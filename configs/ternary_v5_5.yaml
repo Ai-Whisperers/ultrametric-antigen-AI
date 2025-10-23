@@ -1,0 +1,184 @@
+# Ternary VAE v5.5 - Clean Implementation
+# Complete rewrite to fix all config mismatches and implement missing features
+# Goal: 95%+ coverage with proper parameter integration
+
+# Model architecture (identical proven architecture from v5.3/v5.4)
+model:
+  input_dim: 9
+  latent_dim: 16
+
+  # Adaptive latent permeability (phase-scheduled)
+  rho_min: 0.1          # Phase 1: isolation (0-40 epochs)
+  rho_max: 0.7          # Phase 3: resonant coupling (120+ epochs)
+
+  # Adaptive entropy alignment (cyclic)
+  lambda3_base: 0.3     # 3x stronger than v5.1's 0.1
+  lambda3_amplitude: 0.15  # Cyclic range: [0.15, 0.45]
+
+  # Collapse threshold
+  eps_kl: 0.0005        # 5e-4
+
+  # Enable adaptive features
+  gradient_balance: true
+  adaptive_scheduling: true
+
+  # StateNet configuration
+  use_statenet: true                # Enable StateNet controller
+  statenet_lr_scale: 0.05           # Learning rate modulation scale (5%)
+  statenet_lambda_scale: 0.01       # Lambda modulation scale (1%)
+
+# Dataset generation
+ternary_dataset:
+  num_samples: 19683       # All possible operations
+  exhaustive: true
+  seed: 42
+
+# Training configuration
+seed: 42
+batch_size: 64
+num_workers: 0
+
+# Total training epochs
+total_epochs: 400
+
+# Unified optimizer (includes StateNet parameters)
+optimizer:
+  type: adamw
+  lr_start: 0.001
+  weight_decay: 0.0001
+  lr_schedule:
+    - epoch: 0
+      lr: 0.001
+    - epoch: 50
+      lr: 0.0005
+    - epoch: 120
+      lr: 0.0003
+    - epoch: 180
+      lr: 0.0001
+    - epoch: 220
+      lr: 0.00005
+    # Phase 4: Ultra-low LR
+    - epoch: 250
+      lr: 0.00002
+    - epoch: 300
+      lr: 0.00001
+    - epoch: 350
+      lr: 0.000005
+
+# VAE-A parameters (chaotic, stable, exploratory)
+vae_a:
+  beta_start: 0.6
+  beta_end: 1.0
+  temp_start: 1.0
+  temp_end: 0.3
+  temp_cyclic: true      # Enable cyclic temperature for exploration
+
+  # Phase 4: Enhanced temperature exploration (NOW PROPERLY IMPLEMENTED)
+  # This parameter was in v5.4 config but NOT used in code - FIXED in v5.5
+  temp_boost_amplitude: 0.5  # Cyclic amplitude in Phase 4 (epochs 250+)
+                             # Replaces standard 0.1*base_temp for rare ops
+                             # Higher amplitude = more exploration of latent space
+
+# VAE-B parameters (frozen, precise, entropy-amplifying)
+vae_b:
+  beta_start: 0.0
+  beta_end: 1.0
+  temp_start: 0.9
+  temp_end: 0.2         # Monotonic (no cycles, encourage convergence)
+
+  # Phase 4: Slight temperature increase (NOW PROPERLY IMPLEMENTED)
+  # This parameter was in v5.4 config but NOT used in code - FIXED in v5.5
+  temp_phase4: 0.3      # Override temp in Phase 4 (epochs 250+)
+                        # Increased from 0.2 to aid discovery
+
+  entropy_weight: 0.05
+  repulsion_weight: 0.01
+
+# Controller parameters
+controller:
+  temp_lag: 30             # Temperature phase lag (v4's β-cycle period)
+  beta_phase_lag: 0.785    # β phase lag (π/4 radians)
+  entropy_ema_alpha: 0.9   # EMA smoothing for entropy gradient
+  dH_dt_threshold: 0.05    # Entropy cooling threshold
+
+# Training dynamics
+grad_clip: 1.0
+
+# Early stopping
+patience: 100
+min_delta: 0.0001
+coverage_plateau_patience: 100  # Stop if coverage flat for 100 epochs
+min_coverage_delta: 0.001       # 0.1% minimum improvement
+
+# Logging and checkpointing (1-EPOCH INTERVALS)
+log_interval: 1                    # Log every epoch (v5.4: every 5)
+checkpoint_freq: 10                # Still checkpoint every 10 epochs
+checkpoint_dir: sandbox-training/checkpoints/v5_5
+eval_num_samples: 195000           # Comprehensive evaluation (10x exhaustive dataset)
+eval_interval: 1                   # Evaluate every epoch (v5.4: every 5)
+coverage_check_interval: 1         # Check coverage every epoch (v5.4: every 5)
+
+# Data splits
+train_split: 0.8
+val_split: 0.1
+test_split: 0.1
+
+# Success metrics (targets)
+target_coverage_percent: 95.0      # v5.5 target: 95%+ (up from v5.4's 90%)
+target_kld_min: 0.3
+target_kld_max: 1.0
+target_recon_accuracy: 85.0
+
+# Phase transition epochs
+phase_transitions:
+  entropy_expansion_end: 40         # Phase 1 → 2 (ρ: 0.1 → 0.3)
+  consolidation_end: 120            # Phase 2 → 3 (ρ: 0.3 → 0.7, gated on balance)
+  resonant_coupling_end: 250        # Phase 3 → 4
+  ultra_exploration_start: 250      # Phase 4: Ultra-exploration
+  statenet_warm_start: 20           # StateNet starts adapting after initial stability
+
+# =============================================================================
+# v5.5 Key Improvements over v5.4:
+# =============================================================================
+#
+# 1. FIXED CONFIG MISMATCHES (Critical Bugs):
+#    - temp_boost_amplitude now ACTUALLY USED in Phase 4 (was dead parameter)
+#    - temp_phase4 now ACTUALLY USED in Phase 4 (was dead parameter)
+#    - All config parameters verified to be implemented in code
+#
+# 2. 1-EPOCH MONITORING:
+#    - log_interval: 1 (from 5)
+#    - eval_interval: 1 (from 5)
+#    - coverage_check_interval: 1 (from 5)
+#    - Real-time visibility into training dynamics
+#
+# 3. COMPREHENSIVE EVALUATION:
+#    - eval_num_samples: 195000 (10x exhaustive, from 195000)
+#    - Better statistical confidence in coverage metrics
+#
+# 4. CLEAN CODEBASE:
+#    - New model file: src/models/ternary_vae_v5_5.py
+#    - New training script: src/main_ternary_v5_5.py
+#    - No code duplication or dead parameters
+#    - Proper Phase 4 ultra-exploration implementation
+#
+# 5. TARGET INCREASE:
+#    - Coverage target: 95%+ (from v5.4's 90%)
+#    - Building on v5.4's proven 99.57% result at epoch 40
+#
+# =============================================================================
+# Expected Outcome:
+# =============================================================================
+# With proper implementation of ALL config parameters and 1-epoch monitoring,
+# v5.5 should achieve 95%+ coverage with full visibility into the training
+# process, fixing all "blind spots" from previous versions.
+#
+# Key hypothesis: v5.4's success (99.57% at epoch 40) came from:
+#   1. Proper architecture (proven in v5.3)
+#   2. Extended training schedule (400 epochs)
+#   3. Improved learning rate schedule
+#   4. NOT from temp_boost_amplitude/temp_phase4 (they weren't used!)
+#
+# v5.5 will test whether adding those Phase 4 temperature parameters provides
+# any additional benefit, or if v5.4's success was purely from schedule tuning.
+# =============================================================================
