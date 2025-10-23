@@ -187,17 +187,39 @@ class DNVAETrainerV5:
                     return self.config['vae_b']['temp_end']
 
     def get_beta(self, epoch, vae='A'):
-        """Get beta with phase offset for VAE-B."""
+        """Get beta with KL warmup and phase offset for VAE-B.
+
+        Implements β-VAE warmup to prevent posterior collapse:
+        - Warmup phase: β increases from 0 to target over warmup_epochs
+        - After warmup: β follows configured schedule
+        """
         if vae == 'A':
-            return linear_schedule(
-                epoch,
-                self.config['vae_a']['beta_start'],
-                self.config['vae_a']['beta_end'],
-                self.config['total_epochs']
-            )
+            # Get warmup parameters
+            warmup_epochs = self.config['vae_a'].get('beta_warmup_epochs', 0)
+
+            if warmup_epochs > 0 and epoch < warmup_epochs:
+                # Warmup: linearly increase from 0 to beta_start
+                beta_target = self.config['vae_a']['beta_start']
+                return (epoch / warmup_epochs) * beta_target
+            else:
+                # Normal schedule after warmup
+                return linear_schedule(
+                    epoch - warmup_epochs,
+                    self.config['vae_a']['beta_start'],
+                    self.config['vae_a']['beta_end'],
+                    self.config['total_epochs'] - warmup_epochs
+                )
         else:
-            beta_A = self.get_beta(epoch, 'A')
-            return beta_A * abs(math.sin(self.beta_phase_lag))
+            # VAE-B warmup
+            warmup_epochs = self.config['vae_b'].get('beta_warmup_epochs', 0)
+
+            if warmup_epochs > 0 and epoch < warmup_epochs:
+                beta_target = self.config['vae_b']['beta_start']
+                return (epoch / warmup_epochs) * beta_target
+            else:
+                # After warmup, use phase offset from VAE-A
+                beta_A = self.get_beta(epoch, 'A')
+                return beta_A * abs(math.sin(self.beta_phase_lag))
 
     def train_epoch(self, train_loader, epoch):
         """Train for one epoch."""
@@ -226,6 +248,7 @@ class DNVAETrainerV5:
         lr_scheduled = get_lr_from_schedule(epoch, self.config['optimizer']['lr_schedule'])
         entropy_weight = self.config['vae_b']['entropy_weight']
         repulsion_weight = self.config['vae_b']['repulsion_weight']
+        free_bits = self.config.get('free_bits', 0.0)  # Free bits for KL
 
         epoch_losses = defaultdict(float)
         num_batches = 0
@@ -234,7 +257,8 @@ class DNVAETrainerV5:
             batch_data = batch_data.to(self.device)
 
             outputs = self.model(batch_data, temp_A, temp_B, beta_A, beta_B)
-            losses = self.model.loss_function(batch_data, outputs, entropy_weight, repulsion_weight)
+            losses = self.model.loss_function(batch_data, outputs,
+                                            entropy_weight, repulsion_weight, free_bits)
 
             # Apply StateNet corrections once per epoch
             if self.model.use_statenet and batch_idx == 0:
@@ -308,12 +332,14 @@ class DNVAETrainerV5:
         beta_B = self.get_beta(self.epoch, 'B')
         entropy_weight = self.config['vae_b']['entropy_weight']
         repulsion_weight = self.config['vae_b']['repulsion_weight']
+        free_bits = self.config.get('free_bits', 0.0)
 
         with torch.no_grad():
             for batch_data in val_loader:
                 batch_data = batch_data.to(self.device)
                 outputs = self.model(batch_data, temp_A, temp_B, beta_A, beta_B)
-                losses = self.model.loss_function(batch_data, outputs, entropy_weight, repulsion_weight)
+                losses = self.model.loss_function(batch_data, outputs,
+                                                entropy_weight, repulsion_weight, free_bits)
 
                 for key, val in losses.items():
                     if isinstance(val, torch.Tensor):

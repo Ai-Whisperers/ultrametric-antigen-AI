@@ -67,8 +67,11 @@ optimizer:
 
 # VAE-A parameters (chaotic, stable, exploratory)
 vae_a:
-  beta_start: 0.6
-  beta_end: 1.0
+  # IMPROVED: β-warmup to prevent posterior collapse
+  beta_start: 0.3       # REDUCED from 0.6 to prevent early collapse
+  beta_end: 0.8         # REDUCED from 1.0 for better balance
+  beta_warmup_epochs: 50  # NEW: Gradual β increase over first 50 epochs
+
   temp_start: 1.0
   temp_end: 0.3
   temp_cyclic: true      # Enable cyclic temperature for exploration
@@ -81,8 +84,11 @@ vae_a:
 
 # VAE-B parameters (frozen, precise, entropy-amplifying)
 vae_b:
+  # IMPROVED: β-warmup for VAE-B as well
   beta_start: 0.0
-  beta_end: 1.0
+  beta_end: 0.5         # REDUCED from 1.0 for better balance
+  beta_warmup_epochs: 50  # NEW: Gradual β increase over first 50 epochs
+
   temp_start: 0.9
   temp_end: 0.2         # Monotonic (no cycles, encourage convergence)
 
@@ -93,6 +99,11 @@ vae_b:
 
   entropy_weight: 0.05
   repulsion_weight: 0.01
+
+# NEW: KL divergence free bits (prevent posterior collapse)
+free_bits: 0.5          # Allow first 0.5 nats/dim of KL for free
+                        # Prevents aggressive compression of latent space
+                        # Set to 0.0 to disable
 
 # Controller parameters
 controller:
@@ -166,6 +177,12 @@ phase_transitions:
 #    - Coverage target: 95%+ (from v5.4's 90%)
 #    - Building on v5.4's proven 99.57% result at epoch 40
 #
+# 6. POSTERIOR COLLAPSE PREVENTION (NEW - Based on test results):
+#    - β-warmup: Both VAEs start β from 0, warm up over 50 epochs
+#    - Free bits: 0.5 nats/dim allowed before KL penalty
+#    - Reduced β targets: VAE-A 0.8 (from 1.0), VAE-B 0.5 (from 1.0)
+#    - These prevent latent variance collapse (was 0.000 in tests)
+#
 # =============================================================================
 # Expected Outcome:
 # =============================================================================
@@ -173,12 +190,18 @@ phase_transitions:
 # v5.5 should achieve 95%+ coverage with full visibility into the training
 # process, fixing all "blind spots" from previous versions.
 #
-# Key hypothesis: v5.4's success (99.57% at epoch 40) came from:
-#   1. Proper architecture (proven in v5.3)
-#   2. Extended training schedule (400 epochs)
-#   3. Improved learning rate schedule
-#   4. NOT from temp_boost_amplitude/temp_phase4 (they weren't used!)
+# Based on generalization tests, untrained model showed:
+#   - CRITICAL: Posterior collapse (variance 0.000)
+#   - Poor holdout accuracy (32.78% vs >70% target)
+#   - Low reconstruction (30-40% vs >70% target)
 #
-# v5.5 will test whether adding those Phase 4 temperature parameters provides
-# any additional benefit, or if v5.4's success was purely from schedule tuning.
+# The improved config addresses posterior collapse through:
+#   1. β-warmup preventing early over-regularization
+#   2. Free bits allowing latent space to develop
+#   3. Lower final β values balancing reconstruction vs regularization
+#
+# Expected improvements:
+#   - Latent variance > 0.1 (no collapse)
+#   - Holdout accuracy > 70% (true generalization)
+#   - Reconstruction > 80% (better learning)
 # =============================================================================

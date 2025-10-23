@@ -454,10 +454,31 @@ class DualNeuralVAEV5(nn.Module):
             'beta_B': beta_B
         }
 
-    def compute_kl_divergence(self, mu: torch.Tensor, logvar: torch.Tensor) -> torch.Tensor:
-        """Compute KL divergence KL(q(z|x) || p(z))."""
-        kl = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-        return kl / mu.size(0)
+    def compute_kl_divergence(self, mu: torch.Tensor, logvar: torch.Tensor,
+                             free_bits: float = 0.0) -> torch.Tensor:
+        """Compute KL divergence KL(q(z|x) || p(z)) with optional free bits.
+
+        Free bits allows the first 'free_bits' nats of KL per dimension to be
+        ignored, preventing posterior collapse while still regularizing.
+
+        Args:
+            mu: Mean of variational posterior
+            logvar: Log variance of variational posterior
+            free_bits: Minimum KL per dimension (in nats) before penalty applies
+
+        Returns:
+            KL divergence (scalar)
+        """
+        # Compute KL per dimension: -0.5 * (1 + logvar - mu^2 - exp(logvar))
+        kl_per_dim = -0.5 * (1 + logvar - mu.pow(2) - logvar.exp())
+
+        if free_bits > 0:
+            # Apply free bits: only penalize KL above threshold
+            kl_per_dim = torch.clamp(kl_per_dim, min=free_bits)
+
+        # Sum over dimensions, average over batch
+        kl = torch.sum(kl_per_dim) / mu.size(0)
+        return kl
 
     def repulsion_loss(self, z: torch.Tensor, sigma: float = 0.5) -> torch.Tensor:
         """Compute repulsion loss."""
@@ -472,8 +493,20 @@ class DualNeuralVAEV5(nn.Module):
 
     def loss_function(self, x: torch.Tensor, outputs: dict,
                       entropy_weight_B: float = 0.05,
-                      repulsion_weight_B: float = 0.01) -> dict:
-        """Compute total loss with adaptive regime-aware scaling."""
+                      repulsion_weight_B: float = 0.01,
+                      free_bits: float = 0.0) -> dict:
+        """Compute total loss with adaptive regime-aware scaling.
+
+        Args:
+            x: Input data
+            outputs: Model outputs
+            entropy_weight_B: Weight for entropy regularization of VAE-B
+            repulsion_weight_B: Weight for repulsion loss of VAE-B
+            free_bits: Free bits per dimension for KL (0.0 = disabled)
+
+        Returns:
+            Dictionary of losses
+        """
         batch_size = x.size(0)
 
         # Convert input to class indices
@@ -492,9 +525,11 @@ class DualNeuralVAEV5(nn.Module):
             reduction='sum'
         ) / batch_size
 
-        # KL divergences
-        kl_A = self.compute_kl_divergence(outputs['mu_A'], outputs['logvar_A'])
-        kl_B = self.compute_kl_divergence(outputs['mu_B'], outputs['logvar_B'])
+        # KL divergences with free bits
+        kl_A = self.compute_kl_divergence(outputs['mu_A'], outputs['logvar_A'],
+                                          free_bits=free_bits)
+        kl_B = self.compute_kl_divergence(outputs['mu_B'], outputs['logvar_B'],
+                                          free_bits=free_bits)
 
         # VAE-A loss
         loss_A = ce_A + outputs['beta_A'] * kl_A
