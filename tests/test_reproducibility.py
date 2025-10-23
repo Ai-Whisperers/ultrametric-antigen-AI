@@ -10,7 +10,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.models.ternary_vae_v5_5 import DualNeuralVAEV5
-from src.utils.data import generate_all_ternary_operations
+from src.utils.data import generate_all_ternary_operations, sample_operations
 
 
 def set_seed(seed: int = 42):
@@ -97,7 +97,7 @@ class TestReproducibility:
     def test_training_step_determinism(self, model):
         """Test that a training step is deterministic."""
         set_seed(42)
-        x = torch.randn(32, 9)
+        x = torch.FloatTensor(sample_operations(32, replacement=True, seed=42))
         optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
         # First training step
@@ -199,38 +199,35 @@ class TestReproducibility:
         lambda2 = model.compute_cyclic_lambda3(50, period=30)
         assert lambda1 == lambda2, "Cyclic lambda is not deterministic"
 
-    def test_gradient_norm_tracking_determinism(self, model):
+    def test_gradient_norm_tracking_determinism(self):
         """Test that gradient norm tracking is deterministic."""
+        # First run
         set_seed(42)
-        x = torch.randn(32, 9)
+        model1 = DualNeuralVAEV5(input_dim=9, latent_dim=16)
+        model1.train()
+        x1 = torch.FloatTensor(sample_operations(32, replacement=True, seed=100))
 
-        model.train()
-        out = model(x, temp_A=1.0, temp_B=1.0, beta_A=1.0, beta_B=1.0)
-        loss = model.loss_function(x, out)
-        loss['loss'].backward()
+        set_seed(200)
+        out1 = model1(x1, temp_A=1.0, temp_B=1.0, beta_A=1.0, beta_B=1.0)
+        loss1 = model1.loss_function(x1, out1)
+        loss1['loss'].backward()
+        model1.update_gradient_norms()
 
-        # Track gradients
-        grad_norm_before_A = model.grad_norm_A_ema.clone()
-        grad_norm_before_B = model.grad_norm_B_ema.clone()
-
-        model.update_gradient_norms()
-
-        grad_norm_after_A = model.grad_norm_A_ema.clone()
-        grad_norm_after_B = model.grad_norm_B_ema.clone()
-
-        # Reset and repeat
+        # Second run with same seeds
         set_seed(42)
         model2 = DualNeuralVAEV5(input_dim=9, latent_dim=16)
         model2.train()
-        x2 = torch.randn(32, 9)
+        x2 = torch.FloatTensor(sample_operations(32, replacement=True, seed=100))
+
+        set_seed(200)
         out2 = model2(x2, temp_A=1.0, temp_B=1.0, beta_A=1.0, beta_B=1.0)
         loss2 = model2.loss_function(x2, out2)
         loss2['loss'].backward()
         model2.update_gradient_norms()
 
         # Compare
-        assert torch.allclose(model.grad_norm_A_ema, model2.grad_norm_A_ema), "Gradient norm A EMA differs"
-        assert torch.allclose(model.grad_norm_B_ema, model2.grad_norm_B_ema), "Gradient norm B EMA differs"
+        assert torch.allclose(model1.grad_norm_A_ema, model2.grad_norm_A_ema), "Gradient norm A EMA differs"
+        assert torch.allclose(model1.grad_norm_B_ema, model2.grad_norm_B_ema), "Gradient norm B EMA differs"
 
 
 if __name__ == '__main__':
