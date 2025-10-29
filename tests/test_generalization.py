@@ -115,12 +115,19 @@ class TestGeneralization:
 
     @pytest.fixture
     def trained_model(self):
-        """Load or create a minimally trained model for testing.
+        """Load trained model from checkpoint for validation.
 
-        Note: For real validation, this should load a checkpoint from actual training.
-        For now, we create a fresh model to test the architecture.
+        Loads the production checkpoint to verify that training actually learned.
         """
         set_seed(42)
+
+        # Path to the trained checkpoint
+        checkpoint_path = Path(__file__).parent.parent / "sandbox-training" / "checkpoints" / "v5_5" / "latest.pt"
+
+        if not checkpoint_path.exists():
+            pytest.skip(f"Checkpoint not found at {checkpoint_path}. Run training first.")
+
+        # Initialize model with same config as training
         model = DualNeuralVAEV5(
             input_dim=9,
             latent_dim=16,
@@ -130,7 +137,12 @@ class TestGeneralization:
             lambda3_amplitude=0.15,
             eps_kl=0.0005
         )
+
+        # Load trained weights
+        checkpoint = torch.load(checkpoint_path, map_location='cpu')
+        model.load_state_dict(checkpoint['model'])
         model.eval()
+
         return model
 
     @pytest.fixture
@@ -172,12 +184,12 @@ class TestGeneralization:
             x_rounded = x.long()
             accuracy = (preds_A == x_rounded).float().mean().item()
 
-        # Store result for analysis
-        print(f"\n[ULT] Holdout reconstruction accuracy: {accuracy*100:.2f}%")
-
-        # This test currently just measures performance, not pass/fail
-        # A good model should achieve >70% accuracy
-        assert accuracy >= 0.0, "Reconstruction accuracy measured"
+        # A trained model should achieve high accuracy on holdout operations
+        # Models that memorize would fail; models that learn rules should succeed
+        assert accuracy > 0.9, (
+            f"Holdout reconstruction accuracy too low: {accuracy*100:.2f}%. "
+            f"Expected >90% for a model that learns structure rather than memorizing."
+        )
 
     def test_compositional_operations(self, trained_model):
         """Test if model can reconstruct composite operations.
@@ -209,10 +221,11 @@ class TestGeneralization:
             x_rounded = x.long()
             accuracy = (preds_A == x_rounded).float().mean().item()
 
-        print(f"\n[Compositional] Composite operation reconstruction: {accuracy*100:.2f}%")
-
-        # Store for analysis
-        assert accuracy >= 0.0, "Compositional reconstruction measured"
+        # Trained model should handle compositional operations
+        assert accuracy > 0.7, (
+            f"Compositional reconstruction accuracy too low: {accuracy*100:.2f}%. "
+            f"Expected >70% for compositional understanding."
+        )
 
     # ========================================================================
     # 2. PERMUTATION ROBUSTNESS TEST (PRT)
@@ -270,10 +283,12 @@ class TestGeneralization:
             dist_perm.flatten()
         ]))[0, 1].item()
 
-        print(f"\n[PRT] Distance matrix correlation under permutation: {correlation:.3f}")
-
         # Higher correlation means better structural preservation
-        assert correlation >= -1.0, "Permutation robustness measured"
+        # A model that learns permutation-invariant structure should have high correlation
+        assert correlation > 0.7, (
+            f"Permutation distance correlation too low: {correlation:.3f}. "
+            f"Expected >0.7 for structure-preserving embeddings."
+        )
 
     # ========================================================================
     # 3. LOGICAL NOISE INJECTION TEST (LNIT)
@@ -302,6 +317,7 @@ class TestGeneralization:
                                          beta_A=1.0, beta_B=1.0)
             z_clean_A = outputs_clean['z_A']
 
+            max_distance = 0.0
             for noise_level in noise_levels:
                 # Add noise
                 noisy_ops = np.array([inject_noise(op, noise_level, seed=i)
@@ -314,11 +330,13 @@ class TestGeneralization:
 
                 # Measure distance between clean and noisy encodings
                 distances = torch.norm(z_clean_A - z_noisy_A, dim=1).mean().item()
+                max_distance = max(max_distance, distances)
 
-                print(f"\n[LNIT] Noise {noise_level*100:.0f}% -> "
-                      f"Mean latent distance: {distances:.3f}")
-
-        assert True, "Noise resilience measured"
+        # Robust model should keep latent distance bounded even with 5% noise
+        assert max_distance < 5.0, (
+            f"Latent space not resilient to noise: max distance {max_distance:.3f}. "
+            f"Expected <5.0 for noise-robust encodings."
+        )
 
     # ========================================================================
     # 4. LATENT ALGEBRA CONSISTENCY
@@ -367,9 +385,13 @@ class TestGeneralization:
                 arithmetic_errors.append(error)
 
             mean_error = np.mean(arithmetic_errors)
-            print(f"\n[Latent Arithmetic] Mean composition error: {mean_error:.3f}")
 
-        assert True, "Latent arithmetic consistency measured"
+        # If latent space has algebraic structure, composition error should be bounded
+        # Note: Exact arithmetic may not hold, but reasonable structure should keep error < 10
+        assert mean_error < 10.0, (
+            f"Latent arithmetic error too high: {mean_error:.3f}. "
+            f"Expected <10.0 for meaningful algebraic structure."
+        )
 
     # ========================================================================
     # 5. STATENET VALIDATION
@@ -455,11 +477,14 @@ class TestGeneralization:
         sparse_acc = measure_accuracy(sparse_ops)
         dense_acc = measure_accuracy(dense_ops)
 
-        print(f"\n[Reconstruction] Sparse ops (≥6 zeros): {sparse_acc*100:.2f}%")
-        print(f"[Reconstruction] Dense ops (≤3 zeros): {dense_acc*100:.2f}%")
-
-        # Store for analysis
-        assert True, "Reconstruction distribution measured"
+        # Both sparse and dense operations should be reconstructed well
+        # Testing that the model handles different operation types
+        min_acc = min(sparse_acc, dense_acc)
+        assert min_acc > 0.8, (
+            f"Reconstruction accuracy too low for some operation types. "
+            f"Sparse: {sparse_acc*100:.2f}%, Dense: {dense_acc*100:.2f}%. "
+            f"Expected >80% for both."
+        )
 
     def test_latent_space_coverage(self, trained_model):
         """Test if latent space is well-utilized vs collapsed.
@@ -500,8 +525,15 @@ class TestGeneralization:
             print(f"[Latent Coverage] VAE-B mean variance: {var_B:.3f}")
 
         # Good latent spaces should have variance > 0.1 and use most dimensions
-        assert var_A > 0.0, "Latent space variance measured"
-        assert effective_dim_A > 0, "Latent space dimensionality measured"
+        # Posterior collapse would show very low variance
+        assert var_A > 0.1, (
+            f"Latent space variance too low: {var_A:.3f}. "
+            f"Expected >0.1 to avoid posterior collapse."
+        )
+        assert effective_dim_A > 8, (
+            f"Latent space not using enough dimensions: {effective_dim_A:.1f}/16. "
+            f"Expected >8 for good latent utilization."
+        )
 
 
 if __name__ == '__main__':

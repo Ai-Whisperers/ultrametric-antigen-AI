@@ -5,7 +5,10 @@ import torch
 import yaml
 import time
 import sys
+import json
+import hashlib
 from pathlib import Path
+from datetime import datetime
 import numpy as np
 from tabulate import tabulate
 from typing import Dict, List
@@ -25,6 +28,14 @@ class TernaryVAEBenchmark:
         self.config_path = config_path
         self.checkpoint_path = checkpoint_path
         self.device = device if torch.cuda.is_available() else 'cpu'
+
+        # Require checkpoint for valid benchmarking
+        if checkpoint_path is None:
+            raise ValueError(
+                "Checkpoint is required for benchmarking. "
+                "Running benchmarks on untrained weights produces meaningless results. "
+                "Please provide --checkpoint argument."
+            )
 
         # Load config
         with open(config_path, 'r') as f:
@@ -194,13 +205,27 @@ class TernaryVAEBenchmark:
         print("Benchmarking Latent Entropy")
         print(f"{'='*80}")
 
-        # Generate latent codes
-        with torch.no_grad():
-            z_A = torch.randn(num_samples, self.model.latent_dim, device=self.device)
-            z_B = torch.randn(num_samples, self.model.latent_dim, device=self.device)
+        # Generate real ternary operations and encode them to get actual latent codes
+        all_ops = generate_all_ternary_operations()
+        # Sample subset if requested samples < total operations
+        if num_samples < len(all_ops):
+            indices = torch.randperm(len(all_ops))[:num_samples]
+            sampled_ops = all_ops[indices]
+        else:
+            sampled_ops = all_ops[:num_samples]
 
-            H_A = compute_latent_entropy(z_A)
-            H_B = compute_latent_entropy(z_B)
+        # Convert to tensor if needed and move to device
+        if not isinstance(sampled_ops, torch.Tensor):
+            sampled_ops = torch.FloatTensor(sampled_ops)
+        sampled_ops = sampled_ops.to(self.device)
+
+        # Encode to get real latent codes
+        with torch.no_grad():
+            mu_A, _ = self.model.encoder_A(sampled_ops)
+            mu_B, _ = self.model.encoder_B(sampled_ops)
+
+            H_A = compute_latent_entropy(mu_A)
+            H_B = compute_latent_entropy(mu_B)
 
         results = {
             'num_samples': num_samples,
@@ -319,18 +344,72 @@ class TernaryVAEBenchmark:
 
         print(tabulate(table_data, headers=['Metric', 'Value'], tablefmt='grid'))
 
+    def save_results(self, results: Dict, output_path: str = None):
+        """Save benchmark results to JSON file with metadata.
+
+        Args:
+            results: Benchmark results dictionary
+            output_path: Path to save results (default: benchmarks/coverage_vs_entropy.json)
+        """
+        if output_path is None:
+            output_path = Path(__file__).parent.parent.parent / "benchmarks" / "coverage_vs_entropy.json"
+        else:
+            output_path = Path(output_path)
+
+        # Create benchmarks directory if it doesn't exist
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Compute checkpoint hash
+        checkpoint_hash = self._compute_file_hash(self.checkpoint_path)
+        config_hash = self._compute_file_hash(self.config_path)
+
+        # Prepare output with metadata
+        output = {
+            'timestamp': datetime.now().isoformat(),
+            'metadata': {
+                'checkpoint_path': str(self.checkpoint_path),
+                'checkpoint_hash': checkpoint_hash,
+                'config_path': str(self.config_path),
+                'config_hash': config_hash,
+                'device': self.device,
+            },
+            'results': results,
+        }
+
+        # Save to JSON
+        with open(output_path, 'w') as f:
+            json.dump(output, f, indent=2)
+
+        print(f"\n{'='*80}")
+        print(f"Results saved to: {output_path}")
+        print(f"Checkpoint hash: {checkpoint_hash}")
+        print(f"Config hash: {config_hash}")
+        print(f"{'='*80}\n")
+
+    def _compute_file_hash(self, file_path: str) -> str:
+        """Compute SHA256 hash of a file."""
+        sha256_hash = hashlib.sha256()
+        with open(file_path, "rb") as f:
+            for byte_block in iter(lambda: f.read(4096), b""):
+                sha256_hash.update(byte_block)
+        return sha256_hash.hexdigest()
+
 
 def main():
     parser = argparse.ArgumentParser(description='Benchmark Ternary VAE v5.5')
     parser.add_argument('--config', type=str, required=True, help='Path to config file')
-    parser.add_argument('--checkpoint', type=str, default=None, help='Path to checkpoint (optional)')
+    parser.add_argument('--checkpoint', type=str, required=True, help='Path to checkpoint (required)')
     parser.add_argument('--device', type=str, default='cuda', help='Device: cuda or cpu')
     parser.add_argument('--trials', type=int, default=5, help='Number of trials for coverage benchmark')
+    parser.add_argument('--output', type=str, default=None, help='Output path for JSON results (default: benchmarks/coverage_vs_entropy.json)')
     args = parser.parse_args()
 
     # Run benchmark
     benchmark = TernaryVAEBenchmark(args.config, args.checkpoint, args.device)
     results = benchmark.run_full_benchmark()
+
+    # Save results to JSON
+    benchmark.save_results(results, args.output)
 
     print(f"\n{'='*80}")
     print("Benchmark Complete!")

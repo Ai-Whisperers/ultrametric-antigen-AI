@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-10-29T16:20:38.611015",
+  "metadata": {
+    "checkpoint_path": "sandbox-training/checkpoints/v5_5/latest.pt",
+    "checkpoint_hash": "322db7936df7c2613c391c0461fbb062d688fbcbb838e0be98c329a6789efd7f",
+    "config_path": "configs/ternary_v5_5.yaml",
+    "config_hash": "9ac5581fb8d93a53a82d3546cdf6e23b02acbc23e42f65a5aa617908106aa61b",
+    "device": "cuda"
+  },
+  "results": {
+    "inference": {
+      "num_samples": 10000,
+      "num_trials": 10,
+      "vae_a_mean_time": 0.002259182929992676,
+      "vae_a_std_time": 0.004032690445140314,
+      "vae_a_samples_per_sec": 4426379.053790221,
+      "vae_b_mean_time": 0.0016408205032348634,
+      "vae_b_std_time": 0.0025076321223335783,
+      "vae_b_samples_per_sec": 6094511.849580796
+    },
+    "coverage": {
+      "num_samples": 195000,
+      "num_trials": 5,
+      "vae_a_mean_unique": 19609.0,
+      "vae_a_std_unique": 10.237187113655782,
+      "vae_a_mean_coverage": 99.62404105065283,
+      "vae_a_std_coverage": 0.052010298804325394,
+      "vae_a_max_coverage": 99.69008789310573,
+      "vae_b_mean_unique": 19605.8,
+      "vae_b_std_unique": 8.280096617793781,
+      "vae_b_mean_coverage": 99.60778336635676,
+      "vae_b_std_coverage": 0.04206724898538172,
+      "vae_b_max_coverage": 99.65452420870801
+    },
+    "entropy": {
+      "num_samples": 10000,
+      "entropy_A": 2.7303357124328613,
+      "entropy_B": 2.6923201084136963,
+      "entropy_diff": 0.03801560401916504
+    },
+    "memory": {
+      "baseline_gb": 0.009202688,
+      "current_gb": 0.009563136,
+      "peak_gb": 0.015284736,
+      "overhead_gb": 0.006082048
+    }
+  }
+}

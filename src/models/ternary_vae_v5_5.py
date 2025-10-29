@@ -623,8 +623,10 @@ class DualNeuralVAEV5(nn.Module):
             else:
                 logits = self.decoder_B(z)
 
-            probs = F.softmax(logits, dim=-1)
+            # Use categorical sampling instead of expectation
+            dist = torch.distributions.Categorical(logits=logits)
+            indices = dist.sample()
             values = torch.tensor([-1.0, 0.0, 1.0], device=device)
-            samples = torch.sum(probs * values.view(1, 1, 3), dim=-1)
+            samples = values[indices]
 
         return samples
