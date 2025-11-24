@@ -18,6 +18,22 @@ from src.data import generate_all_ternary_operations
 from src.artifacts import CheckpointManager
 
 
+def convert_to_python_types(obj):
+    """Convert numpy types to native Python types for JSON serialization"""
+    if isinstance(obj, dict):
+        return {k: convert_to_python_types(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_to_python_types(v) for v in obj]
+    elif isinstance(obj, np.integer):
+        return int(obj)
+    elif isinstance(obj, np.floating):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    else:
+        return obj
+
+
 class ManifoldResolutionBenchmark:
     """Measures resolution quality between discrete operations and continuous latent space"""
 
@@ -392,7 +408,7 @@ def main():
 
     output_file = output_dir / f'manifold_resolution_{checkpoint.get("epoch", "init")}.json'
     with open(output_file, 'w') as f:
-        json.dump(results, f, indent=2)
+        json.dump(convert_to_python_types(results), f, indent=2)
 
     print(f"\nResults saved to: {output_file}")
 
