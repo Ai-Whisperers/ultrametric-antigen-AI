@@ -28,17 +28,28 @@ Think of it like this:
 
 ### Why 9 Dimensions?
 
-Each ternary operation is a lookup table with 9 entries:
+Each ternary operation is a **2-input logic function** with a truth table of 9 entries.
+
+**Inputs**: Two ternary values (a, b) where each ∈ {-1, 0, +1}
+**Combinations**: 3 × 3 = 9 possible input pairs
+
+The truth table defines the output for each input combination:
 ```
-Input pattern → Output value
-[−1,−1,−1,−1,−1,−1,−1,−1,−1] → f₀ ∈ {−1, 0, +1}
-[−1,−1,−1,−1,−1,−1,−1,−1, 0] → f₁ ∈ {−1, 0, +1}
-[−1,−1,−1,−1,−1,−1,−1,−1,+1] → f₂ ∈ {−1, 0, +1}
-...
-[+1,+1,+1,+1,+1,+1,+1,+1,+1] → f₈ ∈ {−1, 0, +1}
+Input pair (a, b) → Output f(a,b)
+(-1, -1) → f₀ ∈ {−1, 0, +1}
+(-1,  0) → f₁ ∈ {−1, 0, +1}
+(-1, +1) → f₂ ∈ {−1, 0, +1}
+( 0, -1) → f₃ ∈ {−1, 0, +1}
+( 0,  0) → f₄ ∈ {−1, 0, +1}
+( 0, +1) → f₅ ∈ {−1, 0, +1}
+(+1, -1) → f₆ ∈ {−1, 0, +1}
+(+1,  0) → f₇ ∈ {−1, 0, +1}
+(+1, +1) → f₈ ∈ {−1, 0, +1}
 ```
 
-**Total combinations**: 3⁹ = 19,683 unique operations
+**Each operation** is represented as a 9-element vector: `[f₀, f₁, f₂, f₃, f₄, f₅, f₆, f₇, f₈]`
+
+**Total combinations**: 3⁹ = 19,683 unique operations (one for each possible output assignment)
 
 ---
 
