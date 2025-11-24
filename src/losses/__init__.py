@@ -8,4 +8,18 @@ This module contains loss computation separated from model architecture:
 - DualVAELoss: Aggregated loss for dual VAE system
 """
 
-__all__ = []
+from .dual_vae_loss import (
+    ReconstructionLoss,
+    KLDivergenceLoss,
+    EntropyRegularization,
+    RepulsionLoss,
+    DualVAELoss
+)
+
+__all__ = [
+    'ReconstructionLoss',
+    'KLDivergenceLoss',
+    'EntropyRegularization',
+    'RepulsionLoss',
+    'DualVAELoss'
+]
