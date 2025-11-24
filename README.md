@@ -68,6 +68,15 @@ python scripts/train/train_ternary_v5_5.py --config configs/ternary_v5_5.yaml
 
 **Note**: Both trainers are production-ready and fully compatible. The refactored version provides better code organization and maintainability.
 
+### Benchmarking
+
+```bash
+# Measure manifold resolution (discrete→continuous mapping quality)
+python scripts/benchmark/measure_manifold_resolution.py
+
+# Results saved to: reports/benchmarks/manifold_resolution_{epoch}.json
+```
+
 ---
 
 ## Project Structure (Refactored)
@@ -108,9 +117,11 @@ ternary-vaes/
 │   └── ternary_v5_5_reproducible.yaml    # Deterministic seed config
 │
 ├── scripts/
-│   └── train/
-│       ├── train_ternary_v5_5_refactored.py  # Refactored trainer (115 lines)
-│       └── train_ternary_v5_5.py             # Original trainer (549 lines)
+│   ├── train/
+│   │   ├── train_ternary_v5_5_refactored.py  # Refactored trainer (115 lines)
+│   │   └── train_ternary_v5_5.py             # Original trainer (549 lines)
+│   └── benchmark/
+│       └── measure_manifold_resolution.py     # Manifold resolution benchmark (420 lines)
 │
 ├── artifacts/                            # Training artifacts lifecycle
 │   ├── raw/                              # Direct training outputs
@@ -329,6 +340,18 @@ print(f"Best val loss: {checkpoint['best_val_loss']}")
 - **Trainer**: 398 → 350 lines (-12%)
 - **SRP Compliance**: 100%
 - **Test Coverage**: 100% validation pass (15/15 tests)
+
+### Manifold Resolution
+Measures discrete→continuous mapping quality:
+- **Reconstruction Fidelity**: Exact match rate, bit-error distribution
+- **Latent Separation**: Pairwise distance statistics in latent space
+- **Sampling Coverage**: Unique operations achievable from prior sampling
+- **Interpolation Quality**: Smoothness of latent-space interpolations
+- **Nearest Neighbor Consistency**: Hamming distance preservation
+- **Manifold Dimensionality**: Effective dimensions via PCA
+- **Resolution Score**: Aggregate quality metric (0-1 scale)
+
+Run `python scripts/benchmark/measure_manifold_resolution.py` for full report.
 
 ---
 
