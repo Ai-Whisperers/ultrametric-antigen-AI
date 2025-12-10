@@ -98,14 +98,18 @@ class TernaryVAETrainer:
             config['checkpoint_freq']
         )
 
-        # Initialize loss function
+        # Initialize loss function (with p-adic losses if configured)
         self.loss_fn = DualVAELoss(
             free_bits=config.get('free_bits', 0.0),
-            repulsion_sigma=0.5
+            repulsion_sigma=0.5,
+            padic_config=config.get('padic_losses', {})
         )
 
         # Cache phase 4 start for model updates
         self.phase_4_start = config['phase_transitions']['ultra_exploration_start']
+
+        # Precompute base-3 weights for index computation
+        self._base3_weights = torch.tensor([3**i for i in range(9)], dtype=torch.long)
 
         # Print initialization summary
         self._print_init_summary()
@@ -127,6 +131,39 @@ class TernaryVAETrainer:
         print(f"Adaptive scheduling: {self.config['model'].get('adaptive_scheduling', True)}")
         print(f"StateNet enabled: {self.config['model'].get('use_statenet', True)}")
         print(f"torch.compile: {'enabled' if self.compiled else 'disabled'}")
+
+        # p-Adic losses (Phase 1A/1B)
+        padic_config = self.config.get('padic_losses', {})
+        has_padic = (padic_config.get('enable_metric_loss', False) or
+                     padic_config.get('enable_ranking_loss', False) or
+                     padic_config.get('enable_norm_loss', False))
+        if has_padic:
+            print(f"\np-Adic Losses (implement.md Phase 1):")
+            if padic_config.get('enable_metric_loss', False):
+                print(f"  Metric Loss: weight={padic_config.get('metric_loss_weight', 0.1)}, scale={padic_config.get('metric_loss_scale', 1.0)}")
+            if padic_config.get('enable_ranking_loss', False):
+                print(f"  Ranking Loss: weight={padic_config.get('ranking_loss_weight', 0.5)}, margin={padic_config.get('ranking_margin', 0.1)}")
+            if padic_config.get('enable_norm_loss', False):
+                print(f"  Norm Loss: weight={padic_config.get('norm_loss_weight', 0.05)}")
+
+    def _compute_batch_indices(self, batch_data: torch.Tensor) -> torch.Tensor:
+        """Compute operation indices from ternary data.
+
+        Each ternary operation is encoded as 9 digits in {-1, 0, 1}.
+        The index is computed as: Σ (digit + 1) * 3^i for i in 0..8
+
+        Args:
+            batch_data: Ternary data (batch_size, 9) with values in {-1, 0, 1}
+
+        Returns:
+            Operation indices (batch_size,) in range [0, 19682]
+        """
+        # Convert {-1, 0, 1} to {0, 1, 2}
+        digits = (batch_data + 1).long()
+        # Compute index as base-3 number
+        weights = self._base3_weights.to(batch_data.device)
+        indices = (digits * weights).sum(dim=1)
+        return indices
 
     def _update_model_parameters(self, epoch: int) -> None:
         """Update model's adaptive parameters for current epoch.
@@ -175,16 +212,20 @@ class TernaryVAETrainer:
         for batch_idx, batch_data in enumerate(train_loader):
             batch_data = batch_data.to(self.device)
 
+            # Compute batch indices for p-adic losses
+            batch_indices = self._compute_batch_indices(batch_data)
+
             # Forward pass
             outputs = self.model(batch_data, temp_A, temp_B, beta_A, beta_B)
 
-            # Compute losses using DualVAELoss
+            # Compute losses using DualVAELoss (with p-adic losses)
             losses = self.loss_fn(
                 batch_data, outputs,
                 self.model.lambda1, self.model.lambda2, self.model.lambda3,
                 entropy_weight, repulsion_weight,
                 self.model.grad_norm_A_ema, self.model.grad_norm_B_ema,
-                self.model.gradient_balance, self.model.training
+                self.model.gradient_balance, self.model.training,
+                batch_indices=batch_indices
             )
 
             # Add rho and phase to loss dict for logging
@@ -277,15 +318,20 @@ class TernaryVAETrainer:
         with torch.no_grad():
             for batch_data in val_loader:
                 batch_data = batch_data.to(self.device)
+
+                # Compute batch indices for p-adic losses
+                batch_indices = self._compute_batch_indices(batch_data)
+
                 outputs = self.model(batch_data, temp_A, temp_B, beta_A, beta_B)
 
-                # Compute losses using DualVAELoss
+                # Compute losses using DualVAELoss (with p-adic losses)
                 losses = self.loss_fn(
                     batch_data, outputs,
                     self.model.lambda1, self.model.lambda2, self.model.lambda3,
                     entropy_weight, repulsion_weight,
                     self.model.grad_norm_A_ema, self.model.grad_norm_B_ema,
-                    self.model.gradient_balance, False  # training=False in validation
+                    self.model.gradient_balance, False,  # training=False in validation
+                    batch_indices=batch_indices
                 )
 
                 # Add rho and phase to loss dict for logging

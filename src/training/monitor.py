@@ -196,8 +196,22 @@ class TrainingMonitor:
 
         print(f"  Coverage: A={unique_A} ({cov_A:.2f}%) | B={unique_B} ({cov_B:.2f}%)")
 
+        # p-Adic losses (Phase 1A/1B)
+        has_padic = (train_losses.get('padic_metric_A', 0) > 0 or
+                     train_losses.get('padic_ranking_A', 0) > 0 or
+                     train_losses.get('padic_norm_A', 0) > 0)
+        if has_padic:
+            parts = []
+            if train_losses.get('padic_metric_A', 0) > 0:
+                parts.append(f"metric={train_losses.get('padic_metric_A', 0):.4f}/{train_losses.get('padic_metric_B', 0):.4f}")
+            if train_losses.get('padic_ranking_A', 0) > 0:
+                parts.append(f"rank={train_losses.get('padic_ranking_A', 0):.4f}/{train_losses.get('padic_ranking_B', 0):.4f}")
+            if train_losses.get('padic_norm_A', 0) > 0:
+                parts.append(f"norm={train_losses.get('padic_norm_A', 0):.4f}/{train_losses.get('padic_norm_B', 0):.4f}")
+            print(f"  p-Adic: {' '.join(parts)}")
+
         if is_best:
-            print(f"  ✓ Best val loss: {self.best_val_loss:.4f}")
+            print(f"  Best val loss: {self.best_val_loss:.4f}")
 
     def log_tensorboard(
         self,
@@ -292,6 +306,27 @@ class TrainingMonitor:
                 'delta_lambda2': train_losses.get('delta_lambda2', 0),
                 'delta_lambda3': train_losses.get('delta_lambda3', 0)
             }, epoch)
+
+        # p-Adic losses (Phase 1A/1B from implement.md)
+        has_padic = (train_losses.get('padic_metric_A', 0) > 0 or
+                     train_losses.get('padic_ranking_A', 0) > 0 or
+                     train_losses.get('padic_norm_A', 0) > 0)
+        if has_padic:
+            if train_losses.get('padic_metric_A', 0) > 0:
+                self.writer.add_scalars('PAdicLoss/Metric', {
+                    'VAE_A': train_losses.get('padic_metric_A', 0),
+                    'VAE_B': train_losses.get('padic_metric_B', 0)
+                }, epoch)
+            if train_losses.get('padic_ranking_A', 0) > 0:
+                self.writer.add_scalars('PAdicLoss/Ranking', {
+                    'VAE_A': train_losses.get('padic_ranking_A', 0),
+                    'VAE_B': train_losses.get('padic_ranking_B', 0)
+                }, epoch)
+            if train_losses.get('padic_norm_A', 0) > 0:
+                self.writer.add_scalars('PAdicLoss/Norm', {
+                    'VAE_A': train_losses.get('padic_norm_A', 0),
+                    'VAE_B': train_losses.get('padic_norm_B', 0)
+                }, epoch)
 
         # Flush to ensure real-time visibility in dashboard
         self.writer.flush()

@@ -1,0 +1,187 @@
+# Ternary VAE v5.7 - Metric-Aware StateNet with Unified r + Coverage Optimization
+# Key innovation: StateNet v3 sees ranking correlation and dynamically adjusts ranking weight
+# Goal: Achieve both r>0.9 AND 99%+ coverage simultaneously
+
+# Model architecture
+model:
+  input_dim: 9
+  latent_dim: 16
+
+  # Adaptive latent permeability (phase-scheduled)
+  rho_min: 0.1
+  rho_max: 0.7
+
+  # Adaptive entropy alignment (cyclic)
+  lambda3_base: 0.3
+  lambda3_amplitude: 0.15
+
+  # Collapse threshold
+  eps_kl: 0.0005
+
+  # Enable adaptive features
+  gradient_balance: true
+  adaptive_scheduling: true
+
+  # StateNet v3 configuration (UPGRADED from v2)
+  use_statenet: true
+  statenet_lr_scale: 0.05
+  statenet_lambda_scale: 0.01
+  statenet_ranking_scale: 0.5      # NEW: scale for ranking weight modulation (increased for wider range)
+  base_ranking_weight: 0.5          # NEW: base ranking loss weight (modulated by StateNet)
+
+# Dataset generation
+ternary_dataset:
+  num_samples: 19683
+  exhaustive: true
+  seed: 42
+
+# Training configuration
+seed: 42
+batch_size: 256
+num_workers: 0
+
+# Total training epochs
+total_epochs: 200
+
+# Unified optimizer
+optimizer:
+  type: adamw
+  lr_start: 0.001
+  weight_decay: 0.0001
+  lr_schedule:
+    - epoch: 0
+      lr: 0.001
+    - epoch: 50
+      lr: 0.0005
+    - epoch: 120
+      lr: 0.0003
+    - epoch: 180
+      lr: 0.0001
+
+# VAE-A parameters (chaotic, stable, exploratory)
+vae_a:
+  beta_start: 0.3
+  beta_end: 0.8
+  beta_warmup_epochs: 50
+  temp_start: 1.0
+  temp_end: 0.3
+  temp_cyclic: true
+  temp_boost_amplitude: 0.5
+
+# VAE-B parameters (frozen, precise, entropy-amplifying)
+vae_b:
+  beta_start: 0.0
+  beta_end: 0.5
+  beta_warmup_epochs: 50
+  temp_start: 0.9
+  temp_end: 0.2
+  temp_phase4: 0.3
+  entropy_weight: 0.05
+  repulsion_weight: 0.01
+
+# KL divergence free bits
+free_bits: 0.5
+
+# =============================================================================
+# p-ADIC LOSSES with DYNAMIC RANKING WEIGHT (v5.7 innovation)
+# =============================================================================
+padic_losses:
+  # Metric loss (MSE-based - kept disabled)
+  metric_loss_weight: 0.1
+  metric_loss_scale: 1.0
+  metric_n_pairs: 1000
+  enable_metric_loss: false
+
+  # Ranking Loss (NOW DYNAMICALLY WEIGHTED by StateNet v3)
+  # base_ranking_weight in model config is modulated by StateNet output
+  # Effective weight = base_ranking_weight * (1 + statenet_ranking_scale * delta_ranking)
+  ranking_loss_weight: 0.5         # Initial weight (overridden by StateNet)
+  ranking_margin: 0.1
+  ranking_n_triplets: 500
+  enable_ranking_loss: true
+
+  # Norm regularizer
+  norm_loss_weight: 0.05
+  enable_norm_loss: true
+
+# Controller parameters
+controller:
+  temp_lag: 30
+  beta_phase_lag: 0.785
+  entropy_ema_alpha: 0.9
+  dH_dt_threshold: 0.05
+
+# Training dynamics
+grad_clip: 1.0
+
+# Early stopping
+patience: 100
+min_delta: 0.0001
+coverage_plateau_patience: 100
+min_coverage_delta: 0.001
+
+# Logging and checkpointing
+log_interval: 1
+checkpoint_freq: 10
+checkpoint_dir: sandbox-training/checkpoints/v5_7
+eval_num_samples: 50000
+eval_interval: 5
+coverage_check_interval: 5
+
+# TensorBoard
+tensorboard_dir: runs
+experiment_name: null
+
+# TorchInductor compilation
+torch_compile:
+  enabled: false
+  backend: inductor
+  mode: default
+  fullgraph: false
+
+# Data splits
+train_split: 0.8
+val_split: 0.1
+test_split: 0.1
+
+# Success metrics (targets)
+target_coverage_percent: 99.0
+target_kld_min: 0.3
+target_kld_max: 1.0
+target_recon_accuracy: 85.0
+target_ranking_correlation: 0.9   # NEW: r target
+
+# Phase transition epochs
+phase_transitions:
+  entropy_expansion_end: 40
+  consolidation_end: 120
+  resonant_coupling_end: 250
+  ultra_exploration_start: 250
+  statenet_warm_start: 20
+
+# =============================================================================
+# v5.7 Key Improvements over v5.6:
+# =============================================================================
+#
+# 1. STATENET v3 (METRIC-AWARE):
+#    - Input: 14D (was 12D) - adds r_A, r_B ranking correlations
+#    - Output: 5D (was 4D) - adds delta_ranking_weight
+#    - Wider hidden layers (48 vs 32) for richer representations
+#    - Metric attention head for state dimension weighting
+#
+# 2. DYNAMIC RANKING WEIGHT:
+#    - StateNet learns to modulate ranking loss weight based on current state
+#    - When coverage is stable but r is low: increase ranking weight
+#    - When r is high but coverage is dropping: decrease ranking weight
+#    - Creates unified optimization that maximizes both objectives
+#
+# 3. RANKING CORRELATION TRACKING:
+#    - EMA tracking of r_A and r_B for trend analysis
+#    - Exposed in model.get_metric_state() for logging
+#
+# 4. ARCHITECTURAL INSIGHT:
+#    - Same pattern that solved coverage collapse (v2: add coverage signals)
+#    - Now solves r-coverage tradeoff (v3: add ranking signals)
+#    - StateNet becomes a "meta-optimizer" that balances competing objectives
+#
+# =============================================================================

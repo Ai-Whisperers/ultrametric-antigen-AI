@@ -7,6 +7,8 @@ This module contains all loss computation separated from model architecture:
 - Repulsion loss
 - Entropy alignment
 - Gradient normalization
+- p-Adic metric loss (Phase 1A)
+- p-Adic norm loss (Phase 1B)
 
 Single responsibility: Loss computation only.
 """
@@ -14,7 +16,9 @@ Single responsibility: Loss computation only.
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from typing import Dict, Any
+from typing import Dict, Any, Optional
+
+from .padic_losses import PAdicMetricLoss, PAdicRankingLoss, PAdicNormLoss
 
 
 class ReconstructionLoss(nn.Module):
@@ -143,24 +147,55 @@ class DualVAELoss(nn.Module):
     - Repulsion loss for VAE-B
     - Entropy alignment between VAEs
     - Gradient normalization
+    - p-Adic metric loss (Phase 1A) - aligns latent geometry to 3-adic metric
+    - p-Adic norm loss (Phase 1B) - enforces MSB/LSB hierarchy
     """
 
     def __init__(
         self,
         free_bits: float = 0.0,
-        repulsion_sigma: float = 0.5
+        repulsion_sigma: float = 0.5,
+        padic_config: Optional[Dict[str, Any]] = None
     ):
         """Initialize Dual VAE loss.
 
         Args:
             free_bits: Free bits per dimension for KL (0.0 = disabled)
             repulsion_sigma: Bandwidth for repulsion loss
+            padic_config: Configuration for p-adic losses (from config['padic_losses'])
         """
         super().__init__()
         self.reconstruction_loss = ReconstructionLoss()
         self.kl_loss = KLDivergenceLoss(free_bits)
         self.entropy_loss = EntropyRegularization()
         self.repulsion_loss = RepulsionLoss(repulsion_sigma)
+
+        # p-Adic losses (Phase 1A/1B from implement.md)
+        self.padic_config = padic_config or {}
+        self.enable_metric_loss = self.padic_config.get('enable_metric_loss', False)
+        self.enable_ranking_loss = self.padic_config.get('enable_ranking_loss', False)
+        self.enable_norm_loss = self.padic_config.get('enable_norm_loss', False)
+
+        # Phase 1A: Metric loss (MSE-based, for small scale mismatches)
+        if self.enable_metric_loss:
+            self.padic_metric_loss = PAdicMetricLoss(
+                scale=self.padic_config.get('metric_loss_scale', 1.0),
+                n_pairs=self.padic_config.get('metric_n_pairs', 1000)
+            )
+            self.metric_loss_weight = self.padic_config.get('metric_loss_weight', 0.1)
+
+        # Phase 1A-alt: Ranking loss (triplet-based, for large scale mismatches)
+        if self.enable_ranking_loss:
+            self.padic_ranking_loss = PAdicRankingLoss(
+                margin=self.padic_config.get('ranking_margin', 0.1),
+                n_triplets=self.padic_config.get('ranking_n_triplets', 500)
+            )
+            self.ranking_loss_weight = self.padic_config.get('ranking_loss_weight', 0.5)
+
+        # Phase 1B: Norm loss
+        if self.enable_norm_loss:
+            self.padic_norm_loss = PAdicNormLoss(latent_dim=16)
+            self.norm_loss_weight = self.padic_config.get('norm_loss_weight', 0.05)
 
     def forward(
         self,
@@ -174,7 +209,8 @@ class DualVAELoss(nn.Module):
         grad_norm_A_ema: torch.Tensor,
         grad_norm_B_ema: torch.Tensor,
         gradient_balance: bool,
-        training: bool
+        training: bool,
+        batch_indices: Optional[torch.Tensor] = None
     ) -> Dict[str, Any]:
         """Compute complete Dual VAE loss.
 
@@ -190,6 +226,7 @@ class DualVAELoss(nn.Module):
             grad_norm_B_ema: EMA of VAE-B gradient norm
             gradient_balance: Whether to apply gradient balancing
             training: Whether in training mode
+            batch_indices: Operation indices for p-adic losses (batch_size,)
 
         Returns:
             Dictionary of losses and metrics
@@ -231,12 +268,39 @@ class DualVAELoss(nn.Module):
         # Entropy alignment
         entropy_align = torch.abs(outputs['H_A'] - outputs['H_B'])
 
-        # Total loss
+        # Total loss (base)
         total_loss = (
             lambda1 * loss_A * grad_scale_A +
             lambda2 * loss_B * grad_scale_B +
             lambda3 * entropy_align
         )
+
+        # p-Adic losses (Phase 1A/1B from implement.md)
+        padic_metric_A = torch.tensor(0.0, device=x.device)
+        padic_metric_B = torch.tensor(0.0, device=x.device)
+        padic_ranking_A = torch.tensor(0.0, device=x.device)
+        padic_ranking_B = torch.tensor(0.0, device=x.device)
+        padic_norm_A = torch.tensor(0.0, device=x.device)
+        padic_norm_B = torch.tensor(0.0, device=x.device)
+
+        if batch_indices is not None:
+            # Phase 1A: p-Adic Metric Loss (MSE-based)
+            if self.enable_metric_loss:
+                padic_metric_A = self.padic_metric_loss(outputs['z_A'], batch_indices)
+                padic_metric_B = self.padic_metric_loss(outputs['z_B'], batch_indices)
+                total_loss = total_loss + self.metric_loss_weight * (padic_metric_A + padic_metric_B)
+
+            # Phase 1A-alt: p-Adic Ranking Loss (triplet-based, better for scale mismatch)
+            if self.enable_ranking_loss:
+                padic_ranking_A = self.padic_ranking_loss(outputs['z_A'], batch_indices)
+                padic_ranking_B = self.padic_ranking_loss(outputs['z_B'], batch_indices)
+                total_loss = total_loss + self.ranking_loss_weight * (padic_ranking_A + padic_ranking_B)
+
+            # Phase 1B: p-Adic Norm Loss
+            if self.enable_norm_loss:
+                padic_norm_A = self.padic_norm_loss(outputs['z_A'], batch_indices)
+                padic_norm_B = self.padic_norm_loss(outputs['z_B'], batch_indices)
+                total_loss = total_loss + self.norm_loss_weight * (padic_norm_A + padic_norm_B)
 
         return {
             'loss': total_loss,
@@ -255,5 +319,12 @@ class DualVAELoss(nn.Module):
             'grad_scale_B': grad_scale_B.item() if isinstance(grad_scale_B, torch.Tensor) else grad_scale_B,
             'lambda1': lambda1,
             'lambda2': lambda2,
-            'lambda3': lambda3
+            'lambda3': lambda3,
+            # p-Adic losses (Phase 1A/1B)
+            'padic_metric_A': padic_metric_A.item() if torch.is_tensor(padic_metric_A) else padic_metric_A,
+            'padic_metric_B': padic_metric_B.item() if torch.is_tensor(padic_metric_B) else padic_metric_B,
+            'padic_ranking_A': padic_ranking_A.item() if torch.is_tensor(padic_ranking_A) else padic_ranking_A,
+            'padic_ranking_B': padic_ranking_B.item() if torch.is_tensor(padic_ranking_B) else padic_ranking_B,
+            'padic_norm_A': padic_norm_A.item() if torch.is_tensor(padic_norm_A) else padic_norm_A,
+            'padic_norm_B': padic_norm_B.item() if torch.is_tensor(padic_norm_B) else padic_norm_B
         }
