@@ -3,8 +3,9 @@
 This module implements losses from implement.md Phase 1A/1B:
 - PAdicMetricLoss: Force latent distances to match 3-adic distances
 - PAdicNormLoss: Enforce MSB/LSB hierarchy via p-adic norm
+- PAdicRankingLossV2: Hard negative mining + hierarchical margin (v5.8)
 
-Goal: Boost 3-adic correlation from r=0.62 to r>0.9
+Goal: Boost 3-adic correlation from r=0.62 to r>0.9+
 
 Single responsibility: p-Adic geometry alignment.
 """
@@ -12,7 +13,7 @@ Single responsibility: p-Adic geometry alignment.
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from typing import Optional
+from typing import Optional, Tuple
 import functools
 
 
@@ -90,6 +91,44 @@ def compute_3adic_distance_batch(
         distances[nonzero_mask] = torch.pow(3.0, -v)
 
     return distances
+
+
+def compute_3adic_valuation_batch(
+    idx_i: torch.Tensor,
+    idx_j: torch.Tensor
+) -> torch.Tensor:
+    """Compute 3-adic valuations for batches of index pairs.
+
+    The valuation v_3(|i-j|) = max k such that 3^k divides |i-j|.
+
+    Args:
+        idx_i: First indices (batch,)
+        idx_j: Second indices (batch,)
+
+    Returns:
+        3-adic valuations (batch,) - integers from 0 to 9
+    """
+    diff = torch.abs(idx_i.long() - idx_j.long())
+    valuations = torch.zeros_like(diff, dtype=torch.float32)
+
+    nonzero_mask = diff > 0
+    if nonzero_mask.any():
+        remaining = diff[nonzero_mask].float()
+        v = torch.zeros_like(remaining)
+
+        for _ in range(9):
+            divisible = (remaining % 3 == 0)
+            if not divisible.any():
+                break
+            v[divisible] += 1
+            remaining[divisible] = remaining[divisible] // 3
+
+        valuations[nonzero_mask] = v
+
+    # Zero differences get max valuation (infinite in theory, but 9 in practice)
+    valuations[~nonzero_mask] = 9.0
+
+    return valuations
 
 
 class PAdicMetricLoss(nn.Module):
@@ -248,6 +287,286 @@ class PAdicRankingLoss(nn.Module):
         ).mean()
 
         return loss
+
+
+class PAdicRankingLossV2(nn.Module):
+    """Enhanced p-Adic Ranking Loss with Hard Negative Mining and Hierarchical Margin.
+
+    Key improvements over PAdicRankingLoss:
+    1. Hard negative mining: Focus on triplets that violate the ranking
+    2. Hierarchical margin: Scale margin by valuation difference
+    3. Semi-hard strategy: Select negatives that are close but wrong
+
+    This addresses two bottlenecks:
+    - Random sampling misses the hardest (most informative) triplets
+    - Fixed margin ignores the multi-scale nature of 3-adic distances
+    """
+
+    def __init__(
+        self,
+        base_margin: float = 0.05,
+        margin_scale: float = 0.15,
+        n_triplets: int = 500,
+        hard_negative_ratio: float = 0.5,
+        semi_hard: bool = True
+    ):
+        """Initialize Enhanced p-Adic Ranking Loss.
+
+        Args:
+            base_margin: Minimum margin for all triplets
+            margin_scale: Scale factor for valuation-based margin adjustment
+            n_triplets: Number of triplets to sample per batch
+            hard_negative_ratio: Fraction of triplets that should be hard negatives
+            semi_hard: If True, use semi-hard negatives (close but wrong ordering)
+        """
+        super().__init__()
+        self.base_margin = base_margin
+        self.margin_scale = margin_scale
+        self.n_triplets = n_triplets
+        self.hard_negative_ratio = hard_negative_ratio
+        self.semi_hard = semi_hard
+
+    def forward(
+        self,
+        z: torch.Tensor,
+        batch_indices: torch.Tensor
+    ) -> Tuple[torch.Tensor, dict]:
+        """Compute enhanced p-Adic ranking loss.
+
+        Args:
+            z: Latent codes (batch_size, latent_dim)
+            batch_indices: Operation indices for each sample (batch_size,)
+
+        Returns:
+            Tuple of (loss, metrics_dict)
+        """
+        batch_size = z.size(0)
+        device = z.device
+
+        if batch_size < 3:
+            return torch.tensor(0.0, device=device), {'hard_ratio': 0.0, 'violations': 0}
+
+        n_triplets = min(self.n_triplets, batch_size)
+        n_hard = int(n_triplets * self.hard_negative_ratio)
+        n_random = n_triplets - n_hard
+
+        # === Phase 1: Hard Negative Mining ===
+        if n_hard > 0:
+            hard_triplets = self._mine_hard_negatives(z, batch_indices, n_hard)
+        else:
+            hard_triplets = None
+
+        # === Phase 2: Random Triplets (for diversity) ===
+        if n_random > 0:
+            random_triplets = self._sample_random_triplets(z, batch_indices, n_random)
+        else:
+            random_triplets = None
+
+        # === Combine triplets ===
+        all_triplets = []
+        if hard_triplets is not None and hard_triplets[0].size(0) > 0:
+            all_triplets.append(hard_triplets)
+        if random_triplets is not None and random_triplets[0].size(0) > 0:
+            all_triplets.append(random_triplets)
+
+        if len(all_triplets) == 0:
+            return torch.tensor(0.0, device=device), {'hard_ratio': 0.0, 'violations': 0}
+
+        # Concatenate all triplets
+        anchor_idx = torch.cat([t[0] for t in all_triplets])
+        pos_idx = torch.cat([t[1] for t in all_triplets])
+        neg_idx = torch.cat([t[2] for t in all_triplets])
+        v_pos = torch.cat([t[3] for t in all_triplets])
+        v_neg = torch.cat([t[4] for t in all_triplets])
+
+        # === Compute Hierarchical Margin ===
+        # Larger valuation difference = easier distinction = larger margin
+        v_diff = torch.abs(v_pos - v_neg)
+        hierarchical_margin = self.base_margin + self.margin_scale * v_diff
+
+        # === Compute Latent Distances ===
+        d_anchor_pos = torch.norm(z[anchor_idx] - z[pos_idx], dim=1)
+        d_anchor_neg = torch.norm(z[anchor_idx] - z[neg_idx], dim=1)
+
+        # === Triplet Loss with Hierarchical Margin ===
+        # We want d_pos < d_neg (positive is 3-adically closer)
+        violations = d_anchor_pos - d_anchor_neg + hierarchical_margin
+        loss = F.relu(violations).mean()
+
+        # Compute metrics
+        n_violations = (violations > 0).sum().item()
+        actual_hard_ratio = n_hard / max(anchor_idx.size(0), 1)
+
+        metrics = {
+            'hard_ratio': actual_hard_ratio,
+            'violations': n_violations,
+            'mean_margin': hierarchical_margin.mean().item(),
+            'total_triplets': anchor_idx.size(0)
+        }
+
+        return loss, metrics
+
+    def _mine_hard_negatives(
+        self,
+        z: torch.Tensor,
+        batch_indices: torch.Tensor,
+        n_hard: int
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+        """Mine hard negative triplets.
+
+        Hard negatives are pairs where:
+        - pos is 3-adically closer than neg (v_pos > v_neg)
+        - BUT latent distance violates this (d_pos >= d_neg)
+
+        Semi-hard negatives additionally require:
+        - d_neg < d_pos + margin (negative is within margin)
+        """
+        batch_size = z.size(0)
+        device = z.device
+
+        # Sample candidate anchors
+        n_candidates = min(batch_size, n_hard * 4)
+        anchor_candidates = torch.randint(0, batch_size, (n_candidates,), device=device)
+
+        # For each anchor, find pos/neg that violate ranking
+        hard_anchors = []
+        hard_pos = []
+        hard_neg = []
+        hard_v_pos = []
+        hard_v_neg = []
+
+        # Compute all pairwise latent distances for the batch
+        with torch.no_grad():
+            d_latent = torch.cdist(z, z, p=2)
+
+        for anchor in anchor_candidates:
+            if len(hard_anchors) >= n_hard:
+                break
+
+            anchor_idx_val = batch_indices[anchor]
+
+            # Compute 3-adic valuations from anchor to all others
+            v_to_all = compute_3adic_valuation_batch(
+                anchor_idx_val.expand(batch_size),
+                batch_indices
+            )
+
+            # Find candidate positives (high valuation = close in 3-adic)
+            # and negatives (low valuation = far in 3-adic)
+            v_sorted_idx = torch.argsort(v_to_all, descending=True)
+
+            # Skip self
+            v_sorted_idx = v_sorted_idx[v_sorted_idx != anchor]
+
+            if len(v_sorted_idx) < 2:
+                continue
+
+            # Top half are potential positives, bottom half are potential negatives
+            n_half = len(v_sorted_idx) // 2
+            pos_candidates = v_sorted_idx[:max(n_half, 1)]
+            neg_candidates = v_sorted_idx[max(n_half, 1):]
+
+            if len(neg_candidates) == 0:
+                continue
+
+            # Find hard negatives: neg is latent-close but 3-adically far
+            for pos in pos_candidates[:3]:  # Check top 3 positives
+                d_ap = d_latent[anchor, pos]
+                v_pos_val = v_to_all[pos]
+
+                # Find negatives where d_an <= d_ap (violation) or d_an < d_ap + margin (semi-hard)
+                for neg in neg_candidates:
+                    d_an = d_latent[anchor, neg]
+                    v_neg_val = v_to_all[neg]
+
+                    # Must have v_pos > v_neg (pos is 3-adically closer)
+                    if v_pos_val <= v_neg_val:
+                        continue
+
+                    # Check for violation or semi-hard condition
+                    if self.semi_hard:
+                        # Semi-hard: d_ap < d_an < d_ap + margin OR d_an < d_ap
+                        is_hard = d_an < d_ap + self.base_margin + self.margin_scale * (v_pos_val - v_neg_val)
+                    else:
+                        # Pure hard: d_an <= d_ap (actual violation)
+                        is_hard = d_an <= d_ap
+
+                    if is_hard:
+                        hard_anchors.append(anchor)
+                        hard_pos.append(pos)
+                        hard_neg.append(neg)
+                        hard_v_pos.append(v_pos_val)
+                        hard_v_neg.append(v_neg_val)
+
+                        if len(hard_anchors) >= n_hard:
+                            break
+                if len(hard_anchors) >= n_hard:
+                    break
+
+        if len(hard_anchors) == 0:
+            return (
+                torch.tensor([], dtype=torch.long, device=device),
+                torch.tensor([], dtype=torch.long, device=device),
+                torch.tensor([], dtype=torch.long, device=device),
+                torch.tensor([], device=device),
+                torch.tensor([], device=device)
+            )
+
+        return (
+            torch.stack(hard_anchors),
+            torch.stack(hard_pos),
+            torch.stack(hard_neg),
+            torch.stack(hard_v_pos),
+            torch.stack(hard_v_neg)
+        )
+
+    def _sample_random_triplets(
+        self,
+        z: torch.Tensor,
+        batch_indices: torch.Tensor,
+        n_random: int
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+        """Sample random valid triplets (for diversity)."""
+        batch_size = z.size(0)
+        device = z.device
+
+        # Sample random indices
+        anchor_idx = torch.randint(0, batch_size, (n_random * 2,), device=device)
+        pos_idx = torch.randint(0, batch_size, (n_random * 2,), device=device)
+        neg_idx = torch.randint(0, batch_size, (n_random * 2,), device=device)
+
+        # Avoid degenerate triplets
+        valid = (anchor_idx != pos_idx) & (anchor_idx != neg_idx) & (pos_idx != neg_idx)
+        anchor_idx = anchor_idx[valid][:n_random]
+        pos_idx = pos_idx[valid][:n_random]
+        neg_idx = neg_idx[valid][:n_random]
+
+        if len(anchor_idx) == 0:
+            return (
+                torch.tensor([], dtype=torch.long, device=device),
+                torch.tensor([], dtype=torch.long, device=device),
+                torch.tensor([], dtype=torch.long, device=device),
+                torch.tensor([], device=device),
+                torch.tensor([], device=device)
+            )
+
+        # Compute valuations
+        v_pos = compute_3adic_valuation_batch(
+            batch_indices[anchor_idx], batch_indices[pos_idx]
+        )
+        v_neg = compute_3adic_valuation_batch(
+            batch_indices[anchor_idx], batch_indices[neg_idx]
+        )
+
+        # Filter to valid triplets (pos is 3-adically closer)
+        valid_order = v_pos > v_neg
+        anchor_idx = anchor_idx[valid_order]
+        pos_idx = pos_idx[valid_order]
+        neg_idx = neg_idx[valid_order]
+        v_pos = v_pos[valid_order]
+        v_neg = v_neg[valid_order]
+
+        return anchor_idx, pos_idx, neg_idx, v_pos, v_neg
 
 
 class PAdicNormLoss(nn.Module):

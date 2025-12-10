@@ -7,6 +7,7 @@ This module contains loss computation separated from model architecture:
 - RepulsionLoss: Latent space repulsion
 - DualVAELoss: Aggregated loss for dual VAE system
 - PAdicMetricLoss: 3-adic metric alignment (Phase 1A)
+- PAdicRankingLossV2: Hard negative mining + hierarchical margin (v5.8)
 - PAdicNormLoss: MSB/LSB hierarchy regularizer (Phase 1B)
 - AdaptiveRankingLoss: Multi-scale ranking loss for ultrametric approximation
 - HierarchicalNormLoss: MSB/LSB variance hierarchy
@@ -26,6 +27,7 @@ from .dual_vae_loss import (
 from .padic_losses import (
     PAdicMetricLoss,
     PAdicRankingLoss,
+    PAdicRankingLossV2,
     PAdicNormLoss
 )
 
@@ -46,6 +48,7 @@ __all__ = [
     'DualVAELoss',
     'PAdicMetricLoss',
     'PAdicRankingLoss',
+    'PAdicRankingLossV2',
     'PAdicNormLoss',
     'AdaptiveRankingLoss',
     'HierarchicalNormLoss',
