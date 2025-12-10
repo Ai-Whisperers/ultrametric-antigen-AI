@@ -293,6 +293,9 @@ class TrainingMonitor:
                 'delta_lambda3': train_losses.get('delta_lambda3', 0)
             }, epoch)
 
+        # Flush to ensure real-time visibility in dashboard
+        self.writer.flush()
+
     def log_histograms(
         self,
         epoch: int,
@@ -312,6 +315,9 @@ class TrainingMonitor:
                 self.writer.add_histogram(f'Weights/{name}', param.data, epoch)
                 if param.grad is not None:
                     self.writer.add_histogram(f'Gradients/{name}', param.grad, epoch)
+
+        # Flush histograms immediately
+        self.writer.flush()
 
     def close(self) -> None:
         """Close TensorBoard writer and flush all pending events."""
