@@ -136,17 +136,28 @@ class TernaryDecoderB(nn.Module):
 
 
 class StateNet(nn.Module):
-    """Autodecoder StateNet for learned hyperparameter modulation.
+    """Coverage-aware StateNet v2 for learned hyperparameter modulation.
 
     Compresses training state into latent representation, then decodes
     to produce corrections for learning rate and lambda values.
 
-    Input: state vector [H_A, H_B, KL_A, KL_B, grad_ratio, ρ, λ₁, λ₂, λ₃] (9D)
+    v2 UPGRADE: Now includes coverage feedback to prevent collapse blindness.
+    The original StateNet (v1) only saw entropy/KL signals and couldn't detect
+    the 4,028-operation coverage collapse during epochs 0-40.
+
+    Input: state vector (12D):
+        [H_A, H_B, KL_A, KL_B, grad_ratio, ρ, λ₁, λ₂, λ₃,
+         coverage_A_norm, coverage_B_norm, missing_ops_norm]
+
+        - coverage_A_norm: VAE-A coverage / 19683 (normalized to [0, 1])
+        - coverage_B_norm: VAE-B coverage / 19683 (normalized to [0, 1])
+        - missing_ops_norm: (19683 - max(cov_A, cov_B)) / 19683 (normalized)
+
     Latent: compressed state representation (8D)
     Output: corrections [Δlr, Δλ₁, Δλ₂, Δλ₃] (4D)
     """
 
-    def __init__(self, state_dim: int = 9, hidden_dim: int = 32, latent_dim: int = 8):
+    def __init__(self, state_dim: int = 12, hidden_dim: int = 32, latent_dim: int = 8):
         super().__init__()
 
         self.state_dim = state_dim
@@ -171,7 +182,7 @@ class StateNet(nn.Module):
     def forward(self, state: torch.Tensor) -> tuple:
         """
         Args:
-            state: Training state tensor [batch, 9] or [9]
+            state: Training state tensor [batch, 12] or [12]
 
         Returns:
             corrections: [Δlr, Δλ₁, Δλ₂, Δλ₃]
@@ -235,9 +246,9 @@ class DualNeuralVAEV5(nn.Module):
         self.encoder_B = TernaryEncoderB(input_dim, latent_dim)
         self.decoder_B = TernaryDecoderB(latent_dim, input_dim)
 
-        # StateNet controller
+        # StateNet v2 controller (coverage-aware, 12D input)
         if self.use_statenet:
-            self.state_net = StateNet(state_dim=9, hidden_dim=32, latent_dim=8)
+            self.state_net = StateNet(state_dim=12, hidden_dim=32, latent_dim=8)
 
         # Controller state
         self.H_A_prev = None
@@ -345,15 +356,43 @@ class DualNeuralVAEV5(nn.Module):
         H_B: float,
         kl_A: float,
         kl_B: float,
-        grad_ratio: float
+        grad_ratio: float,
+        coverage_A: int = 0,
+        coverage_B: int = 0
     ) -> tuple:
-        """Apply StateNet corrections to learning rate and lambdas."""
+        """Apply StateNet v2 corrections to learning rate and lambdas.
+
+        v2 UPGRADE: Now includes coverage feedback in state vector.
+        This allows StateNet to detect and respond to coverage collapse
+        proactively rather than reacting only to entropy/KL signals.
+
+        Args:
+            lr: Current learning rate
+            H_A: VAE-A entropy
+            H_B: VAE-B entropy
+            kl_A: VAE-A KL divergence
+            kl_B: VAE-B KL divergence
+            grad_ratio: Gradient norm ratio (A/B)
+            coverage_A: VAE-A unique operations count (0-19683)
+            coverage_B: VAE-B unique operations count (0-19683)
+
+        Returns:
+            Tuple of (corrected_lr, delta_lr, delta_lambda1, delta_lambda2, delta_lambda3)
+        """
         if not self.use_statenet or not self.training:
             return lr, 0.0, 0.0, 0.0, 0.0
 
+        # Normalize coverage values to [0, 1] for stable training
+        TOTAL_OPS = 19683
+        coverage_A_norm = coverage_A / TOTAL_OPS
+        coverage_B_norm = coverage_B / TOTAL_OPS
+        missing_ops_norm = (TOTAL_OPS - max(coverage_A, coverage_B)) / TOTAL_OPS
+
+        # Build 12D state vector with coverage feedback
         state_vec = torch.tensor(
             [H_A, H_B, kl_A, kl_B, grad_ratio, self.rho,
-             self.lambda1, self.lambda2, self.lambda3],
+             self.lambda1, self.lambda2, self.lambda3,
+             coverage_A_norm, coverage_B_norm, missing_ops_norm],
             device=self.grad_norm_A_ema.device,
             dtype=torch.float32
         )

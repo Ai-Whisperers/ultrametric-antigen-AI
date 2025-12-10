@@ -191,15 +191,21 @@ class TernaryVAETrainer:
             losses['rho'] = self.model.rho
             losses['phase'] = self.model.current_phase
 
-            # Apply StateNet corrections once per epoch
+            # Apply StateNet v2 corrections once per epoch (with coverage feedback)
             if self.model.use_statenet and batch_idx == 0:
+                # Get latest coverage from monitor history for StateNet v2
+                coverage_A = self.monitor.coverage_A_history[-1] if self.monitor.coverage_A_history else 0
+                coverage_B = self.monitor.coverage_B_history[-1] if self.monitor.coverage_B_history else 0
+
                 corrected_lr, *deltas = self.model.apply_statenet_corrections(
                     lr_scheduled,
                     losses['H_A'].item() if torch.is_tensor(losses['H_A']) else losses['H_A'],
                     losses['H_B'].item() if torch.is_tensor(losses['H_B']) else losses['H_B'],
                     losses['kl_A'].item(),
                     losses['kl_B'].item(),
-                    (self.model.grad_norm_B_ema / (self.model.grad_norm_A_ema + 1e-8)).item()
+                    (self.model.grad_norm_B_ema / (self.model.grad_norm_A_ema + 1e-8)).item(),
+                    coverage_A=coverage_A,
+                    coverage_B=coverage_B
                 )
 
                 for param_group in self.optimizer.param_groups:
