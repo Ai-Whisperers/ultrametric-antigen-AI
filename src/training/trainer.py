@@ -4,6 +4,7 @@ This trainer delegates to specialized components for:
 - Scheduling: TemperatureScheduler, BetaScheduler, LearningRateScheduler
 - Monitoring: TrainingMonitor
 - Checkpointing: CheckpointManager
+- Compilation: torch.compile (TorchInductor) for 1.4-2x speedup
 
 Single responsibility: Orchestrate training loop only.
 """
@@ -12,8 +13,9 @@ import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from collections import defaultdict
+import sys
 
 from .schedulers import TemperatureScheduler, BetaScheduler, LearningRateScheduler
 from .monitor import TrainingMonitor
@@ -40,6 +42,28 @@ class TernaryVAETrainer:
         self.device = device
         self.epoch = 0
 
+        # TorchInductor compilation (PyTorch 2.x)
+        self.compiled = False
+        compile_config = config.get('torch_compile', {})
+        if compile_config.get('enabled', False) and hasattr(torch, 'compile'):
+            try:
+                backend = compile_config.get('backend', 'inductor')
+                mode = compile_config.get('mode', 'default')
+                fullgraph = compile_config.get('fullgraph', False)
+
+                self.model = torch.compile(
+                    self.model,
+                    backend=backend,
+                    mode=mode,
+                    fullgraph=fullgraph
+                )
+                self.compiled = True
+                print(f"torch.compile enabled: backend={backend}, mode={mode}")
+            except Exception as e:
+                print(f"Warning: torch.compile failed ({e}), falling back to eager mode")
+        elif compile_config.get('enabled', False):
+            print("Warning: torch.compile requested but not available (PyTorch < 2.0)")
+
         # Initialize optimizer
         self.optimizer = optim.AdamW(
             self.model.parameters(),
@@ -63,7 +87,11 @@ class TernaryVAETrainer:
             config['optimizer']['lr_schedule']
         )
 
-        self.monitor = TrainingMonitor(config['eval_num_samples'])
+        self.monitor = TrainingMonitor(
+            eval_num_samples=config['eval_num_samples'],
+            tensorboard_dir=config.get('tensorboard_dir'),
+            experiment_name=config.get('experiment_name')
+        )
 
         self.checkpoint_manager = CheckpointManager(
             Path(config['checkpoint_dir']),
@@ -98,6 +126,7 @@ class TernaryVAETrainer:
         print(f"Gradient balance: {self.config['model'].get('gradient_balance', True)}")
         print(f"Adaptive scheduling: {self.config['model'].get('adaptive_scheduling', True)}")
         print(f"StateNet enabled: {self.config['model'].get('use_statenet', True)}")
+        print(f"torch.compile: {'enabled' if self.compiled else 'disabled'}")
 
     def _update_model_parameters(self, epoch: int) -> None:
         """Update model's adaptive parameters for current epoch.
@@ -307,7 +336,7 @@ class TernaryVAETrainer:
                 unique_A, unique_B
             )
 
-            # Log epoch
+            # Log epoch (console)
             self.monitor.log_epoch(
                 epoch, total_epochs,
                 train_losses, val_losses,
@@ -316,6 +345,16 @@ class TernaryVAETrainer:
                 self.model.use_statenet,
                 self.model.grad_balance_achieved
             )
+
+            # Log to TensorBoard (if enabled)
+            self.monitor.log_tensorboard(
+                epoch, train_losses, val_losses,
+                unique_A, unique_B, cov_A, cov_B
+            )
+
+            # Log weight histograms every 10 epochs (expensive)
+            if epoch % 10 == 0:
+                self.monitor.log_histograms(epoch, self.model)
 
             # Save checkpoint
             metadata = {
@@ -344,5 +383,6 @@ class TernaryVAETrainer:
                 print(f"\n⚠️  Early stopping triggered (patience={self.config['patience']})")
                 break
 
-        # Print summary
+        # Print summary and cleanup
         self.monitor.print_training_summary()
+        self.monitor.close()

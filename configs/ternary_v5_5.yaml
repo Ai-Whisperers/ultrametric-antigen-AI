@@ -129,6 +129,22 @@ eval_num_samples: 195000           # Comprehensive evaluation (10x exhaustive da
 eval_interval: 1                   # Evaluate every epoch (v5.4: every 5)
 coverage_check_interval: 1         # Check coverage every epoch (v5.4: every 5)
 
+# TensorBoard (local, IP-safe visualization)
+tensorboard_dir: runs              # Base directory for TensorBoard logs
+experiment_name: null              # Auto-generate timestamp if null
+# Launch with: tensorboard --logdir runs
+
+# TorchInductor compilation (PyTorch 2.x, ~1.4-2x speedup)
+torch_compile:
+  enabled: true                    # Enable torch.compile (requires PyTorch 2.0+)
+  backend: inductor                # Backend: inductor (default), cudagraphs, eager
+  mode: default                    # Mode: default, reduce-overhead, max-autotune
+  fullgraph: false                 # Require full graph (no graph breaks)
+# Modes:
+#   - default: Good balance of compile time and runtime performance
+#   - reduce-overhead: Reduces Python overhead, good for small models
+#   - max-autotune: Maximum performance, longer compile time (uses Triton autotuning)
+
 # Data splits
 train_split: 0.8
 val_split: 0.1
