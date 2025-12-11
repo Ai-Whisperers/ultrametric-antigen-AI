@@ -36,14 +36,16 @@ model:
   gradient_balance: true
   adaptive_scheduling: true
 
-  # StateNet v4 with hyperbolic homeostasis
+  # StateNet v4 with hyperbolic homeostasis (18D input, 7D output)
+  # Inherits v5.6 (12D: H, KL, grad, rho, lambda, coverage)
+  # Inherits v5.7 (+2D: r_A, r_B ranking correlations, +1D: delta_ranking)
+  # v5.10 adds (+4D: mean_radius_A/B, prior_sigma, curvature, +2D: delta_sigma, delta_curvature)
   use_statenet: true
-  statenet_lr_scale: 0.1
-  statenet_lambda_scale: 0.02
-  statenet_ranking_scale: 0.3
-  # v5.10: StateNet also modulates hyperbolic params
-  statenet_hyp_sigma_scale: 0.05      # Modulates prior_sigma
-  statenet_hyp_curvature_scale: 0.02  # Modulates curvature
+  statenet_lr_scale: 0.1              # Learning rate correction scale
+  statenet_lambda_scale: 0.02         # Lambda (1,2,3) correction scale
+  statenet_ranking_scale: 0.3         # v5.7: ranking weight correction scale
+  statenet_hyp_sigma_scale: 0.05      # v5.10: prior_sigma correction scale
+  statenet_hyp_curvature_scale: 0.02  # v5.10: curvature correction scale
 
 # Dataset generation
 ternary_dataset:

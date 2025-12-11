@@ -25,7 +25,7 @@ from datetime import datetime
 
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
-from src.models.ternary_vae_v5_6 import DualNeuralVAEV5
+from src.models.ternary_vae_v5_10 import DualNeuralVAEV5_10, StateNetV4
 from src.training import TernaryVAETrainer
 from src.data import generate_all_ternary_operations, TernaryOperationDataset
 from src.losses.padic_losses import PAdicRankingLossHyperbolic
@@ -548,9 +548,9 @@ def main():
         num_workers=config['num_workers']
     )
 
-    # Initialize model (v5.6 backbone)
+    # Initialize model (v5.10 with StateNet v4)
     model_config = config['model']
-    model = DualNeuralVAEV5(
+    model = DualNeuralVAEV5_10(
         input_dim=model_config['input_dim'],
         latent_dim=model_config['latent_dim'],
         rho_min=model_config['rho_min'],
@@ -562,7 +562,10 @@ def main():
         adaptive_scheduling=model_config.get('adaptive_scheduling', True),
         use_statenet=model_config.get('use_statenet', True),
         statenet_lr_scale=model_config.get('statenet_lr_scale', 0.1),
-        statenet_lambda_scale=model_config.get('statenet_lambda_scale', 0.02)
+        statenet_lambda_scale=model_config.get('statenet_lambda_scale', 0.02),
+        statenet_ranking_scale=model_config.get('statenet_ranking_scale', 0.3),
+        statenet_hyp_sigma_scale=model_config.get('statenet_hyp_sigma_scale', 0.05),
+        statenet_hyp_curvature_scale=model_config.get('statenet_hyp_curvature_scale', 0.02)
     )
 
     # Initialize base trainer
