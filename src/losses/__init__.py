@@ -28,6 +28,7 @@ from .padic_losses import (
     PAdicMetricLoss,
     PAdicRankingLoss,
     PAdicRankingLossV2,
+    PAdicRankingLossHyperbolic,
     PAdicNormLoss
 )
 
@@ -49,6 +50,7 @@ __all__ = [
     'PAdicMetricLoss',
     'PAdicRankingLoss',
     'PAdicRankingLossV2',
+    'PAdicRankingLossHyperbolic',
     'PAdicNormLoss',
     'AdaptiveRankingLoss',
     'HierarchicalNormLoss',

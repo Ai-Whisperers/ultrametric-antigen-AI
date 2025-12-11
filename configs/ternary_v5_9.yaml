@@ -1,0 +1,234 @@
+# Ternary VAE v5.9 - Hyperbolic Geometry + Continuous Feedback
+# Key innovations:
+#   1. PAdicRankingLossHyperbolic: Poincare distance in hyperbolic space
+#   2. Radial hierarchy: High valuation near origin, low valuation at boundary
+#   3. Continuous feedback: StateNet modulates ranking_weight dynamically
+#   4. No two-phase training - emergence through continuous adaptation
+# Goal: Achieve r>0.99 AND coverage>99.7% via hyperbolic ultrametric embedding
+
+# Model architecture (same backbone as v5.8)
+model:
+  input_dim: 9
+  latent_dim: 16
+
+  # Adaptive latent permeability (phase-scheduled)
+  rho_min: 0.1
+  rho_max: 0.7
+
+  # Adaptive entropy alignment (cyclic)
+  lambda3_base: 0.3
+  lambda3_amplitude: 0.15
+
+  # Collapse threshold
+  eps_kl: 0.0005
+
+  # Enable adaptive features
+  gradient_balance: true
+  adaptive_scheduling: true
+
+  # StateNet v3 with continuous feedback (upgraded)
+  use_statenet: true
+  statenet_lr_scale: 0.05
+  statenet_lambda_scale: 0.01
+  statenet_ranking_scale: 0.5      # Scale for ranking weight modulation
+
+# Dataset generation
+ternary_dataset:
+  num_samples: 19683
+  exhaustive: true
+  seed: 42
+
+# Training configuration
+seed: 42
+batch_size: 256
+num_workers: 0
+
+# Total training epochs
+total_epochs: 300
+
+# Unified optimizer
+optimizer:
+  type: adamw
+  lr_start: 0.001
+  weight_decay: 0.0001
+  lr_schedule:
+    - epoch: 0
+      lr: 0.001
+    - epoch: 100
+      lr: 0.0005
+    - epoch: 200
+      lr: 0.0003
+    - epoch: 270
+      lr: 0.0001
+
+# VAE-A parameters (chaotic, explores boundary of Poincare ball)
+vae_a:
+  beta_start: 0.3
+  beta_end: 0.8
+  beta_warmup_epochs: 50
+  temp_start: 1.0
+  temp_end: 0.3
+  temp_cyclic: true
+  temp_boost_amplitude: 0.5
+
+# VAE-B parameters (stable, anchors near origin of Poincare ball)
+vae_b:
+  beta_start: 0.0
+  beta_end: 0.5
+  beta_warmup_epochs: 50
+  temp_start: 0.9
+  temp_end: 0.2
+  temp_phase4: 0.3
+  entropy_weight: 0.05
+  repulsion_weight: 0.01
+
+# KL divergence free bits
+free_bits: 0.5
+
+# =============================================================================
+# CONTINUOUS FEEDBACK (v5.9 innovation - replaces two-phase training)
+# =============================================================================
+continuous_feedback:
+  enabled: true
+
+  # Sigmoid-based ranking weight modulation
+  # ranking_weight = base_weight * sigmoid(k * (coverage - threshold) + m * d_coverage/dt)
+  base_ranking_weight: 0.5         # Base weight before modulation
+  coverage_threshold: 90.0         # Target coverage percentage
+  coverage_sensitivity: 0.1        # k: sensitivity to coverage gap
+  coverage_trend_sensitivity: 2.0  # m: sensitivity to coverage trend
+
+  # Bounds to prevent extreme values
+  min_ranking_weight: 0.0          # Minimum effective weight
+  max_ranking_weight: 1.0          # Maximum effective weight
+
+  # EMA for coverage trend estimation
+  coverage_ema_alpha: 0.9          # Smoothing factor for d_coverage/dt
+
+# =============================================================================
+# HYPERBOLIC p-ADIC LOSSES (v5.9 innovation)
+# =============================================================================
+padic_losses:
+  # Metric loss (MSE-based - kept disabled)
+  metric_loss_weight: 0.1
+  metric_loss_scale: 1.0
+  metric_n_pairs: 1000
+  enable_metric_loss: false
+
+  # Hyperbolic Ranking Loss (NEW in v5.9)
+  enable_ranking_loss_hyperbolic: true
+  ranking_hyperbolic:
+    base_margin: 0.05              # Minimum margin for all triplets
+    margin_scale: 0.15             # Scale factor for valuation-based adjustment
+    n_triplets: 500                # Triplets per batch
+    hard_negative_ratio: 0.5       # 50% hard negatives, 50% random
+    curvature: 1.0                 # Poincare ball curvature (c=1)
+    radial_weight: 0.1             # Weight for radial hierarchy loss
+    max_norm: 0.95                 # Maximum radius in Poincare ball
+
+  # Legacy V2 ranking (disabled when hyperbolic is enabled)
+  enable_ranking_loss_v2: false
+
+  # Legacy V1 ranking (disabled)
+  enable_ranking_loss: false
+  ranking_loss_weight: 0.5
+  ranking_margin: 0.1
+  ranking_n_triplets: 500
+
+  # Norm regularizer (adjusted for hyperbolic)
+  norm_loss_weight: 0.03           # Reduced - radial loss handles hierarchy
+  enable_norm_loss: true
+
+# Controller parameters
+controller:
+  temp_lag: 30
+  beta_phase_lag: 0.785
+  entropy_ema_alpha: 0.9
+  dH_dt_threshold: 0.05
+
+# Training dynamics
+grad_clip: 1.0
+
+# Early stopping (relaxed for continuous feedback exploration)
+patience: 150
+min_delta: 0.0001
+coverage_plateau_patience: 150
+min_coverage_delta: 0.001
+
+# Logging and checkpointing
+log_interval: 1
+checkpoint_freq: 10
+checkpoint_dir: sandbox-training/checkpoints/v5_9
+eval_num_samples: 50000
+eval_interval: 5
+coverage_check_interval: 5
+
+# TensorBoard
+tensorboard_dir: runs
+experiment_name: null
+
+# TorchInductor compilation
+# NOTE: inductor backend requires Triton which has version issues on Windows
+# Options: inductor (Linux), aot_eager (slow), or disabled
+torch_compile:
+  enabled: false
+  backend: inductor
+  mode: default
+  fullgraph: false
+
+# Data splits
+train_split: 0.8
+val_split: 0.1
+test_split: 0.1
+
+# Success metrics (ambitious targets)
+target_coverage_percent: 99.7
+target_kld_min: 0.3
+target_kld_max: 1.0
+target_recon_accuracy: 85.0
+target_ranking_correlation: 0.99  # Ambitious target with hyperbolic geometry
+
+# Phase transition epochs
+phase_transitions:
+  entropy_expansion_end: 40
+  consolidation_end: 120
+  resonant_coupling_end: 250
+  ultra_exploration_start: 250
+  statenet_warm_start: 20
+
+# =============================================================================
+# v5.9 Key Innovations over v5.8:
+# =============================================================================
+#
+# 1. HYPERBOLIC GEOMETRY (Poincare Ball Model):
+#    - Ultrametric spaces embed isometrically into hyperbolic space
+#    - 3-adic distances are ultrametric by definition
+#    - Poincare distance: d(x,y) = arcosh(1 + 2||x-y||^2 / ((1-||x||^2)(1-||y||^2)))
+#    - Natural tree-like structure emerges from hyperbolic metric
+#
+# 2. RADIAL HIERARCHY:
+#    - High 3-adic valuation (divisible by 3^k) -> near origin
+#    - Low 3-adic valuation (not divisible by 3) -> near boundary
+#    - VAE-A explores boundary (chaotic, low valuation regions)
+#    - VAE-B anchors near origin (stable, high valuation regions)
+#    - Radial loss: MSE between actual and target radius
+#
+# 3. CONTINUOUS FEEDBACK (replaces two-phase):
+#    - ranking_weight = sigmoid(k * (coverage - threshold) + m * d_coverage/dt)
+#    - When coverage is stable and high: ranking_weight increases
+#    - When coverage is dropping: ranking_weight decreases (protect coverage)
+#    - StateNet learns to modulate based on system state
+#    - No discrete phase transitions - smooth continuous adaptation
+#
+# 4. EMERGENCE THROUGH LOSS GEOMETRY:
+#    - Keep Euclidean latent space (standard encoder/decoder)
+#    - Hyperbolic structure emerges from Poincare distance in loss
+#    - No forced architectural constraints
+#    - "Let the math do the work"
+#
+# Expected Results:
+#    - Hyperbolic metric should naturally separate valuation levels
+#    - Continuous feedback prevents coverage-correlation tradeoff
+#    - Target: r > 0.99, coverage > 99.7%
+#
+# =============================================================================
