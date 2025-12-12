@@ -1,5 +1,6 @@
 # Ternary VAE v5.10 - Pure Hyperbolic Geometry
 # =============================================================================
+config_version: "5.10"
 # Key innovations (modular replacements for complete hyperbolic consistency):
 #   1. HyperbolicPrior: Wrapped Normal on Poincare ball (replaces Gaussian KL)
 #   2. HyperbolicReconLoss: Radius-weighted CE (replaces flat MSE)
@@ -135,9 +136,9 @@ padic_losses:
   enable_norm_loss: false
   norm_loss_weight: 0.0
 
-  # DISABLED: Legacy ranking losses
-  enable_ranking_loss_v2: false
-  enable_ranking_loss: false
+  # Legacy ranking losses (disabled, kept as comments for reference)
+  # enable_ranking_loss_v2: false
+  # enable_ranking_loss: false
 
   # ==========================================================================
   # v5.10 PURE HYPERBOLIC MODULES (new)
@@ -207,6 +208,7 @@ min_coverage_delta: 0.001
 
 # Logging and checkpointing
 log_interval: 1
+log_dir: logs
 checkpoint_freq: 10
 checkpoint_dir: sandbox-training/checkpoints/v5_10
 eval_num_samples: 1000           # Reduced from 10000 for faster epochs
