@@ -117,7 +117,7 @@ class TernaryVAETrainer:
     def _print_init_summary(self) -> None:
         """Print initialization summary."""
         print(f"\n{'='*80}")
-        print("DN-VAE v5.6 Initialized")
+        print("Dual Neural VAE - Base Trainer Initialized")
         print(f"{'='*80}")
         print(f"Total parameters: {sum(p.numel() for p in self.model.parameters()):,}")
 
@@ -183,11 +183,12 @@ class TernaryVAETrainer:
             coverage_B = self.monitor.coverage_B_history[-1]
             self.model.update_adaptive_lambdas(grad_ratio, coverage_A, coverage_B)
 
-    def train_epoch(self, train_loader: DataLoader) -> Dict[str, Any]:
-        """Train for one epoch.
+    def train_epoch(self, train_loader: DataLoader, log_interval: int = 10) -> Dict[str, Any]:
+        """Train for one epoch with batch-level TensorBoard logging.
 
         Args:
             train_loader: Training data loader
+            log_interval: Log to console every N batches
 
         Returns:
             Dict of epoch losses and metrics
@@ -207,7 +208,7 @@ class TernaryVAETrainer:
         free_bits = self.config.get('free_bits', 0.0)
 
         epoch_losses = defaultdict(float)
-        num_batches = 0
+        num_batches = len(train_loader)
 
         for batch_idx, batch_data in enumerate(train_loader):
             batch_data = batch_data.to(self.device)
@@ -269,14 +270,26 @@ class TernaryVAETrainer:
             self.model.update_gradient_norms()
             self.optimizer.step()
 
+            # Batch-level TensorBoard logging (real-time observability)
+            batch_loss = losses['loss'].item() if torch.is_tensor(losses['loss']) else losses['loss']
+            self.monitor.log_batch(
+                epoch=self.epoch,
+                batch_idx=batch_idx,
+                total_batches=num_batches,
+                loss=batch_loss,
+                ce_A=losses['ce_A'].item() if torch.is_tensor(losses['ce_A']) else losses['ce_A'],
+                ce_B=losses['ce_B'].item() if torch.is_tensor(losses['ce_B']) else losses['ce_B'],
+                kl_A=losses['kl_A'].item() if torch.is_tensor(losses['kl_A']) else losses['kl_A'],
+                kl_B=losses['kl_B'].item() if torch.is_tensor(losses['kl_B']) else losses['kl_B'],
+                log_interval=log_interval
+            )
+
             # Accumulate losses
             for key, val in losses.items():
                 if isinstance(val, torch.Tensor):
                     epoch_losses[key] += val.item()
                 else:
                     epoch_losses[key] += val
-
-            num_batches += 1
 
         # Average losses
         for key in epoch_losses:
@@ -359,7 +372,7 @@ class TernaryVAETrainer:
             val_loader: Validation data loader
         """
         print(f"\n{'='*80}")
-        print("Starting DN-VAE v5.6 Training")
+        print("Starting Dual Neural VAE Training")
         print(f"{'='*80}\n")
 
         total_epochs = self.config['total_epochs']

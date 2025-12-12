@@ -1,11 +1,10 @@
-"""Utility functions for Ternary VAE v5.6."""
+"""Utility functions for Ternary VAE.
 
-from .data import (
-    generate_all_ternary_operations,
-    TernaryOperationDataset,
-    split_dataset,
-    create_dataloader
-)
+This module contains legacy coverage tracking utilities.
+For data generation, use src.data instead.
+For hyperbolic metrics, use src.metrics instead.
+"""
+
 from .metrics import (
     evaluate_coverage,
     compute_latent_entropy,
@@ -14,10 +13,6 @@ from .metrics import (
 )
 
 __all__ = [
-    'generate_all_ternary_operations',
-    'TernaryOperationDataset',
-    'split_dataset',
-    'create_dataloader',
     'evaluate_coverage',
     'compute_latent_entropy',
     'compute_diversity_score',

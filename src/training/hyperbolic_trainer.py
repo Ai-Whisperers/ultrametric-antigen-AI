@@ -8,10 +8,11 @@ adaptation for the Dual Neural VAE. It wraps a base trainer and adds:
 3. Hyperbolic Centroid Loss (Frechet mean clustering)
 4. Continuous feedback for ranking weight adaptation
 5. Homeostatic parameter adaptation
+6. Unified TensorBoard observability (batch + epoch level)
 
 Key principle: No Euclidean contamination - all geometry is hyperbolic.
 
-Single responsibility: Hyperbolic training orchestration only.
+Single responsibility: Hyperbolic training orchestration and observability.
 """
 
 import torch
@@ -21,6 +22,7 @@ from ..losses.padic_losses import PAdicRankingLossHyperbolic
 from ..losses.hyperbolic_prior import HomeostaticHyperbolicPrior
 from ..losses.hyperbolic_recon import HomeostaticReconLoss, HyperbolicCentroidLoss
 from ..metrics.hyperbolic import compute_ranking_correlation_hyperbolic
+from .monitor import TrainingMonitor
 
 
 class HyperbolicVAETrainer:
@@ -44,13 +46,18 @@ class HyperbolicVAETrainer:
         model: torch.nn.Module,
         device: str,
         config: Dict[str, Any],
-        monitor=None
+        monitor: Optional[TrainingMonitor] = None
     ):
         self.base_trainer = base_trainer
         self.model = model
         self.device = device
         self.config = config
-        self.monitor = monitor
+        self.monitor = monitor or base_trainer.monitor
+        self.total_epochs = config.get('total_epochs', 100)
+
+        # Observability config
+        self.histogram_interval = config.get('histogram_interval', 10)
+        self.log_interval = config.get('log_interval', 10)
 
         # Initialize continuous feedback
         self._init_continuous_feedback(config)
@@ -278,14 +285,17 @@ class HyperbolicVAETrainer:
         ranking_weight = self.compute_ranking_weight(current_coverage)
         self.ranking_weight_history.append(ranking_weight)
 
-        # Base training (uses DualVAELoss internally)
-        train_losses = self.base_trainer.train_epoch(train_loader)
+        # Base training (uses DualVAELoss internally, logs batch metrics)
+        train_losses = self.base_trainer.train_epoch(train_loader, log_interval=self.log_interval)
         val_losses = self.base_trainer.validate(val_loader)
 
         # Compute hyperbolic losses and metrics
         hyperbolic_metrics = self._compute_hyperbolic_losses(
             train_loader, ranking_weight, current_coverage
         )
+
+        # Log hyperbolic metrics at batch level for TensorBoard
+        self.log_hyperbolic_batch(hyperbolic_metrics)
 
         # Correlation evaluation (only at intervals)
         should_check_correlation = (epoch == 0) or (epoch % self.eval_interval == 0)
@@ -490,6 +500,192 @@ class HyperbolicVAETrainer:
             'ranking_metrics': ranking_metrics,
             'homeostatic_metrics': homeostatic_metrics
         }
+
+    def log_epoch(self, epoch: int, losses: Dict[str, Any]) -> None:
+        """Unified epoch-level logging to TensorBoard and console/file.
+
+        This method centralizes ALL observability for the epoch:
+        - Console/file summary via log_epoch_summary()
+        - TensorBoard hyperbolic metrics via log_hyperbolic_epoch()
+        - TensorBoard standard VAE metrics via log_tensorboard()
+        - Weight/gradient histograms at intervals
+
+        Args:
+            epoch: Current epoch number
+            losses: Dict containing all losses and metrics from train_epoch()
+        """
+        if self.monitor is None:
+            return
+
+        # Extract homeostatic metrics
+        homeo = {k.replace('homeo_', ''): v for k, v in losses.items() if k.startswith('homeo_')}
+        homeo_dict = homeo if homeo else None
+
+        # 1. Console/file epoch summary
+        self.monitor.log_epoch_summary(
+            epoch=epoch,
+            total_epochs=self.total_epochs,
+            loss=losses['loss'],
+            cov_A=losses['cov_A'],
+            cov_B=losses['cov_B'],
+            corr_A_hyp=losses['corr_A_hyp'],
+            corr_B_hyp=losses['corr_B_hyp'],
+            corr_A_euc=losses['corr_A_euc'],
+            corr_B_euc=losses['corr_B_euc'],
+            mean_radius_A=losses['mean_radius_A'],
+            mean_radius_B=losses['mean_radius_B'],
+            ranking_weight=losses['ranking_weight'],
+            coverage_evaluated=losses.get('coverage_evaluated', True),
+            correlation_evaluated=losses.get('correlation_evaluated', True),
+            hyp_kl_A=losses.get('hyp_kl_A', 0),
+            hyp_kl_B=losses.get('hyp_kl_B', 0),
+            centroid_loss=losses.get('centroid_loss', 0),
+            radial_loss=losses.get('radial_loss', 0),
+            homeostatic_metrics=homeo_dict
+        )
+
+        # 2. TensorBoard hyperbolic metrics (epoch-level)
+        self.monitor.log_hyperbolic_epoch(
+            epoch=epoch,
+            corr_A_hyp=losses['corr_A_hyp'],
+            corr_B_hyp=losses['corr_B_hyp'],
+            corr_A_euc=losses['corr_A_euc'],
+            corr_B_euc=losses['corr_B_euc'],
+            mean_radius_A=losses['mean_radius_A'],
+            mean_radius_B=losses['mean_radius_B'],
+            ranking_weight=losses['ranking_weight'],
+            ranking_loss=losses.get('ranking_loss_hyp', 0),
+            radial_loss=losses.get('radial_loss', 0),
+            hyp_kl_A=losses.get('hyp_kl_A', 0),
+            hyp_kl_B=losses.get('hyp_kl_B', 0),
+            centroid_loss=losses.get('centroid_loss', 0),
+            homeostatic_metrics=homeo_dict
+        )
+
+        # 3. TensorBoard standard VAE metrics (epoch-level)
+        self._log_standard_tensorboard(epoch, losses)
+
+        # 4. Weight/gradient histograms at intervals
+        if epoch % self.histogram_interval == 0:
+            self.monitor.log_histograms(epoch, self.model)
+
+    def _log_standard_tensorboard(self, epoch: int, losses: Dict[str, Any]) -> None:
+        """Log standard VAE metrics to TensorBoard.
+
+        Args:
+            epoch: Current epoch
+            losses: Losses dict from train_epoch()
+        """
+        if self.monitor.writer is None:
+            return
+
+        writer = self.monitor.writer
+
+        # Total loss
+        writer.add_scalar('Loss/Total', losses['loss'], epoch)
+
+        # VAE-A metrics
+        writer.add_scalar('VAE_A/CrossEntropy', losses.get('ce_A', 0), epoch)
+        writer.add_scalar('VAE_A/KL_Divergence', losses.get('kl_A', 0), epoch)
+        writer.add_scalar('VAE_A/Entropy', losses.get('H_A', 0), epoch)
+        writer.add_scalar('VAE_A/Coverage_Pct', losses['cov_A'], epoch)
+
+        # VAE-B metrics
+        writer.add_scalar('VAE_B/CrossEntropy', losses.get('ce_B', 0), epoch)
+        writer.add_scalar('VAE_B/KL_Divergence', losses.get('kl_B', 0), epoch)
+        writer.add_scalar('VAE_B/Entropy', losses.get('H_B', 0), epoch)
+        writer.add_scalar('VAE_B/Coverage_Pct', losses['cov_B'], epoch)
+
+        # Comparative metrics
+        writer.add_scalars('Compare/Coverage', {
+            'VAE_A': losses['cov_A'],
+            'VAE_B': losses['cov_B']
+        }, epoch)
+
+        writer.add_scalars('Compare/Entropy', {
+            'VAE_A': losses.get('H_A', 0),
+            'VAE_B': losses.get('H_B', 0)
+        }, epoch)
+
+        # Training dynamics
+        writer.add_scalar('Dynamics/Phase', losses.get('phase', 0), epoch)
+        writer.add_scalar('Dynamics/Rho', losses.get('rho', 0), epoch)
+        writer.add_scalar('Dynamics/GradRatio', losses.get('grad_ratio', 0), epoch)
+
+        # Lambda weights
+        writer.add_scalars('Lambdas', {
+            'lambda1': losses.get('lambda1', 0),
+            'lambda2': losses.get('lambda2', 0),
+            'lambda3': losses.get('lambda3', 0)
+        }, epoch)
+
+        # Temperature and beta
+        writer.add_scalars('Temperature', {
+            'VAE_A': losses.get('temp_A', 1.0),
+            'VAE_B': losses.get('temp_B', 1.0)
+        }, epoch)
+
+        writer.add_scalars('Beta', {
+            'VAE_A': losses.get('beta_A', 1.0),
+            'VAE_B': losses.get('beta_B', 1.0)
+        }, epoch)
+
+        # Learning rate
+        writer.add_scalar('LR/Scheduled', losses.get('lr_scheduled', 0), epoch)
+        if 'lr_corrected' in losses:
+            writer.add_scalar('LR/Corrected', losses['lr_corrected'], epoch)
+
+        # Coverage EMA for continuous feedback
+        if 'coverage_ema' in losses:
+            writer.add_scalar('Feedback/CoverageEMA', losses['coverage_ema'], epoch)
+
+        writer.flush()
+
+    def log_hyperbolic_batch(self, hyperbolic_metrics: Dict[str, Any]) -> None:
+        """Log hyperbolic metrics at batch level to TensorBoard.
+
+        Called after computing hyperbolic losses for real-time observability.
+
+        Args:
+            hyperbolic_metrics: Dict from _compute_hyperbolic_losses()
+        """
+        if self.monitor is None:
+            return
+
+        self.monitor.log_hyperbolic_batch(
+            ranking_loss=hyperbolic_metrics.get('ranking_loss', 0),
+            radial_loss=hyperbolic_metrics.get('radial_loss', 0),
+            hyp_kl_A=hyperbolic_metrics.get('hyp_kl_A', 0),
+            hyp_kl_B=hyperbolic_metrics.get('hyp_kl_B', 0),
+            centroid_loss=hyperbolic_metrics.get('centroid_loss', 0)
+        )
+
+    def update_monitor_state(self, losses: Dict[str, Any]) -> None:
+        """Update monitor's internal tracking state.
+
+        Args:
+            losses: Losses dict from train_epoch()
+        """
+        if self.monitor is None:
+            return
+
+        self.monitor.check_best(losses['loss'])
+        self.monitor.update_histories(
+            H_A=losses.get('H_A', 0),
+            H_B=losses.get('H_B', 0),
+            coverage_A=losses['unique_A'],
+            coverage_B=losses['unique_B']
+        )
+
+    def print_summary(self) -> None:
+        """Print training completion summary."""
+        if self.monitor:
+            self.monitor.print_training_summary()
+
+    def close(self) -> None:
+        """Close TensorBoard writer and cleanup."""
+        if self.monitor:
+            self.monitor.close()
 
 
 __all__ = ['HyperbolicVAETrainer']
