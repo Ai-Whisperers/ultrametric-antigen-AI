@@ -1,33 +1,32 @@
-# Ternary VAE v5.6 - Production Implementation
+# Ternary VAE v5.10.1 - Pure Hyperbolic Geometry
 
 **Status**: Production-Ready
-**Architecture**: Single Responsibility Principle (SRP) Compliant
+**Architecture**: SRP-Compliant with Hyperbolic Embedding
 **Coverage**: 99.7% (VAE-A), 99.6% (VAE-B) at epoch 100+
-**Parameters**: 168,770 total (StateNet: 1,068, 0.63% overhead)
-**Version**: v5.6.0 (2025-12-10)
+**Version**: v5.10.1 (2025-12-12)
 
 ---
 
-## What's New in v5.6.0
+## What's New in v5.10.1
 
-**Production Features** - Enhanced observability and performance:
+**Pure Hyperbolic Geometry** - Hyperbolic embedding with homeostatic emergence:
 
-✅ **TensorBoard Integration**: Local, IP-safe visualization dashboard
-✅ **TorchInductor (torch.compile)**: 1.4-2x training speedup with PyTorch 2.x
-✅ **99%+ Coverage**: Achieved at epoch 100+ on both VAEs
-✅ **Modular Architecture**: SRP-compliant with clean separation of concerns
-✅ **Fully Compatible**: Backward compatible with v5.5 checkpoints
+- **HyperbolicVAETrainer**: Specialized trainer for Poincare ball embedding
+- **HomeostaticHyperbolicPrior**: Self-regulating sigma based on centroid drift
+- **StateNet v4**: Enhanced meta-controller with orbital tracking
+- **3-adic Ranking Loss**: Explicit preservation of ultrametric structure
+- **DualNeuralVAEV5_10**: Full inheritance chain (v5.6 → v5.7 → v5.10)
 
 ---
 
 ## Overview
 
-The Ternary VAE v5.6 is a **dual-pathway variational autoencoder** designed to learn complete coverage of all possible 19,683 ternary logic operations (9-bit truth tables with values {-1, 0, +1}). It achieves this through a sophisticated architecture that combines:
+The Ternary VAE v5.10.1 is a **dual-pathway variational autoencoder** that embeds all possible 19,683 ternary operations into a **16-dimensional Poincare ball** (hyperbolic space). It achieves this through:
 
-1. **Two complementary VAE pathways** (chaotic vs. frozen regimes)
-2. **Stop-gradient cross-injection** for controlled information flow
-3. **StateNet meta-controller** for adaptive hyperparameter optimization
-4. **Phase-scheduled training** with 4 distinct learning phases
+1. **Hyperbolic geometry**: Native embedding in constant negative curvature space
+2. **3-adic ultrametric preservation**: Ranking loss for tree-structured distances
+3. **Homeostatic prior**: Self-regulating sigma based on manifold dynamics
+4. **StateNet v4 meta-controller**: Adaptive hyperparameter optimization
 
 ### What Problem Does This Solve?
 
@@ -43,6 +42,66 @@ The Ternary VAE v5.6 is a **dual-pathway variational autoencoder** designed to l
 
 ---
 
+## Mathematical Definition: 3^9 Operations and the Ternary Manifold
+
+### The 3^9 Operation Space
+
+The **3^9 = 19,683 operations** are the complete set of binary functions over the ternary field:
+
+```
+f: Z₃ × Z₃ → Z₃   where Z₃ = {-1, 0, +1}
+```
+
+Each operation is a **lookup table (LUT)** of 9 values—one output for each of the 9 possible input pairs `(a, b)` where `a, b ∈ {-1, 0, +1}`. The canonical ordering:
+
+| Input (a,b) | (-1,-1) | (-1,0) | (-1,+1) | (0,-1) | (0,0) | (0,+1) | (+1,-1) | (+1,0) | (+1,+1) |
+|-------------|---------|--------|---------|--------|-------|--------|---------|--------|---------|
+| LUT index   | 0       | 1      | 2       | 3      | 4     | 5      | 6       | 7      | 8       |
+
+Each operation is indexed by `i ∈ [0, 19682]` via its **base-3 representation**:
+
+```
+i = Σₖ (digit_k + 1) × 3^k   where digit_k ∈ {-1, 0, +1}
+```
+
+### 3-Adic Ultrametric Structure
+
+This indexing naturally endows the operation space with a **3-adic ultrametric**:
+
+```
+d(i, j) = 3^(-v₃(|i-j|))
+```
+
+where `v₃(n)` is the **3-adic valuation**—the largest power of 3 dividing `n`. Operations sharing `k` leading digits in base-3 are exactly `3^(-k)` apart.
+
+| Shared Digits | Distance | Cluster Size | Interpretation |
+|---------------|----------|--------------|----------------|
+| 0 | 1 | 19,683 | Different root branches |
+| 1 | 1/3 | 6,561 | Same first output |
+| 2 | 1/9 | 2,187 | Same first row |
+| 3 | 1/27 | 729 | Same first 3 outputs |
+| ... | ... | ... | ... |
+| 9 | 0 | 1 | Identical operations |
+
+This makes the space **isomorphic to Z/3⁹Z** with p-adic topology—a **9-level ternary tree** where leaves are individual operations and internal nodes are prefix-sharing clusters (**fibers**).
+
+### The Ternary Manifold
+
+The **ternary manifold** is the image of this discrete ultrametric space under the VAE encoder:
+
+```
+Encoder: Z₃⁹ → B¹⁶_Poincare   (19,683 points → 16D Poincare ball)
+```
+
+The **Poincare ball** is hyperbolic space of constant negative curvature, where:
+- **Geodesic distance** grows exponentially toward the boundary
+- **Hierarchical structures** embed naturally (root at origin, leaves near boundary)
+- **Ultrametric distances** are preserved isometrically when the embedding is correct
+
+The training objective is for **Poincare geodesic distance to match 3-adic distance**, making the learned manifold an **isometric embedding** of the ternary operation tree.
+
+---
+
 ## Quick Start
 
 ### Installation
@@ -55,7 +114,7 @@ pip install -r requirements.txt
 ### Training
 
 ```bash
-python scripts/train/train_ternary_v5_6.py --config configs/ternary_v5_6.yaml
+python scripts/train/train_ternary_v5_10.py --config configs/ternary_v5_10.yaml
 ```
 
 ### TensorBoard Visualization
@@ -439,13 +498,14 @@ trainer.train(train_loader, val_loader)
 
 ## Version History
 
-- **v5.5.0-srp** (2025-11-24): Complete SRP refactoring, modular architecture, 4,200+ lines of docs
-- **v5.5** (2025-11-23): Production release, 97.6% coverage, complete config integration
+- **v5.10.1** (2025-12-12): Pure Hyperbolic Geometry with homeostatic emergence, StateNet v4
+- **v5.10.0** (2025-12-11): HyperbolicVAETrainer, 3-adic ranking loss, Poincare ball embedding
+- **v5.7.0** (2025-12-10): Hyperbolic prior integration, Frechet centroids
+- **v5.6.0** (2025-12-10): TensorBoard integration, torch.compile optimization
+- **v5.5.0-srp** (2025-11-24): Complete SRP refactoring, modular architecture
+- **v5.5** (2025-11-23): Production release, 97.6% coverage
 - **v5.4** (2025-10): Extended training, 99.57% peak at epoch 40
-- **v5.3** (2025-10): Fixed gradient balance
-- **v5.2** (2025-10): Phase scheduling
-- **v5.1** (2025-10): Initial StateNet integration
-- **v5.0** (2025-10): Dual-VAE baseline
+- **v5.0-v5.3** (2025-10): Dual-VAE baseline through gradient balance fixes
 
 ---
 
@@ -454,13 +514,13 @@ trainer.train(train_loader, val_loader)
 If you use this model in your research, please cite:
 
 ```bibtex
-@software{ternary_vae_v5_5_srp,
-  title={Ternary VAE v5.5-SRP: Modular Dual-Pathway Variational Autoencoder for Complete Ternary Operation Coverage},
+@software{ternary_vae_v5_10,
+  title={Ternary VAE v5.10: Hyperbolic Embedding of 3-Adic Ultrametric Operation Space},
   author={AI Whisperers},
   year={2025},
-  version={5.5.0-srp},
+  version={5.10.1},
   url={https://github.com/gesttaltt/ternary-vaes},
-  note={SRP-compliant modular architecture with comprehensive documentation}
+  note={Poincare ball embedding preserving 3-adic ultrametric structure via ranking loss}
 }
 ```
 
@@ -495,50 +555,43 @@ For questions, issues, or contributions:
 
 ---
 
-## Research Implications: Algebraic Computation on Learned Manifolds
+## Research Implications: Isometric Embedding of Ultrametric Space
 
-### Emergent 3-Adic Structure
+### Hyperbolic Geometry for Tree-Structured Data
 
-**Critical Discovery (December 2025)**: The VAE spontaneously learns p-adic algebraic topology without explicit supervision.
+**Key Insight**: The 3-adic ultrametric on 19,683 operations forms a **9-level ternary tree**. Hyperbolic space (Poincare ball) is the natural geometry for tree embedding:
 
-| Metric | Value | Significance |
-|--------|-------|--------------|
-| 3-adic ↔ latent correlation | **r=0.62** | Ultrametric structure emerged |
-| Digit-dimension correlation | **r=0.943** | Natural factorization |
-| Latent holes | **0%** | Fully dense manifold |
-| Interpolation validity | **88%** | Continuous paths respect topology |
-| Jacobian uniformity | [16-23] | Smooth, stable decoder |
-| Algebraic closure | **0%** | Isometric but NOT homomorphic |
+| Property | Euclidean | Hyperbolic (Poincare) |
+|----------|-----------|----------------------|
+| Volume growth | Polynomial O(r^d) | Exponential O(e^r) |
+| Tree embedding | Distortion O(log n) | Distortion O(1) |
+| Hierarchy representation | Flat | Root→boundary stratified |
 
-The system is an **isometric embedding** of the ternary operation space into ℝ¹⁶ that preserves the 3-adic metric—but it does not yet preserve algebraic composition (z_a + z_b ≠ z_{a∘b}).
+### v5.10 Training Objective
 
-### Implications for High-Performance Computing
+The **3-adic ranking loss** explicitly trains for isometric embedding:
 
-If **algebraic closure** is achieved (latent arithmetic = operation composition), the implications extend beyond ternary logic:
+```
+For triplets (anchor, positive, negative) where d_3adic(a,p) < d_3adic(a,n):
+    Enforce: d_poincare(z_a, z_p) < d_poincare(z_a, z_n)
+```
 
-**Computational Virtualization**: Traditional physics simulation scales O(N³) with spatial resolution, constrained by CFL timestep conditions. An algebraically-closed manifold embedding of physical laws would enable:
-
-- **Forward simulation as latent arithmetic**: A single matrix multiply in latent space corresponds to millions of FLOPS in physical space
-- **Compression ratio**: Manifold dimensionality vs. discretized state space (potentially 10⁶-10⁹x for symmetric systems)
-- **Real-time high-fidelity simulation**: Fluid, cloth, deformation, acoustics at VR framerates (90fps, <10ms latency)
-
-**Mechanism**: Physical laws have symmetries, conservation laws, and algebraic structure. If these can be embedded into a learned manifold that preserves the algebra (homomorphism), then computation in latent space IS physical simulation—but compressed to the intrinsic dimensionality of the constraint manifold.
+Combined with **hyperbolic KL divergence** against a **wrapped normal prior** on the Poincare ball.
 
 ### Current Status vs. Requirements
 
-| Requirement | Status | Gap |
-|-------------|--------|-----|
-| Complete coverage | ✅ 100% | - |
-| Metric preservation | ✅ r=0.62 | Need r>0.9 |
-| Smooth decoder | ✅ Jacobian uniform | - |
-| Dense manifold | ✅ 0% holes | - |
-| Algebraic closure | ❌ 0% | **Primary research target** |
+| Requirement | Status | Implementation |
+|-------------|--------|----------------|
+| Complete coverage | ✅ 99.7% | Dual-VAE with cross-injection |
+| 3-adic structure | ✅ Ranking loss | `src/metrics/hyperbolic.py` |
+| Hyperbolic embedding | ✅ Poincare ball | `project_to_poincare()` |
+| Homeostatic prior | ✅ Self-regulating | `HomeostaticHyperbolicPrior` |
+| Manifold visualization | ❌ Scalars only | See `reports/analysis/manifold_observability_gap.md` |
+| Algebraic closure | ❌ Not attempted | Future research target |
 
-### Next Steps (See `implement.md`)
+### Known Gap: Manifold Observability
 
-1. **Phase 1**: p-Adic Metric Loss + Norm Regularizer (boost r=0.62 → r>0.9)
-2. **Phase 2**: Algebraic Closure Loss (force z_a + z_b - z_0 ≈ z_{a∘b})
-3. **Phase 3**: Extend to continuous algebras (physics simulation)
+The current TensorBoard implementation logs **50+ scalar metrics** but **zero embedding visualizations**. We track correlation coefficients that could be achieved by degenerate solutions without verifying the actual manifold structure. See `reports/analysis/manifold_observability_gap.md` for proposed `src/visualization/` module.
 
 ---
 
