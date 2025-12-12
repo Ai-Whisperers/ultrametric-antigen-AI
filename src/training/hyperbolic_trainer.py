@@ -287,7 +287,12 @@ class HyperbolicVAETrainer:
 
         # Base training (uses DualVAELoss internally, logs batch metrics)
         train_losses = self.base_trainer.train_epoch(train_loader, log_interval=self.log_interval)
-        val_losses = self.base_trainer.validate(val_loader)
+
+        # Validate only if val_loader is provided (not in manifold approach)
+        if val_loader is not None:
+            val_losses = self.base_trainer.validate(val_loader)
+        else:
+            val_losses = train_losses  # Use train losses for compatibility
 
         # Compute hyperbolic losses and metrics
         hyperbolic_metrics = self._compute_hyperbolic_losses(

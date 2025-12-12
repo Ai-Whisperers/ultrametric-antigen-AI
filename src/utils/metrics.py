@@ -217,11 +217,14 @@ class CoverageTracker:
         self.history['coverage_A'].append(coverage_A)
         self.history['coverage_B'].append(coverage_B)
 
-        union = max(coverage_A, coverage_B)  # Approximate union
-        self.history['coverage_union'].append(union)
+        # Note: True union requires tracking actual operation sets.
+        # Using max as lower bound; actual union >= max(A, B).
+        # For accurate union, pass intersection count or use set-based tracking.
+        coverage_best = max(coverage_A, coverage_B)
+        self.history['coverage_union'].append(coverage_best)
 
-        if union > self.best_coverage:
-            self.best_coverage = union
+        if coverage_best > self.best_coverage:
+            self.best_coverage = coverage_best
             self.best_epoch = epoch
 
     def get_statistics(self) -> Dict:

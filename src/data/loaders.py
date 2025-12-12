@@ -75,13 +75,15 @@ def create_ternary_data_loaders(
         pin_memory=pin_memory and torch.cuda.is_available()
     )
 
-    val_loader = DataLoader(
-        val_dataset,
-        batch_size=batch_size,
-        shuffle=False,
-        num_workers=num_workers,
-        pin_memory=pin_memory and torch.cuda.is_available()
-    )
+    val_loader = None
+    if val_size > 0:
+        val_loader = DataLoader(
+            val_dataset,
+            batch_size=batch_size,
+            shuffle=False,
+            num_workers=num_workers,
+            pin_memory=pin_memory and torch.cuda.is_available()
+        )
 
     test_loader = None
     if test_size > 0:

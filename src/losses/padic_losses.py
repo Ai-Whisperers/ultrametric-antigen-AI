@@ -14,40 +14,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from typing import Optional, Tuple
-import functools
 
 
-@functools.lru_cache(maxsize=1)
-def _get_3adic_distance_matrix(device: torch.device) -> torch.Tensor:
-    """Precompute full 3-adic distance matrix for all 19,683 operations.
-
-    The 3-adic distance between operations i and j is:
-    d_3(i, j) = 3^(-v_3(i - j)) where v_3 is the 3-adic valuation
-
-    Returns:
-        Tensor of shape (19683, 19683) with 3-adic distances
-    """
-    n = 19683
-    # Compute 3-adic valuations for all differences
-    # v_3(k) = largest power of 3 dividing k
-    distances = torch.zeros(n, n, device=device)
-
-    for i in range(n):
-        for j in range(i + 1, n):
-            diff = abs(i - j)
-            if diff == 0:
-                dist = 0.0
-            else:
-                # Compute 3-adic valuation
-                v = 0
-                while diff % 3 == 0:
-                    v += 1
-                    diff //= 3
-                dist = 3.0 ** (-v)
-            distances[i, j] = dist
-            distances[j, i] = dist
-
-    return distances
+# Note: Full 19683x19683 distance matrix removed (was O(n²) dead code).
+# Use compute_3adic_distance_batch() for efficient on-demand computation.
 
 
 def compute_3adic_distance_batch(

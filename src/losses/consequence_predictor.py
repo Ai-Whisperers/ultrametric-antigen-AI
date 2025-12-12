@@ -216,24 +216,54 @@ def evaluate_addition_accuracy(
             z0_outputs = model(zero_op.float(), 1.0, 1.0, 0.5, 0.5)
         z_0 = z0_outputs['z_A']  # (1, latent_dim)
 
-        # Test homomorphism: z_a + z_0 - z_0 should ≈ z_a
-        # This is a simple test - if latent space has algebraic structure,
-        # adding and subtracting zero should preserve the original
-        z_predicted = z_A + z_0 - z_0  # Should equal z_A
+        # Test 1: Identity operation should be near origin (small norm)
+        # A well-structured latent space places identity centrally
+        z_0_norm = torch.norm(z_0).item()
+        z_A_norms = torch.norm(z_A, dim=1)
+        mean_norm = z_A_norms.mean().item()
 
-        # Measure reconstruction quality
-        errors = torch.norm(z_predicted - z_A, dim=1)
+        # Identity should have below-average norm (near center)
+        identity_central = 1.0 if z_0_norm < mean_norm else 0.5
 
-        # Accuracy = fraction with error below threshold
-        threshold = 0.1
-        accuracy = (errors < threshold).float().mean().item()
+        # Test 2: 3-adically close operations should be latent-close
+        # Sample random pairs and check if 3-adic neighbors are latent neighbors
+        n_pairs = min(500, n_ops * (n_ops - 1) // 2)
+        i_idx = torch.randint(0, n_ops, (n_pairs,), device=device)
+        j_idx = torch.randint(0, n_ops, (n_pairs,), device=device)
 
-        # More sophisticated test: sample random pairs and check composition
-        # For operations a, b: (a ∘ b) should have latent z_{a∘b} ≈ f(z_a, z_b)
-        # This requires knowing the composition rule, which is implicit in the data
+        # Filter to distinct pairs
+        valid = i_idx != j_idx
+        i_idx, j_idx = i_idx[valid], j_idx[valid]
 
-        # For now, return the simple homomorphism test result
-        # A more complete test would evaluate actual ternary composition
+        if len(i_idx) > 10:
+            # Compute 3-adic valuations (higher = closer in 3-adic metric)
+            diff = torch.abs(indices[i_idx] - indices[j_idx])
+            v_3adic = torch.zeros_like(diff, dtype=torch.float32)
+            remaining = diff.clone()
+            for _ in range(9):
+                mask = (remaining % 3 == 0) & (remaining > 0)
+                v_3adic[mask] += 1
+                remaining[mask] = remaining[mask] // 3
+
+            # Compute latent distances
+            latent_dist = torch.norm(z_A[i_idx] - z_A[j_idx], dim=1)
+
+            # Check correlation: high 3-adic valuation should correlate with low latent distance
+            # Normalize to [0,1] for comparison
+            v_norm = v_3adic / (v_3adic.max() + 1e-8)
+            d_norm = latent_dist / (latent_dist.max() + 1e-8)
+
+            # Concordance: pairs where high v_3adic (close in 3-adic) have low latent_dist
+            # For triplets (i,j,k): if v(i,j) > v(i,k) then d(i,j) < d(i,k)
+            # Simplified: check correlation between v_3adic and -latent_dist
+            correlation = torch.corrcoef(torch.stack([v_norm, -d_norm]))[0, 1].item()
+            # Map correlation [-1, 1] to accuracy [0, 1]
+            structure_accuracy = (correlation + 1) / 2 if not torch.isnan(torch.tensor(correlation)) else 0.5
+        else:
+            structure_accuracy = 0.5
+
+        # Combined accuracy: weight both tests
+        accuracy = 0.3 * identity_central + 0.7 * structure_accuracy
 
     return accuracy
 
