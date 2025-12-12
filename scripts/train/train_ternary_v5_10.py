@@ -11,6 +11,7 @@ Usage:
     python scripts/train/train_ternary_v5_10.py --config configs/ternary_v5_10.yaml
 """
 
+import logging
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -31,6 +32,39 @@ from src.data import generate_all_ternary_operations, TernaryOperationDataset
 from src.losses.padic_losses import PAdicRankingLossHyperbolic
 from src.losses.hyperbolic_prior import HomeostaticHyperbolicPrior
 from src.losses.hyperbolic_recon import HomeostaticReconLoss, HyperbolicCentroidLoss
+
+
+def setup_logging(config_path: str, log_dir: str = "logs") -> logging.Logger:
+    """Setup dual logging to console and file with timestamp."""
+    log_path = Path(log_dir)
+    log_path.mkdir(parents=True, exist_ok=True)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    config_name = Path(config_path).stem
+    log_file = log_path / f"{config_name}_{timestamp}.log"
+
+    # Create logger
+    logger = logging.getLogger("ternary_vae")
+    logger.setLevel(logging.INFO)
+    logger.handlers.clear()
+
+    # File handler
+    file_handler = logging.FileHandler(log_file, encoding='utf-8')
+    file_handler.setLevel(logging.INFO)
+    file_formatter = logging.Formatter('%(asctime)s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    file_handler.setFormatter(file_formatter)
+
+    # Console handler
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setLevel(logging.INFO)
+    console_formatter = logging.Formatter('%(message)s')
+    console_handler.setFormatter(console_formatter)
+
+    logger.addHandler(file_handler)
+    logger.addHandler(console_handler)
+
+    logger.info(f"Logging to: {log_file}")
+    return logger
 
 
 def compute_ranking_correlation_hyperbolic(model, device, n_samples=5000, max_norm=0.95, curvature=2.0):
@@ -517,44 +551,49 @@ def main():
     parser = argparse.ArgumentParser(description='Train Ternary VAE v5.10 - Pure Hyperbolic')
     parser.add_argument('--config', type=str, default='configs/ternary_v5_10.yaml',
                         help='Path to config file')
+    parser.add_argument('--log-dir', type=str, default='logs',
+                        help='Directory for log files')
     args = parser.parse_args()
+
+    # Setup logging first
+    logger = setup_logging(args.config, args.log_dir)
 
     # Load config
     with open(args.config, 'r') as f:
         config = yaml.safe_load(f)
 
-    print(f"{'='*80}")
-    print("Ternary VAE v5.10 Training - PURE HYPERBOLIC GEOMETRY")
-    print("Homeostatic Emergence for Algebraic Convergence")
-    print(f"{'='*80}")
-    print(f"Config: {args.config}")
+    logger.info(f"{'='*80}")
+    logger.info("Ternary VAE v5.10 Training - PURE HYPERBOLIC GEOMETRY")
+    logger.info("Homeostatic Emergence for Algebraic Convergence")
+    logger.info(f"{'='*80}")
+    logger.info(f"Config: {args.config}")
 
     # Print v5.10 module status
     padic = config.get('padic_losses', {})
     hyp_v10 = padic.get('hyperbolic_v10', {})
 
-    print(f"\nv5.10 Modules:")
-    print(f"  Hyperbolic Prior: {'ENABLED' if hyp_v10.get('use_hyperbolic_prior', False) else 'DISABLED'}")
-    print(f"  Hyperbolic Recon: {'ENABLED' if hyp_v10.get('use_hyperbolic_recon', False) else 'DISABLED'}")
-    print(f"  Centroid Loss: {'ENABLED' if hyp_v10.get('use_centroid_loss', False) else 'DISABLED'}")
+    logger.info(f"\nv5.10 Modules:")
+    logger.info(f"  Hyperbolic Prior: {'ENABLED' if hyp_v10.get('use_hyperbolic_prior', False) else 'DISABLED'}")
+    logger.info(f"  Hyperbolic Recon: {'ENABLED' if hyp_v10.get('use_hyperbolic_recon', False) else 'DISABLED'}")
+    logger.info(f"  Centroid Loss: {'ENABLED' if hyp_v10.get('use_centroid_loss', False) else 'DISABLED'}")
 
     if hyp_v10.get('use_hyperbolic_prior', False):
         prior = hyp_v10.get('prior', {})
-        print(f"    Prior curvature: {prior.get('curvature', 2.0)}")
-        print(f"    Prior sigma: {prior.get('prior_sigma', 1.0)}")
-        print(f"    Homeostatic: {prior.get('homeostatic', True)}")
+        logger.info(f"    Prior curvature: {prior.get('curvature', 2.0)}")
+        logger.info(f"    Prior sigma: {prior.get('prior_sigma', 1.0)}")
+        logger.info(f"    Homeostatic: {prior.get('homeostatic', True)}")
 
-    print(f"\nEuclidean Contamination:")
-    print(f"  norm_loss: DISABLED" if not padic.get('enable_norm_loss', False) else "  norm_loss: WARNING - ENABLED")
-    print(f"  metric_loss: DISABLED" if not padic.get('enable_metric_loss', False) else "  metric_loss: WARNING - ENABLED")
+    logger.info(f"\nEuclidean Contamination:")
+    logger.info(f"  norm_loss: DISABLED" if not padic.get('enable_norm_loss', False) else "  norm_loss: WARNING - ENABLED")
+    logger.info(f"  metric_loss: DISABLED" if not padic.get('enable_metric_loss', False) else "  metric_loss: WARNING - ENABLED")
 
     # Check hyperbolic ranking
     if padic.get('enable_ranking_loss_hyperbolic', False):
         hyp = padic.get('ranking_hyperbolic', {})
-        print(f"\nHyperbolic Ranking Loss:")
-        print(f"  Curvature: {hyp.get('curvature', 2.0)}")
-        print(f"  Radial weight: {hyp.get('radial_weight', 0.4)}")
-        print(f"  Max norm: {hyp.get('max_norm', 0.95)}")
+        logger.info(f"\nHyperbolic Ranking Loss:")
+        logger.info(f"  Curvature: {hyp.get('curvature', 2.0)}")
+        logger.info(f"  Radial weight: {hyp.get('radial_weight', 0.4)}")
+        logger.info(f"  Max norm: {hyp.get('max_norm', 0.95)}")
 
     # Set seed
     seed = config.get('seed', 42)
@@ -564,13 +603,13 @@ def main():
         torch.cuda.manual_seed(seed)
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    print(f"\nDevice: {device}")
+    logger.info(f"\nDevice: {device}")
 
     # Generate dataset
-    print("\nGenerating dataset...")
+    logger.info("\nGenerating dataset...")
     operations = generate_all_ternary_operations()
     dataset = TernaryOperationDataset(operations)
-    print(f"Total operations: {len(dataset):,}")
+    logger.info(f"Total operations: {len(dataset):,}")
 
     # Split dataset
     train_size = int(config['train_split'] * len(dataset))
@@ -582,7 +621,7 @@ def main():
         generator=torch.Generator().manual_seed(seed)
     )
 
-    print(f"Train: {len(train_dataset):,} | Val: {len(val_dataset):,} | Test: {len(test_dataset):,}")
+    logger.info(f"Train: {len(train_dataset):,} | Val: {len(val_dataset):,} | Test: {len(test_dataset):,}")
 
     # Data loaders
     train_loader = DataLoader(
@@ -625,14 +664,14 @@ def main():
     # Wrap with pure hyperbolic trainer
     trainer = PureHyperbolicTrainer(base_trainer, model, device, config)
 
-    print(f"\n{'='*80}")
-    print("Starting Pure Hyperbolic Training with Homeostatic Adaptation")
-    print(f"{'='*80}")
-    print(f"\nEvaluation Intervals (reduces ~10min/epoch to ~1-2min/epoch):")
-    print(f"  Coverage check: every {config.get('coverage_check_interval', 5)} epochs")
-    print(f"  Correlation check: every {config.get('eval_interval', 20)} epochs")
-    print(f"  Samples per check: {config.get('eval_num_samples', 1000)}")
-    print(f"  Training loss logged every batch (free convergence signal)\n")
+    logger.info(f"\n{'='*80}")
+    logger.info("Starting Pure Hyperbolic Training with Homeostatic Adaptation")
+    logger.info(f"{'='*80}")
+    logger.info(f"\nEvaluation Intervals (reduces ~10min/epoch to ~1-2min/epoch):")
+    logger.info(f"  Coverage check: every {config.get('coverage_check_interval', 5)} epochs")
+    logger.info(f"  Correlation check: every {config.get('eval_interval', 20)} epochs")
+    logger.info(f"  Samples per check: {config.get('eval_num_samples', 1000)}")
+    logger.info(f"  Training loss logged every batch (free convergence signal)\n")
 
     total_epochs = config['total_epochs']
 
@@ -654,27 +693,27 @@ def main():
         cov_status = "FRESH" if losses.get('coverage_evaluated', True) else "cached"
         corr_status = "FRESH" if losses.get('correlation_evaluated', True) else "cached"
 
-        print(f"\nEpoch {epoch}/{total_epochs}")
-        print(f"  Loss: {losses['loss']:.4f} | Ranking Weight: {losses['ranking_weight']:.3f}")
-        print(f"  Coverage [{cov_status}]: A={losses['cov_A']:.1f}% B={losses['cov_B']:.1f}% (best={trainer.best_coverage:.1f}%)")
-        print(f"  3-Adic Correlation [{corr_status}] (Hyp): A={losses['corr_A_hyp']:.3f} B={losses['corr_B_hyp']:.3f} (best={trainer.best_corr_hyp:.3f})")
+        logger.info(f"\nEpoch {epoch}/{total_epochs}")
+        logger.info(f"  Loss: {losses['loss']:.4f} | Ranking Weight: {losses['ranking_weight']:.3f}")
+        logger.info(f"  Coverage [{cov_status}]: A={losses['cov_A']:.1f}% B={losses['cov_B']:.1f}% (best={trainer.best_coverage:.1f}%)")
+        logger.info(f"  3-Adic Correlation [{corr_status}] (Hyp): A={losses['corr_A_hyp']:.3f} B={losses['corr_B_hyp']:.3f} (best={trainer.best_corr_hyp:.3f})")
         if losses.get('correlation_evaluated', True):
-            print(f"  3-Adic Correlation (Euclidean):  A={losses['corr_A_euc']:.3f} B={losses['corr_B_euc']:.3f}")
-        print(f"  Mean Radius: A={losses['mean_radius_A']:.3f} B={losses['mean_radius_B']:.3f}")
+            logger.info(f"  3-Adic Correlation (Euclidean):  A={losses['corr_A_euc']:.3f} B={losses['corr_B_euc']:.3f}")
+        logger.info(f"  Mean Radius: A={losses['mean_radius_A']:.3f} B={losses['mean_radius_B']:.3f}")
 
         if losses.get('radial_loss', 0) > 0:
-            print(f"  Radial Loss: {losses['radial_loss']:.4f}")
+            logger.info(f"  Radial Loss: {losses['radial_loss']:.4f}")
 
         # v5.10 metrics
         if losses.get('hyp_kl_A', 0) > 0:
-            print(f"  Hyperbolic KL: A={losses['hyp_kl_A']:.4f} B={losses['hyp_kl_B']:.4f}")
+            logger.info(f"  Hyperbolic KL: A={losses['hyp_kl_A']:.4f} B={losses['hyp_kl_B']:.4f}")
         if losses.get('centroid_loss', 0) > 0:
-            print(f"  Centroid Loss: {losses['centroid_loss']:.4f}")
+            logger.info(f"  Centroid Loss: {losses['centroid_loss']:.4f}")
 
         # Homeostatic metrics
         if 'homeo_prior_sigma_A' in losses:
-            print(f"  Homeostatic Prior Sigma: A={losses['homeo_prior_sigma_A']:.3f} B={losses['homeo_prior_sigma_B']:.3f}")
-            print(f"  Homeostatic Curvature: A={losses['homeo_prior_curvature_A']:.3f} B={losses['homeo_prior_curvature_B']:.3f}")
+            logger.info(f"  Homeostatic Prior Sigma: A={losses['homeo_prior_sigma_A']:.3f} B={losses['homeo_prior_sigma_B']:.3f}")
+            logger.info(f"  Homeostatic Curvature: A={losses['homeo_prior_curvature_A']:.3f} B={losses['homeo_prior_curvature_B']:.3f}")
 
         # Log to TensorBoard
         if base_trainer.monitor.writer is not None:
@@ -737,13 +776,13 @@ def main():
             }, checkpoint_dir / f'checkpoint_epoch_{epoch}.pt')
 
     # Final summary
-    print(f"\n{'='*80}")
-    print("Training Complete - Pure Hyperbolic v5.10")
-    print(f"{'='*80}")
-    print(f"Best Hyperbolic Correlation: {trainer.best_corr_hyp:.4f}")
-    print(f"Best Euclidean Correlation: {trainer.best_corr_euc:.4f}")
-    print(f"Best Coverage: {trainer.best_coverage:.2f}%")
-    print(f"Target: r > 0.99, coverage > 99.7%")
+    logger.info(f"\n{'='*80}")
+    logger.info("Training Complete - Pure Hyperbolic v5.10")
+    logger.info(f"{'='*80}")
+    logger.info(f"Best Hyperbolic Correlation: {trainer.best_corr_hyp:.4f}")
+    logger.info(f"Best Euclidean Correlation: {trainer.best_corr_euc:.4f}")
+    logger.info(f"Best Coverage: {trainer.best_coverage:.2f}%")
+    logger.info(f"Target: r > 0.99, coverage > 99.7%")
 
     # Save final model
     checkpoint_dir = Path(config.get('checkpoint_dir', 'sandbox-training/checkpoints/v5_10'))
@@ -761,7 +800,7 @@ def main():
         'config': config
     }, checkpoint_dir / 'final_model.pt')
 
-    print(f"\nFinal model saved to: {checkpoint_dir / 'final_model.pt'}")
+    logger.info(f"\nFinal model saved to: {checkpoint_dir / 'final_model.pt'}")
 
 
 if __name__ == '__main__':
