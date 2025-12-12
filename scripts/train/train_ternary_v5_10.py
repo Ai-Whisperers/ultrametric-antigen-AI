@@ -1,62 +1,109 @@
 """Training script for Ternary VAE v5.10 - Pure Hyperbolic Geometry.
 
 This is a THIN orchestration script that wires together components from src/.
-All training logic and observability is delegated to HyperbolicVAETrainer.
-
-The script only handles:
-- CLI argument parsing
-- Config loading
-- Component instantiation
-- Training loop orchestration
-- Checkpoint saving
-
-All TensorBoard logging, console output, and metrics tracking happen in src/.
+All logic is delegated to src modules:
+- src.training: Trainers, monitoring, config validation
+- src.data: Data loading
+- src.utils: Reproducibility
+- src.artifacts: Checkpoint management
+- src.models: Model architecture
 
 Usage:
     python scripts/train/train_ternary_v5_10.py --config configs/ternary_v5_10.yaml
+    python scripts/train/train_ternary_v5_10.py --config configs/ternary_v5_10.yaml --strict
 """
 
-import torch
 import yaml
 import argparse
-import numpy as np
 from pathlib import Path
 import sys
-from torch.utils.data import DataLoader, random_split
 
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
 from src.models.ternary_vae_v5_10 import DualNeuralVAEV5_10
-from src.training import TernaryVAETrainer, HyperbolicVAETrainer, TrainingMonitor
-from src.data import generate_all_ternary_operations, TernaryOperationDataset
+from src.training import (
+    TernaryVAETrainer,
+    HyperbolicVAETrainer,
+    TrainingMonitor,
+    validate_config,
+    ConfigValidationError,
+    validate_environment
+)
+from src.data import create_ternary_data_loaders, get_data_loader_info
+from src.utils import set_seed
+from src.artifacts import CheckpointManager
 
 
 def main():
     args = parse_args()
-    config = load_config(args.config)
+
+    # Load and validate config
+    raw_config = load_config(args.config)
+    try:
+        validated = validate_config(raw_config)
+        config = raw_config  # Use raw dict for backward compatibility
+    except ConfigValidationError as e:
+        print(f"Configuration error:\n{e}")
+        sys.exit(1)
 
     # Initialize monitor (centralized observability)
-    monitor = create_monitor(config, args.log_dir)
+    monitor = TrainingMonitor(
+        eval_num_samples=config.get('eval_num_samples', 1000),
+        tensorboard_dir=config.get('tensorboard_dir', 'runs'),
+        log_dir=args.log_dir,
+        log_to_file=True
+    )
     log_startup_info(monitor, config, args.config)
 
-    # Set reproducibility
+    # Validate environment
+    env_status = validate_environment(config, monitor, strict=args.strict)
+    if not env_status.is_valid:
+        monitor._log("\nAborting due to environment validation failure")
+        sys.exit(1)
+
+    # Set reproducibility (from src.utils)
     set_seed(config.get('seed', 42))
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = 'cuda' if env_status.cuda_available else 'cpu'
     monitor._log(f"\nDevice: {device}")
 
-    # Create components
-    train_loader, val_loader = create_data_loaders(config, monitor)
+    # Create data loaders (from src.data)
+    monitor._log("\nCreating data loaders...")
+    train_loader, val_loader, _ = create_ternary_data_loaders(
+        batch_size=config['batch_size'],
+        train_split=config['train_split'],
+        val_split=config['val_split'],
+        test_split=config.get('test_split', 0.1),
+        num_workers=config['num_workers'],
+        seed=config.get('seed', 42)
+    )
+    monitor._log(f"Train: {get_data_loader_info(train_loader)['size']:,} samples")
+    monitor._log(f"Val: {get_data_loader_info(val_loader)['size']:,} samples")
+
+    # Create model
     model = create_model(config)
-    trainer = create_trainer(model, config, device, monitor)
+
+    # Create trainer
+    base_trainer = TernaryVAETrainer(model, config, device)
+    trainer = HyperbolicVAETrainer(base_trainer, model, device, config, monitor)
+
+    # Create checkpoint manager (from src.artifacts)
+    checkpoint_manager = CheckpointManager(
+        checkpoint_dir=Path(config.get('checkpoint_dir', 'sandbox-training/checkpoints/v5_10')),
+        checkpoint_freq=config.get('checkpoint_freq', 10)
+    )
 
     # Run training
-    run_training_loop(trainer, model, train_loader, val_loader, config)
+    run_training_loop(trainer, model, train_loader, val_loader, config, checkpoint_manager)
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train Ternary VAE v5.10 - Pure Hyperbolic')
-    parser.add_argument('--config', type=str, default='configs/ternary_v5_10.yaml')
-    parser.add_argument('--log-dir', type=str, default='logs')
+    parser.add_argument('--config', type=str, default='configs/ternary_v5_10.yaml',
+                        help='Path to config YAML file')
+    parser.add_argument('--log-dir', type=str, default='logs',
+                        help='Directory for log files')
+    parser.add_argument('--strict', action='store_true',
+                        help='Treat environment warnings as errors')
     return parser.parse_args()
 
 
@@ -65,21 +112,12 @@ def load_config(config_path: str) -> dict:
         return yaml.safe_load(f)
 
 
-def create_monitor(config: dict, log_dir: str) -> TrainingMonitor:
-    return TrainingMonitor(
-        eval_num_samples=config.get('eval_num_samples', 1000),
-        tensorboard_dir=config.get('tensorboard_dir', 'runs'),
-        log_dir=log_dir,
-        log_to_file=True
-    )
-
-
 def log_startup_info(monitor: TrainingMonitor, config: dict, config_path: str) -> None:
     """Log configuration summary at startup."""
     monitor._log(f"{'='*80}")
     monitor._log("Ternary VAE v5.10 Training - PURE HYPERBOLIC GEOMETRY")
     monitor._log(f"{'='*80}")
-    monitor._log(f"Config: {config_path}")
+    monitor._log(f"Config: {config_path} (validated)")
 
     padic = config.get('padic_losses', {})
     hyp_v10 = padic.get('hyperbolic_v10', {})
@@ -99,50 +137,8 @@ def log_startup_info(monitor: TrainingMonitor, config: dict, config_path: str) -
     monitor._log(f"  Correlation: every {config.get('eval_interval', 20)} epochs")
 
 
-def set_seed(seed: int) -> None:
-    torch.manual_seed(seed)
-    np.random.seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed(seed)
-
-
-def create_data_loaders(config: dict, monitor: TrainingMonitor):
-    """Create train and validation data loaders."""
-    monitor._log("\nGenerating dataset...")
-    operations = generate_all_ternary_operations()
-    dataset = TernaryOperationDataset(operations)
-    monitor._log(f"Total operations: {len(dataset):,}")
-
-    seed = config.get('seed', 42)
-    train_size = int(config['train_split'] * len(dataset))
-    val_size = int(config['val_split'] * len(dataset))
-    test_size = len(dataset) - train_size - val_size
-
-    train_dataset, val_dataset, _ = random_split(
-        dataset, [train_size, val_size, test_size],
-        generator=torch.Generator().manual_seed(seed)
-    )
-
-    monitor._log(f"Train: {len(train_dataset):,} | Val: {len(val_dataset):,}")
-
-    train_loader = DataLoader(
-        train_dataset,
-        batch_size=config['batch_size'],
-        shuffle=True,
-        num_workers=config['num_workers']
-    )
-    val_loader = DataLoader(
-        val_dataset,
-        batch_size=config['batch_size'],
-        shuffle=False,
-        num_workers=config['num_workers']
-    )
-
-    return train_loader, val_loader
-
-
 def create_model(config: dict) -> DualNeuralVAEV5_10:
-    """Create and return the model."""
+    """Create model from config."""
     mc = config['model']
     return DualNeuralVAEV5_10(
         input_dim=mc['input_dim'],
@@ -163,19 +159,16 @@ def create_model(config: dict) -> DualNeuralVAEV5_10:
     )
 
 
-def create_trainer(model, config: dict, device: str, monitor: TrainingMonitor) -> HyperbolicVAETrainer:
-    """Create the hyperbolic trainer with all observability wired up."""
-    base_trainer = TernaryVAETrainer(model, config, device)
-    return HyperbolicVAETrainer(base_trainer, model, device, config, monitor)
-
-
-def run_training_loop(trainer: HyperbolicVAETrainer, model, train_loader, val_loader, config: dict) -> None:
+def run_training_loop(
+    trainer: HyperbolicVAETrainer,
+    model,
+    train_loader,
+    val_loader,
+    config: dict,
+    checkpoint_manager: CheckpointManager
+) -> None:
     """Execute the training loop with unified observability."""
-    checkpoint_dir = Path(config.get('checkpoint_dir', 'sandbox-training/checkpoints/v5_10'))
-    checkpoint_dir.mkdir(parents=True, exist_ok=True)
-
     total_epochs = config['total_epochs']
-    checkpoint_freq = config.get('checkpoint_freq', 10)
 
     for epoch in range(total_epochs):
         # Set epoch on base trainer
@@ -188,46 +181,29 @@ def run_training_loop(trainer: HyperbolicVAETrainer, model, train_loader, val_lo
         trainer.update_monitor_state(losses)
         trainer.log_epoch(epoch, losses)
 
-        # Save checkpoint at intervals
-        if epoch % checkpoint_freq == 0:
-            save_checkpoint(checkpoint_dir, epoch, model, trainer, config)
+        # Save checkpoint using CheckpointManager (from src.artifacts)
+        is_best = losses['loss'] < trainer.monitor.best_val_loss
+        checkpoint_manager.save_checkpoint(
+            epoch=epoch,
+            model=model,
+            optimizer=trainer.base_trainer.optimizer,
+            metadata={
+                'best_corr_hyp': trainer.best_corr_hyp,
+                'best_corr_euc': trainer.best_corr_euc,
+                'best_coverage': trainer.best_coverage,
+                'correlation_history_hyp': trainer.correlation_history_hyp,
+                'correlation_history_euc': trainer.correlation_history_euc,
+                'coverage_history': trainer.coverage_history,
+                'ranking_weight_history': trainer.ranking_weight_history,
+                'config': config
+            },
+            is_best=is_best
+        )
 
     # Training complete
     trainer.print_summary()
-    save_final_model(checkpoint_dir, model, trainer, config)
+    trainer.monitor._log(f"\nCheckpoints saved to: {checkpoint_manager.checkpoint_dir}")
     trainer.close()
-
-
-def save_checkpoint(checkpoint_dir: Path, epoch: int, model, trainer: HyperbolicVAETrainer, config: dict) -> None:
-    """Save training checkpoint."""
-    torch.save({
-        'epoch': epoch,
-        'model_state_dict': model.state_dict(),
-        'optimizer_state_dict': trainer.base_trainer.optimizer.state_dict(),
-        'best_corr_hyp': trainer.best_corr_hyp,
-        'best_corr_euc': trainer.best_corr_euc,
-        'best_coverage': trainer.best_coverage,
-        'config': config
-    }, checkpoint_dir / f'checkpoint_epoch_{epoch}.pt')
-
-
-def save_final_model(checkpoint_dir: Path, model, trainer: HyperbolicVAETrainer, config: dict) -> None:
-    """Save final model with full training history."""
-    final_path = checkpoint_dir / 'final_model.pt'
-    torch.save({
-        'epoch': config['total_epochs'],
-        'model_state_dict': model.state_dict(),
-        'optimizer_state_dict': trainer.base_trainer.optimizer.state_dict(),
-        'best_corr_hyp': trainer.best_corr_hyp,
-        'best_corr_euc': trainer.best_corr_euc,
-        'best_coverage': trainer.best_coverage,
-        'correlation_history_hyp': trainer.correlation_history_hyp,
-        'correlation_history_euc': trainer.correlation_history_euc,
-        'coverage_history': trainer.coverage_history,
-        'ranking_weight_history': trainer.ranking_weight_history,
-        'config': config
-    }, final_path)
-    trainer.monitor._log(f"\nFinal model saved to: {final_path}")
 
 
 if __name__ == '__main__':
