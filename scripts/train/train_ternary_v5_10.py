@@ -11,7 +11,6 @@ Usage:
     python scripts/train/train_ternary_v5_10.py --config configs/ternary_v5_10.yaml
 """
 
-import logging
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -28,43 +27,11 @@ sys.path.append(str(Path(__file__).parent.parent.parent))
 
 from src.models.ternary_vae_v5_10 import DualNeuralVAEV5_10, StateNetV4
 from src.training import TernaryVAETrainer
+from src.training.monitor import TrainingMonitor
 from src.data import generate_all_ternary_operations, TernaryOperationDataset
 from src.losses.padic_losses import PAdicRankingLossHyperbolic
 from src.losses.hyperbolic_prior import HomeostaticHyperbolicPrior
 from src.losses.hyperbolic_recon import HomeostaticReconLoss, HyperbolicCentroidLoss
-
-
-def setup_logging(config_path: str, log_dir: str = "logs") -> logging.Logger:
-    """Setup dual logging to console and file with timestamp."""
-    log_path = Path(log_dir)
-    log_path.mkdir(parents=True, exist_ok=True)
-
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    config_name = Path(config_path).stem
-    log_file = log_path / f"{config_name}_{timestamp}.log"
-
-    # Create logger
-    logger = logging.getLogger("ternary_vae")
-    logger.setLevel(logging.INFO)
-    logger.handlers.clear()
-
-    # File handler
-    file_handler = logging.FileHandler(log_file, encoding='utf-8')
-    file_handler.setLevel(logging.INFO)
-    file_formatter = logging.Formatter('%(asctime)s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-    file_handler.setFormatter(file_formatter)
-
-    # Console handler
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setLevel(logging.INFO)
-    console_formatter = logging.Formatter('%(message)s')
-    console_handler.setFormatter(console_formatter)
-
-    logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
-
-    logger.info(f"Logging to: {log_file}")
-    return logger
 
 
 def compute_ranking_correlation_hyperbolic(model, device, n_samples=5000, max_norm=0.95, curvature=2.0):
@@ -181,11 +148,12 @@ def compute_ranking_correlation_hyperbolic(model, device, n_samples=5000, max_no
 class PureHyperbolicTrainer:
     """Trainer for v5.10 Pure Hyperbolic geometry with homeostatic adaptation."""
 
-    def __init__(self, base_trainer, model, device, config):
+    def __init__(self, base_trainer, model, device, config, monitor=None):
         self.base_trainer = base_trainer
         self.model = model
         self.device = device
         self.config = config
+        self.monitor = monitor  # Unified monitor for logging
 
         # Continuous feedback config
         self.feedback_config = config.get('continuous_feedback', {})
@@ -555,45 +523,50 @@ def main():
                         help='Directory for log files')
     args = parser.parse_args()
 
-    # Setup logging first
-    logger = setup_logging(args.config, args.log_dir)
-
-    # Load config
+    # Load config first to get tensorboard_dir
     with open(args.config, 'r') as f:
         config = yaml.safe_load(f)
 
-    logger.info(f"{'='*80}")
-    logger.info("Ternary VAE v5.10 Training - PURE HYPERBOLIC GEOMETRY")
-    logger.info("Homeostatic Emergence for Algebraic Convergence")
-    logger.info(f"{'='*80}")
-    logger.info(f"Config: {args.config}")
+    # Create unified monitor with file logging + TensorBoard
+    monitor = TrainingMonitor(
+        eval_num_samples=config.get('eval_num_samples', 1000),
+        tensorboard_dir=config.get('tensorboard_dir', 'runs'),
+        log_dir=args.log_dir,
+        log_to_file=True
+    )
+
+    monitor._log(f"{'='*80}")
+    monitor._log("Ternary VAE v5.10 Training - PURE HYPERBOLIC GEOMETRY")
+    monitor._log("Homeostatic Emergence for Algebraic Convergence")
+    monitor._log(f"{'='*80}")
+    monitor._log(f"Config: {args.config}")
 
     # Print v5.10 module status
     padic = config.get('padic_losses', {})
     hyp_v10 = padic.get('hyperbolic_v10', {})
 
-    logger.info(f"\nv5.10 Modules:")
-    logger.info(f"  Hyperbolic Prior: {'ENABLED' if hyp_v10.get('use_hyperbolic_prior', False) else 'DISABLED'}")
-    logger.info(f"  Hyperbolic Recon: {'ENABLED' if hyp_v10.get('use_hyperbolic_recon', False) else 'DISABLED'}")
-    logger.info(f"  Centroid Loss: {'ENABLED' if hyp_v10.get('use_centroid_loss', False) else 'DISABLED'}")
+    monitor._log(f"\nv5.10 Modules:")
+    monitor._log(f"  Hyperbolic Prior: {'ENABLED' if hyp_v10.get('use_hyperbolic_prior', False) else 'DISABLED'}")
+    monitor._log(f"  Hyperbolic Recon: {'ENABLED' if hyp_v10.get('use_hyperbolic_recon', False) else 'DISABLED'}")
+    monitor._log(f"  Centroid Loss: {'ENABLED' if hyp_v10.get('use_centroid_loss', False) else 'DISABLED'}")
 
     if hyp_v10.get('use_hyperbolic_prior', False):
         prior = hyp_v10.get('prior', {})
-        logger.info(f"    Prior curvature: {prior.get('curvature', 2.0)}")
-        logger.info(f"    Prior sigma: {prior.get('prior_sigma', 1.0)}")
-        logger.info(f"    Homeostatic: {prior.get('homeostatic', True)}")
+        monitor._log(f"    Prior curvature: {prior.get('curvature', 2.0)}")
+        monitor._log(f"    Prior sigma: {prior.get('prior_sigma', 1.0)}")
+        monitor._log(f"    Homeostatic: {prior.get('homeostatic', True)}")
 
-    logger.info(f"\nEuclidean Contamination:")
-    logger.info(f"  norm_loss: DISABLED" if not padic.get('enable_norm_loss', False) else "  norm_loss: WARNING - ENABLED")
-    logger.info(f"  metric_loss: DISABLED" if not padic.get('enable_metric_loss', False) else "  metric_loss: WARNING - ENABLED")
+    monitor._log(f"\nEuclidean Contamination:")
+    monitor._log(f"  norm_loss: DISABLED" if not padic.get('enable_norm_loss', False) else "  norm_loss: WARNING - ENABLED")
+    monitor._log(f"  metric_loss: DISABLED" if not padic.get('enable_metric_loss', False) else "  metric_loss: WARNING - ENABLED")
 
     # Check hyperbolic ranking
     if padic.get('enable_ranking_loss_hyperbolic', False):
         hyp = padic.get('ranking_hyperbolic', {})
-        logger.info(f"\nHyperbolic Ranking Loss:")
-        logger.info(f"  Curvature: {hyp.get('curvature', 2.0)}")
-        logger.info(f"  Radial weight: {hyp.get('radial_weight', 0.4)}")
-        logger.info(f"  Max norm: {hyp.get('max_norm', 0.95)}")
+        monitor._log(f"\nHyperbolic Ranking Loss:")
+        monitor._log(f"  Curvature: {hyp.get('curvature', 2.0)}")
+        monitor._log(f"  Radial weight: {hyp.get('radial_weight', 0.4)}")
+        monitor._log(f"  Max norm: {hyp.get('max_norm', 0.95)}")
 
     # Set seed
     seed = config.get('seed', 42)
@@ -603,13 +576,13 @@ def main():
         torch.cuda.manual_seed(seed)
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    logger.info(f"\nDevice: {device}")
+    monitor._log(f"\nDevice: {device}")
 
     # Generate dataset
-    logger.info("\nGenerating dataset...")
+    monitor._log("\nGenerating dataset...")
     operations = generate_all_ternary_operations()
     dataset = TernaryOperationDataset(operations)
-    logger.info(f"Total operations: {len(dataset):,}")
+    monitor._log(f"Total operations: {len(dataset):,}")
 
     # Split dataset
     train_size = int(config['train_split'] * len(dataset))
@@ -621,7 +594,7 @@ def main():
         generator=torch.Generator().manual_seed(seed)
     )
 
-    logger.info(f"Train: {len(train_dataset):,} | Val: {len(val_dataset):,} | Test: {len(test_dataset):,}")
+    monitor._log(f"Train: {len(train_dataset):,} | Val: {len(val_dataset):,} | Test: {len(test_dataset):,}")
 
     # Data loaders
     train_loader = DataLoader(
@@ -661,17 +634,17 @@ def main():
     # Initialize base trainer
     base_trainer = TernaryVAETrainer(model, config, device)
 
-    # Wrap with pure hyperbolic trainer
-    trainer = PureHyperbolicTrainer(base_trainer, model, device, config)
+    # Wrap with pure hyperbolic trainer - pass unified monitor
+    trainer = PureHyperbolicTrainer(base_trainer, model, device, config, monitor)
 
-    logger.info(f"\n{'='*80}")
-    logger.info("Starting Pure Hyperbolic Training with Homeostatic Adaptation")
-    logger.info(f"{'='*80}")
-    logger.info(f"\nEvaluation Intervals (reduces ~10min/epoch to ~1-2min/epoch):")
-    logger.info(f"  Coverage check: every {config.get('coverage_check_interval', 5)} epochs")
-    logger.info(f"  Correlation check: every {config.get('eval_interval', 20)} epochs")
-    logger.info(f"  Samples per check: {config.get('eval_num_samples', 1000)}")
-    logger.info(f"  Training loss logged every batch (free convergence signal)\n")
+    monitor._log(f"\n{'='*80}")
+    monitor._log("Starting Pure Hyperbolic Training with Homeostatic Adaptation")
+    monitor._log(f"{'='*80}")
+    monitor._log(f"\nEvaluation Intervals (reduces ~10min/epoch to ~1-2min/epoch):")
+    monitor._log(f"  Coverage check: every {config.get('coverage_check_interval', 5)} epochs")
+    monitor._log(f"  Correlation check: every {config.get('eval_interval', 20)} epochs")
+    monitor._log(f"  Samples per check: {config.get('eval_num_samples', 1000)}")
+    monitor._log(f"  Batch-level logging: every batch to TensorBoard\n")
 
     total_epochs = config['total_epochs']
 
@@ -689,78 +662,56 @@ def main():
             losses['H_A'], losses['H_B'], losses['unique_A'], losses['unique_B']
         )
 
-        # Print epoch summary
-        cov_status = "FRESH" if losses.get('coverage_evaluated', True) else "cached"
-        corr_status = "FRESH" if losses.get('correlation_evaluated', True) else "cached"
-
-        logger.info(f"\nEpoch {epoch}/{total_epochs}")
-        logger.info(f"  Loss: {losses['loss']:.4f} | Ranking Weight: {losses['ranking_weight']:.3f}")
-        logger.info(f"  Coverage [{cov_status}]: A={losses['cov_A']:.1f}% B={losses['cov_B']:.1f}% (best={trainer.best_coverage:.1f}%)")
-        logger.info(f"  3-Adic Correlation [{corr_status}] (Hyp): A={losses['corr_A_hyp']:.3f} B={losses['corr_B_hyp']:.3f} (best={trainer.best_corr_hyp:.3f})")
-        if losses.get('correlation_evaluated', True):
-            logger.info(f"  3-Adic Correlation (Euclidean):  A={losses['corr_A_euc']:.3f} B={losses['corr_B_euc']:.3f}")
-        logger.info(f"  Mean Radius: A={losses['mean_radius_A']:.3f} B={losses['mean_radius_B']:.3f}")
-
-        if losses.get('radial_loss', 0) > 0:
-            logger.info(f"  Radial Loss: {losses['radial_loss']:.4f}")
-
-        # v5.10 metrics
-        if losses.get('hyp_kl_A', 0) > 0:
-            logger.info(f"  Hyperbolic KL: A={losses['hyp_kl_A']:.4f} B={losses['hyp_kl_B']:.4f}")
-        if losses.get('centroid_loss', 0) > 0:
-            logger.info(f"  Centroid Loss: {losses['centroid_loss']:.4f}")
-
-        # Homeostatic metrics
+        # Build homeostatic metrics dict
+        homeostatic_metrics = {}
         if 'homeo_prior_sigma_A' in losses:
-            logger.info(f"  Homeostatic Prior Sigma: A={losses['homeo_prior_sigma_A']:.3f} B={losses['homeo_prior_sigma_B']:.3f}")
-            logger.info(f"  Homeostatic Curvature: A={losses['homeo_prior_curvature_A']:.3f} B={losses['homeo_prior_curvature_B']:.3f}")
+            homeostatic_metrics = {
+                'prior_sigma_A': losses['homeo_prior_sigma_A'],
+                'prior_sigma_B': losses['homeo_prior_sigma_B'],
+                'prior_curvature_A': losses['homeo_prior_curvature_A'],
+                'prior_curvature_B': losses['homeo_prior_curvature_B']
+            }
 
-        # Log to TensorBoard
-        if base_trainer.monitor.writer is not None:
-            writer = base_trainer.monitor.writer
+        # Use unified monitor for epoch summary (console + file)
+        monitor.log_epoch_summary(
+            epoch=epoch,
+            total_epochs=total_epochs,
+            loss=losses['loss'],
+            cov_A=losses['cov_A'],
+            cov_B=losses['cov_B'],
+            corr_A_hyp=losses['corr_A_hyp'],
+            corr_B_hyp=losses['corr_B_hyp'],
+            corr_A_euc=losses['corr_A_euc'],
+            corr_B_euc=losses['corr_B_euc'],
+            mean_radius_A=losses['mean_radius_A'],
+            mean_radius_B=losses['mean_radius_B'],
+            ranking_weight=losses['ranking_weight'],
+            coverage_evaluated=losses.get('coverage_evaluated', True),
+            correlation_evaluated=losses.get('correlation_evaluated', True),
+            hyp_kl_A=losses.get('hyp_kl_A', 0),
+            hyp_kl_B=losses.get('hyp_kl_B', 0),
+            centroid_loss=losses.get('centroid_loss', 0),
+            radial_loss=losses.get('radial_loss', 0),
+            homeostatic_metrics=homeostatic_metrics if homeostatic_metrics else None
+        )
 
-            # Correlation metrics
-            writer.add_scalars('Hyperbolic/CorrelationHyp', {
-                'VAE_A': losses['corr_A_hyp'],
-                'VAE_B': losses['corr_B_hyp'],
-                'Mean': losses['corr_mean_hyp']
-            }, epoch)
-
-            writer.add_scalars('Hyperbolic/Coverage', {
-                'VAE_A': losses['cov_A'],
-                'VAE_B': losses['cov_B'],
-                'Mean': losses['cov_mean']
-            }, epoch)
-
-            writer.add_scalars('Hyperbolic/MeanRadius', {
-                'VAE_A': losses['mean_radius_A'],
-                'VAE_B': losses['mean_radius_B']
-            }, epoch)
-
-            writer.add_scalar('Hyperbolic/RankingWeight', losses['ranking_weight'], epoch)
-            writer.add_scalar('Hyperbolic/RadialLoss', losses.get('radial_loss', 0), epoch)
-
-            # v5.10 metrics
-            if losses.get('hyp_kl_A', 0) > 0:
-                writer.add_scalars('v5.10/HyperbolicKL', {
-                    'VAE_A': losses['hyp_kl_A'],
-                    'VAE_B': losses['hyp_kl_B']
-                }, epoch)
-
-            if losses.get('centroid_loss', 0) > 0:
-                writer.add_scalar('v5.10/CentroidLoss', losses['centroid_loss'], epoch)
-
-            if 'homeo_prior_sigma_A' in losses:
-                writer.add_scalars('v5.10/HomeostaticSigma', {
-                    'VAE_A': losses['homeo_prior_sigma_A'],
-                    'VAE_B': losses['homeo_prior_sigma_B']
-                }, epoch)
-                writer.add_scalars('v5.10/HomeostaticCurvature', {
-                    'VAE_A': losses['homeo_prior_curvature_A'],
-                    'VAE_B': losses['homeo_prior_curvature_B']
-                }, epoch)
-
-            writer.flush()
+        # Use unified monitor for TensorBoard logging
+        monitor.log_hyperbolic_epoch(
+            epoch=epoch,
+            corr_A_hyp=losses['corr_A_hyp'],
+            corr_B_hyp=losses['corr_B_hyp'],
+            corr_A_euc=losses['corr_A_euc'],
+            corr_B_euc=losses['corr_B_euc'],
+            mean_radius_A=losses['mean_radius_A'],
+            mean_radius_B=losses['mean_radius_B'],
+            ranking_weight=losses['ranking_weight'],
+            ranking_loss=losses.get('ranking_loss_hyp', 0),
+            radial_loss=losses.get('radial_loss', 0),
+            hyp_kl_A=losses.get('hyp_kl_A', 0),
+            hyp_kl_B=losses.get('hyp_kl_B', 0),
+            centroid_loss=losses.get('centroid_loss', 0),
+            homeostatic_metrics=homeostatic_metrics if homeostatic_metrics else None
+        )
 
         # Checkpoint
         if epoch % config.get('checkpoint_freq', 10) == 0:
@@ -775,14 +726,8 @@ def main():
                 'config': config
             }, checkpoint_dir / f'checkpoint_epoch_{epoch}.pt')
 
-    # Final summary
-    logger.info(f"\n{'='*80}")
-    logger.info("Training Complete - Pure Hyperbolic v5.10")
-    logger.info(f"{'='*80}")
-    logger.info(f"Best Hyperbolic Correlation: {trainer.best_corr_hyp:.4f}")
-    logger.info(f"Best Euclidean Correlation: {trainer.best_corr_euc:.4f}")
-    logger.info(f"Best Coverage: {trainer.best_coverage:.2f}%")
-    logger.info(f"Target: r > 0.99, coverage > 99.7%")
+    # Final summary using unified monitor
+    monitor.print_training_summary()
 
     # Save final model
     checkpoint_dir = Path(config.get('checkpoint_dir', 'sandbox-training/checkpoints/v5_10'))
@@ -800,7 +745,8 @@ def main():
         'config': config
     }, checkpoint_dir / 'final_model.pt')
 
-    logger.info(f"\nFinal model saved to: {checkpoint_dir / 'final_model.pt'}")
+    monitor._log(f"\nFinal model saved to: {checkpoint_dir / 'final_model.pt'}")
+    monitor.close()
 
 
 if __name__ == '__main__':
