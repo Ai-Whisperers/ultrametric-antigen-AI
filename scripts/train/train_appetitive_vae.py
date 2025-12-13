@@ -1,5 +1,18 @@
 """Training script for Appetitive Dual-VAE.
 
+DEPRECATED: This approach has been superseded by v5.10.1 Radial-First Curriculum Learning.
+Use train_ternary_v5_10.py instead for new training runs.
+
+The v5.10.1 curriculum approach provides:
+- StateNet v5 controlled curriculum (vs metric-gated phases)
+- RadialStratificationLoss (vs HierarchicalNormLoss)
+- ContinuousCurriculumModule (vs phase gates)
+- Simpler architecture with better convergence
+
+Kept for historical reference and comparison experiments.
+
+---
+
 Bio-inspired VAE training with emergent drives toward:
 - r > 0.99 3-adic correlation (ultrametric structure)
 - Full 19683 operation coverage

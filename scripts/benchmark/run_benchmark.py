@@ -1,4 +1,4 @@
-"""Comprehensive benchmarking suite for Ternary VAE v5.6."""
+"""Comprehensive benchmarking suite for Ternary VAE (v5.6 and v5.10)."""
 
 import argparse
 import torch
@@ -17,17 +17,20 @@ from typing import Dict, List
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from src.models.ternary_vae_v5_6 import DualNeuralVAEV5
-from src.utils.data import generate_all_ternary_operations, TernaryOperationDataset
+from src.models.ternary_vae_v5_10 import DualNeuralVAEV5_10
+from src.data import generate_all_ternary_operations, TernaryOperationDataset
 from src.utils.metrics import evaluate_coverage, compute_latent_entropy
+from src.metrics import compute_ranking_correlation_hyperbolic
 
 
 class TernaryVAEBenchmark:
-    """Benchmark suite for Ternary VAE v5.6."""
+    """Benchmark suite for Ternary VAE (v5.6 and v5.10)."""
 
-    def __init__(self, config_path: str, checkpoint_path: str = None, device: str = 'cuda'):
+    def __init__(self, config_path: str, checkpoint_path: str = None, device: str = 'cuda', model_version: str = 'v5.10'):
         self.config_path = config_path
         self.checkpoint_path = checkpoint_path
         self.device = device if torch.cuda.is_available() else 'cpu'
+        self.model_version = model_version
 
         # Require checkpoint for valid benchmarking
         if checkpoint_path is None:
@@ -41,17 +44,39 @@ class TernaryVAEBenchmark:
         with open(config_path, 'r') as f:
             self.config = yaml.safe_load(f)
 
-        # Initialize model
+        # Initialize model based on version
         model_config = self.config['model']
-        self.model = DualNeuralVAEV5(
-            input_dim=model_config['input_dim'],
-            latent_dim=model_config['latent_dim'],
-            rho_min=model_config['rho_min'],
-            rho_max=model_config['rho_max'],
-            lambda3_base=model_config['lambda3_base'],
-            lambda3_amplitude=model_config['lambda3_amplitude'],
-            eps_kl=model_config['eps_kl']
-        ).to(self.device)
+
+        if model_version == 'v5.10':
+            self.model = DualNeuralVAEV5_10(
+                input_dim=model_config['input_dim'],
+                latent_dim=model_config['latent_dim'],
+                rho_min=model_config['rho_min'],
+                rho_max=model_config['rho_max'],
+                lambda3_base=model_config['lambda3_base'],
+                lambda3_amplitude=model_config['lambda3_amplitude'],
+                eps_kl=model_config['eps_kl'],
+                gradient_balance=model_config.get('gradient_balance', True),
+                adaptive_scheduling=model_config.get('adaptive_scheduling', True),
+                use_statenet=model_config.get('use_statenet', True),
+                statenet_version=model_config.get('statenet_version', 4),
+                statenet_lr_scale=model_config.get('statenet_lr_scale', 0.1),
+                statenet_lambda_scale=model_config.get('statenet_lambda_scale', 0.02),
+                statenet_ranking_scale=model_config.get('statenet_ranking_scale', 0.3),
+                statenet_hyp_sigma_scale=model_config.get('statenet_hyp_sigma_scale', 0.05),
+                statenet_hyp_curvature_scale=model_config.get('statenet_hyp_curvature_scale', 0.02),
+                statenet_curriculum_scale=model_config.get('statenet_curriculum_scale', 0.1)
+            ).to(self.device)
+        else:  # v5.6
+            self.model = DualNeuralVAEV5(
+                input_dim=model_config['input_dim'],
+                latent_dim=model_config['latent_dim'],
+                rho_min=model_config['rho_min'],
+                rho_max=model_config['rho_max'],
+                lambda3_base=model_config['lambda3_base'],
+                lambda3_amplitude=model_config['lambda3_amplitude'],
+                eps_kl=model_config['eps_kl']
+            ).to(self.device)
 
         # Load checkpoint if provided
         if checkpoint_path:
@@ -62,21 +87,27 @@ class TernaryVAEBenchmark:
     def load_checkpoint(self, checkpoint_path: str):
         """Load model from checkpoint."""
         checkpoint = torch.load(checkpoint_path, map_location=self.device)
-        self.model.load_state_dict(checkpoint['model'])
+
+        # Handle different checkpoint formats
+        if 'model_state_dict' in checkpoint:
+            self.model.load_state_dict(checkpoint['model_state_dict'])
+        elif 'model' in checkpoint:
+            self.model.load_state_dict(checkpoint['model'])
+        else:
+            self.model.load_state_dict(checkpoint)
+
         print(f"Loaded checkpoint from {checkpoint_path}")
         print(f"  Epoch: {checkpoint.get('epoch', 'unknown')}")
-        print(f"  Best val loss: {checkpoint.get('best_val_loss', 'unknown')}")
+
+        # Print version-specific metrics
+        if self.model_version == 'v5.10':
+            print(f"  Best hyp corr: {checkpoint.get('best_corr_hyp', 'unknown')}")
+            print(f"  Best coverage: {checkpoint.get('best_coverage', 'unknown')}")
+        else:
+            print(f"  Best val loss: {checkpoint.get('best_val_loss', 'unknown')}")
 
     def benchmark_inference_speed(self, num_samples: int = 10000, num_trials: int = 10) -> Dict:
-        """Benchmark inference speed.
-
-        Args:
-            num_samples: Number of samples to generate per trial
-            num_trials: Number of trials to average
-
-        Returns:
-            dict: Timing statistics
-        """
+        """Benchmark inference speed."""
         print(f"\n{'='*80}")
         print("Benchmarking Inference Speed")
         print(f"{'='*80}")
@@ -117,24 +148,15 @@ class TernaryVAEBenchmark:
             'vae_b_samples_per_sec': num_samples / np.mean(times_B),
         }
 
-        # Print results
-        print(f"\nVAE-A: {results['vae_a_mean_time']:.4f}s ± {results['vae_a_std_time']:.4f}s")
+        print(f"\nVAE-A: {results['vae_a_mean_time']:.4f}s +/- {results['vae_a_std_time']:.4f}s")
         print(f"       {results['vae_a_samples_per_sec']:.0f} samples/sec")
-        print(f"\nVAE-B: {results['vae_b_mean_time']:.4f}s ± {results['vae_b_std_time']:.4f}s")
+        print(f"\nVAE-B: {results['vae_b_mean_time']:.4f}s +/- {results['vae_b_std_time']:.4f}s")
         print(f"       {results['vae_b_samples_per_sec']:.0f} samples/sec")
 
         return results
 
     def benchmark_coverage(self, num_samples: int = 195000, num_trials: int = 5) -> Dict:
-        """Benchmark operation coverage.
-
-        Args:
-            num_samples: Number of samples to generate (10x exhaustive)
-            num_trials: Number of trials to average
-
-        Returns:
-            dict: Coverage statistics
-        """
+        """Benchmark operation coverage."""
         print(f"\n{'='*80}")
         print("Benchmarking Coverage")
         print(f"{'='*80}")
@@ -179,47 +201,35 @@ class TernaryVAEBenchmark:
             'vae_b_max_coverage': np.max(cov_B_values),
         }
 
-        # Print summary
         print(f"\n{'='*40}")
         print("Coverage Summary")
         print(f"{'='*40}")
-        print(f"VAE-A: {results['vae_a_mean_coverage']:.2f}% ± {results['vae_a_std_coverage']:.2f}%")
+        print(f"VAE-A: {results['vae_a_mean_coverage']:.2f}% +/- {results['vae_a_std_coverage']:.2f}%")
         print(f"       Max: {results['vae_a_max_coverage']:.2f}%")
-        print(f"       ({results['vae_a_mean_unique']:.0f} ± {results['vae_a_std_unique']:.0f} ops)")
-        print(f"\nVAE-B: {results['vae_b_mean_coverage']:.2f}% ± {results['vae_b_std_coverage']:.2f}%")
+        print(f"       ({results['vae_a_mean_unique']:.0f} +/- {results['vae_a_std_unique']:.0f} ops)")
+        print(f"\nVAE-B: {results['vae_b_mean_coverage']:.2f}% +/- {results['vae_b_std_coverage']:.2f}%")
         print(f"       Max: {results['vae_b_max_coverage']:.2f}%")
-        print(f"       ({results['vae_b_mean_unique']:.0f} ± {results['vae_b_std_unique']:.0f} ops)")
+        print(f"       ({results['vae_b_mean_unique']:.0f} +/- {results['vae_b_std_unique']:.0f} ops)")
 
         return results
 
     def benchmark_latent_entropy(self, num_samples: int = 10000) -> Dict:
-        """Benchmark latent space entropy.
-
-        Args:
-            num_samples: Number of samples to analyze
-
-        Returns:
-            dict: Entropy statistics
-        """
+        """Benchmark latent space entropy."""
         print(f"\n{'='*80}")
         print("Benchmarking Latent Entropy")
         print(f"{'='*80}")
 
-        # Generate real ternary operations and encode them to get actual latent codes
         all_ops = generate_all_ternary_operations()
-        # Sample subset if requested samples < total operations
         if num_samples < len(all_ops):
             indices = torch.randperm(len(all_ops))[:num_samples]
             sampled_ops = all_ops[indices]
         else:
             sampled_ops = all_ops[:num_samples]
 
-        # Convert to tensor if needed and move to device
         if not isinstance(sampled_ops, torch.Tensor):
             sampled_ops = torch.FloatTensor(sampled_ops)
         sampled_ops = sampled_ops.to(self.device)
 
-        # Encode to get real latent codes
         with torch.no_grad():
             mu_A, _ = self.model.encoder_A(sampled_ops)
             mu_B, _ = self.model.encoder_B(sampled_ops)
@@ -240,12 +250,60 @@ class TernaryVAEBenchmark:
 
         return results
 
-    def benchmark_memory_usage(self) -> Dict:
-        """Benchmark memory usage.
+    def benchmark_hyperbolic_correlation(self, num_samples: int = 5000, num_trials: int = 3) -> Dict:
+        """Benchmark hyperbolic 3-adic correlation (v5.10 specific)."""
+        print(f"\n{'='*80}")
+        print("Benchmarking Hyperbolic 3-adic Correlation")
+        print(f"{'='*80}")
 
-        Returns:
-            dict: Memory statistics
-        """
+        results_list = []
+
+        for trial in range(num_trials):
+            print(f"\nTrial {trial+1}/{num_trials}...")
+
+            corr_hyp, corr_euc, d_hyp, d_euc, cov_unique, cov_pct = compute_ranking_correlation_hyperbolic(
+                self.model, self.device, n_samples=num_samples
+            )
+
+            results_list.append({
+                'corr_hyp': corr_hyp,
+                'corr_euc': corr_euc,
+                'dist_hyp': d_hyp,
+                'dist_euc': d_euc,
+                'coverage_unique': cov_unique,
+                'coverage_pct': cov_pct
+            })
+
+            print(f"  Hyperbolic corr: {corr_hyp:.4f}")
+            print(f"  Euclidean corr:  {corr_euc:.4f}")
+            print(f"  Coverage: {cov_unique} ({cov_pct:.2f}%)")
+
+        # Aggregate
+        results = {
+            'num_samples': num_samples,
+            'num_trials': num_trials,
+            'corr_hyp_mean': np.mean([r['corr_hyp'] for r in results_list]),
+            'corr_hyp_std': np.std([r['corr_hyp'] for r in results_list]),
+            'corr_hyp_max': np.max([r['corr_hyp'] for r in results_list]),
+            'corr_euc_mean': np.mean([r['corr_euc'] for r in results_list]),
+            'corr_euc_std': np.std([r['corr_euc'] for r in results_list]),
+            'dist_hyp_mean': np.mean([r['dist_hyp'] for r in results_list]),
+            'dist_euc_mean': np.mean([r['dist_euc'] for r in results_list]),
+            'coverage_mean': np.mean([r['coverage_pct'] for r in results_list]),
+        }
+
+        print(f"\n{'='*40}")
+        print("Hyperbolic Correlation Summary")
+        print(f"{'='*40}")
+        print(f"Hyperbolic: {results['corr_hyp_mean']:.4f} +/- {results['corr_hyp_std']:.4f}")
+        print(f"            Max: {results['corr_hyp_max']:.4f}")
+        print(f"Euclidean:  {results['corr_euc_mean']:.4f} +/- {results['corr_euc_std']:.4f}")
+        print(f"Hyp/Euc Ratio: {results['corr_hyp_mean']/results['corr_euc_mean']:.2f}x")
+
+        return results
+
+    def benchmark_memory_usage(self) -> Dict:
+        """Benchmark memory usage."""
         print(f"\n{'='*80}")
         print("Benchmarking Memory Usage")
         print(f"{'='*80}")
@@ -257,14 +315,10 @@ class TernaryVAEBenchmark:
         torch.cuda.empty_cache()
         torch.cuda.reset_peak_memory_stats()
 
-        # Baseline
         baseline = torch.cuda.memory_allocated() / 1e9
-
-        # Generate samples
         _ = self.model.sample(10000, self.device, 'A')
         torch.cuda.synchronize()
 
-        # Peak memory
         peak = torch.cuda.max_memory_allocated() / 1e9
         current = torch.cuda.memory_allocated() / 1e9
 
@@ -283,19 +337,17 @@ class TernaryVAEBenchmark:
         return results
 
     def run_full_benchmark(self) -> Dict:
-        """Run complete benchmark suite.
-
-        Returns:
-            dict: All benchmark results
-        """
+        """Run complete benchmark suite."""
         print(f"\n{'#'*80}")
-        print(f"# Ternary VAE v5.6 - Full Benchmark Suite")
+        print(f"# Ternary VAE {self.model_version} - Full Benchmark Suite")
         print(f"# Config: {self.config_path}")
         print(f"# Checkpoint: {self.checkpoint_path or 'None'}")
         print(f"# Device: {self.device}")
         print(f"{'#'*80}")
 
-        results = {}
+        results = {
+            'model_version': self.model_version
+        }
 
         # Inference speed
         results['inference'] = self.benchmark_inference_speed(num_samples=10000, num_trials=10)
@@ -305,6 +357,10 @@ class TernaryVAEBenchmark:
 
         # Latent entropy
         results['entropy'] = self.benchmark_latent_entropy(num_samples=10000)
+
+        # Hyperbolic correlation (v5.10 primary metric)
+        if self.model_version == 'v5.10':
+            results['hyperbolic'] = self.benchmark_hyperbolic_correlation(num_samples=5000, num_trials=3)
 
         # Memory usage
         results['memory'] = self.benchmark_memory_usage()
@@ -317,10 +373,9 @@ class TernaryVAEBenchmark:
     def print_summary_table(self, results: Dict):
         """Print formatted summary table."""
         print(f"\n{'='*80}")
-        print("BENCHMARK SUMMARY")
+        print(f"BENCHMARK SUMMARY ({self.model_version})")
         print(f"{'='*80}\n")
 
-        # Prepare table data
         table_data = []
 
         # Inference
@@ -330,13 +385,19 @@ class TernaryVAEBenchmark:
 
         # Coverage
         if 'coverage' in results:
-            table_data.append(['Coverage (VAE-A)', f"{results['coverage']['vae_a_mean_coverage']:.2f}% ± {results['coverage']['vae_a_std_coverage']:.2f}%"])
-            table_data.append(['Coverage (VAE-B)', f"{results['coverage']['vae_b_mean_coverage']:.2f}% ± {results['coverage']['vae_b_std_coverage']:.2f}%"])
+            table_data.append(['Coverage (VAE-A)', f"{results['coverage']['vae_a_mean_coverage']:.2f}% +/- {results['coverage']['vae_a_std_coverage']:.2f}%"])
+            table_data.append(['Coverage (VAE-B)', f"{results['coverage']['vae_b_mean_coverage']:.2f}% +/- {results['coverage']['vae_b_std_coverage']:.2f}%"])
 
         # Entropy
         if 'entropy' in results:
             table_data.append(['Latent Entropy (VAE-A)', f"{results['entropy']['entropy_A']:.3f}"])
             table_data.append(['Latent Entropy (VAE-B)', f"{results['entropy']['entropy_B']:.3f}"])
+
+        # Hyperbolic (v5.10)
+        if 'hyperbolic' in results:
+            table_data.append(['3-adic Corr (Hyperbolic)', f"{results['hyperbolic']['corr_hyp_mean']:.4f} +/- {results['hyperbolic']['corr_hyp_std']:.4f}"])
+            table_data.append(['3-adic Corr (Euclidean)', f"{results['hyperbolic']['corr_euc_mean']:.4f} +/- {results['hyperbolic']['corr_euc_std']:.4f}"])
+            table_data.append(['Hyp/Euc Advantage', f"{results['hyperbolic']['corr_hyp_mean']/results['hyperbolic']['corr_euc_mean']:.2f}x"])
 
         # Memory
         if 'memory' in results and results['memory']:
@@ -345,28 +406,21 @@ class TernaryVAEBenchmark:
         print(tabulate(table_data, headers=['Metric', 'Value'], tablefmt='grid'))
 
     def save_results(self, results: Dict, output_path: str = None):
-        """Save benchmark results to JSON file with metadata.
-
-        Args:
-            results: Benchmark results dictionary
-            output_path: Path to save results (default: benchmarks/coverage_vs_entropy.json)
-        """
+        """Save benchmark results to JSON file with metadata."""
         if output_path is None:
-            output_path = Path(__file__).parent.parent.parent / "benchmarks" / "coverage_vs_entropy.json"
+            output_path = Path(__file__).parent.parent.parent / "benchmarks" / f"benchmark_{self.model_version}.json"
         else:
             output_path = Path(output_path)
 
-        # Create benchmarks directory if it doesn't exist
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Compute checkpoint hash
         checkpoint_hash = self._compute_file_hash(self.checkpoint_path)
         config_hash = self._compute_file_hash(self.config_path)
 
-        # Prepare output with metadata
         output = {
             'timestamp': datetime.now().isoformat(),
             'metadata': {
+                'model_version': self.model_version,
                 'checkpoint_path': str(self.checkpoint_path),
                 'checkpoint_hash': checkpoint_hash,
                 'config_path': str(self.config_path),
@@ -376,7 +430,6 @@ class TernaryVAEBenchmark:
             'results': results,
         }
 
-        # Save to JSON
         with open(output_path, 'w') as f:
             json.dump(output, f, indent=2)
 
@@ -396,19 +449,18 @@ class TernaryVAEBenchmark:
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Benchmark Ternary VAE v5.6')
+    parser = argparse.ArgumentParser(description='Benchmark Ternary VAE (v5.6 or v5.10)')
     parser.add_argument('--config', type=str, required=True, help='Path to config file')
     parser.add_argument('--checkpoint', type=str, required=True, help='Path to checkpoint (required)')
+    parser.add_argument('--model-version', type=str, default='v5.10', choices=['v5.6', 'v5.10'],
+                        help='Model version to benchmark (default: v5.10)')
     parser.add_argument('--device', type=str, default='cuda', help='Device: cuda or cpu')
     parser.add_argument('--trials', type=int, default=5, help='Number of trials for coverage benchmark')
-    parser.add_argument('--output', type=str, default=None, help='Output path for JSON results (default: benchmarks/coverage_vs_entropy.json)')
+    parser.add_argument('--output', type=str, default=None, help='Output path for JSON results')
     args = parser.parse_args()
 
-    # Run benchmark
-    benchmark = TernaryVAEBenchmark(args.config, args.checkpoint, args.device)
+    benchmark = TernaryVAEBenchmark(args.config, args.checkpoint, args.device, args.model_version)
     results = benchmark.run_full_benchmark()
-
-    # Save results to JSON
     benchmark.save_results(results, args.output)
 
     print(f"\n{'='*80}")

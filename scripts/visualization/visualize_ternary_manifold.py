@@ -1,4 +1,4 @@
-"""Ternary Manifold Surface Visualization.
+"""Ternary Manifold Surface Visualization (v5.6 and v5.10).
 
 Generates 3D surface plots of:
 1. Loss Landscape: z = reconstruction_loss(PC1, PC2) - optimization surface
@@ -7,6 +7,7 @@ Generates 3D surface plots of:
 Usage:
     python scripts/visualization/visualize_ternary_manifold.py --checkpoint latest.pt
     python scripts/visualization/visualize_ternary_manifold.py --checkpoint latest.pt --vae B
+    python scripts/visualization/visualize_ternary_manifold.py --checkpoint latest.pt --model-version v5.10
 """
 
 import argparse
@@ -27,21 +28,34 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.models.ternary_vae_v5_6 import DualNeuralVAEV5
+from src.models.ternary_vae_v5_10 import DualNeuralVAEV5_10
 from src.data.generation import generate_all_ternary_operations
 
 
-def load_checkpoint(checkpoint_path: Path, device: str = 'cpu') -> DualNeuralVAEV5:
+def load_checkpoint(checkpoint_path: Path, device: str = 'cpu', model_version: str = 'v5.6'):
     """Load model from checkpoint."""
     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
 
-    # Determine if StateNet was used (check checkpoint structure)
-    use_statenet = checkpoint.get('statenet_enabled', False)
-
-    model = DualNeuralVAEV5(
-        input_dim=9,
-        latent_dim=16,
-        use_statenet=use_statenet
-    )
+    if model_version == 'v5.10':
+        # v5.10 model with hyperbolic-aware StateNet (v5.10.1 curriculum support)
+        model_config = checkpoint.get('config', {}).get('model', {})
+        model = DualNeuralVAEV5_10(
+            input_dim=9,
+            latent_dim=16,
+            use_statenet=model_config.get('use_statenet', True),
+            statenet_version=model_config.get('statenet_version', 4),
+            statenet_curriculum_scale=model_config.get('statenet_curriculum_scale', 0.1)
+        )
+        print(f"Loading v5.10.1 model (Radial-First Curriculum Learning)")
+    else:
+        # v5.6 model
+        use_statenet = checkpoint.get('statenet_enabled', False)
+        model = DualNeuralVAEV5(
+            input_dim=9,
+            latent_dim=16,
+            use_statenet=use_statenet
+        )
+        print(f"Loading v5.6 model (Legacy)")
 
     # Handle different checkpoint formats
     if 'model' in checkpoint:
@@ -49,7 +63,6 @@ def load_checkpoint(checkpoint_path: Path, device: str = 'cpu') -> DualNeuralVAE
     elif 'model_state_dict' in checkpoint:
         model.load_state_dict(checkpoint['model_state_dict'])
     else:
-        # Try loading directly (raw state dict)
         model.load_state_dict(checkpoint)
 
     model.to(device)
@@ -57,7 +70,13 @@ def load_checkpoint(checkpoint_path: Path, device: str = 'cpu') -> DualNeuralVAE
 
     print(f"Loaded checkpoint: {checkpoint_path.name}")
     print(f"  Epoch: {checkpoint.get('epoch', 'N/A')}")
-    print(f"  StateNet: {'enabled' if use_statenet else 'disabled'}")
+
+    if model_version == 'v5.10':
+        print(f"  Best hyp corr: {checkpoint.get('best_corr_hyp', 'N/A')}")
+        print(f"  Best coverage: {checkpoint.get('best_coverage', 'N/A')}")
+    else:
+        use_statenet = checkpoint.get('statenet_enabled', False)
+        print(f"  StateNet: {'enabled' if use_statenet else 'disabled'}")
 
     # Print coverage history if available
     cov_A = checkpoint.get('coverage_A_history', [])
@@ -70,7 +89,7 @@ def load_checkpoint(checkpoint_path: Path, device: str = 'cpu') -> DualNeuralVAE
     return model
 
 
-def encode_all_operations(model: DualNeuralVAEV5, device: str = 'cpu', use_vae: str = 'A'):
+def encode_all_operations(model, device: str = 'cpu', use_vae: str = 'A'):
     """Encode all 19,683 ternary operations and compute reconstruction losses."""
     operations = generate_all_ternary_operations()
     x = torch.tensor(operations, dtype=torch.float32, device=device)
@@ -693,9 +712,11 @@ def plot_manifold_with_gradient_flow(data: dict, output_path: Path, vae_name: st
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Visualize Ternary Manifold')
+    parser = argparse.ArgumentParser(description='Visualize Ternary Manifold (v5.6 or v5.10)')
     parser.add_argument('--checkpoint', type=str, default='latest.pt',
-                        help='Checkpoint filename (in sandbox-training/checkpoints/v5_5/)')
+                        help='Checkpoint filename or full path')
+    parser.add_argument('--model-version', type=str, default='v5.6', choices=['v5.6', 'v5.10'],
+                        help='Model version (default: v5.6)')
     parser.add_argument('--vae', type=str, default='both', choices=['A', 'B', 'both'],
                         help='Which VAE to visualize')
     parser.add_argument('--output', type=str, default='outputs/manifold_viz',
@@ -704,19 +725,26 @@ def main():
 
     args = parser.parse_args()
 
-    # Setup paths
-    checkpoint_dir = PROJECT_ROOT / 'sandbox-training' / 'checkpoints' / 'v5_5'
-    checkpoint_path = checkpoint_dir / args.checkpoint
+    # Setup paths - support both relative checkpoint names and full paths
+    checkpoint_path = Path(args.checkpoint)
+    if not checkpoint_path.is_absolute():
+        if args.model_version == 'v5.10':
+            checkpoint_dir = PROJECT_ROOT / 'sandbox-training' / 'checkpoints' / 'v5_10'
+        else:
+            checkpoint_dir = PROJECT_ROOT / 'sandbox-training' / 'checkpoints' / 'v5_5'
+        checkpoint_path = checkpoint_dir / args.checkpoint
+
     output_path = PROJECT_ROOT / args.output
     output_path.mkdir(parents=True, exist_ok=True)
 
+    print(f"Model version: {args.model_version}")
     print(f"Device: {args.device}")
     print(f"Checkpoint: {checkpoint_path}")
     print(f"Output: {output_path}")
     print()
 
     # Load model
-    model = load_checkpoint(checkpoint_path, args.device)
+    model = load_checkpoint(checkpoint_path, args.device, args.model_version)
 
     # Compute operation properties once (shared across VAEs)
     print("\n" + "="*60)
