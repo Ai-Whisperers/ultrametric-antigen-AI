@@ -422,6 +422,14 @@ class TernaryVAETrainer:
             if epoch % 10 == 0:
                 self.monitor.log_histograms(epoch, self.model)
 
+            # Log embedding projections for 3D visualization
+            embedding_interval = self.config.get('embedding_interval', 50)
+            if embedding_interval > 0 and epoch % embedding_interval == 0:
+                self.monitor.log_manifold_embedding(
+                    self.model, epoch, self.device,
+                    n_samples=self.config.get('embedding_n_samples', 5000)
+                )
+
             # Save checkpoint
             metadata = {
                 **self.monitor.get_metadata(),

@@ -224,6 +224,8 @@ class TrainingConfig:
     tensorboard_dir: str = 'runs'
     experiment_name: Optional[str] = None
     histogram_interval: int = 10
+    embedding_interval: int = 50  # Log embeddings every N epochs (0 to disable)
+    embedding_n_samples: int = 5000  # Number of samples for embedding visualization
 
     # Optional sections
     continuous_feedback: ContinuousFeedbackConfig = field(default_factory=ContinuousFeedbackConfig)
@@ -397,6 +399,8 @@ def validate_config(raw_config: Dict[str, Any]) -> TrainingConfig:
         tensorboard_dir=raw_config.get('tensorboard_dir', 'runs'),
         experiment_name=raw_config.get('experiment_name'),
         histogram_interval=raw_config.get('histogram_interval', 10),
+        embedding_interval=raw_config.get('embedding_interval', 50),
+        embedding_n_samples=raw_config.get('embedding_n_samples', 5000),
         continuous_feedback=continuous_feedback,
         padic_losses=padic_losses,
         controller=controller,

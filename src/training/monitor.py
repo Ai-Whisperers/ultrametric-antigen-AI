@@ -679,6 +679,156 @@ class TrainingMonitor:
         # Flush histograms immediately
         self.writer.flush()
 
+    def log_manifold_embedding(
+        self,
+        model: torch.nn.Module,
+        epoch: int,
+        device: str,
+        n_samples: int = 5000,
+        include_all: bool = False
+    ) -> None:
+        """Log latent embeddings to TensorBoard for 3D visualization.
+
+        Uses TensorBoard's embedding projector for interactive PCA/t-SNE/UMAP
+        visualization of the latent space with 3-adic structure metadata.
+
+        Args:
+            model: The VAE model to encode samples
+            epoch: Current epoch for step tracking
+            device: Device to run inference on
+            n_samples: Number of samples to embed (default 5000 for performance)
+            include_all: If True, embed all 19,683 operations (slower)
+        """
+        if self.writer is None:
+            return
+
+        from src.data.generation import generate_all_ternary_operations
+
+        model.eval()
+
+        # Generate operations
+        all_operations = generate_all_ternary_operations()
+        total_ops = len(all_operations)
+
+        # Sample or use all
+        if include_all or n_samples >= total_ops:
+            indices = list(range(total_ops))
+        else:
+            import random
+            indices = sorted(random.sample(range(total_ops), n_samples))
+
+        import numpy as np
+        operations = all_operations[np.array(indices)]  # Efficient numpy indexing
+        x = torch.from_numpy(operations).float().to(device)
+
+        with torch.no_grad():
+            # Forward pass - handle both v5.6 and v5.10 models
+            outputs = model(x, 1.0, 1.0, 0.5, 0.5)
+            z_A = outputs['z_A']  # (n_samples, latent_dim)
+            z_B = outputs['z_B']
+
+            # Project to Poincaré ball for visualization
+            z_A_norm = torch.norm(z_A, dim=1, keepdim=True)
+            z_A_poincare = z_A / (1 + z_A_norm) * 0.95
+
+            z_B_norm = torch.norm(z_B, dim=1, keepdim=True)
+            z_B_poincare = z_B / (1 + z_B_norm) * 0.95
+
+        # Compute 3-adic metadata for each operation
+        metadata = []
+        metadata_header = [
+            'index',
+            'prefix_1',    # First trit (3 values)
+            'prefix_2',    # First 2 trits (9 values)
+            'prefix_3',    # First 3 trits (27 values)
+            'tree_depth',  # 3-adic depth from origin
+            'radius_A',    # Poincaré radius
+            'radius_B'
+        ]
+
+        for idx, op_idx in enumerate(indices):
+            # 3-adic prefix hierarchy
+            prefix_1 = op_idx % 3
+            prefix_2 = op_idx % 9
+            prefix_3 = op_idx % 27
+
+            # 3-adic valuation from 0 (tree depth)
+            depth = self._compute_3adic_depth(op_idx)
+
+            # Poincaré radii
+            r_A = z_A_norm[idx, 0].item()
+            r_B = z_B_norm[idx, 0].item()
+
+            metadata.append([
+                str(op_idx),
+                str(prefix_1),
+                str(prefix_2),
+                str(prefix_3),
+                str(depth),
+                f'{r_A:.3f}',
+                f'{r_B:.3f}'
+            ])
+
+        # Log VAE-A embeddings (Euclidean)
+        self.writer.add_embedding(
+            z_A.cpu(),
+            metadata=metadata,
+            metadata_header=metadata_header,
+            global_step=epoch,
+            tag='Embedding/VAE_A_Euclidean'
+        )
+
+        # Log VAE-A embeddings (Poincaré projected)
+        self.writer.add_embedding(
+            z_A_poincare.cpu(),
+            metadata=metadata,
+            metadata_header=metadata_header,
+            global_step=epoch,
+            tag='Embedding/VAE_A_Poincare'
+        )
+
+        # Log VAE-B embeddings (Euclidean)
+        self.writer.add_embedding(
+            z_B.cpu(),
+            metadata=metadata,
+            metadata_header=metadata_header,
+            global_step=epoch,
+            tag='Embedding/VAE_B_Euclidean'
+        )
+
+        # Log VAE-B embeddings (Poincaré projected)
+        self.writer.add_embedding(
+            z_B_poincare.cpu(),
+            metadata=metadata,
+            metadata_header=metadata_header,
+            global_step=epoch,
+            tag='Embedding/VAE_B_Poincare'
+        )
+
+        self.writer.flush()
+        self._log(f"Logged {len(indices)} embeddings to TensorBoard (epoch {epoch})")
+
+    def _compute_3adic_depth(self, n: int) -> int:
+        """Compute 3-adic valuation (tree depth) of integer n.
+
+        Returns the largest k such that 3^k divides n.
+        For n=0, returns 9 (maximum depth for 3^9 space).
+
+        Args:
+            n: Integer index
+
+        Returns:
+            3-adic valuation (depth in tree)
+        """
+        if n == 0:
+            return 9  # Origin has maximum depth
+
+        depth = 0
+        while n % 3 == 0:
+            depth += 1
+            n //= 3
+        return depth
+
     def close(self) -> None:
         """Close TensorBoard writer and flush all pending events."""
         if self.writer is not None:

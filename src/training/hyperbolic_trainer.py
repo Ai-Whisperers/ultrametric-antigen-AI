@@ -57,6 +57,8 @@ class HyperbolicVAETrainer:
 
         # Observability config
         self.histogram_interval = config.get('histogram_interval', 10)
+        self.embedding_interval = config.get('embedding_interval', 50)
+        self.embedding_n_samples = config.get('embedding_n_samples', 5000)
         self.log_interval = config.get('log_interval', 10)
 
         # Initialize continuous feedback
@@ -573,6 +575,13 @@ class HyperbolicVAETrainer:
         # 4. Weight/gradient histograms at intervals
         if epoch % self.histogram_interval == 0:
             self.monitor.log_histograms(epoch, self.model)
+
+        # 5. Embedding projections at intervals (for 3D visualization)
+        if self.embedding_interval > 0 and epoch % self.embedding_interval == 0:
+            self.monitor.log_manifold_embedding(
+                self.model, epoch, self.device,
+                n_samples=self.embedding_n_samples
+            )
 
     def _log_standard_tensorboard(self, epoch: int, losses: Dict[str, Any]) -> None:
         """Log standard VAE metrics to TensorBoard.
