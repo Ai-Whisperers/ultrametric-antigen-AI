@@ -218,6 +218,9 @@ coverage_check_interval: 5       # Coverage evaluation every N epochs (was unuse
 # TensorBoard
 tensorboard_dir: runs
 experiment_name: null
+histogram_interval: 10           # Weight/gradient histograms every N epochs
+embedding_interval: 50           # 3D embedding projections every N epochs (0 to disable)
+embedding_n_samples: 5000        # Samples for embedding visualization
 
 # TorchInductor compilation
 torch_compile:

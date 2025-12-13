@@ -121,7 +121,7 @@ class TernaryVAETrainer:
         print(f"{'='*80}")
         print(f"Total parameters: {sum(p.numel() for p in self.model.parameters()):,}")
 
-        if self.config['model'].get('use_statenet', True):
+        if self.config['model'].get('use_statenet', True) and self.model.state_net is not None:
             statenet_params = sum(p.numel() for p in self.model.state_net.parameters())
             total_params = sum(p.numel() for p in self.model.parameters())
             print(f"StateNet parameters: {statenet_params:,} ({statenet_params/total_params*100:.2f}%)")

@@ -130,6 +130,7 @@ def log_startup_info(monitor: TrainingMonitor, config: dict, config_path: str) -
     monitor._log(f"\nObservability:")
     monitor._log(f"  TensorBoard: {config.get('tensorboard_dir', 'runs')}/")
     monitor._log(f"  Histogram interval: every {config.get('histogram_interval', 10)} epochs")
+    monitor._log(f"  Embedding interval: every {config.get('embedding_interval', 50)} epochs")
     monitor._log(f"  Batch log interval: every {config.get('log_interval', 10)} batches")
 
     monitor._log(f"\nEvaluation Intervals:")
