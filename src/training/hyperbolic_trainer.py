@@ -290,6 +290,18 @@ class HyperbolicVAETrainer:
         # Base training (uses DualVAELoss internally, logs batch metrics)
         train_losses = self.base_trainer.train_epoch(train_loader, log_interval=self.log_interval)
 
+        # P1 FIX: Apply StateNet delta_sigma/delta_curvature to HyperbolicPrior modules
+        # This enables StateNet to control the hyperbolic prior's adaptive parameters
+        if self.use_hyperbolic_prior and 'delta_sigma' in train_losses:
+            delta_sigma = train_losses.get('delta_sigma', 0.0)
+            delta_curvature = train_losses.get('delta_curvature', 0.0)
+
+            # Apply to both VAE's hyperbolic priors
+            if hasattr(self.hyperbolic_prior_A, 'set_from_statenet'):
+                self.hyperbolic_prior_A.set_from_statenet(delta_sigma, delta_curvature)
+            if hasattr(self.hyperbolic_prior_B, 'set_from_statenet'):
+                self.hyperbolic_prior_B.set_from_statenet(delta_sigma, delta_curvature)
+
         # Validate only if val_loader is provided (not in manifold approach)
         if val_loader is not None:
             val_losses = self.base_trainer.validate(val_loader)
@@ -392,17 +404,16 @@ class HyperbolicVAETrainer:
         Returns:
             Dict of hyperbolic loss values and metrics
         """
-        ranking_loss = 0.0
-        radial_loss = 0.0
-        hyp_kl_A = 0.0
-        hyp_kl_B = 0.0
-        hyp_recon_A = 0.0
-        hyp_recon_B = 0.0
-        centroid_loss_val = 0.0
-        ranking_metrics = {}
-        homeostatic_metrics = {}
+        # P0 FIX: Short-circuit when ALL hyperbolic modules are disabled
+        # Avoids 2000-sample forward pass when nothing will use the outputs
+        all_disabled = (
+            self.ranking_loss_hyp is None and
+            not self.use_hyperbolic_prior and
+            not self.use_hyperbolic_recon and
+            not self.use_centroid_loss
+        )
 
-        if ranking_weight <= 0:
+        if all_disabled or ranking_weight <= 0:
             self.radial_loss_history.append(0.0)
             self.homeostatic_history.append({})
             return {
@@ -416,6 +427,16 @@ class HyperbolicVAETrainer:
                 'ranking_metrics': {},
                 'homeostatic_metrics': {}
             }
+
+        ranking_loss = 0.0
+        radial_loss = 0.0
+        hyp_kl_A = 0.0
+        hyp_kl_B = 0.0
+        hyp_recon_A = 0.0
+        hyp_recon_B = 0.0
+        centroid_loss_val = 0.0
+        ranking_metrics = {}
+        homeostatic_metrics = {}
 
         self.model.eval()
         with torch.no_grad():

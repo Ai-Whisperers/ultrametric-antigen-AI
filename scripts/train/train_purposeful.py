@@ -33,6 +33,7 @@ from src.models.ternary_vae_v5_6 import DualNeuralVAEV5
 from src.models.ternary_vae_v5_10 import DualNeuralVAEV5_10
 from src.training import TernaryVAETrainer
 from src.data import generate_all_ternary_operations, TernaryOperationDataset
+from src.data import create_gpu_resident_loaders  # P2 FIX: GPU-resident dataset
 from src.losses import ConsequencePredictor, evaluate_addition_accuracy
 from src.metrics import compute_ranking_correlation_hyperbolic
 
@@ -208,6 +209,8 @@ def main():
                         help='Model version (default: v5.6)')
     parser.add_argument('--epochs', type=int, default=200,
                         help='Number of epochs')
+    parser.add_argument('--gpu-resident', action='store_true',
+                        help='P2 FIX: Use GPU-resident dataset (no CPU-GPU transfers)')
     args = parser.parse_args()
 
     # Load config
@@ -241,38 +244,56 @@ def main():
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print(f"Device: {device}")
 
-    # Generate dataset
-    print("\nGenerating dataset...")
-    operations = generate_all_ternary_operations()
-    dataset = TernaryOperationDataset(operations)
-    print(f"Total operations: {len(dataset):,}")
+    # P2 FIX: Support GPU-resident dataset (eliminates CPU-GPU transfers)
+    # Can be enabled via CLI flag (--gpu-resident) or config (gpu_resident: true)
+    use_gpu_resident = args.gpu_resident or config.get('gpu_resident', False)
+    if use_gpu_resident:
+        print("\nUsing GPU-resident dataset (P2 optimization)...")
+        print("  - All 19,683 samples loaded to GPU once (~865 KB)")
+        print("  - Zero per-batch CPU→GPU transfers")
+        print("  - Direct tensor indexing (faster than DataLoader)")
 
-    # Split dataset
-    train_size = int(config['train_split'] * len(dataset))
-    val_size = int(config['val_split'] * len(dataset))
-    test_size = len(dataset) - train_size - val_size
+        train_loader, val_loader, test_loader = create_gpu_resident_loaders(
+            device=device,
+            batch_size=config['batch_size'],
+            train_split=config['train_split'],
+            val_split=config['val_split'],
+            seed=seed
+        )
+        print(f"Train batches: {len(train_loader)} | Val batches: {len(val_loader)}")
+    else:
+        # Traditional DataLoader approach
+        print("\nGenerating dataset...")
+        operations = generate_all_ternary_operations()
+        dataset = TernaryOperationDataset(operations)
+        print(f"Total operations: {len(dataset):,}")
 
-    train_dataset, val_dataset, test_dataset = random_split(
-        dataset, [train_size, val_size, test_size],
-        generator=torch.Generator().manual_seed(seed)
-    )
+        # Split dataset
+        train_size = int(config['train_split'] * len(dataset))
+        val_size = int(config['val_split'] * len(dataset))
+        test_size = len(dataset) - train_size - val_size
 
-    print(f"Train: {len(train_dataset):,} | Val: {len(val_dataset):,}")
+        train_dataset, val_dataset, test_dataset = random_split(
+            dataset, [train_size, val_size, test_size],
+            generator=torch.Generator().manual_seed(seed)
+        )
 
-    # Data loaders
-    train_loader = DataLoader(
-        train_dataset,
-        batch_size=config['batch_size'],
-        shuffle=True,
-        num_workers=config['num_workers']
-    )
+        print(f"Train: {len(train_dataset):,} | Val: {len(val_dataset):,}")
 
-    val_loader = DataLoader(
-        val_dataset,
-        batch_size=config['batch_size'],
-        shuffle=False,
-        num_workers=config['num_workers']
-    )
+        # Data loaders
+        train_loader = DataLoader(
+            train_dataset,
+            batch_size=config['batch_size'],
+            shuffle=True,
+            num_workers=config['num_workers']
+        )
+
+        val_loader = DataLoader(
+            val_dataset,
+            batch_size=config['batch_size'],
+            shuffle=False,
+            num_workers=config['num_workers']
+        )
 
     # Initialize model based on version
     model_config = config['model']

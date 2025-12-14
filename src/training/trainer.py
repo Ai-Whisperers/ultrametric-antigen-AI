@@ -342,6 +342,9 @@ class TernaryVAETrainer:
                     epoch_losses['delta_lambda2'] = corrections['delta_lambda2']
                     epoch_losses['delta_lambda3'] = corrections['delta_lambda3']
                     epoch_losses['delta_curriculum'] = corrections['delta_curriculum']
+                    # P1 FIX: Include delta_sigma and delta_curvature for HyperbolicPrior
+                    epoch_losses['delta_sigma'] = corrections['delta_sigma']
+                    epoch_losses['delta_curvature'] = corrections['delta_curvature']
                 else:
                     # Fall back to v4 corrections
                     corrected_lr, *deltas = self.model.apply_statenet_corrections(

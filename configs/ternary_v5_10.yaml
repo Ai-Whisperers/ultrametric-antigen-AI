@@ -94,6 +94,9 @@ seed: 42
 batch_size: 256
 num_workers: 0
 total_epochs: 300
+# P2 FIX: GPU-resident dataset (eliminates CPU→GPU transfers)
+# All 19,683 samples loaded to GPU once (~865 KB) for zero-transfer training
+gpu_resident: true
 
 # Unified optimizer
 optimizer:
@@ -184,8 +187,8 @@ padic_losses:
   hyperbolic_v10:
     # Hyperbolic Prior: Wrapped Normal on Poincare ball
     # Replaces KL(q || N(0,I)) with KL(q || WrappedNormal)
-    # DISABLED: Causes training divergence, needs debugging
-    use_hyperbolic_prior: false
+    # P1 FIX: Enabled to utilize StateNet's delta_sigma/delta_curvature outputs
+    use_hyperbolic_prior: true
     prior:
       homeostatic: true        # Enable adaptive sigma/curvature
       latent_dim: 16
