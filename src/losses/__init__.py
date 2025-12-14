@@ -1,27 +1,31 @@
 """Loss function components.
 
-This module contains loss computation separated from model architecture:
-- ReconstructionLoss: Cross-entropy reconstruction loss
-- KLDivergenceLoss: KL divergence with free bits support
-- EntropyRegularization: Entropy-based regularization
-- RepulsionLoss: Latent space repulsion
-- DualVAELoss: Aggregated loss for dual VAE system
-- PAdicMetricLoss: 3-adic metric alignment (Phase 1A)
-- PAdicRankingLossV2: Hard negative mining + hierarchical margin (v5.8)
-- PAdicRankingLossHyperbolic: Poincare distance ranking (v5.9)
-- PAdicNormLoss: MSB/LSB hierarchy regularizer (Phase 1B)
-- AdaptiveRankingLoss: Multi-scale ranking loss for ultrametric approximation
-- HierarchicalNormLoss: MSB/LSB variance hierarchy
-- CuriosityModule: Density-based exploration drive
-- SymbioticBridge: MI-based coupling between VAEs
-- AlgebraicClosureLoss: Homomorphism constraint
-- HyperbolicPrior: Wrapped normal on Poincare ball (v5.10)
-- HomeostaticHyperbolicPrior: Adaptive hyperbolic prior (v5.10)
-- HyperbolicReconLoss: Geodesic reconstruction loss (v5.10)
-- HomeostaticReconLoss: Adaptive reconstruction loss (v5.10)
-- HyperbolicCentroidLoss: Frechet mean clustering (v5.10)
-- RadialStratificationLoss: Radial hierarchy enforcement (v5.10 curriculum)
-- ConsequencePredictor: Purpose feedback (experimental)
+This module contains loss computation separated from model architecture.
+
+Architecture:
+    - base.py: LossComponent protocol and LossResult dataclass
+    - registry.py: LossRegistry for dynamic composition
+    - components.py: LossComponent wrappers for all loss types
+
+Legacy classes (for backwards compatibility):
+    - DualVAELoss: Aggregated loss (deprecated, use LossRegistry)
+    - ReconstructionLoss, KLDivergenceLoss, etc.
+
+New pattern (recommended):
+    from src.losses import LossRegistry, ReconstructionLossComponent
+
+    registry = LossRegistry()
+    registry.register('recon', ReconstructionLossComponent())
+    result = registry.compose(outputs, targets)
+
+Loss Types:
+    - Reconstruction: Cross-entropy for ternary operations
+    - KL Divergence: With free bits support
+    - Entropy: Regularization for diversity
+    - Repulsion: Latent space diversity
+    - p-Adic: Metric alignment, ranking, hierarchical norms
+    - Hyperbolic: Poincare ball geometry (v5.10)
+    - Radial: Stratification for 3-adic hierarchy
 """
 
 from .dual_vae_loss import (
@@ -70,7 +74,32 @@ from .consequence_predictor import (
     evaluate_addition_accuracy
 )
 
+# New structural components (LossRegistry pattern)
+from .base import (
+    LossResult,
+    LossComponent,
+    DualVAELossComponent
+)
+
+from .registry import (
+    LossRegistry,
+    LossGroup,
+    create_registry_from_config
+)
+
+from .components import (
+    ReconstructionLossComponent,
+    KLDivergenceLossComponent,
+    EntropyLossComponent,
+    RepulsionLossComponent,
+    EntropyAlignmentComponent,
+    PAdicRankingLossComponent,
+    PAdicHyperbolicLossComponent,
+    RadialStratificationLossComponent
+)
+
 __all__ = [
+    # Legacy classes (backwards compatibility)
     'ReconstructionLoss',
     'KLDivergenceLoss',
     'EntropyRegularization',
@@ -95,5 +124,20 @@ __all__ = [
     'RadialStratificationLoss',
     'compute_single_index_valuation',
     'ConsequencePredictor',
-    'evaluate_addition_accuracy'
+    'evaluate_addition_accuracy',
+    # New structural components (LossRegistry pattern)
+    'LossResult',
+    'LossComponent',
+    'DualVAELossComponent',
+    'LossRegistry',
+    'LossGroup',
+    'create_registry_from_config',
+    'ReconstructionLossComponent',
+    'KLDivergenceLossComponent',
+    'EntropyLossComponent',
+    'RepulsionLossComponent',
+    'EntropyAlignmentComponent',
+    'PAdicRankingLossComponent',
+    'PAdicHyperbolicLossComponent',
+    'RadialStratificationLossComponent'
 ]

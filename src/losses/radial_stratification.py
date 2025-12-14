@@ -15,12 +15,14 @@ import torch.nn as nn
 import torch.nn.functional as F
 from typing import Optional, Tuple
 
+# STRUCTURAL FIX: Use core module's TERNARY singleton as single source of truth
+from ..core import TERNARY
+
 
 def compute_single_index_valuation(indices: torch.Tensor) -> torch.Tensor:
     """Compute 3-adic valuation for single indices (not pairs).
 
-    The valuation v_3(n) = max k such that 3^k divides n.
-    Special case: v_3(0) = max_valuation (represents tree root).
+    Delegates to TERNARY.valuation() for O(1) lookups.
 
     Args:
         indices: Operation indices (batch,) in range [0, 19682]
@@ -28,28 +30,7 @@ def compute_single_index_valuation(indices: torch.Tensor) -> torch.Tensor:
     Returns:
         valuations: 3-adic valuations (batch,) in range [0, 9]
     """
-    valuations = torch.zeros_like(indices, dtype=torch.float32)
-
-    # Handle zero specially (infinite valuation, capped at 9)
-    zero_mask = indices == 0
-    valuations[zero_mask] = 9.0
-
-    # For non-zero indices, count factors of 3
-    nonzero_mask = indices > 0
-    if nonzero_mask.any():
-        remaining = indices[nonzero_mask].float()
-        v = torch.zeros_like(remaining)
-
-        for _ in range(9):  # Max 9 digits in base-3 for 19683
-            divisible = (remaining % 3 == 0)
-            if not divisible.any():
-                break
-            v[divisible] += 1
-            remaining[divisible] = remaining[divisible] // 3
-
-        valuations[nonzero_mask] = v
-
-    return valuations
+    return TERNARY.valuation(indices).float()
 
 
 class RadialStratificationLoss(nn.Module):

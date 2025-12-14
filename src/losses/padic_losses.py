@@ -15,9 +15,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 from typing import Optional, Tuple
 
+# STRUCTURAL FIX: Use core module's TERNARY singleton as single source of truth
+from ..core import TERNARY
+
 
 # Note: Full 19683x19683 distance matrix removed (was O(n²) dead code).
-# Use compute_3adic_distance_batch() for efficient on-demand computation.
+# Use TERNARY.distance() for efficient on-demand computation.
 
 
 def compute_3adic_distance_batch(
@@ -27,6 +30,8 @@ def compute_3adic_distance_batch(
 ) -> torch.Tensor:
     """Compute 3-adic distances for batches of index pairs.
 
+    Delegates to TERNARY.distance() for O(1) lookups.
+
     Args:
         idx_i: First indices (batch,)
         idx_j: Second indices (batch,)
@@ -35,32 +40,7 @@ def compute_3adic_distance_batch(
     Returns:
         3-adic distances (batch,)
     """
-    # Vectorized 3-adic distance computation
-    diff = torch.abs(idx_i.long() - idx_j.long())
-
-    # Handle zero differences
-    distances = torch.zeros_like(diff, dtype=torch.float32)
-    nonzero_mask = diff > 0
-
-    if nonzero_mask.any():
-        nonzero_diff = diff[nonzero_mask].float()
-
-        # Compute 3-adic valuation: count factors of 3
-        # v_3(n) = max k such that 3^k divides n
-        v = torch.zeros_like(nonzero_diff)
-        remaining = nonzero_diff.clone()
-
-        for _ in range(9):  # Max 9 digits in base-3 for 19683
-            divisible = (remaining % 3 == 0)
-            if not divisible.any():
-                break
-            v[divisible] += 1
-            remaining[divisible] = remaining[divisible] // 3
-
-        # d_3(i, j) = 3^(-v_3(|i-j|))
-        distances[nonzero_mask] = torch.pow(3.0, -v)
-
-    return distances
+    return TERNARY.distance(idx_i, idx_j)
 
 
 def compute_3adic_valuation_batch(
@@ -69,6 +49,7 @@ def compute_3adic_valuation_batch(
 ) -> torch.Tensor:
     """Compute 3-adic valuations for batches of index pairs.
 
+    Delegates to TERNARY.valuation() for O(1) lookups.
     The valuation v_3(|i-j|) = max k such that 3^k divides |i-j|.
 
     Args:
@@ -79,26 +60,7 @@ def compute_3adic_valuation_batch(
         3-adic valuations (batch,) - integers from 0 to 9
     """
     diff = torch.abs(idx_i.long() - idx_j.long())
-    valuations = torch.zeros_like(diff, dtype=torch.float32)
-
-    nonzero_mask = diff > 0
-    if nonzero_mask.any():
-        remaining = diff[nonzero_mask].float()
-        v = torch.zeros_like(remaining)
-
-        for _ in range(9):
-            divisible = (remaining % 3 == 0)
-            if not divisible.any():
-                break
-            v[divisible] += 1
-            remaining[divisible] = remaining[divisible] // 3
-
-        valuations[nonzero_mask] = v
-
-    # Zero differences get max valuation (infinite in theory, but 9 in practice)
-    valuations[~nonzero_mask] = 9.0
-
-    return valuations
+    return TERNARY.valuation(diff).float()
 
 
 class PAdicMetricLoss(nn.Module):
@@ -692,27 +654,11 @@ class PAdicRankingLossHyperbolic(nn.Module):
         return radial_loss
 
     def _compute_valuation(self, indices: torch.Tensor) -> torch.Tensor:
-        """Compute 3-adic valuation for indices."""
-        valuations = torch.zeros_like(indices, dtype=torch.float32)
-        nonzero_mask = indices > 0
+        """Compute 3-adic valuation for indices.
 
-        if nonzero_mask.any():
-            remaining = indices[nonzero_mask].float()
-            v = torch.zeros_like(remaining)
-
-            for _ in range(9):
-                divisible = (remaining % 3 == 0)
-                if not divisible.any():
-                    break
-                v[divisible] += 1
-                remaining[divisible] = remaining[divisible] // 3
-
-            valuations[nonzero_mask] = v
-
-        # Zero index gets max valuation
-        valuations[~nonzero_mask] = 9.0
-
-        return valuations
+        Delegates to TERNARY.valuation() for O(1) lookups.
+        """
+        return TERNARY.valuation(indices).float()
 
     def forward(
         self,
@@ -1008,29 +954,16 @@ class PAdicNormLoss(nn.Module):
         The 3-adic valuation v_3(n) = max k such that 3^k divides n.
         We normalize to [0, 1] range for stable training.
 
+        Delegates to TERNARY.valuation() for O(1) lookups.
+
         Args:
             indices: Operation indices (batch,)
 
         Returns:
             Expected valuations normalized to [0, 1] (batch,)
         """
-        valuations = torch.zeros_like(indices, dtype=torch.float32)
+        # Use TERNARY for O(1) valuation lookup
+        v = TERNARY.valuation(indices).float()
 
-        # Compute v_3(index) for each index
-        nonzero_mask = indices > 0
-
-        if nonzero_mask.any():
-            remaining = indices[nonzero_mask].float()
-            v = torch.zeros_like(remaining)
-
-            for _ in range(9):  # Max 9 digits in base-3
-                divisible = (remaining % 3 == 0)
-                if not divisible.any():
-                    break
-                v[divisible] += 1
-                remaining[divisible] = remaining[divisible] // 3
-
-            # Normalize to [0, 1] using 3^(-v)
-            valuations[nonzero_mask] = torch.pow(3.0, -v)
-
-        return valuations
+        # Normalize to [0, 1] using 3^(-v)
+        return torch.pow(3.0, -v)

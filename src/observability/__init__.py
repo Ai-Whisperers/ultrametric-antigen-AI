@@ -1,0 +1,48 @@
+"""Observability layer - Decoupled from training.
+
+This module provides observability components that are decoupled
+from the training loop:
+
+- MetricsBuffer: In-memory buffer (zero I/O during training)
+- AsyncTensorBoardWriter: Async I/O in background thread
+- CoverageEvaluator: Vectorized coverage evaluation
+
+Architecture:
+    Training Loop                    Observability Layer
+    ─────────────                    ───────────────────
+    train_epoch()
+         │
+         ├──> buffer.record()  ──────> MetricsBuffer (in-memory)
+         │                                   │
+         └──> evaluator.evaluate()           │ (drain periodically)
+                   │                         v
+                   │              AsyncTensorBoardWriter
+                   │                         │
+                   v                         v (background thread)
+              CoverageStats            TensorBoard files
+
+Benefits:
+    - Training not blocked by I/O
+    - Single flush per epoch (not 3-5)
+    - Coverage evaluation uses vectorized ops
+    - Easy to disable observability for benchmarks
+"""
+
+from .metrics_buffer import MetricsBuffer, MetricRecord, ScopedMetrics
+from .async_writer import AsyncTensorBoardWriter, NullWriter, create_writer
+from .coverage import CoverageEvaluator, CoverageStats, evaluate_model_coverage
+
+__all__ = [
+    # Metrics buffer
+    'MetricsBuffer',
+    'MetricRecord',
+    'ScopedMetrics',
+    # Async writer
+    'AsyncTensorBoardWriter',
+    'NullWriter',
+    'create_writer',
+    # Coverage
+    'CoverageEvaluator',
+    'CoverageStats',
+    'evaluate_model_coverage',
+]

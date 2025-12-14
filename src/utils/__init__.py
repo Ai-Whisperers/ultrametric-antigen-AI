@@ -3,6 +3,7 @@
 This module contains:
 - Coverage tracking utilities
 - Reproducibility utilities (seed management)
+- Precomputed ternary LUTs (P1 optimization)
 
 For data generation, use src.data instead.
 For hyperbolic metrics, use src.metrics instead.
@@ -15,6 +16,14 @@ from .metrics import (
     CoverageTracker
 )
 from .reproducibility import set_seed, get_generator
+from .ternary_lut import (
+    VALUATION_LUT,
+    TERNARY_LUT,
+    get_valuation_batch,
+    get_ternary_batch,
+    get_3adic_distance,
+    get_3adic_distance_batch,
+)
 
 __all__ = [
     # Coverage metrics
@@ -25,4 +34,11 @@ __all__ = [
     # Reproducibility
     'set_seed',
     'get_generator',
+    # Ternary LUTs (P1 optimization)
+    'VALUATION_LUT',
+    'TERNARY_LUT',
+    'get_valuation_batch',
+    'get_ternary_batch',
+    'get_3adic_distance',
+    'get_3adic_distance_batch',
 ]

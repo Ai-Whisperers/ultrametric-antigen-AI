@@ -364,21 +364,25 @@ class DualVAELoss(nn.Module):
             lambda3 * entropy_align
         )
 
-        # p-Adic losses (Phase 1A/1B from implement.md)
-        padic_metric_A = torch.tensor(0.0, device=x.device)
-        padic_metric_B = torch.tensor(0.0, device=x.device)
-        padic_ranking_A = torch.tensor(0.0, device=x.device)
-        padic_ranking_B = torch.tensor(0.0, device=x.device)
-        padic_norm_A = torch.tensor(0.0, device=x.device)
-        padic_norm_B = torch.tensor(0.0, device=x.device)
+        # P0 FIX: Use Python floats instead of GPU tensor zeros for disabled modules.
+        # Only allocate tensors when modules are actually enabled and called.
+        # This saves 14 GPU allocations per batch (1078/epoch) when modules disabled.
 
-        # v5.8/v5.9 p-Adic loss defaults
-        padic_ranking_v2_A = torch.tensor(0.0, device=x.device)
-        padic_ranking_v2_B = torch.tensor(0.0, device=x.device)
+        # p-Adic losses (Phase 1A/1B from implement.md) - lazy init
+        padic_metric_A = 0.0
+        padic_metric_B = 0.0
+        padic_ranking_A = 0.0
+        padic_ranking_B = 0.0
+        padic_norm_A = 0.0
+        padic_norm_B = 0.0
+
+        # v5.8/v5.9 p-Adic loss defaults - lazy init
+        padic_ranking_v2_A = 0.0
+        padic_ranking_v2_B = 0.0
         metrics_v2_A = {'hard_ratio': 0.0, 'violations': 0, 'mean_margin': 0.0, 'total_triplets': 0}
         metrics_v2_B = {'hard_ratio': 0.0, 'violations': 0, 'mean_margin': 0.0, 'total_triplets': 0}
-        padic_hyp_A = torch.tensor(0.0, device=x.device)
-        padic_hyp_B = torch.tensor(0.0, device=x.device)
+        padic_hyp_A = 0.0
+        padic_hyp_B = 0.0
         metrics_hyp_A = {'hard_ratio': 0.0, 'violations': 0, 'poincare_dist_mean': 0.0, 'radial_loss': 0.0, 'ranking_loss': 0.0}
         metrics_hyp_B = {'hard_ratio': 0.0, 'violations': 0, 'poincare_dist_mean': 0.0, 'radial_loss': 0.0, 'ranking_loss': 0.0}
         hyp_weight = 0.0
@@ -416,10 +420,10 @@ class DualVAELoss(nn.Module):
                 padic_hyp_B, metrics_hyp_B = self.padic_ranking_loss_hyperbolic(outputs['z_B'], batch_indices)
                 total_loss = total_loss + hyp_weight * (padic_hyp_A + padic_hyp_B)
 
-        # v5.10: Hyperbolic metrics initialization
+        # v5.10: Hyperbolic metrics initialization - lazy init
         hyp_v10_metrics = {}
-        hyp_kl_A = torch.tensor(0.0, device=x.device)
-        hyp_kl_B = torch.tensor(0.0, device=x.device)
+        hyp_kl_A = 0.0
+        hyp_kl_B = 0.0
 
         # v5.10: Hyperbolic Centroid Loss (tree structure) - requires batch_indices
         if batch_indices is not None and self.use_centroid_loss:
@@ -453,9 +457,9 @@ class DualVAELoss(nn.Module):
                     'prior_curvature_B': self.hyperbolic_prior_B.adaptive_curvature.item()
                 })
 
-        # v5.10: Hyperbolic Reconstruction Loss
-        hyp_recon_A = torch.tensor(0.0, device=x.device)
-        hyp_recon_B = torch.tensor(0.0, device=x.device)
+        # v5.10: Hyperbolic Reconstruction Loss - lazy init
+        hyp_recon_A = 0.0
+        hyp_recon_B = 0.0
 
         if self.use_hyperbolic_recon:
             hyp_recon_A, recon_metrics_A = self.hyperbolic_recon_A(
