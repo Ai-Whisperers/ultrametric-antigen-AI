@@ -254,11 +254,15 @@ class TernaryVAETrainer:
         epoch_losses = defaultdict(float)
         num_batches = len(train_loader)
 
-        for batch_idx, batch_data in enumerate(train_loader):
-            batch_data = batch_data.to(self.device)
-
-            # Compute batch indices for p-adic losses
-            batch_indices = self._compute_batch_indices(batch_data)
+        for batch_idx, batch in enumerate(train_loader):
+            # P2 FIX: Handle both standard DataLoader (tensor) and GPU-resident (tuple)
+            if isinstance(batch, tuple):
+                # GPU-resident dataset returns (data, indices) already on GPU
+                batch_data, batch_indices = batch
+            else:
+                # Standard DataLoader returns just data tensor
+                batch_data = batch.to(self.device)
+                batch_indices = self._compute_batch_indices(batch_data)
 
             # Forward pass
             outputs = self.model(batch_data, temp_A, temp_B, beta_A, beta_B)
@@ -437,11 +441,15 @@ class TernaryVAETrainer:
         free_bits = self.config.get('free_bits', 0.0)
 
         with torch.no_grad():
-            for batch_data in val_loader:
-                batch_data = batch_data.to(self.device)
-
-                # Compute batch indices for p-adic losses
-                batch_indices = self._compute_batch_indices(batch_data)
+            for batch in val_loader:
+                # P2 FIX: Handle both standard DataLoader (tensor) and GPU-resident (tuple)
+                if isinstance(batch, tuple):
+                    # GPU-resident dataset returns (data, indices) already on GPU
+                    batch_data, batch_indices = batch
+                else:
+                    # Standard DataLoader returns just data tensor
+                    batch_data = batch.to(self.device)
+                    batch_indices = self._compute_batch_indices(batch_data)
 
                 outputs = self.model(batch_data, temp_A, temp_B, beta_A, beta_B)
 
