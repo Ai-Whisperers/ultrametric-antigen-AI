@@ -1,9 +1,8 @@
 """Training orchestration components.
 
 This module contains components for managing the training process:
-- Trainer: Main training loop (single responsibility)
-- HyperbolicVAETrainer: Pure hyperbolic geometry trainer (v5.10)
-- AppetitiveVAETrainer: Trainer with bio-inspired appetite losses
+- TernaryVAETrainer: Main training loop (single responsibility)
+- HyperbolicVAETrainer: Hyperbolic geometry trainer (canonical)
 - Schedulers: Parameter scheduling (temperature, beta, learning rate)
 - Monitor: Logging and metrics tracking (TensorBoard + file)
 - ConfigSchema: Typed configuration validation
@@ -19,7 +18,6 @@ from .schedulers import (
 )
 from .monitor import TrainingMonitor
 from .trainer import TernaryVAETrainer
-from .appetitive_trainer import AppetitiveVAETrainer
 from .hyperbolic_trainer import HyperbolicVAETrainer
 from .config_schema import (
     TrainingConfig,
@@ -38,7 +36,6 @@ __all__ = [
     # Trainers
     'TernaryVAETrainer',
     'HyperbolicVAETrainer',
-    'AppetitiveVAETrainer',
     # Schedulers
     'TemperatureScheduler',
     'BetaScheduler',

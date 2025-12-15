@@ -1,21 +1,21 @@
-"""V5.11 Training Script: Frozen Coverage + Hyperbolic Structure.
+"""Ternary VAE Training Script (Canonical V5.11 Architecture).
 
-This script trains the V5.11 architecture:
-1. Loads frozen v5.5 encoder (100% coverage preserved)
-2. Trains HyperbolicProjection layer for radial hierarchy
-3. Uses unified PAdicGeodesicLoss (hierarchy + correlation)
-4. Optional: DifferentiableController for adaptive training
+Architecture:
+- Frozen encoder_A (100% coverage preserved)
+- Trainable encoder_B (learns 3-adic structure)
+- Dual HyperbolicProjection for radial hierarchy
+- PAdicGeodesicLoss (hierarchy + correlation)
 
 Usage:
-    python scripts/train/train_v5_11.py
-    python scripts/train/train_v5_11.py --config configs/ternary_v5_11.yaml
-    python scripts/train/train_v5_11.py --epochs 100 --lr 1e-3
+    python scripts/train/train.py
+    python scripts/train/train.py --config configs/ternary.yaml
+    python scripts/train/train.py --epochs 100 --lr 1e-3
 
-Key differences from v5.10:
-- Encoder is FROZEN (no gradients, coverage preserved)
-- Only projection layer and controller train
-- Single unified geodesic loss (not separate ranking + radial)
-- Controller outputs are tensors (gradients flow)
+Key features:
+- Option C architecture: frozen coverage + trainable structure
+- Dual projection: separate hyperbolic projection per VAE
+- Stratified sampling: ensures high-valuation points in batches
+- Early stopping recommended at ~2000-4000 steps
 """
 
 import argparse
@@ -55,7 +55,7 @@ def parse_args():
                         default='sandbox-training/checkpoints/v5_5/latest.pt',
                         help='Path to v5.5 checkpoint')
     parser.add_argument('--save_dir', type=str,
-                        default='sandbox-training/checkpoints/v5_11',
+                        default='sandbox-training/checkpoints/ternary',
                         help='Directory to save checkpoints')
     parser.add_argument('--use_controller', action='store_true', default=False,
                         help='Use differentiable controller')
@@ -355,13 +355,13 @@ def main():
         variant_parts.append('dual')
     variant = '_'.join(variant_parts)
 
-    default_save_dir = f'sandbox-training/checkpoints/v5_11_{variant}'
+    default_save_dir = f'sandbox-training/checkpoints/ternary_{variant}'
     save_dir = Path(config.get('save_dir', default_save_dir))
     save_dir.mkdir(parents=True, exist_ok=True)
 
     # Setup TensorBoard
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    log_dir = Path('runs') / f'v5_11_{variant}_{timestamp}'
+    log_dir = Path('runs') / f'ternary_{variant}_{timestamp}'
     writer = SummaryWriter(log_dir=str(log_dir))
 
     # Create model (Option A or Option C, with optional dual projection)

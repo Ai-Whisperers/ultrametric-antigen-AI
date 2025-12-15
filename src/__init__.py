@@ -1,24 +1,28 @@
-"""Ternary VAE v5.10 - Pure Hyperbolic Geometry.
+"""Ternary VAE - Canonical V5.11 Architecture.
 
 This package implements Dual Neural VAEs for learning 3-adic algebraic
 structure in ternary operation space using hyperbolic geometry.
 
 Key modules:
-- models: VAE architectures (v5.6 legacy, v5.7 metric-aware, v5.10 hyperbolic)
-- losses: Loss functions including hyperbolic prior/recon (v5.10)
+- models: VAE architectures (canonical v5.11 with frozen encoder)
+- losses: Loss functions including p-adic geodesic loss
 - training: Trainers, schedulers, monitoring
 - data: Ternary operation generation and datasets
 - metrics: Hyperbolic correlation metrics
 """
 
-__version__ = "5.10.0"
+__version__ = "5.11.0"
 __author__ = "AI Whisperers"
 __license__ = "MIT"
 
-# v5.10 canonical model
-from .models.ternary_vae_v5_10 import DualNeuralVAEV5_10
+# Canonical model (V5.11)
+from .models.ternary_vae import TernaryVAEV5_11, TernaryVAEV5_11_OptionC
 
-# Data (canonical location)
+# Canonical aliases
+TernaryVAE = TernaryVAEV5_11
+TernaryVAE_OptionC = TernaryVAEV5_11_OptionC
+
+# Data
 from .data import generate_all_ternary_operations, TernaryOperationDataset
 
 # Training
@@ -31,20 +35,19 @@ from .training import (
 # Metrics
 from .metrics import compute_ranking_correlation_hyperbolic
 
-# Legacy model (for backwards compatibility)
-from .models.ternary_vae_v5_6 import DualNeuralVAEV5
-
 __all__ = [
-    # v5.10 canonical
-    'DualNeuralVAEV5_10',
-    'HyperbolicVAETrainer',
-    'compute_ranking_correlation_hyperbolic',
+    # Canonical (V5.11)
+    'TernaryVAE',
+    'TernaryVAE_OptionC',
+    'TernaryVAEV5_11',
+    'TernaryVAEV5_11_OptionC',
     # Data
     'generate_all_ternary_operations',
     'TernaryOperationDataset',
     # Training
     'TernaryVAETrainer',
+    'HyperbolicVAETrainer',
     'TrainingMonitor',
-    # Legacy
-    'DualNeuralVAEV5',
+    # Metrics
+    'compute_ranking_correlation_hyperbolic',
 ]
