@@ -430,10 +430,12 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
     def __init__(
         self,
         freeze_encoder_b: bool = False,
+        encoder_b_lr_scale: float = 0.1,
         **kwargs
     ):
         super().__init__(**kwargs)
         self.freeze_encoder_b = freeze_encoder_b
+        self.encoder_b_lr_scale = encoder_b_lr_scale
 
     def load_v5_5_checkpoint(self, checkpoint_path: Path, device: str = 'cpu'):
         """Load checkpoint with optional encoder_B unfreezing."""
@@ -444,6 +446,79 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
             for param in self.encoder_B.parameters():
                 param.requires_grad = True
             print("  encoder_B UNFROZEN for Option C training")
+            print(f"  encoder_B LR scale: {self.encoder_b_lr_scale}")
+
+    def forward(
+        self,
+        x: torch.Tensor,
+        compute_control: bool = True
+    ) -> Dict[str, torch.Tensor]:
+        """Forward pass with conditional gradient flow for encoder_B.
+
+        Override parent to allow gradients through encoder_B when unfrozen.
+        """
+        # Encoder A is ALWAYS frozen (coverage anchor)
+        with torch.no_grad():
+            mu_A, logvar_A = self.encoder_A(x)
+            z_A_euc = self.reparameterize(mu_A, logvar_A)
+
+        # Encoder B: frozen or trainable depending on config
+        if self.freeze_encoder_b:
+            with torch.no_grad():
+                mu_B, logvar_B = self.encoder_B(x)
+                z_B_euc = self.reparameterize(mu_B, logvar_B)
+        else:
+            # Allow gradients through encoder_B for Option C
+            mu_B, logvar_B = self.encoder_B(x)
+            z_B_euc = self.reparameterize(mu_B, logvar_B)
+
+        # Trainable projection to Poincaré ball
+        if self.use_dual_projection:
+            z_A_hyp, z_B_hyp = self.projection(z_A_euc, z_B_euc)
+        else:
+            z_A_hyp = self.projection(z_A_euc)
+            z_B_hyp = self.projection(z_B_euc)
+
+        # Compute control signals (if enabled)
+        if compute_control and self.controller is not None:
+            radius_A = torch.norm(z_A_hyp, dim=-1).mean()
+            radius_B = torch.norm(z_B_hyp, dim=-1).mean()
+            kl_A = -0.5 * (1 + logvar_A - mu_A.pow(2) - logvar_A.exp()).sum(dim=-1).mean()
+            kl_B = -0.5 * (1 + logvar_B - mu_B.pow(2) - logvar_B.exp()).sum(dim=-1).mean()
+
+            batch_stats = torch.stack([
+                radius_A, radius_B,
+                torch.tensor(1.0, device=x.device),
+                torch.tensor(1.0, device=x.device),
+                kl_A, kl_B,
+                torch.tensor(0.0, device=x.device),
+                torch.tensor(0.0, device=x.device)
+            ])
+
+            control = self.controller(batch_stats)
+            control = {k: v.squeeze(0) for k, v in control.items()}
+        else:
+            control = {
+                k: torch.tensor(v, device=x.device)
+                for k, v in self.default_control.items()
+            }
+
+        # Verification reconstruction
+        with torch.no_grad():
+            logits_A = self.decoder_A(mu_A)  # Use mean for deterministic verification
+
+        return {
+            'z_A_euc': z_A_euc,
+            'z_B_euc': z_B_euc,
+            'mu_A': mu_A,
+            'mu_B': mu_B,
+            'logvar_A': logvar_A,
+            'logvar_B': logvar_B,
+            'z_A_hyp': z_A_hyp,
+            'z_B_hyp': z_B_hyp,
+            'control': control,
+            'logits_A': logits_A
+        }
 
     def get_trainable_parameters(self):
         """Get trainable parameters including optionally unfrozen encoder_B."""
@@ -453,6 +528,66 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
             params.extend(self.encoder_B.parameters())
 
         return params
+
+    def get_param_groups(self, base_lr: float):
+        """Get parameter groups with different learning rates.
+
+        Returns param groups for optimizer with encoder_B at lower LR.
+        For dual projection, proj_A and proj_B get separate groups.
+        """
+        param_groups = []
+
+        if self.use_dual_projection:
+            # Separate groups for each projection
+            param_groups.append({
+                'params': list(self.projection.proj_A.parameters()),
+                'lr': base_lr,
+                'name': 'proj_A'
+            })
+            # proj_B params - handle both share_direction modes
+            if hasattr(self.projection, 'proj_B'):
+                proj_b_params = list(self.projection.proj_B.parameters())
+            else:
+                proj_b_params = list(self.projection.proj_B_radius.parameters())
+            param_groups.append({
+                'params': proj_b_params,
+                'lr': base_lr,
+                'name': 'proj_B'
+            })
+        else:
+            param_groups.append({
+                'params': list(self.projection.parameters()),
+                'lr': base_lr,
+                'name': 'projection'
+            })
+
+        if self.controller is not None:
+            param_groups.append({
+                'params': list(self.controller.parameters()),
+                'lr': base_lr,
+                'name': 'controller'
+            })
+
+        if not self.freeze_encoder_b:
+            param_groups.append({
+                'params': list(self.encoder_B.parameters()),
+                'lr': base_lr * self.encoder_b_lr_scale,
+                'name': 'encoder_B'
+            })
+
+        return param_groups
+
+    def count_parameters(self) -> Dict[str, int]:
+        """Count parameters by component."""
+        counts = super().count_parameters()
+
+        if not self.freeze_encoder_b:
+            encoder_b_params = sum(p.numel() for p in self.encoder_B.parameters())
+            counts['encoder_b_trainable'] = encoder_b_params
+            counts['trainable'] += encoder_b_params
+            counts['frozen'] -= encoder_b_params
+
+        return counts
 
 
 __all__ = [

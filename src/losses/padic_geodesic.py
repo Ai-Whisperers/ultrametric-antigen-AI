@@ -188,7 +188,7 @@ class RadialHierarchyLoss(nn.Module):
     Target: v_3(n) high → radius small (near origin)
             v_3(n) low  → radius large (near boundary)
 
-    Can be used in early training then reduced as geodesic loss takes over.
+    V5.11.1 FIX: Added margin loss to enforce separation between valuation levels.
     """
 
     def __init__(
@@ -196,7 +196,9 @@ class RadialHierarchyLoss(nn.Module):
         inner_radius: float = 0.1,
         outer_radius: float = 0.85,
         max_valuation: int = 9,
-        valuation_weighting: bool = True
+        valuation_weighting: bool = True,
+        margin_weight: float = 1.0,
+        use_margin_loss: bool = True
     ):
         """Initialize RadialHierarchyLoss.
 
@@ -205,12 +207,19 @@ class RadialHierarchyLoss(nn.Module):
             outer_radius: Target radius for lowest valuation (near boundary)
             max_valuation: Maximum valuation (log_3(19683) = 9)
             valuation_weighting: Weight high-valuation points more
+            margin_weight: Weight for margin-based separation loss
+            use_margin_loss: Enable pairwise margin loss for radial separation
         """
         super().__init__()
         self.inner_radius = inner_radius
         self.outer_radius = outer_radius
         self.max_valuation = max_valuation
         self.valuation_weighting = valuation_weighting
+        self.margin_weight = margin_weight
+        self.use_margin_loss = use_margin_loss
+
+        # Compute radius step per valuation level
+        self.radius_step = (outer_radius - inner_radius) / max_valuation
 
     def forward(
         self,
@@ -227,6 +236,7 @@ class RadialHierarchyLoss(nn.Module):
             Tuple of (loss, metrics_dict)
         """
         device = z_hyp.device
+        batch_size = z_hyp.size(0)
 
         # Compute 3-adic valuation for each index
         valuations = TERNARY.valuation(batch_indices).float()
@@ -240,11 +250,50 @@ class RadialHierarchyLoss(nn.Module):
 
         # Weighted loss (high-valuation points are rarer, more important)
         if self.valuation_weighting:
-            weights = 1.0 + normalized_v  # Higher weight for high valuation
+            # V5.11.2: Exponential weighting to compensate for rarity
+            # v=0: weight=1, v=4: weight~5, v=7: weight~20, v=9: weight~50
+            # This compensates for the fact that v=9 is ~20000x rarer than v=0
+            weights = 1.0 + torch.exp(valuations * 0.4)  # exp(0.4*v)
         else:
             weights = torch.ones_like(normalized_v)
 
-        loss = (F.smooth_l1_loss(actual_radius, target_radius, reduction='none') * weights).mean()
+        # Primary loss: push each point to its target radius
+        primary_loss = (F.mse_loss(actual_radius, target_radius, reduction='none') * weights).mean()
+
+        # Margin loss: enforce separation between different valuation levels
+        margin_loss = torch.tensor(0.0, device=device)
+        if self.use_margin_loss and batch_size >= 2:
+            # Sample pairs
+            n_pairs = min(1000, batch_size * (batch_size - 1) // 2)
+            i_idx = torch.randint(0, batch_size, (n_pairs,), device=device)
+            j_idx = torch.randint(0, batch_size, (n_pairs,), device=device)
+
+            # Avoid same index
+            same = i_idx == j_idx
+            j_idx[same] = (j_idx[same] + 1) % batch_size
+
+            v_i = valuations[i_idx]
+            v_j = valuations[j_idx]
+            r_i = actual_radius[i_idx]
+            r_j = actual_radius[j_idx]
+
+            # For pairs where v_i > v_j (i has higher valuation),
+            # we want r_i < r_j (i should be closer to origin)
+            higher_v_mask = v_i > v_j
+
+            if higher_v_mask.any():
+                # Expected margin: proportional to valuation difference
+                v_diff = (v_i[higher_v_mask] - v_j[higher_v_mask])
+                expected_margin = v_diff * self.radius_step * 0.5  # Half step as margin
+
+                # Actual difference: r_j - r_i (should be positive)
+                actual_diff = r_j[higher_v_mask] - r_i[higher_v_mask]
+
+                # Margin violation: max(0, expected_margin - actual_diff)
+                violations = F.relu(expected_margin - actual_diff)
+                margin_loss = violations.mean()
+
+        total_loss = primary_loss + self.margin_weight * margin_loss
 
         # Metrics
         with torch.no_grad():
@@ -252,13 +301,21 @@ class RadialHierarchyLoss(nn.Module):
             if torch.isnan(radial_corr):
                 radial_corr = torch.tensor(0.0, device=device)
 
+            # Compute actual range
+            radius_range = actual_radius.max() - actual_radius.min()
+
         metrics = {
             'mean_radius': actual_radius.mean().item(),
             'mean_target_radius': target_radius.mean().item(),
-            'radial_hierarchy_corr': radial_corr.item()
+            'radial_hierarchy_corr': radial_corr.item(),
+            'radius_min': actual_radius.min().item(),
+            'radius_max': actual_radius.max().item(),
+            'radius_range': radius_range.item(),
+            'primary_loss': primary_loss.item(),
+            'margin_loss': margin_loss.item() if isinstance(margin_loss, torch.Tensor) else margin_loss
         }
 
-        return loss, metrics
+        return total_loss, metrics
 
 
 class CombinedGeodesicLoss(nn.Module):

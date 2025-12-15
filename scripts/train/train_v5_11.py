@@ -35,7 +35,7 @@ from scipy.stats import spearmanr
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.models import TernaryVAEV5_11
+from src.models import TernaryVAEV5_11, TernaryVAEV5_11_OptionC
 from src.losses import PAdicGeodesicLoss, RadialHierarchyLoss, CombinedGeodesicLoss
 from src.data.generation import generate_all_ternary_operations
 from src.core import TERNARY
@@ -65,6 +65,19 @@ def parse_args():
                         help='Maximum Poincare ball radius')
     parser.add_argument('--device', type=str, default='cuda',
                         help='Device to train on')
+    parser.add_argument('--radial_weight', type=float, default=2.0,
+                        help='Weight for radial loss (always active)')
+    parser.add_argument('--margin_weight', type=float, default=1.0,
+                        help='Weight for radial margin loss')
+    parser.add_argument('--no_stratified', action='store_true', default=False,
+                        help='Disable stratified sampling (use random)')
+    # Option C arguments
+    parser.add_argument('--option_c', action='store_true', default=False,
+                        help='Use Option C (partial freeze, encoder_B trainable)')
+    parser.add_argument('--encoder_b_lr_scale', type=float, default=0.1,
+                        help='Learning rate scale for encoder_B in Option C')
+    parser.add_argument('--dual_projection', action='store_true', default=False,
+                        help='Use separate projections for VAE-A and VAE-B')
     return parser.parse_args()
 
 
@@ -80,6 +93,93 @@ def create_full_dataset(device: str):
     x = torch.tensor(operations, dtype=torch.float32, device=device)
     indices = torch.arange(len(operations), device=device)
     return x, indices
+
+
+def create_stratified_indices(indices: torch.Tensor, batch_size: int, device: str):
+    """Create stratified batch indices ensuring all valuation levels represented.
+
+    V5.11.2 FIX: High-valuation points are extremely rare (v≥7 is ~9 out of 19683).
+    Random sampling means most batches have NO high-valuation points.
+
+    Solution: Stratified sampling - ensure each batch contains points from
+    all valuation levels, with oversampling of rare high-valuation points.
+
+    Args:
+        indices: All operation indices
+        batch_size: Target batch size
+        device: Torch device
+
+    Returns:
+        List of batch index tensors, each containing stratified samples
+    """
+    n_samples = len(indices)
+    valuations = TERNARY.valuation(indices).cpu().numpy()
+
+    # Group indices by valuation level
+    valuation_groups = {}
+    for i, v in enumerate(valuations):
+        v = int(v)
+        if v not in valuation_groups:
+            valuation_groups[v] = []
+        valuation_groups[v].append(i)
+
+    # Convert to tensors
+    for v in valuation_groups:
+        valuation_groups[v] = torch.tensor(valuation_groups[v], device=device)
+
+    # Compute samples per valuation level per batch
+    # High valuation = more oversampling
+    max_v = max(valuation_groups.keys())
+
+    # Allocation: reserve 20% of batch for high-v (v≥4), rest proportional
+    high_v_budget = int(batch_size * 0.2)  # 20% for high-valuation
+    low_v_budget = batch_size - high_v_budget  # 80% for low-valuation
+
+    # High-v levels: v=4,5,6,7,8,9 (or whatever exists)
+    high_v_levels = [v for v in valuation_groups if v >= 4]
+    low_v_levels = [v for v in valuation_groups if v < 4]
+
+    batches = []
+    n_batches = (n_samples + batch_size - 1) // batch_size
+
+    for _ in range(n_batches):
+        batch_indices = []
+
+        # Sample from high-valuation levels (with replacement if needed)
+        if high_v_levels:
+            per_high_v = max(1, high_v_budget // len(high_v_levels))
+            for v in high_v_levels:
+                group = valuation_groups[v]
+                n_to_sample = min(per_high_v, len(group))
+                if len(group) <= n_to_sample:
+                    # Take all, with replacement if oversampling needed
+                    sample_idx = torch.randint(0, len(group), (per_high_v,), device=device)
+                else:
+                    sample_idx = torch.randperm(len(group), device=device)[:n_to_sample]
+                batch_indices.append(group[sample_idx])
+
+        # Sample from low-valuation levels (proportional to size)
+        if low_v_levels:
+            total_low = sum(len(valuation_groups[v]) for v in low_v_levels)
+            for v in low_v_levels:
+                group = valuation_groups[v]
+                n_to_sample = max(1, int(low_v_budget * len(group) / total_low))
+                sample_idx = torch.randint(0, len(group), (n_to_sample,), device=device)
+                batch_indices.append(group[sample_idx])
+
+        # Combine and shuffle
+        batch = torch.cat(batch_indices)
+        # Trim to exact batch size or pad if needed
+        if len(batch) > batch_size:
+            batch = batch[torch.randperm(len(batch), device=device)[:batch_size]]
+        elif len(batch) < batch_size:
+            # Pad with random samples
+            extra = torch.randint(0, n_samples, (batch_size - len(batch),), device=device)
+            batch = torch.cat([batch, extra])
+
+        batches.append(batch)
+
+    return batches
 
 
 def compute_metrics(model, x, indices, geodesic_loss_fn, radial_loss_fn, device):
@@ -108,8 +208,14 @@ def compute_metrics(model, x, indices, geodesic_loss_fn, radial_loss_fn, device)
         radial_corr_A = spearmanr(valuations, radii_A)[0]
         radial_corr_B = spearmanr(valuations, radii_B)[0]
 
-        # Coverage check (using frozen decoder)
-        logits_A = outputs['logits_A']
+        # Radius range by valuation
+        radius_v0 = radii_A[valuations == 0].mean() if (valuations == 0).any() else 0
+        radius_v9 = radii_A[valuations == 9].mean() if (valuations == 9).any() else 0
+        radius_range = radii_A.max() - radii_A.min()
+
+        # Coverage check (using frozen decoder with MEAN, not sampled)
+        mu_A = outputs['mu_A']
+        logits_A = model.decoder_A(mu_A)
         preds = torch.argmax(logits_A, dim=-1) - 1
         targets = x.long()
         correct = (preds == targets).float().mean(dim=1)
@@ -125,28 +231,55 @@ def compute_metrics(model, x, indices, geodesic_loss_fn, radial_loss_fn, device)
         'radial_corr_B': radial_corr_B,
         'mean_radius_A': radii_A.mean(),
         'mean_radius_B': radii_B.mean(),
+        'radius_min_A': radii_A.min(),
+        'radius_max_A': radii_A.max(),
+        'radius_range_A': radius_range,
+        'radius_v0': radius_v0,
+        'radius_v9': radius_v9,
         'distance_corr_A': geo_metrics_A.get('distance_correlation', 0),
         'distance_corr_B': geo_metrics_B.get('distance_correlation', 0)
     }
 
 
 def train_epoch(model, optimizer, x, indices, geodesic_loss_fn, radial_loss_fn,
-                batch_size, epoch, tau, device):
-    """Train one epoch."""
+                batch_size, epoch, tau, radial_weight, device, use_stratified=True):
+    """Train one epoch.
+
+    V5.11.1 FIX: Changed loss composition to always include radial loss.
+    Instead of curriculum blending (which eliminates radial at tau=1),
+    we use: total = geo_loss + radial_weight * rad_loss
+
+    V5.11.2 FIX: Added stratified sampling to ensure high-valuation points
+    are represented in every batch. Without this, v≥7 points (only ~9 in dataset)
+    may never appear in most batches.
+
+    tau now controls geodesic weight, but radial is always active.
+    """
     model.train()
 
     n_samples = len(x)
-    n_batches = (n_samples + batch_size - 1) // batch_size
-    perm = torch.randperm(n_samples, device=device)
+
+    if use_stratified:
+        # V5.11.2: Use stratified sampling for balanced valuation representation
+        batches = create_stratified_indices(indices, batch_size, device)
+        n_batches = len(batches)
+    else:
+        # Original random sampling
+        n_batches = (n_samples + batch_size - 1) // batch_size
+        perm = torch.randperm(n_samples, device=device)
+        batches = None
 
     total_loss = 0.0
     total_geo = 0.0
     total_rad = 0.0
 
     for i in range(n_batches):
-        start = i * batch_size
-        end = min(start + batch_size, n_samples)
-        batch_idx = perm[start:end]
+        if use_stratified:
+            batch_idx = batches[i]
+        else:
+            start = i * batch_size
+            end = min(start + batch_size, n_samples)
+            batch_idx = perm[start:end]
 
         x_batch = x[batch_idx]
         idx_batch = indices[batch_idx]
@@ -162,21 +295,18 @@ def train_epoch(model, optimizer, x, indices, geodesic_loss_fn, radial_loss_fn,
         # Compute losses
         geo_loss_A, _ = geodesic_loss_fn(z_A_hyp, idx_batch)
         geo_loss_B, _ = geodesic_loss_fn(z_B_hyp, idx_batch)
-        rad_loss_A, _ = radial_loss_fn(z_A_hyp, idx_batch)
-        rad_loss_B, _ = radial_loss_fn(z_B_hyp, idx_batch)
+        rad_loss_A, rad_metrics_A = radial_loss_fn(z_A_hyp, idx_batch)
+        rad_loss_B, rad_metrics_B = radial_loss_fn(z_B_hyp, idx_batch)
 
         geo_loss = geo_loss_A + geo_loss_B
         rad_loss = rad_loss_A + rad_loss_B
 
-        # Get tau from controller if available, else use schedule
-        if model.use_controller and 'control' in outputs:
-            ctrl = outputs['control']
-            tau_batch = ctrl['tau'].item() if isinstance(ctrl['tau'], torch.Tensor) else ctrl['tau']
-        else:
-            tau_batch = tau
-
-        # Curriculum blend: (1-tau)*radial + tau*geodesic
-        total_batch_loss = (1 - tau_batch) * rad_loss + tau_batch * geo_loss
+        # V5.11.1 FIX: Always include both losses
+        # Radial loss is ALWAYS active (weighted by radial_weight)
+        # Geodesic loss ramps up with tau
+        # Early: low tau = focus on radial, some geodesic
+        # Late: high tau = more geodesic, but radial still active
+        total_batch_loss = tau * geo_loss + radial_weight * rad_loss
 
         # Backward and optimize
         total_batch_loss.backward()
@@ -212,24 +342,54 @@ def main():
     device = config.get('device', 'cuda' if torch.cuda.is_available() else 'cpu')
     print(f"Using device: {device}")
 
-    # Create save directory
-    save_dir = Path(config.get('save_dir', 'sandbox-training/checkpoints/v5_11'))
+    # Create save directory (differentiate Option A vs C, and dual projection)
+    use_option_c = config.get('option_c', False)
+    use_dual_proj = config.get('dual_projection', False)
+
+    variant_parts = []
+    if use_option_c:
+        variant_parts.append('option_c')
+    else:
+        variant_parts.append('option_a')
+    if use_dual_proj:
+        variant_parts.append('dual')
+    variant = '_'.join(variant_parts)
+
+    default_save_dir = f'sandbox-training/checkpoints/v5_11_{variant}'
+    save_dir = Path(config.get('save_dir', default_save_dir))
     save_dir.mkdir(parents=True, exist_ok=True)
 
     # Setup TensorBoard
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    log_dir = Path('runs') / f'v5_11_{timestamp}'
+    log_dir = Path('runs') / f'v5_11_{variant}_{timestamp}'
     writer = SummaryWriter(log_dir=str(log_dir))
 
-    # Create model
-    print("\n=== Creating V5.11 Model ===")
-    model = TernaryVAEV5_11(
-        latent_dim=16,
-        hidden_dim=config.get('hidden_dim', 64),
-        max_radius=config.get('max_radius', 0.95),
-        curvature=config.get('curvature', 1.0),
-        use_controller=config.get('use_controller', False)
-    )
+    # Create model (Option A or Option C, with optional dual projection)
+    encoder_b_lr_scale = config.get('encoder_b_lr_scale', 0.1)
+
+    dual_str = " + DUAL PROJECTION" if use_dual_proj else ""
+    if use_option_c:
+        print(f"\n=== Creating V5.11 Model (OPTION C: encoder_B trainable{dual_str}) ===")
+        model = TernaryVAEV5_11_OptionC(
+            latent_dim=16,
+            hidden_dim=config.get('hidden_dim', 64),
+            max_radius=config.get('max_radius', 0.95),
+            curvature=config.get('curvature', 1.0),
+            use_controller=config.get('use_controller', False),
+            use_dual_projection=use_dual_proj,
+            freeze_encoder_b=False,  # Key difference: encoder_B trains
+            encoder_b_lr_scale=encoder_b_lr_scale
+        )
+    else:
+        print(f"\n=== Creating V5.11 Model (OPTION A: all encoders frozen{dual_str}) ===")
+        model = TernaryVAEV5_11(
+            latent_dim=16,
+            hidden_dim=config.get('hidden_dim', 64),
+            max_radius=config.get('max_radius', 0.95),
+            curvature=config.get('curvature', 1.0),
+            use_controller=config.get('use_controller', False),
+            use_dual_projection=use_dual_proj
+        )
 
     # Load v5.5 checkpoint
     v5_5_path = Path(config.get('v5_5_checkpoint', 'sandbox-training/checkpoints/v5_5/latest.pt'))
@@ -262,15 +422,35 @@ def main():
 
     radial_loss_fn = RadialHierarchyLoss(
         inner_radius=config.get('inner_radius', 0.1),
-        outer_radius=config.get('outer_radius', 0.85)
+        outer_radius=config.get('outer_radius', 0.85),
+        margin_weight=config.get('margin_weight', 1.0),
+        use_margin_loss=True
     ).to(device)
 
+    # Radial weight (always active, not curriculum-blended)
+    radial_weight = config.get('radial_weight', 2.0)
+    print(f"\nLoss weights: radial={radial_weight}, margin={config.get('margin_weight', 1.0)}")
+
     # Create optimizer (only trainable parameters)
-    optimizer = torch.optim.AdamW(
-        model.get_trainable_parameters(),
-        lr=config.get('lr', 1e-3),
-        weight_decay=config.get('weight_decay', 1e-4)
-    )
+    base_lr = config.get('lr', 1e-3)
+    if use_option_c and hasattr(model, 'get_param_groups'):
+        # Option C: use param groups with different LRs
+        param_groups = model.get_param_groups(base_lr)
+        optimizer = torch.optim.AdamW(
+            param_groups,
+            weight_decay=config.get('weight_decay', 1e-4)
+        )
+        print(f"\nUsing param groups: {len(param_groups)} groups")
+        for i, pg in enumerate(param_groups):
+            name = pg.get('name', f'group_{i}')
+            print(f"  {name}: {len(pg['params'])} params, lr={pg['lr']:.2e}")
+    else:
+        # Option A: single learning rate
+        optimizer = torch.optim.AdamW(
+            model.get_trainable_parameters(),
+            lr=base_lr,
+            weight_decay=config.get('weight_decay', 1e-4)
+        )
 
     # Learning rate scheduler
     scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
@@ -281,6 +461,8 @@ def main():
     print("\n=== Starting Training ===")
     n_epochs = config.get('epochs', 100)
     batch_size = config.get('batch_size', 512)
+    use_stratified = not config.get('no_stratified', False)
+    print(f"Stratified sampling: {use_stratified}")
 
     best_radial_corr = float('inf')  # Want negative, so lower is better
 
@@ -292,7 +474,8 @@ def main():
         train_metrics = train_epoch(
             model, optimizer, x, indices,
             geodesic_loss_fn, radial_loss_fn,
-            batch_size, epoch, tau, device
+            batch_size, epoch, tau, radial_weight, device,
+            use_stratified=use_stratified
         )
 
         # Evaluate
@@ -315,6 +498,9 @@ def main():
         writer.add_scalar('Eval/distance_corr_A', eval_metrics['distance_corr_A'], epoch)
         writer.add_scalar('Eval/mean_radius_A', eval_metrics['mean_radius_A'], epoch)
         writer.add_scalar('Eval/mean_radius_B', eval_metrics['mean_radius_B'], epoch)
+        writer.add_scalar('Eval/radius_range_A', eval_metrics['radius_range_A'], epoch)
+        writer.add_scalar('Eval/radius_v0', eval_metrics['radius_v0'], epoch)
+        writer.add_scalar('Eval/radius_v9', eval_metrics['radius_v9'], epoch)
         writer.add_scalar('LR', optimizer.param_groups[0]['lr'], epoch)
 
         # Print progress
@@ -323,8 +509,9 @@ def main():
             print(f"  Loss: {train_metrics['loss']:.4f} (geo: {train_metrics['geo_loss']:.4f}, rad: {train_metrics['rad_loss']:.4f})")
             print(f"  Coverage: {eval_metrics['coverage']*100:.1f}%")
             print(f"  Radial Hierarchy: A={eval_metrics['radial_corr_A']:.3f}, B={eval_metrics['radial_corr_B']:.3f}")
-            print(f"  Distance Corr: A={eval_metrics['distance_corr_A']:.3f}, B={eval_metrics['distance_corr_B']:.3f}")
-            print(f"  Mean Radius: A={eval_metrics['mean_radius_A']:.3f}, B={eval_metrics['mean_radius_B']:.3f}")
+            print(f"  Radius Range: [{eval_metrics['radius_min_A']:.3f}, {eval_metrics['radius_max_A']:.3f}] (range={eval_metrics['radius_range_A']:.3f})")
+            print(f"  Radius v=0: {eval_metrics['radius_v0']:.3f}, v=9: {eval_metrics['radius_v9']:.3f} (target: 0.85, 0.10)")
+            print(f"  Distance Corr: A={eval_metrics['distance_corr_A']:.3f}")
             print(f"  tau: {tau:.3f}, LR: {optimizer.param_groups[0]['lr']:.2e}")
 
         # Save best model (best = most negative radial correlation)
@@ -366,6 +553,9 @@ def main():
     print(f"\nFinal Metrics:")
     print(f"  Coverage: {eval_metrics['coverage']*100:.1f}%")
     print(f"  Radial Hierarchy: A={eval_metrics['radial_corr_A']:.3f}, B={eval_metrics['radial_corr_B']:.3f}")
+    print(f"  Radius Range: [{eval_metrics['radius_min_A']:.3f}, {eval_metrics['radius_max_A']:.3f}]")
+    print(f"  Radius v=0: {eval_metrics['radius_v0']:.3f} (target: 0.85)")
+    print(f"  Radius v=9: {eval_metrics['radius_v9']:.3f} (target: 0.10)")
     print(f"  Distance Correlation: A={eval_metrics['distance_corr_A']:.3f}")
     print(f"\nBest Radial Hierarchy: {best_radial_corr:.4f}")
     print(f"\nCheckpoints saved to: {save_dir}")
