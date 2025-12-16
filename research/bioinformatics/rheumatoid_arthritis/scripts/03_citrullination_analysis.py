@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Citrullination Boundary Analysis for RA Autoantigens
+Citrullination Boundary Analysis for RA Autoantigens - HYPERBOLIC GEOMETRY
 
 Tests the hypothesis that citrullination (R→Cit) moves peptide epitopes
 across p-adic boundaries, converting "self" to "foreign" in immune recognition.
@@ -13,7 +13,10 @@ Key RA autoantigens analyzed:
 - Filaggrin (FLG)
 
 Citrullination converts Arginine (R) to Citrulline - a non-coded amino acid.
-This experiment measures how this modification shifts epitope embeddings.
+This experiment measures how this modification shifts epitope embeddings
+in Poincaré ball (hyperbolic) space.
+
+Version: 2.0 - Updated to use Poincaré ball geometry
 """
 
 import torch
@@ -24,21 +27,23 @@ from collections import defaultdict
 import json
 from scipy import stats
 
+# Import hyperbolic utilities
+from hyperbolic_utils import (
+    poincare_distance as hyp_poincare_distance,
+    project_to_poincare,
+    load_codon_encoder,
+    get_results_dir,
+    codon_to_onehot,
+    CodonEncoder,
+    AA_TO_CODON,
+    ARGININE_CODONS,
+)
+
 # ============================================================================
 # RA AUTOANTIGENS WITH KNOWN CITRULLINATION SITES
 # ============================================================================
 
-# Amino acid to codon mapping (most common codons used)
-AA_TO_CODON = {
-    'A': 'GCT', 'R': 'CGG', 'N': 'AAC', 'D': 'GAC', 'C': 'TGC',
-    'E': 'GAG', 'Q': 'CAG', 'G': 'GGC', 'H': 'CAC', 'I': 'ATC',
-    'L': 'CTG', 'K': 'AAG', 'M': 'ATG', 'F': 'TTC', 'P': 'CCG',
-    'S': 'TCG', 'T': 'ACC', 'W': 'TGG', 'Y': 'TAC', 'V': 'GTG',
-    '*': 'TGA',
-}
-
-# Alternative codons for arginine (R) - important for analysis
-ARGININE_CODONS = ['CGT', 'CGC', 'CGA', 'CGG', 'AGA', 'AGG']
+# AA_TO_CODON and ARGININE_CODONS are now imported from hyperbolic_utils
 
 # RA Autoantigens with epitope sequences around citrullination sites
 # Format: protein name, epitope sequence (with R at citrullination site), position
@@ -176,35 +181,9 @@ RA_AUTOANTIGENS = {
 }
 
 # ============================================================================
-# CODON ENCODER
+# CODON ENCODER - Now imported from hyperbolic_utils
+# CodonEncoder and codon_to_onehot are imported above
 # ============================================================================
-
-class CodonEncoder(nn.Module):
-    def __init__(self, input_dim=12, hidden_dim=32, embed_dim=16, n_clusters=21):
-        super().__init__()
-        self.encoder = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, embed_dim),
-        )
-        self.cluster_head = nn.Linear(embed_dim, n_clusters)
-        self.cluster_centers = nn.Parameter(torch.randn(n_clusters, embed_dim) * 0.1)
-
-    def encode(self, x):
-        return self.encoder(x)
-
-
-def codon_to_onehot(codon):
-    """Convert codon string to one-hot encoding."""
-    nucleotides = {'A': 0, 'C': 1, 'G': 2, 'T': 3, 'U': 3}
-    onehot = np.zeros(12)
-    for i, nuc in enumerate(codon.upper()):
-        if nuc in nucleotides:
-            onehot[i * 4 + nucleotides[nuc]] = 1
-    return onehot
-
 
 def aa_sequence_to_codons(aa_sequence):
     """Convert amino acid sequence to codons."""
@@ -212,11 +191,27 @@ def aa_sequence_to_codons(aa_sequence):
 
 
 # ============================================================================
-# CITRULLINATION ANALYSIS
+# CITRULLINATION ANALYSIS - Updated for Hyperbolic Geometry
 # ============================================================================
 
-def encode_epitope(aa_sequence, encoder, device='cpu'):
-    """Encode an epitope's codon sequence."""
+def poincare_distance(emb1, emb2, c=1.0):
+    """Geodesic distance in Poincaré ball model."""
+    return float(hyp_poincare_distance(emb1, emb2, c=c))
+
+
+def encode_epitope(aa_sequence, encoder, device='cpu', use_hyperbolic=True):
+    """
+    Encode an epitope's codon sequence.
+
+    Args:
+        aa_sequence: Amino acid sequence string
+        encoder: CodonEncoder model
+        device: Device for inference
+        use_hyperbolic: If True, project embeddings to Poincaré ball
+
+    Returns:
+        Tuple of (embeddings array, codons list)
+    """
     codons = aa_sequence_to_codons(aa_sequence)
     embeddings = []
 
@@ -225,6 +220,9 @@ def encode_epitope(aa_sequence, encoder, device='cpu'):
             onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
             with torch.no_grad():
                 emb = encoder.encode(onehot).cpu().numpy().squeeze()
+                if use_hyperbolic:
+                    # Project to Poincaré ball for hyperbolic geometry
+                    emb = project_to_poincare(emb, max_radius=0.95).squeeze()
             embeddings.append(emb)
 
     return np.array(embeddings), codons
@@ -261,25 +259,30 @@ def simulate_citrullination(epitope_embeddings, cit_position, encoder, device='c
 
 
 def compute_embedding_shift(original, modified):
-    """Compute the shift in embedding space due to modification."""
+    """
+    Compute the shift in embedding space due to modification.
+    Uses Poincaré geodesic distance for hyperbolic geometry.
+    """
     # Sequence-level: mean embedding
     orig_mean = np.mean(original, axis=0)
     mod_mean = np.mean(modified, axis=0)
 
+    # Euclidean for comparison
     euclidean_shift = np.linalg.norm(orig_mean - mod_mean)
 
-    # Position-level shift at citrullination site
-    # (captured in the mean, but we can also look at individual positions)
+    # Poincaré geodesic distance (main metric)
+    poincare_shift = poincare_distance(orig_mean, mod_mean)
 
     # Angular shift
     cos_sim = np.dot(orig_mean, mod_mean) / (np.linalg.norm(orig_mean) * np.linalg.norm(mod_mean) + 1e-8)
     angular_shift = np.arccos(np.clip(cos_sim, -1, 1))
 
-    # Radial shift (change in distance from origin)
+    # Radial shift (change in distance from origin - important in hyperbolic space)
     radial_shift = np.linalg.norm(mod_mean) - np.linalg.norm(orig_mean)
 
     return {
         'euclidean': euclidean_shift,
+        'poincare': poincare_shift,
         'angular': angular_shift,
         'radial': radial_shift,
         'original_norm': np.linalg.norm(orig_mean),
@@ -290,13 +293,20 @@ def compute_embedding_shift(original, modified):
 def analyze_cluster_boundary_crossing(original_emb, modified_emb, cluster_centers):
     """
     Check if citrullination causes cluster boundary crossing.
+    Uses Poincaré geodesic distance for cluster assignments.
     """
     orig_mean = np.mean(original_emb, axis=0)
     mod_mean = np.mean(modified_emb, axis=0)
 
-    # Find nearest cluster for each
-    orig_dists = [np.linalg.norm(orig_mean - c) for c in cluster_centers]
-    mod_dists = [np.linalg.norm(mod_mean - c) for c in cluster_centers]
+    # Project cluster centers to Poincaré ball if not already
+    cluster_centers_hyp = np.array([
+        project_to_poincare(c, max_radius=0.95).squeeze()
+        for c in cluster_centers
+    ])
+
+    # Find nearest cluster for each (using Poincaré distance)
+    orig_dists = [poincare_distance(orig_mean, c) for c in cluster_centers_hyp]
+    mod_dists = [poincare_distance(mod_mean, c) for c in cluster_centers_hyp]
 
     orig_cluster = np.argmin(orig_dists)
     mod_cluster = np.argmin(mod_dists)
@@ -318,10 +328,10 @@ def analyze_cluster_boundary_crossing(original_emb, modified_emb, cluster_center
     }
 
 
-def analyze_all_arginine_codons(encoder, device='cpu'):
+def analyze_all_arginine_codons(encoder, device='cpu', use_hyperbolic=True):
     """
-    Analyze how different arginine codons embed differently.
-    This shows the "wobble" space available for R.
+    Analyze how different arginine codons embed differently in hyperbolic space.
+    This shows the "wobble" space available for R in Poincaré ball.
     """
     results = {}
     embeddings = []
@@ -330,14 +340,19 @@ def analyze_all_arginine_codons(encoder, device='cpu'):
         onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
         with torch.no_grad():
             emb = encoder.encode(onehot).cpu().numpy().squeeze()
+            if use_hyperbolic:
+                # Project to Poincaré ball
+                emb = project_to_poincare(emb, max_radius=0.95).squeeze()
         embeddings.append(emb)
         results[codon] = emb
 
-    # Compute variance within arginine codons
+    # Compute variance within arginine codons using Poincaré distances
     emb_array = np.array(embeddings)
     centroid = np.mean(emb_array, axis=0)
-    variance = np.mean([np.linalg.norm(e - centroid)**2 for e in emb_array])
-    max_spread = np.max([np.linalg.norm(emb_array[i] - emb_array[j])
+
+    # Variance using Poincaré distances
+    variance = np.mean([poincare_distance(e, centroid)**2 for e in emb_array])
+    max_spread = np.max([poincare_distance(emb_array[i], emb_array[j])
                          for i in range(len(emb_array)) for j in range(i+1, len(emb_array))])
 
     return {
@@ -493,25 +508,19 @@ def create_visualization(results, arginine_analysis, output_path):
 
 def main():
     print("=" * 70)
-    print("CITRULLINATION BOUNDARY ANALYSIS")
-    print("Testing P-Adic Geometry for RA Autoantigen Recognition")
+    print("CITRULLINATION BOUNDARY ANALYSIS - HYPERBOLIC GEOMETRY")
+    print("Testing Poincaré Ball Geometry for RA Autoantigen Recognition")
     print("=" * 70)
 
-    # Paths
+    # Paths - use hyperbolic results directory
     script_dir = Path(__file__).parent
-    results_dir = script_dir.parent / 'results'
-    results_dir.mkdir(exist_ok=True)
+    results_dir = get_results_dir(hyperbolic=True)
+    print(f"\nResults will be saved to: {results_dir}")
 
-    # Load encoder
-    print("\nLoading codon encoder...")
-    research_dir = script_dir.parent.parent.parent  # research/
-    encoder_path = research_dir / 'genetic_code' / 'data' / 'codon_encoder.pt'
-    if not encoder_path.exists():
-        encoder_path = script_dir.parent / 'data' / 'codon_encoder.pt'
-    encoder = CodonEncoder()
-    checkpoint = torch.load(encoder_path, map_location='cpu', weights_only=False)
-    encoder.load_state_dict(checkpoint['model_state'])
-    encoder.eval()
+    # Load encoder using utility function
+    # Using '3adic' version (native hyperbolic from V5.11.3)
+    print("\nLoading codon encoder (3-adic, V5.11.3)...")
+    encoder, codon_mapping, _ = load_codon_encoder(device='cpu', version='3adic')
 
     # Get cluster centers from encoder
     cluster_centers = encoder.cluster_centers.detach().numpy()

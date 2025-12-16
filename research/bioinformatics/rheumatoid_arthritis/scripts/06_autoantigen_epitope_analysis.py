@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 """
-Autoantigen Epitope Analysis for Rheumatoid Arthritis
+Autoantigen Epitope Analysis for Rheumatoid Arthritis - HYPERBOLIC GEOMETRY
 
-Deep analysis of RA autoantigens using p-adic geometry to understand:
+Deep analysis of RA autoantigens using Poincaré ball geometry to understand:
 1. Why specific citrullination sites trigger autoimmunity
-2. P-adic signatures that distinguish immunodominant from silent sites
+2. Hyperbolic signatures that distinguish immunodominant from silent sites
 3. Codon usage patterns in immunogenic regions
-4. Potential therapeutic targets based on p-adic clustering
+4. Potential therapeutic targets based on hyperbolic clustering
 
-Key hypothesis: Immunodominant citrullination sites occupy distinct p-adic
+Key hypothesis: Immunodominant citrullination sites occupy distinct hyperbolic
 positions that cross cluster boundaries, making them appear "foreign" to
 the immune system.
+
+Version: 2.0 - Updated to use Poincaré ball geometry
 """
 
 import torch
@@ -21,6 +23,18 @@ from collections import defaultdict
 import json
 from scipy import stats
 from scipy.spatial.distance import pdist, squareform
+
+# Import hyperbolic utilities
+from hyperbolic_utils import (
+    poincare_distance as hyp_poincare_distance,
+    project_to_poincare,
+    load_codon_encoder,
+    get_results_dir,
+    codon_to_onehot,
+    CodonEncoder,
+    AA_TO_CODON,
+    ARGININE_CODONS,
+)
 
 # ============================================================================
 # COMPREHENSIVE RA AUTOANTIGEN DATABASE
@@ -274,43 +288,18 @@ RA_AUTOANTIGENS_EXTENDED = {
 
 
 # ============================================================================
-# CODON ENCODER
+# CODON ENCODER - Now imported from hyperbolic_utils
+# CodonEncoder, codon_to_onehot, AA_TO_CODON, ARGININE_CODONS are imported above
 # ============================================================================
 
-class CodonEncoder(nn.Module):
-    def __init__(self, input_dim=12, hidden_dim=32, embed_dim=16, n_clusters=21):
-        super().__init__()
-        self.encoder = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, embed_dim),
-        )
-        self.cluster_head = nn.Linear(embed_dim, n_clusters)
-        self.cluster_centers = nn.Parameter(torch.randn(n_clusters, embed_dim) * 0.1)
 
-    def encode(self, x):
-        return self.encoder(x)
-
-    def get_cluster(self, x):
-        emb = self.encode(x)
-        logits = self.cluster_head(emb)
-        return torch.argmax(logits, dim=-1), emb
-
-
-def codon_to_onehot(codon):
-    """Convert codon string to one-hot encoding."""
-    nucleotides = {'A': 0, 'C': 1, 'G': 2, 'T': 3, 'U': 3}
-    onehot = np.zeros(12)
-    for i, nuc in enumerate(codon.upper()):
-        if nuc in nucleotides:
-            onehot[i * 4 + nucleotides[nuc]] = 1
-    return onehot
+def poincare_distance(emb1, emb2, c=1.0):
+    """Geodesic distance in Poincaré ball model."""
+    return float(hyp_poincare_distance(emb1, emb2, c=c))
 
 
 # ============================================================================
-# P-ADIC ANALYSIS FUNCTIONS
+# HYPERBOLIC ANALYSIS FUNCTIONS
 # ============================================================================
 
 def compute_epitope_padic_profile(epitope_sequence, encoder, mapping, device='cpu'):
@@ -550,57 +539,19 @@ def compute_epitope_centroid_shift(epitope_profile, arg_positions):
 
 def main():
     print("=" * 80)
-    print("AUTOANTIGEN EPITOPE ANALYSIS - P-ADIC SIGNATURES OF RA AUTOANTIGENS")
+    print("AUTOANTIGEN EPITOPE ANALYSIS - HYPERBOLIC SIGNATURES OF RA AUTOANTIGENS")
     print("=" * 80)
 
-    # Setup paths
+    # Setup paths - use hyperbolic results directory
     script_dir = Path(__file__).parent
-    results_dir = script_dir.parent / 'results'
-    results_dir.mkdir(parents=True, exist_ok=True)
+    results_dir = get_results_dir(hyperbolic=True)
+    print(f"\nResults will be saved to: {results_dir}")
 
-    # Load codon encoder
-    research_dir = script_dir.parent.parent.parent
-    encoder_paths = [
-        research_dir / 'genetic_code' / 'data' / 'codon_encoder.pt',
-        script_dir.parent / 'data' / 'codon_encoder.pt',
-    ]
-
-    encoder_path = None
-    for path in encoder_paths:
-        if path.exists():
-            encoder_path = path
-            break
-
-    if not encoder_path:
-        print("ERROR: Codon encoder not found")
-        return
-
-    print(f"\nLoading encoder from: {encoder_path}")
-
+    # Load codon encoder using utility function
+    # Using '3adic' version (native hyperbolic from V5.11.3)
+    print("\nLoading codon encoder (3-adic, V5.11.3)...")
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    encoder = CodonEncoder(input_dim=12, hidden_dim=32, embed_dim=16, n_clusters=21)
-
-    checkpoint = torch.load(encoder_path, map_location=device, weights_only=False)
-    encoder.load_state_dict(checkpoint['model_state'])
-    encoder.eval()
-    encoder.to(device)
-
-    # Load p-adic mapping from checkpoint or JSON
-    mapping = {}
-    if 'codon_to_position' in checkpoint:
-        mapping = checkpoint['codon_to_position']
-    else:
-        mapping_paths = [
-            research_dir / 'genetic_code' / 'data' / 'learned_codon_mapping.json',
-            script_dir.parent / 'data' / 'learned_codon_mapping.json',
-        ]
-        for path in mapping_paths:
-            if path.exists():
-                with open(path) as f:
-                    data = json.load(f)
-                    mapping = data.get('codon_to_position', data)
-                break
-
+    encoder, mapping, _ = load_codon_encoder(device=device, version='3adic')
     print(f"Loaded mapping for {len(mapping)} codons")
 
     # =========================================================================

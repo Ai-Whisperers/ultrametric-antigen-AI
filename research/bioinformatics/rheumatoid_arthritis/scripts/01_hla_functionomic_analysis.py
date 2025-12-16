@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """
-HLA Functionomic Analysis using P-Adic Geometry
+HLA Functionomic Analysis using Hyperbolic (Poincaré Ball) Geometry
 
-Tests whether RA-associated HLA-DRB1 alleles cluster differently in p-adic
+Tests whether RA-associated HLA-DRB1 alleles cluster differently in hyperbolic
 embedding space compared to control alleles.
 
-Hypothesis: The immune system computes self/non-self via p-adic-like distance.
-RA-associated alleles may have altered p-adic geometry that causes misclassification.
+Hypothesis: The immune system computes self/non-self via hyperbolic/ultrametric distance.
+RA-associated alleles may have altered hyperbolic geometry that causes misclassification.
+
+Version: 2.0 - Updated to use Poincaré ball geometry
 """
 
 import torch
@@ -16,6 +18,19 @@ from pathlib import Path
 from collections import defaultdict
 from itertools import combinations
 import json
+
+# Import hyperbolic utilities
+from hyperbolic_utils import (
+    poincare_distance as hyp_poincare_distance,
+    poincare_distance_matrix,
+    project_to_poincare,
+    load_hyperbolic_encoder,
+    load_codon_encoder,
+    get_results_dir,
+    codon_to_onehot,
+    HyperbolicCodonEncoder,
+    CodonEncoder,
+)
 
 # ============================================================================
 # HLA-DRB1 ALLELE DATA
@@ -137,81 +152,41 @@ HLA_DRB1_SHARED_EPITOPE = {
 }
 
 # ============================================================================
-# CODON ENCODER (from 08_learn_codon_mapping.py)
+# CODON ENCODER - Now imported from hyperbolic_utils
+# CodonEncoder and codon_to_onehot are imported above
 # ============================================================================
-
-class CodonEncoder(nn.Module):
-    """Neural network that maps codons to embedding space."""
-
-    def __init__(self, input_dim=12, hidden_dim=32, embed_dim=16, n_clusters=21):
-        super().__init__()
-        self.encoder = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, embed_dim),
-        )
-        self.cluster_head = nn.Linear(embed_dim, n_clusters)
-        self.cluster_centers = nn.Parameter(torch.randn(n_clusters, embed_dim) * 0.1)
-
-    def forward(self, x):
-        embedding = self.encoder(x)
-        logits = self.cluster_head(embedding)
-        return embedding, logits
-
-    def encode(self, x):
-        return self.encoder(x)
-
-
-def codon_to_onehot(codon):
-    """Convert codon string to one-hot encoding."""
-    nucleotides = {'A': 0, 'C': 1, 'G': 2, 'T': 3, 'U': 3}
-    onehot = np.zeros(12)  # 4 nucleotides x 3 positions
-    for i, nuc in enumerate(codon.upper()):
-        if nuc in nucleotides:
-            onehot[i * 4 + nucleotides[nuc]] = 1
-    return onehot
 
 
 # ============================================================================
-# P-ADIC DISTANCE COMPUTATION
+# DISTANCE COMPUTATION - Using Hyperbolic Utilities
 # ============================================================================
 
 def euclidean_distance(emb1, emb2):
-    """Standard Euclidean distance in embedding space."""
+    """Standard Euclidean distance in embedding space (for comparison)."""
     return np.linalg.norm(emb1 - emb2)
 
 
-def poincare_distance(emb1, emb2, eps=1e-6):
-    """Geodesic distance in Poincaré ball model."""
-    # Clamp norms to avoid numerical issues
-    norm1_sq = np.clip(np.sum(emb1 ** 2), 0, 1 - eps)
-    norm2_sq = np.clip(np.sum(emb2 ** 2), 0, 1 - eps)
-    diff_sq = np.sum((emb1 - emb2) ** 2)
-
-    # Poincaré distance formula
-    numerator = 2 * diff_sq
-    denominator = (1 - norm1_sq) * (1 - norm2_sq)
-
-    arg = 1 + numerator / (denominator + eps)
-    return np.arccosh(np.clip(arg, 1, None))
+def poincare_distance(emb1, emb2, c=1.0):
+    """
+    Geodesic distance in Poincaré ball model.
+    Uses the validated hyperbolic implementation from hyperbolic_utils.
+    """
+    return float(hyp_poincare_distance(emb1, emb2, c=c))
 
 
 def ultrametric_distance(emb1, emb2, p=3):
     """
-    Approximate p-adic distance using embedding norm difference.
-    Based on the insight that radial position encodes hierarchical depth.
+    Approximate p-adic distance using radial position + angular distance.
+    The hyperbolic model encodes hierarchy as radial depth.
     """
-    # Use difference in radial position as proxy for p-adic valuation
     norm1 = np.linalg.norm(emb1)
     norm2 = np.linalg.norm(emb2)
 
-    # Also consider angular difference
+    # Angular difference
     cos_sim = np.dot(emb1, emb2) / (norm1 * norm2 + 1e-8)
     angular_dist = np.arccos(np.clip(cos_sim, -1, 1)) / np.pi
 
-    # Combine: radial difference + angular distance
+    # Radial difference (hierarchical depth)
     radial_diff = np.abs(norm1 - norm2)
 
     return radial_diff + angular_dist
@@ -221,13 +196,27 @@ def ultrametric_distance(emb1, emb2, p=3):
 # ANALYSIS FUNCTIONS
 # ============================================================================
 
-def encode_allele(allele_data, encoder, device='cpu'):
-    """Encode all codons of an allele's shared epitope."""
+def encode_allele(allele_data, encoder, device='cpu', use_hyperbolic=True):
+    """
+    Encode all codons of an allele's shared epitope.
+
+    Args:
+        allele_data: Dict with 'codons' mapping positions to codon strings
+        encoder: CodonEncoder model
+        device: Device for inference
+        use_hyperbolic: If True, project embeddings to Poincaré ball
+
+    Returns:
+        Dict mapping positions to embeddings (in Euclidean or hyperbolic space)
+    """
     embeddings = {}
     for pos, codon in allele_data['codons'].items():
         onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
         with torch.no_grad():
             emb = encoder.encode(onehot).cpu().numpy().squeeze()
+            if use_hyperbolic:
+                # Project to Poincaré ball for hyperbolic geometry
+                emb = project_to_poincare(emb, max_radius=0.95).squeeze()
         embeddings[pos] = emb
     return embeddings
 
@@ -489,45 +478,26 @@ def create_visualization(alleles_embeddings, allele_data, results, output_path):
 
 def main():
     print("=" * 70)
-    print("HLA FUNCTIONOMIC ANALYSIS")
-    print("Testing P-Adic Geometry for RA Association")
+    print("HLA FUNCTIONOMIC ANALYSIS - HYPERBOLIC GEOMETRY")
+    print("Testing Poincaré Ball Geometry for RA Association")
     print("=" * 70)
 
-    # Paths
+    # Paths - use hyperbolic results directory
     script_dir = Path(__file__).parent
-    results_dir = script_dir.parent / 'results'
-    results_dir.mkdir(exist_ok=True)
+    results_dir = get_results_dir(hyperbolic=True)
+    print(f"\nResults will be saved to: {results_dir}")
 
-    # Load codon encoder from genetic_code or local data
-    print("\nLoading codon encoder...")
-    research_dir = script_dir.parent.parent.parent  # research/
-    encoder_paths = [
-        research_dir / 'genetic_code' / 'data' / 'codon_encoder.pt',
-        script_dir.parent / 'data' / 'codon_encoder.pt',
-    ]
+    # Load codon encoder using utility function
+    # Using '3adic' version (native hyperbolic from V5.11.3)
+    print("\nLoading codon encoder (3-adic, V5.11.3)...")
+    encoder, codon_mapping, _ = load_codon_encoder(device='cpu', version='3adic')
+    print(f"  Loaded encoder with {sum(p.numel() for p in encoder.parameters())} parameters")
 
-    encoder_path = None
-    for path in encoder_paths:
-        if path.exists():
-            encoder_path = path
-            break
-
-    if encoder_path is None:
-        print(f"  ERROR: Codon encoder not found!")
-        print("  Please run genetic_code/scripts/06_learn_codon_mapping.py first")
-        return
-
-    encoder = CodonEncoder()
-    checkpoint = torch.load(encoder_path, map_location='cpu', weights_only=False)
-    encoder.load_state_dict(checkpoint['model_state'])
-    encoder.eval()
-    print(f"  Loaded encoder from {encoder_path}")
-
-    # Encode all alleles
-    print("\nEncoding HLA-DRB1 alleles...")
+    # Encode all alleles with hyperbolic projection
+    print("\nEncoding HLA-DRB1 alleles (projecting to Poincaré ball)...")
     alleles_embeddings = {}
     for allele_name, allele_data in HLA_DRB1_SHARED_EPITOPE.items():
-        embeddings = encode_allele(allele_data, encoder)
+        embeddings = encode_allele(allele_data, encoder, use_hyperbolic=True)
         alleles_embeddings[allele_name] = embeddings
         print(f"  {allele_name}: {allele_data['amino_acids']} (OR={allele_data['odds_ratio']}, {allele_data['ra_status']})")
 

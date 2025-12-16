@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
 Regenerative Axis Analysis: Synovium-Stem Cell-Gut-Autonomic Connection
+HYPERBOLIC GEOMETRY VERSION
 
-Explores the p-adic geometry of regeneration-related signaling pathways:
+Explores the Poincaré ball geometry of regeneration-related signaling pathways:
 
 1. PARASYMPATHETIC (Vagal/Cholinergic) - "Rest and Digest", anti-inflammatory
    - Acetylcholine receptors (nAChR, mAChR)
@@ -24,9 +25,11 @@ Explores the p-adic geometry of regeneration-related signaling pathways:
    - Pattern recognition receptors (TLRs)
    - Inflammatory cytokines
 
-Hypothesis: Parasympathetic dominance creates a "regenerative p-adic state"
+Hypothesis: Parasympathetic dominance creates a "regenerative hyperbolic state"
 where stem cells can safely differentiate without triggering autoimmunity.
 Chronic stress shifts cells to "defensive" states with boundary-crossing risk.
+
+Version: 2.0 - Updated to use Poincaré ball geometry
 """
 
 import torch
@@ -36,6 +39,17 @@ from pathlib import Path
 from collections import defaultdict
 import json
 from typing import Dict, List
+
+# Import hyperbolic utilities
+from hyperbolic_utils import (
+    poincare_distance as hyp_poincare_distance,
+    project_to_poincare,
+    load_codon_encoder,
+    get_results_dir,
+    codon_to_onehot,
+    CodonEncoder,
+    AA_TO_CODON,
+)
 
 # ============================================================================
 # KEY PROTEINS IN REGENERATIVE AXIS
@@ -233,45 +247,21 @@ REGENERATIVE_AXIS_PROTEINS = {
 }
 
 # ============================================================================
-# CODON ENCODER (reused from previous scripts)
+# CODON ENCODER - Now imported from hyperbolic_utils
+# CodonEncoder, AA_TO_CODON, and codon_to_onehot are imported above
 # ============================================================================
 
-class CodonEncoder(nn.Module):
-    def __init__(self, input_dim=12, hidden_dim=32, embed_dim=16, n_clusters=21):
-        super().__init__()
-        self.encoder = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, embed_dim),
-        )
-        self.cluster_head = nn.Linear(embed_dim, n_clusters)
-        self.cluster_centers = nn.Parameter(torch.randn(n_clusters, embed_dim) * 0.1)
 
-    def encode(self, x):
-        return self.encoder(x)
+def poincare_distance(emb1, emb2, c=1.0):
+    """Geodesic distance in Poincaré ball model."""
+    return float(hyp_poincare_distance(emb1, emb2, c=c))
 
 
-AA_TO_CODON = {
-    'A': 'GCT', 'R': 'CGG', 'N': 'AAC', 'D': 'GAC', 'C': 'TGC',
-    'E': 'GAG', 'Q': 'CAG', 'G': 'GGC', 'H': 'CAC', 'I': 'ATC',
-    'L': 'CTG', 'K': 'AAG', 'M': 'ATG', 'F': 'TTC', 'P': 'CCG',
-    'S': 'TCG', 'T': 'ACC', 'W': 'TGG', 'Y': 'TAC', 'V': 'GTG',
-}
-
-
-def codon_to_onehot(codon):
-    nucleotides = {'A': 0, 'C': 1, 'G': 2, 'T': 3}
-    onehot = np.zeros(12)
-    for i, nuc in enumerate(codon.upper()):
-        if nuc in nucleotides:
-            onehot[i * 4 + nucleotides[nuc]] = 1
-    return onehot
-
-
-def encode_sequence(aa_sequence, encoder):
-    """Encode amino acid sequence to embedding space."""
+def encode_sequence(aa_sequence, encoder, use_hyperbolic=True):
+    """
+    Encode amino acid sequence to embedding space.
+    Projects to Poincaré ball if use_hyperbolic is True.
+    """
     embeddings = []
     for aa in aa_sequence.upper():
         if aa in AA_TO_CODON:
@@ -279,6 +269,8 @@ def encode_sequence(aa_sequence, encoder):
             onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0)
             with torch.no_grad():
                 emb = encoder.encode(onehot).cpu().numpy().squeeze()
+                if use_hyperbolic:
+                    emb = project_to_poincare(emb, max_radius=0.95).squeeze()
             embeddings.append(emb)
     return np.array(embeddings) if embeddings else None
 
@@ -610,25 +602,19 @@ def create_visualization(analysis: Dict, regen_test: Dict, autonomic: Dict, outp
 
 def main():
     print("=" * 70)
-    print("REGENERATIVE AXIS ANALYSIS")
-    print("Synovium - Stem Cell - Gut - Autonomic Connection")
+    print("REGENERATIVE AXIS ANALYSIS - HYPERBOLIC GEOMETRY")
+    print("Synovium - Stem Cell - Gut - Autonomic Connection (Poincaré Ball)")
     print("=" * 70)
 
-    # Paths
+    # Paths - use hyperbolic results directory
     script_dir = Path(__file__).parent
-    results_dir = script_dir.parent / 'results'
-    results_dir.mkdir(exist_ok=True)
+    results_dir = get_results_dir(hyperbolic=True)
+    print(f"\nResults will be saved to: {results_dir}")
 
-    # Load encoder
-    print("\nLoading codon encoder...")
-    research_dir = script_dir.parent.parent.parent  # research/
-    encoder_path = research_dir / 'genetic_code' / 'data' / 'codon_encoder.pt'
-    if not encoder_path.exists():
-        encoder_path = script_dir.parent / 'data' / 'codon_encoder.pt'
-    encoder = CodonEncoder()
-    checkpoint = torch.load(encoder_path, map_location='cpu', weights_only=False)
-    encoder.load_state_dict(checkpoint['model_state'])
-    encoder.eval()
+    # Load encoder using utility function
+    # Using '3adic' version (native hyperbolic from V5.11.3)
+    print("\nLoading codon encoder (3-adic, V5.11.3)...")
+    encoder, codon_mapping, _ = load_codon_encoder(device='cpu', version='3adic')
 
     # Analyze pathways
     print("\nAnalyzing pathway geometry...")
@@ -740,12 +726,12 @@ def main():
         'pathways': list(analysis['pathway_stats'].keys()),
         'regeneration_hypothesis': {
             'separation_ratio': float(regen_test.get('separation_ratio', 0)),
-            'supported': regen_test.get('separation_ratio', 0) > 1.0,
+            'supported': bool(regen_test.get('separation_ratio', 0) > 1.0),
         },
         'autonomic_analysis': {
             'para_symp_distance': float(autonomic.get('para_symp_distance', 0)),
-            'para_closer_to_regen': autonomic.get('para_regen_distance', 1) < autonomic.get('symp_regen_distance', 0),
-            'symp_closer_to_inflam': autonomic.get('symp_inflam_distance', 1) < autonomic.get('para_inflam_distance', 0),
+            'para_closer_to_regen': bool(autonomic.get('para_regen_distance', 1) < autonomic.get('symp_regen_distance', 0)),
+            'symp_closer_to_inflam': bool(autonomic.get('symp_inflam_distance', 1) < autonomic.get('para_inflam_distance', 0)),
         },
     }
 

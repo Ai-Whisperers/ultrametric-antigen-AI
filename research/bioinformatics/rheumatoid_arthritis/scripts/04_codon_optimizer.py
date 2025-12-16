@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """
-Codon Optimizer for Boundary-Safe Regenerative Sequences
+Codon Optimizer for Boundary-Safe Regenerative Sequences - HYPERBOLIC GEOMETRY
 
 Optimizes DNA sequences to place all epitopes deep inside p-adic clusters,
 maximizing distance from cluster boundaries to reduce immunogenicity.
+
+Uses Poincaré ball (hyperbolic) geometry for boundary calculations.
 
 Applications:
 - Synoviocyte gene design for RA regeneration
@@ -12,9 +14,11 @@ Applications:
 
 Algorithm:
 1. Sliding window analysis of epitope contexts (9-15 AA)
-2. Score each synonymous codon by boundary margin
+2. Score each synonymous codon by boundary margin (Poincaré distance)
 3. Greedy optimization with context awareness
 4. Citrullination sensitivity screening for R positions
+
+Version: 2.0 - Updated to use Poincaré ball geometry
 """
 
 import torch
@@ -24,6 +28,16 @@ from pathlib import Path
 from collections import defaultdict
 import json
 from typing import List, Dict, Tuple, Optional
+
+# Import hyperbolic utilities
+from hyperbolic_utils import (
+    poincare_distance as hyp_poincare_distance,
+    project_to_poincare,
+    load_codon_encoder,
+    get_results_dir,
+    codon_to_onehot,
+    CodonEncoder,
+)
 
 # ============================================================================
 # GENETIC CODE
@@ -81,47 +95,37 @@ HUMAN_CODON_USAGE = {
 }
 
 # ============================================================================
-# CODON ENCODER
+# CODON ENCODER - Now imported from hyperbolic_utils
+# CodonEncoder and codon_to_onehot are imported above
 # ============================================================================
 
-class CodonEncoder(nn.Module):
-    def __init__(self, input_dim=12, hidden_dim=32, embed_dim=16, n_clusters=21):
-        super().__init__()
-        self.encoder = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, embed_dim),
-        )
-        self.cluster_head = nn.Linear(embed_dim, n_clusters)
-        self.cluster_centers = nn.Parameter(torch.randn(n_clusters, embed_dim) * 0.1)
 
-    def encode(self, x):
-        return self.encoder(x)
-
-
-def codon_to_onehot(codon: str) -> np.ndarray:
-    """Convert codon string to one-hot encoding."""
-    nucleotides = {'A': 0, 'C': 1, 'G': 2, 'T': 3, 'U': 3}
-    onehot = np.zeros(12)
-    for i, nuc in enumerate(codon.upper()):
-        if nuc in nucleotides:
-            onehot[i * 4 + nucleotides[nuc]] = 1
-    return onehot
+def poincare_distance(emb1, emb2, c=1.0):
+    """Geodesic distance in Poincaré ball model."""
+    return float(hyp_poincare_distance(emb1, emb2, c=c))
 
 
 # ============================================================================
-# BOUNDARY ANALYSIS
+# BOUNDARY ANALYSIS - Updated for Hyperbolic Geometry
 # ============================================================================
 
 class BoundaryAnalyzer:
-    """Analyzes codon embeddings relative to cluster boundaries."""
+    """Analyzes codon embeddings relative to cluster boundaries in Poincaré ball."""
 
-    def __init__(self, encoder: CodonEncoder):
+    def __init__(self, encoder: CodonEncoder, use_hyperbolic: bool = True):
         self.encoder = encoder
         self.encoder.eval()
-        self.cluster_centers = encoder.cluster_centers.detach().numpy()
+        self.use_hyperbolic = use_hyperbolic
+
+        # Project cluster centers to Poincaré ball
+        raw_centers = encoder.cluster_centers.detach().numpy()
+        if use_hyperbolic:
+            self.cluster_centers = np.array([
+                project_to_poincare(c, max_radius=0.95).squeeze()
+                for c in raw_centers
+            ])
+        else:
+            self.cluster_centers = raw_centers
         self.n_clusters = len(self.cluster_centers)
 
         # Pre-compute all codon embeddings
@@ -133,8 +137,11 @@ class BoundaryAnalyzer:
             emb = self._encode_codon(codon)
             self.codon_embeddings[codon] = emb
 
-            # Find nearest cluster and margin
-            dists = [np.linalg.norm(emb - c) for c in self.cluster_centers]
+            # Find nearest cluster and margin (using Poincaré distance if hyperbolic)
+            if use_hyperbolic:
+                dists = [poincare_distance(emb, c) for c in self.cluster_centers]
+            else:
+                dists = [np.linalg.norm(emb - c) for c in self.cluster_centers]
             nearest = np.argmin(dists)
             second = np.partition(dists, 1)[1]
 
@@ -142,10 +149,12 @@ class BoundaryAnalyzer:
             self.codon_margins[codon] = second - dists[nearest]  # Margin to boundary
 
     def _encode_codon(self, codon: str) -> np.ndarray:
-        """Encode a single codon."""
+        """Encode a single codon and project to Poincaré ball if hyperbolic."""
         onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0)
         with torch.no_grad():
             emb = self.encoder.encode(onehot).cpu().numpy().squeeze()
+            if self.use_hyperbolic:
+                emb = project_to_poincare(emb, max_radius=0.95).squeeze()
         return emb
 
     def get_codon_score(self, codon: str, weight_margin: float = 1.0,
@@ -166,7 +175,7 @@ class BoundaryAnalyzer:
         """
         Analyze an epitope window (typically 9-15 codons).
 
-        Returns embedding centroid, cluster, and margin.
+        Returns embedding centroid, cluster, and margin (using Poincaré distance).
         """
         embeddings = [self.codon_embeddings[c] for c in codons if c in self.codon_embeddings]
         if not embeddings:
@@ -174,8 +183,11 @@ class BoundaryAnalyzer:
 
         centroid = np.mean(embeddings, axis=0)
 
-        # Find cluster and margin for centroid
-        dists = [np.linalg.norm(centroid - c) for c in self.cluster_centers]
+        # Find cluster and margin for centroid (using Poincaré distance if hyperbolic)
+        if self.use_hyperbolic:
+            dists = [poincare_distance(centroid, c) for c in self.cluster_centers]
+        else:
+            dists = [np.linalg.norm(centroid - c) for c in self.cluster_centers]
         nearest = np.argmin(dists)
         second = np.partition(dists, 1)[1]
 
@@ -191,7 +203,7 @@ class BoundaryAnalyzer:
         """
         Simulate citrullination at an R position.
 
-        Returns the embedding shift and boundary crossing status.
+        Returns the embedding shift and boundary crossing status (using Poincaré distance).
         """
         if r_position >= len(codons):
             return {'valid': False}
@@ -221,11 +233,15 @@ class BoundaryAnalyzer:
         embeddings.append(modified_emb)
         mod_centroid = np.mean(embeddings, axis=0)
 
-        # Find cluster for modified
-        mod_dists = [np.linalg.norm(mod_centroid - c) for c in self.cluster_centers]
-        mod_nearest = np.argmin(mod_dists)
+        # Find cluster for modified (using Poincaré distance if hyperbolic)
+        if self.use_hyperbolic:
+            mod_dists = [poincare_distance(mod_centroid, c) for c in self.cluster_centers]
+            shift = poincare_distance(original['centroid'], mod_centroid)
+        else:
+            mod_dists = [np.linalg.norm(mod_centroid - c) for c in self.cluster_centers]
+            shift = np.linalg.norm(original['centroid'] - mod_centroid)
 
-        shift = np.linalg.norm(original['centroid'] - mod_centroid)
+        mod_nearest = np.argmin(mod_dists)
         boundary_crossed = original['cluster'] != mod_nearest
 
         return {
@@ -613,27 +629,22 @@ def create_visualization(results: Dict, output_path: Path):
 def main():
     print("=" * 70)
     print("CODON OPTIMIZER FOR BOUNDARY-SAFE REGENERATIVE SEQUENCES")
+    print("USING HYPERBOLIC (POINCARÉ BALL) GEOMETRY")
     print("=" * 70)
 
-    # Paths
+    # Paths - use hyperbolic results directory
     script_dir = Path(__file__).parent
-    results_dir = script_dir.parent / 'results'
-    results_dir.mkdir(exist_ok=True)
+    results_dir = get_results_dir(hyperbolic=True)
+    print(f"\nResults will be saved to: {results_dir}")
 
-    # Load encoder
-    print("\nLoading codon encoder...")
-    research_dir = script_dir.parent.parent.parent  # research/
-    encoder_path = research_dir / 'genetic_code' / 'data' / 'codon_encoder.pt'
-    if not encoder_path.exists():
-        encoder_path = script_dir.parent / 'data' / 'codon_encoder.pt'
-    encoder = CodonEncoder()
-    checkpoint = torch.load(encoder_path, map_location='cpu', weights_only=False)
-    encoder.load_state_dict(checkpoint['model_state'])
-    encoder.eval()
+    # Load encoder using utility function
+    # Using '3adic' version (native hyperbolic from V5.11.3)
+    print("\nLoading codon encoder (3-adic, V5.11.3)...")
+    encoder, codon_mapping, _ = load_codon_encoder(device='cpu', version='3adic')
 
-    # Create analyzer and optimizer
-    print("Initializing boundary analyzer...")
-    analyzer = BoundaryAnalyzer(encoder)
+    # Create analyzer and optimizer (with hyperbolic geometry)
+    print("Initializing boundary analyzer with Poincaré geometry...")
+    analyzer = BoundaryAnalyzer(encoder, use_hyperbolic=True)
     optimizer = CodonOptimizer(analyzer, epitope_window=9)
 
     # Analyze pre-computed codon margins

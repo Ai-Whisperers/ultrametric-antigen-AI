@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Citrullination Shift Analysis
+Citrullination Shift Analysis - HYPERBOLIC GEOMETRY
 
-Follow-up analysis focusing on the CHANGE in p-adic space caused by citrullination,
+Follow-up analysis focusing on the CHANGE in Poincaré ball space caused by citrullination,
 rather than the absolute position of arginine residues.
 
 Key insight from 06_autoantigen_epitope_analysis.py:
@@ -11,8 +11,10 @@ Key insight from 06_autoantigen_epitope_analysis.py:
 - Instead, it may be the MAGNITUDE of change from self → modified
 
 Hypothesis: Immunodominant citrullination sites cause a specific magnitude of
-p-adic shift that crosses a recognition threshold - not too small (ignored)
+hyperbolic shift that crosses a recognition threshold - not too small (ignored)
 and not too large (tolerized as completely foreign).
+
+Version: 2.0 - Updated to use Poincaré ball geometry
 """
 
 import torch
@@ -23,17 +25,20 @@ from collections import defaultdict
 import json
 from scipy import stats
 
+# Import hyperbolic utilities
+from hyperbolic_utils import (
+    poincare_distance as hyp_poincare_distance,
+    project_to_poincare,
+    load_codon_encoder,
+    get_results_dir,
+    codon_to_onehot,
+    CodonEncoder,
+    AA_TO_CODON,
+)
+
 # ============================================================================
 # AUTOANTIGEN DATA (same as 06)
 # ============================================================================
-
-AA_TO_CODON = {
-    'A': 'GCT', 'R': 'CGG', 'N': 'AAC', 'D': 'GAC', 'C': 'TGC',
-    'E': 'GAG', 'Q': 'CAG', 'G': 'GGC', 'H': 'CAC', 'I': 'ATC',
-    'L': 'CTG', 'K': 'AAG', 'M': 'ATG', 'F': 'TTC', 'P': 'CCG',
-    'S': 'TCG', 'T': 'ACC', 'W': 'TGG', 'Y': 'TAC', 'V': 'GTG',
-    '*': 'TGA',
-}
 
 # Epitope database with ACPA reactivity percentages
 EPITOPE_DATABASE = [
@@ -60,42 +65,6 @@ EPITOPE_DATABASE = [
     # Histones
     {'id': 'H2A_R3', 'seq': 'SGRGKQGGKAR', 'arg_pos': [2, 10], 'immunodominant': True, 'acpa': 0.35},
 ]
-
-
-# ============================================================================
-# CODON ENCODER
-# ============================================================================
-
-class CodonEncoder(nn.Module):
-    def __init__(self, input_dim=12, hidden_dim=32, embed_dim=16, n_clusters=21):
-        super().__init__()
-        self.encoder = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, embed_dim),
-        )
-        self.cluster_head = nn.Linear(embed_dim, n_clusters)
-        self.cluster_centers = nn.Parameter(torch.randn(n_clusters, embed_dim) * 0.1)
-
-    def encode(self, x):
-        return self.encoder(x)
-
-    def get_cluster_probs(self, x):
-        emb = self.encode(x)
-        logits = self.cluster_head(emb)
-        probs = torch.softmax(logits, dim=-1)
-        return probs, emb
-
-
-def codon_to_onehot(codon):
-    nucleotides = {'A': 0, 'C': 1, 'G': 2, 'T': 3, 'U': 3}
-    onehot = np.zeros(12)
-    for i, nuc in enumerate(codon.upper()):
-        if nuc in nucleotides:
-            onehot[i * 4 + nucleotides[nuc]] = 1
-    return onehot
 
 
 # ============================================================================
@@ -280,28 +249,18 @@ def correlate_shift_with_acpa(all_shifts):
 
 def main():
     print("=" * 80)
-    print("CITRULLINATION SHIFT ANALYSIS - P-ADIC SPACE PERTURBATION")
+    print("CITRULLINATION SHIFT ANALYSIS - HYPERBOLIC SPACE PERTURBATION")
     print("=" * 80)
 
-    # Setup
-    script_dir = Path(__file__).parent
-    results_dir = script_dir.parent / 'results'
-    results_dir.mkdir(parents=True, exist_ok=True)
+    # Setup - use hyperbolic results directory
+    results_dir = get_results_dir(hyperbolic=True)
+    print(f"\nResults will be saved to: {results_dir}")
 
-    research_dir = script_dir.parent.parent.parent
-    encoder_path = research_dir / 'genetic_code' / 'data' / 'codon_encoder.pt'
-
-    if not encoder_path.exists():
-        encoder_path = script_dir.parent / 'data' / 'codon_encoder.pt'
-
-    print(f"\nLoading encoder from: {encoder_path}")
-
+    # Load codon encoder using utility function
+    # Using '3adic' version (native hyperbolic from V5.11.3)
+    print("\nLoading codon encoder (3-adic, V5.11.3)...")
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    encoder = CodonEncoder(input_dim=12, hidden_dim=32, embed_dim=16, n_clusters=21)
-    checkpoint = torch.load(encoder_path, map_location=device, weights_only=False)
-    encoder.load_state_dict(checkpoint['model_state'])
-    encoder.eval()
-    encoder.to(device)
+    encoder, mapping, _ = load_codon_encoder(device=device, version='3adic')
 
     # =========================================================================
     # ANALYZE ALL EPITOPES

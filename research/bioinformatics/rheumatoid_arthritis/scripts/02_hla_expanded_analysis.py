@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """
-Expanded HLA Functionomic Analysis
+Expanded HLA Functionomic Analysis - HYPERBOLIC GEOMETRY
 
 Augmented version with:
 1. More HLA-DRB1 alleles (20+ with known RA associations)
 2. Full peptide binding groove analysis (positions 9-90)
 3. Proper statistical testing with permutation
+4. Poincaré ball hyperbolic distance metrics
 
 Uses nucleotide sequences from IPD-IMGT/HLA database.
+
+Version: 2.0 - Updated to use Poincaré ball geometry
 """
 
 import torch
@@ -18,6 +21,17 @@ from collections import defaultdict
 from itertools import combinations, permutations
 import json
 from scipy import stats
+
+# Import hyperbolic utilities
+from hyperbolic_utils import (
+    poincare_distance as hyp_poincare_distance,
+    poincare_distance_matrix,
+    project_to_poincare,
+    load_codon_encoder,
+    get_results_dir,
+    codon_to_onehot,
+    CodonEncoder,
+)
 
 # ============================================================================
 # EXPANDED HLA-DRB1 ALLELE DATABASE
@@ -272,35 +286,9 @@ HLA_DRB1_EXPANDED = {
 }
 
 # ============================================================================
-# CODON ENCODER
+# CODON ENCODER - Now imported from hyperbolic_utils
+# CodonEncoder and codon_to_onehot are imported above
 # ============================================================================
-
-class CodonEncoder(nn.Module):
-    def __init__(self, input_dim=12, hidden_dim=32, embed_dim=16, n_clusters=21):
-        super().__init__()
-        self.encoder = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, embed_dim),
-        )
-        self.cluster_head = nn.Linear(embed_dim, n_clusters)
-        self.cluster_centers = nn.Parameter(torch.randn(n_clusters, embed_dim) * 0.1)
-
-    def encode(self, x):
-        return self.encoder(x)
-
-
-def codon_to_onehot(codon):
-    """Convert codon string to one-hot encoding."""
-    nucleotides = {'A': 0, 'C': 1, 'G': 2, 'T': 3, 'U': 3}
-    onehot = np.zeros(12)
-    for i, nuc in enumerate(codon.upper()):
-        if nuc in nucleotides:
-            onehot[i * 4 + nucleotides[nuc]] = 1
-    return onehot
-
 
 def sequence_to_codons(sequence):
     """Split nucleotide sequence into codons."""
@@ -312,14 +300,24 @@ def sequence_to_codons(sequence):
 
 
 # ============================================================================
-# DISTANCE FUNCTIONS
+# DISTANCE FUNCTIONS - Updated for Hyperbolic Geometry
 # ============================================================================
 
 def euclidean_distance(emb1, emb2):
+    """Standard Euclidean distance (for comparison)."""
     return np.linalg.norm(emb1 - emb2)
 
 
+def poincare_distance(emb1, emb2, c=1.0):
+    """
+    Geodesic distance in Poincaré ball model.
+    Uses the validated hyperbolic implementation from hyperbolic_utils.
+    """
+    return float(hyp_poincare_distance(emb1, emb2, c=c))
+
+
 def cosine_distance(emb1, emb2):
+    """Cosine distance (for comparison)."""
     cos_sim = np.dot(emb1, emb2) / (np.linalg.norm(emb1) * np.linalg.norm(emb2) + 1e-8)
     return 1 - cos_sim
 
@@ -328,8 +326,19 @@ def cosine_distance(emb1, emb2):
 # ENCODING AND ANALYSIS
 # ============================================================================
 
-def encode_full_sequence(sequence, encoder, device='cpu'):
-    """Encode all codons in a sequence."""
+def encode_full_sequence(sequence, encoder, device='cpu', use_hyperbolic=True):
+    """
+    Encode all codons in a sequence.
+
+    Args:
+        sequence: Nucleotide sequence string
+        encoder: CodonEncoder model
+        device: Device for inference
+        use_hyperbolic: If True, project embeddings to Poincaré ball
+
+    Returns:
+        Tuple of (embeddings array, codons list)
+    """
     codons = sequence_to_codons(sequence)
     embeddings = []
 
@@ -338,6 +347,9 @@ def encode_full_sequence(sequence, encoder, device='cpu'):
             onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
             with torch.no_grad():
                 emb = encoder.encode(onehot).cpu().numpy().squeeze()
+                if use_hyperbolic:
+                    # Project to Poincaré ball for hyperbolic geometry
+                    emb = project_to_poincare(emb, max_radius=0.95).squeeze()
             embeddings.append(emb)
 
     return np.array(embeddings), codons
@@ -361,8 +373,17 @@ def compute_sequence_embedding(position_embeddings, method='mean'):
         return np.mean(position_embeddings, axis=0)
 
 
-def compute_pairwise_distances(allele_embeddings, distance_fn='euclidean'):
-    """Compute pairwise distance matrix between alleles."""
+def compute_pairwise_distances(allele_embeddings, distance_fn='poincare'):
+    """
+    Compute pairwise distance matrix between alleles.
+
+    Args:
+        allele_embeddings: Dict mapping allele names to embeddings
+        distance_fn: 'poincare' (default), 'euclidean', or 'cosine'
+
+    Returns:
+        Tuple of (distance_matrix, allele_names)
+    """
     allele_names = list(allele_embeddings.keys())
     n = len(allele_names)
 
@@ -371,7 +392,9 @@ def compute_pairwise_distances(allele_embeddings, distance_fn='euclidean'):
         for j in range(n):
             emb_i = allele_embeddings[allele_names[i]]
             emb_j = allele_embeddings[allele_names[j]]
-            if distance_fn == 'euclidean':
+            if distance_fn == 'poincare':
+                dist_matrix[i, j] = poincare_distance(emb_i, emb_j)
+            elif distance_fn == 'euclidean':
                 dist_matrix[i, j] = euclidean_distance(emb_i, emb_j)
             elif distance_fn == 'cosine':
                 dist_matrix[i, j] = cosine_distance(emb_i, emb_j)
@@ -379,16 +402,27 @@ def compute_pairwise_distances(allele_embeddings, distance_fn='euclidean'):
     return dist_matrix, allele_names
 
 
-def analyze_position_importance(alleles_data, encoder, positions_of_interest=None):
+def analyze_position_importance(alleles_data, encoder, positions_of_interest=None, use_hyperbolic=True):
     """
     Analyze which positions contribute most to RA vs control separation.
+
+    Args:
+        alleles_data: Dict mapping allele names to allele data dicts
+        encoder: CodonEncoder model
+        positions_of_interest: Optional list of positions to focus on
+        use_hyperbolic: If True, project embeddings to Poincaré ball
+
+    Returns:
+        Tuple of (position_scores, allele_position_embeddings)
     """
-    # Encode all alleles
+    # Encode all alleles with hyperbolic projection
     allele_position_embeddings = {}
     min_len = float('inf')
 
     for name, data in alleles_data.items():
-        embeddings, codons = encode_full_sequence(data['exon2_sequence'], encoder)
+        embeddings, codons = encode_full_sequence(
+            data['exon2_sequence'], encoder, use_hyperbolic=use_hyperbolic
+        )
         allele_position_embeddings[name] = embeddings
         min_len = min(min_len, len(embeddings))
 
@@ -412,12 +446,12 @@ def analyze_position_importance(alleles_data, encoder, positions_of_interest=Non
             risk_centroid = np.mean(risk_embs, axis=0)
             control_centroid = np.mean(control_embs, axis=0)
 
-            # Between-group distance
-            between_dist = euclidean_distance(risk_centroid, control_centroid)
+            # Between-group distance (using Poincaré distance)
+            between_dist = poincare_distance(risk_centroid, control_centroid)
 
-            # Within-group variance
-            risk_var = np.mean([euclidean_distance(e, risk_centroid)**2 for e in risk_embs])
-            control_var = np.mean([euclidean_distance(e, control_centroid)**2 for e in control_embs])
+            # Within-group variance (using Poincaré distances)
+            risk_var = np.mean([poincare_distance(e, risk_centroid)**2 for e in risk_embs])
+            control_var = np.mean([poincare_distance(e, control_centroid)**2 for e in control_embs])
             within_var = (risk_var + control_var) / 2
 
             # Fisher's discriminant ratio
@@ -667,26 +701,19 @@ def create_expanded_visualization(allele_embeddings, alleles_data, results, posi
 
 def main():
     print("=" * 70)
-    print("EXPANDED HLA FUNCTIONOMIC ANALYSIS")
-    print("Full Peptide Binding Groove + 17 Alleles")
+    print("EXPANDED HLA FUNCTIONOMIC ANALYSIS - HYPERBOLIC GEOMETRY")
+    print("Full Peptide Binding Groove + 17 Alleles + Poincaré Ball")
     print("=" * 70)
 
-    # Paths
+    # Paths - use hyperbolic results directory
     script_dir = Path(__file__).parent
-    results_dir = script_dir.parent / 'results'
-    results_dir.mkdir(exist_ok=True)
+    results_dir = get_results_dir(hyperbolic=True)
+    print(f"\nResults will be saved to: {results_dir}")
 
-    # Load encoder
-    print("\nLoading codon encoder...")
-    research_dir = script_dir.parent.parent.parent  # research/
-    encoder_path = research_dir / 'genetic_code' / 'data' / 'codon_encoder.pt'
-    if not encoder_path.exists():
-        encoder_path = script_dir.parent / 'data' / 'codon_encoder.pt'
-
-    encoder = CodonEncoder()
-    checkpoint = torch.load(encoder_path, map_location='cpu', weights_only=False)
-    encoder.load_state_dict(checkpoint['model_state'])
-    encoder.eval()
+    # Load encoder using utility function
+    # Using '3adic' version (native hyperbolic from V5.11.3)
+    print("\nLoading codon encoder (3-adic, V5.11.3)...")
+    encoder, codon_mapping, _ = load_codon_encoder(device='cpu', version='3adic')
     print(f"  Loaded encoder with {sum(p.numel() for p in encoder.parameters())} parameters")
 
     # Analyze position importance
@@ -709,9 +736,9 @@ def main():
         allele_embeddings[name] = seq_emb
         print(f"  {name}: OR={data['odds_ratio']:.2f}, status={data['ra_status']}")
 
-    # Compute distance matrix
-    print("\nComputing pairwise distances...")
-    dist_matrix, allele_names = compute_pairwise_distances(allele_embeddings, distance_fn='euclidean')
+    # Compute distance matrix using Poincaré geodesic distance
+    print("\nComputing pairwise Poincaré distances...")
+    dist_matrix, allele_names = compute_pairwise_distances(allele_embeddings, distance_fn='poincare')
 
     # Statistical tests
     print("\nRunning statistical tests...")
