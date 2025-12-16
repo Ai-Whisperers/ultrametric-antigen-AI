@@ -1,0 +1,277 @@
+# Rheumatoid Arthritis Analysis using P-Adic Geometry
+
+**Doc-Type:** Project Index · Version 1.0 · Updated 2025-12-16
+
+---
+
+## Overview
+
+This directory contains a comprehensive analysis of rheumatoid arthritis (RA) using p-adic geometric methods derived from the Ternary VAE v1.1.0 model. The analysis spans from HLA genetics to synovial regeneration strategies.
+
+---
+
+## Key Findings Summary
+
+| Discovery | Metric | Significance |
+|-----------|--------|--------------|
+| **HLA-RA Prediction** | p < 0.0001, r = 0.751 | P-adic geometry predicts RA risk |
+| **Citrullination Boundaries** | 14% cross boundaries | Sentinel epitopes identified |
+| **Codon Optimization** | 100% safety achievable | Immunologically silent constructs |
+| **Regenerative Axis** | Para closer to regen | Autonomic control of healing |
+
+---
+
+## Directory Structure
+
+```
+RA_analysis/
+├── README.md                    # This file
+├── scripts/                     # Analysis scripts
+│   ├── 01_hla_functionomic_analysis.py
+│   ├── 02_hla_expanded_analysis.py
+│   ├── 03_citrullination_analysis.py
+│   ├── 04_codon_optimizer.py
+│   └── 05_regenerative_axis_analysis.py
+├── discoveries/                 # Discovery reports
+│   ├── DISCOVERY_HLA_RA_PREDICTION.md
+│   ├── DISCOVERY_CITRULLINATION_BOUNDARIES.md
+│   └── DISCOVERY_REGENERATIVE_AXIS.md
+├── plans/                       # Experimental plans
+│   └── PLAN_FUNCTIONOMIC_PREDICTION.md
+├── results/                     # Output files
+│   ├── *.png                    # Visualizations
+│   └── *.json                   # Numerical results
+└── data/                        # Required data files
+    ├── codon_encoder.pt         # Trained codon encoder model
+    └── learned_codon_mapping.json
+```
+
+---
+
+## Scripts
+
+### 01. HLA Functionomic Analysis
+**File:** `scripts/01_hla_functionomic_analysis.py`
+
+Initial analysis of 8 HLA-DRB1 alleles using the shared epitope region (positions 70-74).
+
+**Key Results:**
+- Separation ratio: 1.33x
+- Position 70 most discriminative
+- RA alleles cluster more tightly than controls
+
+**Run:**
+```bash
+python scripts/01_hla_functionomic_analysis.py
+```
+
+---
+
+### 02. HLA Expanded Analysis
+**File:** `scripts/02_hla_expanded_analysis.py`
+
+Comprehensive analysis of 17 HLA-DRB1 alleles across the full peptide binding groove (84 positions).
+
+**Key Results:**
+- Permutation p-value: < 0.0001
+- Z-score: 5.84
+- OR correlation: r = 0.751, p = 0.0008
+- Position 65 most discriminative (novel finding)
+
+**Run:**
+```bash
+python scripts/02_hla_expanded_analysis.py
+```
+
+---
+
+### 03. Citrullination Analysis
+**File:** `scripts/03_citrullination_analysis.py`
+
+Analysis of how citrullination (R→Cit) affects peptide embedding positions.
+
+**Key Results:**
+- 14% of citrullinations cross p-adic boundaries
+- Boundary-crossing epitopes: FGA_R38, FLG_R30
+- These are the clinically most important RA autoantigens
+
+**Run:**
+```bash
+python scripts/03_citrullination_analysis.py
+```
+
+---
+
+### 04. Codon Optimizer
+**File:** `scripts/04_codon_optimizer.py`
+
+Algorithm for selecting codons that maximize boundary safety for regenerative constructs.
+
+**Key Results:**
+- PRG4 (Lubricin): 100% citrullination safety
+- Collagen II: 100% safety, highest margin (0.661)
+- Provides optimized DNA sequences for synovial proteins
+
+**Run:**
+```bash
+python scripts/04_codon_optimizer.py
+```
+
+---
+
+### 05. Regenerative Axis Analysis
+**File:** `scripts/05_regenerative_axis_analysis.py`
+
+Analysis of the autonomic nervous system's relationship to regeneration in p-adic space.
+
+**Key Results:**
+- Parasympathetic is geometrically central
+- Sympathetic is peripheral (locked from regeneration)
+- Gut barrier spans regeneration-inflammation axis
+
+**Run:**
+```bash
+python scripts/05_regenerative_axis_analysis.py
+```
+
+---
+
+## Discoveries
+
+### 1. HLA-RA Prediction
+**File:** `discoveries/DISCOVERY_HLA_RA_PREDICTION.md`
+
+The p-adic embedding space predicts RA disease association with p < 0.0001. Distance from protective HLA alleles correlates with odds ratio (r = 0.751).
+
+### 2. Citrullination Boundaries
+**File:** `discoveries/DISCOVERY_CITRULLINATION_BOUNDARIES.md`
+
+Only 14% of citrullination events cross p-adic cluster boundaries. The two that do (FGA_R38, FLG_R30) are the most clinically important RA autoantigens, suggesting they are "sentinel epitopes" that initiate autoimmunity.
+
+### 3. Regenerative Axis
+**File:** `discoveries/DISCOVERY_REGENERATIVE_AXIS.md`
+
+Parasympathetic signaling occupies a central position in p-adic space with access to both regeneration and inflammation. Sympathetic signaling is peripheral. This explains why chronic stress blocks regeneration.
+
+---
+
+## Data Requirements
+
+The scripts require the trained codon encoder from the main analysis:
+
+```
+data/codon_encoder.pt           # Neural network weights
+data/learned_codon_mapping.json # Codon to cluster mapping
+```
+
+These are generated by `riemann_hypothesis_sandbox/08_learn_codon_mapping.py`.
+
+---
+
+## Results
+
+### Visualizations
+
+| File | Content |
+|------|---------|
+| `hla_functionomic_analysis.png` | Initial HLA analysis (8 alleles) |
+| `hla_expanded_analysis.png` | Expanded HLA analysis (17 alleles) |
+| `citrullination_analysis.png` | Epitope boundary crossing |
+| `codon_optimization_*.png` | Optimized synovial proteins |
+| `regenerative_axis_analysis.png` | Autonomic-regeneration geometry |
+
+### JSON Results
+
+| File | Content |
+|------|---------|
+| `hla_functionomic_results.json` | Initial HLA metrics |
+| `hla_expanded_results.json` | Expanded HLA metrics |
+| `citrullination_results.json` | Epitope analysis |
+| `codon_optimization_results.json` | Optimized sequences |
+| `regenerative_axis_results.json` | Pathway distances |
+
+---
+
+## Clinical Applications
+
+### For RA Prediction
+- Use p-adic distance to stratify RA risk from HLA typing
+- Position 65 as novel biomarker
+
+### For RA Treatment
+- Target sentinel epitopes (FGA_R38, FLG_R30) for tolerogenic vaccines
+- Use boundary analysis to predict epitope immunogenicity
+
+### For RA Regeneration
+1. **Enhance parasympathetic tone** (vagal stimulation)
+2. **Repair gut barrier** (dietary/probiotic intervention)
+3. **Activate Wnt signaling** (stem cell mobilization)
+4. **Use codon-optimized proteins** (immunologically silent)
+
+---
+
+## Dependencies
+
+```python
+torch           # Neural network
+numpy           # Numerical computation
+scipy           # Statistical tests
+matplotlib      # Visualization
+scikit-learn    # PCA, clustering
+```
+
+---
+
+## Running the Full Analysis
+
+```bash
+# From riemann_hypothesis_sandbox directory
+cd RA_analysis/scripts
+
+# Run in sequence
+python 01_hla_functionomic_analysis.py
+python 02_hla_expanded_analysis.py
+python 03_citrullination_analysis.py
+python 04_codon_optimizer.py
+python 05_regenerative_axis_analysis.py
+```
+
+Note: Scripts expect the codon encoder in `../results/` or `../data/`. Adjust paths if running from different directory.
+
+---
+
+## Future Directions
+
+1. **Expand HLA dataset** - Include more alleles, multi-ethnic validation
+2. **Experimental validation** - Test predictions in RA cohorts
+3. **Wet lab validation** - Test codon-optimized constructs
+4. **Clinical trial** - Multimodal regeneration protocol
+
+---
+
+## Connection to Main Project
+
+This analysis builds on:
+- **Ternary VAE v1.1.0** - Learned p-adic geometry
+- **Codon Encoder** - Maps codons to embedding space
+- **Wobble Pattern** - Mutation tolerance in positions 6-8
+
+---
+
+## Citation
+
+If using this analysis, please cite:
+- The Ternary VAE project
+- The specific discovery documents in `discoveries/`
+
+---
+
+## Changelog
+
+| Date | Version | Description |
+|------|---------|-------------|
+| 2025-12-16 | 1.0 | Initial organization |
+
+---
+
+**Status:** Complete analysis pipeline, ready for experimental validation

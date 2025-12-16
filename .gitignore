@@ -69,3 +69,5 @@ runs/
 # Training logs
 *.log
 training_verification.log
+*.so
+engine/build/
