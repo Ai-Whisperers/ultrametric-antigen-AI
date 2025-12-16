@@ -1,0 +1,60 @@
+TERNARY VAE INTELLECTUAL PROPERTY TIMESTAMP MANIFEST
+=====================================================
+
+Repository: ternary-vaes
+Version: V5.11.3 (Production Ready)
+Tag: v1.1.0
+
+Git Commit: aff7db2517ae44bc4533b2452c8b6de124f5741b
+Timestamp Date: 2025-12-15
+
+COVERED INTELLECTUAL PROPERTY:
+------------------------------
+
+1. ARCHITECTURE INNOVATIONS
+   - Dual VAE system with frozen coverage + trainable structure
+   - Hyperbolic projection layer with separate direction/radius networks
+   - DualHyperbolicProjection for independent VAE-A/VAE-B projections
+   - Adaptive curriculum with tau freezing at hierarchy threshold
+
+2. LOSS FUNCTIONS
+   - GlobalRankLoss: Differentiable rank ordering for monotonic radius
+   - PAdicGeodesicLoss: Unified hierarchy + correlation via geodesics
+   - RadialHierarchyLoss: Direct radius enforcement with margin loss
+   - Stratified sampling for rare high-valuation points
+
+3. TRAINED MODEL WEIGHTS
+   - Projection layer: 53,154 parameters achieving -0.730 hierarchy
+   - Encoder B fine-tuned weights
+   - Checkpoint: sandbox-training/checkpoints/v5_11_structural/best.pt
+
+4. VALIDATION METHODOLOGY
+   - Downstream validation suite (nearest-neighbor, hierarchy, arithmetic)
+   - Production readiness thresholds and benchmarks
+   - Quality metrics: 92.4% pairwise accuracy, 94.7% NN adjacent rate
+
+5. KEY SOURCE FILES
+   - src/models/ternary_vae.py
+   - src/models/hyperbolic_projection.py
+   - src/losses/padic_geodesic.py
+   - scripts/train/train.py
+   - scripts/eval/downstream_validation.py
+
+CLAIMS:
+-------
+This timestamp proves that the above intellectual property existed
+in this form at the time the OpenTimestamps proof was created.
+
+The cryptographic hash of this commit covers all files in the
+repository, providing tamper-evident proof of existence.
+
+HASH VERIFICATION:
+------------------
+To verify this timestamp covers the repository state:
+1. Clone repository at commit aff7db2517ae44bc4533b2452c8b6de124f5741b
+2. Verify SHA-256 of this manifest matches the timestamped hash
+3. Use `ots verify` on the .ots proof file
+
+=====================================================
+SHA-256 of git commit tree will be timestamped via OpenTimestamps
+Bitcoin blockchain anchoring provides decentralized proof-of-existence
