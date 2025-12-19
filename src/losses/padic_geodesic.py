@@ -513,10 +513,169 @@ class GlobalRankLoss(nn.Module):
         return loss, metrics
 
 
+class MonotonicRadialLoss(nn.Module):
+    """Monotonic Radial Loss - enforces strict per-level radius ordering.
+
+    V5.11.4 IMPROVEMENT: Instead of sampling random pairs, this loss:
+    1. Groups points by valuation level (0-9)
+    2. Computes mean radius per level
+    3. Enforces: mean_r[v] > mean_r[v+1] + margin for all consecutive levels
+
+    This creates explicit "radial bands" where each valuation level occupies
+    a distinct range of radii with guaranteed separation.
+
+    Key insight: The weakness of pairwise sampling is that it may miss
+    enforcing structure between specific adjacent levels. This loss
+    directly targets the level-wise means, ensuring monotonicity.
+    """
+
+    def __init__(
+        self,
+        inner_radius: float = 0.1,
+        outer_radius: float = 0.85,
+        max_valuation: int = 9,
+        min_margin: float = 0.02,
+        margin_scale: float = 1.0,
+        use_soft_margin: bool = True,
+        temperature: float = 0.05
+    ):
+        """Initialize MonotonicRadialLoss.
+
+        Args:
+            inner_radius: Target radius for highest valuation (v=9)
+            outer_radius: Target radius for lowest valuation (v=0)
+            max_valuation: Maximum valuation level
+            min_margin: Minimum margin between adjacent levels
+            margin_scale: Scale factor for adaptive margins
+            use_soft_margin: Use soft hinge loss (differentiable)
+            temperature: Softness for soft margin (lower = sharper)
+        """
+        super().__init__()
+        self.inner_radius = inner_radius
+        self.outer_radius = outer_radius
+        self.max_valuation = max_valuation
+        self.min_margin = min_margin
+        self.margin_scale = margin_scale
+        self.use_soft_margin = use_soft_margin
+        self.temperature = temperature
+
+        # Compute target radius per level
+        self.radius_range = outer_radius - inner_radius
+        self.level_step = self.radius_range / max_valuation
+
+    def forward(
+        self,
+        z_hyp: torch.Tensor,
+        batch_indices: torch.Tensor
+    ) -> Tuple[torch.Tensor, dict]:
+        """Compute monotonic radial loss.
+
+        Args:
+            z_hyp: Points in Poincaré ball (batch, latent_dim)
+            batch_indices: Operation indices (batch,)
+
+        Returns:
+            Tuple of (loss, metrics_dict)
+        """
+        device = z_hyp.device
+        batch_size = z_hyp.size(0)
+
+        if batch_size < 2:
+            return torch.tensor(0.0, device=device), {'n_levels': 0}
+
+        # Get valuations and radii
+        valuations = TERNARY.valuation(batch_indices)
+        radii = torch.norm(z_hyp, dim=1)
+
+        # Compute mean radius per valuation level
+        level_means = []
+        level_counts = []
+        levels_present = []
+
+        for v in range(self.max_valuation + 1):
+            mask = valuations == v
+            if mask.any():
+                level_means.append(radii[mask].mean())
+                level_counts.append(mask.sum().item())
+                levels_present.append(v)
+
+        if len(levels_present) < 2:
+            # Need at least 2 levels to enforce ordering
+            return torch.tensor(0.0, device=device), {
+                'n_levels': len(levels_present),
+                'margin_violations': 0
+            }
+
+        level_means = torch.stack(level_means)
+        n_levels = len(levels_present)
+
+        # Compute target margins between adjacent present levels
+        # Margin proportional to valuation gap
+        margins = []
+        for i in range(n_levels - 1):
+            v_gap = levels_present[i + 1] - levels_present[i]
+            # Adaptive margin: larger gaps get larger margins
+            margin = max(self.min_margin, self.level_step * v_gap * self.margin_scale)
+            margins.append(margin)
+
+        margins = torch.tensor(margins, device=device)
+
+        # Monotonicity constraint: r[v] > r[v+1] + margin
+        # Equivalently: r[v] - r[v+1] > margin
+        # Violation: margin - (r[v] - r[v+1]) > 0
+        radius_diffs = level_means[:-1] - level_means[1:]  # r[v] - r[v+1]
+        violations = margins - radius_diffs  # positive when violated
+
+        if self.use_soft_margin:
+            # Soft hinge: smooth approximation of max(0, x)
+            # softplus(x/temp) * temp ≈ max(0, x) as temp → 0
+            loss = F.softplus(violations / self.temperature).mean() * self.temperature
+        else:
+            # Hard hinge
+            loss = F.relu(violations).mean()
+
+        # Also add a gentle pull toward target radii per level
+        target_radii = []
+        for v in levels_present:
+            target = self.outer_radius - (v / self.max_valuation) * self.radius_range
+            target_radii.append(target)
+        target_radii = torch.tensor(target_radii, device=device)
+
+        target_loss = F.mse_loss(level_means, target_radii)
+
+        # Combined loss: margin enforcement + target guidance
+        total_loss = loss + 0.5 * target_loss
+
+        # Metrics
+        with torch.no_grad():
+            hard_violations = (violations > 0).sum().item()
+            mean_violation = violations[violations > 0].mean().item() if hard_violations > 0 else 0.0
+
+            # Build level radius map for logging
+            level_radius_map = {
+                f'r_v{levels_present[i]}': level_means[i].item()
+                for i in range(n_levels)
+            }
+
+        metrics = {
+            'n_levels': n_levels,
+            'margin_violations': hard_violations,
+            'mean_violation_magnitude': mean_violation,
+            'monotonic_loss': loss.item(),
+            'target_loss': target_loss.item(),
+            'min_radius_diff': radius_diffs.min().item() if len(radius_diffs) > 0 else 0,
+            'mean_radius_diff': radius_diffs.mean().item() if len(radius_diffs) > 0 else 0,
+            **level_radius_map
+        }
+
+        return total_loss, metrics
+
+
 __all__ = [
     'poincare_distance',
     'PAdicGeodesicLoss',
     'RadialHierarchyLoss',
     'CombinedGeodesicLoss',
-    'GlobalRankLoss'
+    'GlobalRankLoss',
+    'MonotonicRadialLoss'
 ]

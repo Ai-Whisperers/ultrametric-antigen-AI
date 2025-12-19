@@ -1,6 +1,6 @@
 # P-adic Genomics Framework: Cross-Reference Index
 
-**Doc-Type:** Navigation Index · Version 1.0 · Updated 2025-12-19 · Author AI Whisperers
+**Doc-Type:** Navigation Index · Version 2.0 · Updated 2025-12-19 · Author AI Whisperers
 
 ---
 
@@ -11,6 +11,7 @@
 | Document | Location | Description |
 |:---------|:---------|:------------|
 | **DISCOVERIES.md** | `p-adic-genomics/` | Consolidated findings across all applications |
+| **VALIDATION_PROOF.md** | `p-adic-genomics/` | **Mathematical validation of 3-adic framework** |
 | **DISEASE_APPLICATION_ROADMAP.md** | `p-adic-genomics/` | Future application planning |
 | **PROPOSAL_ACCESSIBLE_THERAPEUTICS.md** | `p-adic-genomics/` | Therapeutic development strategy |
 | README.md | `p-adic-genomics/` | Project overview |
@@ -28,6 +29,16 @@
 |:--------|:---------|:-------|
 | **Rheumatoid Arthritis** | `p-adic-genomics/validations/RA_CASE_STUDY.md` | VALIDATED |
 | **SARS-CoV-2** | `p-adic-genomics/validations/SARS_COV2_CASE_STUDY.md` | VALIDATED (AlphaFold3) |
+| **Alzheimer's Tau** | `neurodegeneration/alzheimers/FINDINGS.md` | VALIDATED (additive model) |
+
+### Framework Validation
+
+| Test | Script | Result |
+|:-----|:-------|:-------|
+| **Ultrametric Property** | `validations/padic_biology_validation.py` | 100% valid |
+| **Synonymous Clustering** | `validations/encoder_cross_validation.py` | 2.59x separation |
+| **Wobble Effect** | `validations/encoder_cross_validation.py` | 35% smaller |
+| **Phosphomimic Geometry** | `validations/encoder_cross_validation.py` | 6.74 shift |
 
 ---
 
@@ -128,6 +139,25 @@
 | Trained encoder | `genetic_code/data/codon_encoder_3adic.pt` | 3-adic weights |
 | Encoder utils | `bioinformatics/rheumatoid_arthritis/scripts/hyperbolic_utils.py` | Shared functions |
 | VAE model | `src/models/ternary_vae.py` | V5.11.3 architecture |
+| **Validation scripts** | `p-adic-genomics/validations/` | Cross-validation framework |
+
+---
+
+## Validation Script Details
+
+| Script | Purpose | Key Results |
+|:-------|:--------|:------------|
+| `padic_biology_validation.py` | Test ultrametric property across 7 encoding schemes | 100% validity |
+| `encoder_cross_validation.py` | Validate trained encoder against genetic code | 2/3 tests pass |
+
+**Encoding Schemes Tested:**
+1. Amino Acid Chemistry (hydrophobic/polar/charged)
+2. Amino Acid Size (small/medium/large)
+3. Secondary Structure Propensity (helix/sheet/coil)
+4. Nucleotide Chemistry (purine/pyrimidine/other)
+5. Codon Position (1st/2nd/3rd)
+6. Methylation State (unmet/5mC/5hmC)
+7. Phosphorylation State (unphospho/phospho/mimic)
 
 ---
 
@@ -135,4 +165,5 @@
 
 | Date | Version | Description |
 |:-----|:--------|:------------|
+| 2025-12-19 | 2.0 | Added VALIDATION_PROOF.md and validation scripts |
 | 2025-12-19 | 1.0 | Initial index with SARS-CoV-2 and Tau applications |

@@ -72,3 +72,7 @@ runs/
 training_verification.log
 *.so
 engine/build/
+
+# Large AlphaFold prediction archives (keep locally, not in repo)
+**/alphafold3_predictions/*.zip
+**/alphafold_jobs/*.zip

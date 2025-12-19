@@ -74,7 +74,8 @@ from .padic_geodesic import (
     PAdicGeodesicLoss,
     RadialHierarchyLoss,
     CombinedGeodesicLoss,
-    GlobalRankLoss
+    GlobalRankLoss,
+    MonotonicRadialLoss
 )
 
 from .consequence_predictor import (
@@ -138,6 +139,7 @@ __all__ = [
     'RadialHierarchyLoss',
     'CombinedGeodesicLoss',
     'GlobalRankLoss',
+    'MonotonicRadialLoss',
     'ConsequencePredictor',
     'evaluate_addition_accuracy',
     'PurposefulRankingLoss',
