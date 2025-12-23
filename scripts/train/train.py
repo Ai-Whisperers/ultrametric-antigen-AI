@@ -109,6 +109,8 @@ def parse_args():
                         help='Weight for global rank loss (default: 1.0)')
     parser.add_argument('--no_rank_loss', action='store_true', default=False,
                         help='Disable global rank loss')
+    parser.add_argument('--n_pairs', type=int, default=2000,
+                        help='Number of pairs for geodesic loss (default: 2000)')
     return parser.parse_args()
 
 
