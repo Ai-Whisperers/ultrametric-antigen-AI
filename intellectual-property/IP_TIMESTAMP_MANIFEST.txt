@@ -2,11 +2,11 @@ TERNARY VAE INTELLECTUAL PROPERTY TIMESTAMP MANIFEST
 =====================================================
 
 Repository: ternary-vaes
-Version: V5.11.3 (Production Ready)
-Tag: v1.1.0
+Version: V5.12.0 (Restructured)
+Tag: v1.2.0
 
-Git Commit: aff7db2517ae44bc4533b2452c8b6de124f5741b
-Timestamp Date: 2025-12-15
+Git Commit: 1b8bfbd03ee6939b533a2970a24eac2b6c2d50ad
+Timestamp Date: 2025-12-23
 
 COVERED INTELLECTUAL PROPERTY:
 ------------------------------
@@ -40,6 +40,12 @@ COVERED INTELLECTUAL PROPERTY:
    - scripts/train/train.py
    - scripts/eval/downstream_validation.py
 
+6. BIOINFORMATICS RESEARCH
+   - research/bioinformatics/codon_encoder_research/hiv/ (glycan shield analysis)
+   - research/bioinformatics/p-adic-genomics/ (p-adic sequence analysis)
+   - research/bioinformatics/genetic_code/ (codon encoding research)
+   - AlphaFold3 predictions and validation data
+
 CLAIMS:
 -------
 This timestamp proves that the above intellectual property existed
@@ -51,7 +57,7 @@ repository, providing tamper-evident proof of existence.
 HASH VERIFICATION:
 ------------------
 To verify this timestamp covers the repository state:
-1. Clone repository at commit aff7db2517ae44bc4533b2452c8b6de124f5741b
+1. Clone repository at commit 1b8bfbd03ee6939b533a2970a24eac2b6c2d50ad
 2. Verify SHA-256 of this manifest matches the timestamped hash
 3. Use `ots verify` on the .ots proof file
 
