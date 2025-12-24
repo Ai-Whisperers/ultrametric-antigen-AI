@@ -19,6 +19,7 @@ from .poincare import (
     lambda_x,
     parallel_transport,
     PoincareModule,
+    get_riemannian_optimizer,
     GEOOPT_AVAILABLE
 )
 
@@ -32,5 +33,6 @@ __all__ = [
     'lambda_x',
     'parallel_transport',
     'PoincareModule',
+    'get_riemannian_optimizer',
     'GEOOPT_AVAILABLE'
 ]

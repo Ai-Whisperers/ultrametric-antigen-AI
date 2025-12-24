@@ -48,6 +48,7 @@ from src.losses import PAdicGeodesicLoss, RadialHierarchyLoss, CombinedGeodesicL
 from src.losses import CombinedZeroStructureLoss
 from src.data.generation import generate_all_ternary_operations
 from src.core import TERNARY
+from src.geometry import get_riemannian_optimizer, GEOOPT_AVAILABLE
 
 
 def parse_args():
@@ -148,6 +149,9 @@ def parse_args():
                         help='Weight for zero-valuation loss (default: 1.0)')
     parser.add_argument('--zero_sparsity_weight', type=float, default=0.5,
                         help='Weight for zero-sparsity loss (default: 0.5)')
+    # Riemannian optimizer (v5.11.10)
+    parser.add_argument('--riemannian', action='store_true', default=False,
+                        help='Use RiemannianAdam optimizer (geoopt) instead of AdamW')
     return parser.parse_args()
 
 
@@ -690,24 +694,48 @@ def main():
 
     # Create optimizer (only trainable parameters)
     base_lr = config.get('lr', 1e-3)
+    use_riemannian = config.get('riemannian', False)
+
+    if use_riemannian and not GEOOPT_AVAILABLE:
+        print("WARNING: --riemannian requested but geoopt not installed. Using AdamW.")
+        use_riemannian = False
+
     if use_option_c and hasattr(model, 'get_param_groups'):
         # Option C: use param groups with different LRs
         param_groups = model.get_param_groups(base_lr)
-        optimizer = torch.optim.AdamW(
-            param_groups,
-            weight_decay=config.get('weight_decay', 1e-4)
-        )
-        print(f"\nUsing param groups: {len(param_groups)} groups")
+        if use_riemannian:
+            optimizer = get_riemannian_optimizer(
+                param_groups,
+                lr=base_lr,
+                optimizer_type='adam',
+                weight_decay=config.get('weight_decay', 1e-4)
+            )
+            print(f"\nUsing RiemannianAdam (geoopt) with param groups")
+        else:
+            optimizer = torch.optim.AdamW(
+                param_groups,
+                weight_decay=config.get('weight_decay', 1e-4)
+            )
+        print(f"Param groups: {len(param_groups)} groups")
         for i, pg in enumerate(param_groups):
             name = pg.get('name', f'group_{i}')
             print(f"  {name}: {len(pg['params'])} params, lr={pg['lr']:.2e}")
     else:
         # Option A: single learning rate
-        optimizer = torch.optim.AdamW(
-            model.get_trainable_parameters(),
-            lr=base_lr,
-            weight_decay=config.get('weight_decay', 1e-4)
-        )
+        if use_riemannian:
+            optimizer = get_riemannian_optimizer(
+                model.get_trainable_parameters(),
+                lr=base_lr,
+                optimizer_type='adam',
+                weight_decay=config.get('weight_decay', 1e-4)
+            )
+            print(f"\nUsing RiemannianAdam (geoopt)")
+        else:
+            optimizer = torch.optim.AdamW(
+                model.get_trainable_parameters(),
+                lr=base_lr,
+                weight_decay=config.get('weight_decay', 1e-4)
+            )
 
     # Learning rate scheduler
     scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
