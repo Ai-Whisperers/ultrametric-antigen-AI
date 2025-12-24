@@ -52,8 +52,8 @@ Our technology, the **3-Adic Codon Encoder**, maps these movements.
 
 ```bash
 # Analyze HIV Resistance
-python experiments/bioinformatics/hiv/scripts/01_hiv_escape_analysis.py
+python research/bioinformatics/hiv/scripts/01_hiv_escape_analysis.py
 
 # Analyze RA Risk Factors
-python experiments/bioinformatics/rheumatoid_arthritis/scripts/01_hla_functionomic_analysis.py
+python research/bioinformatics/rheumatoid_arthritis/scripts/01_hla_functionomic_analysis.py
 ```

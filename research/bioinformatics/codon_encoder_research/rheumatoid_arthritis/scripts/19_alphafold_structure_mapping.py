@@ -19,7 +19,8 @@ from typing import Dict, List, Optional, Tuple
 from collections import defaultdict
 import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.use('Agg')
+
+matplotlib.use("Agg")
 
 # ============================================================================
 # CONFIGURATION
@@ -30,20 +31,20 @@ ALPHAFOLD_API = "https://alphafold.ebi.ac.uk/files"
 
 # Key RA autoantigens with UniProt IDs
 RA_AUTOANTIGENS = {
-    'VIM': 'P08670',      # Vimentin
-    'FGA': 'P02671',      # Fibrinogen alpha
-    'FGB': 'P02675',      # Fibrinogen beta
-    'FGG': 'P02679',      # Fibrinogen gamma
-    'ENO1': 'P06733',     # Alpha-enolase
-    'COL2A1': 'P02458',   # Collagen type II
-    'FLG': 'P20930',      # Filaggrin
-    'HIST1H2A': 'P0C0S8', # Histone H2A
-    'HIST1H3A': 'P68431', # Histone H3
-    'HIST1H4A': 'P62805', # Histone H4
-    'TNC': 'P24821',      # Tenascin-C
-    'FN1': 'P02751',      # Fibronectin
-    'HSPA5': 'P11021',    # BiP/GRP78
-    'CLU': 'P10909',      # Clusterin
+    "VIM": "P08670",  # Vimentin
+    "FGA": "P02671",  # Fibrinogen alpha
+    "FGB": "P02675",  # Fibrinogen beta
+    "FGG": "P02679",  # Fibrinogen gamma
+    "ENO1": "P06733",  # Alpha-enolase
+    "COL2A1": "P02458",  # Collagen type II
+    "FLG": "P20930",  # Filaggrin
+    "HIST1H2A": "P0C0S8",  # Histone H2A
+    "HIST1H3A": "P68431",  # Histone H3
+    "HIST1H4A": "P62805",  # Histone H4
+    "TNC": "P24821",  # Tenascin-C
+    "FN1": "P02751",  # Fibronectin
+    "HSPA5": "P11021",  # BiP/GRP78
+    "CLU": "P10909",  # Clusterin
 }
 
 # Output configuration
@@ -54,6 +55,7 @@ OUTPUT_SUBDIR = f"{SCRIPT_NUM}_alphafold_mapping"
 # ============================================================================
 # DIRECTORY SETUP
 # ============================================================================
+
 
 def get_output_dir() -> Path:
     """Get output directory for this script."""
@@ -75,6 +77,7 @@ def get_pdb_dir() -> Path:
 # ALPHAFOLD DOWNLOAD
 # ============================================================================
 
+
 def download_alphafold_structure(uniprot_id: str, output_dir: Path) -> Optional[Path]:
     """
     Download AlphaFold2 predicted structure for a protein.
@@ -82,7 +85,7 @@ def download_alphafold_structure(uniprot_id: str, output_dir: Path) -> Optional[
     Returns path to downloaded PDB file or None if failed.
     """
     # Try different versions (v6 is current, fallback to v4)
-    for version in ['v6', 'v4']:
+    for version in ["v6", "v4"]:
         pdb_path = output_dir / f"AF-{uniprot_id}-F1-model_{version}.pdb"
 
         # Check if already downloaded
@@ -95,7 +98,7 @@ def download_alphafold_structure(uniprot_id: str, output_dir: Path) -> Optional[
         try:
             response = requests.get(url, timeout=30)
             if response.status_code == 200:
-                with open(pdb_path, 'w') as f:
+                with open(pdb_path, "w") as f:
                     f.write(response.text)
                 return pdb_path
         except Exception as e:
@@ -111,7 +114,7 @@ def download_alphafold_confidence(uniprot_id: str, output_dir: Path) -> Optional
     json_path = output_dir / f"AF-{uniprot_id}-F1-confidence_v4.json"
 
     if json_path.exists():
-        with open(json_path, 'r') as f:
+        with open(json_path, "r") as f:
             return json.load(f)
 
     url = f"{ALPHAFOLD_API}/AF-{uniprot_id}-F1-confidence_v4.json"
@@ -120,7 +123,7 @@ def download_alphafold_confidence(uniprot_id: str, output_dir: Path) -> Optional
         response = requests.get(url, timeout=30)
         if response.status_code == 200:
             data = response.json()
-            with open(json_path, 'w') as f:
+            with open(json_path, "w") as f:
                 json.dump(data, f)
             return data
         else:
@@ -133,6 +136,7 @@ def download_alphafold_confidence(uniprot_id: str, output_dir: Path) -> Optional
 # ============================================================================
 # PDB PARSING
 # ============================================================================
+
 
 def parse_pdb(pdb_path: Path) -> Dict:
     """
@@ -147,9 +151,9 @@ def parse_pdb(pdb_path: Path) -> Dict:
     ca_coords = {}
     arginines = []
 
-    with open(pdb_path, 'r') as f:
+    with open(pdb_path, "r") as f:
         for line in f:
-            if line.startswith('ATOM'):
+            if line.startswith("ATOM"):
                 atom_name = line[12:16].strip()
                 resname = line[17:20].strip()
                 resnum = int(line[22:26].strip())
@@ -158,27 +162,28 @@ def parse_pdb(pdb_path: Path) -> Dict:
                 z = float(line[46:54].strip())
                 bfactor = float(line[60:66].strip()) if len(line) > 66 else 0.0
 
-                if atom_name == 'CA':
+                if atom_name == "CA":
                     ca_coords[resnum] = (x, y, z)
-                    residues.append({
-                        'resname': resname,
-                        'resnum': resnum,
-                        'x': x, 'y': y, 'z': z,
-                        'bfactor': bfactor  # pLDDT in AlphaFold
-                    })
+                    residues.append(
+                        {
+                            "resname": resname,
+                            "resnum": resnum,
+                            "x": x,
+                            "y": y,
+                            "z": z,
+                            "bfactor": bfactor,  # pLDDT in AlphaFold
+                        }
+                    )
 
-                    if resname == 'ARG':
+                    if resname == "ARG":
                         arginines.append(resnum)
 
-    return {
-        'residues': residues,
-        'arginines': arginines,
-        'ca_coords': ca_coords
-    }
+    return {"residues": residues, "arginines": arginines, "ca_coords": ca_coords}
 
 
-def compute_solvent_accessibility(ca_coords: Dict, resnum: int,
-                                   neighbor_radius: float = 10.0) -> float:
+def compute_solvent_accessibility(
+    ca_coords: Dict, resnum: int, neighbor_radius: float = 10.0
+) -> float:
     """
     Estimate relative solvent accessibility based on neighbor density.
 
@@ -193,7 +198,7 @@ def compute_solvent_accessibility(ca_coords: Dict, resnum: int,
     for other_resnum, (ox, oy, oz) in ca_coords.items():
         if other_resnum == resnum:
             continue
-        dist = np.sqrt((x-ox)**2 + (y-oy)**2 + (z-oz)**2)
+        dist = np.sqrt((x - ox) ** 2 + (y - oy) ** 2 + (z - oz) ** 2)
         if dist < neighbor_radius:
             neighbor_count += 1
 
@@ -212,52 +217,61 @@ def compute_secondary_structure_proxy(ca_coords: Dict, resnum: int) -> str:
     Coil: variable
     """
     if resnum not in ca_coords:
-        return 'unknown'
+        return "unknown"
 
     # Check helix pattern (i to i+4)
     if resnum + 4 in ca_coords:
         x1, y1, z1 = ca_coords[resnum]
         x2, y2, z2 = ca_coords[resnum + 4]
-        dist = np.sqrt((x1-x2)**2 + (y1-y2)**2 + (z1-z2)**2)
+        dist = np.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2 + (z1 - z2) ** 2)
         if 5.0 < dist < 6.5:
-            return 'helix'
+            return "helix"
 
     # Check sheet pattern (i to i+2)
     if resnum + 2 in ca_coords:
         x1, y1, z1 = ca_coords[resnum]
         x2, y2, z2 = ca_coords[resnum + 2]
-        dist = np.sqrt((x1-x2)**2 + (y1-y2)**2 + (z1-z2)**2)
+        dist = np.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2 + (z1 - z2) ** 2)
         if 6.0 < dist < 7.5:
-            return 'sheet'
+            return "sheet"
 
-    return 'coil'
+    return "coil"
 
 
 # ============================================================================
 # EPITOPE DATA
 # ============================================================================
 
+
 def load_epitope_data() -> List[Dict]:
     """Load epitope data with entropy change values."""
     script_dir = Path(__file__).parent
-    results_path = script_dir.parent / "results" / "hyperbolic" / "goldilocks_validation" / "goldilocks_validation_results.json"
+    results_path = (
+        script_dir.parent
+        / "results"
+        / "hyperbolic"
+        / "goldilocks_validation"
+        / "goldilocks_validation_results.json"
+    )
 
     if not results_path.exists():
         print(f"  Warning: Goldilocks results not found at {results_path}")
         return []
 
-    with open(results_path, 'r') as f:
+    with open(results_path, "r") as f:
         data = json.load(f)
 
-    return data.get('epitope_details', [])
+    return data.get("epitope_details", [])
 
 
 # ============================================================================
 # STRUCTURAL ANALYSIS
 # ============================================================================
 
-def analyze_protein_structure(gene_name: str, uniprot_id: str,
-                              epitopes: List[Dict], pdb_dir: Path) -> Optional[Dict]:
+
+def analyze_protein_structure(
+    gene_name: str, uniprot_id: str, epitopes: List[Dict], pdb_dir: Path
+) -> Optional[Dict]:
     """
     Analyze structure for a single protein.
 
@@ -272,7 +286,7 @@ def analyze_protein_structure(gene_name: str, uniprot_id: str,
     structure = parse_pdb(pdb_path)
 
     # Get protein-specific epitopes
-    protein_epitopes = [e for e in epitopes if e['epitope_id'].startswith(gene_name)]
+    protein_epitopes = [e for e in epitopes if e["epitope_id"].startswith(gene_name)]
 
     if not protein_epitopes:
         return None
@@ -282,46 +296,48 @@ def analyze_protein_structure(gene_name: str, uniprot_id: str,
 
     for epitope in protein_epitopes:
         # Extract arginine position from epitope ID (e.g., "VIM_R71" -> 71)
-        epitope_id = epitope['epitope_id']
+        epitope_id = epitope["epitope_id"]
         try:
-            r_pos = int(epitope_id.split('_R')[-1].split('_')[0])
+            r_pos = int(epitope_id.split("_R")[-1].split("_")[0])
         except:
             # Handle special cases like "ENO1_CEP1"
             continue
 
         # Get structural features for this position
-        if r_pos in structure['ca_coords']:
-            accessibility = compute_solvent_accessibility(structure['ca_coords'], r_pos)
-            ss = compute_secondary_structure_proxy(structure['ca_coords'], r_pos)
+        if r_pos in structure["ca_coords"]:
+            accessibility = compute_solvent_accessibility(structure["ca_coords"], r_pos)
+            ss = compute_secondary_structure_proxy(structure["ca_coords"], r_pos)
 
             # Get pLDDT (B-factor in AlphaFold PDB)
             plddt = 0
-            for res in structure['residues']:
-                if res['resnum'] == r_pos:
-                    plddt = res['bfactor']
+            for res in structure["residues"]:
+                if res["resnum"] == r_pos:
+                    plddt = res["bfactor"]
                     break
 
-            site_analyses.append({
-                'epitope_id': epitope_id,
-                'r_position': r_pos,
-                'entropy_change': epitope.get('mean_entropy_change', 0),
-                'immunodominant': epitope.get('immunodominant', False),
-                'acpa_reactivity': epitope.get('acpa_reactivity', 0),
-                'solvent_accessibility': accessibility,
-                'secondary_structure': ss,
-                'plddt': plddt,
-                'x': structure['ca_coords'][r_pos][0],
-                'y': structure['ca_coords'][r_pos][1],
-                'z': structure['ca_coords'][r_pos][2],
-            })
+            site_analyses.append(
+                {
+                    "epitope_id": epitope_id,
+                    "r_position": r_pos,
+                    "entropy_change": epitope.get("mean_entropy_change", 0),
+                    "immunodominant": epitope.get("immunodominant", False),
+                    "acpa_reactivity": epitope.get("acpa_reactivity", 0),
+                    "solvent_accessibility": accessibility,
+                    "secondary_structure": ss,
+                    "plddt": plddt,
+                    "x": structure["ca_coords"][r_pos][0],
+                    "y": structure["ca_coords"][r_pos][1],
+                    "z": structure["ca_coords"][r_pos][2],
+                }
+            )
 
     return {
-        'gene_name': gene_name,
-        'uniprot_id': uniprot_id,
-        'total_residues': len(structure['residues']),
-        'total_arginines': len(structure['arginines']),
-        'analyzed_sites': site_analyses,
-        'pdb_path': str(pdb_path),
+        "gene_name": gene_name,
+        "uniprot_id": uniprot_id,
+        "total_residues": len(structure["residues"]),
+        "total_arginines": len(structure["arginines"]),
+        "analyzed_sites": site_analyses,
+        "pdb_path": str(pdb_path),
     }
 
 
@@ -334,11 +350,11 @@ def generate_pymol_script(protein_analysis: Dict, output_dir: Path) -> Path:
     - Blue: high entropy decrease (silent)
     - White: neutral
     """
-    gene = protein_analysis['gene_name']
+    gene = protein_analysis["gene_name"]
     script_path = output_dir / f"visualize_{gene}.pml"
 
-    pdb_path = protein_analysis['pdb_path']
-    sites = protein_analysis['analyzed_sites']
+    pdb_path = protein_analysis["pdb_path"]
+    sites = protein_analysis["analyzed_sites"]
 
     script_lines = [
         f"# PyMOL visualization script for {gene}",
@@ -356,9 +372,9 @@ def generate_pymol_script(protein_analysis: Dict, output_dir: Path) -> Path:
     ]
 
     for site in sites:
-        r_pos = site['r_position']
-        entropy = site['entropy_change']
-        imm = site['immunodominant']
+        r_pos = site["r_position"]
+        entropy = site["entropy_change"]
+        imm = site["immunodominant"]
 
         # Color scale: -0.15 (blue) to +0.05 (red)
         # Normalize to 0-1 range
@@ -382,24 +398,28 @@ def generate_pymol_script(protein_analysis: Dict, output_dir: Path) -> Path:
 
         # Label immunodominant sites
         if imm:
-            script_lines.append(f"label {gene} and resi {r_pos} and name CA, \"R{r_pos}*\"")
+            script_lines.append(
+                f'label {gene} and resi {r_pos} and name CA, "R{r_pos}*"'
+            )
 
-    script_lines.extend([
-        "",
-        "# Styling",
-        "bg_color white",
-        "set ray_shadows, 0",
-        "set antialias, 2",
-        "set cartoon_fancy_helices, 1",
-        f"zoom {gene}",
-        "",
-        f"# Save image",
-        f"ray 1920, 1080",
-        f"png {output_dir}/{gene}_entropy_map.png, dpi=300",
-    ])
+    script_lines.extend(
+        [
+            "",
+            "# Styling",
+            "bg_color white",
+            "set ray_shadows, 0",
+            "set antialias, 2",
+            "set cartoon_fancy_helices, 1",
+            f"zoom {gene}",
+            "",
+            f"# Save image",
+            f"ray 1920, 1080",
+            f"png {output_dir}/{gene}_entropy_map.png, dpi=300",
+        ]
+    )
 
-    with open(script_path, 'w') as f:
-        f.write('\n'.join(script_lines))
+    with open(script_path, "w") as f:
+        f.write("\n".join(script_lines))
 
     return script_path
 
@@ -408,27 +428,42 @@ def generate_html_viewer(protein_analysis: Dict, output_dir: Path) -> Path:
     """
     Generate interactive HTML viewer using 3Dmol.js
     """
-    gene = protein_analysis['gene_name']
+    gene = protein_analysis["gene_name"]
     html_path = output_dir / f"view_{gene}.html"
 
-    pdb_path = Path(protein_analysis['pdb_path'])
-    sites = protein_analysis['analyzed_sites']
+    pdb_path = Path(protein_analysis["pdb_path"])
+    sites = protein_analysis["analyzed_sites"]
 
     # Read PDB content
-    with open(pdb_path, 'r') as f:
-        pdb_content = f.read().replace('\n', '\\n').replace("'", "\\'")
+    with open(pdb_path, "r") as f:
+        pdb_content = f.read().replace("\n", "\\n").replace("'", "\\'")
 
     # Build site data for JavaScript
     site_js_data = []
     for site in sites:
-        site_js_data.append({
-            'resi': site['r_position'],
-            'entropy': site['entropy_change'],
-            'immunodominant': site['immunodominant'],
-            'acpa': site['acpa_reactivity'],
-        })
+        site_js_data.append(
+            {
+                "resi": site["r_position"],
+                "entropy": site["entropy_change"],
+                "immunodominant": site["immunodominant"],
+                "acpa": site["acpa_reactivity"],
+            }
+        )
 
-    html_content = f'''<!DOCTYPE html>
+    rows_html = ""
+    for s in sites:
+        row_class = "imm" if s["immunodominant"] else "silent"
+        imm_text = "Immunodominant" if s["immunodominant"] else "Silent"
+        rows_html += f"""<tr class="{row_class}">
+            <td>R{s['r_position']}</td>
+            <td>{s['entropy_change']:.4f}</td>
+            <td>{imm_text}</td>
+            <td>{s['acpa_reactivity']:.2f}</td>
+            <td>{s['solvent_accessibility']:.2f}</td>
+            <td>{s['secondary_structure']}</td>
+        </tr>"""
+
+    html_content = f"""<!DOCTYPE html>
 <html>
 <head>
     <title>{gene} - Entropy Change Mapping</title>
@@ -472,14 +507,7 @@ def generate_html_viewer(protein_analysis: Dict, output_dir: Path) -> Path:
             <th>Accessibility</th>
             <th>Structure</th>
         </tr>
-        {''.join(f'''<tr class="{'imm' if s['immunodominant'] else 'silent'}">
-            <td>R{s['r_position']}</td>
-            <td>{s['entropy_change']:.4f}</td>
-            <td>{'Immunodominant' if s['immunodominant'] else 'Silent'}</td>
-            <td>{s['acpa_reactivity']:.2f}</td>
-            <td>{s['solvent_accessibility']:.2f}</td>
-            <td>{s['secondary_structure']}</td>
-        </tr>''' for s in sites)}
+        {rows_html}
     </table>
 
     <script>
@@ -532,9 +560,9 @@ def generate_html_viewer(protein_analysis: Dict, output_dir: Path) -> Path:
         viewer.render();
     </script>
 </body>
-</html>'''
+</html>"""
 
-    with open(html_path, 'w') as f:
+    with open(html_path, "w") as f:
         f.write(html_content)
 
     return html_path
@@ -544,6 +572,7 @@ def generate_html_viewer(protein_analysis: Dict, output_dir: Path) -> Path:
 # CORRELATION ANALYSIS
 # ============================================================================
 
+
 def analyze_structural_correlations(all_analyses: List[Dict], output_dir: Path) -> Dict:
     """
     Analyze correlations between structural features and immunogenicity.
@@ -551,8 +580,8 @@ def analyze_structural_correlations(all_analyses: List[Dict], output_dir: Path) 
     # Collect all site data
     all_sites = []
     for analysis in all_analyses:
-        if analysis and 'analyzed_sites' in analysis:
-            all_sites.extend(analysis['analyzed_sites'])
+        if analysis and "analyzed_sites" in analysis:
+            all_sites.extend(analysis["analyzed_sites"])
 
     if not all_sites:
         return {}
@@ -563,28 +592,33 @@ def analyze_structural_correlations(all_analyses: List[Dict], output_dir: Path) 
     correlations = {}
 
     # Entropy vs accessibility
-    if 'solvent_accessibility' in df.columns and 'entropy_change' in df.columns:
+    if "solvent_accessibility" in df.columns and "entropy_change" in df.columns:
         from scipy import stats
-        r, p = stats.pearsonr(df['solvent_accessibility'], df['entropy_change'])
-        correlations['entropy_vs_accessibility'] = {'r': r, 'p': p}
+
+        r, p = stats.pearsonr(df["solvent_accessibility"], df["entropy_change"])
+        correlations["entropy_vs_accessibility"] = {"r": r, "p": p}
 
     # Entropy vs pLDDT
-    if 'plddt' in df.columns and 'entropy_change' in df.columns:
-        r, p = stats.pearsonr(df['plddt'], df['entropy_change'])
-        correlations['entropy_vs_plddt'] = {'r': r, 'p': p}
+    if "plddt" in df.columns and "entropy_change" in df.columns:
+        r, p = stats.pearsonr(df["plddt"], df["entropy_change"])
+        correlations["entropy_vs_plddt"] = {"r": r, "p": p}
 
     # Secondary structure distribution
-    if 'secondary_structure' in df.columns and 'immunodominant' in df.columns:
-        ss_dist = df.groupby(['immunodominant', 'secondary_structure']).size().unstack(fill_value=0)
-        correlations['ss_distribution'] = ss_dist.to_dict()
+    if "secondary_structure" in df.columns and "immunodominant" in df.columns:
+        ss_dist = (
+            df.groupby(["immunodominant", "secondary_structure"])
+            .size()
+            .unstack(fill_value=0)
+        )
+        correlations["ss_distribution"] = ss_dist.to_dict()
 
     # Accessibility by immunodominance
-    if 'solvent_accessibility' in df.columns and 'immunodominant' in df.columns:
-        imm_acc = df[df['immunodominant']]['solvent_accessibility'].mean()
-        silent_acc = df[~df['immunodominant']]['solvent_accessibility'].mean()
-        correlations['mean_accessibility'] = {
-            'immunodominant': imm_acc,
-            'silent': silent_acc
+    if "solvent_accessibility" in df.columns and "immunodominant" in df.columns:
+        imm_acc = df[df["immunodominant"]]["solvent_accessibility"].mean()
+        silent_acc = df[~df["immunodominant"]]["solvent_accessibility"].mean()
+        correlations["mean_accessibility"] = {
+            "immunodominant": imm_acc,
+            "silent": silent_acc,
         }
 
     # Generate correlation plots
@@ -592,54 +626,70 @@ def analyze_structural_correlations(all_analyses: List[Dict], output_dir: Path) 
 
     # 1. Entropy vs Accessibility
     ax = axes[0, 0]
-    colors = ['#e53935' if imm else '#1e88e5' for imm in df['immunodominant']]
-    ax.scatter(df['solvent_accessibility'], df['entropy_change'], c=colors, alpha=0.7, s=80)
-    ax.set_xlabel('Solvent Accessibility (estimated)', fontsize=11)
-    ax.set_ylabel('Entropy Change', fontsize=11)
-    ax.set_title('Entropy Change vs Solvent Accessibility', fontsize=12, fontweight='bold')
-    ax.axhline(0, color='gray', linestyle='--', alpha=0.5)
+    colors = ["#e53935" if imm else "#1e88e5" for imm in df["immunodominant"]]
+    ax.scatter(
+        df["solvent_accessibility"], df["entropy_change"], c=colors, alpha=0.7, s=80
+    )
+    ax.set_xlabel("Solvent Accessibility (estimated)", fontsize=11)
+    ax.set_ylabel("Entropy Change", fontsize=11)
+    ax.set_title(
+        "Entropy Change vs Solvent Accessibility", fontsize=12, fontweight="bold"
+    )
+    ax.axhline(0, color="gray", linestyle="--", alpha=0.5)
     ax.grid(True, alpha=0.3)
 
     # 2. Entropy vs pLDDT
     ax = axes[0, 1]
-    ax.scatter(df['plddt'], df['entropy_change'], c=colors, alpha=0.7, s=80)
-    ax.set_xlabel('AlphaFold pLDDT Score', fontsize=11)
-    ax.set_ylabel('Entropy Change', fontsize=11)
-    ax.set_title('Entropy Change vs Structure Confidence', fontsize=12, fontweight='bold')
-    ax.axhline(0, color='gray', linestyle='--', alpha=0.5)
+    ax.scatter(df["plddt"], df["entropy_change"], c=colors, alpha=0.7, s=80)
+    ax.set_xlabel("AlphaFold pLDDT Score", fontsize=11)
+    ax.set_ylabel("Entropy Change", fontsize=11)
+    ax.set_title(
+        "Entropy Change vs Structure Confidence", fontsize=12, fontweight="bold"
+    )
+    ax.axhline(0, color="gray", linestyle="--", alpha=0.5)
     ax.grid(True, alpha=0.3)
 
     # 3. Secondary structure distribution
     ax = axes[1, 0]
-    ss_counts = df.groupby(['immunodominant', 'secondary_structure']).size().unstack(fill_value=0)
-    ss_counts.plot(kind='bar', ax=ax, color=['#66b3ff', '#99ff99', '#ffcc99'])
-    ax.set_xlabel('Immunodominant', fontsize=11)
-    ax.set_ylabel('Count', fontsize=11)
-    ax.set_title('Secondary Structure Distribution', fontsize=12, fontweight='bold')
-    ax.set_xticklabels(['Silent', 'Immunodominant'], rotation=0)
-    ax.legend(title='Structure')
+    ss_counts = (
+        df.groupby(["immunodominant", "secondary_structure"])
+        .size()
+        .unstack(fill_value=0)
+    )
+    ss_counts.plot(kind="bar", ax=ax, color=["#66b3ff", "#99ff99", "#ffcc99"])
+    ax.set_xlabel("Immunodominant", fontsize=11)
+    ax.set_ylabel("Count", fontsize=11)
+    ax.set_title("Secondary Structure Distribution", fontsize=12, fontweight="bold")
+    ax.set_xticklabels(["Silent", "Immunodominant"], rotation=0)
+    ax.legend(title="Structure")
 
     # 4. Box plot of entropy by structure
     ax = axes[1, 1]
-    ss_types = df['secondary_structure'].unique()
-    data_by_ss = [df[df['secondary_structure'] == ss]['entropy_change'].values for ss in ss_types]
+    ss_types = df["secondary_structure"].unique()
+    data_by_ss = [
+        df[df["secondary_structure"] == ss]["entropy_change"].values for ss in ss_types
+    ]
     bp = ax.boxplot(data_by_ss, labels=ss_types, patch_artist=True)
-    colors_box = ['#66b3ff', '#99ff99', '#ffcc99']
-    for patch, color in zip(bp['boxes'], colors_box[:len(ss_types)]):
+    colors_box = ["#66b3ff", "#99ff99", "#ffcc99"]
+    for patch, color in zip(bp["boxes"], colors_box[: len(ss_types)]):
         patch.set_facecolor(color)
         patch.set_alpha(0.7)
-    ax.set_xlabel('Secondary Structure', fontsize=11)
-    ax.set_ylabel('Entropy Change', fontsize=11)
-    ax.set_title('Entropy Change by Secondary Structure', fontsize=12, fontweight='bold')
-    ax.axhline(0, color='gray', linestyle='--', alpha=0.5)
-    ax.grid(True, alpha=0.3, axis='y')
+    ax.set_xlabel("Secondary Structure", fontsize=11)
+    ax.set_ylabel("Entropy Change", fontsize=11)
+    ax.set_title(
+        "Entropy Change by Secondary Structure", fontsize=12, fontweight="bold"
+    )
+    ax.axhline(0, color="gray", linestyle="--", alpha=0.5)
+    ax.grid(True, alpha=0.3, axis="y")
 
     plt.tight_layout()
-    plt.savefig(output_dir / 'structural_correlations.png', dpi=300, bbox_inches='tight')
+    plt.savefig(
+        output_dir / "structural_correlations.png", dpi=300, bbox_inches="tight"
+    )
     plt.close()
 
     # Save site data
-    df.to_csv(output_dir / 'site_structural_analysis.csv', index=False)
+    df.to_csv(output_dir / "site_structural_analysis.csv", index=False)
 
     return correlations
 
@@ -647,6 +697,7 @@ def analyze_structural_correlations(all_analyses: List[Dict], output_dir: Path) 
 # ============================================================================
 # MAIN
 # ============================================================================
+
 
 def main():
     print("=" * 80)
@@ -675,11 +726,13 @@ def main():
 
         if analysis:
             all_analyses.append(analysis)
-            print(f"    Structure: {analysis['total_residues']} residues, {analysis['total_arginines']} arginines")
+            print(
+                f"    Structure: {analysis['total_residues']} residues, {analysis['total_arginines']} arginines"
+            )
             print(f"    Mapped sites: {len(analysis['analyzed_sites'])}")
 
             # Generate visualization scripts
-            if analysis['analyzed_sites']:
+            if analysis["analyzed_sites"]:
                 pymol_script = generate_pymol_script(analysis, output_dir)
                 print(f"    PyMOL script: {pymol_script.name}")
 
@@ -694,32 +747,35 @@ def main():
 
     if correlations:
         print("\n  Correlation Results:")
-        if 'entropy_vs_accessibility' in correlations:
-            c = correlations['entropy_vs_accessibility']
+        if "entropy_vs_accessibility" in correlations:
+            c = correlations["entropy_vs_accessibility"]
             print(f"    Entropy vs Accessibility: r={c['r']:.3f}, p={c['p']:.4f}")
-        if 'entropy_vs_plddt' in correlations:
-            c = correlations['entropy_vs_plddt']
+        if "entropy_vs_plddt" in correlations:
+            c = correlations["entropy_vs_plddt"]
             print(f"    Entropy vs pLDDT: r={c['r']:.3f}, p={c['p']:.4f}")
-        if 'mean_accessibility' in correlations:
-            c = correlations['mean_accessibility']
-            print(f"    Mean Accessibility - Immunodominant: {c['immunodominant']:.3f}, Silent: {c['silent']:.3f}")
+        if "mean_accessibility" in correlations:
+            c = correlations["mean_accessibility"]
+            print(
+                f"    Mean Accessibility - Immunodominant: {c['immunodominant']:.3f}, Silent: {c['silent']:.3f}"
+            )
 
     # Save summary
     print("\n[4] Saving summary...")
     summary = {
-        'proteins_analyzed': len(all_analyses),
-        'total_sites_mapped': sum(len(a['analyzed_sites']) for a in all_analyses if a),
-        'correlations': correlations,
-        'proteins': [
+        "proteins_analyzed": len(all_analyses),
+        "total_sites_mapped": sum(len(a["analyzed_sites"]) for a in all_analyses if a),
+        "correlations": correlations,
+        "proteins": [
             {
-                'gene': a['gene_name'],
-                'uniprot': a['uniprot_id'],
-                'residues': a['total_residues'],
-                'arginines': a['total_arginines'],
-                'sites_mapped': len(a['analyzed_sites'])
+                "gene": a["gene_name"],
+                "uniprot": a["uniprot_id"],
+                "residues": a["total_residues"],
+                "arginines": a["total_arginines"],
+                "sites_mapped": len(a["analyzed_sites"]),
             }
-            for a in all_analyses if a
-        ]
+            for a in all_analyses
+            if a
+        ],
     }
 
     # Convert numpy types for JSON serialization
@@ -734,8 +790,8 @@ def main():
             return obj.tolist()
         return obj
 
-    summary_path = output_dir / 'structure_mapping_summary.json'
-    with open(summary_path, 'w') as f:
+    summary_path = output_dir / "structure_mapping_summary.json"
+    with open(summary_path, "w") as f:
         json.dump(convert_types(summary), f, indent=2)
     print(f"  Saved: {summary_path}")
 
@@ -759,5 +815,5 @@ def main():
     return all_analyses
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
