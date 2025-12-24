@@ -13,22 +13,15 @@ import sys
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
 from src.models.ternary_vae_v5_6 import DualNeuralVAEV5
-from src.data import generate_all_ternary_operations
 from src.artifacts import CheckpointManager
-from src.benchmark import convert_to_python_types
+from src.benchmark import convert_to_python_types, BenchmarkBase
 
 
-class CoupledSystemBenchmark:
+class CoupledSystemBenchmark(BenchmarkBase):
     """Measures resolution of the coupled dual-VAE system"""
 
     def __init__(self, model: DualNeuralVAEV5, device: str = 'cuda'):
-        self.model = model.to(device)
-        self.model.eval()
-        self.device = device
-
-        # Generate all operations
-        self.all_ops = torch.FloatTensor(generate_all_ternary_operations()).to(device)
-        self.n_ops = len(self.all_ops)
+        super().__init__(model, device)
 
     @torch.no_grad()
     def measure_ensemble_reconstruction(self, batch_size=256) -> Dict:
