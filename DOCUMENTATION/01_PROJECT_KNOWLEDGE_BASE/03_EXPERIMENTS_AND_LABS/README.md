@@ -1,15 +1,15 @@
 # Experiments & Labs (Analysis Log)
 
-> **⚠️ Moved**: Active research notebooks have been moved to the root `research/` directory to separate code from documentation.
+**Status**: Active Research Directory.
 
 ## Active Research Locations
 
-- **[Bioinformatics Notebooks](../../../research/bioinformatics/)**:
+- **[Bioinformatics Notebooks](bioinformatics/)**:
   - Rheumatoid Arthritis Analysis
   - HIV/Viral Escape
-- **[Codon Optimization Logs](../../../research/codon_encoder_research/)**:
+- **[Codon Optimization Logs](codon_encoder_research/)**:
   - Genetic Code optimization runs
 
 ## Completed Analysis Summaries
 
-_Place final summaries of experiments here, linking to the raw notebooks._
+_Place final summaries of experiments here, usually linking to specific notebooks in the subfolders._

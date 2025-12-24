@@ -11,7 +11,7 @@ _The "Static" Truth._
 - **00 Strategy & Vision**: Pitch decks, long-term goals.
 - **01 Presentation Suite**: Public-facing assets (Grants, Posters).
 - **02 Theory**: Mathematical and Biological foundations.
-- **03 Experiments**: Summaries of completed analysis (Active notebooks moved to `/research`).
+- **03 Experiments**: Juypter notebooks and research logs.
 - **04 Scientific History**: Archive of past discoveries.
 - **05 Legal**: IP and Licensing.
 

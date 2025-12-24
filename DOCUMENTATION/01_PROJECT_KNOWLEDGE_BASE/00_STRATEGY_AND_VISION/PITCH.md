@@ -79,4 +79,4 @@ We are moving from **Research** to **Clinical Validation**.
 
 - **[Biologists Solution Brief](../01_PRESENTATION_SUITE/02_SCIENTIFIC_COMMUNICATION/DOMAIN_Virology_Viral_Escape.md)**: Deep dive into the HIV/RA results.
 - **[Technical Architecture](../01_PRESENTATION_SUITE/02_SCIENTIFIC_COMMUNICATION/THEORY_Code_Architecture.md)**: How the Frozen Encoder works.
-- **[Interactive Demo](../../../research/demo/interactive_manifold.ipynb)**: See the geometry yourself.
+- **[Interactive Demo](../03_EXPERIMENTS_AND_LABS/demo/interactive_manifold.ipynb)**: See the geometry yourself.
