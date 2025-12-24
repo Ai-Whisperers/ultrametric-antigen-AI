@@ -462,7 +462,28 @@ def train_epoch(model, optimizer, x, indices, geodesic_loss_fn, radial_loss_fn,
             # Controller outputs are [batch, 1] tensors, take mean for scalar weight
             learned_tau = ctrl['tau'].mean()
             learned_radial = ctrl['weight_radial'].mean()
-            total_batch_loss = learned_tau * geo_loss + learned_radial * rad_loss + rank_loss_weight * rank_loss
+            learned_geo = ctrl['weight_geodesic'].mean()
+
+            # Core loss with learned weights
+            core_loss = learned_tau * geo_loss + learned_radial * rad_loss + rank_loss_weight * rank_loss
+
+            # V5.11.5: Q-preservation regularization
+            # Prevent controller from collapsing to "easy path" (radial-only)
+            # Constraint 1: tau must stay above minimum (ensure geodesic learning)
+            tau_min = 0.3
+            tau_penalty = torch.relu(tau_min - learned_tau) ** 2
+
+            # Constraint 2: radial/geodesic ratio must stay bounded
+            # This prevents radial from dominating even when tau is reasonable
+            max_ratio = 3.0
+            ratio = learned_radial / (learned_geo + 1e-6)
+            ratio_penalty = torch.relu(ratio - max_ratio) ** 2
+
+            # Regularization weight (tunable)
+            q_reg_weight = 1.0
+            q_regularization = q_reg_weight * (tau_penalty + ratio_penalty)
+
+            total_batch_loss = core_loss + q_regularization
         else:
             total_batch_loss = tau * geo_loss + radial_weight * rad_loss + rank_loss_weight * rank_loss
 
