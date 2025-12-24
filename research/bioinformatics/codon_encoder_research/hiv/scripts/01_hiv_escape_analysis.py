@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+# Copyright 2024-2025 AI Whisperers (https://github.com/Ai-Whisperers)
+#
+# Licensed under the PolyForm Noncommercial License 1.0.0
+# See LICENSE file in the repository root for full license text.
+#
+# For commercial licensing inquiries: support@aiwhisperers.com
+
 """
 HIV-1 CTL Escape Mutation Analysis using Hyperbolic Geometry
 Uses shared hyperbolic_utils from RA pipeline (codon_encoder_3adic.pt)

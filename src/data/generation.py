@@ -1,3 +1,10 @@
+# Copyright 2024-2025 AI Whisperers (https://github.com/Ai-Whisperers)
+#
+# Licensed under the PolyForm Noncommercial License 1.0.0
+# See LICENSE file in the repository root for full license text.
+#
+# For commercial licensing inquiries: support@aiwhisperers.com
+
 """Ternary operation data generation.
 
 This module generates all possible ternary operations for the 3^9 space.

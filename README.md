@@ -596,13 +596,25 @@ If you use this model in your research, please cite:
 
 ## License
 
-MIT License - See LICENSE file for details
+**PolyForm Noncommercial License 1.0.0**
+
+This software is free for:
+- Academic research and education
+- Student projects and coursework
+- Non-profit research organizations
+- Personal learning and experimentation
+
+**Commercial use requires a separate license.** Contact support@aiwhisperers.com for commercial licensing.
+
+See [LICENSE](LICENSE) file for full terms.
 
 ---
 
 ## Contributing
 
-Contributions are welcome! The modular architecture makes it easy to:
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+The modular architecture makes it easy to:
 
 - Add new loss components
 - Create custom schedulers
@@ -610,6 +622,55 @@ Contributions are welcome! The modular architecture makes it easy to:
 - Add new metrics and monitoring
 
 See `guides/developers/ARCHITECTURE.md` for architecture details.
+
+---
+
+## Third-Party Code and Data
+
+This project includes code and data from third-party sources. See [NOTICE](NOTICE) for complete attribution.
+
+### AlphaFold3 Utilities
+
+Files in `research/alphafold3/utils/` are derived from DeepMind's AlphaFold3 project.
+
+- **License**: CC BY-NC-SA 4.0
+- **Copyright**: 2024 DeepMind Technologies Limited
+- **Source**: https://github.com/google-deepmind/alphafold3
+
+### AlphaFold3 Predictions
+
+Structural predictions in `research/bioinformatics/*/alphafold3_predictions/` were generated using the AlphaFold Server and are subject to their Terms of Service.
+
+### Dependencies
+
+All Python dependencies use permissive licenses (MIT, BSD, Apache 2.0). See `requirements.txt` for the full list.
+
+---
+
+## Export Control Notice
+
+This software and associated research data may be subject to export control regulations.
+
+### Compliance Requirements
+
+- **EAR (Export Administration Regulations)**: This software contains encryption and bioinformatics research that may require export licenses for certain countries
+- **Dual-Use Research**: HIV/viral research components may be subject to dual-use research oversight
+
+### User Responsibilities
+
+Before using or distributing this software:
+
+1. Verify compliance with your institution's export control policies
+2. Obtain necessary approvals for international collaborations
+3. Do not share with embargoed countries or sanctioned entities
+
+### Permitted Use
+
+- Academic research at accredited institutions
+- Non-commercial scientific collaboration
+- Educational purposes
+
+For export control questions, contact your institution's export control office.
 
 ---
 

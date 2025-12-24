@@ -1,3 +1,10 @@
+# Copyright 2024-2025 AI Whisperers (https://github.com/Ai-Whisperers)
+#
+# Licensed under the PolyForm Noncommercial License 1.0.0
+# See LICENSE file in the repository root for full license text.
+#
+# For commercial licensing inquiries: support@aiwhisperers.com
+
 """p-Adic loss functions for 3-adic manifold coherence.
 
 This module implements losses from implement.md Phase 1A/1B:

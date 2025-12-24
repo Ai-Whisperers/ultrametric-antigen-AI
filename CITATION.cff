@@ -1,0 +1,54 @@
+cff-version: 1.2.0
+message: "If you use this software in your research, please cite it as below."
+title: "Ternary VAEs Bioinformatics: Hyperbolic Geometry for Discrete Algebraic Structures"
+abstract: >-
+  A variational autoencoder framework for learning 3-adic algebraic structures
+  in ternary operation space using hyperbolic (Poincare ball) geometry.
+  Achieves 100% coverage of all 19,683 ternary operations while preserving
+  ultrametric hierarchical structure. Includes applications to HIV codon
+  analysis and viral protein structure prediction.
+type: software
+authors:
+  - name: "AI Whisperers"
+    email: support@aiwhisperers.com
+repository-code: "https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics"
+url: "https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics"
+license: "PolyForm-Noncommercial-1.0.0"
+version: "5.11.0"
+date-released: "2025-01-01"
+keywords:
+  - variational-autoencoder
+  - hyperbolic-geometry
+  - poincare-ball
+  - ternary-operations
+  - p-adic-numbers
+  - ultrametric
+  - bioinformatics
+  - HIV-research
+  - codon-analysis
+  - deep-learning
+  - pytorch
+
+references:
+  - type: software
+    title: "PyTorch"
+    authors:
+      - family-names: Paszke
+        given-names: Adam
+    url: "https://pytorch.org"
+
+  - type: software
+    title: "Geoopt"
+    authors:
+      - family-names: Kochurov
+        given-names: Max
+    url: "https://github.com/geoopt/geoopt"
+
+preferred-citation:
+  type: software
+  title: "Ternary VAEs Bioinformatics: Hyperbolic Geometry for Discrete Algebraic Structures"
+  authors:
+    - name: "AI Whisperers"
+  year: 2025
+  url: "https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics"
+  license: "PolyForm-Noncommercial-1.0.0"

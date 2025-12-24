@@ -1,3 +1,10 @@
+# Copyright 2024-2025 AI Whisperers (https://github.com/Ai-Whisperers)
+#
+# Licensed under the PolyForm Noncommercial License 1.0.0
+# See LICENSE file in the repository root for full license text.
+#
+# For commercial licensing inquiries: support@aiwhisperers.com
+
 """Zero-Structure Loss for exploiting ternary zero semantics.
 
 This module implements losses that exploit the semantic meaning of zeros

@@ -1,12 +1,13 @@
 TERNARY VAE INTELLECTUAL PROPERTY TIMESTAMP MANIFEST
 =====================================================
 
-Repository: ternary-vaes
-Version: V5.12.0 (Restructured)
-Tag: v1.2.0
+Repository: ternary-vaes-bioinformatics
+Version: V5.12.1 (IP Protection Update)
+License: PolyForm Noncommercial 1.0.0
 
-Git Commit: 1b8bfbd03ee6939b533a2970a24eac2b6c2d50ad
-Timestamp Date: 2025-12-23
+Git Commit: f8be1eee2f09d369557d430ad67bdd9565a4368c
+Timestamp Date: 2025-12-24
+Previous Timestamp: 1b8bfbd03ee6939b533a2970a24eac2b6c2d50ad (2025-12-23)
 
 COVERED INTELLECTUAL PROPERTY:
 ------------------------------
@@ -16,17 +17,20 @@ COVERED INTELLECTUAL PROPERTY:
    - Hyperbolic projection layer with separate direction/radius networks
    - DualHyperbolicProjection for independent VAE-A/VAE-B projections
    - Adaptive curriculum with tau freezing at hierarchy threshold
+   - Frozen encoder architecture guaranteeing 100% coverage
 
 2. LOSS FUNCTIONS
    - GlobalRankLoss: Differentiable rank ordering for monotonic radius
    - PAdicGeodesicLoss: Unified hierarchy + correlation via geodesics
    - RadialHierarchyLoss: Direct radius enforcement with margin loss
    - Stratified sampling for rare high-valuation points
+   - HomeostaticHyperbolicPrior: Self-regulating prior distribution
 
 3. TRAINED MODEL WEIGHTS
    - Projection layer: 53,154 parameters achieving -0.730 hierarchy
    - Encoder B fine-tuned weights
    - Checkpoint: sandbox-training/checkpoints/v5_11_structural/best.pt
+   - All .pt/.pth checkpoint files in results/checkpoints/
 
 4. VALIDATION METHODOLOGY
    - Downstream validation suite (nearest-neighbor, hierarchy, arithmetic)
@@ -40,11 +44,31 @@ COVERED INTELLECTUAL PROPERTY:
    - scripts/train/train.py
    - scripts/eval/downstream_validation.py
 
-6. BIOINFORMATICS RESEARCH
-   - research/bioinformatics/codon_encoder_research/hiv/ (glycan shield analysis)
-   - research/bioinformatics/p-adic-genomics/ (p-adic sequence analysis)
-   - research/bioinformatics/genetic_code/ (codon encoding research)
-   - AlphaFold3 predictions and validation data
+6. BIOINFORMATICS RESEARCH (UPDATED 2025-12-24)
+   - HIV Glycan Shield Sentinel Analysis
+     * research/bioinformatics/codon_encoder_research/hiv/glycan_shield/
+     * Sentinel residue identification for CD4/gp120 binding
+     * Glycan perturbation vulnerability mapping
+
+   - HIV Complete Hiding Landscape
+     * 7 validated disruptive conjectures for HIV immune evasion
+     * Integrase vulnerability analysis
+     * P-adic geometric analysis of HIV-1
+
+   - AlphaFold3 Hybrid Approach
+     * 6300x storage reduction methodology
+     * Batch job manifest generation
+     * Integrase structural validation pipeline
+
+7. TIERED DISCLOSURE STRATEGY
+   - research/bioinformatics/codon_encoder_research/hiv/pitch/
+   - Structured commercial partnership approach
+   - Academic vs. commercial disclosure tiers
+
+8. RESEARCH INSIGHTS
+   - research_insights/01_video_analysis/ (Anton Petrov analysis)
+   - Connection ideas and implementation strategies
+   - Dataset and resource compilation
 
 CLAIMS:
 -------
@@ -57,9 +81,20 @@ repository, providing tamper-evident proof of existence.
 HASH VERIFICATION:
 ------------------
 To verify this timestamp covers the repository state:
-1. Clone repository at commit 1b8bfbd03ee6939b533a2970a24eac2b6c2d50ad
+1. Clone repository at commit f8be1eee2f09d369557d430ad67bdd9565a4368c
 2. Verify SHA-256 of this manifest matches the timestamped hash
 3. Use `ots verify` on the .ots proof file
+
+NEW COMMITS SINCE LAST TIMESTAMP:
+---------------------------------
+f8be1ee feat: Add tiered pitch folders for HIV research disclosure
+8184ebd feat: Add HIV codon encoder research data, documentation
+55cb8ba feat: Implement hybrid AF3 approach with 6300x storage reduction
+a78be53 docs: Add hybrid approach for AF3 integration
+1e7efb6 feat: Add AlphaFold3 setup for integrase structural validation
+8bf216b feat: add research_insights from YouTube analysis
+04a72be feat: Validate all 7 disruptive conjectures for HIV hiding
+3e74d0f feat: Add HIV complete hiding landscape analysis
 
 =====================================================
 SHA-256 of git commit tree will be timestamped via OpenTimestamps

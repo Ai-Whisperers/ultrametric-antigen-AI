@@ -1,0 +1,63 @@
+NOTICE
+
+Ternary VAEs Bioinformatics
+Copyright 2024-2025 AI Whisperers (https://github.com/Ai-Whisperers)
+
+This repository contains code and data from third-party sources:
+
+================================================================================
+
+1. AlphaFold3 Utilities
+
+   Copyright 2024 DeepMind Technologies Limited
+   Licensed under CC BY-NC-SA 4.0
+
+   Source: https://github.com/google-deepmind/alphafold3
+   License: https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+   Files:
+   - research/alphafold3/utils/atom_types.py
+   - research/alphafold3/utils/residue_names.py
+
+   Modifications:
+   - Import paths modified for standalone use
+   - Original: from alphafold3.constants import residue_names
+   - Modified: from . import residue_names
+
+   AlphaFold 3 source code is licensed under CC BY-NC-SA 4.0. To view a copy
+   of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+   To request access to the AlphaFold 3 model parameters, follow the process
+   set out at https://github.com/google-deepmind/alphafold3. You may only use
+   these if received directly from Google. Use is subject to terms of use
+   available at https://github.com/google-deepmind/alphafold3/blob/main/WEIGHTS_TERMS_OF_USE.md
+
+================================================================================
+
+2. AlphaFold3 Server Predictions
+
+   Data in research/bioinformatics/codon_encoder_research/*/alphafold3_predictions/
+   was generated using the AlphaFold Server (https://alphafoldserver.com).
+
+   Subject to AlphaFold Server Terms of Service.
+
+   Use of predictions is permitted for academic and non-commercial research only.
+
+================================================================================
+
+3. Dependencies
+
+   This project uses the following open-source libraries (see requirements.txt):
+   - PyTorch (BSD-3-Clause)
+   - NumPy (BSD-3-Clause)
+   - SciPy (BSD-3-Clause)
+   - geoopt (Apache-2.0)
+   - matplotlib (PSF License)
+   - scikit-learn (BSD-3-Clause)
+
+   Full dependency licenses available in their respective packages.
+
+================================================================================
+
+For questions about attribution or licensing:
+support@aiwhisperers.com

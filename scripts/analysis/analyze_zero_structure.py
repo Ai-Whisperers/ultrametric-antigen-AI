@@ -1,3 +1,10 @@
+# Copyright 2024-2025 AI Whisperers (https://github.com/Ai-Whisperers)
+#
+# Licensed under the PolyForm Noncommercial License 1.0.0
+# See LICENSE file in the repository root for full license text.
+#
+# For commercial licensing inquiries: support@aiwhisperers.com
+
 """Zero-trit structure analysis for Ternary VAE.
 
 Analyzes whether the model exploits zeros structurally or treats them as random categorical values.

@@ -1,3 +1,10 @@
+# Copyright 2024-2025 AI Whisperers (https://github.com/Ai-Whisperers)
+#
+# Licensed under the PolyForm Noncommercial License 1.0.0
+# See LICENSE file in the repository root for full license text.
+#
+# For commercial licensing inquiries: support@aiwhisperers.com
+
 """Model definitions for Ternary VAE (canonical V5.11 architecture)."""
 
 from .ternary_vae import TernaryVAEV5_11, TernaryVAEV5_11_OptionC, FrozenEncoder, FrozenDecoder
