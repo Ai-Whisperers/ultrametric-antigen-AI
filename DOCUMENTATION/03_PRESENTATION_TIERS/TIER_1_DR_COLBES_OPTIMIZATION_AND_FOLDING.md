@@ -13,13 +13,13 @@ We propose a way to break this ceiling: **The 3-adic Geometric Term.**
 
 Dr. Colbes, your work on **Scoring Functions (JCIM 2018)** analyzed the weights of physical terms ($E_{vdw}$, $E_{elec}$). We propose adding a new, orthogonal term derived from Number Theory:
 
-$$ E*{total} = w*{phys} E*{physical} + w*{geom} E\_{3-adic} $$
+$$ E_{total} = w_{phys} \cdot E_{physical} + w_{geom} \cdot E_{3\text{-}adic} $$
 
 ## 2. Theoretical Foundation: The "Metric" of Biology
 
 Standard bioinformatics treats sequences as strings. We treat them as **Vectors in Hyperbolic Space**.
 
-### [P-adic Genomics](../01_PROJECT_KNOWLEDGE_BASE/03_EXPERIMENTS_AND_LABS/BIOINFORMATICS/P_ADIC_GENOMICS/README.md)
+### [P-adic Genomics](../01_PROJECT_KNOWLEDGE_BASE/03_EXPERIMENTS_AND_LABS/bioinformatics/P_ADIC_GENOMICS/README.md)
 
 We have proven that viral genomes are not 1D linear strings, but **~1.58D Fractals**.
 
@@ -32,7 +32,7 @@ We have proven that viral genomes are not 1D linear strings, but **~1.58D Fracta
 
 ### A. Rheumatoid Arthritis (The Fail Case)
 
-**See:** [RA Detailed Report](../01_PROJECT_KNOWLEDGE_BASE/03_EXPERIMENTS_AND_LABS/BIOINFORMATICS/GENETIC_CODE/02_PHASE_1_RHEUMATOID_ARTHRITIS.md)
+**See:** [RA Detailed Report](../01_PROJECT_KNOWLEDGE_BASE/03_EXPERIMENTS_AND_LABS/bioinformatics/genetic_code/02_PHASE_1_RHEUMATOID_ARTHRITIS.md)
 
 - **Problem:** Citrullination (R->Q).
 - **Your Domain:** Side-Chain Packing modification.
@@ -40,7 +40,7 @@ We have proven that viral genomes are not 1D linear strings, but **~1.58D Fracta
 
 ### B. HIV Glycan Shield (The Optimization Masterclass)
 
-**See:** [HIV Detailed Report](../01_PROJECT_KNOWLEDGE_BASE/03_EXPERIMENTS_AND_LABS/BIOINFORMATICS/CODON_ENCODER_RESEARCH/HIV/DETAILED_REPORT.md)
+**See:** [HIV Detailed Report](../01_PROJECT_KNOWLEDGE_BASE/03_EXPERIMENTS_AND_LABS/bioinformatics/codon_encoder_research/hiv/DETAILED_REPORT.md)
 
 - **Problem:** HIV needs to hide self-antigens.
 - **Optimization:** It uses a **Natural Genetic Algorithm** to place glycans that minimize the 3-adic shift to <15%.
@@ -62,7 +62,7 @@ We view viral evolution as a **Tabu Search** or **Genetic Algorithm** (your expe
 If you are interested in the implementation details:
 
 - **The Algorithm**: [Genetic Code & PTMs](../01_PROJECT_KNOWLEDGE_BASE/03_EXPERIMENTS_AND_LABS/bioinformatics/genetic_code/README.md)
-- **The Neural Network**: [Spectral Analysis](../01_PROJECT_KNOWLEDGE_BASE/03_EXPERIMENTS_AND_LABS/bioinformatics/spectral_analysis_over_models/README.md) - We showed the VAE learns a perfect ultrametric tree ($\rho = 0.590$).
+- **The Neural Network**: [Spectral Analysis](../01_PROJECT_KNOWLEDGE_BASE/03_EXPERIMENTS_AND_LABS/bioinformatics/spectral_analysis_over_models/README.md) - We showed the VAE learns a near-perfect ultrametric tree ($\rho = 0.582$, radial hierarchy $r = -0.719$).
 
 ---
 
