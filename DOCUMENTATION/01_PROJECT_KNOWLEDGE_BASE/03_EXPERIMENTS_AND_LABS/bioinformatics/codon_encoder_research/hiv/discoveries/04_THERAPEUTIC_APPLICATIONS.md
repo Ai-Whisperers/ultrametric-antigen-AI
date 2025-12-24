@@ -1,6 +1,6 @@
 # Therapeutic Applications
 
-**Doc-Type:** Discovery Module | Version 1.0 | Updated 2025-12-24
+**Doc-Type:** Discovery Module | Version 2.0 | Updated 2025-12-24
 
 ---
 
@@ -31,32 +31,62 @@ timeline
 
 ---
 
+## Application Overview
+
+```mermaid
+flowchart TB
+    subgraph APPLICATIONS["<b>7 Therapeutic Applications</b>"]
+        A1["<b>1. Vaccine Design</b><br/>Sentinel glycan removal"]
+        A2["<b>2. Resistance Prediction</b><br/>Clinical decision support"]
+        A3["<b>3. Combo Optimization</b><br/>Maximize escape barrier"]
+        A4["<b>4. Elite Controller Research</b><br/>Geometric trap identification"]
+        A5["<b>5. Glycan Editing</b><br/>Novel therapeutic"]
+        A6["<b>6. Universal Targets</b><br/>Cross-clade analysis"]
+        A7["<b>7. Computational Platform</b><br/>API for researchers"]
+    end
+
+    PADIC["<b>P-Adic Framework</b><br/>3-Adic Codon Encoder"] --> APPLICATIONS
+
+    style PADIC fill:#3b82f6,stroke:#1e40af,color:#ffffff,stroke-width:2px
+    style A1 fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:2px
+    style A2 fill:#10b981,stroke:#059669,color:#ffffff,stroke-width:2px
+    style A3 fill:#14b8a6,stroke:#0d9488,color:#ffffff,stroke-width:2px
+    style A4 fill:#06b6d4,stroke:#0891b2,color:#ffffff,stroke-width:2px
+    style A5 fill:#8b5cf6,stroke:#7c3aed,color:#ffffff,stroke-width:2px
+    style A6 fill:#ec4899,stroke:#db2777,color:#ffffff,stroke-width:2px
+    style A7 fill:#f97316,stroke:#ea580c,color:#ffffff,stroke-width:2px
+```
+
+---
+
 ## Application 1: Vaccine Immunogen Design
 
 ### Concept
 
 ```mermaid
 flowchart LR
-    subgraph DESIGN["Immunogen Design Pipeline"]
-        BG505["BG505 SOSIP.664"]
-        MUT["Introduce N→Q<br/>at sentinel sites"]
-        EXPRESS["Express & Purify"]
-        TEST["Test bnAb Binding"]
-        IMMUNIZE["Animal Immunization"]
+    subgraph DESIGN["<b>Immunogen Design Pipeline</b>"]
+        BG505["<b>BG505 SOSIP.664</b>"]
+        MUT["<b>Introduce N→Q</b><br/>at sentinel sites"]
+        EXPRESS["<b>Express & Purify</b>"]
+        TEST["<b>Test bnAb Binding</b>"]
+        IMMUNIZE["<b>Animal Immunization</b>"]
     end
 
     BG505 --> MUT --> EXPRESS --> TEST --> IMMUNIZE
 
-    PADIC["P-Adic Analysis"] -->|"Identifies<br/>sentinel sites"| MUT
+    PADIC["<b>P-Adic Analysis</b>"] -->|"Identifies<br/>sentinel sites"| MUT
 
-    style PADIC fill:#74c0fc,stroke:#1864ab,stroke-width:2px
+    style PADIC fill:#3b82f6,stroke:#1e40af,color:#ffffff,stroke-width:2px
+    style BG505 fill:#8b5cf6,stroke:#7c3aed,color:#ffffff,stroke-width:2px
+    style IMMUNIZE fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:2px
 ```
 
 ### Recommended Constructs
 
 ```mermaid
 flowchart TB
-    subgraph CONSTRUCTS["Vaccine Immunogen Designs"]
+    subgraph CONSTRUCTS["<b>Vaccine Immunogen Designs</b>"]
         C1["<b>DESIGN 1: Triple Sentinel</b><br/>N58Q + N103Q + N204Q<br/><br/>Targets: V1/V2 apex + V3 supersite<br/>bnAbs: PG9, PG16, PGT121, PGT128"]
 
         C2["<b>DESIGN 2: V1/V2 Focused</b><br/>N103Q + N107Q<br/><br/>Targets: V1/V2 apex only<br/>bnAbs: PG9, PG16, PGT145"]
@@ -64,9 +94,9 @@ flowchart TB
         C3["<b>DESIGN 3: Sequential</b><br/>Prime: Deglycosylated (3-site)<br/>Boost: Native Env<br/><br/>Strategy: Broad prime + affinity maturation"]
     end
 
-    style C1 fill:#69db7c,stroke:#2f9e44,stroke-width:2px
-    style C2 fill:#b2f2bb,stroke:#2f9e44
-    style C3 fill:#d3f9d8,stroke:#2f9e44
+    style C1 fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:3px
+    style C2 fill:#10b981,stroke:#059669,color:#ffffff,stroke-width:2px
+    style C3 fill:#14b8a6,stroke:#0d9488,color:#ffffff,stroke-width:2px
 ```
 
 ---
@@ -77,26 +107,28 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-    subgraph PREDICT["Resistance Prediction Pipeline"]
-        SEQ["Patient<br/>Sequence"] --> ENCODE["3-Adic<br/>Encoding"]
-        ENCODE --> CALC["Calculate<br/>Escape d"]
-        CALC --> RANK["Rank<br/>Mutations"]
-        RANK --> GUIDE["Treatment<br/>Guidance"]
+    subgraph PREDICT["<b>Resistance Prediction Pipeline</b>"]
+        SEQ["<b>Patient<br/>Sequence</b>"] --> ENCODE["<b>3-Adic<br/>Encoding</b>"]
+        ENCODE --> CALC["<b>Calculate<br/>Escape d</b>"]
+        CALC --> RANK["<b>Rank<br/>Mutations</b>"]
+        RANK --> GUIDE["<b>Treatment<br/>Guidance</b>"]
     end
 
-    DB["Stanford HIVDB"] --> |"Known mutations"| ENCODE
+    DB["<b>Stanford HIVDB</b>"] --> |"Known mutations"| ENCODE
 
-    style GUIDE fill:#69db7c,stroke:#2f9e44,stroke-width:2px
+    style GUIDE fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:2px
+    style SEQ fill:#3b82f6,stroke:#1e40af,color:#ffffff,stroke-width:2px
+    style DB fill:#8b5cf6,stroke:#7c3aed,color:#ffffff,stroke-width:2px
 ```
 
 ### Clinical Decision Support
 
 ```mermaid
 flowchart TB
-    subgraph DECISION["Treatment Selection"]
-        Q1{"Patient<br/>HLA Type?"}
-        Q2{"Current<br/>Regimen?"}
-        Q3{"Resistance<br/>History?"}
+    subgraph DECISION["<b>Treatment Selection</b>"]
+        Q1{"<b>Patient<br/>HLA Type?</b>"}
+        Q2{"<b>Current<br/>Regimen?</b>"}
+        Q3{"<b>Resistance<br/>History?</b>"}
 
         REC1["<b>HIGH BARRIER</b><br/>INSTI + NRTI<br/>d ≈ 11.2"]
         REC2["<b>MODERATE</b><br/>INSTI + NNRTI<br/>d ≈ 10.5"]
@@ -108,8 +140,12 @@ flowchart TB
     Q3 -->|"Some history"| REC2
     Q3 -->|"Complex"| REC3
 
-    style REC1 fill:#69db7c,stroke:#2f9e44,stroke-width:2px
-    style REC3 fill:#ff6b6b,stroke:#c92a2a,color:#fff
+    style REC1 fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:3px
+    style REC2 fill:#eab308,stroke:#ca8a04,color:#ffffff,stroke-width:2px
+    style REC3 fill:#ef4444,stroke:#dc2626,color:#ffffff,stroke-width:2px
+    style Q1 fill:#3b82f6,stroke:#1e40af,color:#ffffff
+    style Q2 fill:#3b82f6,stroke:#1e40af,color:#ffffff
+    style Q3 fill:#3b82f6,stroke:#1e40af,color:#ffffff
 ```
 
 ---
@@ -120,17 +156,18 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    subgraph BARRIER["Total Escape Barrier"]
-        D1["Drug 1 Escape d"] --> TOTAL["TOTAL BARRIER<br/>= d₁ + d₂ + d₃"]
-        D2["Drug 2 Escape d"] --> TOTAL
-        D3["Drug 3 Escape d"] --> TOTAL
+    subgraph BARRIER["<b>Total Escape Barrier</b>"]
+        D1["<b>Drug 1 Escape d</b>"] --> TOTAL["<b>TOTAL BARRIER</b><br/>= d₁ + d₂ + d₃"]
+        D2["<b>Drug 2 Escape d</b>"] --> TOTAL
+        D3["<b>Drug 3 Escape d</b>"] --> TOTAL
 
-        TOTAL --> HIGH["HIGH = Durable<br/>d > 10"]
-        TOTAL --> LOW["LOW = Risky<br/>d < 9"]
+        TOTAL --> HIGH["<b>HIGH = Durable</b><br/>d > 10"]
+        TOTAL --> LOW["<b>LOW = Risky</b><br/>d < 9"]
     end
 
-    style HIGH fill:#69db7c,stroke:#2f9e44
-    style LOW fill:#ff6b6b,stroke:#c92a2a,color:#fff
+    style HIGH fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:2px
+    style LOW fill:#ef4444,stroke:#dc2626,color:#ffffff,stroke-width:2px
+    style TOTAL fill:#3b82f6,stroke:#1e40af,color:#ffffff,stroke-width:2px
 ```
 
 ### Combination Rankings
@@ -151,34 +188,37 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    subgraph TRAP["Identifying Geometric Traps"]
-        SCREEN["Screen all<br/>HLA-epitope pairs"]
-        ENCODE["Encode epitopes<br/>+ escape variants"]
-        CALC["Calculate<br/>escape distances"]
-        FILTER["Filter d > 6.0"]
-        TARGET["Elite Controller<br/>Targets"]
+    subgraph TRAP["<b>Identifying Geometric Traps</b>"]
+        SCREEN["<b>Screen all<br/>HLA-epitope pairs</b>"]
+        ENCODE["<b>Encode epitopes<br/>+ escape variants</b>"]
+        CALC["<b>Calculate<br/>escape distances</b>"]
+        FILTER["<b>Filter d > 6.0</b>"]
+        TARGET["<b>Elite Controller<br/>Targets</b>"]
     end
 
     SCREEN --> ENCODE --> CALC --> FILTER --> TARGET
 
-    style TARGET fill:#69db7c,stroke:#2f9e44,stroke-width:2px
+    style TARGET fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:3px
+    style SCREEN fill:#3b82f6,stroke:#1e40af,color:#ffffff,stroke-width:2px
+    style FILTER fill:#ef4444,stroke:#dc2626,color:#ffffff,stroke-width:2px
 ```
 
 ### Known High-Distance Epitopes
 
 ```mermaid
 flowchart LR
-    subgraph ELITE["Elite Controller Epitopes (d > 6.0)"]
-        E1["KK10 / B27<br/>d = 7.38"]
-        E2["FL8 / A24<br/>d = 7.37"]
-        E3["TW10 / B57<br/>d = 6.34"]
+    subgraph ELITE["<b>Elite Controller Epitopes (d > 6.0)</b>"]
+        E1["<b>KK10 / B27</b><br/>d = 7.38"]
+        E2["<b>FL8 / A24</b><br/>d = 7.37"]
+        E3["<b>TW10 / B57</b><br/>d = 6.34"]
     end
 
-    VACCINE["CTL-Based<br/>Vaccine"] --> ELITE
+    VACCINE["<b>CTL-Based<br/>Vaccine</b>"] --> ELITE
 
-    style E1 fill:#ff6b6b,stroke:#c92a2a,color:#fff
-    style E2 fill:#ff6b6b,stroke:#c92a2a,color:#fff
-    style E3 fill:#ff8787,stroke:#c92a2a,color:#fff
+    style E1 fill:#ef4444,stroke:#dc2626,color:#ffffff,stroke-width:3px
+    style E2 fill:#f97316,stroke:#ea580c,color:#ffffff,stroke-width:2px
+    style E3 fill:#eab308,stroke:#ca8a04,color:#ffffff,stroke-width:2px
+    style VACCINE fill:#3b82f6,stroke:#1e40af,color:#ffffff,stroke-width:2px
 ```
 
 ---
@@ -189,22 +229,23 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-    subgraph EDIT["Glycan Editing Therapy"]
+    subgraph EDIT["<b>Glycan Editing Therapy</b>"]
         GAC["<b>Glycosidase-Antibody Conjugate</b>"]
 
-        STEP1["1. Antibody targets<br/>HIV Env on infected cell"]
-        STEP2["2. Glycosidase removes<br/>sentinel glycans"]
-        STEP3["3. Epitopes exposed<br/>to bnAbs"]
-        STEP4["4. bnAbs bind &<br/>clear infected cell"]
+        STEP1["<b>1. Antibody targets</b><br/>HIV Env on infected cell"]
+        STEP2["<b>2. Glycosidase removes</b><br/>sentinel glycans"]
+        STEP3["<b>3. Epitopes exposed</b><br/>to bnAbs"]
+        STEP4["<b>4. bnAbs bind &</b><br/>clear infected cell"]
     end
 
     GAC --> STEP1 --> STEP2 --> STEP3 --> STEP4
 
-    RESERVOIR["Latent<br/>Reservoir"] --> |"Targeted"| STEP1
-    CURE["Functional<br/>Cure?"] --> STEP4
+    RESERVOIR["<b>Latent<br/>Reservoir</b>"] --> |"Targeted"| STEP1
+    CURE["<b>Functional<br/>Cure?</b>"] --> STEP4
 
-    style GAC fill:#b197fc,stroke:#7048e8,stroke-width:2px
-    style CURE fill:#69db7c,stroke:#2f9e44,stroke-width:2px
+    style GAC fill:#8b5cf6,stroke:#7c3aed,color:#ffffff,stroke-width:3px
+    style CURE fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:2px
+    style RESERVOIR fill:#ef4444,stroke:#dc2626,color:#ffffff,stroke-width:2px
 ```
 
 ### Development Pathway
@@ -234,11 +275,11 @@ gantt
 
 ```mermaid
 flowchart TB
-    subgraph UNIVERSAL["Universal Vaccine Target Discovery"]
-        CLADES["Analyze all<br/>HIV-1 Clades"]
-        SENTINEL["Run sentinel<br/>analysis per clade"]
-        INTERSECT["Find intersection:<br/>Conserved sentinels"]
-        DESIGN["Design universal<br/>immunogen"]
+    subgraph UNIVERSAL["<b>Universal Vaccine Target Discovery</b>"]
+        CLADES["<b>Analyze all<br/>HIV-1 Clades</b>"]
+        SENTINEL["<b>Run sentinel<br/>analysis per clade</b>"]
+        INTERSECT["<b>Find intersection:<br/>Conserved sentinels</b>"]
+        DESIGN["<b>Design universal<br/>immunogen</b>"]
     end
 
     CLADES --> SENTINEL --> INTERSECT --> DESIGN
@@ -249,7 +290,9 @@ flowchart TB
     CLADE_D["Clade D"] --> CLADES
     CRF["CRFs"] --> CLADES
 
-    style DESIGN fill:#69db7c,stroke:#2f9e44,stroke-width:2px
+    style DESIGN fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:3px
+    style CLADES fill:#3b82f6,stroke:#1e40af,color:#ffffff,stroke-width:2px
+    style INTERSECT fill:#8b5cf6,stroke:#7c3aed,color:#ffffff,stroke-width:2px
 ```
 
 ---
@@ -260,17 +303,19 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-    subgraph API["HIV P-Adic API"]
-        ANALYZE["analyze_mutation()"]
-        RANK["rank_epitopes()"]
-        OPTIMIZE["optimize_immunogen()"]
-        PREDICT["predict_resistance()"]
+    subgraph API["<b>HIV P-Adic API</b>"]
+        ANALYZE["<b>analyze_mutation()</b>"]
+        RANK["<b>rank_epitopes()</b>"]
+        OPTIMIZE["<b>optimize_immunogen()</b>"]
+        PREDICT["<b>predict_resistance()</b>"]
     end
 
-    USER["Researcher"] --> API
-    API --> RESULTS["Results:<br/>Distances, Rankings,<br/>Designs"]
+    USER["<b>Researcher</b>"] --> API
+    API --> RESULTS["<b>Results:</b><br/>Distances, Rankings,<br/>Designs"]
 
-    style API fill:#74c0fc,stroke:#1864ab,stroke-width:2px
+    style API fill:#3b82f6,stroke:#1e40af,color:#ffffff,stroke-width:2px
+    style USER fill:#8b5cf6,stroke:#7c3aed,color:#ffffff,stroke-width:2px
+    style RESULTS fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:2px
 ```
 
 ### Example Usage

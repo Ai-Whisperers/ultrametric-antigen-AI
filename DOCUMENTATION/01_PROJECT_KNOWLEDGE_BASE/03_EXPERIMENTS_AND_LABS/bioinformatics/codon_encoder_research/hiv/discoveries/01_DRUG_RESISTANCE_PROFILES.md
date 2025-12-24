@@ -1,6 +1,6 @@
 # Drug Resistance Geometric Profiles
 
-**Doc-Type:** Discovery Module | Version 1.0 | Updated 2025-12-24
+**Doc-Type:** Discovery Module | Version 2.0 | Updated 2025-12-24
 
 ---
 
@@ -13,26 +13,43 @@ Each antiretroviral drug class has a characteristic p-adic distance profile refl
 ## Drug Class Distance Hierarchy
 
 ```mermaid
-graph TB
-    subgraph "P-Adic Distance by Drug Class"
+flowchart TB
+    subgraph HIERARCHY["P-Adic Distance by Drug Class"]
+        direction TB
         NRTI["<b>NRTI</b><br/>d = 6.05 ± 1.28<br/>RT Active Site"]
         NNRTI["<b>NNRTI</b><br/>d = 5.34 ± 1.40<br/>Allosteric Pocket"]
         INSTI["<b>INSTI</b><br/>d = 5.16 ± 1.45<br/>Integrase Active Site"]
         PI["<b>PI</b><br/>d = 3.60 ± 2.01<br/>Protease"]
     end
 
-    HIGH["HIGH CONSTRAINT<br/>Active Sites"] --> NRTI
-    HIGH --> INSTI
+    subgraph CONSTRAINT["Constraint Level"]
+        HIGH["<b>HIGH CONSTRAINT</b><br/>Active Sites"]
+        LOW["<b>LOW CONSTRAINT</b><br/>Flexible Regions"]
+    end
 
-    LOW["LOW CONSTRAINT<br/>Flexible Regions"] --> NNRTI
+    HIGH --> NRTI
+    HIGH --> INSTI
+    LOW --> NNRTI
     LOW --> PI
 
-    style NRTI fill:#ff6b6b,stroke:#c92a2a,stroke-width:3px,color:#fff
-    style INSTI fill:#ff8787,stroke:#c92a2a,stroke-width:2px,color:#fff
-    style NNRTI fill:#74c0fc,stroke:#1864ab,stroke-width:2px
-    style PI fill:#69db7c,stroke:#2f9e44,stroke-width:2px
-    style HIGH fill:#ffe066,stroke:#fab005,stroke-width:2px
-    style LOW fill:#d0bfff,stroke:#7048e8,stroke-width:2px
+    style NRTI fill:#ef4444,stroke:#dc2626,color:#ffffff,stroke-width:3px
+    style INSTI fill:#f97316,stroke:#ea580c,color:#ffffff,stroke-width:2px
+    style NNRTI fill:#3b82f6,stroke:#1e40af,color:#ffffff,stroke-width:2px
+    style PI fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:2px
+    style HIGH fill:#eab308,stroke:#ca8a04,color:#ffffff,stroke-width:2px
+    style LOW fill:#8b5cf6,stroke:#7c3aed,color:#ffffff,stroke-width:2px
+```
+
+---
+
+## Distance Bar Chart
+
+```mermaid
+xychart-beta
+    title "Mean Escape Distance by Drug Class"
+    x-axis ["NRTI", "NNRTI", "INSTI", "PI"]
+    y-axis "Poincare Distance (d)" 0 --> 8
+    bar [6.05, 5.34, 5.16, 3.60]
 ```
 
 ---
@@ -64,18 +81,19 @@ quadrantChart
 ```mermaid
 flowchart LR
     subgraph NRTI["NRTI Resistance Mutations"]
-        M184V["M184V<br/>d = 4.00<br/>3TC/FTC"]
-        K65R["K65R<br/>d = 7.41<br/>TDF/ABC"]
-        K70R["K70R<br/>d = 7.41<br/>AZT/D4T"]
-        T215Y["T215Y<br/>d = 6.06<br/>TAM"]
-        L74V["L74V<br/>d = 4.63<br/>ABC/DDI"]
+        M184V["<b>M184V</b><br/>d = 4.00<br/>3TC/FTC"]
+        K65R["<b>K65R</b><br/>d = 7.41<br/>TDF/ABC"]
+        K70R["<b>K70R</b><br/>d = 7.41<br/>AZT/D4T"]
+        T215Y["<b>T215Y</b><br/>d = 6.06<br/>TAM"]
+        L74V["<b>L74V</b><br/>d = 4.63<br/>ABC/DDI"]
     end
 
-    RT["RT Active Site"] --> NRTI
+    RT["<b>RT Active Site</b><br/>Highly Conserved"] --> NRTI
 
-    style K65R fill:#ff6b6b,stroke:#c92a2a,color:#fff
-    style K70R fill:#ff6b6b,stroke:#c92a2a,color:#fff
-    style T215Y fill:#ff8787,stroke:#c92a2a,color:#fff
+    style K65R fill:#ef4444,stroke:#dc2626,color:#ffffff,stroke-width:2px
+    style K70R fill:#ef4444,stroke:#dc2626,color:#ffffff,stroke-width:2px
+    style T215Y fill:#f97316,stroke:#ea580c,color:#ffffff,stroke-width:2px
+    style RT fill:#3b82f6,stroke:#1e40af,color:#ffffff,stroke-width:2px
 ```
 
 | Mutation | Distance | Drugs | Fitness Cost |
@@ -95,17 +113,18 @@ flowchart LR
 ```mermaid
 flowchart LR
     subgraph INSTI["INSTI Resistance Mutations"]
-        R263K["R263K<br/>d = 7.41<br/>DTG"]
-        Y143R["Y143R<br/>d = 5.72<br/>RAL"]
-        N155H["N155H<br/>d = 4.19<br/>RAL/EVG"]
-        Q148H["Q148H<br/>d = 4.27<br/>RAL/EVG/DTG"]
-        E92Q["E92Q<br/>d = 4.19<br/>RAL/EVG"]
+        R263K["<b>R263K</b><br/>d = 7.41<br/>DTG"]
+        Y143R["<b>Y143R</b><br/>d = 5.72<br/>RAL"]
+        N155H["<b>N155H</b><br/>d = 4.19<br/>RAL/EVG"]
+        Q148H["<b>Q148H</b><br/>d = 4.27<br/>RAL/EVG/DTG"]
+        E92Q["<b>E92Q</b><br/>d = 4.19<br/>RAL/EVG"]
     end
 
-    IN["Integrase Active Site<br/>DDE Catalytic Triad"] --> INSTI
+    IN["<b>Integrase Active Site</b><br/>DDE Catalytic Triad"] --> INSTI
 
-    style R263K fill:#ff6b6b,stroke:#c92a2a,color:#fff
-    style Y143R fill:#ff8787,stroke:#c92a2a,color:#fff
+    style R263K fill:#ef4444,stroke:#dc2626,color:#ffffff,stroke-width:2px
+    style Y143R fill:#f97316,stroke:#ea580c,color:#ffffff,stroke-width:2px
+    style IN fill:#8b5cf6,stroke:#7c3aed,color:#ffffff,stroke-width:2px
 ```
 
 | Mutation | Distance | Drugs | Fitness Cost |
@@ -125,15 +144,16 @@ flowchart LR
 ```mermaid
 flowchart LR
     subgraph NNRTI["NNRTI Resistance Mutations"]
-        K103N["K103N<br/>d = 6.89<br/>EFV/NVP"]
-        Y181C["Y181C<br/>d = 5.27<br/>NVP/EFV"]
-        G190A["G190A<br/>d = 4.63<br/>NVP/EFV"]
-        K101E["K101E<br/>d = 4.58<br/>NVP/EFV"]
+        K103N["<b>K103N</b><br/>d = 6.89<br/>EFV/NVP"]
+        Y181C["<b>Y181C</b><br/>d = 5.27<br/>NVP/EFV"]
+        G190A["<b>G190A</b><br/>d = 4.63<br/>NVP/EFV"]
+        K101E["<b>K101E</b><br/>d = 4.58<br/>NVP/EFV"]
     end
 
-    POCKET["Allosteric Binding Pocket<br/>(Not Active Site)"] --> NNRTI
+    POCKET["<b>Allosteric Pocket</b><br/>(Not Active Site)"] --> NNRTI
 
-    style K103N fill:#ff8787,stroke:#c92a2a,color:#fff
+    style K103N fill:#f97316,stroke:#ea580c,color:#ffffff,stroke-width:2px
+    style POCKET fill:#06b6d4,stroke:#0891b2,color:#ffffff,stroke-width:2px
 ```
 
 | Mutation | Distance | Drugs | Fitness Cost |
@@ -152,16 +172,17 @@ flowchart LR
 ```mermaid
 flowchart LR
     subgraph PI["PI Resistance Mutations"]
-        I84V["I84V<br/>d = 6.43<br/>DRV/ATV"]
-        M46I["M46I<br/>d = 3.39<br/>IDV/NFV"]
-        V82A["V82A<br/>d = 2.41<br/>IDV/RTV"]
-        L90M["L90M<br/>d = 2.18<br/>SQV/NFV"]
+        I84V["<b>I84V</b><br/>d = 6.43<br/>DRV/ATV"]
+        M46I["<b>M46I</b><br/>d = 3.39<br/>IDV/NFV"]
+        V82A["<b>V82A</b><br/>d = 2.41<br/>IDV/RTV"]
+        L90M["<b>L90M</b><br/>d = 2.18<br/>SQV/NFV"]
     end
 
-    PROT["Protease<br/>(More Flexible)"] --> PI
+    PROT["<b>Protease</b><br/>(More Flexible)"] --> PI
 
-    style I84V fill:#ff8787,stroke:#c92a2a,color:#fff
-    style L90M fill:#69db7c,stroke:#2f9e44
+    style I84V fill:#f97316,stroke:#ea580c,color:#ffffff,stroke-width:2px
+    style L90M fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:2px
+    style PROT fill:#ec4899,stroke:#db2777,color:#ffffff,stroke-width:2px
 ```
 
 | Mutation | Distance | Drugs | Fitness Cost |
@@ -179,23 +200,44 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-    subgraph HIGH["HIGH BARRIER COMBINATIONS"]
+    subgraph HIGH["<b>HIGH BARRIER COMBINATIONS</b>"]
         direction LR
-        H1["INSTI + NRTI"] --> H1R["d ≈ 11.2"]
-        H2["INSTI + NNRTI"] --> H2R["d ≈ 10.5"]
+        H1["INSTI + NRTI"] --> H1R["<b>d ≈ 11.2</b>"]
+        H2["INSTI + NNRTI"] --> H2R["<b>d ≈ 10.5</b>"]
     end
 
-    subgraph LOW["LOWER BARRIER COMBINATIONS"]
+    subgraph LOW["<b>LOWER BARRIER COMBINATIONS</b>"]
         direction LR
         L1["NNRTI + PI"] --> L1R["d ≈ 8.9"]
         L2["PI + PI"] --> L2R["d ≈ 7.2"]
     end
 
-    REC["<b>RECOMMENDATION</b><br/>Use high-barrier combinations"] --> HIGH
+    REC["<b>RECOMMENDATION</b><br/>Use high-barrier combinations<br/>for durable suppression"] --> HIGH
 
-    style HIGH fill:#d3f9d8,stroke:#2f9e44,stroke-width:2px
-    style LOW fill:#ffe3e3,stroke:#c92a2a,stroke-width:2px
-    style REC fill:#fff3bf,stroke:#fab005,stroke-width:2px
+    style HIGH fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:2px
+    style LOW fill:#ef4444,stroke:#dc2626,color:#ffffff,stroke-width:2px
+    style REC fill:#eab308,stroke:#ca8a04,color:#ffffff,stroke-width:2px
+    style H1R fill:#10b981,stroke:#059669,color:#ffffff
+    style H2R fill:#10b981,stroke:#059669,color:#ffffff
+```
+
+---
+
+## Summary Metrics
+
+```mermaid
+flowchart LR
+    subgraph METRICS["<b>Drug Class Summary</b>"]
+        M1["<b>NRTI</b><br/>d = 6.05<br/>HIGHEST"]
+        M2["<b>NNRTI</b><br/>d = 5.34"]
+        M3["<b>INSTI</b><br/>d = 5.16"]
+        M4["<b>PI</b><br/>d = 3.60<br/>LOWEST"]
+    end
+
+    M1 --> M2 --> M3 --> M4
+
+    style M1 fill:#ef4444,stroke:#dc2626,color:#ffffff,stroke-width:3px
+    style M4 fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:3px
 ```
 
 ---

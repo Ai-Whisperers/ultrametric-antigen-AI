@@ -1,6 +1,6 @@
 # Elite Controller HLA Mechanism
 
-**Doc-Type:** Discovery Module | Version 1.0 | Updated 2025-12-24
+**Doc-Type:** Discovery Module | Version 2.0 | Updated 2025-12-24
 
 ---
 
@@ -14,20 +14,22 @@ Approximately 1% of HIV-infected individuals ("elite controllers") maintain unde
 
 ```mermaid
 flowchart TB
-    subgraph ELITE["Elite Controller Protection"]
-        HLA["Protective HLA<br/>(B27, B*57:01)"]
-        EP["CTL Epitope<br/>Presented"]
-        ESC["Escape Mutation<br/>Required"]
-        COST["HIGH FITNESS COST<br/>d > 6.0"]
+    subgraph ELITE["<b>Elite Controller Protection</b>"]
+        HLA["<b>Protective HLA</b><br/>(B27, B*57:01)"]
+        EP["<b>CTL Epitope</b><br/>Presented"]
+        ESC["<b>Escape Mutation</b><br/>Required"]
+        COST["<b>HIGH FITNESS COST</b><br/>d > 6.0"]
         TRAP["<b>GEOMETRIC TRAP</b><br/>Virus cannot escape<br/>without major penalty"]
     end
 
     HLA --> EP --> ESC --> COST --> TRAP
     TRAP -.->|"Suppressed<br/>Replication"| HLA
 
-    style HLA fill:#74c0fc,stroke:#1864ab,stroke-width:2px
-    style TRAP fill:#ff6b6b,stroke:#c92a2a,stroke-width:3px,color:#fff
-    style COST fill:#ffe066,stroke:#fab005,stroke-width:2px
+    style HLA fill:#3b82f6,stroke:#1e40af,color:#ffffff,stroke-width:2px
+    style EP fill:#8b5cf6,stroke:#7c3aed,color:#ffffff,stroke-width:2px
+    style ESC fill:#f97316,stroke:#ea580c,color:#ffffff,stroke-width:2px
+    style COST fill:#eab308,stroke:#ca8a04,color:#ffffff,stroke-width:2px
+    style TRAP fill:#ef4444,stroke:#dc2626,color:#ffffff,stroke-width:3px
 ```
 
 ---
@@ -54,19 +56,22 @@ flowchart LR
     end
 
     subgraph MODERATE["<b>MODERATE PROTECTION</b><br/>Escape d = 5-6"]
-        FL8["FL8<br/>HLA-A*24:02<br/>Nef<br/>K94R escape<br/>d = 7.37"]
-        SL9["SL9<br/>HLA-A*02:01<br/>Gag p17<br/>Y79F escape<br/>d = 5.27"]
+        FL8["<b>FL8</b><br/>HLA-A*24:02<br/>Nef<br/>K94R escape<br/>d = 7.37"]
+        SL9["<b>SL9</b><br/>HLA-A*02:01<br/>Gag p17<br/>Y79F escape<br/>d = 5.27"]
     end
 
     subgraph LOWER["<b>LOWER PROTECTION</b><br/>Escape d < 5"]
-        RL9["RL9<br/>HLA-B*08:01<br/>Env<br/>D314N escape<br/>d = 4.96"]
-        IV9["IV9<br/>HLA-A*02:01<br/>RT<br/>V181I escape<br/>d = 4.10"]
+        RL9["<b>RL9</b><br/>HLA-B*08:01<br/>Env<br/>D314N escape<br/>d = 4.96"]
+        IV9["<b>IV9</b><br/>HLA-A*02:01<br/>RT<br/>V181I escape<br/>d = 4.10"]
     end
 
-    style KK10 fill:#ff6b6b,stroke:#c92a2a,stroke-width:3px,color:#fff
-    style TW10 fill:#ff8787,stroke:#c92a2a,stroke-width:2px,color:#fff
-    style FL8 fill:#ffd43b,stroke:#fab005
-    style SL9 fill:#ffd43b,stroke:#fab005
+    style KK10 fill:#ef4444,stroke:#dc2626,color:#ffffff,stroke-width:3px
+    style TW10 fill:#f97316,stroke:#ea580c,color:#ffffff,stroke-width:2px
+    style FL8 fill:#eab308,stroke:#ca8a04,color:#ffffff,stroke-width:2px
+    style SL9 fill:#eab308,stroke:#ca8a04,color:#ffffff,stroke-width:2px
+    style PROTECTIVE fill:#fecaca,stroke:#ef4444,stroke-width:2px
+    style MODERATE fill:#fef3c7,stroke:#f59e0b,stroke-width:2px
+    style LOWER fill:#dbeafe,stroke:#3b82f6,stroke-width:2px
 ```
 
 ---
@@ -88,7 +93,7 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-    subgraph B27["HLA-B27 Protection Mechanism"]
+    subgraph B27["<b>HLA-B27 Protection Mechanism</b>"]
         direction TB
         P1["<b>1. Epitope Selection</b><br/>KK10 in Gag p24"]
         P2["<b>2. High Conservation</b><br/>Gag p24 is essential"]
@@ -99,8 +104,11 @@ flowchart TB
 
     P1 --> P2 --> P3 --> P4 --> P5
 
-    style P3 fill:#ff6b6b,stroke:#c92a2a,stroke-width:2px,color:#fff
-    style P5 fill:#69db7c,stroke:#2f9e44,stroke-width:2px
+    style P1 fill:#3b82f6,stroke:#1e40af,color:#ffffff,stroke-width:2px
+    style P2 fill:#8b5cf6,stroke:#7c3aed,color:#ffffff,stroke-width:2px
+    style P3 fill:#ef4444,stroke:#dc2626,color:#ffffff,stroke-width:3px
+    style P4 fill:#f97316,stroke:#ea580c,color:#ffffff,stroke-width:2px
+    style P5 fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:2px
 ```
 
 ---
@@ -117,20 +125,45 @@ pie showData
 
 ---
 
+## Protection Threshold Visualization
+
+```mermaid
+flowchart TB
+    subgraph THRESHOLD["<b>Protection Classification by Distance</b>"]
+        direction LR
+        T1["<b>d > 6.0</b><br/>Elite Protection<br/>KK10, FL8, TW10"]
+        T2["<b>d = 5-6</b><br/>Moderate<br/>SL9"]
+        T3["<b>d < 5</b><br/>Lower<br/>RL9, IV9"]
+    end
+
+    BARRIER["<b>Geometric Barrier</b><br/>Higher d = Better Control"] --> THRESHOLD
+
+    style T1 fill:#ef4444,stroke:#dc2626,color:#ffffff,stroke-width:3px
+    style T2 fill:#eab308,stroke:#ca8a04,color:#ffffff,stroke-width:2px
+    style T3 fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:2px
+    style BARRIER fill:#3b82f6,stroke:#1e40af,color:#ffffff,stroke-width:2px
+```
+
+---
+
 ## Therapeutic Implications
 
 ```mermaid
 flowchart LR
-    subgraph IMPLICATIONS["Therapeutic Applications"]
+    subgraph IMPLICATIONS["<b>Therapeutic Applications</b>"]
         V1["<b>CTL Vaccine Design</b><br/>Target epitopes with d > 6.0"]
         V2["<b>Immunotherapy</b><br/>Expand B27/B57-like responses"]
         V3["<b>HLA Screening</b><br/>Identify protective alleles"]
         V4["<b>Functional Cure</b><br/>Replicate elite immunity"]
     end
 
-    DISCOVERY["P-Adic Discovery:<br/>Distance = Fitness Cost"] --> IMPLICATIONS
+    DISCOVERY["<b>P-Adic Discovery</b><br/>Distance = Fitness Cost"] --> IMPLICATIONS
 
-    style DISCOVERY fill:#74c0fc,stroke:#1864ab,stroke-width:2px
+    style DISCOVERY fill:#3b82f6,stroke:#1e40af,color:#ffffff,stroke-width:2px
+    style V1 fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:2px
+    style V2 fill:#10b981,stroke:#059669,color:#ffffff,stroke-width:2px
+    style V3 fill:#14b8a6,stroke:#0d9488,color:#ffffff,stroke-width:2px
+    style V4 fill:#06b6d4,stroke:#0891b2,color:#ffffff,stroke-width:2px
 ```
 
 ### Specific Recommendations
