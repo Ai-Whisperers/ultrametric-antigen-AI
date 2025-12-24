@@ -91,11 +91,19 @@ engine/build/
 **/alphafold_jobs/*.zip
 research/alphafold3/repo/
 
-# CONFIDENTIAL - Internal IP Protection
-# NOTE: pitch_tier3_INTERNAL committed to PRIVATE repo only
-# If repo ever becomes public, uncomment these lines:
-# **/pitch_tier3_INTERNAL/
-# **/INTERNAL/
-# **/*_INTERNAL/
-# **/*_CONFIDENTIAL/
+# CONFIDENTIAL - Internal IP Protection (NEVER COMMIT)
+**/pitch_tier3_INTERNAL/
+**/03_TIER_3_TECHNICAL/
+**/TIER_3_TECHNICAL/
+**/INTERNAL/
+**/*_INTERNAL/
+**/*_CONFIDENTIAL/
 **/.secrets/
+**/FORBIDDEN_TERMS*
+**/COMPETITIVE_MOAT*
+**/IP_INVENTORY*
+**/DISCLOSURE_MATRIX*
+**/PRIOR_ART_ANALYSIS*
+**/CLAIM_BOUNDARIES*
+**/SAFE_LANGUAGE*
+**/VALIDATION_REALITY*
