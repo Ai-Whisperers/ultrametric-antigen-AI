@@ -1,4 +1,4 @@
-# AlphaFold3 Local Setup
+# AlphaFold3 Integration
 
 **Doc-Type:** Setup Guide · Version 1.0 · Updated 2025-12-24 · Author AI Whisperers
 
@@ -6,7 +6,15 @@
 
 ## Overview
 
-This directory contains AlphaFold3 resources for structural validation of HIV integrase reveal mutations identified by our 3-adic codon geometry analysis.
+This directory contains AlphaFold3 resources for structural validation of HIV integrase reveal mutations. **We use a hybrid approach** that eliminates the need for massive hardware requirements.
+
+---
+
+## Recommended: Hybrid Approach
+
+**See [HYBRID_APPROACH.md](./HYBRID_APPROACH.md)** for our strategy.
+
+Instead of replicating AF3's full pipeline (A100 GPU, 630GB databases, proprietary weights), we leverage AF3's open-source utilities for structure parsing combined with our **ternary VAE model (v5_11_11_production/best.pt)** which already captures evolutionary constraints through 3-adic geometry. The discrete-continuum bridge in our model (binary↔ternary↔continuous) encodes the same information that AF3 extracts from MSAs through sequence statistics, but geometrically - meaning we only need the PDB structural database (~50GB) rather than redundant MSA databases (580GB).
 
 ---
 
@@ -15,18 +23,36 @@ This directory contains AlphaFold3 resources for structural validation of HIV in
 ```
 alphafold3/
 ├── README.md                    # This file
-├── repo/                        # Cloned AlphaFold3 repository
-├── inputs/                      # JSON inputs for predictions
-│   └── integrase/              # Integrase reveal mutations
+├── HYBRID_APPROACH.md          # Our lightweight strategy
+├── repo/                        # Cloned AF3 repository (utilities only)
+├── utils/                       # Extracted useful AF3 modules
+├── inputs/integrase/           # JSON inputs for predictions
 ├── outputs/                     # Prediction results
 └── scripts/                     # Input generation utilities
 ```
 
 ---
 
-## Hardware Requirements
+## Three Paths Forward
 
-### Minimum (Local Inference)
+### Path 1: Hybrid Approach (RECOMMENDED)
+
+| Aspect | Requirement |
+|:-------|:------------|
+| Storage | ~50GB (PDB only) |
+| GPU | Any (or CPU) |
+| Model | Our ternary VAE |
+| Setup | Hours |
+
+### Path 2: AlphaFold Server
+
+| Aspect | Requirement |
+|:-------|:------------|
+| URL | https://alphafoldserver.com |
+| Limit | 20 jobs/day |
+| Cost | Free (non-commercial) |
+
+### Path 3: Full Local AF3 (If Hardware Available)
 
 | Component | Requirement |
 |:----------|:------------|
@@ -34,13 +60,6 @@ alphafold3/
 | RAM | 64 GB minimum |
 | Storage | 1 TB SSD (630GB databases + models) |
 | OS | Linux (Ubuntu 22.04 recommended) |
-
-### Alternative: AlphaFold Server
-
-For immediate validation without local hardware:
-- URL: https://alphafoldserver.com
-- Limit: 20 jobs/day
-- Free for non-commercial use
 
 ---
 
