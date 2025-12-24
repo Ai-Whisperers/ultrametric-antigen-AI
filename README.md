@@ -153,11 +153,11 @@ python scripts/benchmark/measure_manifold_resolution.py
 ternary-vaes/
 ├── README.md                      # This file
 ├── DOCUMENTATION/                 # 📚 KNOWLEDGE BASE
-│   ├── 01_GUIDES/                 # Explanations & Guides (Biologists, Mathematicians, Developers)
+├── DOCUMENTATION/                 # 📚 KNOWLEDGE BASE
+│   ├── 01_STAKEHOLDER_RESOURCES/  # Guides, Pitch Decks, & Technical Specs
 │   ├── 02_THEORY_AND_RESEARCH/    # Theory, Reports, Analysis
 │   ├── 03_EXPERIMENTS_AND_LABS/   # Experimental Code (Bioinformatics, Mathematics)
 │   ├── 04_PROJECT_MANAGEMENT/     # Plans & Archives
-│   ├── 05_PRESENTATION/           # Pitch Decks
 │   └── 06_LEGAL/                  # Legal
 │
 ├── src/                           # 🧠 LOGIC (Production Code)
@@ -475,17 +475,17 @@ Detailed research notes and future directions can be found in the documentation:
 - [Scientific Domains](DOCUMENTATION/02_THEORY_AND_RESEARCH/biology_context/SCIENTIFIC_DOMAINS.md)
 - [Medical Frontiers](DOCUMENTATION/02_THEORY_AND_RESEARCH/biology_context/MEDICAL_FRONTIERS.md)
 - [Relevant Repositories](DOCUMENTATION/02_THEORY_AND_RESEARCH/academic_output/RELEVANT_REPOS.md)
-- [Suggested Libraries](DOCUMENTATION/01_GUIDES/shared/SUGGESTED_LIBRARIES.md)
+- [Suggested Libraries](DOCUMENTATION/01_STAKEHOLDER_RESOURCES/industry/technical_specs/DEPENDENCIES.md)
 
-* **[01_GUIDES](DOCUMENTATION/01_GUIDES/)**: Explanations & Guides.
+* **[01_STAKEHOLDER_RESOURCES](DOCUMENTATION/01_STAKEHOLDER_RESOURCES/)**: Guides & Presentations.
 
-  - [Setup & Dependencies](DOCUMENTATION/01_GUIDES/developers/SETUP_AND_DEPENDENCIES.md)
-  - [Workflows & Scripts](DOCUMENTATION/01_GUIDES/developers/WORKFLOWS_AND_SCRIPTS.md)
-  - [Mathematical Foundations](DOCUMENTATION/01_GUIDES/shared/mathematical_foundations/) (Split into 3 parts)
-    - [Ternary VAE Formulation](DOCUMENTATION/01_GUIDES/shared/mathematical_foundations/01_ternary_vae_formulation.md)
-    - [StateNet Dynamics](DOCUMENTATION/01_GUIDES/shared/mathematical_foundations/02_statenet_dynamics.md)
-    - [Optimization & Convergence](DOCUMENTATION/01_GUIDES/shared/mathematical_foundations/03_optimization_and_convergence.md)
-  - [Dual VAE Architecture](DOCUMENTATION/01_GUIDES/developers/DUAL_VAE_ARCHITECTURE_GUIDE.md)
+  - [Setup & Dependencies](DOCUMENTATION/01_STAKEHOLDER_RESOURCES/industry/technical_specs/SETUP.md)
+  - [Workflows & Scripts](DOCUMENTATION/01_STAKEHOLDER_RESOURCES/industry/technical_specs/WORKFLOWS.md)
+  - [Mathematical Foundations](DOCUMENTATION/01_STAKEHOLDER_RESOURCES/academic/theory_deep_dive/)
+    - [Ternary VAE Formulation](DOCUMENTATION/01_STAKEHOLDER_RESOURCES/academic/theory_deep_dive/01_ternary_vae_formulation.md)
+    - [StateNet Dynamics](DOCUMENTATION/01_STAKEHOLDER_RESOURCES/academic/theory_deep_dive/02_statenet_dynamics.md)
+    - [Optimization & Convergence](DOCUMENTATION/01_STAKEHOLDER_RESOURCES/academic/theory_deep_dive/03_optimization_and_convergence.md)
+  - [Dual VAE Architecture](DOCUMENTATION/01_STAKEHOLDER_RESOURCES/academic/code_walkthrough/DUAL_VAE_GUIDE.md)
 
 * **[02_THEORY_AND_RESEARCH](DOCUMENTATION/02_THEORY_AND_RESEARCH/)**: Research & Context.
   - **Foundations**: [Conjectures](DOCUMENTATION/02_THEORY_AND_RESEARCH/foundations/CONJECTURES_INFORMATIONAL_GEOMETRY.md), [Topology](DOCUMENTATION/02_THEORY_AND_RESEARCH/foundations/TOPOLOGY_OF_INTELLIGENCE.md)
@@ -494,7 +494,7 @@ Detailed research notes and future directions can be found in the documentation:
   - **Reports**: [Codebase Analysis](DOCUMENTATION/02_THEORY_AND_RESEARCH/reports/V5_11_CODEBASE_ANALYSIS.md)
 * **[03_EXPERIMENTS](DOCUMENTATION/03_EXPERIMENTS_AND_LABS/)**: Research scripts and labs.
   - Contains `bioinformatics/` and `mathematics/` experiments.
-* **[05_PRESENTATION](DOCUMENTATION/05_PRESENTATION/)**: Pitch decks and summaries.
+* **[01_STAKEHOLDER_RESOURCES](DOCUMENTATION/01_STAKEHOLDER_RESOURCES/)**: Pitch decks and summaries.
 
 ### `results/` - Data & Outputs
 
@@ -506,9 +506,9 @@ Detailed research notes and future directions can be found in the documentation:
 
 Sandbox for research scripts. Contains no heavy data.
 
-### `DOCUMENTATION/05_PRESENTATION/`
+### `DOCUMENTATION/01_STAKEHOLDER_RESOURCES/`
 
-- **[Executive Summary (PITCH)](DOCUMENTATION/05_PRESENTATION/PITCH.md)**: For Investors & Lab Directors.
+- **[Executive Summary (PITCH)](DOCUMENTATION/01_STAKEHOLDER_RESOURCES/PITCH.md)**: For Investors & Lab Directors.
 
 ---
 
@@ -518,9 +518,9 @@ Comprehensive documentation is available:
 
 ### Architecture & API
 
-- **ARCHITECTURE.md** (`DOCUMENTATION/01_GUIDES/developers/ARCHITECTURE.md`) - Complete system architecture
-- **API_REFERENCE.md** (`DOCUMENTATION/01_GUIDES/developers/API_REFERENCE.md`) - Complete API documentation
-- **REFACTORING_SUMMARY.md** (`DOCUMENTATION/01_GUIDES/developers/REFACTORING_SUMMARY.md`) - Refactoring overview
+- **ARCHITECTURE.md** (`DOCUMENTATION/01_STAKEHOLDER_RESOURCES/industry/technical_specs/ARCHITECTURE.md`) - Complete system architecture
+- **API_REFERENCE.md** (`DOCUMENTATION/01_STAKEHOLDER_RESOURCES/industry/technical_specs/API_REFERENCE.md`) - Complete API documentation
+- **REFACTORING_SUMMARY.md** (`DOCUMENTATION/01_STAKEHOLDER_RESOURCES/industry/technical_specs/REFACTORING_SUMMARY.md`) - Refactoring overview
 
 ### Validation & Reports
 
@@ -530,7 +530,7 @@ Comprehensive documentation is available:
 
 ### Theory
 
-- **MATHEMATICAL_FOUNDATIONS.md** (`DOCUMENTATION/01_GUIDES/shared/MATHEMATICAL_FOUNDATIONS.md`) - Mathematical foundations
+- **MATHEMATICAL_FOUNDATIONS.md** (`DOCUMENTATION/01_STAKEHOLDER_RESOURCES/academic/theory_deep_dive/`) - Mathematical foundations
 - **DUAL_VAE_ARCHITECTURE.md** (`DOCUMENTATION/02_THEORY_AND_RESEARCH/theory/DUAL_VAE_ARCHITECTURE.md`) - Architecture details
 - **STATENET_CONTROLLER.md** (`DOCUMENTATION/02_THEORY_AND_RESEARCH/theory/STATENET_CONTROLLER.md`) - StateNet explanation
 - **PHASE_TRANSITIONS.md** (`DOCUMENTATION/02_THEORY_AND_RESEARCH/theory/PHASE_TRANSITIONS.md`) - Training phases
@@ -617,10 +617,10 @@ See `guides/developers/ARCHITECTURE.md` for architecture details.
 For questions, issues, or contributions:
 
 - GitHub Issues: [Create an issue](https://github.com/gesttaltt/ternary-vaes/issues)
-- Documentation: See `DOCUMENTATION/01_GUIDES/` directory
-- Architecture: `DOCUMENTATION/01_GUIDES/developers/ARCHITECTURE.md`
-- Migration: `DOCUMENTATION/01_GUIDES/developers/MIGRATION_GUIDE.md`
-- API: `DOCUMENTATION/01_GUIDES/developers/API_REFERENCE.md`
+- Documentation: See `DOCUMENTATION/01_STAKEHOLDER_RESOURCES/` directory
+- Architecture: `DOCUMENTATION/01_STAKEHOLDER_RESOURCES/industry/technical_specs/ARCHITECTURE.md`
+- Migration: `DOCUMENTATION/01_STAKEHOLDER_RESOURCES/industry/technical_specs/MIGRATION_GUIDE.md`
+- API: `DOCUMENTATION/01_STAKEHOLDER_RESOURCES/industry/technical_specs/API_REFERENCE.md`
 
 ---
 
