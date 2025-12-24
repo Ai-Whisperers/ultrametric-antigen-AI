@@ -96,7 +96,8 @@ class TrainingMonitor:
             self._log(f"TensorBoard logging to: {log_path}")
         elif tensorboard_dir is not None and not TENSORBOARD_AVAILABLE:
             self._log(
-                "Warning: TensorBoard requested but not installed (pip install tensorboard)"
+                "Warning: TensorBoard requested but not installed "
+                "(pip install tensorboard)"
             )
 
     def _setup_file_logging(self, log_dir: str, experiment_name: str) -> logging.Logger:
@@ -192,7 +193,8 @@ class TrainingMonitor:
         if batch_idx % log_interval == 0 or batch_idx == total_batches - 1:
             progress = (batch_idx + 1) / total_batches * 100
             self._log(
-                f"  [Epoch {epoch}] Batch {batch_idx+1}/{total_batches} ({progress:.0f}%) | Loss: {loss:.4f}"
+                f"  [Epoch {epoch}] Batch {batch_idx+1}/{total_batches} "
+                f"({progress:.0f}%) | Loss: {loss:.4f}"
             )
 
     def log_hyperbolic_batch(
@@ -275,13 +277,21 @@ class TrainingMonitor:
         if self.writer is not None:
             self.writer.add_scalars(
                 "Hyperbolic/Correlation_Hyp",
-                {"VAE_A": corr_A_hyp, "VAE_B": corr_B_hyp, "Mean": corr_mean_hyp},
+                {
+                    "VAE_A": corr_A_hyp,
+                    "VAE_B": corr_B_hyp,
+                    "Mean": corr_mean_hyp,
+                },
                 epoch,
             )
 
             self.writer.add_scalars(
                 "Hyperbolic/Correlation_Euc",
-                {"VAE_A": corr_A_euc, "VAE_B": corr_B_euc, "Mean": corr_mean_euc},
+                {
+                    "VAE_A": corr_A_euc,
+                    "VAE_B": corr_B_euc,
+                    "Mean": corr_mean_euc,
+                },
                 epoch,
             )
 
@@ -297,7 +307,9 @@ class TrainingMonitor:
 
             # v5.10 specific
             self.writer.add_scalars(
-                "v5.10/HyperbolicKL", {"VAE_A": hyp_kl_A, "VAE_B": hyp_kl_B}, epoch
+                "v5.10/HyperbolicKL",
+                {"VAE_A": hyp_kl_A, "VAE_B": hyp_kl_B},
+                epoch,
             )
             self.writer.add_scalar("v5.10/CentroidLoss", centroid_loss, epoch)
 
@@ -379,15 +391,19 @@ class TrainingMonitor:
         self._log(f"\nEpoch {epoch}/{total_epochs}")
         self._log(f"  Loss: {loss:.4f} | Ranking Weight: {ranking_weight:.3f}")
         self._log(
-            f"  Coverage [{cov_status}]: A={cov_A:.1f}% B={cov_B:.1f}% (best={self.best_coverage:.1f}%)"
+            f"  Coverage [{cov_status}]: A={cov_A:.1f}% B={cov_B:.1f}% "
+            f"(best={self.best_coverage:.1f}%)"
         )
         self._log(
-            f"  3-Adic Correlation [{corr_status}] (Hyp): A={corr_A_hyp:.3f} B={corr_B_hyp:.3f} (best={self.best_corr_hyp:.3f})"
+            f"  3-Adic Correlation [{corr_status}] (Hyp): "
+            f"A={corr_A_hyp:.3f} B={corr_B_hyp:.3f} "
+            f"(best={self.best_corr_hyp:.3f})"
         )
 
         if correlation_evaluated:
             self._log(
-                f"  3-Adic Correlation (Euclidean): A={corr_A_euc:.3f} B={corr_B_euc:.3f}"
+                f"  3-Adic Correlation (Euclidean): "
+                f"A={corr_A_euc:.3f} B={corr_B_euc:.3f}"
             )
 
         self._log(f"  Mean Radius: A={mean_radius_A:.3f} B={mean_radius_B:.3f}")
@@ -404,11 +420,15 @@ class TrainingMonitor:
         if homeostatic_metrics:
             if "prior_sigma_A" in homeostatic_metrics:
                 self._log(
-                    f"  Homeostatic Sigma: A={homeostatic_metrics['prior_sigma_A']:.3f} B={homeostatic_metrics['prior_sigma_B']:.3f}"
+                    f"  Homeostatic Sigma: "
+                    f"A={homeostatic_metrics['prior_sigma_A']:.3f} "
+                    f"B={homeostatic_metrics['prior_sigma_B']:.3f}"
                 )
             if "prior_curvature_A" in homeostatic_metrics:
                 self._log(
-                    f"  Homeostatic Curvature: A={homeostatic_metrics['prior_curvature_A']:.3f} B={homeostatic_metrics['prior_curvature_B']:.3f}"
+                    f"  Homeostatic Curvature: "
+                    f"A={homeostatic_metrics['prior_curvature_A']:.3f} "
+                    f"B={homeostatic_metrics['prior_curvature_B']:.3f}"
                 )
 
     def check_best(self, val_loss: float) -> bool:
@@ -445,7 +465,8 @@ class TrainingMonitor:
         """Check if coverage improvement has plateaued.
 
         Useful for manifold approach where 100% coverage is the goal.
-        Triggers when coverage improvement over `patience` epochs is below threshold.
+        Triggers when coverage improvement over `patience` epochs
+        is below threshold.
 
         Args:
             patience: Number of epochs to check for improvement
@@ -468,11 +489,15 @@ class TrainingMonitor:
         return improvement < min_delta
 
     def evaluate_coverage(
-        self, model: torch.nn.Module, num_samples: int, device: str, vae: str = "A"
+        self,
+        model: torch.nn.Module,
+        num_samples: int,
+        device: str,
+        vae: str = "A",
     ) -> tuple[int, float]:
         """Evaluate operation coverage.
 
-        P0 FIX: Vectorized implementation using torch.unique instead of Python loops.
+        P0 FIX: Vectorized implementation using torch.unique.
         Reduces 500+ GPU syncs to 1 sync per batch.
 
         Args:
@@ -536,16 +561,22 @@ class TrainingMonitor:
         """
         self._log(f"\nEpoch {epoch}/{total_epochs}")
         self._log(
-            f"  Loss: Train={train_losses['loss']:.4f} Val={val_losses['loss']:.4f}"
+            f"  Loss: Train={train_losses['loss']:.4f} " f"Val={val_losses['loss']:.4f}"
         )
         self._log(
-            f"  VAE-A: CE={train_losses['ce_A']:.4f} KL={train_losses['kl_A']:.4f} H={train_losses['H_A']:.3f}"
+            f"  VAE-A: CE={train_losses['ce_A']:.4f} "
+            f"KL={train_losses['kl_A']:.4f} "
+            f"H={train_losses['H_A']:.3f}"
         )
         self._log(
-            f"  VAE-B: CE={train_losses['ce_B']:.4f} KL={train_losses['kl_B']:.4f} H={train_losses['H_B']:.3f}"
+            f"  VAE-B: CE={train_losses['ce_B']:.4f} "
+            f"KL={train_losses['kl_B']:.4f} "
+            f"H={train_losses['H_B']:.3f}"
         )
         self._log(
-            f"  Weights: l1={train_losses['lambda1']:.3f} l2={train_losses['lambda2']:.3f} l3={train_losses['lambda3']:.3f}"
+            f"  Weights: l1={train_losses['lambda1']:.3f} "
+            f"l2={train_losses['lambda2']:.3f} "
+            f"l3={train_losses['lambda3']:.3f}"
         )
         self._log(
             f"  Phase {train_losses['phase']}: "
@@ -962,7 +993,11 @@ class TrainingMonitor:
         if self.coverage_A_history:
             final_cov_A = self.coverage_A_history[-1]
             final_cov_B = self.coverage_B_history[-1]
-            self._log(f"Final Coverage: A={final_cov_A} ({final_cov_A/19683*100:.2f}%)")
-            self._log(f"                B={final_cov_B} ({final_cov_B/19683*100:.2f}%)")
+            self._log(
+                f"Final Coverage: A={final_cov_A} " f"({final_cov_A/19683*100:.2f}%)"
+            )
+            self._log(
+                f"                B={final_cov_B} " f"({final_cov_B/19683*100:.2f}%)"
+            )
 
         self._log("Target: r > 0.99, coverage > 99.7%")
