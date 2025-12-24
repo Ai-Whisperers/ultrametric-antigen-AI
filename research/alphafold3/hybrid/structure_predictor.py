@@ -31,6 +31,13 @@ try:
 except ImportError:
     HAS_TORCH = False
 
+# Try to import the TernaryVAE model
+try:
+    from src.models.ternary_vae import TernaryVAEV5_11
+    HAS_MODEL_CLASS = True
+except ImportError:
+    HAS_MODEL_CLASS = False
+
 from .pdb_analyzer import PDBAnalyzer, HAS_BIOPYTHON
 
 
@@ -117,6 +124,10 @@ class HybridStructurePredictor:
             print("Warning: PyTorch not available, using fallback distance calculation")
             return
 
+        if not HAS_MODEL_CLASS:
+            print("Warning: TernaryVAEV5_11 model class not available, using fallback")
+            return
+
         if not self.model_path.exists():
             print(f"Warning: Model not found at {self.model_path}")
             print("Using fallback codon distance calculation")
@@ -124,11 +135,31 @@ class HybridStructurePredictor:
 
         try:
             checkpoint = torch.load(self.model_path, map_location=self.device, weights_only=False)
-            # Extract model if wrapped in checkpoint dict
-            if isinstance(checkpoint, dict) and 'model' in checkpoint:
-                self.model = checkpoint['model']
-            else:
-                self.model = checkpoint
+
+            # Extract config from checkpoint
+            config = checkpoint.get('config', {})
+
+            # Instantiate model with config parameters
+            self.model = TernaryVAEV5_11(
+                latent_dim=16,
+                hidden_dim=config.get('projection_hidden_dim', 64),
+                max_radius=config.get('max_radius', 0.95),
+                curvature=config.get('curvature', 1.0),
+                use_controller=config.get('use_controller', False),
+                use_dual_projection=config.get('dual_projection', False),
+                n_projection_layers=config.get('projection_layers', 1),
+                projection_dropout=config.get('projection_dropout', 0.1),
+                learnable_curvature=config.get('learnable_curvature', False),
+            )
+
+            # Load the state dict
+            if 'model_state' in checkpoint:
+                self.model.load_state_dict(checkpoint['model_state'])
+            elif 'state_dict' in checkpoint:
+                self.model.load_state_dict(checkpoint['state_dict'])
+
+            self.model.to(self.device)
+            self.model.eval()  # Set to evaluation mode
             self._model_loaded = True
             print(f"Loaded ternary model from {self.model_path}")
         except Exception as e:
@@ -230,9 +261,11 @@ class HybridStructurePredictor:
             mut_input = torch.tensor(self._codon_to_ternary(mut_codon)).unsqueeze(0)
 
             with torch.no_grad():
-                # Get latent representations
-                wt_z = self.model.encode(wt_input)[0]  # mu
-                mut_z = self.model.encode(mut_input)[0]
+                # Get hyperbolic latent representations via forward pass
+                wt_output = self.model(wt_input, compute_control=False)
+                mut_output = self.model(mut_input, compute_control=False)
+                wt_z = wt_output['z_A_hyp']  # Hyperbolic embeddings
+                mut_z = mut_output['z_A_hyp']
 
             # Compute hyperbolic distance
             return self._poincare_distance(

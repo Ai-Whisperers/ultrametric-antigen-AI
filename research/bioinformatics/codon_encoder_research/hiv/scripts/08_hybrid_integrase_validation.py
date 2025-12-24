@@ -420,8 +420,20 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     output_path = output_dir / "hybrid_integrase_validation.json"
+
+    # Custom encoder for numpy types
+    class NumpyEncoder(json.JSONEncoder):
+        def default(self, obj):
+            if isinstance(obj, np.floating):
+                return float(obj)
+            if isinstance(obj, np.integer):
+                return int(obj)
+            if isinstance(obj, np.ndarray):
+                return obj.tolist()
+            return super().default(obj)
+
     with open(output_path, 'w') as f:
-        json.dump(results, f, indent=2)
+        json.dump(results, f, indent=2, cls=NumpyEncoder)
 
     print(f"\n\nResults saved to: {output_path}")
 
