@@ -102,7 +102,7 @@ class HybridStructurePredictor:
 
         # Model path defaults
         if model_path is None:
-            model_path = project_root / "checkpoints" / "v5_11_11_production" / "best.pt"
+            model_path = project_root / "sandbox-training" / "checkpoints" / "v5_11_11_production" / "best.pt"
 
         self.model_path = model_path
         self.model = None
