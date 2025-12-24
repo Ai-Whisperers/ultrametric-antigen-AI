@@ -428,25 +428,38 @@ class TernaryVAEV5_11(nn.Module):
 
 
 class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
-    """V5.11 Option C: Partial freeze variant.
+    """V5.11 Option C: Partial freeze variant with homeostatic control.
 
-    Inherits from V5.11 but allows optional unfreezing of encoder_B
-    for exploration while keeping encoder_A frozen for coverage.
+    Inherits from V5.11 but allows dynamic freeze/unfreeze of components
+    based on training metrics (coverage, hierarchy, gradient norms).
 
-    This enables Three-Body dynamics where:
-    - VAE-A (frozen): Anchors coverage
-    - VAE-B (trainable): Explores structure
+    V5.11.7: Hierarchical homeostasis where:
+    - encoder_A: coverage-gated (freeze on drop, unfreeze on recovery)
+    - encoder_B: hierarchy-gated (freeze when VAE-B hierarchy plateaus)
+    - controller: gradient-gated (freeze when weights stabilize)
+    - projections: always trainable (fast adaptation layer)
+
+    This implements complementary learning systems theory:
+    - Slow components (encoders) consolidate when objectives met
+    - Fast components (projections) continuously adapt
     """
 
     def __init__(
         self,
         freeze_encoder_b: bool = False,
         encoder_b_lr_scale: float = 0.1,
+        encoder_a_lr_scale: float = 0.05,
+        controller_lr_scale: float = 1.0,
         **kwargs
     ):
         super().__init__(**kwargs)
         self.freeze_encoder_b = freeze_encoder_b
         self.encoder_b_lr_scale = encoder_b_lr_scale
+        self.controller_lr_scale = controller_lr_scale
+        # Homeostatic freeze states
+        self.freeze_encoder_a = True  # Starts frozen
+        self.freeze_controller = False  # Starts trainable
+        self.encoder_a_lr_scale = encoder_a_lr_scale
 
     def load_v5_5_checkpoint(self, checkpoint_path: Path, device: str = 'cpu'):
         """Load checkpoint with optional encoder_B unfreezing."""
@@ -459,17 +472,98 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
             print("  encoder_B UNFROZEN for Option C training")
             print(f"  encoder_B LR scale: {self.encoder_b_lr_scale}")
 
+    def set_encoder_a_unfreeze(self, lr_scale: float):
+        """Progressively unfreeze encoder_A with given learning rate scale.
+
+        V5.11.6: Allows gradual unfreezing of encoder_A during training.
+        Call this during training to update the unfreeze state.
+
+        Args:
+            lr_scale: Learning rate multiplier (0.0 = frozen, >0 = trainable)
+        """
+        self.encoder_a_lr_scale = lr_scale
+        self.freeze_encoder_a = (lr_scale == 0.0)
+
+        if not self.freeze_encoder_a:
+            # Enable gradients for encoder_A
+            for param in self.encoder_A.parameters():
+                param.requires_grad = True
+        else:
+            # Disable gradients for encoder_A
+            for param in self.encoder_A.parameters():
+                param.requires_grad = False
+
+    def set_encoder_a_frozen(self, frozen: bool):
+        """Set encoder_A freeze state (homeostatic control).
+
+        Args:
+            frozen: True to freeze, False to unfreeze
+        """
+        self.freeze_encoder_a = frozen
+        for param in self.encoder_A.parameters():
+            param.requires_grad = not frozen
+
+    def set_encoder_b_frozen(self, frozen: bool):
+        """Set encoder_B freeze state (homeostatic control).
+
+        Args:
+            frozen: True to freeze, False to unfreeze
+        """
+        self.freeze_encoder_b = frozen
+        for param in self.encoder_B.parameters():
+            param.requires_grad = not frozen
+
+    def set_controller_frozen(self, frozen: bool):
+        """Set controller freeze state (homeostatic control).
+
+        Args:
+            frozen: True to freeze, False to unfreeze
+        """
+        if self.controller is None:
+            return
+        self.freeze_controller = frozen
+        for param in self.controller.parameters():
+            param.requires_grad = not frozen
+
+    def apply_homeostasis_state(self, state: dict):
+        """Apply freeze states from HomeostasisController.
+
+        Args:
+            state: Dict with encoder_a_frozen, encoder_b_frozen, controller_frozen
+        """
+        if 'encoder_a_frozen' in state:
+            self.set_encoder_a_frozen(state['encoder_a_frozen'])
+        if 'encoder_b_frozen' in state:
+            self.set_encoder_b_frozen(state['encoder_b_frozen'])
+        if 'controller_frozen' in state:
+            self.set_controller_frozen(state['controller_frozen'])
+
+    def get_freeze_state_summary(self) -> str:
+        """Get human-readable freeze state summary."""
+        states = []
+        states.append(f"enc_A:{'F' if self.freeze_encoder_a else 'T'}")
+        states.append(f"enc_B:{'F' if self.freeze_encoder_b else 'T'}")
+        ctrl_state = 'F' if getattr(self, 'freeze_controller', False) else 'T'
+        states.append(f"ctrl:{ctrl_state}")
+        return " ".join(states)
+
     def forward(
         self,
         x: torch.Tensor,
         compute_control: bool = True
     ) -> Dict[str, torch.Tensor]:
-        """Forward pass with conditional gradient flow for encoder_B.
+        """Forward pass with conditional gradient flow for both encoders.
 
-        Override parent to allow gradients through encoder_B when unfrozen.
+        Override parent to allow gradients through encoder_A and encoder_B
+        based on freeze state. V5.11.6 enables progressive unfreezing.
         """
-        # Encoder A is ALWAYS frozen (coverage anchor)
-        with torch.no_grad():
+        # Encoder A: frozen by default, can be progressively unfrozen
+        if self.freeze_encoder_a:
+            with torch.no_grad():
+                mu_A, logvar_A = self.encoder_A(x)
+                z_A_euc = self.reparameterize(mu_A, logvar_A)
+        else:
+            # Allow gradients through encoder_A for progressive unfreezing
             mu_A, logvar_A = self.encoder_A(x)
             z_A_euc = self.reparameterize(mu_A, logvar_A)
 
@@ -532,8 +626,11 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
         }
 
     def get_trainable_parameters(self):
-        """Get trainable parameters including optionally unfrozen encoder_B."""
+        """Get trainable parameters including optionally unfrozen encoders."""
         params = super().get_trainable_parameters()
+
+        if not self.freeze_encoder_a:
+            params.extend(self.encoder_A.parameters())
 
         if not self.freeze_encoder_b:
             params.extend(self.encoder_B.parameters())
@@ -543,19 +640,19 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
     def get_param_groups(self, base_lr: float):
         """Get parameter groups with different learning rates.
 
-        Returns param groups for optimizer with encoder_B at lower LR.
+        Returns param groups for optimizer with encoders at lower LR.
         For dual projection, proj_A and proj_B get separate groups.
+        Frozen components are excluded from param groups.
         """
         param_groups = []
 
+        # Projections always trainable (fast adaptation layer)
         if self.use_dual_projection:
-            # Separate groups for each projection
             param_groups.append({
                 'params': list(self.projection.proj_A.parameters()),
                 'lr': base_lr,
                 'name': 'proj_A'
             })
-            # proj_B params - handle both share_direction modes
             if hasattr(self.projection, 'proj_B'):
                 proj_b_params = list(self.projection.proj_B.parameters())
             else:
@@ -572,13 +669,23 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
                 'name': 'projection'
             })
 
-        if self.controller is not None:
+        # Controller (can be frozen by homeostasis)
+        if self.controller is not None and not getattr(self, 'freeze_controller', False):
             param_groups.append({
                 'params': list(self.controller.parameters()),
-                'lr': base_lr,
+                'lr': base_lr * self.controller_lr_scale,
                 'name': 'controller'
             })
 
+        # Encoder A (can be frozen by homeostasis)
+        if not self.freeze_encoder_a:
+            param_groups.append({
+                'params': list(self.encoder_A.parameters()),
+                'lr': base_lr * self.encoder_a_lr_scale,
+                'name': 'encoder_A'
+            })
+
+        # Encoder B (can be frozen by homeostasis)
         if not self.freeze_encoder_b:
             param_groups.append({
                 'params': list(self.encoder_B.parameters()),
@@ -587,6 +694,20 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
             })
 
         return param_groups
+
+    def rebuild_optimizer(self, optimizer, base_lr: float):
+        """Rebuild optimizer with current freeze states.
+
+        Called when homeostasis changes freeze states to update optimizer.
+        Returns new optimizer with correct param groups.
+        """
+        import torch.optim as optim
+        param_groups = self.get_param_groups(base_lr)
+        new_optimizer = optim.AdamW(
+            param_groups,
+            weight_decay=optimizer.defaults.get('weight_decay', 1e-4)
+        )
+        return new_optimizer
 
     def count_parameters(self) -> Dict[str, int]:
         """Count parameters by component."""
