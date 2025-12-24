@@ -13,6 +13,8 @@ from scipy.spatial import KDTree
 import json
 import os
 
+from projections import quintic_fibration
+
 OUTPUT_DIR = "outputs/viz/calabi_yau_v58"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -60,34 +62,7 @@ print(f"32D: {emb_32d.shape}, 64D: {emb_64d.shape}, 128D: {emb_128d.shape}")
 
 
 # === Calabi-Yau Projection Functions ===
-
-def quintic_fibration(z):
-    """Calabi-Yau quintic threefold fibration projection."""
-    z = z.numpy() if torch.is_tensor(z) else z
-    z_norm = z / (np.linalg.norm(z, axis=1, keepdims=True) + 1e-8)
-
-    dim = z.shape[1]
-    n_complex = min(5, dim // 2)
-
-    # Create complex coordinates
-    w = [z_norm[:, 2*i] + 1j * z_norm[:, 2*i+1] for i in range(n_complex)]
-
-    # Quintic constraint violation
-    constraint = sum(c**5 for c in w)
-
-    # Base coordinates (B2)
-    x = np.real(w[0] * np.conj(w[1]))
-    y = np.imag(w[0] * np.conj(w[1]))
-
-    # Fiber coordinate with intertwining
-    phase = np.angle(w[0]) + np.angle(w[2]) if len(w) > 2 else np.angle(w[0])
-    z_coord = np.sin(phase * 2.5) * np.abs(constraint) * 0.3
-
-    if len(w) >= 4:
-        z_coord += 0.2 * np.real(w[2] * w[3])
-
-    return np.column_stack([x, y, z_coord])
-
+# quintic_fibration imported from projections.py
 
 def hopf_intertwined(z):
     """Hopf fibration with intertwined fiber structure."""

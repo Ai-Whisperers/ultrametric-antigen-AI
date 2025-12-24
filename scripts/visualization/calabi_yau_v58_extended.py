@@ -13,6 +13,9 @@ from scipy.spatial import KDTree
 import json
 import os
 
+# Canonical projection implementations available in projections.py
+# This script uses specialized variants for extended analysis
+
 OUTPUT_DIR = "outputs/viz/calabi_yau_v58"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 

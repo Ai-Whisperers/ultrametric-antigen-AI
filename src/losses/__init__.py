@@ -44,14 +44,8 @@ from .padic_losses import (
     PAdicNormLoss
 )
 
-from .appetitive_losses import (
-    AdaptiveRankingLoss,
-    HierarchicalNormLoss,
-    CuriosityModule,
-    SymbioticBridge,
-    AlgebraicClosureLoss,
-    ViolationBuffer
-)
+# Appetitive losses archived (unused in active training)
+# See src/losses/archive/appetitive_losses.py for legacy code
 
 from .hyperbolic_prior import (
     HyperbolicPrior,
@@ -128,12 +122,7 @@ __all__ = [
     'PAdicRankingLossV2',
     'PAdicRankingLossHyperbolic',
     'PAdicNormLoss',
-    'AdaptiveRankingLoss',
-    'HierarchicalNormLoss',
-    'CuriosityModule',
-    'SymbioticBridge',
-    'AlgebraicClosureLoss',
-    'ViolationBuffer',
+    # Appetitive exports removed (archived)
     'HyperbolicPrior',
     'HomeostaticHyperbolicPrior',
     'HyperbolicReconLoss',
