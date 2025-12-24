@@ -10,14 +10,8 @@ import numpy as np
 import torch
 from pathlib import Path
 
-sys.path.insert(
-    0,
-    str(
-        Path(__file__).resolve().parent.parent.parent
-        / "rheumatoid_arthritis"
-        / "scripts"
-    ),
-)
+# Use local hyperbolic_utils
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from hyperbolic_utils import (
     load_codon_encoder,
@@ -301,19 +295,83 @@ def analyze_escape(encoder, wt_codons, escape_info, mapping):
 
 def main():
     print("HIV-1 CTL ESCAPE ANALYSIS - codon_encoder_3adic")
+    print("=" * 60)
+
     encoder, mapping, _ = load_codon_encoder(device="cpu", version="3adic")
     pos_to_cluster = {
         pos: idx % 21 for idx, pos in enumerate(sorted(set(mapping.values())))
     }
     cluster_map = {c: pos_to_cluster.get(p, -1) for c, p in mapping.items()}
 
+    all_results = []
+    epitope_results = {}
+
     for name, data in HIV_CTL_EPITOPES.items():
         seq = data["wild_type"]["sequence"]
-        print(f"\n{name}: {seq}")
+        hla = data["wild_type"].get("hla", "Unknown")
+        print(f"\n{name} (HLA: {hla}): {seq}")
+
+        epitope_data = {
+            "epitope": name,
+            "hla": hla,
+            "wild_type_sequence": seq,
+            "escape_mutations": []
+        }
+
         for esc in data["escape_variants"]:
             r = analyze_escape(encoder, data["wild_type"]["codons"], esc, cluster_map)
             status = "CROSSED" if r["boundary_crossed"] else "within"
             print(f"  {r['mutation']}: d={r['hyperbolic_distance']:.3f}, {status}")
+
+            epitope_data["escape_mutations"].append(r)
+            all_results.append({
+                "epitope": name,
+                "hla": hla,
+                **r
+            })
+
+        epitope_results[name] = epitope_data
+
+    # Compute summary statistics
+    distances = [r["hyperbolic_distance"] for r in all_results]
+    boundary_crossed = sum(1 for r in all_results if r["boundary_crossed"])
+
+    summary = {
+        "total_mutations": len(all_results),
+        "boundary_crossed": boundary_crossed,
+        "boundary_crossing_rate": boundary_crossed / len(all_results) if all_results else 0,
+        "mean_distance": float(np.mean(distances)) if distances else 0,
+        "std_distance": float(np.std(distances)) if distances else 0,
+        "min_distance": float(np.min(distances)) if distances else 0,
+        "max_distance": float(np.max(distances)) if distances else 0,
+    }
+
+    print(f"\n{'='*60}")
+    print(f"SUMMARY:")
+    print(f"  Total mutations analyzed: {summary['total_mutations']}")
+    print(f"  Boundary crossing rate: {summary['boundary_crossing_rate']:.1%}")
+    print(f"  Mean hyperbolic distance: {summary['mean_distance']:.3f}")
+
+    # Save results to JSON
+    script_dir = Path(__file__).parent
+    results_dir = script_dir.parent / "results"
+    results_dir.mkdir(exist_ok=True)
+
+    output = {
+        "metadata": {
+            "encoder": "3-adic (V5.11.3)",
+            "analysis_type": "HIV CTL Escape Mutations"
+        },
+        "summary": summary,
+        "epitopes": epitope_results,
+        "all_mutations": all_results
+    }
+
+    output_path = results_dir / "hiv_escape_results.json"
+    with open(output_path, "w") as f:
+        json.dump(output, f, indent=2)
+
+    print(f"\nResults saved to: {output_path}")
 
 
 if __name__ == "__main__":

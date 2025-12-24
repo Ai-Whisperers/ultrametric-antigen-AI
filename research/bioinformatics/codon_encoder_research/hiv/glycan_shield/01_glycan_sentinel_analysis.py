@@ -17,10 +17,8 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 from dataclasses import dataclass
 
-# Import shared utilities from RA pipeline
-sys.path.insert(
-    0, str(Path(__file__).parent.parent.parent / "rheumatoid_arthritis" / "scripts")
-)
+# Import shared utilities from local scripts folder
+sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 from hyperbolic_utils import (
     load_codon_encoder,
     poincare_distance,
@@ -387,8 +385,10 @@ def main():
             else:
                 print(f"  {glycan_name}: Not found in analysis")
 
-    # Save results
-    output_dir = Path(__file__).resolve().parents[3]
+    # Save results to research hiv results folder
+    script_dir = Path(__file__).parent
+    output_dir = script_dir.parent / "results"
+    output_dir.mkdir(exist_ok=True)
     output_file = output_dir / "glycan_analysis_results.json"
 
     results_dict = {

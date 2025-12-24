@@ -50,12 +50,12 @@ def get_output_dir() -> Path:
 
 
 def load_glycan_results() -> Dict:
-    """Load glycan analysis results."""
+    """Load glycan analysis results from hiv/results folder."""
     script_dir = Path(__file__).parent
-    results_path = script_dir / "glycan_analysis_results.json"
+    results_path = script_dir.parent / "results" / "glycan_analysis_results.json"
 
     if not results_path.exists():
-        raise FileNotFoundError(f"Run 01_glycan_sentinel_analysis.py first")
+        raise FileNotFoundError(f"Run 01_glycan_sentinel_analysis.py first. Expected: {results_path}")
 
     with open(results_path, 'r') as f:
         return json.load(f)

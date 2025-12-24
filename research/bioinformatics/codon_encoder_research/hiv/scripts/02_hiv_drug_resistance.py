@@ -10,7 +10,8 @@ import numpy as np
 import torch
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'rheumatoid_arthritis' / 'scripts'))
+# Use local hyperbolic_utils
+sys.path.insert(0, str(Path(__file__).parent))
 
 from hyperbolic_utils import load_codon_encoder, poincare_distance, codon_to_onehot, AA_TO_CODON
 
