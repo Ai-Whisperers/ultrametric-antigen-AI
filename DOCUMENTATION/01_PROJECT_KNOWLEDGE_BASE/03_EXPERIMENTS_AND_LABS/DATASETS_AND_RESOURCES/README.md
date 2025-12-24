@@ -14,4 +14,5 @@ Comprehensive list of datasets, tools, and resources for expanding Ternary VAEs 
 | **Diseases**         | Autoimmune (RA), HLA, Epitopes          | [06_AUTOIMMUNE_AND_DISEASE_DBS.md](06_AUTOIMMUNE_AND_DISEASE_DBS.md)   |
 | **Origin of Life**   | Astrobiology, Prebiotic Chemistry       | [07_ORIGIN_OF_LIFE_RESOURCES.md](07_ORIGIN_OF_LIFE_RESOURCES.md)       |
 | **Machine Learning** | Models (ESM), Tools (PyGC), Frameworks  | [08_MACHINE_LEARNING_AND_TOOLS.md](08_MACHINE_LEARNING_AND_TOOLS.md)   |
+| **Peptides/AMPs**    | Antimicrobial peptides, StarPepDB       | [10_ANTIMICROBIAL_PEPTIDE_RESOURCES.md](10_ANTIMICROBIAL_PEPTIDE_RESOURCES.md) |
 | **Action Plan**      | Checklists, APIs, Search Targets        | [09_ACTIONABLE_DATA_CHECKLIST.md](09_ACTIONABLE_DATA_CHECKLIST.md)     |

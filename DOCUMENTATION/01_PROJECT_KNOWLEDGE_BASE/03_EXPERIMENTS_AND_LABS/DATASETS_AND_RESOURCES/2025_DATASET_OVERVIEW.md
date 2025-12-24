@@ -71,6 +71,13 @@
 | **PubMed – Lenacapavir pharmacodynamics** | IC₅₀, PK/PD, reported drug‑drug interactions (sertraline). | Encode pharmacodynamic curves as numeric vectors; test whether lenacapavir‑induced p‑adic shift reduces sertraline re‑uptake in silico. |
 | **ClinicalTrials.gov – NCT05364044**      | Study of lenacapavir + antidepressants.                    | Extract adverse‑event frequencies; correlate with predicted geometric changes in capsid protein.                                        |
 
+## 10. Antimicrobial Peptides (AMPs)
+
+| Dataset                                      | Content                                                                                    | How we can use it                                                                                                                    |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **StarPepDB**                                | Graph-based integration of 40+ bioactive peptide databases; experimentally validated.       | Encode peptide sequences → compute p-adic representation of bioactive motifs → train VAE to predict antimicrobial potency.           |
+| **APD3 / CAMP / DBAASP**                     | Natural and synthetic AMP sequences, MIC values, structural modifications.                 | Cross-validate StarPepDB findings; use as high-confidence training subsets for specific bacterial target models.                     |
+
 ---
 
 ## How to integrate these datasets into the Ternary‑VAE pipeline

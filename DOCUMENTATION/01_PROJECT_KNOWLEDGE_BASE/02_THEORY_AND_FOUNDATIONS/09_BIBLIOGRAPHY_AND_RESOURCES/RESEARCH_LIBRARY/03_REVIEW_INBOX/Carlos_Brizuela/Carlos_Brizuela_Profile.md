@@ -56,3 +56,7 @@ His primary research focus lies at the intersection of **Computational Biology**
 *   **Visual Graph Mining:** Construction of molecular similarity networks to explore the chemical space of bioactive peptides.
 *   **Evolutionary Algorithms:** Application of genetic algorithms to problems like the Shortest Common Superstring Problem and multi-objective optimization tasks.
 *   **Polypharmacology:** Identifying features of human-target antimicrobials using ML techniques.
+
+## Codebase Integration
+*   **Ingestion Pipeline:** `scripts/ingest/ingest_starpep.py` implements the loading of peptide datasets (like StarPepDB) used in Brizuela's work.
+*   **Geometric Encoding:** We utilize the `encode_sequence_hyperbolic` function (in `hyperbolic_utils.py`) to map his alignment-free peptide sequences into our project's 3-adic hyperbolic space, effectively translating his "molecular similarity" concepts into our "ternary geometric" framework.
