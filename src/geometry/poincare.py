@@ -337,9 +337,37 @@ def get_riemannian_optimizer(
     raise ValueError(f"Unknown optimizer type: {optimizer_type}")
 
 
+def poincare_distance_matrix(
+    z: torch.Tensor,
+    c: float = 1.0
+) -> torch.Tensor:
+    """Compute all pairwise Poincare distances (vectorized).
+
+    Uses geoopt for numerical stability at the ball boundary.
+
+    Args:
+        z: Points on Poincare ball, shape (n, dim)
+        c: Curvature parameter
+
+    Returns:
+        Distance matrix of shape (n, n)
+    """
+    manifold = get_manifold(c)
+    n = z.size(0)
+
+    # Expand for pairwise computation: (n, 1, dim) and (1, n, dim)
+    z_i = z.unsqueeze(1)  # (n, 1, dim)
+    z_j = z.unsqueeze(0)  # (1, n, dim)
+
+    # Use geoopt's stable distance computation
+    # Broadcasting: (n, 1, dim) vs (1, n, dim) -> (n, n)
+    return manifold.dist(z_i, z_j, keepdim=False)
+
+
 __all__ = [
     'get_manifold',
     'poincare_distance',
+    'poincare_distance_matrix',
     'project_to_poincare',
     'exp_map_zero',
     'log_map_zero',

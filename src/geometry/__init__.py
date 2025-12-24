@@ -12,6 +12,7 @@ Key components:
 from .poincare import (
     get_manifold,
     poincare_distance,
+    poincare_distance_matrix,
     project_to_poincare,
     exp_map_zero,
     log_map_zero,
@@ -31,6 +32,7 @@ from .poincare import (
 __all__ = [
     'get_manifold',
     'poincare_distance',
+    'poincare_distance_matrix',
     'project_to_poincare',
     'exp_map_zero',
     'log_map_zero',
