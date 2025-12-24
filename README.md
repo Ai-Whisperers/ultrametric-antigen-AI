@@ -467,14 +467,34 @@ The core Python package.
 
 ### `DOCUMENTATION/` - Knowledge Base
 
-- **[01_GUIDES](DOCUMENTATION/01_GUIDES/)**: Explanations & Guides.
+## Jona's Research Roadmap
+
+Detailed research notes and future directions can be found in the documentation:
+
+- [Strategic Roadmap (Jona)](DOCUMENTATION/04_PROJECT_MANAGEMENT/JONA_ROADMAP.md)
+- [Scientific Domains](DOCUMENTATION/02_THEORY_AND_RESEARCH/biology_context/SCIENTIFIC_DOMAINS.md)
+- [Medical Frontiers](DOCUMENTATION/02_THEORY_AND_RESEARCH/biology_context/MEDICAL_FRONTIERS.md)
+- [Relevant Repositories](DOCUMENTATION/02_THEORY_AND_RESEARCH/academic_output/RELEVANT_REPOS.md)
+- [Suggested Libraries](DOCUMENTATION/01_GUIDES/shared/SUGGESTED_LIBRARIES.md)
+
+* **[01_GUIDES](DOCUMENTATION/01_GUIDES/)**: Explanations & Guides.
+
   - [Setup & Dependencies](DOCUMENTATION/01_GUIDES/developers/SETUP_AND_DEPENDENCIES.md)
   - [Workflows & Scripts](DOCUMENTATION/01_GUIDES/developers/WORKFLOWS_AND_SCRIPTS.md)
-  - [Testing Strategy](DOCUMENTATION/01_GUIDES/developers/TESTING.md)
-- **[02_THEORY](DOCUMENTATION/02_THEORY_AND_RESEARCH/)**: Mathematical foundations and analysis.
-- **[03_EXPERIMENTS](DOCUMENTATION/03_EXPERIMENTS_AND_LABS/)**: Research scripts and labs.
+  - [Mathematical Foundations](DOCUMENTATION/01_GUIDES/shared/mathematical_foundations/) (Split into 3 parts)
+    - [Ternary VAE Formulation](DOCUMENTATION/01_GUIDES/shared/mathematical_foundations/01_ternary_vae_formulation.md)
+    - [StateNet Dynamics](DOCUMENTATION/01_GUIDES/shared/mathematical_foundations/02_statenet_dynamics.md)
+    - [Optimization & Convergence](DOCUMENTATION/01_GUIDES/shared/mathematical_foundations/03_optimization_and_convergence.md)
+  - [Dual VAE Architecture](DOCUMENTATION/01_GUIDES/developers/DUAL_VAE_ARCHITECTURE_GUIDE.md)
+
+* **[02_THEORY_AND_RESEARCH](DOCUMENTATION/02_THEORY_AND_RESEARCH/)**: Research & Context.
+  - **Foundations**: [Conjectures](DOCUMENTATION/02_THEORY_AND_RESEARCH/foundations/CONJECTURES_INFORMATIONAL_GEOMETRY.md), [Topology](DOCUMENTATION/02_THEORY_AND_RESEARCH/foundations/TOPOLOGY_OF_INTELLIGENCE.md)
+  - **Biology Context**: [Medical Frontiers](DOCUMENTATION/02_THEORY_AND_RESEARCH/biology_context/MEDICAL_FRONTIERS.md), [Scientific Domains](DOCUMENTATION/02_THEORY_AND_RESEARCH/biology_context/SCIENTIFIC_DOMAINS.md)
+  - **Academic Output**: [Database](DOCUMENTATION/02_THEORY_AND_RESEARCH/academic_output/ACADEMIC_DATABASE.md), [Research Opps](DOCUMENTATION/02_THEORY_AND_RESEARCH/academic_output/RESEARCH_OPPORTUNITIES.md)
+  - **Reports**: [Codebase Analysis](DOCUMENTATION/02_THEORY_AND_RESEARCH/reports/V5_11_CODEBASE_ANALYSIS.md)
+* **[03_EXPERIMENTS](DOCUMENTATION/03_EXPERIMENTS_AND_LABS/)**: Research scripts and labs.
   - Contains `bioinformatics/` and `mathematics/` experiments.
-- **[05_PRESENTATION](DOCUMENTATION/05_PRESENTATION/)**: Pitch decks and summaries.
+* **[05_PRESENTATION](DOCUMENTATION/05_PRESENTATION/)**: Pitch decks and summaries.
 
 ### `results/` - Data & Outputs
 
