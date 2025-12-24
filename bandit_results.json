@@ -1,0 +1,4742 @@
+{
+  "errors": [
+    {
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\19_alphafold_structure_mapping.py",
+      "reason": "syntax error while parsing AST from file"
+    }
+  ],
+  "generated_at": "2025-12-24T03:38:24Z",
+  "metrics": {
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\02_THEORY_AND_FOUNDATIONS\\embeddings_analysis\\01_extract_compare_embeddings.py": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 2,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 472,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\02_THEORY_AND_FOUNDATIONS\\embeddings_analysis\\02_visualize_hierarchy.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 117,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\hiv\\glycan_shield\\01_glycan_sentinel_analysis.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 343,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\hiv\\glycan_shield\\02_alphafold3_input_generator.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 331,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\hiv\\glycan_shield\\03_create_batch_json.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 61,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\hiv\\scripts\\01_hiv_escape_analysis.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 301,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\hiv\\scripts\\02_hiv_drug_resistance.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 97,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\neurodegeneration\\alzheimers\\01_tau_phospho_sweep.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 361,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\neurodegeneration\\alzheimers\\02_tau_mtbr_interface.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 483,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\neurodegeneration\\alzheimers\\03_tau_vae_trajectory.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 502,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\neurodegeneration\\alzheimers\\04_tau_combinatorial.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 441,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\neurodegeneration\\alzheimers\\05_alphafold3_validation_jobs.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 250,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\neurodegeneration\\alzheimers\\data\\tau_phospho_database.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 250,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\01_hla_functionomic_analysis.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 562,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\02_hla_expanded_analysis.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 649,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\03_citrullination_analysis.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 1,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 516,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\04_codon_optimizer.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 556,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\05_regenerative_axis_analysis.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 554,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\06_autoantigen_epitope_analysis.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 587,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\07_citrullination_shift_analysis.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 269,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\08_augmented_epitope_database.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 631,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\09_immunogenicity_analysis_augmented.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 323,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\10_immunogenicity_visualizations.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 438,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\11_immunogenicity_predictor.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 554,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\12_download_human_proteome.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 2,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 2,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 284,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\13_extract_arginine_contexts.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 209,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\14_compute_geometric_features.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 300,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\15_predict_immunogenicity.py": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 2,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 328,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\16_enrichment_analysis.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 282,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\17_proteome_visualizations.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 348,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\18_extract_acpa_proteins.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 269,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\18_goldilocks_validation.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 409,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\19_alphafold_structure_mapping.py": {
+      "loc": 552,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\19_comprehensive_ra_ptm_sweep.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 281,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\20_deep_structural_analysis.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 537,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\20_ra_handshake_analysis.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 332,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\21_alphafold3_input_generator.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 305,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\21_ra_alphafold_jobs.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 196,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\22_alphafold3_analysis.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 342,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\22_deep_citrullination_analysis.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 315,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\23_alphafold_visualizations.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 594,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\24_model_validation_visualizations.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 574,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\cross_validation.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 230,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\hyperbolic_utils.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 355,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\visualizations\\generate_all.py": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 2,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 79,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\visualizations\\pitch\\01_pathophysiology_funnel\\generate.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 83,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\visualizations\\pitch\\02_hla_risk_charts\\generate.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 97,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\visualizations\\pitch\\03_intervention_pathways\\generate.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 124,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\visualizations\\pitch\\04_safety_comparisons\\generate.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 114,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\visualizations\\pitch\\05_goldilocks_radar\\generate.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 182,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\visualizations\\scientific\\01_hla_pca_projections\\generate.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 136,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\visualizations\\scientific\\02_cluster_boundary_3d\\generate.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 210,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\visualizations\\scientific\\04_calabi_yau_manifolds\\generate.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 273,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\visualizations\\scientific\\05_distance_heatmaps\\generate.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 161,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\visualizations\\utils\\__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 2,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\visualizations\\utils\\data_loader.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 207,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\visualizations\\utils\\plotting.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 120,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\sars_cov_2\\glycan_shield\\01_spike_sentinel_analysis.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 238,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\sars_cov_2\\glycan_shield\\02_handshake_interface_analysis.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 411,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\sars_cov_2\\glycan_shield\\03_deep_handshake_sweep.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 422,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\sars_cov_2\\glycan_shield\\04_alphafold3_validation_jobs.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 267,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\data\\natural_positions_v5_11_3.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 8,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\01_bioinformatics_analysis.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 709,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\02_genetic_code_padic.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 579,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\03_reverse_padic_search.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 506,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\04_fast_reverse_search.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 275,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\05_analyze_natural_positions.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 483,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\06_learn_codon_mapping.py": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 1,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 527,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\07_extract_v5_11_3_embeddings.py": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 1,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 206,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\08_find_natural_positions_v5_11_3.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 289,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\09_train_codon_encoder_3adic.py": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 1,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 420,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\p-adic-genomics\\validations\\deep_encoder_validation.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 611,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\p-adic-genomics\\validations\\encoder_cross_validation.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 439,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\p-adic-genomics\\validations\\padic_biology_validation.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 452,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\01_extract_embeddings.py": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 2,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 217,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\02_compute_spectrum.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 292,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\02_compute_spectrum_fast.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 184,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\03_compare_zeta.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 368,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\04_padic_spectral_analysis.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 216,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\05_exact_padic_analysis.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 304,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\07_adelic_analysis.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 325,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\08_alternative_spectral_operators.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 377,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\09_binary_ternary_decomposition.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 345,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\10_semantic_amplification_benchmark.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 419,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\11_variational_orthogonality_test.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 302,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\import_test.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 8,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 0,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\analysis\\__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 0,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\analysis\\analyze_external_tools.py": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 2,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 138,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\analysis\\analyze_zero_structure.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 197,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\analysis\\audit_repo.py": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 1,
+      "SEVERITY.LOW": 1,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 110,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\analysis\\code_stats.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 1,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 97,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\analysis\\compare_options.py": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 2,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 274,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\analysis\\comprehensive_audit.py": {
+      "CONFIDENCE.HIGH": 3,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 1,
+      "SEVERITY.LOW": 2,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 189,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\analysis\\verify_mathematical_proofs.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 123,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\benchmark\\measure_coupled_resolution.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 316,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\benchmark\\measure_manifold_resolution.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 321,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\benchmark\\run_benchmark.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 358,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\eval\\downstream_validation.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 285,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\train\\archive\\train_appetitive_vae.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 130,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\train\\archive\\train_hyperbolic_structure.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 310,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\train\\archive\\train_purposeful.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 317,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\train\\archive\\train_ternary_v5_10.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 225,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\train\\archive\\train_ternary_v5_5.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 401,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\train\\archive\\train_ternary_v5_6.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 85,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\train\\archive\\train_ternary_v5_7.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 446,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\train\\archive\\train_ternary_v5_8.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 330,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\train\\archive\\train_ternary_v5_9.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 403,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\train\\archive\\train_ternary_v5_9_1.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 393,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\train\\train.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 772,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\visualization\\analyze_3adic_deep.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 499,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\visualization\\analyze_3adic_structure.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 517,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\visualization\\analyze_advanced_manifold.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 455,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\visualization\\analyze_v5_5_quality.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 246,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\visualization\\calabi_yau_fibration.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 375,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\visualization\\calabi_yau_projection.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 348,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\visualization\\calabi_yau_surface_mesh.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 325,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\visualization\\calabi_yau_v58_extended.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 361,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\visualization\\calabi_yau_v58_fast.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 266,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\visualization\\calabi_yau_v58_fibration.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 515,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\visualization\\plot_training_artifacts.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 445,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\visualization\\visualize_ternary_manifold.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 601,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\visualization\\viz_v58_v59.py": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 2,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 146,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\scripts\\visualization\\viz_v59_hyperbolic.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 133,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\setup.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 82,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 35,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\analysis\\geometry.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 113,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\artifacts\\__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 10,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\artifacts\\checkpoint_manager.py": {
+      "CONFIDENCE.HIGH": 2,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 2,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 192,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\core\\__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 33,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\core\\ternary.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 250,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\data\\__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 30,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\data\\dataset.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 61,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\data\\generation.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 46,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\data\\gpu_resident.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 177,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\data\\loaders.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 98,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\geometry\\__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 32,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\geometry\\poincare.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 293,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\losses\\__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 151,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\losses\\appetitive_losses.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 425,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\losses\\base.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 174,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\losses\\components.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 471,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\losses\\consequence_predictor.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 231,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\losses\\dual_vae_loss.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 402,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\losses\\hyperbolic_prior.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 259,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\losses\\hyperbolic_recon.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 415,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\losses\\padic_geodesic.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 477,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\losses\\padic_losses.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 680,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\losses\\radial_stratification.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 113,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\losses\\registry.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 285,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\losses\\zero_structure.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 238,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\metrics\\__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 20,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\metrics\\hyperbolic.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 117,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\models\\__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 24,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\models\\archive\\appetitive_vae.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 247,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\models\\archive\\ternary_vae_v5_10.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 983,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\models\\archive\\ternary_vae_v5_6.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 416,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\models\\archive\\ternary_vae_v5_7.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 478,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\models\\curriculum.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 160,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\models\\differentiable_controller.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 206,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\models\\homeostasis.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 355,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\models\\hyperbolic_projection.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 227,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\models\\ternary_vae.py": {
+      "CONFIDENCE.HIGH": 3,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 3,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 582,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\observability\\__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 39,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\observability\\async_writer.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 182,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\observability\\coverage.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 131,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\observability\\metrics_buffer.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 152,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\training\\__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 49,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\training\\archive\\appetitive_trainer.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 499,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\training\\config_schema.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 350,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\training\\environment.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 177,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\training\\hyperbolic_trainer.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 790,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\training\\monitor.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 1,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 822,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\training\\schedulers.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 160,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\training\\trainer.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 485,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\utils\\__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 37,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\utils\\metrics.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 191,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\utils\\reproducibility.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 35,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\src\\utils\\ternary_lut.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 111,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\tests\\integration\\test_generalization.py": {
+      "CONFIDENCE.HIGH": 10,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 9,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 335,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\tests\\integration\\test_reproducibility.py": {
+      "CONFIDENCE.HIGH": 22,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 21,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 157,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    ".\\tests\\integration\\test_training_validation.py": {
+      "CONFIDENCE.HIGH": 11,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 2,
+      "SEVERITY.LOW": 8,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 246,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "_totals": {
+      "CONFIDENCE.HIGH": 110,
+      "CONFIDENCE.LOW": 3,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 5,
+      "SEVERITY.LOW": 51,
+      "SEVERITY.MEDIUM": 57,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 54665,
+      "nosec": 0,
+      "skipped_tests": 0
+    }
+  },
+  "results": [
+    {
+      "code": "96     \"\"\"Load checkpoint and extract projection weights.\"\"\"\n97     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n98     return {\n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\02_THEORY_AND_FOUNDATIONS\\embeddings_analysis\\01_extract_compare_embeddings.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 97,
+      "line_range": [
+        97
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "278     \"\"\"Load frozen encoder weights from v5.5 checkpoint.\"\"\"\n279     checkpoint = torch.load(v5_5_checkpoint, map_location=device, weights_only=False)\n280     model_state = checkpoint['model']\n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\02_THEORY_AND_FOUNDATIONS\\embeddings_analysis\\01_extract_compare_embeddings.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 279,
+      "line_range": [
+        279
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "668     print(\"-\" * 70)\n669     print(\"\"\"\n670     For regenerating healthy synovium without triggering autoimmunity:\n671 \n672     1. CODON OPTIMIZATION: Select synonymous codons that place epitopes\n673        deep inside p-adic clusters (far from boundaries)\n674 \n675     2. ARGININE CODON CHOICE: Different R codons create spread of {:.4f} in\n676        embedding space. Choosing \"central\" R codons may reduce immunogenicity.\n677 \n678     3. AVOID HIGH-SHIFT SEQUENCES: Screen synthetic synoviocyte genes for\n679        epitopes that would shift significantly upon citrullination.\n680 \n681     4. TOLERANCE INDUCTION: Design altered peptide ligands that occupy the\n682        same p-adic region but don't trigger T cell activation.\n683     \"\"\".format(arg_analysis['max_spread']))\n684 \n",
+      "col_offset": 10,
+      "end_col_offset": 7,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\03_citrullination_analysis.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 89,
+        "link": "https://cwe.mitre.org/data/definitions/89.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Possible SQL injection vector through string-based query construction.",
+      "line_number": 669,
+      "line_range": [
+        669,
+        670,
+        671,
+        672,
+        673,
+        674,
+        675,
+        676,
+        677,
+        678,
+        679,
+        680,
+        681,
+        682,
+        683
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b608_hardcoded_sql_expressions.html",
+      "test_id": "B608",
+      "test_name": "hardcoded_sql_expressions"
+    },
+    {
+      "code": "97 \n98     response = requests.get(url, params=params, stream=True)\n99     response.raise_for_status()\n",
+      "col_offset": 15,
+      "end_col_offset": 60,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\12_download_human_proteome.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 400,
+        "link": "https://cwe.mitre.org/data/definitions/400.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Call to requests without timeout",
+      "line_number": 98,
+      "line_range": [
+        98
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b113_request_without_timeout.html",
+      "test_id": "B113",
+      "test_name": "request_without_timeout"
+    },
+    {
+      "code": "144 \n145     response = requests.get(url, params=params, stream=True)\n146     response.raise_for_status()\n",
+      "col_offset": 15,
+      "end_col_offset": 60,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\12_download_human_proteome.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 400,
+        "link": "https://cwe.mitre.org/data/definitions/400.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Call to requests without timeout",
+      "line_number": 145,
+      "line_range": [
+        145
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b113_request_without_timeout.html",
+      "test_id": "B113",
+      "test_name": "request_without_timeout"
+    },
+    {
+      "code": "18 from collections import Counter\n19 import pickle\n20 \n",
+      "col_offset": 0,
+      "end_col_offset": 13,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\15_predict_immunogenicity.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Consider possible security implications associated with pickle module.",
+      "line_number": 19,
+      "line_range": [
+        19
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/blacklists/blacklist_imports.html#b403-import-pickle",
+      "test_id": "B403",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "261             valid_indices.append(i)\n262         except Exception:\n263             continue\n264 \n",
+      "col_offset": 8,
+      "end_col_offset": 20,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\15_predict_immunogenicity.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Try, Except, Continue detected.",
+      "line_number": 262,
+      "line_range": [
+        262,
+        263
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b112_try_except_continue.html",
+      "test_id": "B112",
+      "test_name": "try_except_continue"
+    },
+    {
+      "code": "132             req = urllib.request.Request(url, headers={'User-Agent': 'Python/research'})\n133             with urllib.request.urlopen(req, timeout=30) as response:\n134                 data = json.loads(response.read().decode('utf-8'))\n",
+      "col_offset": 17,
+      "end_col_offset": 56,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\18_extract_acpa_proteins.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 22,
+        "link": "https://cwe.mitre.org/data/definitions/22.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Audit url open for permitted schemes. Allowing use of file:/ or custom schemes is often unexpected.",
+      "line_number": 133,
+      "line_range": [
+        133
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/blacklists/blacklist_calls.html#b310-urllib-urlopen",
+      "test_id": "B310",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "288     encoder = CodonEncoder(input_dim=12, hidden_dim=32, embed_dim=16, n_clusters=21)\n289     checkpoint = torch.load(encoder_path, map_location=device, weights_only=False)\n290     encoder.load_state_dict(checkpoint['model_state'])\n",
+      "col_offset": 17,
+      "end_col_offset": 82,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\scripts\\hyperbolic_utils.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 289,
+      "line_range": [
+        289
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "6 \n7 import subprocess\n8 import sys\n",
+      "col_offset": 0,
+      "end_col_offset": 17,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\visualizations\\generate_all.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Consider possible security implications associated with the subprocess module.",
+      "line_number": 7,
+      "line_range": [
+        7
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/blacklists/blacklist_imports.html#b404-import-subprocess",
+      "test_id": "B404",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "20     try:\n21         result = subprocess.run(\n22             [sys.executable, str(script_path)],\n23             cwd=str(BASE_DIR),\n24             capture_output=True,\n25             text=True\n26         )\n27 \n",
+      "col_offset": 17,
+      "end_col_offset": 9,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\codon_encoder_research\\rheumatoid_arthritis\\visualizations\\generate_all.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "subprocess call - check for execution of untrusted input.",
+      "line_number": 21,
+      "line_range": [
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b603_subprocess_without_shell_equals_true.html",
+      "test_id": "B603",
+      "test_name": "subprocess_without_shell_equals_true"
+    },
+    {
+      "code": "738     print(\"Loading embeddings...\")\n739     data = torch.load(\n740         PROJECT_ROOT / \"riemann_hypothesis_sandbox\" / \"embeddings\" / \"embeddings.pt\",\n741         weights_only=False,\n742     )\n743 \n",
+      "col_offset": 11,
+      "end_col_offset": 5,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\01_bioinformatics_analysis.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 739,
+      "line_range": [
+        739,
+        740,
+        741,
+        742
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "652     print(\"\\nLoading v1.1.0 production embeddings...\")\n653     data = torch.load(\n654         PROJECT_ROOT / \"riemann_hypothesis_sandbox\" / \"embeddings\" / \"embeddings.pt\",\n655         weights_only=False,\n656     )\n657 \n",
+      "col_offset": 11,
+      "end_col_offset": 5,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\02_genetic_code_padic.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 653,
+      "line_range": [
+        653,
+        654,
+        655,
+        656
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "595     print(\"\\nLoading v1.1.0 production embeddings...\")\n596     data = torch.load(\n597         PROJECT_ROOT / \"riemann_hypothesis_sandbox\" / \"embeddings\" / \"embeddings.pt\",\n598         weights_only=False,\n599     )\n600 \n",
+      "col_offset": 11,
+      "end_col_offset": 5,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\03_reverse_padic_search.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 596,
+      "line_range": [
+        596,
+        597,
+        598,
+        599
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "97     print(\"\\nLoading embeddings...\")\n98     data = torch.load(\n99         PROJECT_ROOT / \"riemann_hypothesis_sandbox\" / \"embeddings\" / \"embeddings.pt\",\n100         weights_only=False,\n101     )\n102 \n",
+      "col_offset": 11,
+      "end_col_offset": 5,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\04_fast_reverse_search.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 98,
+      "line_range": [
+        98,
+        99,
+        100,
+        101
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "210     aa_sizes = [aa_counts[aa] for aa in aa_sorted]\n211     assert aa_sizes == CLUSTER_SIZES, f\"Mismatch: {aa_sizes} vs {CLUSTER_SIZES}\"\n212 \n",
+      "col_offset": 4,
+      "end_col_offset": 80,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\06_learn_codon_mapping.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 211,
+      "line_range": [
+        211
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "644     )\n645     vae_data = torch.load(data_path, weights_only=False)\n646 \n",
+      "col_offset": 15,
+      "end_col_offset": 56,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\06_learn_codon_mapping.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 645,
+      "line_range": [
+        645
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "76     print(f\"  Loading V5.11.3 weights from: {v5_11_3_path}\")\n77     checkpoint = torch.load(v5_11_3_path, map_location=device, weights_only=False)\n78 \n",
+      "col_offset": 17,
+      "end_col_offset": 82,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\07_extract_v5_11_3_embeddings.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 77,
+      "line_range": [
+        77
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "181     n_ops = len(valuations)\n182     assert n_ops == 19683, f\"Expected 19683 operations, got {n_ops}\"\n183     print(f\"  Total operations: {n_ops} (expected 19683)\")\n",
+      "col_offset": 4,
+      "end_col_offset": 68,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\07_extract_v5_11_3_embeddings.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 182,
+      "line_range": [
+        182
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "322     print(f\"\\nLoading embeddings from: {embeddings_path}\")\n323     data = torch.load(embeddings_path, weights_only=False)\n324 \n",
+      "col_offset": 11,
+      "end_col_offset": 58,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\08_find_natural_positions_v5_11_3.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 323,
+      "line_range": [
+        323
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "182     aa_sizes = [aa_counts[aa] for aa in aa_sorted]\n183     assert aa_sizes == CLUSTER_SIZES, f\"Mismatch: {aa_sizes} vs {CLUSTER_SIZES}\"\n184 \n",
+      "col_offset": 4,
+      "end_col_offset": 80,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\09_train_codon_encoder_3adic.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 183,
+      "line_range": [
+        183
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "507     print(f\"\\nLoading V5.11.3 embeddings from: {embeddings_path}\")\n508     emb_data = torch.load(embeddings_path, weights_only=False)\n509     vae_embeddings = emb_data[\"z_B_hyp\"]  # Use VAE-B (stronger hierarchy)\n",
+      "col_offset": 15,
+      "end_col_offset": 62,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\genetic_code\\scripts\\09_train_codon_encoder_3adic.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 508,
+      "line_range": [
+        508
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "257 \n258     checkpoint = torch.load(encoder_path, map_location='cpu', weights_only=False)\n259 \n",
+      "col_offset": 17,
+      "end_col_offset": 81,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\p-adic-genomics\\validations\\deep_encoder_validation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 258,
+      "line_range": [
+        258
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "113         try:\n114             checkpoint = torch.load(encoder_path, map_location='cpu')\n115             print(f\"Loaded encoder from: {encoder_path}\")\n",
+      "col_offset": 25,
+      "end_col_offset": 69,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\p-adic-genomics\\validations\\encoder_cross_validation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 114,
+      "line_range": [
+        114
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "28     \"\"\"Load a v5.5 style checkpoint (encoder/decoder only, no projection).\"\"\"\n29     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n30 \n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\01_extract_embeddings.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 29,
+      "line_range": [
+        29
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "92     # Load checkpoint to get config\n93     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n94     config = checkpoint.get(\"config\", {})\n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\01_extract_embeddings.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 93,
+      "line_range": [
+        93
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "325     print(f\"Loading embeddings from: {embeddings_path}\")\n326     data = torch.load(embeddings_path)\n327     z_hyp = data[\"z_hyperbolic\"]\n",
+      "col_offset": 11,
+      "end_col_offset": 38,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\02_compute_spectrum.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 326,
+      "line_range": [
+        326
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "105     print(f\"Loading embeddings...\")\n106     data = torch.load(PROJECT_ROOT / args.embeddings)\n107     z_hyp = data[\"z_hyperbolic\"]\n",
+      "col_offset": 11,
+      "end_col_offset": 53,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\02_compute_spectrum_fast.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 106,
+      "line_range": [
+        106
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "82     print(\"Loading full embedding space...\")\n83     data = torch.load(\n84         PROJECT_ROOT / \"research/spectral_analysis\" / \"embeddings\" / \"embeddings.pt\",\n85         weights_only=False,\n86     )\n87     z_hyp = data[\"z_hyperbolic\"]\n",
+      "col_offset": 11,
+      "end_col_offset": 5,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\04_padic_spectral_analysis.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 83,
+      "line_range": [
+        83,
+        84,
+        85,
+        86
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "234     print(\"Loading embeddings (VAE-B for best hierarchy)...\")\n235     data = torch.load(\n236         PROJECT_ROOT / \"research/spectral_analysis\" / \"embeddings\" / \"embeddings.pt\",\n237         weights_only=False,\n238     )\n239 \n",
+      "col_offset": 11,
+      "end_col_offset": 5,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\05_exact_padic_analysis.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 235,
+      "line_range": [
+        235,
+        236,
+        237,
+        238
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "386     print(\"Loading embeddings...\")\n387     data = torch.load(\n388         PROJECT_ROOT / \"research/spectral_analysis\" / \"embeddings\" / \"embeddings.pt\",\n389         weights_only=False,\n390     )\n391 \n",
+      "col_offset": 11,
+      "end_col_offset": 5,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\07_adelic_analysis.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 387,
+      "line_range": [
+        387,
+        388,
+        389,
+        390
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "426     print(\"Loading embeddings...\")\n427     data = torch.load(\n428         PROJECT_ROOT / \"research/spectral_analysis\" / \"embeddings\" / \"embeddings.pt\",\n429         weights_only=False,\n430     )\n431 \n",
+      "col_offset": 11,
+      "end_col_offset": 5,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\08_alternative_spectral_operators.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 427,
+      "line_range": [
+        427,
+        428,
+        429,
+        430
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "390     print(\"Loading embeddings...\")\n391     data = torch.load(\n392         PROJECT_ROOT / \"research/spectral_analysis\" / \"embeddings\" / \"embeddings.pt\",\n393         weights_only=False,\n394     )\n395 \n",
+      "col_offset": 11,
+      "end_col_offset": 5,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\09_binary_ternary_decomposition.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 391,
+      "line_range": [
+        391,
+        392,
+        393,
+        394
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "44 \n45     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n46     model_state = checkpoint.get(\"model\", checkpoint.get(\"model_state\", {}))\n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\DOCUMENTATION\\01_PROJECT_KNOWLEDGE_BASE\\03_EXPERIMENTS_AND_LABS\\experiments_and_labs\\bioinformatics\\spectral_analysis_over_models\\scripts\\11_variational_orthogonality_test.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 45,
+      "line_range": [
+        45
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "1 import sys\n2 import subprocess\n3 import json\n",
+      "col_offset": 0,
+      "end_col_offset": 17,
+      "filename": ".\\scripts\\analysis\\analyze_external_tools.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Consider possible security implications associated with the subprocess module.",
+      "line_number": 2,
+      "line_range": [
+        2
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/blacklists/blacklist_imports.html#b404-import-subprocess",
+      "test_id": "B404",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "95     try:\n96         subprocess.run(\n97             [sys.executable, \"-m\", tool_name, \"--version\"],\n98             capture_output=True,\n99             check=True,\n100         )\n101         return True\n",
+      "col_offset": 8,
+      "end_col_offset": 9,
+      "filename": ".\\scripts\\analysis\\analyze_external_tools.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "subprocess call - check for execution of untrusted input.",
+      "line_number": 96,
+      "line_range": [
+        96,
+        97,
+        98,
+        99,
+        100
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b603_subprocess_without_shell_equals_true.html",
+      "test_id": "B603",
+      "test_name": "subprocess_without_shell_equals_true"
+    },
+    {
+      "code": "63 \n64     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n65 \n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\scripts\\analysis\\analyze_zero_structure.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 64,
+      "line_range": [
+        64
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "1 import subprocess\n2 import json\n3 import os\n",
+      "col_offset": 0,
+      "end_col_offset": 17,
+      "filename": ".\\scripts\\analysis\\audit_repo.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Consider possible security implications associated with the subprocess module.",
+      "line_number": 1,
+      "line_range": [
+        1
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/blacklists/blacklist_imports.html#b404-import-subprocess",
+      "test_id": "B404",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "17             text=True,\n18             shell=True,\n19             encoding=\"utf-8\",\n20             errors=\"replace\",\n21         )\n22         return result.stdout, result.stderr, result.returncode\n23     except Exception as e:\n24         return \"\", str(e), 1\n25 \n26 \n",
+      "col_offset": 17,
+      "end_col_offset": 9,
+      "filename": ".\\scripts\\analysis\\audit_repo.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "subprocess call with shell=True identified, security issue.",
+      "line_number": 18,
+      "line_range": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b602_subprocess_popen_with_shell_equals_true.html",
+      "test_id": "B602",
+      "test_name": "subprocess_popen_with_shell_equals_true"
+    },
+    {
+      "code": "62 \n63             h = hashlib.md5(str(window).encode(\"utf-8\")).hexdigest()\n64             window_hashes[h].append((f_idx, i))\n",
+      "col_offset": 16,
+      "end_col_offset": 56,
+      "filename": ".\\scripts\\analysis\\code_stats.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 327,
+        "link": "https://cwe.mitre.org/data/definitions/327.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "Use of weak MD5 hash for security. Consider usedforsecurity=False",
+      "line_number": 63,
+      "line_range": [
+        63
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b324_hashlib.html",
+      "test_id": "B324",
+      "test_name": "hashlib"
+    },
+    {
+      "code": "36 \n37     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n38     model.load_state_dict(checkpoint['model_state'])\n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\scripts\\analysis\\compare_options.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 37,
+      "line_range": [
+        37
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "55 \n56     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n57     model.load_state_dict(checkpoint['model_state'])\n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\scripts\\analysis\\compare_options.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 56,
+      "line_range": [
+        56
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "1 import subprocess\n2 import sys\n3 import json\n",
+      "col_offset": 0,
+      "end_col_offset": 17,
+      "filename": ".\\scripts\\analysis\\comprehensive_audit.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Consider possible security implications associated with the subprocess module.",
+      "line_number": 1,
+      "line_range": [
+        1
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/blacklists/blacklist_imports.html#b404-import-subprocess",
+      "test_id": "B404",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "48             text=True,\n49             shell=True,\n50             encoding=\"utf-8\",\n51             errors=\"replace\",\n52         )\n53         return result.stdout, result.stderr, result.returncode\n54     except Exception as e:\n55         return \"\", str(e), 1\n56 \n57 \n",
+      "col_offset": 17,
+      "end_col_offset": 9,
+      "filename": ".\\scripts\\analysis\\comprehensive_audit.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "subprocess call with shell=True identified, security issue.",
+      "line_number": 49,
+      "line_range": [
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b602_subprocess_popen_with_shell_equals_true.html",
+      "test_id": "B602",
+      "test_name": "subprocess_popen_with_shell_equals_true"
+    },
+    {
+      "code": "95                 )\n96         except:\n97             pass\n98     return issues\n",
+      "col_offset": 8,
+      "end_col_offset": 16,
+      "filename": ".\\scripts\\analysis\\comprehensive_audit.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Try, Except, Pass detected.",
+      "line_number": 96,
+      "line_range": [
+        96,
+        97
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b110_try_except_pass.html",
+      "test_id": "B110",
+      "test_name": "try_except_pass"
+    },
+    {
+      "code": "70         # Use simple load for now, assuming standard save format\n71         checkpoint = torch.load(checkpoint_path, map_location=device)\n72         state_dict = checkpoint.get(\"model\", checkpoint)\n",
+      "col_offset": 21,
+      "end_col_offset": 69,
+      "filename": ".\\scripts\\analysis\\verify_mathematical_proofs.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 71,
+      "line_range": [
+        71
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "88         \"\"\"Load model from checkpoint.\"\"\"\n89         checkpoint = torch.load(checkpoint_path, map_location=self.device)\n90 \n",
+      "col_offset": 21,
+      "end_col_offset": 74,
+      "filename": ".\\scripts\\benchmark\\run_benchmark.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 89,
+      "line_range": [
+        89
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "57     # Load trained weights (projection + encoder_B)\n58     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n59 \n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\scripts\\eval\\downstream_validation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 58,
+      "line_range": [
+        58
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "92 \n93         checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n94         model_state = checkpoint['model']\n",
+      "col_offset": 21,
+      "end_col_offset": 89,
+      "filename": ".\\scripts\\train\\archive\\train_hyperbolic_structure.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 93,
+      "line_range": [
+        93
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "34     \"\"\"Load model from checkpoint.\"\"\"\n35     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n36     use_statenet = checkpoint.get('statenet_enabled', False)\n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\scripts\\visualization\\analyze_3adic_deep.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 35,
+      "line_range": [
+        35
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "38     \"\"\"Load model and encode all operations.\"\"\"\n39     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n40     use_statenet = checkpoint.get('statenet_enabled', False)\n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\scripts\\visualization\\analyze_3adic_structure.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 39,
+      "line_range": [
+        39
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "36     \"\"\"Load model from checkpoint.\"\"\"\n37     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n38 \n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\scripts\\visualization\\analyze_advanced_manifold.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 37,
+      "line_range": [
+        37
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "30     checkpoint_path = PROJECT_ROOT / 'sandbox-training' / 'checkpoints' / 'v5_5' / 'latest.pt'\n31     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n32     return checkpoint\n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\scripts\\visualization\\analyze_v5_5_quality.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 31,
+      "line_range": [
+        31
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "36     \"\"\"Load VAE embeddings.\"\"\"\n37     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n38     model = DualNeuralVAEV5(input_dim=9, latent_dim=16, use_statenet=False)\n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\scripts\\visualization\\calabi_yau_fibration.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 37,
+      "line_range": [
+        37
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "32     \"\"\"Load model and extract all 19683 latent embeddings.\"\"\"\n33     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n34 \n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\scripts\\visualization\\calabi_yau_projection.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 33,
+      "line_range": [
+        33
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "38     \"\"\"Load and return VAE embeddings.\"\"\"\n39     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n40     model = DualNeuralVAEV5(input_dim=9, latent_dim=16, use_statenet=False)\n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\scripts\\visualization\\calabi_yau_surface_mesh.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 39,
+      "line_range": [
+        39
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "22 print(\"Loading v5.8 checkpoint...\")\n23 ckpt = torch.load('sandbox-training/checkpoints/v5_8/latest.pt', map_location='cpu', weights_only=False)\n24 print(f\"Epoch {ckpt['epoch']}, Coverage: {ckpt['best_coverage']:.2f}%, Correlation: {ckpt['best_corr']:.4f}\")\n",
+      "col_offset": 7,
+      "end_col_offset": 104,
+      "filename": ".\\scripts\\visualization\\calabi_yau_v58_extended.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 23,
+      "line_range": [
+        23
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "19 print(\"Loading v5.8 checkpoint...\")\n20 ckpt = torch.load('sandbox-training/checkpoints/v5_8/latest.pt', map_location='cpu', weights_only=False)\n21 print(f\"Epoch {ckpt['epoch']}, Coverage: {ckpt['best_coverage']:.2f}%, Correlation: {ckpt['best_corr']:.4f}\")\n",
+      "col_offset": 7,
+      "end_col_offset": 104,
+      "filename": ".\\scripts\\visualization\\calabi_yau_v58_fast.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 20,
+      "line_range": [
+        20
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "64     ckpt_path = 'sandbox-training/checkpoints/v5_8/latest.pt'\n65     ckpt = torch.load(ckpt_path, map_location=device, weights_only=False)\n66 \n",
+      "col_offset": 11,
+      "end_col_offset": 73,
+      "filename": ".\\scripts\\visualization\\calabi_yau_v58_fibration.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 65,
+      "line_range": [
+        65
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "427         try:\n428             ckpt = torch.load(ckpt_path, map_location='cpu', weights_only=False)\n429             epoch = ckpt.get('epoch', 0)\n",
+      "col_offset": 19,
+      "end_col_offset": 80,
+      "filename": ".\\scripts\\visualization\\plot_training_artifacts.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 428,
+      "line_range": [
+        428
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "36     \"\"\"Load model from checkpoint.\"\"\"\n37     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)\n38 \n",
+      "col_offset": 17,
+      "end_col_offset": 85,
+      "filename": ".\\scripts\\visualization\\visualize_ternary_manifold.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 37,
+      "line_range": [
+        37
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "13 # Load both v5.8 and v5.9\n14 ckpt_v58 = torch.load('sandbox-training/checkpoints/v5_8/latest.pt', map_location='cpu', weights_only=False)\n15 ckpt_v59 = torch.load('sandbox-training/checkpoints/v5_9/epoch_150.pt', map_location='cpu', weights_only=False)\n",
+      "col_offset": 11,
+      "end_col_offset": 108,
+      "filename": ".\\scripts\\visualization\\viz_v58_v59.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 14,
+      "line_range": [
+        14
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "14 ckpt_v58 = torch.load('sandbox-training/checkpoints/v5_8/latest.pt', map_location='cpu', weights_only=False)\n15 ckpt_v59 = torch.load('sandbox-training/checkpoints/v5_9/epoch_150.pt', map_location='cpu', weights_only=False)\n16 \n",
+      "col_offset": 11,
+      "end_col_offset": 111,
+      "filename": ".\\scripts\\visualization\\viz_v58_v59.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 15,
+      "line_range": [
+        15
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "13 # Load v5.9 epoch 150\n14 ckpt = torch.load('sandbox-training/checkpoints/v5_9/epoch_150.pt', map_location='cpu', weights_only=False)\n15 \n",
+      "col_offset": 7,
+      "end_col_offset": 107,
+      "filename": ".\\scripts\\visualization\\viz_v59_hyperbolic.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 14,
+      "line_range": [
+        14
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "212         # Load checkpoint\n213         checkpoint = torch.load(checkpoint_path, map_location=device)\n214 \n",
+      "col_offset": 21,
+      "end_col_offset": 69,
+      "filename": ".\\src\\artifacts\\checkpoint_manager.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 213,
+      "line_range": [
+        213
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "254 \n255         checkpoint = torch.load(latest_path, map_location='cpu')\n256         return checkpoint.get('epoch')\n",
+      "col_offset": 21,
+      "end_col_offset": 64,
+      "filename": ".\\src\\artifacts\\checkpoint_manager.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 255,
+      "line_range": [
+        255
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "91         \"\"\"\n92         checkpoint = torch.load(\n93             checkpoint_path, map_location=device, weights_only=False\n94         )\n95         model_state = checkpoint[\"model\"]\n",
+      "col_offset": 21,
+      "end_col_offset": 9,
+      "filename": ".\\src\\models\\ternary_vae.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 92,
+      "line_range": [
+        92,
+        93,
+        94
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "152         \"\"\"Load frozen decoder from v5.5 checkpoint.\"\"\"\n153         checkpoint = torch.load(\n154             checkpoint_path, map_location=device, weights_only=False\n155         )\n156         model_state = checkpoint[\"model\"]\n",
+      "col_offset": 21,
+      "end_col_offset": 9,
+      "filename": ".\\src\\models\\ternary_vae.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 153,
+      "line_range": [
+        153,
+        154,
+        155
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "268         \"\"\"\n269         checkpoint = torch.load(\n270             checkpoint_path, map_location=device, weights_only=False\n271         )\n272         model_state = checkpoint[\"model\"]\n",
+      "col_offset": 21,
+      "end_col_offset": 9,
+      "filename": ".\\src\\models\\ternary_vae.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 269,
+      "line_range": [
+        269,
+        270,
+        271
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "841         else:\n842             indices = sorted(random.sample(range(total_ops), n_samples))\n843 \n",
+      "col_offset": 29,
+      "end_col_offset": 71,
+      "filename": ".\\src\\training\\monitor.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 330,
+        "link": "https://cwe.mitre.org/data/definitions/330.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+      "line_number": 842,
+      "line_range": [
+        842
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/blacklists/blacklist_calls.html#b311-random",
+      "test_id": "B311",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "141         # Load trained weights\n142         checkpoint = torch.load(checkpoint_path, map_location='cpu')\n143         model.load_state_dict(checkpoint['model'])\n",
+      "col_offset": 21,
+      "end_col_offset": 68,
+      "filename": ".\\tests\\integration\\test_generalization.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 142,
+      "line_range": [
+        142
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "188         # Models that memorize would fail; models that learn rules should succeed\n189         assert accuracy > 0.9, (\n190             f\"Holdout reconstruction accuracy too low: {accuracy*100:.2f}%. \"\n191             f\"Expected >90% for a model that learns structure rather than memorizing.\"\n192         )\n193 \n",
+      "col_offset": 8,
+      "end_col_offset": 9,
+      "filename": ".\\tests\\integration\\test_generalization.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 189,
+      "line_range": [
+        189,
+        190,
+        191,
+        192
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "224         # Trained model should handle compositional operations\n225         assert accuracy > 0.7, (\n226             f\"Compositional reconstruction accuracy too low: {accuracy*100:.2f}%. \"\n227             f\"Expected >70% for compositional understanding.\"\n228         )\n229 \n",
+      "col_offset": 8,
+      "end_col_offset": 9,
+      "filename": ".\\tests\\integration\\test_generalization.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 225,
+      "line_range": [
+        225,
+        226,
+        227,
+        228
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "287         # A model that learns permutation-invariant structure should have high correlation\n288         assert correlation > 0.7, (\n289             f\"Permutation distance correlation too low: {correlation:.3f}. \"\n290             f\"Expected >0.7 for structure-preserving embeddings.\"\n291         )\n292 \n",
+      "col_offset": 8,
+      "end_col_offset": 9,
+      "filename": ".\\tests\\integration\\test_generalization.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 288,
+      "line_range": [
+        288,
+        289,
+        290,
+        291
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "335         # Robust model should keep latent distance bounded even with 5% noise\n336         assert max_distance < 5.0, (\n337             f\"Latent space not resilient to noise: max distance {max_distance:.3f}. \"\n338             f\"Expected <5.0 for noise-robust encodings.\"\n339         )\n340 \n",
+      "col_offset": 8,
+      "end_col_offset": 9,
+      "filename": ".\\tests\\integration\\test_generalization.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 336,
+      "line_range": [
+        336,
+        337,
+        338,
+        339
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "390         # Note: Exact arithmetic may not hold, but reasonable structure should keep error < 10\n391         assert mean_error < 10.0, (\n392             f\"Latent arithmetic error too high: {mean_error:.3f}. \"\n393             f\"Expected <10.0 for meaningful algebraic structure.\"\n394         )\n395 \n",
+      "col_offset": 8,
+      "end_col_offset": 9,
+      "filename": ".\\tests\\integration\\test_generalization.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 391,
+      "line_range": [
+        391,
+        392,
+        393,
+        394
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "429         # StateNet should have non-trivial parameters\n430         assert mean_norm > 0.01, \"StateNet has non-trivial parameters\"\n431 \n",
+      "col_offset": 8,
+      "end_col_offset": 70,
+      "filename": ".\\tests\\integration\\test_generalization.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 430,
+      "line_range": [
+        430
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "482         min_acc = min(sparse_acc, dense_acc)\n483         assert min_acc > 0.8, (\n484             f\"Reconstruction accuracy too low for some operation types. \"\n485             f\"Sparse: {sparse_acc*100:.2f}%, Dense: {dense_acc*100:.2f}%. \"\n486             f\"Expected >80% for both.\"\n487         )\n488 \n",
+      "col_offset": 8,
+      "end_col_offset": 9,
+      "filename": ".\\tests\\integration\\test_generalization.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 483,
+      "line_range": [
+        483,
+        484,
+        485,
+        486,
+        487
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "528         # Posterior collapse would show very low variance\n529         assert var_A > 0.1, (\n530             f\"Latent space variance too low: {var_A:.3f}. \"\n531             f\"Expected >0.1 to avoid posterior collapse.\"\n532         )\n533         assert effective_dim_A > 8, (\n",
+      "col_offset": 8,
+      "end_col_offset": 9,
+      "filename": ".\\tests\\integration\\test_generalization.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 529,
+      "line_range": [
+        529,
+        530,
+        531,
+        532
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "532         )\n533         assert effective_dim_A > 8, (\n534             f\"Latent space not using enough dimensions: {effective_dim_A:.1f}/16. \"\n535             f\"Expected >8 for good latent utilization.\"\n536         )\n537 \n",
+      "col_offset": 8,
+      "end_col_offset": 9,
+      "filename": ".\\tests\\integration\\test_generalization.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 533,
+      "line_range": [
+        533,
+        534,
+        535,
+        536
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "52         for (name1, param1), (name2, param2) in zip(model1.named_parameters(), model2.named_parameters()):\n53             assert name1 == name2, f\"Parameter names don't match: {name1} vs {name2}\"\n54             assert torch.allclose(param1, param2), f\"Weights differ for {name1}\"\n",
+      "col_offset": 12,
+      "end_col_offset": 85,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 53,
+      "line_range": [
+        53
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "53             assert name1 == name2, f\"Parameter names don't match: {name1} vs {name2}\"\n54             assert torch.allclose(param1, param2), f\"Weights differ for {name1}\"\n55 \n",
+      "col_offset": 12,
+      "end_col_offset": 80,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 54,
+      "line_range": [
+        54
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "69         # Compare outputs\n70         assert torch.allclose(out1['logits_A'], out2['logits_A']), \"VAE-A logits differ\"\n71         assert torch.allclose(out1['logits_B'], out2['logits_B']), \"VAE-B logits differ\"\n",
+      "col_offset": 8,
+      "end_col_offset": 88,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 70,
+      "line_range": [
+        70
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "70         assert torch.allclose(out1['logits_A'], out2['logits_A']), \"VAE-A logits differ\"\n71         assert torch.allclose(out1['logits_B'], out2['logits_B']), \"VAE-B logits differ\"\n72         assert torch.allclose(out1['z_A'], out2['z_A']), \"VAE-A latent codes differ\"\n",
+      "col_offset": 8,
+      "end_col_offset": 88,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 71,
+      "line_range": [
+        71
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "71         assert torch.allclose(out1['logits_B'], out2['logits_B']), \"VAE-B logits differ\"\n72         assert torch.allclose(out1['z_A'], out2['z_A']), \"VAE-A latent codes differ\"\n73         assert torch.allclose(out1['z_B'], out2['z_B']), \"VAE-B latent codes differ\"\n",
+      "col_offset": 8,
+      "end_col_offset": 84,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 72,
+      "line_range": [
+        72
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "72         assert torch.allclose(out1['z_A'], out2['z_A']), \"VAE-A latent codes differ\"\n73         assert torch.allclose(out1['z_B'], out2['z_B']), \"VAE-B latent codes differ\"\n74 \n",
+      "col_offset": 8,
+      "end_col_offset": 84,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 73,
+      "line_range": [
+        73
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "93         # Compare\n94         assert torch.allclose(samples1_A, samples2_A), \"VAE-A samples differ\"\n95         assert torch.allclose(samples1_B, samples2_B), \"VAE-B samples differ\"\n",
+      "col_offset": 8,
+      "end_col_offset": 77,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 94,
+      "line_range": [
+        94
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "94         assert torch.allclose(samples1_A, samples2_A), \"VAE-A samples differ\"\n95         assert torch.allclose(samples1_B, samples2_B), \"VAE-B samples differ\"\n96 \n",
+      "col_offset": 8,
+      "end_col_offset": 77,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 95,
+      "line_range": [
+        95
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "126         # Compare losses\n127         assert torch.allclose(loss1['loss'], loss2['loss']), \"Losses differ\"\n128 \n",
+      "col_offset": 8,
+      "end_col_offset": 76,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 127,
+      "line_range": [
+        127
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "130         for (name1, param1), (name2, param2) in zip(model.named_parameters(), model2.named_parameters()):\n131             assert torch.allclose(param1, param2, atol=1e-6), f\"Updated weights differ for {name1}\"\n132 \n",
+      "col_offset": 12,
+      "end_col_offset": 99,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 131,
+      "line_range": [
+        131
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "139         # Should be identical (no randomness)\n140         assert np.array_equal(data1, data2), \"Data generation is not deterministic\"\n141 \n",
+      "col_offset": 8,
+      "end_col_offset": 83,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 140,
+      "line_range": [
+        140
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "142         # Check size\n143         assert data1.shape == (19683, 9), f\"Expected shape (19683, 9), got {data1.shape}\"\n144 \n",
+      "col_offset": 8,
+      "end_col_offset": 89,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 143,
+      "line_range": [
+        143
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "160         model2 = DualNeuralVAEV5(input_dim=9, latent_dim=16)\n161         checkpoint = torch.load(checkpoint_path)\n162         model2.load_state_dict(checkpoint['model'])\n",
+      "col_offset": 21,
+      "end_col_offset": 48,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 161,
+      "line_range": [
+        161
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "169         # Compare\n170         assert torch.allclose(out_before['logits_A'], out_after['logits_A']), \"Logits differ after checkpoint load\"\n171         assert torch.allclose(out_before['logits_B'], out_after['logits_B']), \"Logits differ after checkpoint load\"\n",
+      "col_offset": 8,
+      "end_col_offset": 115,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 170,
+      "line_range": [
+        170
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "170         assert torch.allclose(out_before['logits_A'], out_after['logits_A']), \"Logits differ after checkpoint load\"\n171         assert torch.allclose(out_before['logits_B'], out_after['logits_B']), \"Logits differ after checkpoint load\"\n172 \n",
+      "col_offset": 8,
+      "end_col_offset": 115,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 171,
+      "line_range": [
+        171
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "177         rho2 = model.compute_phase_scheduled_rho(20, phase_4_start=250)\n178         assert rho1 == rho2, \"Phase 1 rho is not deterministic\"\n179 \n",
+      "col_offset": 8,
+      "end_col_offset": 63,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 178,
+      "line_range": [
+        178
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "182         rho2 = model.compute_phase_scheduled_rho(60, phase_4_start=250)\n183         assert rho1 == rho2, \"Phase 2 rho is not deterministic\"\n184 \n",
+      "col_offset": 8,
+      "end_col_offset": 63,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 183,
+      "line_range": [
+        183
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "188         rho2 = model.compute_phase_scheduled_rho(150, phase_4_start=250)\n189         assert rho1 == rho2, \"Phase 3 rho is not deterministic\"\n190 \n",
+      "col_offset": 8,
+      "end_col_offset": 63,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 189,
+      "line_range": [
+        189
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "193         rho2 = model.compute_phase_scheduled_rho(300, phase_4_start=250)\n194         assert rho1 == rho2, \"Phase 4 rho is not deterministic\"\n195 \n",
+      "col_offset": 8,
+      "end_col_offset": 63,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 194,
+      "line_range": [
+        194
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "199         lambda2 = model.compute_cyclic_lambda3(50, period=30)\n200         assert lambda1 == lambda2, \"Cyclic lambda is not deterministic\"\n201 \n",
+      "col_offset": 8,
+      "end_col_offset": 71,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 200,
+      "line_range": [
+        200
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "228         # Compare\n229         assert torch.allclose(model1.grad_norm_A_ema, model2.grad_norm_A_ema), \"Gradient norm A EMA differs\"\n230         assert torch.allclose(model1.grad_norm_B_ema, model2.grad_norm_B_ema), \"Gradient norm B EMA differs\"\n",
+      "col_offset": 8,
+      "end_col_offset": 108,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 229,
+      "line_range": [
+        229
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "229         assert torch.allclose(model1.grad_norm_A_ema, model2.grad_norm_A_ema), \"Gradient norm A EMA differs\"\n230         assert torch.allclose(model1.grad_norm_B_ema, model2.grad_norm_B_ema), \"Gradient norm B EMA differs\"\n231 \n",
+      "col_offset": 8,
+      "end_col_offset": 108,
+      "filename": ".\\tests\\integration\\test_reproducibility.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 230,
+      "line_range": [
+        230
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "42 \n43     checkpoint = torch.load(checkpoint_path, map_location='cpu')\n44 \n",
+      "col_offset": 17,
+      "end_col_offset": 64,
+      "filename": ".\\tests\\integration\\test_training_validation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 502,
+        "link": "https://cwe.mitre.org/data/definitions/502.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Use of unsafe PyTorch load",
+      "line_number": 43,
+      "line_range": [
+        43
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b614_pytorch_load.html",
+      "test_id": "B614",
+      "test_name": "pytorch_load"
+    },
+    {
+      "code": "133         # Success if most dimensions are active\n134         assert active_dims_A >= 10, f\"Too few active dimensions in VAE-A: {active_dims_A}/16\"\n135         assert active_dims_B >= 10, f\"Too few active dimensions in VAE-B: {active_dims_B}/16\"\n",
+      "col_offset": 8,
+      "end_col_offset": 93,
+      "filename": ".\\tests\\integration\\test_training_validation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 134,
+      "line_range": [
+        134
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "134         assert active_dims_A >= 10, f\"Too few active dimensions in VAE-A: {active_dims_A}/16\"\n135         assert active_dims_B >= 10, f\"Too few active dimensions in VAE-B: {active_dims_B}/16\"\n136 \n",
+      "col_offset": 8,
+      "end_col_offset": 93,
+      "filename": ".\\tests\\integration\\test_training_validation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 135,
+      "line_range": [
+        135
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "211         # Assert at least one VAE passes\n212         assert max(acc_A, acc_B) > 40, \\\n213             f\"Both VAEs failed hold-out test: A={acc_A:.2f}%, B={acc_B:.2f}%\"\n214 \n",
+      "col_offset": 8,
+      "end_col_offset": 77,
+      "filename": ".\\tests\\integration\\test_training_validation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 212,
+      "line_range": [
+        212,
+        213
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "262             # Assert reasonable annealing\n263             assert max_diff < 0.1, f\"\u03b2 spike too large: {max_diff:.4f}\"\n264         else:\n",
+      "col_offset": 12,
+      "end_col_offset": 72,
+      "filename": ".\\tests\\integration\\test_training_validation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 263,
+      "line_range": [
+        263
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "304                     # Create hash for verification\n305                     hash_A = hashlib.md5(str(op_A).encode()).hexdigest()\n306                     hash_B = hashlib.md5(str(op_B).encode()).hexdigest()\n",
+      "col_offset": 29,
+      "end_col_offset": 60,
+      "filename": ".\\tests\\integration\\test_training_validation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 327,
+        "link": "https://cwe.mitre.org/data/definitions/327.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "Use of weak MD5 hash for security. Consider usedforsecurity=False",
+      "line_number": 305,
+      "line_range": [
+        305
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b324_hashlib.html",
+      "test_id": "B324",
+      "test_name": "hashlib"
+    },
+    {
+      "code": "305                     hash_A = hashlib.md5(str(op_A).encode()).hexdigest()\n306                     hash_B = hashlib.md5(str(op_B).encode()).hexdigest()\n307 \n",
+      "col_offset": 29,
+      "end_col_offset": 60,
+      "filename": ".\\tests\\integration\\test_training_validation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 327,
+        "link": "https://cwe.mitre.org/data/definitions/327.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "Use of weak MD5 hash for security. Consider usedforsecurity=False",
+      "line_number": 306,
+      "line_range": [
+        306
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b324_hashlib.html",
+      "test_id": "B324",
+      "test_name": "hashlib"
+    },
+    {
+      "code": "330 \n331         assert coverage_A > 10, \"Coverage too low for VAE-A\"\n332         assert coverage_B > 10, \"Coverage too low for VAE-B\"\n",
+      "col_offset": 8,
+      "end_col_offset": 60,
+      "filename": ".\\tests\\integration\\test_training_validation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 331,
+      "line_range": [
+        331
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "331         assert coverage_A > 10, \"Coverage too low for VAE-A\"\n332         assert coverage_B > 10, \"Coverage too low for VAE-B\"\n333 \n",
+      "col_offset": 8,
+      "end_col_offset": 60,
+      "filename": ".\\tests\\integration\\test_training_validation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 332,
+      "line_range": [
+        332
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "386         # Success if not wildly diverging\n387         assert abs(recent_trend_A) < 2000, \"VAE-A diverging\"\n388         assert abs(recent_trend_B) < 2000, \"VAE-B diverging\"\n",
+      "col_offset": 8,
+      "end_col_offset": 60,
+      "filename": ".\\tests\\integration\\test_training_validation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 387,
+      "line_range": [
+        387
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    },
+    {
+      "code": "387         assert abs(recent_trend_A) < 2000, \"VAE-A diverging\"\n388         assert abs(recent_trend_B) < 2000, \"VAE-B diverging\"\n389 \n",
+      "col_offset": 8,
+      "end_col_offset": 60,
+      "filename": ".\\tests\\integration\\test_training_validation.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 703,
+        "link": "https://cwe.mitre.org/data/definitions/703.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "line_number": 388,
+      "line_range": [
+        388
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.2/plugins/b101_assert_used.html",
+      "test_id": "B101",
+      "test_name": "assert_used"
+    }
+  ]
+}
