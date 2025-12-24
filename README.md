@@ -627,19 +627,21 @@ See `guides/developers/ARCHITECTURE.md` for architecture details.
 
 ## Third-Party Code and Data
 
-This project includes code and data from third-party sources. See [NOTICE](NOTICE) for complete attribution.
+This project includes limited third-party code for **validation purposes only**. See [NOTICE](NOTICE) for complete attribution.
 
-### AlphaFold3 Utilities
+**Important**: All core IP (Ternary VAE, hyperbolic geometry, HIV analysis) is original work. Third-party code is used only for structure file parsing and validation.
 
-Files in `research/alphafold3/utils/` are derived from DeepMind's AlphaFold3 project.
+### AlphaFold3 Utilities (Validation Only)
+
+Files in `research/alphafold3/utils/` contain atom/residue name constants from DeepMind's AlphaFold3 project, used for parsing PDB files.
 
 - **License**: CC BY-NC-SA 4.0
-- **Copyright**: 2024 DeepMind Technologies Limited
-- **Source**: https://github.com/google-deepmind/alphafold3
+- **Purpose**: Structure file parsing utilities only
+- **NOT used for**: Core algorithms or research findings
 
-### AlphaFold3 Predictions
+### AlphaFold3 Predictions (Validation Only)
 
-Structural predictions in `research/bioinformatics/*/alphafold3_predictions/` were generated using the AlphaFold Server and are subject to their Terms of Service.
+Structural predictions from AlphaFold Server are used to **validate** our independent findings, not to generate them. Our research conclusions derive from our own Ternary VAE methodology.
 
 ### Dependencies
 

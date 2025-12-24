@@ -3,11 +3,23 @@ NOTICE
 Ternary VAEs Bioinformatics
 Copyright 2024-2025 AI Whisperers (https://github.com/Ai-Whisperers)
 
-This repository contains code and data from third-party sources:
+================================================================================
+
+IMPORTANT: SCOPE OF THIRD-PARTY CODE
+
+All core intellectual property in this repository is original work:
+- Ternary VAE architecture (src/)
+- Hyperbolic geometry losses and metrics
+- HIV hiding landscape analysis methodology
+- P-adic genomic encoding theory
+- Glycan shield sentinel analysis
+
+Third-party code is used ONLY for validation and structure parsing utilities,
+NOT for generating research results.
 
 ================================================================================
 
-1. AlphaFold3 Utilities
+1. AlphaFold3 Utilities (VALIDATION ONLY)
 
    Copyright 2024 DeepMind Technologies Limited
    Licensed under CC BY-NC-SA 4.0
@@ -15,33 +27,29 @@ This repository contains code and data from third-party sources:
    Source: https://github.com/google-deepmind/alphafold3
    License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-   Files:
+   Files (constant/lookup tables only):
    - research/alphafold3/utils/atom_types.py
    - research/alphafold3/utils/residue_names.py
 
+   PURPOSE: These files contain only atom/residue name constants used for
+   parsing PDB structure files. They do NOT contribute to core algorithms
+   or research findings.
+
    Modifications:
    - Import paths modified for standalone use
-   - Original: from alphafold3.constants import residue_names
-   - Modified: from . import residue_names
-
-   AlphaFold 3 source code is licensed under CC BY-NC-SA 4.0. To view a copy
-   of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/
-
-   To request access to the AlphaFold 3 model parameters, follow the process
-   set out at https://github.com/google-deepmind/alphafold3. You may only use
-   these if received directly from Google. Use is subject to terms of use
-   available at https://github.com/google-deepmind/alphafold3/blob/main/WEIGHTS_TERMS_OF_USE.md
 
 ================================================================================
 
-2. AlphaFold3 Server Predictions
+2. AlphaFold3 Server Predictions (VALIDATION ONLY)
 
    Data in research/bioinformatics/codon_encoder_research/*/alphafold3_predictions/
    was generated using the AlphaFold Server (https://alphafoldserver.com).
 
-   Subject to AlphaFold Server Terms of Service.
+   PURPOSE: These predictions are used to VALIDATE our independent findings,
+   not to generate them. Our research conclusions are derived from our own
+   Ternary VAE methodology.
 
-   Use of predictions is permitted for academic and non-commercial research only.
+   Subject to AlphaFold Server Terms of Service.
 
 ================================================================================
 
