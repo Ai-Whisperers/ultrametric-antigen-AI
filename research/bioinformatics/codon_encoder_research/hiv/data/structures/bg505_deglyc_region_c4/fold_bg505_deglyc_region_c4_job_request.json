@@ -1,0 +1,108 @@
+[{
+ "name": "BG505_deglyc_region_C4",
+ "modelSeeds": [
+  "409556544"
+ ],
+ "sequences": [
+  {
+   "proteinChain": {
+    "sequence": "AENLWVTVYYGVPVWKDAETTLFCASDAKAYETEVHNVWATHACVPTDPNPQEIHLENVTEEFNMWKNNMVEQMHTDIISLWDQSLKPCVKLTPLCVTLQCTNVTNNITDDMRGELKNCSFNMTTELRDKKQKVYSLFYRLDVVQINENQGNRSNNSNKEYRLINCNTSAITQACPKVSFEPIPIHYCAPAGFAILKCKDKKFNGTGPCPSVSTVQCTHGIKPVVSTQLLLNGSLAEEEVMIRSENITNNAKNILVQFNTPVQINCTRPNNNTRKSIRIGPGQAFYATGDIIGDIRQAHCNISRAKWNNTLQQVAKKLREHFPQKTIKFANSSGGDLEITTHSFNCGGEFFYCNTSGLFQSTWISNTSVQGSNSTGSNDSITLPCRIKQIINMWQRIGQAMYAPPIQGVIRCVSNITGLILTRDGGSTNSTTETFRPGGGDMRDNWRSELYKYKVVKIEPLGVAPTRCKRRVVGRR",
+    "glycans": [
+     {
+      "residues": "NAG",
+      "position": 58
+     },
+     {
+      "residues": "NAG",
+      "position": 429
+     },
+     {
+      "residues": "NAG",
+      "position": 103
+     },
+     {
+      "residues": "NAG",
+      "position": 204
+     },
+     {
+      "residues": "NAG",
+      "position": 246
+     },
+     {
+      "residues": "NAG",
+      "position": 152
+     },
+     {
+      "residues": "NAG",
+      "position": 155
+     },
+     {
+      "residues": "NAG",
+      "position": 232
+     },
+     {
+      "residues": "NAG",
+      "position": 354
+     },
+     {
+      "residues": "NAG",
+      "position": 167
+     },
+     {
+      "residues": "NAG",
+      "position": 122
+     },
+     {
+      "residues": "NAG",
+      "position": 366
+     },
+     {
+      "residues": "NAG",
+      "position": 301
+     },
+     {
+      "residues": "NAG",
+      "position": 378
+     },
+     {
+      "residues": "NAG",
+      "position": 308
+     },
+     {
+      "residues": "NAG",
+      "position": 107
+     },
+     {
+      "residues": "NAG",
+      "position": 271
+     },
+     {
+      "residues": "NAG",
+      "position": 331
+     },
+     {
+      "residues": "NAG",
+      "position": 373
+     },
+     {
+      "residues": "NAG",
+      "position": 265
+     },
+     {
+      "residues": "NAG",
+      "position": 415
+     },
+     {
+      "residues": "NAG",
+      "position": 118
+     }
+    ],
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  }
+ ],
+ "dialect": "alphafoldserver",
+ "version": 1
+}
+]

@@ -1,0 +1,220 @@
+[
+  {
+    "name": "tau_mtbr_wildtype",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "QTAPVPMPDLKNVKSKIGSTENLKHQPGGGKVQIINKKLDLSNVQSKCGSKDNIKHVPGGGSVQIVYKPVDLSKVTSKCGSLGNIHHKPGGGQVEVKSEKLDFKDRVQSKIGSLDNITHVPGGGN",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  },
+  {
+    "name": "tau_mtbr_S262D",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "QTAPVPMPDLKNVKSKIGDTENLKHQPGGGKVQIINKKLDLSNVQSKCGSKDNIKHVPGGGSVQIVYKPVDLSKVTSKCGSLGNIHHKPGGGQVEVKSEKLDFKDRVQSKIGSLDNITHVPGGGN",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  },
+  {
+    "name": "tau_mtbr_S293D",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "QTAPVPMPDLKNVKSKIGSTENLKHQPGGGKVQIINKKLDLSNVQSKCGDKDNIKHVPGGGSVQIVYKPVDLSKVTSKCGSLGNIHHKPGGGQVEVKSEKLDFKDRVQSKIGSLDNITHVPGGGN",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  },
+  {
+    "name": "tau_mtbr_S324D",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "QTAPVPMPDLKNVKSKIGSTENLKHQPGGGKVQIINKKLDLSNVQSKCGSKDNIKHVPGGGSVQIVYKPVDLSKVTSKCGDLGNIHHKPGGGQVEVKSEKLDFKDRVQSKIGSLDNITHVPGGGN",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  },
+  {
+    "name": "tau_mtbr_S356D",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "QTAPVPMPDLKNVKSKIGSTENLKHQPGGGKVQIINKKLDLSNVQSKCGSKDNIKHVPGGGSVQIVYKPVDLSKVTSKCGSLGNIHHKPGGGQVEVKSEKLDFKDRVQSKIGDLDNITHVPGGGN",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  },
+  {
+    "name": "tau_mtbr_all_KXGS_phospho",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "QTAPVPMPDLKNVKSKIGDTENLKHQPGGGKVQIINKKLDLSNVQSKCGDKDNIKHVPGGGSVQIVYKPVDLSKVTSKCGDLGNIHHKPGGGQVEVKSEKLDFKDRVQSKIGDLDNITHVPGGGN",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  },
+  {
+    "name": "tau_tubulin_wildtype",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "PGSPGTPGSRSRTPSLPTPPTREPKKVAVVRTPPKSPSSAKSRLQTAPVPMPDLKNVKSKIGSTENLKHQPGGGKVQIINKKLDLSNVQSKCGSKDNIKHVPGGGSVQIVYKPVDLSKVTSKCGSLGNIHHKPGGGQVEVKSEKLDFKDRVQSKIGSLDNITHVPGGGNKKIETHKLTFRENAKAKTDHGAEIVYKSPVVS",
+          "count": 1
+        }
+      },
+      {
+        "proteinChain": {
+          "sequence": "SCLLYNYQDQTKQSHLQTVQEDLKNVMDDCDPRHGKYMACCL",
+          "count": 1
+        }
+      },
+      {
+        "proteinChain": {
+          "sequence": "ATNGCDLAKEIMEGVDLQPVLSNASTTAVCDIPRGLKMSATF",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  },
+  {
+    "name": "tau_tubulin_S262D",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "PGSPGTPGSRSRTPSLPTPPTREPKKVAVVRTPPKSPSSAKSRLQTAPVPMPDLKNVKSKIGDTENLKHQPGGGKVQIINKKLDLSNVQSKCGSKDNIKHVPGGGSVQIVYKPVDLSKVTSKCGSLGNIHHKPGGGQVEVKSEKLDFKDRVQSKIGSLDNITHVPGGGNKKIETHKLTFRENAKAKTDHGAEIVYKSPVVS",
+          "count": 1
+        }
+      },
+      {
+        "proteinChain": {
+          "sequence": "SCLLYNYQDQTKQSHLQTVQEDLKNVMDDCDPRHGKYMACCL",
+          "count": 1
+        }
+      },
+      {
+        "proteinChain": {
+          "sequence": "ATNGCDLAKEIMEGVDLQPVLSNASTTAVCDIPRGLKMSATF",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  },
+  {
+    "name": "tau_tubulin_all_KXGS",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "PGSPGTPGSRSRTPSLPTPPTREPKKVAVVRTPPKSPSSAKSRLQTAPVPMPDLKNVKSKIGDTENLKHQPGGGKVQIINKKLDLSNVQSKCGDKDNIKHVPGGGSVQIVYKPVDLSKVTSKCGDLGNIHHKPGGGQVEVKSEKLDFKDRVQSKIGDLDNITHVPGGGNKKIETHKLTFRENAKAKTDHGAEIVYKSPVVS",
+          "count": 1
+        }
+      },
+      {
+        "proteinChain": {
+          "sequence": "SCLLYNYQDQTKQSHLQTVQEDLKNVMDDCDPRHGKYMACCL",
+          "count": 1
+        }
+      },
+      {
+        "proteinChain": {
+          "sequence": "ATNGCDLAKEIMEGVDLQPVLSNASTTAVCDIPRGLKMSATF",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  },
+  {
+    "name": "tau_AT8_epitope",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "PGDPGDPGSRSRTPSLPTPPTREPKKVAVVRTPPKSPSSAKSRLQTAPVPMPDLKNVKSKIGSTENLKHQPGGGKVQIINKKLDLSNVQSKCGSKDNIKHVPGGGSVQIVYKPVDLSKVTSKCGSLGNIHHKPGGGQVEVKSEKLDFKDRVQSKIGSLDNITHVPGGGNKKIETHKLTFRENAKAKTDHGAEIVYKSPVVS",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  },
+  {
+    "name": "tau_PHF1_epitope",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "VQSKIGSLDNITHVPGGGNKKIETHKLTFRENAKAKTDHGAEIVYKDPVVSGDTDPRHLSNVSSTGSIDMVDSPQLATLADEVSASLAKQGL",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  },
+  {
+    "name": "tau_AT180_epitope",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "PGSPGTPGSRSRTPSLPTPPTREPKKVAVVRDPPKDPSSAKSRLQTAPVPMPDLKNVKSKIGSTENLKHQPGGGKVQIINKKLDLSNVQSKCGSKDNIKHVPGGGSVQIVYKPVDLSKVTSKCGSLGNIHHKPGGGQVEVKSEKLDFKDRVQSKIGSLDNITHVPGGGNKKIETHKLTFRENAKAKTDHGAEIVYKSPVVS",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  },
+  {
+    "name": "tau_Braak_VI_simulation",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "MAEPRQEFEVMEDHAGTYGLGDRKDQGGYTMHQDQEGDTDAGLKESPLQTPTEDGSEEPGSETSDAKSTPTAEDVTAPLVDEGAPGKQAAAQPHTEIPEGTTAEEAGIGDTPSLEDEAAGHVTQARMVSKSKDGTGSDDKKAKGADGKTKIATPRGAAPPGQKGQANATRIPAKTPPAPKDPPSSGEPPKSGDRSGYSSPGDPGDPGSRSRTPSLPTPPTREPKKVAVVRDPPKSPSSAKSRLQTAPVPMPDLKNVKSKIGDTENLKHQPGGGKVQIINKKLDLSNVQSKCGDKDNIKHVPGGGSVQIVYKPVDLSKVTSKCGDLGNIHHKPGGGQVEVKSEKLDFKDRVQSKIGDLDNITHVPGGGNKKIETHKLTFRENAKAKTDHGAEIVYKDPVVSGDTSPRHLSNVSSTGSIDMVDSPQLATLADEVSASLAKQGL",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  }
+]

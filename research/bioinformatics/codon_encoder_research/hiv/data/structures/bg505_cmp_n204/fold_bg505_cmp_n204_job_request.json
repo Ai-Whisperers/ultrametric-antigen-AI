@@ -1,0 +1,65 @@
+[{
+ "name": "BG505_cmp_N204",
+ "modelSeeds": [
+  "552755963"
+ ],
+ "sequences": [
+  {
+   "proteinChain": {
+    "sequence": "SNNSNKEYRLINCNTSAITQACPKVSFEPIPIHYCAPAGFAILKCKDKKFNGTGPCPSVSTVQCTHGIKPVVSTQLLLNGSLAEEEVMIRSENITNNAKN",
+    "glycans": [
+     {
+      "residues": "NAG",
+      "position": 51
+     },
+     {
+      "residues": "NAG",
+      "position": 93
+     },
+     {
+      "residues": "NAG",
+      "position": 2
+     },
+     {
+      "residues": "NAG",
+      "position": 79
+     },
+     {
+      "residues": "NAG",
+      "position": 14
+     }
+    ],
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  },
+  {
+   "proteinChain": {
+    "sequence": "SNNSNKEYRLINCNTSAITQACPKVSFEPIPIHYCAPAGFAILKCKDKKFQGTGPCPSVSTVQCTHGIKPVVSTQLLLNGSLAEEEVMIRSENITNNAKN",
+    "glycans": [
+     {
+      "residues": "NAG",
+      "position": 93
+     },
+     {
+      "residues": "NAG",
+      "position": 2
+     },
+     {
+      "residues": "NAG",
+      "position": 79
+     },
+     {
+      "residues": "NAG",
+      "position": 14
+     }
+    ],
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  }
+ ],
+ "dialect": "alphafoldserver",
+ "version": 1
+}
+]

@@ -1,29 +1,36 @@
-# experiments/bioinformatics
+# Bioinformatics Knowledge Base
 
 > **Goal:** Validate the geometric theory on real biological data.
+
+## 🧠 Code vs. Knowledge
+
+- **Active Research**: All executable code, notebooks, and raw data are located in `research/bioinformatics/`.
+- **Knowledge Base**: This directory contains **Summaries, Theory, and Findings** derived from that code.
 
 ## Subdirectories
 
 ### 1. `codon_encoder_research/`
 
-- **Focus:** The Genetic Code (64 -> 21 mapping).
-- **Key Finding:** The genetic code is synonymous-optimized to minimize 3-adic distance.
+- **HIV**: Glycan shield and codon optimization.
+- **SARS-CoV-2**: Spike protein evolution.
+- **Neurodegeneration**: Prion-like mechanisms.
+- **Rheumatoid Arthritis**: HLA geometry.
 
 ### 2. `p-adic-genomics/`
 
-- **Focus:** Whole genomes.
-- **Key Finding:** Viral genomes are fractals. Their dimensionality is not 2D, but ~1.58D (Sierpinski triangle).
+- **Focus**: Whole genomes.
+- **Key Finding**: Fractal dimension of ~1.58D.
 
 ### 3. `spectral_analysis_over_models/`
 
-- **Focus:** Analyzing the "eigenvalues" of the learned representation.
-- **Key Finding:** The spectrum of the Ternary VAE matches the spectrum of natural proteins (Zipf's Law), whereas standard VAEs look like white noise.
+- **Focus**: Eigenvalue spectrum analysis (Zipf's Law).
 
-## How to Run
+## How to Run Experiments
 
-Research scripts are organized by disease/topic.
+Navigate to the research directory:
 
 ```bash
-# Example: Running the Spike Sentinel Analysis for SARS-CoV-2
-python experiments/bioinformatics/codon_encoder_research/sars_cov_2/glycan_shield/01_spike_sentinel_analysis.py
+cd research/bioinformatics/
 ```
+
+See individual `summary.md` files in subdirectories for specific script paths.
