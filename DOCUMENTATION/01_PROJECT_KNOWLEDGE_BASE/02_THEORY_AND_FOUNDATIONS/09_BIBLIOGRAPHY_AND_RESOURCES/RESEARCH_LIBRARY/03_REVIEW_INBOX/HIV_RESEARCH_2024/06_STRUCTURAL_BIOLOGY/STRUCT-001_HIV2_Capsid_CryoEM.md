@@ -1,12 +1,15 @@
 <!-- SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0 -->
 
 ---
+
 title: "Structural Insights into HIV-2 CA Lattice Formation and FG-Pocket Binding Revealed by Single Particle Cryo-EM"
 date: 2025-12-24
 authors:
-  - AI Whisperers
-version: "0.1"
-license: PolyForm-Noncommercial-1.0.0
+
+- AI Whisperers
+  version: "0.1"
+  license: PolyForm-Noncommercial-1.0.0
+
 ---
 
 # Structural Insights into HIV-2 CA Lattice Formation and FG-Pocket Binding Revealed by Single Particle Cryo-EM
@@ -35,18 +38,19 @@ This study reports the first high-resolution structures of HIV-2 CA (capsid) cap
 
 ## Methodology
 
-| Technique | Application |
-|:----------|:------------|
-| Liposome templating | Scaffold for CA lattice assembly |
+| Technique               | Application                             |
+| :---------------------- | :-------------------------------------- |
+| Liposome templating     | Scaffold for CA lattice assembly        |
 | Single particle cryo-EM | High-resolution structure determination |
-| Nup153 peptide binding | Host factor interaction analysis |
-| CPSF6 peptide binding | Host factor interaction analysis |
+| Nup153 peptide binding  | Host factor interaction analysis        |
+| CPSF6 peptide binding   | Host factor interaction analysis        |
 
 ---
 
 ## Key Findings
 
 ### Structures Determined
+
 1. HIV-2 CA hexamers in native lattice
 2. HIV-2 CA pentamers in native lattice
 3. Complexes with Nup153 FG-peptides
@@ -54,12 +58,12 @@ This study reports the first high-resolution structures of HIV-2 CA (capsid) cap
 
 ### Comparative Insights (HIV-2 vs HIV-1)
 
-| Feature | HIV-2 | HIV-1 |
-|:--------|:------|:------|
-| Overall fold | Conserved | Reference |
-| FG-peptide binding | Conserved mode | Reference |
-| CypA interactions | Potentially different | Reference |
-| Hexamer/pentamer switching | Different mechanism | Reference |
+| Feature                    | HIV-2                 | HIV-1     |
+| :------------------------- | :-------------------- | :-------- |
+| Overall fold               | Conserved             | Reference |
+| FG-peptide binding         | Conserved mode        | Reference |
+| CypA interactions          | Potentially different | Reference |
+| Hexamer/pentamer switching | Different mechanism   | Reference |
 
 ---
 
@@ -68,6 +72,7 @@ This study reports the first high-resolution structures of HIV-2 CA (capsid) cap
 > "The mechanism of hexamer/pentamer switching appears different between HIV-2 and HIV-1, suggesting divergent evolution of these lentiviral capsid systems."
 
 This reveals:
+
 1. Distinctive structural features defining HIV-2 CA lattice
 2. Potential differences in host factor interactions
 3. Divergent mechanisms for capsomer assembly
@@ -85,6 +90,7 @@ This reveals:
 ## Relevance to Project
 
 HIV-2 capsid structures inform:
+
 - Sequence-structure relationships in lentiviruses
 - Conserved vs divergent regions between HIV-1/HIV-2
 - Druggable sites for capsid inhibitors
@@ -92,4 +98,4 @@ HIV-2 capsid structures inform:
 
 ---
 
-*Added: 2025-12-24*
+_Added: 2025-12-24_
