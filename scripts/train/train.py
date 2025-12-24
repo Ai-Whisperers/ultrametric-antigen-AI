@@ -152,6 +152,11 @@ def parse_args():
     # Riemannian optimizer (v5.11.10)
     parser.add_argument('--riemannian', action='store_true', default=False,
                         help='Use RiemannianAdam optimizer (geoopt) instead of AdamW')
+    # ManifoldParameter integration (v5.11.11)
+    parser.add_argument('--learnable_curvature', action='store_true', default=False,
+                        help='Make hyperbolic curvature a learnable parameter (geoopt)')
+    parser.add_argument('--manifold_aware', action='store_true', default=False,
+                        help='Return ManifoldParameter from projection for Riemannian gradients')
     return parser.parse_args()
 
 
@@ -600,11 +605,13 @@ def main():
     proj_hidden_dim = config.get('projection_hidden_dim', 64)
     proj_layers = config.get('projection_layers', 1)
     proj_dropout = config.get('projection_dropout', 0.0)
+    learnable_curvature = config.get('learnable_curvature', False)
 
     dual_str = " + DUAL PROJECTION" if use_dual_proj else ""
     capacity_str = f" (hidden={proj_hidden_dim}, layers={proj_layers}, dropout={proj_dropout})"
+    curvature_str = " + LEARNABLE_C" if learnable_curvature else ""
     if use_option_c:
-        print(f"\n=== Creating V5.11 Model (OPTION C: encoder_B trainable{dual_str}{capacity_str}) ===")
+        print(f"\n=== Creating V5.11 Model (OPTION C: encoder_B trainable{dual_str}{capacity_str}{curvature_str}) ===")
         model = TernaryVAEV5_11_OptionC(
             latent_dim=16,
             hidden_dim=proj_hidden_dim,
@@ -614,11 +621,12 @@ def main():
             use_dual_projection=use_dual_proj,
             n_projection_layers=proj_layers,
             projection_dropout=proj_dropout,
+            learnable_curvature=learnable_curvature,
             freeze_encoder_b=False,  # Key difference: encoder_B trains
             encoder_b_lr_scale=encoder_b_lr_scale
         )
     else:
-        print(f"\n=== Creating V5.11 Model (OPTION A: all encoders frozen{dual_str}{capacity_str}) ===")
+        print(f"\n=== Creating V5.11 Model (OPTION A: all encoders frozen{dual_str}{capacity_str}{curvature_str}) ===")
         model = TernaryVAEV5_11(
             latent_dim=16,
             hidden_dim=proj_hidden_dim,
@@ -627,7 +635,8 @@ def main():
             use_controller=config.get('use_controller', False),
             use_dual_projection=use_dual_proj,
             n_projection_layers=proj_layers,
-            projection_dropout=proj_dropout
+            projection_dropout=proj_dropout,
+            learnable_curvature=learnable_curvature
         )
 
     # Load v5.5 checkpoint
@@ -951,6 +960,11 @@ def main():
             writer.add_scalar('Homeostasis/best_Q', homeo_state.get('best_Q', 0), epoch)
             writer.add_scalar('Homeostasis/coverage_freeze_threshold', homeostasis.coverage_freeze_threshold, epoch)
             writer.add_scalar('Homeostasis/total_cycles', sum(homeostasis.cycle_count.values()), epoch)
+
+        # Log learnable curvature if enabled
+        if learnable_curvature and hasattr(model.projection, 'get_curvature'):
+            current_c = model.projection.get_curvature()
+            writer.add_scalar('Geometry/curvature', current_c, epoch)
 
         # Print progress
         if epoch % 5 == 0 or epoch == n_epochs - 1:

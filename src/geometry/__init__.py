@@ -19,7 +19,11 @@ from .poincare import (
     lambda_x,
     parallel_transport,
     PoincareModule,
+    create_manifold_parameter,
+    create_manifold_tensor,
     get_riemannian_optimizer,
+    ManifoldParameter,
+    ManifoldTensor,
     GEOOPT_AVAILABLE
 )
 
@@ -33,6 +37,10 @@ __all__ = [
     'lambda_x',
     'parallel_transport',
     'PoincareModule',
+    'create_manifold_parameter',
+    'create_manifold_tensor',
     'get_riemannian_optimizer',
+    'ManifoldParameter',
+    'ManifoldTensor',
     'GEOOPT_AVAILABLE'
 ]

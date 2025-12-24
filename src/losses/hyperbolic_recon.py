@@ -27,6 +27,7 @@ import math
 
 # P2 FIX: Use core module for vectorized prefix computation
 from ..core import TERNARY
+from ..geometry import poincare_distance, project_to_poincare
 
 
 class HyperbolicReconLoss(nn.Module):
@@ -72,26 +73,7 @@ class HyperbolicReconLoss(nn.Module):
 
     def _project_to_poincare(self, z: torch.Tensor) -> torch.Tensor:
         """Project Euclidean points onto the Poincare ball."""
-        norm = torch.norm(z, dim=-1, keepdim=True)
-        z_hyp = z / (1 + norm) * self.max_norm
-        return z_hyp
-
-    def _poincare_distance(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        """Compute Poincare distance between points."""
-        c = self.curvature
-
-        x_norm_sq = torch.sum(x ** 2, dim=-1)
-        y_norm_sq = torch.sum(y ** 2, dim=-1)
-        diff_norm_sq = torch.sum((x - y) ** 2, dim=-1)
-
-        denom = (1 - c * x_norm_sq) * (1 - c * y_norm_sq)
-        denom = torch.clamp(denom, min=1e-10)
-
-        arg = 1 + 2 * c * diff_norm_sq / denom
-        arg = torch.clamp(arg, min=1.0 + 1e-7)
-
-        distance = (1 / math.sqrt(c)) * torch.acosh(arg)
-        return distance
+        return project_to_poincare(z, max_norm=self.max_norm, c=self.curvature)
 
     def _compute_radius_weights(self, z_hyp: torch.Tensor) -> torch.Tensor:
         """Compute importance weights based on radial position.
@@ -142,8 +124,8 @@ class HyperbolicReconLoss(nn.Module):
             z_enc_hyp = self._project_to_poincare(z_enc)
         z_dec_hyp = self._project_to_poincare(z_dec)
 
-        # Geodesic distance
-        distances = self._poincare_distance(z_enc_hyp, z_dec_hyp)
+        # Geodesic distance (using unified implementation from geometry module)
+        distances = poincare_distance(z_enc_hyp, z_dec_hyp, c=self.curvature)
 
         # Apply radius weighting if enabled
         if self.radius_weighting:
@@ -417,27 +399,6 @@ class HyperbolicCentroidLoss(nn.Module):
             level_weights = torch.tensor([0.5 ** i for i in range(max_level)])
         self.register_buffer('level_weights', level_weights)
 
-    def _project_to_poincare(self, z: torch.Tensor) -> torch.Tensor:
-        """Project to Poincare ball."""
-        norm = torch.norm(z, dim=-1, keepdim=True)
-        return z / (1 + norm) * self.max_norm
-
-    def _poincare_distance(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        """Compute Poincare distance."""
-        c = self.curvature
-
-        x_norm_sq = torch.sum(x ** 2, dim=-1)
-        y_norm_sq = torch.sum(y ** 2, dim=-1)
-        diff_norm_sq = torch.sum((x - y) ** 2, dim=-1)
-
-        denom = (1 - c * x_norm_sq) * (1 - c * y_norm_sq)
-        denom = torch.clamp(denom, min=1e-10)
-
-        arg = 1 + 2 * c * diff_norm_sq / denom
-        arg = torch.clamp(arg, min=1.0 + 1e-7)
-
-        return (1 / math.sqrt(c)) * torch.acosh(arg)
-
     def _get_prefix(self, idx: int, level: int) -> int:
         """Get base-3 prefix of an index at given level.
 
@@ -481,7 +442,7 @@ class HyperbolicCentroidLoss(nn.Module):
 
         # Initialize with weighted Euclidean mean
         mean = (points * weights.unsqueeze(1)).sum(dim=0)
-        mean = self._project_to_poincare(mean.unsqueeze(0)).squeeze(0)
+        mean = project_to_poincare(mean.unsqueeze(0), max_norm=self.max_norm, c=self.curvature).squeeze(0)
 
         # Iterative refinement with convergence check
         for _ in range(n_iter):
@@ -491,7 +452,7 @@ class HyperbolicCentroidLoss(nn.Module):
             direction = direction.sum(dim=0)
             mean = mean + 0.1 * direction
             # Re-project to ball
-            mean = self._project_to_poincare(mean.unsqueeze(0)).squeeze(0)
+            mean = project_to_poincare(mean.unsqueeze(0), max_norm=self.max_norm, c=self.curvature).squeeze(0)
             # Check convergence
             if torch.norm(mean - prev_mean) < tol:
                 break
@@ -512,7 +473,7 @@ class HyperbolicCentroidLoss(nn.Module):
         Returns:
             Tuple of (loss, metrics)
         """
-        z_hyp = self._project_to_poincare(z)
+        z_hyp = project_to_poincare(z, max_norm=self.max_norm, c=self.curvature)
         batch_size = z.size(0)
         device = z.device
 
@@ -537,10 +498,11 @@ class HyperbolicCentroidLoss(nn.Module):
                 # Compute centroid
                 centroid = self._compute_frechet_mean(cluster_points)
 
-                # Distance to centroid
-                distances = self._poincare_distance(
+                # Distance to centroid (using unified implementation)
+                distances = poincare_distance(
                     cluster_points,
-                    centroid.unsqueeze(0).expand_as(cluster_points)
+                    centroid.unsqueeze(0).expand_as(cluster_points),
+                    c=self.curvature
                 )
 
                 level_loss = level_loss + distances.mean()

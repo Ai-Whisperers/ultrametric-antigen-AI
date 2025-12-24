@@ -6,6 +6,11 @@ Key V5.11 innovation: Separate networks for direction and radius learning.
 This decouples angular structure from radial hierarchy, allowing each
 to be learned independently.
 
+V5.11.11 additions:
+- ManifoldParameter support via as_manifold flag
+- Learnable curvature via learnable_curvature flag
+- geoopt manifold attribute for manifold-aware operations
+
 Architecture:
   z_euclidean → [direction_net] → normalized direction
               → [radius_net]    → radius in [0, max_radius]
@@ -17,7 +22,14 @@ Single responsibility: Euclidean to hyperbolic projection.
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from typing import Tuple, Optional
+from typing import Tuple, Optional, Union
+
+# Import geoopt for manifold-aware operations
+from src.geometry import (
+    get_manifold,
+    ManifoldParameter,
+    GEOOPT_AVAILABLE
+)
 
 
 class HyperbolicProjection(nn.Module):
@@ -42,7 +54,8 @@ class HyperbolicProjection(nn.Module):
         curvature: float = 1.0,
         init_identity: bool = True,
         n_layers: int = 1,
-        dropout: float = 0.0
+        dropout: float = 0.0,
+        learnable_curvature: bool = False
     ):
         """Initialize HyperbolicProjection.
 
@@ -54,14 +67,27 @@ class HyperbolicProjection(nn.Module):
             init_identity: If True, initialize direction_net as identity
             n_layers: Number of hidden layers (1=shallow, 2+=deep)
             dropout: Dropout rate for regularization (default: 0.0)
+            learnable_curvature: If True, curvature becomes a learnable parameter
         """
         super().__init__()
         self.latent_dim = latent_dim
         self.hidden_dim = hidden_dim
         self.max_radius = max_radius
-        self.curvature = curvature
         self.n_layers = n_layers
         self.dropout_rate = dropout
+        self.learnable_curvature = learnable_curvature
+
+        # Create manifold with optional learnable curvature
+        if GEOOPT_AVAILABLE:
+            import geoopt
+            if learnable_curvature:
+                self.manifold = geoopt.PoincareBall(c=curvature, learnable=True)
+            else:
+                self.manifold = geoopt.PoincareBall(c=curvature)
+            self.curvature = self.manifold.c  # Use manifold's curvature
+        else:
+            self.manifold = None
+            self.curvature = curvature
 
         # Direction network: learns angular structure
         # Output is a residual added to input, then normalized
@@ -152,14 +178,21 @@ class HyperbolicProjection(nn.Module):
             # Bias the final layer to output ~0.5 after sigmoid
             self.radius_net[-2].bias.zero_()
 
-    def forward(self, z_euclidean: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self,
+        z_euclidean: torch.Tensor,
+        as_manifold: bool = False
+    ) -> Union[torch.Tensor, 'ManifoldParameter']:
         """Project Euclidean latent to Poincaré ball.
 
         Args:
             z_euclidean: Euclidean latent codes (batch, latent_dim)
+            as_manifold: If True, return ManifoldParameter for manifold-aware
+                         gradient updates. Requires geoopt.
 
         Returns:
-            z_hyp: Points in Poincaré ball (batch, latent_dim)
+            z_hyp: Points in Poincaré ball. Regular tensor if as_manifold=False,
+                   ManifoldParameter if as_manifold=True and geoopt available.
         """
         # Direction: input + learned residual, then normalize
         direction_residual = self.direction_net(z_euclidean)
@@ -171,7 +204,20 @@ class HyperbolicProjection(nn.Module):
         # Combine: z_hyp = direction * radius
         z_hyp = direction * radius
 
+        # Optionally wrap as ManifoldParameter for Riemannian gradients
+        if as_manifold and GEOOPT_AVAILABLE and self.manifold is not None:
+            # Project to ensure on manifold, then wrap
+            z_hyp = self.manifold.projx(z_hyp)
+            return ManifoldParameter(z_hyp, manifold=self.manifold)
+
         return z_hyp
+
+    def get_curvature(self) -> float:
+        """Get current curvature value (may be learnable)."""
+        if self.manifold is not None and hasattr(self.manifold, 'c'):
+            c = self.manifold.c
+            return c.item() if hasattr(c, 'item') else float(c)
+        return self.curvature
 
     def forward_with_components(
         self,
@@ -198,6 +244,8 @@ class DualHyperbolicProjection(nn.Module):
     Each VAE gets its own projection layer, allowing them to learn
     different positions in the hyperbolic space while maintaining
     the Three-Body opposition dynamics.
+
+    V5.11.11: Supports learnable curvature and ManifoldParameter output.
     """
 
     def __init__(
@@ -208,7 +256,8 @@ class DualHyperbolicProjection(nn.Module):
         curvature: float = 1.0,
         share_direction: bool = False,
         n_layers: int = 1,
-        dropout: float = 0.0
+        dropout: float = 0.0,
+        learnable_curvature: bool = False
     ):
         """Initialize DualHyperbolicProjection.
 
@@ -220,16 +269,19 @@ class DualHyperbolicProjection(nn.Module):
             share_direction: If True, share direction_net between A and B
             n_layers: Number of hidden layers in projection networks
             dropout: Dropout rate for regularization (default: 0.0)
+            learnable_curvature: If True, curvature becomes a learnable parameter
         """
         super().__init__()
         self.share_direction = share_direction
         self.n_layers = n_layers
         self.dropout_rate = dropout
+        self.learnable_curvature = learnable_curvature
 
         # VAE-A projection (chaotic, explores boundary)
         self.proj_A = HyperbolicProjection(
             latent_dim, hidden_dim, max_radius, curvature,
-            n_layers=n_layers, dropout=dropout
+            n_layers=n_layers, dropout=dropout,
+            learnable_curvature=learnable_curvature
         )
 
         if share_direction:
@@ -251,24 +303,27 @@ class DualHyperbolicProjection(nn.Module):
             # VAE-B has completely separate projection
             self.proj_B = HyperbolicProjection(
                 latent_dim, hidden_dim, max_radius, curvature,
-                n_layers=n_layers, dropout=dropout
+                n_layers=n_layers, dropout=dropout,
+                learnable_curvature=learnable_curvature
             )
 
     def forward(
         self,
         z_A: torch.Tensor,
-        z_B: torch.Tensor
-    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        z_B: torch.Tensor,
+        as_manifold: bool = False
+    ) -> Tuple[Union[torch.Tensor, 'ManifoldParameter'], Union[torch.Tensor, 'ManifoldParameter']]:
         """Project both VAE latents to Poincaré ball.
 
         Args:
             z_A: VAE-A Euclidean latent (batch, latent_dim)
             z_B: VAE-B Euclidean latent (batch, latent_dim)
+            as_manifold: If True, return ManifoldParameters
 
         Returns:
             Tuple of (z_A_hyp, z_B_hyp)
         """
-        z_A_hyp = self.proj_A(z_A)
+        z_A_hyp = self.proj_A(z_A, as_manifold=as_manifold)
 
         if self.share_direction:
             # Use A's direction network for B
@@ -276,10 +331,19 @@ class DualHyperbolicProjection(nn.Module):
             direction = F.normalize(z_B + direction_residual, dim=-1)
             radius = self.proj_B_radius(z_B) * self.max_radius
             z_B_hyp = direction * radius
+
+            # Optionally wrap as ManifoldParameter
+            if as_manifold and GEOOPT_AVAILABLE and self.proj_A.manifold is not None:
+                z_B_hyp = self.proj_A.manifold.projx(z_B_hyp)
+                z_B_hyp = ManifoldParameter(z_B_hyp, manifold=self.proj_A.manifold)
         else:
-            z_B_hyp = self.proj_B(z_B)
+            z_B_hyp = self.proj_B(z_B, as_manifold=as_manifold)
 
         return z_A_hyp, z_B_hyp
+
+    def get_curvature(self) -> float:
+        """Get current curvature value (may be learnable)."""
+        return self.proj_A.get_curvature()
 
 
 __all__ = [

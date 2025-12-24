@@ -192,6 +192,7 @@ class TernaryVAEV5_11(nn.Module):
         use_dual_projection: bool = False,
         n_projection_layers: int = 1,
         projection_dropout: float = 0.0,
+        learnable_curvature: bool = False,
     ):
         """Initialize TernaryVAEV5_11.
 
@@ -204,6 +205,7 @@ class TernaryVAEV5_11(nn.Module):
             use_dual_projection: Whether to use separate A/B projections
             n_projection_layers: Number of hidden layers in projection (1=shallow, 2+=deep)
             projection_dropout: Dropout rate for projection networks (default: 0.0)
+            learnable_curvature: If True, curvature becomes learnable via geoopt (v5.11.11)
         """
         super().__init__()
 
@@ -215,6 +217,7 @@ class TernaryVAEV5_11(nn.Module):
         self.use_dual_projection = use_dual_projection
         self.n_projection_layers = n_projection_layers
         self.projection_dropout = projection_dropout
+        self.learnable_curvature = learnable_curvature
 
         # Frozen encoders (will be loaded from checkpoint)
         self.encoder_A = FrozenEncoder(latent_dim=latent_dim)
@@ -232,6 +235,7 @@ class TernaryVAEV5_11(nn.Module):
                 curvature=curvature,
                 n_layers=n_projection_layers,
                 dropout=projection_dropout,
+                learnable_curvature=learnable_curvature,
             )
         else:
             self.projection = HyperbolicProjection(
@@ -241,6 +245,7 @@ class TernaryVAEV5_11(nn.Module):
                 curvature=curvature,
                 n_layers=n_projection_layers,
                 dropout=projection_dropout,
+                learnable_curvature=learnable_curvature,
             )
 
         # Trainable controller

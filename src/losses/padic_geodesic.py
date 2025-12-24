@@ -24,38 +24,7 @@ import torch.nn.functional as F
 from typing import Tuple, Optional
 
 from ..core import TERNARY
-
-
-def poincare_distance(
-    x: torch.Tensor,
-    y: torch.Tensor,
-    c: float = 1.0,
-    eps: float = 1e-7
-) -> torch.Tensor:
-    """Compute Poincaré geodesic distance between points.
-
-    d_poincare(x,y) = (1/sqrt(c)) * arcosh(1 + 2c||x-y||² / ((1-c||x||²)(1-c||y||²)))
-
-    Args:
-        x: Points in Poincaré ball (batch, dim)
-        y: Points in Poincaré ball (batch, dim)
-        c: Curvature parameter (c > 0)
-        eps: Numerical stability epsilon
-
-    Returns:
-        Geodesic distances (batch,)
-    """
-    x_norm_sq = torch.sum(x ** 2, dim=-1)
-    y_norm_sq = torch.sum(y ** 2, dim=-1)
-    diff_norm_sq = torch.sum((x - y) ** 2, dim=-1)
-
-    denom = (1 - c * x_norm_sq) * (1 - c * y_norm_sq)
-    denom = torch.clamp(denom, min=eps)
-
-    arg = 1 + 2 * c * diff_norm_sq / denom
-    arg = torch.clamp(arg, min=1.0 + eps)
-
-    return (1 / (c ** 0.5)) * torch.acosh(arg)
+from ..geometry import poincare_distance
 
 
 class PAdicGeodesicLoss(nn.Module):
@@ -672,7 +641,6 @@ class MonotonicRadialLoss(nn.Module):
 
 
 __all__ = [
-    'poincare_distance',
     'PAdicGeodesicLoss',
     'RadialHierarchyLoss',
     'CombinedGeodesicLoss',

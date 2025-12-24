@@ -30,11 +30,14 @@ from typing import Optional, Union
 try:
     import geoopt
     from geoopt import PoincareBall as GeooptPoincareBall
+    from geoopt import ManifoldParameter, ManifoldTensor
     from geoopt.optim import RiemannianAdam, RiemannianSGD
     GEOOPT_AVAILABLE = True
 except ImportError:
     GEOOPT_AVAILABLE = False
     GeooptPoincareBall = None
+    ManifoldParameter = None
+    ManifoldTensor = None
     RiemannianAdam = None
     RiemannianSGD = None
 
@@ -348,6 +351,66 @@ class PoincareModule(nn.Module):
         return parallel_transport(x, y, v, self.c)
 
 
+def create_manifold_parameter(
+    data: torch.Tensor,
+    c: float = 1.0,
+    requires_grad: bool = True
+) -> 'ManifoldParameter':
+    """Create a learnable parameter that lives on the Poincare ball.
+
+    This wraps a tensor as a ManifoldParameter, which:
+    - Automatically projects data onto the manifold
+    - Enables Riemannian gradient updates via RiemannianAdam
+    - Handles boundary conditions automatically
+
+    Args:
+        data: Initial data (will be projected to manifold)
+        c: Curvature parameter
+        requires_grad: Whether parameter requires gradients
+
+    Returns:
+        ManifoldParameter on the Poincare ball
+
+    Raises:
+        RuntimeError: If geoopt is not available
+    """
+    if not GEOOPT_AVAILABLE:
+        raise RuntimeError(
+            "create_manifold_parameter requires geoopt. "
+            "Install with: pip install geoopt"
+        )
+
+    manifold = get_manifold(c)
+    # Project data onto manifold for safety
+    data_proj = manifold.projx(data)
+    return ManifoldParameter(data_proj, manifold=manifold, requires_grad=requires_grad)
+
+
+def create_manifold_tensor(
+    data: torch.Tensor,
+    c: float = 1.0
+) -> 'ManifoldTensor':
+    """Create a non-learnable tensor on the Poincare ball.
+
+    Like ManifoldParameter but without gradients. Useful for
+    intermediate computations that should respect manifold geometry.
+
+    Args:
+        data: Initial data (will be projected to manifold)
+        c: Curvature parameter
+
+    Returns:
+        ManifoldTensor on the Poincare ball
+    """
+    if not GEOOPT_AVAILABLE:
+        # Fallback: just project and return regular tensor
+        return project_to_poincare(data, c=c)
+
+    manifold = get_manifold(c)
+    data_proj = manifold.projx(data)
+    return ManifoldTensor(data_proj, manifold=manifold)
+
+
 def get_riemannian_optimizer(
     params,
     lr: float = 1e-3,
@@ -390,6 +453,10 @@ __all__ = [
     'lambda_x',
     'parallel_transport',
     'PoincareModule',
+    'create_manifold_parameter',
+    'create_manifold_tensor',
     'get_riemannian_optimizer',
+    'ManifoldParameter',
+    'ManifoldTensor',
     'GEOOPT_AVAILABLE'
 ]
