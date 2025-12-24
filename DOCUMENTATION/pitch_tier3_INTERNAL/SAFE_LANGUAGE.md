@@ -160,6 +160,45 @@ When discussing our technology externally, use **vague but accurate** language t
 
 ---
 
+## VALIDATION LANGUAGE (CRITICAL)
+
+### The Honest Core Claim
+
+**What we can truthfully say**:
+> "A mathematical encoding that, without biological training, produces distance metrics correlating with independent structural predictions, sequence conservation data, and clinical resistance patterns."
+
+### Validation-Specific Safe Phrases
+
+| Reality | Safe External Phrasing |
+|:--------|:-----------------------|
+| Correlates with AlphaFold3 | "corroborated by independent structural predictions" |
+| Matches database patterns | "aligns with observed sequence conservation" |
+| Matches clinical hierarchy | "mirrors patterns in clinical resistance data" |
+| Internally consistent | "computationally reproducible" |
+
+### Required Qualifiers
+
+**Always include one of these**:
+- "in silico" or "computational"
+- "correlates with" (not "validates" or "proves")
+- "suggests" (not "demonstrates" or "confirms")
+- "pending experimental confirmation"
+
+### Overclaims That Will Damage Credibility
+
+| Never Say | Why It's Wrong | Say Instead |
+|:----------|:---------------|:------------|
+| "Validated" (alone) | Implies wet-lab | "Computationally corroborated" |
+| "Experimentally confirmed" | No wet-lab exists | "Correlates with structural predictions" |
+| "Clinically proven" | No clinical data | "Aligns with clinical patterns" |
+| "We discovered" | Overclaims causation | "Our analysis identifies" |
+
+### The Honest Pitch Template
+
+> "Our geometric encoding produces predictions that correlate with three independent external sources: structural predictions from AlphaFold3, sequence conservation in global databases, and clinical resistance patterns. This correlation—without any biological training—suggests the geometry captures real evolutionary constraints. We're seeking experimental partners to test whether these computational insights translate to therapeutic applications."
+
+---
+
 ## RED FLAG PHRASES TO AVOID
 
 If you find yourself about to say any of these, STOP:
@@ -170,8 +209,10 @@ If you find yourself about to say any of these, STOP:
 - "We realized that X implies Y..."
 - "The mathematical basis is..."
 - "Specifically, we use..."
+- "We've validated..." (without qualifier)
+- "This proves..." (computational ≠ proof)
 
-These phrases often precede IP disclosure.
+These phrases often precede IP disclosure or overclaiming.
 
 ---
 
