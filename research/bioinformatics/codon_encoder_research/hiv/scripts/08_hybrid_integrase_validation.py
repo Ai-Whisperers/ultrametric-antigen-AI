@@ -18,7 +18,9 @@ from typing import Dict, List, Tuple
 import numpy as np
 
 # Add paths for imports
-project_root = Path(__file__).parent.parent.parent.parent.parent
+# Script is at: research/bioinformatics/codon_encoder_research/hiv/scripts/
+# Need 6 parents to reach project root
+project_root = Path(__file__).resolve().parent.parent.parent.parent.parent.parent
 alphafold_path = project_root / "research" / "alphafold3"
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(alphafold_path))
