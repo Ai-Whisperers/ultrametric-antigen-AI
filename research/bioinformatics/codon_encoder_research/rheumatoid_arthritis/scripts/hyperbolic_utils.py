@@ -261,11 +261,23 @@ def load_codon_encoder(
     script_dir = Path(__file__).parent
     research_dir = script_dir.parent.parent.parent
 
+    # Additional paths for different project structures
+    # script_dir = .../rheumatoid_arthritis/scripts
+    # parents: [0]=rheumatoid_arthritis, [1]=codon_encoder_research, [2]=bioinformatics,
+    #          [3]=03_EXPERIMENTS_AND_LABS, [4]=01_PROJECT_KNOWLEDGE_BASE,
+    #          [5]=DOCUMENTATION, [6]=ternary-vaes (project root)
+    try:
+        project_root = script_dir.parents[6]  # Navigate to ternary-vaes root from DOCUMENTATION
+    except IndexError:
+        project_root = script_dir.parents[3]  # Fallback for research/ structure
+
     if version == '3adic':
         # New native hyperbolic encoder (trained on V5.11.3 embeddings)
         encoder_paths = [
             research_dir / 'genetic_code' / 'data' / 'codon_encoder_3adic.pt',
             script_dir.parent / 'data' / 'codon_encoder_3adic.pt',
+            # Project-level paths (works from both DOCUMENTATION and research)
+            project_root / 'research' / 'bioinformatics' / 'genetic_code' / 'data' / 'codon_encoder_3adic.pt',
         ]
         native_hyperbolic = True
     else:

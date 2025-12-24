@@ -19,8 +19,10 @@ from collections import defaultdict
 from itertools import product
 
 # Add path to hyperbolic utils
-RESEARCH_DIR = Path(__file__).parent.parent.parent.parent
-sys.path.insert(0, str(RESEARCH_DIR / "bioinformatics" / "rheumatoid_arthritis" / "scripts"))
+# Path: .../codon_encoder_research/sars_cov_2/glycan_shield/this_script.py
+# parent = glycan_shield, parent.parent = sars_cov_2, parent.parent.parent = codon_encoder_research
+CODON_RESEARCH_DIR = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(CODON_RESEARCH_DIR / "rheumatoid_arthritis" / "scripts"))
 
 from hyperbolic_utils import (
     load_hyperbolic_encoder,

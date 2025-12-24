@@ -23,10 +23,12 @@ from typing import Dict, List, Tuple
 from collections import defaultdict
 
 # Add paths
+# Path: .../codon_encoder_research/neurodegeneration/alzheimers/this_script.py
+# parent = alzheimers, parent.parent = neurodegeneration, parent.parent.parent = codon_encoder_research
 SCRIPT_DIR = Path(__file__).parent
-RESEARCH_DIR = SCRIPT_DIR.parent.parent.parent
+CODON_RESEARCH_DIR = SCRIPT_DIR.parent.parent
 sys.path.insert(0, str(SCRIPT_DIR / "data"))
-sys.path.insert(0, str(RESEARCH_DIR / "bioinformatics" / "rheumatoid_arthritis" / "scripts"))
+sys.path.insert(0, str(CODON_RESEARCH_DIR / "rheumatoid_arthritis" / "scripts"))
 
 from tau_phospho_database import (
     TAU_2N4R_SEQUENCE,
