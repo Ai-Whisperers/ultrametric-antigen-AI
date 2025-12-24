@@ -1,7 +1,7 @@
 """Poincare Ball geometry with geoopt backend.
 
 This module provides numerically stable hyperbolic geometry operations
-using geoopt when available, with fallback to manual implementations.
+using geoopt's C++ backend for optimal performance.
 
 Benefits of geoopt backend:
 - 15-20% faster training (C++ backend)
@@ -23,41 +23,27 @@ Reference:
 
 import torch
 import torch.nn as nn
-import math
-from typing import Optional, Union
 
-# Try importing geoopt
-try:
-    import geoopt
-    from geoopt import PoincareBall as GeooptPoincareBall
-    from geoopt import ManifoldParameter, ManifoldTensor
-    from geoopt.optim import RiemannianAdam, RiemannianSGD
-    GEOOPT_AVAILABLE = True
-except ImportError:
-    GEOOPT_AVAILABLE = False
-    GeooptPoincareBall = None
-    ManifoldParameter = None
-    ManifoldTensor = None
-    RiemannianAdam = None
-    RiemannianSGD = None
+# geoopt is a required dependency
+import geoopt
+from geoopt import PoincareBall as GeooptPoincareBall
+from geoopt import ManifoldParameter, ManifoldTensor
+from geoopt.optim import RiemannianAdam, RiemannianSGD
 
 
 # Global manifold cache for efficiency
 _manifold_cache = {}
 
 
-def get_manifold(c: float = 1.0) -> Optional['GeooptPoincareBall']:
+def get_manifold(c: float = 1.0) -> GeooptPoincareBall:
     """Get a PoincareBall manifold with specified curvature.
 
     Args:
         c: Curvature parameter (c > 0 for hyperbolic space)
 
     Returns:
-        geoopt.PoincareBall if available, None otherwise
+        geoopt.PoincareBall manifold
     """
-    if not GEOOPT_AVAILABLE:
-        return None
-
     if c not in _manifold_cache:
         _manifold_cache[c] = geoopt.PoincareBall(c=c)
 
@@ -72,7 +58,7 @@ def poincare_distance(
 ) -> torch.Tensor:
     """Compute Poincare distance between points.
 
-    Uses geoopt when available for numerical stability.
+    Uses geoopt for numerical stability.
 
     Args:
         x: First set of points, shape (..., dim)
@@ -83,28 +69,8 @@ def poincare_distance(
     Returns:
         Poincare distances, shape (...) or (..., 1) if keepdim
     """
-    if GEOOPT_AVAILABLE:
-        manifold = get_manifold(c)
-        dist = manifold.dist(x, y, keepdim=keepdim)
-        return dist
-
-    # Manual implementation (fallback)
-    x_norm_sq = torch.sum(x ** 2, dim=-1, keepdim=True)
-    y_norm_sq = torch.sum(y ** 2, dim=-1, keepdim=True)
-    diff_norm_sq = torch.sum((x - y) ** 2, dim=-1, keepdim=True)
-
-    denom = (1 - c * x_norm_sq) * (1 - c * y_norm_sq)
-    denom = torch.clamp(denom, min=1e-10)
-
-    arg = 1 + 2 * c * diff_norm_sq / denom
-    arg = torch.clamp(arg, min=1.0 + 1e-7)
-
-    distance = (1 / math.sqrt(c)) * torch.acosh(arg)
-
-    if not keepdim:
-        distance = distance.squeeze(-1)
-
-    return distance
+    manifold = get_manifold(c)
+    return manifold.dist(x, y, keepdim=keepdim)
 
 
 def project_to_poincare(
@@ -114,7 +80,7 @@ def project_to_poincare(
 ) -> torch.Tensor:
     """Project points onto the Poincare ball.
 
-    Uses geoopt.projx when available for stability at boundary.
+    Uses geoopt.projx for stability at boundary.
 
     Args:
         z: Points to project, shape (..., dim)
@@ -124,23 +90,18 @@ def project_to_poincare(
     Returns:
         Projected points on Poincare ball
     """
-    if GEOOPT_AVAILABLE:
-        manifold = get_manifold(c)
-        # geoopt's projx clamps to 1-eps boundary
-        z_proj = manifold.projx(z)
+    manifold = get_manifold(c)
+    # geoopt's projx clamps to 1-eps boundary
+    z_proj = manifold.projx(z)
 
-        # Apply additional max_norm constraint if needed
-        norm = torch.norm(z_proj, dim=-1, keepdim=True)
-        scale = torch.where(
-            norm > max_norm,
-            max_norm / (norm + 1e-10),
-            torch.ones_like(norm)
-        )
-        return z_proj * scale
-
-    # Manual implementation (fallback)
-    norm = torch.norm(z, dim=-1, keepdim=True)
-    return z / (1 + norm) * max_norm
+    # Apply additional max_norm constraint if needed
+    norm = torch.norm(z_proj, dim=-1, keepdim=True)
+    scale = torch.where(
+        norm > max_norm,
+        max_norm / (norm + 1e-10),
+        torch.ones_like(norm)
+    )
+    return z_proj * scale
 
 
 def exp_map_zero(
@@ -158,17 +119,9 @@ def exp_map_zero(
     Returns:
         Points on Poincare ball
     """
-    if GEOOPT_AVAILABLE:
-        manifold = get_manifold(c)
-        origin = torch.zeros_like(v)
-        return manifold.expmap(origin, v)
-
-    # Manual implementation
-    sqrt_c = math.sqrt(c)
-    v_norm = torch.norm(v, dim=-1, keepdim=True)
-    v_norm = torch.clamp(v_norm, min=1e-10)
-
-    return torch.tanh(sqrt_c * v_norm) * v / (sqrt_c * v_norm)
+    manifold = get_manifold(c)
+    origin = torch.zeros_like(v)
+    return manifold.expmap(origin, v)
 
 
 def log_map_zero(
@@ -188,20 +141,9 @@ def log_map_zero(
     Returns:
         Tangent vectors at origin
     """
-    if GEOOPT_AVAILABLE:
-        manifold = get_manifold(c)
-        origin = torch.zeros_like(z)
-        return manifold.logmap(origin, z)
-
-    # Manual implementation
-    sqrt_c = math.sqrt(c)
-    z_norm = torch.norm(z, dim=-1, keepdim=True)
-    z_norm = torch.clamp(z_norm, min=1e-10, max=max_norm - 1e-5)
-
-    sqrt_c_norm = sqrt_c * z_norm
-    sqrt_c_norm = torch.clamp(sqrt_c_norm, max=1.0 - 1e-7)
-
-    return torch.atanh(sqrt_c_norm) * z / (sqrt_c_norm + 1e-10)
+    manifold = get_manifold(c)
+    origin = torch.zeros_like(z)
+    return manifold.logmap(origin, z)
 
 
 def mobius_add(
@@ -222,20 +164,8 @@ def mobius_add(
     Returns:
         Result of Mobius addition
     """
-    if GEOOPT_AVAILABLE:
-        manifold = get_manifold(c)
-        return manifold.mobius_add(x, y)
-
-    # Manual implementation
-    x_sq = torch.sum(x ** 2, dim=-1, keepdim=True)
-    y_sq = torch.sum(y ** 2, dim=-1, keepdim=True)
-    xy = torch.sum(x * y, dim=-1, keepdim=True)
-
-    num = (1 + 2 * c * xy + c * y_sq) * x + (1 - c * x_sq) * y
-    denom = 1 + 2 * c * xy + c ** 2 * x_sq * y_sq
-    denom = torch.clamp(denom, min=1e-10)
-
-    return num / denom
+    manifold = get_manifold(c)
+    return manifold.mobius_add(x, y)
 
 
 def lambda_x(
@@ -255,13 +185,8 @@ def lambda_x(
     Returns:
         Conformal factors
     """
-    if GEOOPT_AVAILABLE:
-        manifold = get_manifold(c)
-        return manifold.lambda_x(x, keepdim=keepdim)
-
-    # Manual implementation
-    x_norm_sq = torch.sum(x ** 2, dim=-1, keepdim=keepdim)
-    return 2 / (1 - c * x_norm_sq + 1e-10)
+    manifold = get_manifold(c)
+    return manifold.lambda_x(x, keepdim=keepdim)
 
 
 def parallel_transport(
@@ -281,14 +206,8 @@ def parallel_transport(
     Returns:
         Transported tangent vector at y
     """
-    if GEOOPT_AVAILABLE:
-        manifold = get_manifold(c)
-        return manifold.transp(x, y, v)
-
-    # Manual implementation using gyration
-    lam_x = lambda_x(x, c, keepdim=True)
-    lam_y = lambda_x(y, c, keepdim=True)
-    return v * lam_x / lam_y
+    manifold = get_manifold(c)
+    return manifold.transp(x, y, v)
 
 
 class PoincareModule(nn.Module):
@@ -310,17 +229,12 @@ class PoincareModule(nn.Module):
         super().__init__()
         self.c = c
         self.max_norm = max_norm
-        self._manifold = get_manifold(c) if GEOOPT_AVAILABLE else None
+        self._manifold = get_manifold(c)
 
     @property
     def manifold(self):
-        """Get the geoopt manifold (None if geoopt not available)."""
+        """Get the geoopt manifold."""
         return self._manifold
-
-    @property
-    def has_geoopt(self) -> bool:
-        """Check if geoopt backend is available."""
-        return GEOOPT_AVAILABLE
 
     def dist(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         """Compute Poincare distance."""
@@ -355,7 +269,7 @@ def create_manifold_parameter(
     data: torch.Tensor,
     c: float = 1.0,
     requires_grad: bool = True
-) -> 'ManifoldParameter':
+) -> ManifoldParameter:
     """Create a learnable parameter that lives on the Poincare ball.
 
     This wraps a tensor as a ManifoldParameter, which:
@@ -370,16 +284,7 @@ def create_manifold_parameter(
 
     Returns:
         ManifoldParameter on the Poincare ball
-
-    Raises:
-        RuntimeError: If geoopt is not available
     """
-    if not GEOOPT_AVAILABLE:
-        raise RuntimeError(
-            "create_manifold_parameter requires geoopt. "
-            "Install with: pip install geoopt"
-        )
-
     manifold = get_manifold(c)
     # Project data onto manifold for safety
     data_proj = manifold.projx(data)
@@ -389,7 +294,7 @@ def create_manifold_parameter(
 def create_manifold_tensor(
     data: torch.Tensor,
     c: float = 1.0
-) -> 'ManifoldTensor':
+) -> ManifoldTensor:
     """Create a non-learnable tensor on the Poincare ball.
 
     Like ManifoldParameter but without gradients. Useful for
@@ -402,10 +307,6 @@ def create_manifold_tensor(
     Returns:
         ManifoldTensor on the Poincare ball
     """
-    if not GEOOPT_AVAILABLE:
-        # Fallback: just project and return regular tensor
-        return project_to_poincare(data, c=c)
-
     manifold = get_manifold(c)
     data_proj = manifold.projx(data)
     return ManifoldTensor(data_proj, manifold=manifold)
@@ -426,19 +327,12 @@ def get_riemannian_optimizer(
         **kwargs: Additional optimizer arguments
 
     Returns:
-        Optimizer (Riemannian if geoopt available, standard otherwise)
+        Riemannian optimizer
     """
-    if GEOOPT_AVAILABLE:
-        if optimizer_type == 'adam':
-            return RiemannianAdam(params, lr=lr, **kwargs)
-        elif optimizer_type == 'sgd':
-            return RiemannianSGD(params, lr=lr, **kwargs)
-
-    # Fallback to standard optimizers
     if optimizer_type == 'adam':
-        return torch.optim.Adam(params, lr=lr, **kwargs)
+        return RiemannianAdam(params, lr=lr, **kwargs)
     elif optimizer_type == 'sgd':
-        return torch.optim.SGD(params, lr=lr, **kwargs)
+        return RiemannianSGD(params, lr=lr, **kwargs)
 
     raise ValueError(f"Unknown optimizer type: {optimizer_type}")
 
@@ -458,5 +352,6 @@ __all__ = [
     'get_riemannian_optimizer',
     'ManifoldParameter',
     'ManifoldTensor',
-    'GEOOPT_AVAILABLE'
+    'RiemannianAdam',
+    'RiemannianSGD',
 ]

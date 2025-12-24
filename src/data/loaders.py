@@ -7,7 +7,7 @@ Single responsibility: DataLoader creation only.
 """
 
 import torch
-from torch.utils.data import DataLoader, random_split, Dataset
+from torch.utils.data import DataLoader, random_split
 from typing import Tuple, Optional
 
 from .generation import generate_all_ternary_operations
@@ -110,10 +110,8 @@ def get_data_loader_info(loader: DataLoader) -> dict:
     dataset = loader.dataset
     if hasattr(dataset, 'dataset'):
         # It's a Subset from random_split
-        base_dataset = dataset.dataset
         size = len(dataset)
     else:
-        base_dataset = dataset
         size = len(dataset)
 
     return {

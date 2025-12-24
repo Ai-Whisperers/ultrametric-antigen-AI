@@ -1,6 +1,5 @@
 import sys
 import subprocess
-import json
 from datetime import datetime
 
 # List of 20+ libraries/tools to research/check
@@ -111,7 +110,7 @@ def check_install(tool_name):
 
 
 def generate_report():
-    print(f"# External Tools Analysis Report")
+    print("# External Tools Analysis Report")
     print(f"**Date:** {datetime.now().strftime('%Y-%m-%d')}\n")
 
     print("## Tool Availability Codebase Audit")

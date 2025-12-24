@@ -13,16 +13,14 @@ Extends to 16D, 32D latent representations for richer Calabi-Yau projections.
 """
 
 import torch
-import torch.nn.functional as F
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
-from scipy.spatial import Delaunay, ConvexHull
+from scipy.spatial import Delaunay
 from scipy.ndimage import gaussian_filter
-from scipy.interpolate import griddata, RBFInterpolator
+from scipy.interpolate import RBFInterpolator
 from skimage import measure
 from pathlib import Path
 import sys
@@ -73,7 +71,7 @@ def calabi_yau_quintic_32d(z, phase=0.0):
 
     Uses all 32 dimensions as 16 complex coordinates for richer structure.
     """
-    N = z.shape[0]
+    z.shape[0]
 
     # Pair as complex: R^32 -> C^16
     z_complex = z[:, ::2] + 1j * z[:, 1::2]  # (N, 16)
@@ -242,7 +240,7 @@ def create_soft_surface_mesh(points, values, resolution=30):
 
     pca = PCA(n_components=2)
     uv = pca.fit_transform(points)  # 2D parameterization
-    height = points[:, 2]  # Use z as height
+    points[:, 2]  # Use z as height
 
     # Create smooth grid
     u_grid = np.linspace(uv[:, 0].min(), uv[:, 0].max(), resolution)
@@ -407,7 +405,7 @@ def export_mesh_data(points_16d, points_32d, output_path):
     # Also export density grids for volumetric rendering
     np.save(output_path / 'density_16d.npy', density_16d)
     np.save(output_path / 'density_32d.npy', density_32d)
-    print(f"Saved: density_16d.npy, density_32d.npy")
+    print("Saved: density_16d.npy, density_32d.npy")
 
     # Export points with projection data
     df = pd.DataFrame()

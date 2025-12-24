@@ -16,15 +16,12 @@ Usage:
 import argparse
 import sys
 from pathlib import Path
-from itertools import combinations
 
 import numpy as np
 import torch
 from sklearn.decomposition import PCA
-from scipy.stats import spearmanr, pearsonr
-from scipy.spatial.distance import pdist, squareform
+from scipy.stats import spearmanr
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -306,7 +303,7 @@ def analyze_single_digit_neighbors(data: dict, output_path: Path):
 
     # In 3-adic topology, lower positions should have larger "jumps"
     # because changing digit 0 is a larger change than digit 8
-    print(f"\nPosition-distance correlation (expect negative if 3-adic preserved):")
+    print("\nPosition-distance correlation (expect negative if 3-adic preserved):")
     corr_A, _ = spearmanr(range(9), means_A)
     corr_B, _ = spearmanr(range(9), means_B)
     print(f"  VAE-A: r={corr_A:.4f}")
@@ -435,7 +432,7 @@ def analyze_algebraic_structure(data: dict, output_path: Path):
             for name2 in names[i+1:]:
                 idx1, idx2 = special_ops[name1], special_ops[name2]
                 dist_A = np.linalg.norm(z_A[idx1] - z_A[idx2])
-                dist_B = np.linalg.norm(z_B[idx1] - z_B[idx2])
+                np.linalg.norm(z_B[idx1] - z_B[idx2])
                 adic = compute_3adic_distance(idx1, idx2)
                 print(f"  {name1} <-> {name2}: latent={dist_A:.3f}, 3-adic={adic}")
 
@@ -648,17 +645,17 @@ def main():
     # Run analyses
     clustering_results = analyze_3adic_clustering(data, output_path)
     neighbor_results = analyze_single_digit_neighbors(data, output_path)
-    special_ops = analyze_algebraic_structure(data, output_path)
+    analyze_algebraic_structure(data, output_path)
     analyze_cayley_structure(data, output_path)
 
     # Summary
     print("\n" + "="*60)
     print("SUMMARY: 3-ADIC STRUCTURE PRESERVATION")
     print("="*60)
-    print(f"\n3-adic distance correlation:")
+    print("\n3-adic distance correlation:")
     print(f"  VAE-A: r={clustering_results['corr_A_dist']:.4f}")
     print(f"  VAE-B: r={clustering_results['corr_B_dist']:.4f}")
-    print(f"\nPosition-distance correlation (negative = 3-adic preserved):")
+    print("\nPosition-distance correlation (negative = 3-adic preserved):")
     print(f"  VAE-A: r={neighbor_results['position_corr_A']:.4f}")
     print(f"  VAE-B: r={neighbor_results['position_corr_B']:.4f}")
 

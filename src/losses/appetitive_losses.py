@@ -14,7 +14,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-from typing import Dict, Tuple, List, Optional
+from typing import Dict, Tuple, List
 
 
 class AdaptiveRankingLoss(nn.Module):
@@ -317,7 +317,7 @@ class SymbioticBridge(nn.Module):
             return torch.tensor(0.0, device=device), 0.0
 
         # Positive pairs: (z_A[i], z_B[i])
-        pos_scores = self.mi_estimator(z_A, z_B).squeeze(-1)
+        self.mi_estimator(z_A, z_B).squeeze(-1)
 
         # Negative pairs: (z_A[i], z_B[j]) for j != i
         # Efficient implementation using broadcasting

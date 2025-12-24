@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 import torch
 import numpy as np
-from scipy.stats import spearmanr, pearsonr
+from scipy.stats import spearmanr
 import matplotlib.pyplot as plt
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -81,12 +81,12 @@ def compute_detailed_metrics(model, x, indices, device, name="Model"):
     radial_corr_A = spearmanr(valuations, radii_A)[0]
     radial_corr_B = spearmanr(valuations, radii_B)[0]
 
-    print(f"\n1. RADIAL HIERARCHY CORRELATION")
+    print("\n1. RADIAL HIERARCHY CORRELATION")
     print(f"   VAE-A: {radial_corr_A:.4f}")
     print(f"   VAE-B: {radial_corr_B:.4f}")
 
     # 2. Per-valuation statistics
-    print(f"\n2. RADIUS BY VALUATION LEVEL")
+    print("\n2. RADIUS BY VALUATION LEVEL")
     print(f"   {'Val':>3} | {'Count':>6} | {'Mean_A':>7} | {'Std_A':>6} | {'Mean_B':>7} | {'Std_B':>6} | {'Target':>7}")
     print(f"   {'-'*3}-+-{'-'*6}-+-{'-'*7}-+-{'-'*6}-+-{'-'*7}-+-{'-'*6}-+-{'-'*7}")
 
@@ -111,7 +111,7 @@ def compute_detailed_metrics(model, x, indices, device, name="Model"):
             print(f"   {v:>3} | {count:>6} | {mean_A:>7.4f} | {std_A:>6.4f} | {mean_B:>7.4f} | {std_B:>6.4f} | {target:>7.4f}")
 
     # 3. Poincare distance analysis
-    print(f"\n3. POINCARE DISTANCE BY VALUATION DIFFERENCE")
+    print("\n3. POINCARE DISTANCE BY VALUATION DIFFERENCE")
 
     # Sample pairs
     n_pairs = 5000
@@ -128,16 +128,16 @@ def compute_detailed_metrics(model, x, indices, device, name="Model"):
     pair_vals = TERNARY.valuation(diff).cpu().numpy()
 
     # Target distance
-    target_d = 3.0 * np.exp(-pair_vals / 3.0)
+    3.0 * np.exp(-pair_vals / 3.0)
 
     dist_corr_A = spearmanr(pair_vals, -d_A)[0]  # Negative because high val = small dist
     dist_corr_B = spearmanr(pair_vals, -d_B)[0]
 
-    print(f"   Distance-Valuation Correlation:")
+    print("   Distance-Valuation Correlation:")
     print(f"   VAE-A: {dist_corr_A:.4f}")
     print(f"   VAE-B: {dist_corr_B:.4f}")
 
-    print(f"\n   Mean Distance by Pair Valuation:")
+    print("\n   Mean Distance by Pair Valuation:")
     print(f"   {'PairVal':>7} | {'Mean_A':>7} | {'Mean_B':>7} | {'Target':>7}")
     print(f"   {'-'*7}-+-{'-'*7}-+-{'-'*7}-+-{'-'*7}")
     for pv in range(7):
@@ -149,7 +149,7 @@ def compute_detailed_metrics(model, x, indices, device, name="Model"):
             print(f"   {pv:>7} | {mean_A:>7.4f} | {mean_B:>7.4f} | {target:>7.4f}")
 
     # 4. Latent space spread
-    print(f"\n4. LATENT SPACE STATISTICS")
+    print("\n4. LATENT SPACE STATISTICS")
     print(f"   VAE-A radius: min={radii_A.min():.4f}, max={radii_A.max():.4f}, range={radii_A.max()-radii_A.min():.4f}")
     print(f"   VAE-B radius: min={radii_B.min():.4f}, max={radii_B.max():.4f}, range={radii_B.max()-radii_B.min():.4f}")
 

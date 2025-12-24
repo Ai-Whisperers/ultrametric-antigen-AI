@@ -15,7 +15,7 @@ import torch
 import torch.nn as nn
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional
 
 
 @dataclass

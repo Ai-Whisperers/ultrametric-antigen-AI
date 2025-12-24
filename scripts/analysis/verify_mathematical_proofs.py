@@ -12,7 +12,6 @@ Validates:
 import sys
 import torch
 import numpy as np
-import json
 import argparse
 from pathlib import Path
 from typing import Dict, Any
@@ -43,7 +42,7 @@ def verify_proofs(
     device: str = "cuda",
 ):
     print(f"\n{'='*60}")
-    print(f"MATHEMATICAL PROOFS VERIFICATION")
+    print("MATHEMATICAL PROOFS VERIFICATION")
     print(f"{'='*60}\n")
 
     device = torch.device(device if torch.cuda.is_available() else "cpu")
@@ -94,7 +93,7 @@ def verify_proofs(
     with torch.no_grad():
         outputs = model(ops_tensor)
         z_A = outputs["z_A_hyp"]  # (N, D)
-        z_B = outputs["z_B_hyp"]
+        outputs["z_B_hyp"]
 
         # We can analyze both or just A. Proofs usually target the "primary" manifold.
         # Let's check A.

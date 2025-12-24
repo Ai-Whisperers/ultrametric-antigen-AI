@@ -43,18 +43,17 @@ def get_file_stats(root_dirs, extensions={".py", ".md", ".ts", ".tsx", ".js", ".
 def find_duplications(file_stats, window_size=6):
     # Map hash of window -> list of (file_index, start_line)
     window_hashes = defaultdict(list)
-    duplications = []
 
     print("Hashing content windows...")
     for f_idx, stats in enumerate(file_stats):
-        lines = [l.strip() for l in stats["content"]]
+        lines = [line.strip() for line in stats["content"]]
         if len(lines) < window_size:
             continue
 
         for i in range(len(lines) - window_size + 1):
             window = tuple(lines[i : i + window_size])
             # Skip windows that are just common boilerplate (empty lines, simple imports)
-            if all(not l for l in window):  # Skip all empty
+            if all(not line for line in window):  # Skip all empty
                 continue
 
             # Simple heuristic to skip very common short lines like '}', 'return', etc if the window is small

@@ -19,7 +19,6 @@ import sys
 
 if TYPE_CHECKING:
     from .monitor import TrainingMonitor
-    from .config_schema import TrainingConfig
 
 
 @dataclass

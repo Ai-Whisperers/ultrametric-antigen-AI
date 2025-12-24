@@ -12,12 +12,10 @@ Projection methods:
 """
 
 import torch
-import torch.nn.functional as F
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 from pathlib import Path
 import pandas as pd
 import sys
@@ -85,7 +83,7 @@ def calabi_yau_quintic_projection(z, phase=0.0):
     Returns:
         (N, 3) array of projected points
     """
-    N = z.shape[0]
+    z.shape[0]
 
     # Pair dimensions as complex numbers: R^16 -> C^8
     z_complex = z[:, ::2] + 1j * z[:, 1::2]  # (N, 8) complex
@@ -118,7 +116,7 @@ def calabi_yau_fermat_projection(z, k=5):
     Creates a more structured Calabi-Yau visualization using
     the Fermat surface parametrization.
     """
-    N = z.shape[0]
+    z.shape[0]
 
     # Use first 6 dimensions for parametrization
     u = z[:, 0:2]  # First complex coordinate
@@ -132,7 +130,7 @@ def calabi_yau_fermat_projection(z, k=5):
 
     # Fermat-like transformation
     # The real parts of z^(1/k) for different roots
-    roots = np.exp(2j * np.pi * np.arange(k) / k)
+    np.exp(2j * np.pi * np.arange(k) / k)
 
     x = np.real(np.abs(u_c)**(2/k) * np.exp(1j * np.angle(u_c) / k))
     y = np.real(np.abs(v_c)**(2/k) * np.exp(1j * np.angle(v_c) / k))
@@ -169,7 +167,7 @@ def hopf_fibration_projection(z):
     # First Hopf map: multiply quaternions
     # q1 * conj(q2) gives S^7 points
     q1 = q[:, 0, :] + 1j * q[:, 1, :]  # First complex pair
-    q2 = q[:, 2, :] + 1j * q[:, 3, :]  # Second complex pair
+    q[:, 2, :] + 1j * q[:, 3, :]  # Second complex pair
 
     # Hopf-like projection to S^3 then to R^3
     w1 = q1[:, 0] + 1j * q1[:, 1]
@@ -200,7 +198,7 @@ def complex_algebraic_projection(z, degree=3):
     Treats the embedding as points on an algebraic variety
     and projects to 3D using polynomial relationships.
     """
-    N = z.shape[0]
+    z.shape[0]
 
     # Create complex coordinates
     z_c = z[:, ::2] + 1j * z[:, 1::2]  # (N, 8) complex
@@ -215,7 +213,7 @@ def complex_algebraic_projection(z, degree=3):
 
     # Power sums for additional structure
     p2 = np.sum(z_c ** 2, axis=1)
-    p3 = np.sum(z_c ** 3, axis=1)
+    np.sum(z_c ** 3, axis=1)
 
     # Combine into 3D coordinates
     x = np.real(e1) + 0.3 * np.real(p2)
@@ -236,7 +234,7 @@ def mirror_symmetry_projection(z):
     In string theory, Calabi-Yau manifolds come in mirror pairs.
     This projection emphasizes the mirror structure.
     """
-    N = z.shape[0]
+    z.shape[0]
 
     # Split into two "mirror" halves
     z1 = z[:, :8]
@@ -287,7 +285,7 @@ def create_static_visualizations(data, output_path):
         # VAE-A projection
         proj_A = proj_func(z_A)
         ax = fig.add_subplot(4, 5, idx + 1, projection='3d')
-        scatter = ax.scatter(proj_A[:, 0], proj_A[:, 1], proj_A[:, 2],
+        ax.scatter(proj_A[:, 0], proj_A[:, 1], proj_A[:, 2],
                             c=acc_A, cmap='viridis', s=1, alpha=0.6)
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
@@ -298,7 +296,7 @@ def create_static_visualizations(data, output_path):
         # VAE-B projection
         proj_B = proj_func(z_B)
         ax = fig.add_subplot(4, 5, idx + 6, projection='3d')
-        scatter = ax.scatter(proj_B[:, 0], proj_B[:, 1], proj_B[:, 2],
+        ax.scatter(proj_B[:, 0], proj_B[:, 1], proj_B[:, 2],
                             c=acc_B, cmap='plasma', s=1, alpha=0.6)
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
@@ -314,13 +312,13 @@ def create_static_visualizations(data, output_path):
     op_indices = np.arange(len(z_A))
 
     ax = fig.add_subplot(4, 5, 11, projection='3d')
-    scatter = ax.scatter(proj_A_q[:, 0], proj_A_q[:, 1], proj_A_q[:, 2],
+    ax.scatter(proj_A_q[:, 0], proj_A_q[:, 1], proj_A_q[:, 2],
                         c=op_indices, cmap='twilight', s=1, alpha=0.6)
     ax.set_title('VAE-A Quintic (3-adic index)')
     ax.view_init(elev=30, azim=60)
 
     ax = fig.add_subplot(4, 5, 12, projection='3d')
-    scatter = ax.scatter(proj_B_q[:, 0], proj_B_q[:, 1], proj_B_q[:, 2],
+    ax.scatter(proj_B_q[:, 0], proj_B_q[:, 1], proj_B_q[:, 2],
                         c=op_indices, cmap='twilight', s=1, alpha=0.6)
     ax.set_title('VAE-B Quintic (3-adic index)')
     ax.view_init(elev=30, azim=60)
@@ -328,7 +326,7 @@ def create_static_visualizations(data, output_path):
     # Color by first digit (coarse structure)
     first_digit = op_indices % 3
     ax = fig.add_subplot(4, 5, 13, projection='3d')
-    scatter = ax.scatter(proj_A_q[:, 0], proj_A_q[:, 1], proj_A_q[:, 2],
+    ax.scatter(proj_A_q[:, 0], proj_A_q[:, 1], proj_A_q[:, 2],
                         c=first_digit, cmap='Set1', s=2, alpha=0.7)
     ax.set_title('VAE-A (digit 0)')
     ax.view_init(elev=30, azim=60)
@@ -336,14 +334,14 @@ def create_static_visualizations(data, output_path):
     # Color by mod 27 (first 3 digits)
     mod27 = op_indices % 27
     ax = fig.add_subplot(4, 5, 14, projection='3d')
-    scatter = ax.scatter(proj_A_q[:, 0], proj_A_q[:, 1], proj_A_q[:, 2],
+    ax.scatter(proj_A_q[:, 0], proj_A_q[:, 1], proj_A_q[:, 2],
                         c=mod27, cmap='tab20', s=2, alpha=0.7)
     ax.set_title('VAE-A (mod 27 classes)')
     ax.view_init(elev=30, azim=60)
 
     # Different view angles for Quintic
     ax = fig.add_subplot(4, 5, 15, projection='3d')
-    scatter = ax.scatter(proj_A_q[:, 0], proj_A_q[:, 1], proj_A_q[:, 2],
+    ax.scatter(proj_A_q[:, 0], proj_A_q[:, 1], proj_A_q[:, 2],
                         c=acc_A, cmap='RdYlGn', s=1, alpha=0.6)
     ax.set_title('VAE-A Quintic (top view)')
     ax.view_init(elev=90, azim=0)
@@ -352,7 +350,7 @@ def create_static_visualizations(data, output_path):
     for phase_idx, phase in enumerate([0, np.pi/5, 2*np.pi/5, 3*np.pi/5]):
         proj_phase = calabi_yau_quintic_projection(z_A, phase=phase)
         ax = fig.add_subplot(4, 5, 16 + phase_idx, projection='3d')
-        scatter = ax.scatter(proj_phase[:, 0], proj_phase[:, 1], proj_phase[:, 2],
+        ax.scatter(proj_phase[:, 0], proj_phase[:, 1], proj_phase[:, 2],
                             c=acc_A, cmap='viridis', s=1, alpha=0.6)
         ax.set_title(f'Phase = {phase:.2f}')
         ax.view_init(elev=25, azim=45 + phase_idx * 30)
@@ -366,7 +364,7 @@ def create_static_visualizations(data, output_path):
 def create_high_res_visualization(data, output_path):
     """Create high-resolution single-projection visualizations."""
     z_A = data['z_A']
-    z_B = data['z_B']
+    data['z_B']
     acc_A = data['acc_A']
 
     # Quintic projection - multiple angles
@@ -379,7 +377,7 @@ def create_high_res_visualization(data, output_path):
 
     for idx, (elev, azim) in enumerate(angles):
         ax = fig.add_subplot(2, 4, idx + 1, projection='3d')
-        scatter = ax.scatter(proj[:, 0], proj[:, 1], proj[:, 2],
+        ax.scatter(proj[:, 0], proj[:, 1], proj[:, 2],
                             c=acc_A, cmap='viridis', s=2, alpha=0.7)
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
@@ -401,7 +399,7 @@ def export_to_csv(data, output_path):
     z_B = data['z_B']
     acc_A = data['acc_A']
     acc_B = data['acc_B']
-    operations = data['operations']
+    data['operations']
 
     projections = {
         'quintic': calabi_yau_quintic_projection,

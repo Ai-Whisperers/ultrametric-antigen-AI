@@ -110,12 +110,12 @@ class TestTrainingValidation:
         max_var_B = var_B.max().item()
         mean_var_B = var_B.mean().item()
 
-        print(f"\n[Latent Spectrum] VAE-A:")
+        print("\n[Latent Spectrum] VAE-A:")
         print(f"  Active dims: {active_dims_A}/16")
         print(f"  Variance - min: {min_var_A:.4f}, max: {max_var_A:.4f}, mean: {mean_var_A:.4f}")
         print(f"  Per-dim variance: {var_A.tolist()}")
 
-        print(f"\n[Latent Spectrum] VAE-B:")
+        print("\n[Latent Spectrum] VAE-B:")
         print(f"  Active dims: {active_dims_B}/16")
         print(f"  Variance - min: {min_var_B:.4f}, max: {max_var_B:.4f}, mean: {mean_var_B:.4f}")
         print(f"  Per-dim variance: {var_B.tolist()}")
@@ -199,12 +199,12 @@ class TestTrainingValidation:
 
         # Check if meeting targets
         if acc_A > 40:
-            print(f"  ✓ VAE-A passes hold-out test")
+            print("  ✓ VAE-A passes hold-out test")
         else:
             print(f"  ✗ VAE-A below target ({acc_A:.2f}% < 40%)")
 
         if acc_B > 40:
-            print(f"  ✓ VAE-B passes hold-out test")
+            print("  ✓ VAE-B passes hold-out test")
         else:
             print(f"  ✗ VAE-B below target ({acc_B:.2f}% < 40%)")
 
@@ -257,12 +257,12 @@ class TestTrainingValidation:
             if max_diff > 0.05:
                 print(f"  ⚠️  WARNING: Large β spike detected ({max_diff:.4f})")
             else:
-                print(f"  ✓ Smooth β annealing")
+                print("  ✓ Smooth β annealing")
 
             # Assert reasonable annealing
             assert max_diff < 0.1, f"β spike too large: {max_diff:.4f}"
         else:
-            print(f"\n[KL-Annealing] Only epoch 0, skipping diff check")
+            print("\n[KL-Annealing] Only epoch 0, skipping diff check")
 
     # ========================================================================
     # 4. HASH-BASED COVERAGE VALIDATION
@@ -323,10 +323,10 @@ class TestTrainingValidation:
 
         # Check for major discrepancies
         if abs(len(unique_ops_A) - reported_coverage_A) > 1000:
-            print(f"  ⚠️  WARNING: Large discrepancy in VAE-A coverage")
+            print("  ⚠️  WARNING: Large discrepancy in VAE-A coverage")
 
         if abs(len(unique_ops_B) - reported_coverage_B) > 1000:
-            print(f"  ⚠️  WARNING: Large discrepancy in VAE-B coverage")
+            print("  ⚠️  WARNING: Large discrepancy in VAE-B coverage")
 
         assert coverage_A > 10, "Coverage too low for VAE-A"
         assert coverage_B > 10, "Coverage too low for VAE-B"
@@ -357,31 +357,31 @@ class TestTrainingValidation:
         peak_growth_A_epoch = np.argmax(growth_A)
         peak_growth_B_epoch = np.argmax(growth_B)
 
-        print(f"\n[Phase-Sync] Analysis:")
+        print("\n[Phase-Sync] Analysis:")
         print(f"  VAE-A peak growth at epoch {peak_growth_A_epoch}")
         print(f"  VAE-B peak growth at epoch {peak_growth_B_epoch}")
 
         # Check if A leads B
         if peak_growth_A_epoch < peak_growth_B_epoch:
-            print(f"  ✓ VAE-A leads VAE-B (healthy rhythm)")
+            print("  ✓ VAE-A leads VAE-B (healthy rhythm)")
         elif peak_growth_A_epoch > peak_growth_B_epoch:
-            print(f"  ⚠️  VAE-B leads VAE-A (unusual pattern)")
+            print("  ⚠️  VAE-B leads VAE-A (unusual pattern)")
         else:
-            print(f"  ○ Simultaneous peak growth")
+            print("  ○ Simultaneous peak growth")
 
         # Check for divergence
         recent_trend_A = np.mean(growth_A[-5:])
         recent_trend_B = np.mean(growth_B[-5:])
 
-        print(f"  Recent trends:")
+        print("  Recent trends:")
         print(f"    VAE-A: {recent_trend_A:+.1f} ops/epoch")
         print(f"    VAE-B: {recent_trend_B:+.1f} ops/epoch")
 
         # Both should be converging (low growth) after initial surge
         if abs(recent_trend_A) < 100 and abs(recent_trend_B) < 100:
-            print(f"  ✓ Both VAEs stabilizing")
+            print("  ✓ Both VAEs stabilizing")
         elif abs(recent_trend_A) > 500 or abs(recent_trend_B) > 500:
-            print(f"  ⚠️  WARNING: Large oscillations detected")
+            print("  ⚠️  WARNING: Large oscillations detected")
 
         # Success if not wildly diverging
         assert abs(recent_trend_A) < 2000, "VAE-A diverging"

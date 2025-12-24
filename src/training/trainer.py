@@ -13,9 +13,8 @@ import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 from collections import defaultdict
-import sys
 
 from .schedulers import TemperatureScheduler, BetaScheduler, LearningRateScheduler
 from .monitor import TrainingMonitor
@@ -174,14 +173,14 @@ class TernaryVAETrainer:
         # Curriculum learning (v5.10+)
         if self.curriculum is not None:
             curriculum_config = self.config.get('curriculum', {})
-            print(f"\nCurriculum Learning (StateNet v5):")
+            print("\nCurriculum Learning (StateNet v5):")
             print(f"  Initial tau: {curriculum_config.get('initial_tau', 0.0)}")
             print(f"  tau_scale: {curriculum_config.get('tau_scale', 0.1)}")
             print(f"  tau bounds: [{curriculum_config.get('tau_min', 0.0)}, {curriculum_config.get('tau_max', 1.0)}]")
 
         if self.radial_loss_fn is not None:
             radial_config = self.config.get('radial_stratification', {})
-            print(f"\nRadial Stratification Loss:")
+            print("\nRadial Stratification Loss:")
             print(f"  inner_radius: {radial_config.get('inner_radius', 0.1)}")
             print(f"  outer_radius: {radial_config.get('outer_radius', 0.85)}")
             print(f"  base_weight: {radial_config.get('base_weight', 0.3)}")
@@ -192,7 +191,7 @@ class TernaryVAETrainer:
                      padic_config.get('enable_ranking_loss', False) or
                      padic_config.get('enable_norm_loss', False))
         if has_padic:
-            print(f"\np-Adic Losses (implement.md Phase 1):")
+            print("\np-Adic Losses (implement.md Phase 1):")
             if padic_config.get('enable_metric_loss', False):
                 print(f"  Metric Loss: weight={padic_config.get('metric_loss_weight', 0.1)}, scale={padic_config.get('metric_loss_scale', 1.0)}")
             if padic_config.get('enable_ranking_loss', False):
@@ -202,10 +201,10 @@ class TernaryVAETrainer:
 
         # P1 FIX: Correlation loss (actually wired into total loss)
         if self.correlation_loss_enabled:
-            print(f"\nCorrelation Loss (P1 Fix - WIRED INTO LOSS):")
+            print("\nCorrelation Loss (P1 Fix - WIRED INTO LOSS):")
             print(f"  weight: {self.correlation_loss_weight}")
             print(f"  warmup_epochs: {self.correlation_loss_warmup}")
-            print(f"  Effect: -weight * correlation added to loss (rewards high correlation)")
+            print("  Effect: -weight * correlation added to loss (rewards high correlation)")
 
     def _compute_batch_indices(self, batch_data: torch.Tensor) -> torch.Tensor:
         """Compute operation indices from ternary data.
@@ -298,7 +297,7 @@ class TernaryVAETrainer:
 
         entropy_weight = self.config['vae_b']['entropy_weight']
         repulsion_weight = self.config['vae_b']['repulsion_weight']
-        free_bits = self.config.get('free_bits', 0.0)
+        self.config.get('free_bits', 0.0)
 
         epoch_losses = defaultdict(float)
         num_batches = len(train_loader)
@@ -526,7 +525,7 @@ class TernaryVAETrainer:
         beta_B = self.beta_scheduler.get_beta(self.epoch, 'B')
         entropy_weight = self.config['vae_b']['entropy_weight']
         repulsion_weight = self.config['vae_b']['repulsion_weight']
-        free_bits = self.config.get('free_bits', 0.0)
+        self.config.get('free_bits', 0.0)
 
         with torch.no_grad():
             for batch in val_loader:

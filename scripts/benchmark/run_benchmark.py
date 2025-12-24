@@ -11,14 +11,14 @@ from pathlib import Path
 from datetime import datetime
 import numpy as np
 from tabulate import tabulate
-from typing import Dict, List
+from typing import Dict
 
 # Add parent to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from src.models.ternary_vae_v5_6 import DualNeuralVAEV5
 from src.models.ternary_vae_v5_10 import DualNeuralVAEV5_10
-from src.data import generate_all_ternary_operations, TernaryOperationDataset
+from src.data import generate_all_ternary_operations
 from src.utils.metrics import evaluate_coverage, compute_latent_entropy
 from src.metrics import compute_ranking_correlation_hyperbolic
 

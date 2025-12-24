@@ -10,7 +10,6 @@ Single responsibility: Configuration typing and validation only.
 
 from dataclasses import dataclass, field
 from typing import Dict, List, Any, Optional
-from pathlib import Path
 
 
 class ConfigValidationError(Exception):
@@ -277,7 +276,6 @@ def validate_config(raw_config: Dict[str, Any]) -> TrainingConfig:
         ConfigValidationError: If required keys are missing or values are invalid
     """
     errors = []
-    warnings = []
 
     # Check required top-level keys
     required_keys = ['model', 'optimizer', 'vae_a', 'vae_b']

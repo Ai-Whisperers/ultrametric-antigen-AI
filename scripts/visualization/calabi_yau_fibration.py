@@ -18,11 +18,9 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from mpl_toolkits.mplot3d.art3d import Line3DCollection, Poly3DCollection
-from scipy.interpolate import CubicSpline, splprep, splev
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+from scipy.interpolate import CubicSpline
 from scipy.spatial import KDTree
-from scipy.spatial.distance import cdist
 from pathlib import Path
 import sys
 import json

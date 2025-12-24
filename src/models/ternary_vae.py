@@ -33,10 +33,10 @@ import torch.nn as nn
 
 import torch.optim as optim
 from pathlib import Path
-from typing import Dict, Optional, Tuple
+from typing import Dict, Tuple
 
 from .hyperbolic_projection import HyperbolicProjection, DualHyperbolicProjection
-from .differentiable_controller import DifferentiableController, ThreeBodyController
+from .differentiable_controller import DifferentiableController
 
 
 class FrozenEncoder(nn.Module):

@@ -20,7 +20,6 @@ from typing import Tuple
 from src.geometry import (
     project_to_poincare,
     poincare_distance,
-    GEOOPT_AVAILABLE
 )
 
 
@@ -169,5 +168,4 @@ __all__ = [
     'poincare_distance',
     'compute_3adic_valuation',
     'compute_ranking_correlation_hyperbolic',
-    'GEOOPT_AVAILABLE'
 ]

@@ -20,7 +20,6 @@ Usage:
 """
 
 import torch
-from typing import Union
 
 
 def _compute_valuation(n: int) -> int:
@@ -141,7 +140,6 @@ def get_3adic_distance_batch(
     Returns:
         Tensor of 3-adic distances, same shape as input
     """
-    device = indices_i.device
     diff = torch.abs(indices_i - indices_j)
 
     # Handle zeros (same index = distance 0)

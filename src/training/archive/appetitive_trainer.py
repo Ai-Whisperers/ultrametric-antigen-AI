@@ -15,9 +15,8 @@ import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 from collections import defaultdict
-import sys
 
 from .schedulers import TemperatureScheduler, BetaScheduler, LearningRateScheduler
 from .monitor import TrainingMonitor
@@ -150,7 +149,7 @@ class AppetitiveVAETrainer:
         print(f"Device: {self.device}")
         print(f"torch.compile: {'enabled' if self.compiled else 'disabled'}")
         print(f"\nPhase: {self.model.get_phase_description()}")
-        print(f"Appetite weights:")
+        print("Appetite weights:")
         print(f"  Ranking: {self.model.appetite_ranking.item():.3f}")
         print(f"  Hierarchy: {self.model.appetite_hierarchy.item():.3f}")
         print(f"  Curiosity: {self.model.appetite_curiosity.item():.3f}")
@@ -435,10 +434,10 @@ class AppetitiveVAETrainer:
         epoch_losses = defaultdict(float)
         num_batches = 0
 
-        temp_A = self.temp_scheduler.get_temperature(self.epoch, 'A')
-        temp_B = self.temp_scheduler.get_temperature(self.epoch, 'B')
-        beta_A = self.beta_scheduler.get_beta(self.epoch, 'A')
-        beta_B = self.beta_scheduler.get_beta(self.epoch, 'B')
+        self.temp_scheduler.get_temperature(self.epoch, 'A')
+        self.temp_scheduler.get_temperature(self.epoch, 'B')
+        self.beta_scheduler.get_beta(self.epoch, 'A')
+        self.beta_scheduler.get_beta(self.epoch, 'B')
         entropy_weight = self.config['vae_b']['entropy_weight']
         repulsion_weight = self.config['vae_b']['repulsion_weight']
 
@@ -493,7 +492,7 @@ class AppetitiveVAETrainer:
             correlation_metrics: 3-adic correlation metrics
         """
         print(f"  Appetitive Phase {self.model.current_phase}: {self.model.get_phase_description()}")
-        print(f"  Appetite Losses:")
+        print("  Appetite Losses:")
         print(f"    Ranking: {train_losses.get('ranking_loss', 0):.4f}")
         print(f"    Hierarchy: {train_losses.get('hierarchy_loss', 0):.4f}")
         print(f"    Curiosity: {train_losses.get('curiosity_loss', 0):.4f}")

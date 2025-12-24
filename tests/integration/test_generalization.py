@@ -417,7 +417,7 @@ class TestGeneralization:
         with torch.no_grad():
             # Forward pass with StateNet
             outputs = trained_model(x, temp_A=1.0, temp_B=1.0, beta_A=1.0, beta_B=1.0)
-            z_with_statenet = outputs['z_A']
+            outputs['z_A']
 
             # Check StateNet parameters have gradients/updates
             statenet_params = list(trained_model.state_net.parameters())

@@ -21,8 +21,7 @@ Note: Uses geoopt backend when available for numerical stability.
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-from typing import Tuple, Optional
+from typing import Tuple
 import math
 
 # Import from geometry module for stable operations
@@ -31,8 +30,7 @@ from src.geometry import (
     project_to_poincare,
     exp_map_zero,
     log_map_zero,
-    lambda_x,
-    GEOOPT_AVAILABLE
+    lambda_x
 )
 
 
@@ -146,7 +144,7 @@ class HyperbolicPrior(nn.Module):
         # This is the "radial" component of KL
         # Create origin on same device as z_mu for CUDA compatibility
         origin = torch.zeros_like(z_mu)
-        dist_from_origin = self._poincare_distance(z_mu, origin)
+        self._poincare_distance(z_mu, origin)
 
         # 3. Map to tangent space at origin
         v_mu = self._log_map_zero(z_mu)

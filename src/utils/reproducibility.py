@@ -8,7 +8,6 @@ Single responsibility: Random seed management only.
 import torch
 import numpy as np
 import random
-from typing import Optional
 
 
 def set_seed(seed: int, deterministic: bool = False) -> None:

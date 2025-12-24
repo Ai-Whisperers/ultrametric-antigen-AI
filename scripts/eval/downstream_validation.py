@@ -16,7 +16,6 @@ from pathlib import Path
 from collections import defaultdict
 
 import torch
-import torch.nn.functional as F
 import numpy as np
 from scipy.stats import spearmanr, kendalltau
 from sklearn.neighbors import NearestNeighbors
@@ -30,7 +29,6 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from src.models import TernaryVAEV5_11_OptionC
 from src.data.generation import generate_all_ternary_operations
 from src.core import TERNARY
-from src.losses import poincare_distance
 
 
 def load_model(checkpoint_path: Path, device: str = 'cuda'):
@@ -154,7 +152,7 @@ def test_nearest_neighbor_retrieval(embeddings: dict, k: int = 10):
         print(f"\n{name}:")
         print(f"  Same valuation rate (k={k}): {same_rate*100:.1f}%")
         print(f"  Adjacent valuation rate (±1): {adjacent_rate*100:.1f}%")
-        print(f"  By valuation level:")
+        print("  By valuation level:")
         for v in sorted(by_level.keys()):
             rates = by_level[v]
             print(f"    v={v}: {np.mean(rates)*100:.1f}% same (n={len(rates)})")
@@ -213,7 +211,7 @@ def test_hierarchy_preservation(embeddings: dict):
         print(f"  Spearman correlation: {spearman_corr:.4f} (p={spearman_p:.2e})")
         print(f"  Kendall's tau: {kendall_corr:.4f} (p={kendall_p:.2e})")
         print(f"  Pairwise accuracy: {pairwise_accuracy*100:.1f}%")
-        print(f"  Radius by valuation level:")
+        print("  Radius by valuation level:")
 
         for v in range(10):
             mask = valuations == v
@@ -328,7 +326,7 @@ def compute_production_readiness_score(nn_results, hierarchy_results, arithmetic
         print(f"  [{status}] {name}: {value:.3f} (threshold: {threshold:.3f})")
 
     # Overall verdict
-    print(f"\n" + "-"*60)
+    print("\n" + "-"*60)
     if passed == total:
         print("VERDICT: PRODUCTION READY")
         print("All downstream validation checks passed.")

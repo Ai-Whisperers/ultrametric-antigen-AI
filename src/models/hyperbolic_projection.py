@@ -22,14 +22,11 @@ Single responsibility: Euclidean to hyperbolic projection.
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from typing import Tuple, Optional, Union
+from typing import Tuple, Union
 
 # Import geoopt for manifold-aware operations
-from src.geometry import (
-    get_manifold,
-    ManifoldParameter,
-    GEOOPT_AVAILABLE
-)
+import geoopt
+from src.geometry import ManifoldParameter
 
 
 class HyperbolicProjection(nn.Module):
@@ -78,16 +75,11 @@ class HyperbolicProjection(nn.Module):
         self.learnable_curvature = learnable_curvature
 
         # Create manifold with optional learnable curvature
-        if GEOOPT_AVAILABLE:
-            import geoopt
-            if learnable_curvature:
-                self.manifold = geoopt.PoincareBall(c=curvature, learnable=True)
-            else:
-                self.manifold = geoopt.PoincareBall(c=curvature)
-            self.curvature = self.manifold.c  # Use manifold's curvature
+        if learnable_curvature:
+            self.manifold = geoopt.PoincareBall(c=curvature, learnable=True)
         else:
-            self.manifold = None
-            self.curvature = curvature
+            self.manifold = geoopt.PoincareBall(c=curvature)
+        self.curvature = self.manifold.c  # Use manifold's curvature
 
         # Direction network: learns angular structure
         # Output is a residual added to input, then normalized
@@ -205,7 +197,7 @@ class HyperbolicProjection(nn.Module):
         z_hyp = direction * radius
 
         # Optionally wrap as ManifoldParameter for Riemannian gradients
-        if as_manifold and GEOOPT_AVAILABLE and self.manifold is not None:
+        if as_manifold:
             # Project to ensure on manifold, then wrap
             z_hyp = self.manifold.projx(z_hyp)
             return ManifoldParameter(z_hyp, manifold=self.manifold)
@@ -214,10 +206,8 @@ class HyperbolicProjection(nn.Module):
 
     def get_curvature(self) -> float:
         """Get current curvature value (may be learnable)."""
-        if self.manifold is not None and hasattr(self.manifold, 'c'):
-            c = self.manifold.c
-            return c.item() if hasattr(c, 'item') else float(c)
-        return self.curvature
+        c = self.manifold.c
+        return c.item() if hasattr(c, 'item') else float(c)
 
     def forward_with_components(
         self,
@@ -333,7 +323,7 @@ class DualHyperbolicProjection(nn.Module):
             z_B_hyp = direction * radius
 
             # Optionally wrap as ManifoldParameter
-            if as_manifold and GEOOPT_AVAILABLE and self.proj_A.manifold is not None:
+            if as_manifold:
                 z_B_hyp = self.proj_A.manifold.projx(z_B_hyp)
                 z_B_hyp = ManifoldParameter(z_B_hyp, manifold=self.proj_A.manifold)
         else:

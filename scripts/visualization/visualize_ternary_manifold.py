@@ -19,7 +19,6 @@ import torch
 import torch.nn.functional as F
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 from scipy.interpolate import griddata
 from scipy.ndimage import gaussian_filter
 
@@ -46,7 +45,7 @@ def load_checkpoint(checkpoint_path: Path, device: str = 'cpu', model_version: s
             statenet_version=model_config.get('statenet_version', 4),
             statenet_curriculum_scale=model_config.get('statenet_curriculum_scale', 0.1)
         )
-        print(f"Loading v5.10.1 model (Radial-First Curriculum Learning)")
+        print("Loading v5.10.1 model (Radial-First Curriculum Learning)")
     else:
         # v5.6 model
         use_statenet = checkpoint.get('statenet_enabled', False)
@@ -55,7 +54,7 @@ def load_checkpoint(checkpoint_path: Path, device: str = 'cpu', model_version: s
             latent_dim=16,
             use_statenet=use_statenet
         )
-        print(f"Loading v5.6 model (Legacy)")
+        print("Loading v5.6 model (Legacy)")
 
     # Handle different checkpoint formats
     if 'model' in checkpoint:
@@ -275,7 +274,7 @@ def plot_real_manifold(data: dict, pca: PCA, output_path: Path, vae_name: str = 
     pca_3d = PCA(n_components=3)
     z_3d = pca_3d.fit_transform(z)
 
-    print(f"\n3D PCA explained variance:")
+    print("\n3D PCA explained variance:")
     print(f"  PC1: {pca_3d.explained_variance_ratio_[0]*100:.1f}%")
     print(f"  PC2: {pca_3d.explained_variance_ratio_[1]*100:.1f}%")
     print(f"  PC3: {pca_3d.explained_variance_ratio_[2]*100:.1f}%")
@@ -320,7 +319,7 @@ def plot_real_manifold(data: dict, pca: PCA, output_path: Path, vae_name: str = 
     Zi_smooth = gaussian_filter(np.nan_to_num(Zi, nan=np.nanmean(Zi)), sigma=1)
 
     # Surface with points overlay
-    surf = ax3.plot_surface(Xi, Yi, Zi_smooth, cmap='coolwarm',
+    ax3.plot_surface(Xi, Yi, Zi_smooth, cmap='coolwarm',
                             alpha=0.6, antialiased=True, edgecolor='none')
     ax3.scatter(z_3d[:, 0], z_3d[:, 1], z_3d[:, 2], c='black', s=1, alpha=0.3)
     ax3.set_xlabel('PC1')

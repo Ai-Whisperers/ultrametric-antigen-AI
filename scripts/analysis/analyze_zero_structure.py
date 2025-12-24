@@ -49,7 +49,7 @@ def analyze_checkpoint(checkpoint_path: str, device: str = 'cuda'):
     """Run full zero-structure analysis on a checkpoint."""
 
     print(f"\n{'='*60}")
-    print(f"ZERO-TRIT STRUCTURE ANALYSIS")
+    print("ZERO-TRIT STRUCTURE ANALYSIS")
     print(f"Checkpoint: {checkpoint_path}")
     print(f"{'='*60}\n")
 

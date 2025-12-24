@@ -23,14 +23,14 @@ def generate_report():
     bandit_data = load_json(BANDIT_FILE)
 
     with open(REPORT_FILE, "w", encoding="utf-8") as f:
-        f.write(f"# Comprehensive Code Health Report\n")
+        f.write("# Comprehensive Code Health Report\n")
         f.write(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M')}\n")
-        f.write(f"**Scope:** Full Repository Audit (Security & Complexity)\n\n")
+        f.write("**Scope:** Full Repository Audit (Security & Complexity)\n\n")
 
         # Security Section
         f.write("## 1. Security Analysis (Bandit)\n")
         if bandit_data:
-            stats = bandit_data.get("metrics", {}).get("_totals", {})
+            bandit_data.get("metrics", {}).get("_totals", {})
             results = bandit_data.get("results", [])
 
             f.write(f"- **Total Issues:** {len(results)}\n")

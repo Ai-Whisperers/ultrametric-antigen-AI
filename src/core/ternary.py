@@ -32,8 +32,7 @@ Why this matters:
 """
 
 import torch
-from typing import Union, Optional
-from functools import lru_cache
+from typing import Optional
 
 
 class TernarySpace:

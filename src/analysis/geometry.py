@@ -1,7 +1,5 @@
 import torch
-import numpy as np
-import itertools
-from typing import Tuple, List, Optional
+from typing import Optional
 
 
 def compute_pairwise_distances(embeddings: torch.Tensor) -> torch.Tensor:
@@ -51,7 +49,6 @@ def compute_delta_hyperbolicity(
 
     dists = compute_pairwise_distances(X)
 
-    max_delta = 0.0
 
     # We iterate through quadruplets
     # Note: Full O(N^4) is expensive. We can vectorize or optimize.
@@ -68,7 +65,6 @@ def compute_delta_hyperbolicity(
         N = 50
 
     # Iterating combinations is safe for N=50 (230k combinations)
-    import itertools
 
     # Move to CPU for loop speed if using python loops, or stay GPU if vectorized
     # Vectorized approach:
@@ -85,16 +81,16 @@ def compute_delta_hyperbolicity(
     # Filter degenerate
     # (Checking distinctness is good but delta=0 for degenerate anyway usually)
 
-    i, j, k, l = idxs[:, 0], idxs[:, 1], idxs[:, 2], idxs[:, 3]
+    idx_i, idx_j, idx_k, idx_l = idxs[:, 0], idxs[:, 1], idxs[:, 2], idxs[:, 3]
 
-    d_ij = dists[i, j]
-    d_kl = dists[k, l]
+    d_ij = dists[idx_i, idx_j]
+    d_kl = dists[idx_k, idx_l]
 
-    d_ik = dists[i, k]
-    d_jl = dists[j, l]
+    d_ik = dists[idx_i, idx_k]
+    d_jl = dists[idx_j, idx_l]
 
-    d_il = dists[i, l]
-    d_jk = dists[j, k]
+    d_il = dists[idx_i, idx_l]
+    d_jk = dists[idx_j, idx_k]
 
     s1 = d_ij + d_kl
     s2 = d_ik + d_jl
@@ -156,7 +152,7 @@ def compute_ultrametricity_score(
     # Largest two sides should be "approx equal"
     L = sorted_sides[:, 0]
     M = sorted_sides[:, 1]
-    S = sorted_sides[:, 2]
+    sorted_sides[:, 2]
 
     # Definition of "Equal" in floating point? Relative difference.
     # |L - M| / (L + epsilon) or just absolute threshold?

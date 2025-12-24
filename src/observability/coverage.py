@@ -15,7 +15,7 @@ Usage:
 """
 
 import torch
-from typing import Tuple, Dict, Any, Optional
+from typing import Tuple, Dict, Optional
 from dataclasses import dataclass
 
 from ..core import TERNARY

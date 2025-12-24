@@ -4,7 +4,6 @@ import json
 import os
 import shutil
 from datetime import datetime
-from collections import defaultdict
 
 # --- Configuration ---
 REPORT_FILE = "COMPREHENSIVE_CODE_HEALTH.md"
@@ -99,7 +98,7 @@ def parse_vulture(stdout):
 
 
 def run_audit():
-    print(f"Starting Comprehensive Audit...")
+    print("Starting Comprehensive Audit...")
     results = {}
 
     for tool_name, config in TOOLS_CONFIG.items():
@@ -134,11 +133,11 @@ def run_audit():
             else:
                 data = stdout
 
-            print(f"Done.")
+            print("Done.")
             results[tool_name] = {"status": "success", "data": data}
 
         except json.JSONDecodeError:
-            print(f"⚠️ JSON Parse Error")
+            print("⚠️ JSON Parse Error")
             results[tool_name] = {
                 "status": "error",
                 "error": "Failed to parse JSON",
@@ -153,7 +152,7 @@ def run_audit():
 
 def generate_markdown(results):
     with open(REPORT_FILE, "w", encoding="utf-8") as f:
-        f.write(f"# Comprehensive Code Health Report\n")
+        f.write("# Comprehensive Code Health Report\n")
         f.write(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M')}\n\n")
 
         # Summary Section

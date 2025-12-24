@@ -12,16 +12,12 @@ Usage:
 
 import sys
 from pathlib import Path
-from itertools import product
 
 import numpy as np
 import torch
-import torch.nn.functional as F
 from sklearn.decomposition import PCA
-from scipy.stats import spearmanr, pearsonr
-from scipy.spatial.distance import cdist
+from scipy.stats import spearmanr
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
@@ -217,7 +213,7 @@ def analyze_interpolation_paths(model, data, output_path, device='cpu'):
         # Color intermediate points by 3-adic distance from start
         start_idx = op_to_index(operations[i])
         colors = [compute_3adic_distance(start_idx, op_to_index(d)) for d in path_decoded]
-        scatter = ax.scatter(path_z[1:-1, 0], path_z[1:-1, 1], c=colors[1:-1],
+        ax.scatter(path_z[1:-1, 0], path_z[1:-1, 1], c=colors[1:-1],
                             cmap='viridis', s=30, zorder=4)
         ax.set_title(f'Path {plot_idx+1}: idx {i}→{j}\n3-adic dist: {compute_3adic_distance(i, j)}')
         if plot_idx == 0:
@@ -226,7 +222,7 @@ def analyze_interpolation_paths(model, data, output_path, device='cpu'):
         # Show decoded operations along path
         ax = axes[1, plot_idx]
         path_matrix = np.array(path_decoded)
-        im = ax.imshow(path_matrix.T, aspect='auto', cmap='RdBu', vmin=-1, vmax=1)
+        ax.imshow(path_matrix.T, aspect='auto', cmap='RdBu', vmin=-1, vmax=1)
         ax.set_xlabel('Interpolation Step')
         ax.set_ylabel('Operation Dimension')
         ax.set_title(f'Decoded Operations Along Path {plot_idx+1}')
@@ -536,7 +532,7 @@ def analyze_latent_arithmetic(model, data, output_path, device='cpu'):
             # Find nearest neighbor in latent space
             distances = np.linalg.norm(z - z_predicted, axis=1)
             nn_idx = np.argmin(distances)
-            nn_dist = distances[nn_idx]
+            distances[nn_idx]
 
             # Check if prediction is correct
             if nn_idx == sum_idx:
@@ -549,7 +545,7 @@ def analyze_latent_arithmetic(model, data, output_path, device='cpu'):
 
             results[vae_name]['dist'].append(distances[sum_idx])
 
-    print(f"\nLatent Arithmetic Test: z_a + z_b - z_0 ≈ z_(a+b)?")
+    print("\nLatent Arithmetic Test: z_a + z_b - z_0 ≈ z_(a+b)?")
     print(f"Testing {n_tests} random pairs\n")
 
     for vae_name in ['A', 'B']:
@@ -583,7 +579,7 @@ def analyze_latent_arithmetic(model, data, output_path, device='cpu'):
         if nn_idx == neg_idx:
             neg_exact_B += 1
 
-    print(f"\nNegation test: 2*z_0 - z_a ≈ z_(-a)?")
+    print("\nNegation test: 2*z_0 - z_a ≈ z_(-a)?")
     print(f"  VAE-A: {neg_exact_A}/500 ({100*neg_exact_A/500:.1f}%)")
     print(f"  VAE-B: {neg_exact_B}/500 ({100*neg_exact_B/500:.1f}%)")
 
@@ -695,8 +691,8 @@ def main():
 
     # Run all analyses
     interp_results = analyze_interpolation_paths(model, data, output_path, device)
-    digit_results = analyze_digit_dimensions(data, output_path)
-    trajectory_results = analyze_training_trajectory(output_path, device)
+    analyze_digit_dimensions(data, output_path)
+    analyze_training_trajectory(output_path, device)
     arithmetic_results = analyze_latent_arithmetic(model, data, output_path, device)
 
     # Final summary
@@ -704,8 +700,8 @@ def main():
     print("COMPLETE ANALYSIS SUMMARY")
     print("="*60)
     print(f"\n1. INTERPOLATION: {interp_results['A']['avg_validity']*100:.1f}% path validity (VAE-A)")
-    print(f"2. DIGIT MAPPING: Latent dims correlate with specific 3-adic digits")
-    print(f"3. TRAJECTORY: 3-adic structure emerges during training")
+    print("2. DIGIT MAPPING: Latent dims correlate with specific 3-adic digits")
+    print("3. TRAJECTORY: 3-adic structure emerges during training")
     print(f"4. ARITHMETIC: {arithmetic_results['A']['exact']/10:.1f}% exact addition matches (VAE-A)")
 
     print("\nGenerated files:")

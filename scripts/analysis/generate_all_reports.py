@@ -40,7 +40,7 @@ def move_file(filename, target_dir):
 
 
 def main():
-    print(f"Starting consolidated audit run...")
+    print("Starting consolidated audit run...")
     print(f"Target Directory: {TARGET_DIR}")
     ensure_dir(TARGET_DIR)
 
@@ -74,19 +74,19 @@ def main():
     # 4. Generate Index
     index_path = os.path.join(TARGET_DIR, "README.md")
     with open(index_path, "w", encoding="utf-8") as f:
-        f.write(f"# Audit Data\n")
+        f.write("# Audit Data\n")
         f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n\n")
         f.write(
-            f"- [Code Health Dashboard](CODE_HEALTH_DASHBOARD.md): Ruff & Mypy Issues\n"
+            "- [Code Health Dashboard](CODE_HEALTH_DASHBOARD.md): Ruff & Mypy Issues\n"
         )
         f.write(
-            f"- [Comprehensive Health Report](COMPREHENSIVE_CODE_HEALTH.md): Security & Complexity\n"
+            "- [Comprehensive Health Report](COMPREHENSIVE_CODE_HEALTH.md): Security & Complexity\n"
         )
         f.write(
-            f"- [External Tools Analysis](EXTERNAL_TOOLS_REPORT.md): Tool Availability\n"
+            "- [External Tools Analysis](EXTERNAL_TOOLS_REPORT.md): Tool Availability\n"
         )
-        f.write(f"- [Radon Raw Data](radon_results.json)\n")
-        f.write(f"- [Bandit Raw Data](bandit_results.json)\n")
+        f.write("- [Radon Raw Data](radon_results.json)\n")
+        f.write("- [Bandit Raw Data](bandit_results.json)\n")
 
     print("\nAll reports generated and moved.")
 

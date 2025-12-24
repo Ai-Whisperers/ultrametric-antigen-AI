@@ -23,7 +23,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from typing import Tuple, Optional, Dict
-import math
 
 # P2 FIX: Use core module for vectorized prefix computation
 from ..core import TERNARY
@@ -474,7 +473,7 @@ class HyperbolicCentroidLoss(nn.Module):
             Tuple of (loss, metrics)
         """
         z_hyp = project_to_poincare(z, max_norm=self.max_norm, c=self.curvature)
-        batch_size = z.size(0)
+        z.size(0)
         device = z.device
 
         total_loss = torch.tensor(0.0, device=device)

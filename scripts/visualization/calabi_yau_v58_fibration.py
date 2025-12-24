@@ -11,10 +11,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from scipy.spatial.distance import cdist
 from scipy.interpolate import splprep, splev
-from scipy.ndimage import gaussian_filter
 import json
 import os
 
@@ -256,7 +253,7 @@ def k3_surface_projection(z):
     z_norm = z / (np.linalg.norm(z, axis=1, keepdims=True) + 1e-8)
 
     # Group into 4 complex coordinates for K3
-    n_groups = dim // 4
+    dim // 4
     groups = []
     for i in range(4):
         start = i * (dim // 4)
@@ -509,7 +506,7 @@ def render_fibration_structure(points, fibers, projection_name, output_path):
 
     # Plot points with color by position
     colors = np.arctan2(points[:, 1], points[:, 0])
-    scatter = ax1.scatter(points[:, 0], points[:, 1], points[:, 2],
+    ax1.scatter(points[:, 0], points[:, 1], points[:, 2],
                          c=colors, cmap='twilight', s=1, alpha=0.3)
 
     # Plot fiber backbones

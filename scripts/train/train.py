@@ -33,10 +33,7 @@ from datetime import datetime
 import yaml
 
 import torch
-import torch.nn.functional as F
 from torch.utils.tensorboard import SummaryWriter
-from tqdm import tqdm
-import numpy as np
 from scipy.stats import spearmanr
 
 # Add project root
@@ -44,11 +41,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.models import TernaryVAEV5_11, TernaryVAEV5_11_OptionC, HomeostasisController
-from src.losses import PAdicGeodesicLoss, RadialHierarchyLoss, CombinedGeodesicLoss, GlobalRankLoss
+from src.losses import PAdicGeodesicLoss, RadialHierarchyLoss, GlobalRankLoss
 from src.losses import CombinedZeroStructureLoss
 from src.data.generation import generate_all_ternary_operations
 from src.core import TERNARY
-from src.geometry import get_riemannian_optimizer, GEOOPT_AVAILABLE
+from src.geometry import get_riemannian_optimizer, RiemannianAdam
 
 
 def parse_args():
@@ -304,7 +301,7 @@ def create_stratified_indices(indices: torch.Tensor, batch_size: int, device: st
 
     # Compute samples per valuation level per batch
     # High valuation = more oversampling
-    max_v = max(valuation_groups.keys())
+    max(valuation_groups.keys())
 
     # Allocation: reserve 20% of batch for high-v (v≥4), rest proportional
     high_v_budget = int(batch_size * 0.2)  # 20% for high-valuation
@@ -649,7 +646,7 @@ def main():
 
     # Count parameters
     param_counts = model.count_parameters()
-    print(f"\nParameter counts:")
+    print("\nParameter counts:")
     print(f"  Frozen: {param_counts['frozen']:,}")
     print(f"  Projection: {param_counts['projection']:,}")
     print(f"  Controller: {param_counts['controller']:,}")
@@ -705,10 +702,6 @@ def main():
     base_lr = config.get('lr', 1e-3)
     use_riemannian = config.get('riemannian', False)
 
-    if use_riemannian and not GEOOPT_AVAILABLE:
-        print("WARNING: --riemannian requested but geoopt not installed. Using AdamW.")
-        use_riemannian = False
-
     if use_option_c and hasattr(model, 'get_param_groups'):
         # Option C: use param groups with different LRs
         param_groups = model.get_param_groups(base_lr)
@@ -719,7 +712,7 @@ def main():
                 optimizer_type='adam',
                 weight_decay=config.get('weight_decay', 1e-4)
             )
-            print(f"\nUsing RiemannianAdam (geoopt) with param groups")
+            print("\nUsing RiemannianAdam (geoopt) with param groups")
         else:
             optimizer = torch.optim.AdamW(
                 param_groups,
@@ -738,7 +731,7 @@ def main():
                 optimizer_type='adam',
                 weight_decay=config.get('weight_decay', 1e-4)
             )
-            print(f"\nUsing RiemannianAdam (geoopt)")
+            print("\nUsing RiemannianAdam (geoopt)")
         else:
             optimizer = torch.optim.AdamW(
                 model.get_trainable_parameters(),
@@ -1052,12 +1045,12 @@ def main():
     print(f"  Radial Hierarchy: {best_radial_corr:.4f}")
 
     if curriculum.tau_frozen:
-        print(f"\nAdaptive Curriculum:")
+        print("\nAdaptive Curriculum:")
         print(f"  Tau frozen at epoch {curriculum.frozen_epoch} (tau={curriculum.frozen_tau:.3f})")
         print(f"  Hierarchy threshold: {curriculum.hierarchy_threshold}")
 
     if curriculum.should_stop:
-        print(f"\nEarly Stopping:")
+        print("\nEarly Stopping:")
         print(f"  Triggered after {curriculum.patience} epochs without improvement")
         print(f"  Saved {n_epochs - final_epoch - 1} epochs of compute")
 

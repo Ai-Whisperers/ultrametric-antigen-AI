@@ -21,7 +21,7 @@ Single responsibility: Unified p-adic geodesic alignment.
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from typing import Tuple, Optional
+from typing import Tuple
 
 from ..core import TERNARY
 from ..geometry import poincare_distance

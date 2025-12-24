@@ -90,7 +90,7 @@ def generate_report(ruff_issues, mypy_issues):
     sorted_files = sorted(issues_by_file.items(), key=lambda x: len(x[1]), reverse=True)
 
     with open(REPORT_FILE, "w", encoding="utf-8") as f:
-        f.write(f"# Code Health Dashboard\n")
+        f.write("# Code Health Dashboard\n")
         f.write(f"**Date:** {datetime.now().strftime('%Y-%m-%d %H:%M')}\n\n")
         f.write(f"**Total Issues Found:** {total_issues}\n")
         f.write(f"- **Ruff (Lint/Style):** {len(ruff_issues)}\n")

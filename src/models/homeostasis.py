@@ -15,8 +15,7 @@ V5.11.8: Q-gated annealing progressively relaxes thresholds when Q improves,
 enabling exploration of higher Q values while maintaining coverage floors.
 """
 
-import torch
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional
 from collections import deque
 
 

@@ -13,7 +13,7 @@ Single responsibility: p-Adic geometry alignment.
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from typing import Optional, Tuple
+from typing import Tuple
 
 # STRUCTURAL FIX: Use core module's TERNARY singleton as single source of truth
 from ..core import TERNARY

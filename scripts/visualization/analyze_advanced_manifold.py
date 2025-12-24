@@ -16,10 +16,7 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import cm
-from mpl_toolkits.mplot3d import Axes3D
 from scipy.spatial import Voronoi, voronoi_plot_2d
-from scipy.spatial.distance import cdist
 from scipy.ndimage import gaussian_filter
 from pathlib import Path
 import sys
@@ -344,7 +341,7 @@ def plot_all_analyses(model, operations, latent_codes, device='cuda'):
 
     print(f"  Jacobian norm range: [{jacobian_norms.min():.3f}, {jacobian_norms.max():.3f}]")
     print(f"  Mean sensitivity: {jacobian_norms.mean():.3f}")
-    print(f"  Saved: jacobian_surface.png")
+    print("  Saved: jacobian_surface.png")
 
     # 2. Voronoi Cells
     print("\n=== 2. Voronoi Cells ===")
@@ -398,7 +395,7 @@ def plot_all_analyses(model, operations, latent_codes, device='cuda'):
     if cell_areas:
         print(f"  Cell area range: [{min(cell_areas):.4f}, {max(cell_areas):.4f}]")
         print(f"  Mean cell area: {np.mean(cell_areas):.4f}")
-    print(f"  Saved: voronoi_cells.png")
+    print("  Saved: voronoi_cells.png")
 
     # 3. Latent Holes
     print("\n=== 3. Latent Holes Detection ===")
@@ -425,7 +422,7 @@ def plot_all_analyses(model, operations, latent_codes, device='cuda'):
 
     # Hole regions only
     ax3 = axes[2]
-    im3 = ax3.imshow(holes.astype(float), extent=[X_h.min(), X_h.max(), Y_h.min(), Y_h.max()],
+    ax3.imshow(holes.astype(float), extent=[X_h.min(), X_h.max(), Y_h.min(), Y_h.max()],
                      origin='lower', cmap='Reds', aspect='auto')
     ax3.scatter(z_2d_h[:, 0], z_2d_h[:, 1], c='blue', s=1, alpha=0.2)
     ax3.set_xlabel('PC1')
@@ -439,7 +436,7 @@ def plot_all_analyses(model, operations, latent_codes, device='cuda'):
     hole_fraction = holes.sum() / (holes.shape[0] * holes.shape[1]) * 100
     print(f"  Hole coverage: {hole_fraction:.2f}% of latent area")
     print(f"  Density range: [{density.min():.1f}, {density.max():.1f}]")
-    print(f"  Saved: latent_holes.png")
+    print("  Saved: latent_holes.png")
 
     # 4. Per-Operation Difficulty
     print("\n=== 4. Per-Operation Difficulty Ranking ===")
@@ -512,7 +509,7 @@ def plot_all_analyses(model, operations, latent_codes, device='cuda'):
     ]
 
     x_pos = np.arange(len(categories))
-    bars = ax3.bar(x_pos, means, yerr=stds, color=['blue', 'orange', 'green', 'red'],
+    ax3.bar(x_pos, means, yerr=stds, color=['blue', 'orange', 'green', 'red'],
                    alpha=0.7, capsize=5)
     ax3.set_xticks(x_pos)
     ax3.set_xticklabels(categories)
@@ -542,7 +539,7 @@ def plot_all_analyses(model, operations, latent_codes, device='cuda'):
     print(f"  Std difficulty: {difficulties.std():.6f}")
     print(f"  Hardest operation: {get_operation_string(hardest_indices[0])} (loss={hardest_vals[0]:.6f})")
     print(f"  Symmetric ops mean: {means[0]:.6f}, Non-symmetric: {means[1]:.6f}")
-    print(f"  Saved: operation_difficulty.png")
+    print("  Saved: operation_difficulty.png")
 
     # Save summary statistics
     summary = {
@@ -573,7 +570,7 @@ def plot_all_analyses(model, operations, latent_codes, device='cuda'):
 
     with open(output_dir / 'advanced_manifold_summary.json', 'w') as f:
         json.dump(summary, f, indent=2)
-    print(f"\n  Summary saved: advanced_manifold_summary.json")
+    print("\n  Summary saved: advanced_manifold_summary.json")
 
     return summary
 
@@ -625,12 +622,12 @@ def main():
     print("ADVANCED MANIFOLD ANALYSIS")
     print("="*60)
 
-    summary = plot_all_analyses(model, operations, latent_codes, device=device)
+    plot_all_analyses(model, operations, latent_codes, device=device)
 
     print("\n" + "="*60)
     print("ANALYSIS COMPLETE")
     print("="*60)
-    print(f"\nOutput directory: outputs/manifold_viz/")
+    print("\nOutput directory: outputs/manifold_viz/")
     print("Generated files:")
     print("  - jacobian_surface.png")
     print("  - voronoi_cells.png")

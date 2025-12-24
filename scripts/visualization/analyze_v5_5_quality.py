@@ -15,7 +15,6 @@ from pathlib import Path
 
 import numpy as np
 import torch
-import torch.nn.functional as F
 from scipy.stats import spearmanr
 
 # Add project root to path
@@ -140,7 +139,7 @@ def analyze_manifold_quality(encoder_A, encoder_B, decoder_A, device='cpu'):
 
     # Convert logits to predictions
     preds = torch.argmax(logits_A, dim=-1) - 1  # Map {0,1,2} -> {-1,0,1}
-    targets = (x + 1).long()  # Map {-1,0,1} -> {0,1,2}
+    (x + 1).long()  # Map {-1,0,1} -> {0,1,2}
 
     # Per-position accuracy
     correct = (preds == x).float()
@@ -176,7 +175,7 @@ def analyze_manifold_quality(encoder_A, encoder_B, decoder_A, device='cpu'):
     corr_A_rad, p_A_rad = spearmanr(valuations, radii_A)
     corr_B_rad, p_B_rad = spearmanr(valuations, radii_B)
 
-    print(f"\nRadius vs 3-adic valuation correlation (expect NEGATIVE for proper hierarchy):")
+    print("\nRadius vs 3-adic valuation correlation (expect NEGATIVE for proper hierarchy):")
     print(f"  VAE-A: r={corr_A_rad:.4f} (p={p_A_rad:.2e})")
     print(f"  VAE-B: r={corr_B_rad:.4f} (p={p_B_rad:.2e})")
 
@@ -234,7 +233,7 @@ def analyze_manifold_quality(encoder_A, encoder_B, decoder_A, device='cpu'):
     corr_A, p_A = spearmanr(adic_dists, latent_dists_A)
     corr_B, p_B = spearmanr(adic_dists, latent_dists_B)
 
-    print(f"\n3-adic digit distance vs latent distance correlation:")
+    print("\n3-adic digit distance vs latent distance correlation:")
     print(f"  VAE-A: r={corr_A:.4f} (p={p_A:.2e})")
     print(f"  VAE-B: r={corr_B:.4f} (p={p_B:.2e})")
 
@@ -334,7 +333,7 @@ def main():
 
     # Load checkpoint
     checkpoint = load_v5_5_checkpoint(device)
-    print(f"\nCheckpoint info:")
+    print("\nCheckpoint info:")
     print(f"  Epoch: {checkpoint.get('epoch', 'unknown')}")
     print(f"  Keys: {list(checkpoint.keys())}")
 

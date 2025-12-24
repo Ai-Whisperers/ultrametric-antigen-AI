@@ -13,7 +13,6 @@ Single responsibility: Enforce radial hierarchy based on 3-adic valuation.
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from typing import Optional, Tuple
 
 # STRUCTURAL FIX: Use core module's TERNARY singleton as single source of truth
 from ..core import TERNARY

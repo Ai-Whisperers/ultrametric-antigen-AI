@@ -18,7 +18,7 @@ Usage:
 """
 
 import torch
-from typing import Iterator, Tuple, Optional
+from typing import Iterator, Tuple
 from ..core import TERNARY
 
 

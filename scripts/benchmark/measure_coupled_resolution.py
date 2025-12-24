@@ -8,8 +8,7 @@ import numpy as np
 import yaml
 import json
 from pathlib import Path
-from typing import Dict, Tuple
-from collections import defaultdict
+from typing import Dict
 import sys
 sys.path.append(str(Path(__file__).parent.parent.parent))
 

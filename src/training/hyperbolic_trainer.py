@@ -510,7 +510,7 @@ class HyperbolicVAETrainer:
         ranking_weight = self.compute_ranking_weight(current_coverage)
 
         # P2 FIX: Check coverage stall and apply exploration boost
-        exploration_boosted = self.check_coverage_stall(current_coverage)
+        self.check_coverage_stall(current_coverage)
         temp_mult, ranking_mult = self.get_exploration_multipliers()
 
         # Apply P2 exploration boost to ranking weight
@@ -563,9 +563,9 @@ class HyperbolicVAETrainer:
 
         # Validate only if val_loader is provided (not in manifold approach)
         if val_loader is not None:
-            val_losses = self.base_trainer.validate(val_loader)
+            self.base_trainer.validate(val_loader)
         else:
-            val_losses = train_losses  # Use train losses for compatibility
+            pass  # Use train losses for compatibility
 
         # Compute hyperbolic losses and metrics
         hyperbolic_metrics = self._compute_hyperbolic_losses(

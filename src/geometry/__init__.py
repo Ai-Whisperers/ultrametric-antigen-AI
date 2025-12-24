@@ -24,7 +24,8 @@ from .poincare import (
     get_riemannian_optimizer,
     ManifoldParameter,
     ManifoldTensor,
-    GEOOPT_AVAILABLE
+    RiemannianAdam,
+    RiemannianSGD,
 )
 
 __all__ = [
@@ -42,5 +43,6 @@ __all__ = [
     'get_riemannian_optimizer',
     'ManifoldParameter',
     'ManifoldTensor',
-    'GEOOPT_AVAILABLE'
+    'RiemannianAdam',
+    'RiemannianSGD',
 ]
