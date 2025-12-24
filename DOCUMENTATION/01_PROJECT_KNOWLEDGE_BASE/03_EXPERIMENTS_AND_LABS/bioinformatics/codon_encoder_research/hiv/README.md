@@ -216,14 +216,15 @@ Identification of "sentinel glycans" whose removal optimally exposes bnAb epitop
 
 ```mermaid
 flowchart TB
-    subgraph DISCOVERIES[" Four Major Discoveries "]
+    subgraph DISCOVERIES[" Five Major Discoveries "]
         D1["Drug Class<br/>Signatures"]
         D2["Elite Controller<br/>Mechanism"]
         D3["Sentinel<br/>Glycans"]
         D4["AlphaFold3<br/>Corroboration"]
+        D5["Pro-Drug<br/>Revelation"]
     end
 
-    PADIC["3-Adic<br/>Encoder"] --> D1 & D2 & D3
+    PADIC["3-Adic<br/>Encoder"] --> D1 & D2 & D3 & D5
     D3 --> D4
 
     style PADIC fill:#3b82f6,stroke:#1e40af,color:#ffffff,stroke-width:3px
@@ -337,6 +338,30 @@ Strong inverse correlation (r = -0.89) between Goldilocks score and structural s
 | Structural perturbation | High             | Moderate               |
 
 **Insight:** Top Goldilocks sites (N58, N429) show maximum structural perturbation upon deglycosylation, validating the p-adic predictions.
+
+### Discovery 5: Pro-Drug Revelation (Handshake Analysis)
+
+```mermaid
+flowchart LR
+    subgraph REVELATION[" Reveal vs Attack Paradigm "]
+        OLD["Attack<br/>Viral Enzyme"]
+        NEW["Reveal<br/>Viral Epitopes"]
+    end
+
+    OLD -->|"Resistance"| BAD["Mutation"]
+    NEW -->|"Asymmetry"| GOOD["Immune<br/>Clearance"]
+
+    style NEW fill:#22c55e,stroke:#15803d,color:#ffffff,stroke-width:2px
+    style OLD fill:#ef4444,stroke:#b91c1c,color:#ffffff
+```
+
+**Key Finding:** HIV gp120 is **2.9x more vulnerable** to asymmetric "revelation" modifications than SARS-CoV-2.
+
+| Target Site   | Modification  | Asymmetry | Mechanism              |
+| :------------ | :------------ | :-------- | :--------------------- |
+| **gp120-368** | E→Q (Charge)  | **58.3%** | Unlocks "closed" state |
+| **gp120-456** | D→N (Masking) | 43.1%     | Disrups loop stability |
+| **gp120-427** | K→Q (Acyl)    | 34.7%     | Acetylation mimic      |
 
 ---
 
@@ -522,6 +547,14 @@ pie showData
 | Below Goldilocks (< 15%) | 0     | -          |
 | Goldilocks Zone (15-30%) | 7     | 23.4%      |
 | Above Goldilocks (> 30%) | 17    | 37.8%      |
+
+### Pro-Drug Revelation Analysis
+
+| Metric            | SARS-CoV-2 (RBD) | HIV-1 (gp120)  | Factor                  |
+| :---------------- | :--------------- | :------------- | :---------------------- |
+| Max Asymmetry     | 20.0%            | **58.3%**      | **2.9x**                |
+| Primary Mechanism | Phosphomimic     | Charge Removal | Distinct                |
+| Vulnerability     | Moderate         | **High**       | Therapeutic Opportunity |
 
 ---
 

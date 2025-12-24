@@ -23,6 +23,9 @@ flowchart TB
             D3["03_SENTINEL_GLYCANS<br/>Inverse Goldilocks model"]
             D4["04_THERAPEUTIC_APPLICATIONS<br/>Clinical applications"]
             D5["05_VALIDATION_RESULTS<br/>AF3 & statistical validation"]
+            D4["04_THERAPEUTIC_APPLICATIONS<br/>Clinical applications"]
+            D5["05_VALIDATION_RESULTS<br/>AF3 & statistical validation"]
+            D6["06_HANDSHAKE_PRODRUG_REVELATION<br/>Reveal vs Attack"]
         end
 
         MAIN["DISCOVERY_HIV_PADIC_RESISTANCE<br/>Full discovery report"]
@@ -30,7 +33,7 @@ flowchart TB
 
     README --> DISCOVERIES
     README --> MAIN
-    D1 --> D2 --> D3 --> D4 --> D5
+    D1 --> D2 --> D3 --> D4 --> D5 --> D6
 
     style README fill:#74c0fc,stroke:#1864ab,stroke-width:2px
     style MAIN fill:#69db7c,stroke:#2f9e44,stroke-width:2px
@@ -40,14 +43,15 @@ flowchart TB
 
 ## Quick Navigation
 
-| Document | Description | Key Metrics |
-|:---------|:------------|:------------|
-| [Drug Resistance Profiles](./01_DRUG_RESISTANCE_PROFILES.md) | Drug class geometric signatures | NRTI: d=6.05, PI: d=3.60 |
-| [Elite Controllers](./02_ELITE_CONTROLLERS.md) | HLA-B27/B57 protection mechanism | KK10 escape: d=7.38 |
-| [Sentinel Glycans](./03_SENTINEL_GLYCANS.md) | Inverse Goldilocks for vaccine design | 7 sites identified |
-| [Therapeutic Applications](./04_THERAPEUTIC_APPLICATIONS.md) | Clinical translation roadmap | 7 application pathways |
-| [Validation Results](./05_VALIDATION_RESULTS.md) | AF3 & statistical validation | r=-0.89 correlation |
-| [Full Discovery Report](./DISCOVERY_HIV_PADIC_RESISTANCE.md) | Comprehensive consolidated report | All findings |
+| Document                                                     | Description                           | Key Metrics              |
+| :----------------------------------------------------------- | :------------------------------------ | :----------------------- |
+| [Drug Resistance Profiles](./01_DRUG_RESISTANCE_PROFILES.md) | Drug class geometric signatures       | NRTI: d=6.05, PI: d=3.60 |
+| [Elite Controllers](./02_ELITE_CONTROLLERS.md)               | HLA-B27/B57 protection mechanism      | KK10 escape: d=7.38      |
+| [Sentinel Glycans](./03_SENTINEL_GLYCANS.md)                 | Inverse Goldilocks for vaccine design | 7 sites identified       |
+| [Therapeutic Applications](./04_THERAPEUTIC_APPLICATIONS.md) | Clinical translation roadmap          | 7 application pathways   |
+| [Validation Results](./05_VALIDATION_RESULTS.md)             | AF3 & statistical validation          | r=-0.89 correlation      |
+| [Pro-Drug Revelation](./06_HANDSHAKE_PRODRUG_REVELATION.md)  | Handshake asymmetry analysis          | 58% vulnerability        |
+| [Full Discovery Report](./DISCOVERY_HIV_PADIC_RESISTANCE.md) | Comprehensive consolidated report     | All findings             |
 
 ---
 
@@ -72,15 +76,15 @@ flowchart LR
 
 ## Summary Metrics
 
-| Category | Metric | Value | Significance |
-|:---------|:-------|:------|:-------------|
-| **Drug Resistance** | Highest class distance | NRTI: 6.05 | Most constrained target |
-| **Drug Resistance** | Lowest class distance | PI: 3.60 | Most flexible target |
-| **Elite Controllers** | Highest escape distance | 7.38 (KK10/B27) | Maximum protection |
-| **Sentinel Glycans** | Sites in Goldilocks Zone | 7/24 (29%) | Vaccine targets |
-| **Sentinel Glycans** | Top candidates | N58, N429, N103 | Highest scores |
-| **Validation** | AF3 correlation | r = -0.89 | Strong confirmation |
-| **Validation** | Boundary crossings | 100% | Expected for AA changes |
+| Category              | Metric                   | Value           | Significance            |
+| :-------------------- | :----------------------- | :-------------- | :---------------------- |
+| **Drug Resistance**   | Highest class distance   | NRTI: 6.05      | Most constrained target |
+| **Drug Resistance**   | Lowest class distance    | PI: 3.60        | Most flexible target    |
+| **Elite Controllers** | Highest escape distance  | 7.38 (KK10/B27) | Maximum protection      |
+| **Sentinel Glycans**  | Sites in Goldilocks Zone | 7/24 (29%)      | Vaccine targets         |
+| **Sentinel Glycans**  | Top candidates           | N58, N429, N103 | Highest scores          |
+| **Validation**        | AF3 correlation          | r = -0.89       | Strong confirmation     |
+| **Validation**        | Boundary crossings       | 100%            | Expected for AA changes |
 
 ---
 
@@ -167,46 +171,50 @@ discoveries/
 ├── 02_ELITE_CONTROLLERS.md             ← HLA mechanism
 ├── 03_SENTINEL_GLYCANS.md              ← Glycan analysis
 ├── 04_THERAPEUTIC_APPLICATIONS.md      ← Applications
-└── 05_VALIDATION_RESULTS.md            ← Validation
+├── 05_VALIDATION_RESULTS.md            ← Validation
+└── 06_HANDSHAKE_PRODRUG_REVELATION.md  ← Pro-drug Revelation (New)
 ```
 
 ---
 
 ## Related Folders
 
-| Location | Content |
-|:---------|:--------|
-| `../scripts/` | Analysis Python scripts |
-| `../glycan_shield/` | Sentinel glycan methodology |
-| `../results/` | Raw analysis outputs |
-| `../../p-adic-genomics/` | Cross-disease framework |
-| `../../rheumatoid_arthritis/` | RA comparison analysis |
+| Location                      | Content                     |
+| :---------------------------- | :-------------------------- |
+| `../scripts/`                 | Analysis Python scripts     |
+| `../glycan_shield/`           | Sentinel glycan methodology |
+| `../results/`                 | Raw analysis outputs        |
+| `../../p-adic-genomics/`      | Cross-disease framework     |
+| `../../rheumatoid_arthritis/` | RA comparison analysis      |
 
 ---
 
 ## Version History
 
-| Date | Version | Changes |
-|:-----|:--------|:--------|
-| 2025-12-24 | 2.0 | Modularized into sub-documents with Mermaid diagrams |
-| 2025-12-24 | 1.0 | Initial applications guide |
-| 2025-12-16 | 0.1 | Original discovery |
+| Date       | Version | Changes                                              |
+| :--------- | :------ | :--------------------------------------------------- |
+| 2025-12-24 | 2.0     | Modularized into sub-documents with Mermaid diagrams |
+| 2025-12-24 | 1.0     | Initial applications guide                           |
+| 2025-12-16 | 0.1     | Original discovery                                   |
 
 ---
 
 ## Quick Reference
 
 ### Top 3 Vaccine Targets
+
 1. **N58** (V1) - Score: 1.19, Shift: 22.4%
 2. **N429** (C5) - Score: 1.19, Shift: 22.6%
 3. **N103** (V2) - Score: 1.04, Shift: 23.7%
 
 ### Top 3 Protective Epitopes
+
 1. **KK10** (HLA-B27) - d = 7.38
 2. **FL8** (HLA-A24) - d = 7.37
 3. **TW10** (HLA-B57) - d = 6.34
 
 ### Optimal Drug Combination
+
 **INSTI + NRTI + NRTI** (e.g., DTG + TAF + FTC) → Total barrier d ≈ 15.1
 
 ---

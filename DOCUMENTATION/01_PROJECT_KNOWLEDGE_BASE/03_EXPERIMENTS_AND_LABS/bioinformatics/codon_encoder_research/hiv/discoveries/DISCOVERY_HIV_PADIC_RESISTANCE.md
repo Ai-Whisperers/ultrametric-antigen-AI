@@ -324,6 +324,40 @@ flowchart TB
 - **Above-Goldilocks sites maintain structure** - consistent with structural glycan role
 - **Multi-site synergy** - Combined removal shows greater effect than sum of singles
 
+- **Multi-site synergy** - Combined removal shows greater effect than sum of singles
+
+---
+
+## Discovery 5: Pro-Drug Revelation (Handshake Analysis)
+
+### The "Reveal vs Attack" Paradigm
+
+Traditional antiviral strategies attack viral enzymes (protease, integrase, RT). Our handshake analysis reveals a new strategy: **Revelation**. By targeting "asymmetric vulnerability" sites at the gp120-CD4 interface, we can induce viral conformational shifts that expose conserved epitopes without affecting host receptors.
+
+### Top Asymmetric Targets
+
+<div align="center">
+  <h3>HIV gp120 Asymmetric Vulnerability (2.9x > SARS-CoV-2)</h3>
+</div>
+
+| Rank  | Target Site           | Modification | Asymmetry | Mechanism                             |
+| :---- | :-------------------- | :----------- | :-------- | :------------------------------------ |
+| **1** | **gp120-368** (Phe43) | E→Q          | **0.583** | Charge removal unlocks "closed" state |
+| **2** | **gp120-456** (Loop)  | D→N          | **0.431** | Disrups electrostatic loop stability  |
+| **3** | **gp120-427** (Sheet) | K→Q          | **0.347** | Acetylation mimic alters hinge        |
+
+### Comparison: HIV vs SARS-CoV-2
+
+```mermaid
+xychart-beta
+    title "Asymmetric Vulnerability Comparison"
+    x-axis ["SARS-CoV-2 (RBD)", "HIV-1 (gp120)"]
+    y-axis "Max Asymmetry %" 0 --> 60
+    bar [20.0, 58.3]
+```
+
+**Key Insight:** HIV gp120 is **2.9x more vulnerable** to geometric revelation than SARS-CoV-2 spike, suggesting this is a highly specific therapeutic avenue for HIV.
+
 ---
 
 ## Therapeutic Implications
