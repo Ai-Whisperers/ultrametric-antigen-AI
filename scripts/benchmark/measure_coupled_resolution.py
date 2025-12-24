@@ -5,22 +5,25 @@ Measures resolution of the full dual-VAE system working together
 
 import torch
 import numpy as np
-import yaml
-import json
-from pathlib import Path
 from typing import Dict
 import sys
+from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
-from src.models.ternary_vae_v5_6 import DualNeuralVAEV5
-from src.artifacts import CheckpointManager
-from src.benchmark import convert_to_python_types, BenchmarkBase
+from src.benchmark import (
+    BenchmarkBase,
+    load_config,
+    get_device,
+    create_v5_6_model,
+    load_checkpoint_safe,
+    save_results,
+)
 
 
 class CoupledSystemBenchmark(BenchmarkBase):
     """Measures resolution of the coupled dual-VAE system"""
 
-    def __init__(self, model: DualNeuralVAEV5, device: str = 'cuda'):
+    def __init__(self, model: torch.nn.Module, device: str = 'cuda'):
         super().__init__(model, device)
 
     @torch.no_grad()
@@ -306,43 +309,15 @@ class CoupledSystemBenchmark(BenchmarkBase):
 
 
 def main():
-    # Load configuration
-    config_path = Path('configs/ternary_v5_6.yaml')
-    with open(config_path) as f:
-        config = yaml.safe_load(f)
-
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    # Setup
+    config = load_config('configs/ternary_v5_6.yaml')
+    device = get_device()
     print(f"Using device: {device}")
 
     # Initialize model
     print("Initializing model...")
-    model = DualNeuralVAEV5(
-        input_dim=config['model']['input_dim'],
-        latent_dim=config['model']['latent_dim'],
-        rho_min=config['model']['rho_min'],
-        rho_max=config['model']['rho_max'],
-        lambda3_base=config['model']['lambda3_base'],
-        lambda3_amplitude=config['model']['lambda3_amplitude'],
-        eps_kl=config['model']['eps_kl'],
-        gradient_balance=config['model'].get('gradient_balance', True),
-        adaptive_scheduling=config['model'].get('adaptive_scheduling', True),
-        use_statenet=config['model'].get('use_statenet', True)
-    )
-
-    # Load checkpoint
-    checkpoint_dir = Path('sandbox-training/checkpoints/v5_6')
-    checkpoint = None
-    if checkpoint_dir.exists():
-        try:
-            manager = CheckpointManager(checkpoint_dir)
-            checkpoint = manager.load_checkpoint(model, checkpoint_name='best', device=device)
-            print(f"Loaded checkpoint from epoch {checkpoint['epoch']}")
-        except Exception as e:
-            print(f"Could not load checkpoint: {e}")
-            checkpoint = {'epoch': 'init'}
-    else:
-        print("No checkpoint found, using random initialization")
-        checkpoint = {'epoch': 'init'}
+    model = create_v5_6_model(config)
+    checkpoint = load_checkpoint_safe(model, 'sandbox-training/checkpoints/v5_6', device)
 
     # Run benchmark
     print("\nRunning coupled system benchmark...")
@@ -350,14 +325,7 @@ def main():
     results = benchmark.run_full_benchmark()
 
     # Save results
-    output_dir = Path('reports/benchmarks')
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    output_file = output_dir / f'coupled_resolution_{checkpoint.get("epoch", "init")}.json'
-    with open(output_file, 'w') as f:
-        json.dump(convert_to_python_types(results), f, indent=2)
-
-    print(f"\nResults saved to: {output_file}")
+    save_results(results, 'coupled_resolution', checkpoint.get('epoch', 'init'))
 
     # Print summary
     print("\n" + "="*80)
