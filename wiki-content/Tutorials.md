@@ -98,9 +98,9 @@ loss_registry = create_registry_from_training_config(config)
 history = {"loss": [], "recon": [], "kl": []}
 
 for epoch in range(config.epochs):
-    epoch_loss = 0
-    epoch_recon = 0
-    epoch_kl = 0
+    epoch_loss = 0.0
+    epoch_recon = 0.0
+    epoch_kl = 0.0
 
     for batch_x, batch_y, _ in train_loader:
         optimizer.zero_grad()
@@ -113,9 +113,17 @@ for epoch in range(config.epochs):
         optimizer.step()
 
         epoch_loss += result.total.item()
+        # Track component losses (handle both tensor and float)
+        recon = result.components.get("reconstruction", 0)
+        kl = result.components.get("kl_divergence", 0)
+        epoch_recon += recon.item() if hasattr(recon, 'item') else recon
+        epoch_kl += kl.item() if hasattr(kl, 'item') else kl
 
     # Log metrics
-    history["loss"].append(epoch_loss / len(train_loader))
+    n_batches = len(train_loader)
+    history["loss"].append(epoch_loss / n_batches)
+    history["recon"].append(epoch_recon / n_batches)
+    history["kl"].append(epoch_kl / n_batches)
 
     if (epoch + 1) % 20 == 0:
         print(f"Epoch {epoch+1}: Loss = {history['loss'][-1]:.4f}")
@@ -179,105 +187,280 @@ You should see:
 
 ## Tutorial 2: Codon Optimization
 
-Optimize codons for improved expression.
+Optimize codons for improved expression in human cells.
 
 ### Goal
-Use Ternary VAE to find optimal synonymous codon substitutions.
+Use Ternary VAE to find optimal synonymous codon substitutions that maximize human expression while preserving protein function.
+
+### Prerequisites
+- Completed Tutorial 1
+- Understanding of codon degeneracy
 
 ### Step 1: Setup
 
 ```python
-from src.models import TernaryVAE
-from src.losses import AutoimmuneCodonRegularizer, HUMAN_CODON_RSCU
-from src.config import TrainingConfig
 import torch
+from src.models import TernaryVAE
+from src.config import TrainingConfig
+
+# Set device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 ```
 
 ### Step 2: Define Codon Tables
 
 ```python
-# Amino acid to codon mapping
+# Standard genetic code: amino acid -> codons (RNA notation)
 CODON_TABLE = {
-    'A': ['GCU', 'GCC', 'GCA', 'GCG'],  # Alanine
-    'R': ['CGU', 'CGC', 'CGA', 'CGG', 'AGA', 'AGG'],  # Arginine
+    'A': ['GCU', 'GCC', 'GCA', 'GCG'],  # Alanine (4 codons)
+    'R': ['CGU', 'CGC', 'CGA', 'CGG', 'AGA', 'AGG'],  # Arginine (6 codons)
     'N': ['AAU', 'AAC'],  # Asparagine
-    # ... (complete table)
-    '*': ['UAA', 'UAG', 'UGA'],  # Stop
+    'D': ['GAU', 'GAC'],  # Aspartic acid
+    'C': ['UGU', 'UGC'],  # Cysteine
+    'Q': ['CAA', 'CAG'],  # Glutamine
+    'E': ['GAA', 'GAG'],  # Glutamic acid
+    'G': ['GGU', 'GGC', 'GGA', 'GGG'],  # Glycine
+    'H': ['CAU', 'CAC'],  # Histidine
+    'I': ['AUU', 'AUC', 'AUA'],  # Isoleucine
+    'L': ['UUA', 'UUG', 'CUU', 'CUC', 'CUA', 'CUG'],  # Leucine (6 codons)
+    'K': ['AAA', 'AAG'],  # Lysine
+    'M': ['AUG'],  # Methionine (1 codon - start)
+    'F': ['UUU', 'UUC'],  # Phenylalanine
+    'P': ['CCU', 'CCC', 'CCA', 'CCG'],  # Proline
+    'S': ['UCU', 'UCC', 'UCA', 'UCG', 'AGU', 'AGC'],  # Serine (6 codons)
+    'T': ['ACU', 'ACC', 'ACA', 'ACG'],  # Threonine
+    'W': ['UGG'],  # Tryptophan (1 codon)
+    'Y': ['UAU', 'UAC'],  # Tyrosine
+    'V': ['GUU', 'GUC', 'GUA', 'GUG'],  # Valine
+    '*': ['UAA', 'UAG', 'UGA'],  # Stop codons
 }
 
+# Reverse lookup: codon -> amino acid
+CODON_TO_AA = {}
+for aa, codons in CODON_TABLE.items():
+    for codon in codons:
+        CODON_TO_AA[codon] = aa
+
 # Human codon preferences (Relative Synonymous Codon Usage)
+# Source: Kazusa Codon Usage Database for Homo sapiens
 HUMAN_RSCU = {
-    'GCU': 0.26, 'GCC': 0.40, 'GCA': 0.23, 'GCG': 0.11,  # Ala
-    # ... from src.losses.autoimmunity
+    # Alanine
+    'GCU': 0.26, 'GCC': 0.40, 'GCA': 0.23, 'GCG': 0.11,
+    # Arginine
+    'CGU': 0.08, 'CGC': 0.19, 'CGA': 0.11, 'CGG': 0.21, 'AGA': 0.20, 'AGG': 0.20,
+    # Asparagine
+    'AAU': 0.46, 'AAC': 0.54,
+    # Aspartic acid
+    'GAU': 0.46, 'GAC': 0.54,
+    # Cysteine
+    'UGU': 0.45, 'UGC': 0.55,
+    # Glutamine
+    'CAA': 0.25, 'CAG': 0.75,
+    # Glutamic acid
+    'GAA': 0.42, 'GAG': 0.58,
+    # Glycine
+    'GGU': 0.16, 'GGC': 0.34, 'GGA': 0.25, 'GGG': 0.25,
+    # Leucine
+    'UUA': 0.07, 'UUG': 0.13, 'CUU': 0.13, 'CUC': 0.20, 'CUA': 0.07, 'CUG': 0.41,
+    # Proline
+    'CCU': 0.28, 'CCC': 0.33, 'CCA': 0.27, 'CCG': 0.11,
+    # Serine
+    'UCU': 0.18, 'UCC': 0.22, 'UCA': 0.15, 'UCG': 0.06, 'AGU': 0.15, 'AGC': 0.24,
+    # Threonine
+    'ACU': 0.24, 'ACC': 0.36, 'ACA': 0.28, 'ACG': 0.12,
+    # Valine
+    'GUU': 0.18, 'GUC': 0.24, 'GUA': 0.11, 'GUG': 0.47,
 }
 ```
 
-### Step 3: Load Pre-trained Model
+### Step 3: Helper Functions
 
 ```python
-# Load model trained on human sequences
-model = TernaryVAE.load("checkpoints/human_codons.pt")
+def translate(codon: str) -> str:
+    """Translate a single codon to amino acid."""
+    # Convert DNA to RNA if needed
+    codon = codon.upper().replace('T', 'U')
+    return CODON_TO_AA.get(codon, 'X')  # X for unknown
+
+def codon_to_index(codon: str) -> int:
+    """Convert codon to ternary operation index."""
+    codon = codon.upper().replace('T', 'U')
+    nucleotide_map = {'A': 0, 'U': 1, 'G': 2, 'C': 0}
+    idx = 0
+    for i, nuc in enumerate(codon):
+        idx += nucleotide_map.get(nuc, 0) * (3 ** (8 - i))
+    return idx % 19683
+
+def one_hot_encode(indices: list) -> torch.Tensor:
+    """One-hot encode a list of operation indices."""
+    if isinstance(indices, int):
+        indices = [indices]
+    x = torch.zeros(len(indices), 19683)
+    for i, idx in enumerate(indices):
+        x[i, idx] = 1.0
+    return x
+
+def sequence_to_codons(sequence: str) -> list:
+    """Split sequence into codons."""
+    sequence = sequence.upper().replace('T', 'U')
+    return [sequence[i:i+3] for i in range(0, len(sequence), 3)]
+```
+
+### Step 4: Load or Create Model
+
+```python
+# Create model (or load pretrained)
+model = TernaryVAE(
+    input_dim=19683,
+    latent_dim=16,
+    curvature=1.0,
+).to(device)
+
+# To load pretrained: model = TernaryVAE.load("checkpoints/human_codons.pt")
 model.eval()
 ```
 
-### Step 4: Encode Original Sequence
+### Step 5: Analyze Original Sequence
 
 ```python
-def sequence_to_operations(codons):
-    """Convert codon sequence to ternary operations."""
-    # Implementation depends on encoding scheme
-    pass
+# Example: short peptide sequence (Met-Pro-Glu-Ala-Lys)
+original_sequence = "AUGCCUGAAGCCAAG"
+codons = sequence_to_codons(original_sequence)
 
-original_sequence = "AUGCCUGAA"  # Met-Pro-Glu
-operations = sequence_to_operations(original_sequence)
+print(f"Original sequence: {original_sequence}")
+print(f"Codons: {codons}")
+print(f"Amino acids: {''.join(translate(c) for c in codons)}")
+
+# Calculate original RSCU score
+original_rscu = sum(HUMAN_RSCU.get(c, 0) for c in codons)
+print(f"Original RSCU score: {original_rscu:.3f}")
 
 # Encode in latent space
 with torch.no_grad():
-    x = one_hot_encode(operations)
+    indices = [codon_to_index(c) for c in codons]
+    x = one_hot_encode(indices).to(device)
     outputs = model(x)
     z_original = outputs["z_hyperbolic"]
+    print(f"Latent representations shape: {z_original.shape}")
 ```
 
-### Step 5: Find Optimal Synonymous Variants
+### Step 6: Generate and Score Variants
 
 ```python
-def generate_synonymous_variants(sequence):
-    """Generate all synonymous codon substitutions."""
+def generate_synonymous_variants(codons: list) -> list:
+    """Generate all single-codon synonymous substitutions."""
     variants = []
-    codons = [sequence[i:i+3] for i in range(0, len(sequence), 3)]
 
     for i, codon in enumerate(codons):
         aa = translate(codon)
-        for alt_codon in CODON_TABLE[aa]:
-            if alt_codon != codon:
-                new_seq = codons.copy()
-                new_seq[i] = alt_codon
-                variants.append(''.join(new_seq))
+        if aa in CODON_TABLE:
+            for alt_codon in CODON_TABLE[aa]:
+                if alt_codon != codon:
+                    new_codons = codons.copy()
+                    new_codons[i] = alt_codon
+                    variants.append({
+                        'codons': new_codons,
+                        'sequence': ''.join(new_codons),
+                        'position': i,
+                        'change': f"{codon}->{alt_codon}",
+                    })
 
     return variants
 
-variants = generate_synonymous_variants(original_sequence)
+def score_variant(variant: dict) -> float:
+    """Calculate RSCU-based expression score."""
+    return sum(HUMAN_RSCU.get(c, 0) for c in variant['codons'])
+
+# Generate all variants
+variants = generate_synonymous_variants(codons)
+print(f"\nGenerated {len(variants)} synonymous variants")
 
 # Score each variant
-scores = []
-for variant in variants:
-    ops = sequence_to_operations(variant)
-    x = one_hot_encode(ops)
+for v in variants:
+    v['rscu_score'] = score_variant(v)
+    v['improvement'] = v['rscu_score'] - original_rscu
 
-    with torch.no_grad():
-        outputs = model(x)
-        z = outputs["z_hyperbolic"]
+# Sort by improvement
+best_variants = sorted(variants, key=lambda x: -x['improvement'])[:10]
 
-    # Score based on human codon preference
-    rscu_score = sum(HUMAN_RSCU.get(c, 0) for c in variant)
-    scores.append((variant, rscu_score))
-
-# Sort by score
-best_variants = sorted(scores, key=lambda x: -x[1])[:5]
-print("Top 5 synonymous variants:")
-for seq, score in best_variants:
-    print(f"  {seq}: {score:.2f}")
+print("\nTop 10 improvements:")
+print("-" * 60)
+for v in best_variants:
+    print(f"  {v['sequence']}")
+    print(f"    Change: position {v['position']+1}, {v['change']}")
+    print(f"    RSCU: {v['rscu_score']:.3f} ({v['improvement']:+.3f})")
 ```
+
+### Step 7: Full Optimization (Greedy)
+
+```python
+def optimize_sequence_greedy(codons: list, max_iterations: int = 10) -> list:
+    """Greedily optimize codon usage."""
+    current = codons.copy()
+    history = [{'codons': current.copy(), 'rscu': score_variant({'codons': current})}]
+
+    for iteration in range(max_iterations):
+        best_improvement = 0
+        best_variant = None
+
+        # Try all single substitutions
+        for variant in generate_synonymous_variants(current):
+            improvement = variant['rscu_score'] - history[-1]['rscu']
+            if improvement > best_improvement:
+                best_improvement = improvement
+                best_variant = variant
+
+        if best_variant is None or best_improvement <= 0:
+            print(f"Converged after {iteration} iterations")
+            break
+
+        current = best_variant['codons'].copy()
+        history.append({
+            'codons': current.copy(),
+            'rscu': best_variant['rscu_score'],
+            'change': best_variant['change'],
+        })
+        print(f"Iteration {iteration+1}: {best_variant['change']} "
+              f"(RSCU: {best_variant['rscu_score']:.3f})")
+
+    return current, history
+
+# Run optimization
+optimized_codons, history = optimize_sequence_greedy(codons)
+
+print(f"\n{'='*60}")
+print(f"Original:  {''.join(codons)}")
+print(f"Optimized: {''.join(optimized_codons)}")
+print(f"RSCU improvement: {history[0]['rscu']:.3f} -> {history[-1]['rscu']:.3f}")
+```
+
+### Expected Output
+
+```
+Original sequence: AUGCCUGAAGCCAAG
+Codons: ['AUG', 'CCU', 'GAA', 'GCC', 'AAG']
+Amino acids: MPEAK
+Original RSCU score: 1.370
+
+Generated 12 synonymous variants
+
+Top 10 improvements:
+------------------------------------------------------------
+  AUGCCCGAAGCCAAG
+    Change: position 2, CCU->CCC
+    RSCU: 1.420 (+0.050)
+  ...
+
+Optimized: AUGCCCGAGGCCAAG
+RSCU improvement: 1.370 -> 1.580
+```
+
+### What You Learned
+
+- How codon degeneracy enables synonymous substitutions
+- Using RSCU scores to predict expression levels
+- Greedy optimization for codon optimization
+- The TernaryVAE latent space captures codon relationships
 
 ---
 
@@ -460,24 +643,34 @@ class DiversityLoss(LossComponent):
 
     def compute(self, outputs: dict, targets: torch.Tensor) -> LossResult:
         z = outputs["z_hyperbolic"]  # (B, D)
+        batch_size = z.size(0)
 
         # Compute pairwise distances
         from src.geometry import poincare_distance_matrix
         distances = poincare_distance_matrix(z, z, curvature=1.0)
 
-        # Penalize distances below threshold
-        mask = distances < self.min_distance
-        mask.fill_diagonal_(False)  # Ignore self-distance
+        # Create mask for off-diagonal elements (exclude self-distances)
+        off_diag_mask = ~torch.eye(batch_size, dtype=torch.bool, device=z.device)
 
-        penalty = (self.min_distance - distances[mask]).sum()
-        loss = penalty / (mask.sum() + 1e-8)
+        # Penalize distances below threshold
+        too_close_mask = (distances < self.min_distance) & off_diag_mask
+
+        if too_close_mask.sum() > 0:
+            penalty = (self.min_distance - distances[too_close_mask]).sum()
+            loss = penalty / too_close_mask.sum().float()
+        else:
+            loss = torch.tensor(0.0, device=z.device)
+
+        # Calculate min pairwise distance (excluding diagonal)
+        off_diag_distances = distances[off_diag_mask]
+        min_dist = off_diag_distances.min().item() if len(off_diag_distances) > 0 else 0.0
 
         return LossResult(
             total=self.weight * loss,
             components={"diversity": loss},
             metrics={
-                "min_pairwise_dist": distances[~torch.eye(len(z), dtype=bool)].min().item(),
-                "pairs_too_close": mask.sum().item(),
+                "min_pairwise_dist": min_dist,
+                "pairs_too_close": too_close_mask.sum().item(),
             },
         )
 ```

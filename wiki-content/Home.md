@@ -92,6 +92,37 @@ print(f"All norms < 1: {(z_hyperbolic.norm(dim=1) < 1).all()}")  # True!
 
 ---
 
+## Start Here (Recommended Reading Order)
+
+```mermaid
+%%{init: {'theme': 'base'}}%%
+flowchart LR
+    S1["1️⃣<br/>Installation"] --> S2["2️⃣<br/>Quick-Start"]
+    S2 --> S3["3️⃣<br/>Tutorials"]
+    S3 --> S4["4️⃣<br/>Geometry"]
+    S4 --> S5["5️⃣<br/>Training"]
+
+    style S1 fill:#1565c0,color:#fff,stroke:#0d47a1
+    style S2 fill:#1565c0,color:#fff,stroke:#0d47a1
+    style S3 fill:#ef6c00,color:#fff,stroke:#e65100
+    style S4 fill:#6a1b9a,color:#fff,stroke:#4a148c
+    style S5 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
+| Step | Page | Time | What You'll Learn |
+|------|------|------|-------------------|
+| **1** | [[Installation]] | 5 min | Set up your environment |
+| **2** | [[Quick-Start]] | 10 min | Run your first model |
+| **3** | [[Tutorials]] | 30 min | Build real applications |
+| **4** | [[Geometry]] | 15 min | Understand hyperbolic space |
+| **5** | [[Training]] | 15 min | Train custom models |
+
+**Already familiar with VAEs?** Jump to [[Geometry]] for the hyperbolic mathematics.
+
+**Want the API reference?** See [[API-Reference]] for all modules.
+
+---
+
 ## Key Features
 
 | Feature | Description |

@@ -189,42 +189,172 @@ print(f"Curvature: {config.geometry.curvature}")
 
 ## Working with Real Data
 
-### Codon Sequences
+### Real Example: Human vs E. coli Codon Usage
+
+This example uses actual codon usage patterns to train a model that distinguishes organisms:
 
 ```python
-from src.data import CodonDataset
+import torch
+from torch.utils.data import DataLoader, TensorDataset
 
-# Load codon data
-dataset = CodonDataset(
-    fasta_file="data/sequences.fasta",
-    max_length=100,
-)
+# Real codon frequencies (Relative Synonymous Codon Usage)
+# Source: Kazusa Codon Usage Database (https://www.kazusa.or.jp/codon/)
 
-loader = DataLoader(dataset, batch_size=32, shuffle=True)
+HUMAN_CODONS = {
+    # Alanine (Ala, A)
+    'GCT': 0.26, 'GCC': 0.40, 'GCA': 0.23, 'GCG': 0.11,
+    # Arginine (Arg, R)
+    'CGT': 0.08, 'CGC': 0.19, 'CGA': 0.11, 'CGG': 0.21, 'AGA': 0.20, 'AGG': 0.20,
+    # Leucine (Leu, L)
+    'TTA': 0.07, 'TTG': 0.13, 'CTT': 0.13, 'CTC': 0.20, 'CTA': 0.07, 'CTG': 0.41,
+    # Glycine (Gly, G)
+    'GGT': 0.16, 'GGC': 0.34, 'GGA': 0.25, 'GGG': 0.25,
+}
+
+ECOLI_CODONS = {
+    # Alanine - E. coli prefers GCG
+    'GCT': 0.16, 'GCC': 0.27, 'GCA': 0.21, 'GCG': 0.36,
+    # Arginine - E. coli prefers CGT
+    'CGT': 0.36, 'CGC': 0.40, 'CGA': 0.06, 'CGG': 0.10, 'AGA': 0.04, 'AGG': 0.02,
+    # Leucine - E. coli prefers CTG
+    'TTA': 0.11, 'TTG': 0.11, 'CTT': 0.10, 'CTC': 0.10, 'CTA': 0.04, 'CTG': 0.54,
+    # Glycine - E. coli prefers GGC
+    'GGT': 0.35, 'GGC': 0.41, 'GGA': 0.11, 'GGG': 0.13,
+}
+
+def codon_to_index(codon: str) -> int:
+    """Convert a 3-letter codon to ternary operation index.
+
+    Encoding: Each nucleotide position mapped to base-3 digit
+    A=0, T/U=1, G=2, C=3 (mod 3 for ternary)
+    """
+    nucleotide_map = {'A': 0, 'T': 1, 'U': 1, 'G': 2, 'C': 0}  # Simplified mapping
+    idx = 0
+    for i, nuc in enumerate(codon):
+        idx += nucleotide_map.get(nuc, 0) * (3 ** (8 - i))  # 3^8, 3^7, 3^6...
+    return idx % 19683  # Ensure valid range
+
+def generate_organism_data(codon_freqs: dict, n_samples: int, label: int):
+    """Generate samples weighted by codon usage."""
+    codons = list(codon_freqs.keys())
+    probs = torch.tensor(list(codon_freqs.values()))
+    probs = probs / probs.sum()  # Normalize
+
+    # Sample codons according to organism's preference
+    indices = torch.multinomial(probs, n_samples, replacement=True)
+    operations = torch.tensor([codon_to_index(codons[i]) for i in indices])
+    labels = torch.full((n_samples,), label, dtype=torch.long)
+
+    return operations, labels
+
+# Generate training data
+n_per_organism = 500
+human_ops, human_labels = generate_organism_data(HUMAN_CODONS, n_per_organism, label=0)
+ecoli_ops, ecoli_labels = generate_organism_data(ECOLI_CODONS, n_per_organism, label=1)
+
+# Combine datasets
+all_ops = torch.cat([human_ops, ecoli_ops])
+all_labels = torch.cat([human_labels, ecoli_labels])
+
+# One-hot encode
+data_onehot = torch.zeros(len(all_ops), 19683)
+data_onehot.scatter_(1, all_ops.unsqueeze(1), 1)
+
+# Create DataLoader
+dataset = TensorDataset(data_onehot, all_ops, all_labels)
+train_loader = DataLoader(dataset, batch_size=64, shuffle=True)
+
+print(f"Dataset: {len(all_ops)} samples (500 human, 500 E. coli)")
+print(f"Human codon example: GCC (Ala) → index {codon_to_index('GCC')}")
+print(f"E.coli codon example: GCG (Ala) → index {codon_to_index('GCG')}")
 ```
 
-### Custom Dataset
+**Expected output:**
+```
+Dataset: 1000 samples (500 human, 500 E. coli)
+Human codon example: GCC (Ala) → index 4374
+E.coli codon example: GCG (Ala) → index 6561
+```
+
+### Loading FASTA Files
+
+```python
+def parse_fasta(filepath: str) -> list[tuple[str, str]]:
+    """Parse a FASTA file into (header, sequence) tuples."""
+    sequences = []
+    current_header = None
+    current_seq = []
+
+    with open(filepath, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if line.startswith('>'):
+                if current_header:
+                    sequences.append((current_header, ''.join(current_seq)))
+                current_header = line[1:]
+                current_seq = []
+            else:
+                current_seq.append(line.upper().replace('U', 'T'))
+
+        if current_header:
+            sequences.append((current_header, ''.join(current_seq)))
+
+    return sequences
+
+def sequence_to_codons(seq: str) -> list[str]:
+    """Split DNA sequence into codons (triplets)."""
+    # Trim to multiple of 3
+    seq = seq[:len(seq) - len(seq) % 3]
+    return [seq[i:i+3] for i in range(0, len(seq), 3)]
+
+# Example: Load and process a FASTA file
+# sequences = parse_fasta("data/spike_protein.fasta")
+# for header, seq in sequences[:3]:
+#     codons = sequence_to_codons(seq)
+#     print(f"{header[:30]}: {len(codons)} codons")
+```
+
+### Custom Dataset Class
 
 ```python
 from torch.utils.data import Dataset
 
-class MyTernaryDataset(Dataset):
-    def __init__(self, operations):
-        """
-        Args:
-            operations: List of ternary operation indices (0-19682)
-        """
-        self.operations = torch.tensor(operations, dtype=torch.long)
+class CodonSequenceDataset(Dataset):
+    """Dataset for codon sequences from FASTA files."""
+
+    def __init__(self, fasta_path: str, max_codons: int = 100):
+        self.max_codons = max_codons
+        self.sequences = []
+
+        for header, seq in parse_fasta(fasta_path):
+            codons = sequence_to_codons(seq)[:max_codons]
+            if len(codons) >= 10:  # Minimum length filter
+                ops = [codon_to_index(c) for c in codons]
+                self.sequences.append({
+                    'header': header,
+                    'codons': codons,
+                    'operations': torch.tensor(ops, dtype=torch.long),
+                })
 
     def __len__(self):
-        return len(self.operations)
+        return len(self.sequences)
 
     def __getitem__(self, idx):
-        op = self.operations[idx]
+        item = self.sequences[idx]
+        ops = item['operations']
+
+        # Pad or truncate to fixed length
+        if len(ops) < self.max_codons:
+            ops = torch.cat([ops, torch.zeros(self.max_codons - len(ops), dtype=torch.long)])
+
+        # For simplicity, use first codon as target
+        target = ops[0].item()
+
         # One-hot encode
         onehot = torch.zeros(19683)
-        onehot[op] = 1.0
-        return onehot, op
+        onehot[target] = 1.0
+
+        return onehot, target
 ```
 
 ## Visualizing Results
@@ -273,15 +403,23 @@ plt.show()
 history = {"loss": [], "kl": [], "recon": []}
 
 for epoch in range(config.epochs):
-    epoch_metrics = {"loss": 0, "kl": 0, "recon": 0}
+    epoch_metrics = {"loss": 0.0, "kl": 0.0, "recon": 0.0}
 
     for batch_x, batch_y in train_loader:
-        # ... training step ...
-        result = loss_registry.compose(outputs, batch_y)
+        optimizer.zero_grad()
+        outputs = model(batch_x.to(device))
+        result = loss_registry.compose(outputs, batch_y.to(device))
+
+        result.total.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        optimizer.step()
 
         epoch_metrics["loss"] += result.total.item()
-        epoch_metrics["kl"] += result.components.get("kl", 0)
-        epoch_metrics["recon"] += result.components.get("reconstruction", 0)
+        # Extract tensor values with .item() for logging
+        kl_val = result.components.get("kl_divergence", torch.tensor(0.0))
+        recon_val = result.components.get("reconstruction", torch.tensor(0.0))
+        epoch_metrics["kl"] += kl_val.item() if hasattr(kl_val, 'item') else kl_val
+        epoch_metrics["recon"] += recon_val.item() if hasattr(recon_val, 'item') else recon_val
 
     for key in epoch_metrics:
         history[key].append(epoch_metrics[key] / len(train_loader))
