@@ -68,6 +68,16 @@ from .zero_structure import (CombinedZeroStructureLoss, ZeroSparsityLoss,
 from .autoimmunity import (AutoimmuneCodonRegularizer, CD4CD8AwareRegularizer,
                            HUMAN_CODON_RSCU)
 
+# Co-evolution losses
+from .coevolution_loss import (
+    BiosyntheticCoherenceLoss,
+    CoEvolutionLoss,
+    CoEvolutionMetrics,
+    ErrorMinimizationLoss,
+    PAdicStructureLoss,
+    ResourceConservationLoss,
+)
+
 # Appetitive losses archived (unused in active training)
 # See src/losses/archive/appetitive_losses.py for legacy code
 
@@ -127,4 +137,11 @@ __all__ = [
     "AutoimmuneCodonRegularizer",
     "CD4CD8AwareRegularizer",
     "HUMAN_CODON_RSCU",
+    # Co-evolution losses
+    "CoEvolutionLoss",
+    "CoEvolutionMetrics",
+    "BiosyntheticCoherenceLoss",
+    "ErrorMinimizationLoss",
+    "ResourceConservationLoss",
+    "PAdicStructureLoss",
 ]

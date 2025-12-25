@@ -1,6 +1,22 @@
 from .circadian_encoder import (CircadianCycleEncoder, KaiCClockEncoder,
                                 ToroidalEmbedding)
 from .codon_encoder import CodonEncoder
+from .diffusion_encoder import (
+    DiffusionMapEncoder,
+    DiffusionMapResult,
+    DiffusionPseudotime,
+    KernelBuilder,
+    MultiscaleDiffusion,
+)
+from .geometric_vector_perceptron import (
+    CodonGVP,
+    GVPLayer,
+    GVPMessage,
+    GVPOutput,
+    PAdicGVP,
+    ProteinGVPEncoder,
+    VectorLinear,
+)
 from .holographic_encoder import (
     GraphLaplacianEncoder,
     HierarchicalProteinEmbedding,
@@ -35,4 +51,18 @@ __all__ = [
     "MultiScaleGraphFeatures",
     "PPINetworkEncoder",
     "HierarchicalProteinEmbedding",
+    # Diffusion map encoding
+    "DiffusionMapEncoder",
+    "DiffusionMapResult",
+    "DiffusionPseudotime",
+    "KernelBuilder",
+    "MultiscaleDiffusion",
+    # Geometric Vector Perceptron
+    "GVPLayer",
+    "GVPMessage",
+    "GVPOutput",
+    "VectorLinear",
+    "PAdicGVP",
+    "ProteinGVPEncoder",
+    "CodonGVP",
 ]

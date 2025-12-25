@@ -23,6 +23,16 @@ Usage:
 """
 
 from .long_covid import LongCOVIDAnalyzer, SpikeVariantComparator
+from .multiple_sclerosis import (
+    DemyelinationPrediction,
+    EpitopePair,
+    HLABindingPredictor,
+    MolecularMimicryDetector,
+    MSRiskProfile,
+    MSSubtype,
+    MultipleSclerosisAnalyzer,
+    MyelinTarget,
+)
 from .repeat_expansion import (RepeatDiseaseInfo, RepeatExpansionAnalyzer,
                                TrinucleotideRepeat)
 
@@ -32,4 +42,13 @@ __all__ = [
     "TrinucleotideRepeat",
     "LongCOVIDAnalyzer",
     "SpikeVariantComparator",
+    # Multiple Sclerosis
+    "MultipleSclerosisAnalyzer",
+    "MolecularMimicryDetector",
+    "HLABindingPredictor",
+    "MSSubtype",
+    "MyelinTarget",
+    "EpitopePair",
+    "MSRiskProfile",
+    "DemyelinationPrediction",
 ]
