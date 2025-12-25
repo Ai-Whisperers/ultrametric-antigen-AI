@@ -22,21 +22,21 @@ src/
 
 ### Functions
 
-| Function | Description |
-|----------|-------------|
-| `load_config(path, overrides)` | Load config from YAML with optional overrides |
-| `save_config(config, path)` | Save config to YAML file |
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `load_config` | `(path: str, overrides: dict = None) -> TrainingConfig` | Load config from YAML with optional overrides |
+| `save_config` | `(config: TrainingConfig, path: str) -> None` | Save config to YAML file |
 
 ### Classes
 
-| Class | Description |
-|-------|-------------|
-| `TrainingConfig` | Main training configuration |
-| `GeometryConfig` | Curvature, radius, latent_dim |
-| `OptimizerConfig` | Optimizer settings |
-| `LossWeights` | Loss component weights |
-| `RankingConfig` | Ranking loss settings |
-| `VAEConfig` | Model architecture config |
+| Class | Key Attributes | Description |
+|-------|----------------|-------------|
+| `TrainingConfig` | `epochs`, `batch_size`, `geometry`, `optimizer`, `loss_weights` | Main training configuration |
+| `GeometryConfig` | `curvature=1.0`, `max_radius=0.95`, `latent_dim=16` | Curvature, radius, latent_dim |
+| `OptimizerConfig` | `type="adamw"`, `learning_rate=0.001`, `weight_decay=0.01` | Optimizer settings |
+| `LossWeights` | `reconstruction=1.0`, `kl_divergence=1.0`, `ranking=0.5` | Loss component weights |
+| `RankingConfig` | `margin=1.0`, `n_triplets=100` | Ranking loss settings |
+| `VAEConfig` | `input_dim`, `latent_dim`, `hidden_dims` | Model architecture config |
 
 ### Constants
 
@@ -75,18 +75,18 @@ src/
 
 ### Functions
 
-| Function | Description |
-|----------|-------------|
-| `poincare_distance(x, y, c)` | Distance in Poincare ball |
-| `poincare_distance_matrix(X, Y, c)` | Pairwise distances |
-| `exp_map_zero(v, c)` | Exponential map from origin |
-| `log_map_zero(x, c)` | Logarithmic map to origin |
-| `mobius_add(x, y, c)` | Hyperbolic addition |
-| `parallel_transport(x, y, v, c)` | Transport vector |
-| `project_to_poincare(x, r_max, c)` | Clip to ball |
-| `lambda_x(x, c)` | Conformal factor |
-| `get_manifold(c)` | Get geoopt manifold |
-| `get_riemannian_optimizer(params, type, lr)` | Create optimizer |
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `poincare_distance` | `(x: Tensor, y: Tensor, curvature: float = 1.0) -> Tensor` | Distance in Poincaré ball |
+| `poincare_distance_matrix` | `(X: Tensor, Y: Tensor, curvature: float = 1.0) -> Tensor` | Pairwise distances (N×M) |
+| `exp_map_zero` | `(v: Tensor, curvature: float = 1.0) -> Tensor` | Exponential map from origin |
+| `log_map_zero` | `(x: Tensor, curvature: float = 1.0) -> Tensor` | Logarithmic map to origin |
+| `mobius_add` | `(x: Tensor, y: Tensor, curvature: float = 1.0) -> Tensor` | Hyperbolic addition (x ⊕ y) |
+| `parallel_transport` | `(x: Tensor, y: Tensor, v: Tensor, curvature: float = 1.0) -> Tensor` | Transport v from T_x to T_y |
+| `project_to_poincare` | `(x: Tensor, max_radius: float = 0.95, curvature: float = 1.0) -> Tensor` | Clip to ball |
+| `lambda_x` | `(x: Tensor, curvature: float = 1.0) -> Tensor` | Conformal factor λ(x) |
+| `get_manifold` | `(curvature: float = 1.0) -> PoincareBall` | Get geoopt manifold |
+| `get_riemannian_optimizer` | `(params, type: str = "adam", lr: float = 0.001) -> Optimizer` | Create Riemannian optimizer |
 
 ### Classes
 
