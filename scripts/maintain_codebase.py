@@ -141,9 +141,7 @@ def run_integrity_audit():
     if not missing_files:
         print("✅ No missing data dependencies found.")
     else:
-        print(
-            f"⚠️ Found {len(missing_files)} missing data references (check 'integrity_report.log' for details)."
-        )
+        print(f"⚠️ Found {len(missing_files)} missing data references (check 'integrity_report.log' for details).")
 
 
 def _check_file_integrity(path, pattern, missing_files_list):
@@ -159,9 +157,7 @@ def _check_file_integrity(path, pattern, missing_files_list):
                 if not _dependency_exists(path, filename):
                     # Only report if it looks like a local file
                     if not filename.startswith("http"):
-                        missing_files_list.append(
-                            (str(path.relative_to(PROJECT_ROOT)), filename)
-                        )
+                        missing_files_list.append((str(path.relative_to(PROJECT_ROOT)), filename))
     except Exception:
         pass
 

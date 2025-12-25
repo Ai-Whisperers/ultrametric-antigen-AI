@@ -65,8 +65,20 @@ class HyperbolicVAETrainer:
         self.model = model
         self.device = device
         self.config = config
+        self.config = config
         self.monitor = monitor or base_trainer.monitor
         self.total_epochs = config.get("total_epochs", 100)
+
+        # Explicit type hints for optional components to satisfy mypy
+        self.ranking_loss_hyp: Optional[Any] = None
+        self.hyperbolic_prior_A: Optional[Any] = None
+        self.hyperbolic_prior_B: Optional[Any] = None
+        self.hyperbolic_recon_A: Optional[Any] = None
+        self.hyperbolic_recon_B: Optional[Any] = None
+        self.centroid_loss: Optional[Any] = None
+        self.radial_stratification_A: Optional[Any] = None
+        self.radial_stratification_B: Optional[Any] = None
+        self.curriculum: Optional[Any] = None
 
         # Observability config
         self.histogram_interval = config.get("histogram_interval", 10)

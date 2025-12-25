@@ -26,19 +26,17 @@ Usage:
 
 from __future__ import annotations
 
-from typing import Dict, List, Optional, Sequence, Tuple, Union
+from typing import List, Optional, Sequence, Tuple, Union
 
-import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.axes import Axes
-from matplotlib.collections import LineCollection
 from matplotlib.colors import Colormap
 from matplotlib.figure import Figure
 from matplotlib.patches import Circle
 
-from src.visualization.config import Context, Theme, VisualizationConfig
 from src.visualization.core.base import create_figure, despine
-from src.visualization.styles.palettes import SEMANTIC, TOLVIBRANT, get_categorical_cmap
+from src.visualization.styles.palettes import (SEMANTIC, TOLVIBRANT,
+                                               get_categorical_cmap)
 
 
 def plot_poincare_disk(

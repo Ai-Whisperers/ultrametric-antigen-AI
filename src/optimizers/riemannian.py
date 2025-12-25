@@ -30,16 +30,13 @@ Usage:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, Iterable, Iterator, Optional
-
-import torch
-import torch.nn as nn
-from torch.optim import Optimizer
+from typing import Any, Dict, Iterable, Optional
 
 # geoopt is a required dependency for hyperbolic geometry
-import geoopt
+import torch
+import torch.nn as nn
 from geoopt import ManifoldParameter
-from geoopt.optim import RiemannianAdam, RiemannianSGD
+from geoopt.optim import RiemannianAdam
 
 
 @dataclass

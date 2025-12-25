@@ -33,7 +33,7 @@ from typing import Dict, Optional, Tuple
 import torch
 import torch.nn as nn
 
-from src.geometry.poincare import (PoincareModule)
+from src.geometry.poincare import PoincareModule
 
 
 class PTMType(IntEnum):

@@ -200,7 +200,13 @@ class LossRegistry(nn.Module):
         Returns:
             LossResult with total loss and all metrics
         """
-        device = outputs.get("z_A", outputs.get("logits_A")).device
+        if "z_A" in outputs:
+            device = outputs["z_A"].device
+        elif "logits_A" in outputs:
+            device = outputs["logits_A"].device
+        else:
+            # Fallback to first available tensor or default
+            device = next(iter(outputs.values())).device if outputs else torch.device("cpu")
         total_loss = torch.tensor(0.0, device=device)
         all_metrics: Dict[str, float] = {}
 
