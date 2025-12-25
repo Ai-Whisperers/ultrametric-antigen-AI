@@ -35,6 +35,7 @@ Input x ──► [FROZEN v5.5 Encoder] ──► z_euclidean (16D)
 Single responsibility: V5.11 model architecture.
 """
 
+import logging
 from pathlib import Path
 from typing import Dict, Tuple
 
@@ -43,6 +44,8 @@ import torch.nn as nn
 import torch.optim as optim
 
 from .differentiable_controller import DifferentiableController
+
+logger = logging.getLogger(__name__)
 from .hyperbolic_projection import (DualHyperbolicProjection,
                                     HyperbolicProjection)
 
@@ -318,8 +321,8 @@ class TernaryVAEV5_11(nn.Module):
         for param in self.decoder_A.parameters():
             param.requires_grad = False
 
-        print(f"Loaded v5.5 checkpoint from {checkpoint_path}")
-        print(f"  Epoch: {checkpoint.get('epoch', 'unknown')}")
+        logger.info(f"Loaded v5.5 checkpoint from {checkpoint_path}")
+        logger.info(f"  Epoch: {checkpoint.get('epoch', 'unknown')}")
 
     def reparameterize(self, mu: torch.Tensor, logvar: torch.Tensor) -> torch.Tensor:
         """Reparameterization trick."""
@@ -477,8 +480,8 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
             # Unfreeze encoder_B for exploration
             for param in self.encoder_B.parameters():
                 param.requires_grad = True
-            print("  encoder_B UNFROZEN for Option C training")
-            print(f"  encoder_B LR scale: {self.encoder_b_lr_scale}")
+            logger.info("  encoder_B UNFROZEN for Option C training")
+            logger.info(f"  encoder_B LR scale: {self.encoder_b_lr_scale}")
 
     def set_encoder_a_unfreeze(self, lr_scale: float):
         """Progressively unfreeze encoder_A with given learning rate scale.

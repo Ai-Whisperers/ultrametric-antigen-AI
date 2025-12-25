@@ -26,6 +26,7 @@ Usage:
 
 from __future__ import annotations
 
+import logging
 from typing import Dict, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
@@ -33,6 +34,8 @@ import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from mpl_toolkits.mplot3d import Axes3D
+
+logger = logging.getLogger(__name__)
 
 from src.visualization.core.base import create_figure, despine
 from src.visualization.styles.palettes import SEMANTIC, TOLVIBRANT
@@ -77,7 +80,7 @@ def project_to_2d_poincare(
             reducer = umap.UMAP(n_components=2, metric="euclidean", **kwargs)
             projected = reducer.fit_transform(embeddings)
         except ImportError:
-            print("UMAP not installed, falling back to PCA")
+            logger.warning("UMAP not installed, falling back to PCA")
             return project_to_2d_poincare(embeddings, method="pca", preserve_norms=preserve_norms)
 
     elif method == "geodesic":

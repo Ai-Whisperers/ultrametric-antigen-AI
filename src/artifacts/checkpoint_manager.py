@@ -15,12 +15,15 @@ Single responsibility: Checkpoint persistence only.
 """
 
 import copy
+import logging
 import queue
 import threading
 from pathlib import Path
 from typing import Any, Dict, Optional
 
 import torch
+
+logger = logging.getLogger(__name__)
 
 
 class AsyncCheckpointSaver:
@@ -85,7 +88,7 @@ class AsyncCheckpointSaver:
             except queue.Empty:
                 continue
             except Exception as e:
-                print(f"AsyncCheckpointSaver error: {e}")
+                logger.error(f"AsyncCheckpointSaver error: {e}")
 
     def shutdown(self, timeout: float = 10.0) -> None:
         """Shutdown the saver, waiting for pending saves.

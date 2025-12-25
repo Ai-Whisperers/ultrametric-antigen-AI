@@ -17,6 +17,7 @@ This module validates the training environment before starting:
 Single responsibility: Environment validation only.
 """
 
+import logging
 import shutil
 import sys
 from dataclasses import dataclass, field
@@ -24,6 +25,8 @@ from pathlib import Path
 from typing import TYPE_CHECKING, List, Optional
 
 import torch
+
+logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from .monitor import TrainingMonitor
@@ -113,7 +116,7 @@ def validate_environment(
         if monitor:
             monitor._log(msg)
         else:
-            print(msg)
+            logger.info(msg)
 
     # Version info
     status.python_version = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"

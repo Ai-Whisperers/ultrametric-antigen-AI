@@ -32,6 +32,7 @@ Usage:
     writer.close()
 """
 
+import logging
 import queue
 import threading
 import time
@@ -39,6 +40,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from .metrics_buffer import MetricRecord
+
+logger = logging.getLogger(__name__)
 
 # TensorBoard integration (optional)
 try:
@@ -75,7 +78,7 @@ class AsyncTensorBoardWriter:
         self._enabled = TENSORBOARD_AVAILABLE
 
         if not self._enabled:
-            print("Warning: TensorBoard not available. Install with: pip install tensorboard")
+            logger.warning("TensorBoard not available. Install with: pip install tensorboard")
             return
 
         # Generate experiment name if not provided
@@ -102,7 +105,7 @@ class AsyncTensorBoardWriter:
         self._records_written = 0
         self._flushes = 0
 
-        print(f"AsyncTensorBoardWriter: logging to {log_path}")
+        logger.info(f"AsyncTensorBoardWriter: logging to {log_path}")
 
     def write(self, records: List[MetricRecord]) -> None:
         """Queue records for async writing.
@@ -118,7 +121,7 @@ class AsyncTensorBoardWriter:
         try:
             self._queue.put_nowait(records)
         except queue.Full:
-            print(f"Warning: TensorBoard write queue full, dropping {len(records)} records")
+            logger.warning(f"TensorBoard write queue full, dropping {len(records)} records")
 
     def write_scalar(self, name: str, value: float, step: int) -> None:
         """Write a single scalar.
@@ -170,7 +173,7 @@ class AsyncTensorBoardWriter:
                     self._write_records(item)
 
             except Exception as e:
-                print(f"AsyncTensorBoardWriter error: {e}")
+                logger.error(f"AsyncTensorBoardWriter error: {e}")
 
     def _write_records(self, records: List[MetricRecord]) -> None:
         """Write records to TensorBoard (called in background thread)."""
@@ -217,7 +220,7 @@ class AsyncTensorBoardWriter:
         # Close TensorBoard writer
         self._writer.close()
 
-        print(f"AsyncTensorBoardWriter closed: {self._records_written} records, {self._flushes} flushes")
+        logger.info(f"AsyncTensorBoardWriter closed: {self._records_written} records, {self._flushes} flushes")
 
 
 class NullWriter:

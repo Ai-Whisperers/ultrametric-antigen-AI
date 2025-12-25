@@ -59,7 +59,14 @@ from .padic_losses import (PAdicMetricLoss, PAdicNormLoss, PAdicRankingLoss,
                            PAdicRankingLossHyperbolic, PAdicRankingLossV2)
 from .radial_stratification import (RadialStratificationLoss,
                                     compute_single_index_valuation)
-from .registry import LossGroup, LossRegistry, create_registry_from_config
+from .registry import (
+    LossComponentRegistry,
+    LossGroup,
+    LossRegistry,
+    create_registry_from_config,
+    create_registry_from_training_config,
+    create_registry_with_plugins,
+)
 from .zero_structure import (CombinedZeroStructureLoss, ZeroSparsityLoss,
                              ZeroValuationLoss, compute_operation_zero_count,
                              compute_operation_zero_valuation)
@@ -134,7 +141,10 @@ __all__ = [
     "DualVAELossComponent",
     "LossRegistry",
     "LossGroup",
+    "LossComponentRegistry",
     "create_registry_from_config",
+    "create_registry_from_training_config",
+    "create_registry_with_plugins",
     "ReconstructionLossComponent",
     "KLDivergenceLossComponent",
     "EntropyLossComponent",

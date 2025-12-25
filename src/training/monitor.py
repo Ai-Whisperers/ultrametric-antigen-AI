@@ -31,6 +31,9 @@ import torch
 
 from src.data.generation import generate_all_ternary_operations
 
+# Module-level logger for fallback when no file logger is configured
+_module_logger = logging.getLogger(__name__)
+
 # TensorBoard integration (optional)
 try:
     from torch.utils.tensorboard import SummaryWriter
@@ -137,7 +140,7 @@ class TrainingMonitor:
         if self.logger:
             self.logger.info(message)
         else:
-            print(message)
+            _module_logger.info(message)
 
     def update_histories(self, H_A: float, H_B: float, coverage_A: int, coverage_B: int) -> None:
         """Update all tracked histories.

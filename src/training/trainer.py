@@ -20,6 +20,7 @@ Inherits from BaseTrainer for:
 - Validation guards (handles optional val_loader)
 """
 
+import logging
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -27,6 +28,8 @@ from typing import Any, Dict, Optional
 import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader
+
+logger = logging.getLogger(__name__)
 
 from ..artifacts import CheckpointManager
 from ..losses import DualVAELoss, RadialStratificationLoss
@@ -69,11 +72,11 @@ class TernaryVAETrainer(BaseTrainer):
 
                 self.model = torch.compile(self.model, backend=backend, mode=mode, fullgraph=fullgraph)  # type: ignore
                 self.compiled = True
-                print(f"torch.compile enabled: backend={backend}, mode={mode}")
+                logger.info(f"torch.compile enabled: backend={backend}, mode={mode}")
             except Exception as e:
-                print(f"Warning: torch.compile failed ({e}), falling back to eager mode")
+                logger.warning(f"torch.compile failed ({e}), falling back to eager mode")
         elif compile_config.get("enabled", False):
-            print("Warning: torch.compile requested but not available (PyTorch < 2.0)")
+            logger.warning("torch.compile requested but not available (PyTorch < 2.0)")
 
         # Initialize optimizer
         # Ensure self.model is treated as Module for parameters()
@@ -156,22 +159,23 @@ class TernaryVAETrainer(BaseTrainer):
         self._print_init_summary()
 
     def _print_init_summary(self) -> None:
-        """Print initialization summary."""
-        print(f"\n{'='*80}")
-        print("Dual Neural VAE - Base Trainer Initialized")
-        print(f"{'='*80}")
-        print(f"Total parameters: {sum(p.numel() for p in self.model.parameters()):,}")
+        """Log initialization summary."""
+        total_params = sum(p.numel() for p in self.model.parameters())
+
+        logger.info("=" * 60)
+        logger.info("Dual Neural VAE - Base Trainer Initialized")
+        logger.info("=" * 60)
+        logger.info(f"Total parameters: {total_params:,}")
 
         if self.config["model"].get("use_statenet", True) and hasattr(self.model, "state_net") and self.model.state_net is not None:
             statenet_params = sum(p.numel() for p in self.model.state_net.parameters())
-            total_params = sum(p.numel() for p in self.model.parameters())
-            print(f"StateNet parameters: {statenet_params:,} ({statenet_params/total_params*100:.2f}%)")
+            logger.info(f"StateNet parameters: {statenet_params:,} ({statenet_params/total_params*100:.2f}%)")
 
-        print(f"Device: {self.device}")
-        print(f"Gradient balance: {self.config['model'].get('gradient_balance', True)}")
-        print(f"Adaptive scheduling: {self.config['model'].get('adaptive_scheduling', True)}")
-        print(f"StateNet enabled: {self.config['model'].get('use_statenet', True)}")
-        print(f"torch.compile: {'enabled' if self.compiled else 'disabled'}")
+        logger.info(f"Device: {self.device}")
+        logger.info(f"Gradient balance: {self.config['model'].get('gradient_balance', True)}")
+        logger.info(f"Adaptive scheduling: {self.config['model'].get('adaptive_scheduling', True)}")
+        logger.info(f"StateNet enabled: {self.config['model'].get('use_statenet', True)}")
+        logger.info(f"torch.compile: {'enabled' if self.compiled else 'disabled'}")
 
     def _check_best(self, losses: Dict[str, Any]) -> bool:
         """Check if current losses represent best model."""
@@ -520,9 +524,9 @@ class TernaryVAETrainer(BaseTrainer):
 
     def train(self, train_loader: DataLoader, val_loader: Optional[DataLoader] = None) -> None:
         """Main training loop."""
-        print(f"\n{'='*80}")
-        print("Starting Dual Neural VAE Training")
-        print(f"{'='*80}\n")
+        logger.info("=" * 60)
+        logger.info("Starting Dual Neural VAE Training")
+        logger.info("=" * 60)
 
         # Cast to Any to avoid mypy issues with torch.compile return type
         model: Any = self.model
@@ -601,7 +605,7 @@ class TernaryVAETrainer(BaseTrainer):
             self.checkpoint_manager.save_checkpoint(epoch, model, self.optimizer, metadata, is_best)
 
             if self.monitor.should_stop(self.config["patience"]):
-                print(f"\n⚠️  Early stopping triggered (patience={self.config['patience']})")
+                logger.warning(f"Early stopping triggered (patience={self.config['patience']})")
                 break
 
             coverage_plateau_patience = self.config.get("coverage_plateau_patience", 100)
@@ -611,7 +615,7 @@ class TernaryVAETrainer(BaseTrainer):
                     (self.monitor.coverage_A_history[-1] if self.monitor.coverage_A_history else 0),
                     (self.monitor.coverage_B_history[-1] if self.monitor.coverage_B_history else 0),
                 )
-                print(f"\n📊 Coverage plateaued at {current_cov/19683*100:.2f}% (no improvement for {coverage_plateau_patience} epochs)")
+                logger.info(f"Coverage plateaued at {current_cov/19683*100:.2f}% (no improvement for {coverage_plateau_patience} epochs)")
                 break
 
         self.monitor.print_training_summary()

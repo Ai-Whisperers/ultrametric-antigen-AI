@@ -29,10 +29,13 @@ Usage:
     async_writer.write(metrics)
 """
 
+import logging
 import threading
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -89,7 +92,7 @@ class MetricsBuffer:
             self._records.append(record)
 
             if len(self._records) > self._max_size and not self._overflow_warned:
-                print(f"Warning: MetricsBuffer has {len(self._records)} records. Consider draining more frequently.")
+                logger.warning(f"MetricsBuffer has {len(self._records)} records. Consider draining more frequently.")
                 self._overflow_warned = True
 
     def record_batch(

@@ -5,7 +5,7 @@
 #
 # For commercial licensing inquiries: support@aiwhisperers.com
 
-"""Loss Registry - Dynamic composition pattern.
+"""Loss Registry - Dynamic composition pattern with plugin support.
 
 This module provides a registry-based approach to loss composition
 that eliminates the God Object anti-pattern in DualVAELoss.
@@ -33,8 +33,10 @@ Benefits:
     - Easy to add/remove losses via configuration
     - Clean separation of concerns
     - No conditional spaghetti
+    - Plugin support for extensibility
 
 Usage:
+    # Standard usage
     registry = LossRegistry()
     registry.register('recon', ReconstructionLoss(weight=1.0))
     registry.register('kl', KLDivergenceLoss(weight=0.1))
@@ -46,15 +48,32 @@ Usage:
 
     # StateNet weight update
     registry.set_weight('kl', new_weight)
+
+Plugin System:
+    # Define a new loss with decorator
+    @LossComponentRegistry.register("my_custom_loss")
+    class MyCustomLoss(LossComponent):
+        ...
+
+    # Auto-discover plugins
+    LossComponentRegistry.discover_plugins(Path("plugins/losses"))
 """
 
+from __future__ import annotations
+
+import importlib
+import logging
+import pkgutil
 from collections import OrderedDict
-from typing import Any, Callable, Dict, List, Optional
+from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional, Type
 
 import torch
 import torch.nn as nn
 
 from .base import LossComponent, LossResult
+
+logger = logging.getLogger(__name__)
 
 
 class LossRegistry(nn.Module):
@@ -353,4 +372,303 @@ def create_registry_from_config(config: Dict[str, Any]) -> LossRegistry:
     return registry
 
 
-__all__ = ["LossRegistry", "LossGroup", "create_registry_from_config"]
+class LossComponentRegistry:
+    """Global registry for loss component classes with plugin support.
+
+    This class provides a decorator-based registration system that allows
+    new loss components to be added without modifying existing code.
+
+    Usage:
+        # Register a new loss component
+        @LossComponentRegistry.register("my_loss")
+        class MyLoss(LossComponent):
+            ...
+
+        # Later, create an instance
+        loss_cls = LossComponentRegistry.get("my_loss")
+        loss = loss_cls(weight=0.5)
+
+        # List all registered losses
+        print(LossComponentRegistry.list_all())
+    """
+
+    _registry: Dict[str, Type[LossComponent]] = {}
+
+    @classmethod
+    def register(cls, name: str) -> Callable[[Type[LossComponent]], Type[LossComponent]]:
+        """Decorator to register a loss component class.
+
+        Args:
+            name: Unique identifier for this loss type
+
+        Returns:
+            Decorator function
+
+        Example:
+            @LossComponentRegistry.register("custom_ranking")
+            class CustomRankingLoss(LossComponent):
+                ...
+        """
+
+        def decorator(loss_cls: Type[LossComponent]) -> Type[LossComponent]:
+            if name in cls._registry:
+                logger.warning(f"Overwriting existing loss registration: {name}")
+            cls._registry[name] = loss_cls
+            logger.debug(f"Registered loss component: {name} -> {loss_cls.__name__}")
+            return loss_cls
+
+        return decorator
+
+    @classmethod
+    def get(cls, name: str) -> Type[LossComponent]:
+        """Get a registered loss component class by name.
+
+        Args:
+            name: Loss identifier
+
+        Returns:
+            Loss component class
+
+        Raises:
+            KeyError: If loss not found
+        """
+        if name not in cls._registry:
+            available = ", ".join(cls._registry.keys())
+            raise KeyError(f"Unknown loss component: '{name}'. Available: {available}")
+        return cls._registry[name]
+
+    @classmethod
+    def list_all(cls) -> List[str]:
+        """List all registered loss component names.
+
+        Returns:
+            List of registered loss names
+        """
+        return list(cls._registry.keys())
+
+    @classmethod
+    def is_registered(cls, name: str) -> bool:
+        """Check if a loss component is registered.
+
+        Args:
+            name: Loss identifier
+
+        Returns:
+            True if registered
+        """
+        return name in cls._registry
+
+    @classmethod
+    def discover_plugins(cls, plugin_dir: Path) -> int:
+        """Auto-discover and load loss plugins from a directory.
+
+        Scans the specified directory for Python modules and imports them.
+        Any classes decorated with @LossComponentRegistry.register will
+        be automatically registered.
+
+        Args:
+            plugin_dir: Directory containing plugin modules
+
+        Returns:
+            Number of plugins loaded
+
+        Example:
+            # plugins/losses/my_custom_loss.py contains:
+            # @LossComponentRegistry.register("my_custom")
+            # class MyCustomLoss(LossComponent): ...
+
+            count = LossComponentRegistry.discover_plugins(Path("plugins/losses"))
+            print(f"Loaded {count} plugins")
+        """
+        if not plugin_dir.exists():
+            logger.warning(f"Plugin directory does not exist: {plugin_dir}")
+            return 0
+
+        loaded = 0
+        for module_info in pkgutil.iter_modules([str(plugin_dir)]):
+            try:
+                # Import the module - decorators will auto-register
+                module_name = f"plugins.losses.{module_info.name}"
+                importlib.import_module(module_name)
+                loaded += 1
+                logger.info(f"Loaded loss plugin: {module_info.name}")
+            except Exception as e:
+                logger.error(f"Failed to load plugin {module_info.name}: {e}")
+
+        return loaded
+
+    @classmethod
+    def create_from_config(
+        cls, name: str, config: Dict[str, Any], **kwargs
+    ) -> LossComponent:
+        """Create a loss component instance from configuration.
+
+        Args:
+            name: Registered loss name
+            config: Configuration dictionary
+            **kwargs: Additional constructor arguments
+
+        Returns:
+            Configured loss component instance
+        """
+        loss_cls = cls.get(name)
+
+        # Merge config with kwargs
+        all_args = {**config, **kwargs}
+
+        # Extract weight separately if present
+        weight = all_args.pop("weight", 1.0)
+
+        return loss_cls(weight=weight, **all_args)
+
+
+def create_registry_with_plugins(
+    config: Dict[str, Any],
+    plugin_dir: Optional[Path] = None,
+) -> LossRegistry:
+    """Create a LossRegistry with plugin support.
+
+    This is an enhanced version of create_registry_from_config that
+    also loads plugins from a specified directory.
+
+    Args:
+        config: Configuration dictionary
+        plugin_dir: Optional directory containing loss plugins
+
+    Returns:
+        Configured LossRegistry with plugins loaded
+    """
+    # Discover plugins first
+    if plugin_dir is not None:
+        LossComponentRegistry.discover_plugins(plugin_dir)
+
+    # Create base registry
+    registry = create_registry_from_config(config)
+
+    # Add any custom losses from config that use registered plugins
+    custom_losses = config.get("custom_losses", {})
+    for name, loss_config in custom_losses.items():
+        if not loss_config.get("enabled", True):
+            continue
+
+        loss_type = loss_config.get("type", name)
+        if LossComponentRegistry.is_registered(loss_type):
+            loss = LossComponentRegistry.create_from_config(loss_type, loss_config)
+            registry.register(name, loss, enabled=True)
+
+    return registry
+
+
+def create_registry_from_training_config(config: "TrainingConfig") -> LossRegistry:
+    """Create LossRegistry from TrainingConfig dataclass.
+
+    This bridges the new config schema (src.config.TrainingConfig) with
+    the loss registry system.
+
+    Args:
+        config: TrainingConfig instance with loss_weights and ranking config
+
+    Returns:
+        Configured LossRegistry
+
+    Example:
+        from src.config import load_config
+        from src.losses import create_registry_from_training_config
+
+        config = load_config("config.yaml")
+        registry = create_registry_from_training_config(config)
+    """
+    from .components import (
+        EntropyLossComponent,
+        KLDivergenceLossComponent,
+        PAdicHyperbolicLossComponent,
+        PAdicRankingLossComponent,
+        ReconstructionLossComponent,
+        RepulsionLossComponent,
+    )
+
+    registry = LossRegistry()
+    weights = config.loss_weights
+
+    # Reconstruction (always enabled if weight > 0)
+    if weights.reconstruction > 0:
+        registry.register(
+            "reconstruction",
+            ReconstructionLossComponent(weight=weights.reconstruction),
+            enabled=True,
+        )
+
+    # KL Divergence
+    if weights.kl_divergence > 0:
+        registry.register(
+            "kl",
+            KLDivergenceLossComponent(
+                weight=weights.kl_divergence,
+                free_bits=config.free_bits,
+            ),
+            enabled=True,
+        )
+
+    # Entropy regularization
+    if weights.entropy > 0:
+        registry.register(
+            "entropy",
+            EntropyLossComponent(weight=weights.entropy),
+            enabled=True,
+        )
+
+    # Repulsion loss
+    if weights.repulsion > 0:
+        registry.register(
+            "repulsion",
+            RepulsionLossComponent(
+                weight=weights.repulsion,
+                sigma=DEFAULT_REPULSION_SIGMA,
+            ),
+            enabled=True,
+        )
+
+    # Ranking loss (p-adic based)
+    if weights.ranking > 0:
+        ranking_cfg = {
+            "margin": config.ranking.margin,
+            "n_triplets": config.ranking.n_triplets,
+            "hard_negative_ratio": config.ranking.hard_negative_ratio,
+        }
+        registry.register(
+            "padic_ranking",
+            PAdicRankingLossComponent(weight=weights.ranking, config=ranking_cfg),
+            enabled=True,
+        )
+
+    # Hyperbolic losses
+    if weights.radial > 0 or weights.geodesic > 0:
+        hyperbolic_cfg = {
+            "weight_radial": weights.radial,
+            "weight_geodesic": weights.geodesic,
+            "curvature": config.geometry.curvature,
+            "max_radius": config.geometry.max_radius,
+        }
+        # Use radial weight as main weight if both present
+        main_weight = weights.radial if weights.radial > 0 else weights.geodesic
+        registry.register(
+            "padic_hyperbolic",
+            PAdicHyperbolicLossComponent(weight=main_weight, config=hyperbolic_cfg),
+            enabled=True,
+        )
+
+    return registry
+
+
+# Import constants for default values
+from src.config.constants import DEFAULT_REPULSION_SIGMA
+
+
+__all__ = [
+    "LossRegistry",
+    "LossGroup",
+    "LossComponentRegistry",
+    "create_registry_from_config",
+    "create_registry_with_plugins",
+    "create_registry_from_training_config",
+]

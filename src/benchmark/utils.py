@@ -12,12 +12,15 @@ to eliminate code duplication (D1.5 from DUPLICATION_REPORT).
 """
 
 import json
+import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict
 
 import numpy as np
 import torch
 import yaml
+
+logger = logging.getLogger(__name__)
 
 from src.data import generate_all_ternary_operations
 
@@ -144,16 +147,16 @@ def load_checkpoint_safe(
 
     checkpoint_path = Path(checkpoint_dir)
     if not checkpoint_path.exists():
-        print("No checkpoint found, using random initialization")
+        logger.info("No checkpoint found, using random initialization")
         return {"epoch": "init"}
 
     try:
         manager = CheckpointManager(checkpoint_path)
         checkpoint = manager.load_checkpoint(model, checkpoint_name=checkpoint_name, device=device)
-        print(f"Loaded checkpoint from epoch {checkpoint['epoch']}")
+        logger.info(f"Loaded checkpoint from epoch {checkpoint['epoch']}")
         return checkpoint
     except Exception as e:
-        print(f"Could not load checkpoint: {e}")
+        logger.warning(f"Could not load checkpoint: {e}")
         return {"epoch": "init"}
 
 
@@ -181,5 +184,5 @@ def save_results(
     with open(output_file, "w") as f:
         json.dump(convert_to_python_types(results), f, indent=2)
 
-    print(f"\nResults saved to: {output_file}")
+    logger.info(f"Results saved to: {output_file}")
     return output_file

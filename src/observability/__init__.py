@@ -37,9 +37,22 @@ Benefits:
 
 from .async_writer import AsyncTensorBoardWriter, NullWriter, create_writer
 from .coverage import CoverageEvaluator, CoverageStats, evaluate_model_coverage
+from .logging import (
+    ColoredFormatter,
+    LogContext,
+    StructuredFormatter,
+    get_logger,
+    setup_logging,
+)
 from .metrics_buffer import MetricRecord, MetricsBuffer, ScopedMetrics
 
 __all__ = [
+    # Logging
+    "setup_logging",
+    "get_logger",
+    "LogContext",
+    "StructuredFormatter",
+    "ColoredFormatter",
     # Metrics buffer
     "MetricsBuffer",
     "MetricRecord",

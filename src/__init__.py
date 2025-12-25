@@ -11,31 +11,54 @@ This package implements Dual Neural VAEs for learning 3-adic algebraic
 structure in ternary operation space using hyperbolic geometry.
 
 Key modules:
+- config: Centralized configuration (constants, schema, loader)
 - models: VAE architectures (canonical v5.11 with frozen encoder)
 - losses: Loss functions including p-adic geodesic loss
-- training: Trainers, schedulers, monitoring
+- training: Trainers, schedulers, monitoring, callbacks
 - data: Ternary operation generation and datasets
 - metrics: Hyperbolic correlation metrics
+- observability: Logging, metrics buffer, async TensorBoard writer
 """
 
 __version__ = "5.11.0"
 __author__ = "AI Whisperers"
 __license__ = "PolyForm-Noncommercial-1.0.0"
 
+# Configuration (new centralized system)
+from .config import TrainingConfig, load_config, save_config
+
 # Data
 from .data import TernaryOperationDataset, generate_all_ternary_operations
+
+# Losses (registry pattern)
+from .losses import (
+    LossRegistry,
+    create_registry_from_config,
+    create_registry_from_training_config,
+)
+
 # Metrics
 from .metrics import compute_ranking_correlation_hyperbolic
+
 # Canonical model (V5.11)
 from .models.ternary_vae import TernaryVAEV5_11, TernaryVAEV5_11_OptionC
+
 # Training
 from .training import HyperbolicVAETrainer, TernaryVAETrainer, TrainingMonitor
+from .training.callbacks import CallbackList, EarlyStoppingCallback, CheckpointCallback
+
+# Observability
+from .observability import setup_logging, get_logger, MetricsBuffer
 
 # Canonical aliases (after imports)
 TernaryVAE = TernaryVAEV5_11
 TernaryVAE_OptionC = TernaryVAEV5_11_OptionC
 
 __all__ = [
+    # Configuration
+    "TrainingConfig",
+    "load_config",
+    "save_config",
     # Canonical (V5.11)
     "TernaryVAE",
     "TernaryVAE_OptionC",
@@ -44,10 +67,21 @@ __all__ = [
     # Data
     "generate_all_ternary_operations",
     "TernaryOperationDataset",
+    # Losses
+    "LossRegistry",
+    "create_registry_from_config",
+    "create_registry_from_training_config",
     # Training
     "TernaryVAETrainer",
     "HyperbolicVAETrainer",
     "TrainingMonitor",
+    "CallbackList",
+    "EarlyStoppingCallback",
+    "CheckpointCallback",
+    # Observability
+    "setup_logging",
+    "get_logger",
+    "MetricsBuffer",
     # Metrics
     "compute_ranking_correlation_hyperbolic",
 ]
