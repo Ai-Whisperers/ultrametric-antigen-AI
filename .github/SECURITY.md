@@ -14,13 +14,17 @@ If you discover a security vulnerability in this project, please report it respo
 
 ### How to Report
 
-1. **DO NOT** open a public GitHub issue for security vulnerabilities
-2. Email us at: **support@aiwhisperers.com**
-3. Include:
+Please use GitHub's **Private Vulnerability Reporting** feature. This allows you to open a secure, private issue that only repository maintainers can see.
+
+1. Navigate to the [Security tab](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics/security).
+2. Click the **Report a vulnerability** button.
+3. In your report, please include:
    - Description of the vulnerability
    - Steps to reproduce
    - Potential impact
    - Suggested fix (if any)
+
+We strictly prefer this method over email. If absolutely necessary, you may contact us at **support@aiwhisperers.com**.
 
 ### What to Expect
 

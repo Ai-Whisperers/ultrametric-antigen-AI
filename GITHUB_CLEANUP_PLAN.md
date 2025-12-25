@@ -61,7 +61,7 @@ All branches have been merged into `main` and deleted.
 
 **Recommended settings (GitHub → Settings → Branches → Add rule):**
 
-```
+```yaml
 Branch name pattern: main
 
 [x] Require a pull request before merging
@@ -254,6 +254,8 @@ Add these topics in GitHub → Settings → General → Topics:
 - [x] Moved `THEORY_ANALYSIS_SUMMARY.md` to `DOCUMENTATION/`
 - [x] Moved `integrity_report.md` to `reports/`
 - [x] Configured `cspell.json` to use `project-words.txt`
+- [x] Moved Community Health Files to `.github/`
+- [x] Updated `SECURITY.md` to direct users to GitHub Private Reporting
 
 ---
 

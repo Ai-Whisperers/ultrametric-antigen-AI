@@ -1,0 +1,145 @@
+{
+  "generated_at": "2025-12-18T17:50:56.351624",
+  "description": "AlphaFold 3 inputs for HIV glycan sentinel validation",
+  "research_context": {
+    "hypothesis": "Deglycosylation at sentinel glycans exposes bnAb epitopes",
+    "inverse_goldilocks": "PTM removal (not addition) shifts into immunogenic zone",
+    "goldilocks_zone": "15-30% centroid shift predicts optimal epitope exposure",
+    "validation_goal": "Structural confirmation of epitope accessibility changes"
+  },
+  "sequence": {
+    "name": "BG505 SOSIP.664 gp120",
+    "length": 476,
+    "total_glycans": 24,
+    "goldilocks_glycans": 7
+  },
+  "top_sentinel_candidates": [
+    {
+      "name": "N58",
+      "position": 58,
+      "region": "V1",
+      "centroid_shift": "22.4%",
+      "goldilocks_zone": "goldilocks",
+      "score": 1.192659854888916
+    },
+    {
+      "name": "N429",
+      "position": 429,
+      "region": "C5",
+      "centroid_shift": "22.6%",
+      "goldilocks_zone": "goldilocks",
+      "score": 1.1894853115081787
+    },
+    {
+      "name": "N103",
+      "position": 103,
+      "region": "V2",
+      "centroid_shift": "23.7%",
+      "goldilocks_zone": "goldilocks",
+      "score": 1.0356947183609009
+    },
+    {
+      "name": "N204",
+      "position": 204,
+      "region": "V3",
+      "centroid_shift": "25.1%",
+      "goldilocks_zone": "goldilocks",
+      "score": 0.8546427488327026
+    },
+    {
+      "name": "N246",
+      "position": 246,
+      "region": "C3",
+      "centroid_shift": "30.0%",
+      "goldilocks_zone": "above",
+      "score": 0.6997739672660828
+    },
+    {
+      "name": "N152",
+      "position": 152,
+      "region": "C2",
+      "centroid_shift": "30.6%",
+      "goldilocks_zone": "above",
+      "score": 0.6862139701843262
+    },
+    {
+      "name": "N155",
+      "position": 155,
+      "region": "C2",
+      "centroid_shift": "31.2%",
+      "goldilocks_zone": "above",
+      "score": 0.6702560782432556
+    },
+    {
+      "name": "N232",
+      "position": 232,
+      "region": "C3",
+      "centroid_shift": "31.6%",
+      "goldilocks_zone": "above",
+      "score": 0.6609336137771606
+    },
+    {
+      "name": "N324",
+      "position": 324,
+      "region": "C4",
+      "centroid_shift": "32.1%",
+      "goldilocks_zone": "above",
+      "score": 0.6482730507850647
+    },
+    {
+      "name": "N360",
+      "position": 360,
+      "region": "C4",
+      "centroid_shift": "33.2%",
+      "goldilocks_zone": "above",
+      "score": 0.6207066774368286
+    }
+  ],
+  "files": {
+    "wild_type": [
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\wild_type\\BG505_gp120_WT.json"
+    ],
+    "single_deglyc": [
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\single_deglyc\\BG505_deglyc_N58.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\single_deglyc\\BG505_deglyc_N429.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\single_deglyc\\BG505_deglyc_N103.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\single_deglyc\\BG505_deglyc_N204.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\single_deglyc\\BG505_deglyc_N246.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\single_deglyc\\BG505_deglyc_N152.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\single_deglyc\\BG505_deglyc_N155.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\single_deglyc\\BG505_deglyc_N232.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\single_deglyc\\BG505_deglyc_N324.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\single_deglyc\\BG505_deglyc_N360.json"
+    ],
+    "multi_deglyc": [
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\multi_deglyc\\BG505_deglyc_all_goldilocks.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\multi_deglyc\\BG505_deglyc_region_C3.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\multi_deglyc\\BG505_deglyc_region_C2.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\multi_deglyc\\BG505_deglyc_region_C4.json"
+    ],
+    "comparison": [
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\comparison\\BG505_cmp_N58.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\comparison\\BG505_cmp_N429.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\comparison\\BG505_cmp_N103.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\comparison\\BG505_cmp_N204.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\comparison\\BG505_cmp_N246.json"
+    ]
+  },
+  "total_files": 20,
+  "recommended_jobs": {
+    "priority_1": "wild_type/BG505_gp120_WT.json",
+    "priority_2": [
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\single_deglyc\\BG505_deglyc_N58.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\single_deglyc\\BG505_deglyc_N429.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\hiv\\glycan_shield\\alphafold3_inputs\\single_deglyc\\BG505_deglyc_N103.json"
+    ],
+    "priority_3": "multi_deglyc/BG505_deglyc_all_goldilocks.json"
+  },
+  "expected_analyses": [
+    "Compare WT vs single deglyc RMSD at glycan site",
+    "Measure solvent-accessible surface area changes",
+    "Identify newly exposed epitope regions",
+    "Map to known bnAb footprints (VRC01, PGT121, etc.)",
+    "Validate Goldilocks prediction accuracy"
+  ]
+}
