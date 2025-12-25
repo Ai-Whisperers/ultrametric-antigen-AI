@@ -33,8 +33,9 @@ from scipy.ndimage import gaussian_filter
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.models.ternary_vae_v5_6 import DualNeuralVAEV5
-from src.models.ternary_vae_v5_10 import DualNeuralVAEV5_10
+# V5.11 is the canonical model - imports V5.6/V5.10 aliases for backwards compatibility
+from src.models import TernaryVAE as DualNeuralVAEV5
+from src.models import TernaryVAE as DualNeuralVAEV5_10
 from src.data.generation import generate_all_ternary_operations
 
 

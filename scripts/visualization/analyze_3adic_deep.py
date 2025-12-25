@@ -29,7 +29,8 @@ import matplotlib.pyplot as plt
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.models.ternary_vae_v5_6 import DualNeuralVAEV5
+# V5.11 is the canonical model - alias for backwards compatibility
+from src.models import TernaryVAE as DualNeuralVAEV5
 from src.data.generation import generate_all_ternary_operations
 
 
