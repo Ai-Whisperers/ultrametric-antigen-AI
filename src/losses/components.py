@@ -23,7 +23,7 @@ import torch
 import torch.nn.functional as F
 
 from .base import DualVAELossComponent, LossComponent, LossResult
-from .padic_losses import PAdicRankingLossHyperbolic, PAdicRankingLossV2
+from .padic import PAdicRankingLossHyperbolic, PAdicRankingLossV2
 
 
 class ReconstructionLossComponent(LossComponent):

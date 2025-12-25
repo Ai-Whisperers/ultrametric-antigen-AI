@@ -185,16 +185,16 @@ def extract_embeddings(checkpoints, device="cpu", force=False):
         print("  Use --force to regenerate")
         return load_checkpoint_compat(embeddings_path, map_location=device)
 
-    # Load model
+    # Load model - use default hidden_dim=64 to match checkpoint
     print("  Loading model...")
     model = TernaryVAEV5_11_OptionC(
         latent_dim=16,
-        hidden_dim=128,
+        hidden_dim=64,  # Must match checkpoint
         max_radius=0.95,
         curvature=1.0,
         use_dual_projection=True,
-        n_projection_layers=2,
-        projection_dropout=0.1,
+        n_projection_layers=1,  # Must match checkpoint
+        projection_dropout=0.0,  # Must match checkpoint
         freeze_encoder_b=False,
         encoder_b_lr_scale=0.1,
     )
@@ -354,12 +354,12 @@ def find_natural_positions(embeddings, force=False):
             "source": "V5.11 embeddings",
             "n_positions": len(positions),
             "n_clusters": n_clusters,
-            "separation_ratio": separation_ratio,
+            "separation_ratio": float(separation_ratio),
             "timestamp": datetime.now().isoformat(),
         },
-        "positions": positions,
-        "labels": labels,
-        "clusters": {str(k): v for k, v in cluster_to_positions.items()},
+        "positions": [int(p) for p in positions],  # Convert to native Python int
+        "labels": [int(l) for l in labels],
+        "clusters": {str(k): [int(p) for p in v] for k, v in cluster_to_positions.items()},
         "cluster_sizes": CLUSTER_SIZES,
         "degeneracy_pattern": CLUSTER_SIZES,
     }
@@ -468,12 +468,15 @@ def train_codon_encoder(embeddings, positions_data, force=False):
                 center = z_B_hyp[pos_list].mean(dim=0)
                 model.cluster_centers[cluster_id] = center
 
-    # Train
-    optimizer = optim.Adam(model.parameters(), lr=0.01)
-    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, 500)
+    # Train with gradient clipping and lower LR
+    optimizer = optim.Adam(model.parameters(), lr=0.005, weight_decay=1e-5)
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, 300)
 
-    print("  Training for 500 epochs...")
-    for epoch in range(500):
+    print("  Training for 300 epochs...")
+    best_acc = 0.0
+    best_state = None
+
+    for epoch in range(300):
         model.train()
         optimizer.zero_grad()
 
@@ -482,15 +485,17 @@ def train_codon_encoder(embeddings, positions_data, force=False):
         # Classification loss
         loss_cluster = F.cross_entropy(cluster_logits, codon_clusters)
 
-        # Contrastive loss
+        # Simplified contrastive loss with clamping for stability
         loss_contrastive = torch.tensor(0.0)
         for i, j in positive_pairs:
             d = poincare_distance(embeddings_out[i:i+1], embeddings_out[j:j+1])
+            d = torch.clamp(d, 0, 10)  # Clamp for stability
             loss_contrastive = loss_contrastive + d.pow(2)
 
         n_neg = min(len(negative_pairs), len(positive_pairs) * 2)
         for i, j in negative_pairs[:n_neg]:
             d = poincare_distance(embeddings_out[i:i+1], embeddings_out[j:j+1])
+            d = torch.clamp(d, 0, 10)  # Clamp for stability
             loss_contrastive = loss_contrastive + F.relu(2.0 - d).pow(2)
 
         loss_contrastive = loss_contrastive / (len(positive_pairs) + n_neg)
@@ -503,18 +508,36 @@ def train_codon_encoder(embeddings, positions_data, force=False):
             loss_center = loss_center + d.pow(2)
         loss_center = loss_center / len(codon_clusters)
 
-        # Total loss
+        # Total loss with NaN check
         loss = loss_cluster + 0.5 * loss_contrastive + 0.3 * loss_center
 
+        if torch.isnan(loss):
+            print(f"    Epoch {epoch}: NaN detected, stopping early")
+            if best_state is not None:
+                model.load_state_dict(best_state)
+            break
+
         loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
         optimizer.step()
         scheduler.step()
 
-        if epoch % 100 == 0 or epoch == 499:
-            with torch.no_grad():
-                preds = cluster_logits.argmax(dim=1)
-                acc = (preds == codon_clusters).float().mean().item()
+        # Track best model
+        with torch.no_grad():
+            preds = cluster_logits.argmax(dim=1)
+            acc = (preds == codon_clusters).float().mean().item()
+
+        if acc > best_acc:
+            best_acc = acc
+            best_state = {k: v.clone() for k, v in model.state_dict().items()}
+
+        if epoch % 50 == 0 or epoch == 299:
             print(f"    Epoch {epoch:3d}: loss={loss.item():.4f}, acc={acc*100:.1f}%")
+
+    # Restore best model
+    if best_state is not None:
+        model.load_state_dict(best_state)
+        print(f"  Restored best model with accuracy: {best_acc*100:.1f}%")
 
     # Evaluate
     model.eval()

@@ -29,8 +29,13 @@ import torch.nn.functional as F
 from .hyperbolic_prior import HomeostaticHyperbolicPrior, HyperbolicPrior
 from .hyperbolic_recon import (HomeostaticReconLoss, HyperbolicCentroidLoss,
                                HyperbolicReconLoss)
-from .padic_losses import (PAdicMetricLoss, PAdicNormLoss, PAdicRankingLoss,
-                           PAdicRankingLossHyperbolic, PAdicRankingLossV2)
+from .padic import (
+    PAdicMetricLoss,
+    PAdicNormLoss,
+    PAdicRankingLoss,
+    PAdicRankingLossHyperbolic,
+    PAdicRankingLossV2,
+)
 
 
 class ReconstructionLoss(nn.Module):

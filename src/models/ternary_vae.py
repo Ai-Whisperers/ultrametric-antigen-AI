@@ -36,6 +36,7 @@ Single responsibility: V5.11 model architecture.
 """
 
 import logging
+import pickle
 from pathlib import Path
 from typing import Dict, Tuple
 
@@ -44,6 +45,28 @@ import torch.nn as nn
 import torch.optim as optim
 
 from .differentiable_controller import DifferentiableController
+
+
+# Fix for numpy version compatibility in torch checkpoints
+class _NumpyBackwardsCompatUnpickler(pickle.Unpickler):
+    """Custom unpickler to handle numpy._core -> numpy.core renaming."""
+
+    def find_class(self, module, name):
+        if module.startswith("numpy._core"):
+            module = module.replace("numpy._core", "numpy.core")
+        return super().find_class(module, name)
+
+
+def _load_checkpoint_compat(path, map_location="cpu"):
+    """Load a checkpoint with numpy version compatibility."""
+    try:
+        return torch.load(path, map_location=map_location, weights_only=False)
+    except ModuleNotFoundError as e:
+        if "numpy._core" in str(e):
+            with open(path, "rb") as f:
+                unpickler = _NumpyBackwardsCompatUnpickler(f)
+                return unpickler.load()
+        raise
 
 logger = logging.getLogger(__name__)
 from .hyperbolic_projection import (DualHyperbolicProjection,
@@ -295,7 +318,7 @@ class TernaryVAEV5_11(nn.Module):
             checkpoint_path: Path to v5.5 checkpoint file
             device: Device to load to
         """
-        checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
+        checkpoint = _load_checkpoint_compat(checkpoint_path, map_location=device)
         model_state = checkpoint["model"]
 
         # Load encoder_A

@@ -13,13 +13,17 @@ from typing import Dict, Optional, Tuple, Union
 import numpy as np
 import torch
 
+from src.config.constants import N_TERNARY_OPERATIONS
 
-def evaluate_coverage(samples: torch.Tensor, total_operations: int = 19683) -> Tuple[int, float]:
+
+def evaluate_coverage(
+    samples: torch.Tensor, total_operations: int = N_TERNARY_OPERATIONS
+) -> Tuple[int, float]:
     """Evaluate operation coverage from generated samples.
 
     Args:
         samples: Generated samples, shape (N, 9)
-        total_operations: Total possible operations (3^9 = 19683)
+        total_operations: Total possible operations (default: N_TERNARY_OPERATIONS)
 
     Returns:
         Tuple of (unique_count, coverage_percentage)
@@ -257,9 +261,9 @@ class CoverageTracker:
             "current_coverage_A": current_A,
             "current_coverage_B": current_B,
             "current_coverage_union": current_union,
-            "current_coverage_pct": (current_union / 19683) * 100,
+            "current_coverage_pct": (current_union / N_TERNARY_OPERATIONS) * 100,
             "best_coverage": self.best_coverage,
-            "best_coverage_pct": (self.best_coverage / 19683) * 100,
+            "best_coverage_pct": (self.best_coverage / N_TERNARY_OPERATIONS) * 100,
             "best_epoch": self.best_epoch,
             "improvement_rate": improvement_rate,
             "epochs_tracked": len(self.history["epoch"]),
@@ -279,6 +283,6 @@ class CoverageTracker:
             return False
 
         recent = self.history["coverage_union"][-patience:]
-        improvement = (recent[-1] - recent[0]) / 19683
+        improvement = (recent[-1] - recent[0]) / N_TERNARY_OPERATIONS
 
         return improvement < min_delta

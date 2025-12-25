@@ -34,6 +34,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from src.geometry import project_to_poincare as geometry_project_to_poincare
+
 
 class MismatchType(Enum):
     """Types of mismatches in CRISPR targeting."""
@@ -273,16 +275,15 @@ class HyperbolicOfftargetEmbedder(nn.Module):
     def project_to_poincare(self, x: torch.Tensor) -> torch.Tensor:
         """Project to Poincaré ball.
 
+        Delegates to geometry module for single source of truth.
+
         Args:
             x: Input tensor
 
         Returns:
             Projected tensor with norm < max_norm
         """
-        norm = x.norm(dim=-1, keepdim=True)
-        scale = self.max_norm / (norm + 1e-8)
-        scale = torch.minimum(scale, torch.ones_like(scale))
-        return x * scale
+        return geometry_project_to_poincare(x, max_norm=self.max_norm, c=self.curvature)
 
     def encode_sequence(self, sequences: list[str]) -> torch.Tensor:
         """Encode multiple sequences.

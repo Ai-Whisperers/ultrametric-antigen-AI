@@ -5,47 +5,48 @@
 #
 # For commercial licensing inquiries: support@aiwhisperers.com
 
-"""Training monitoring and logging.
+"""Training monitoring and logging (composition facade).
 
-This module handles training progress monitoring:
-- Loss and metrics logging (batch-level and epoch-level)
-- Coverage evaluation and tracking
-- Training history management
-- TensorBoard visualization (local, IP-safe)
-- Persistent file logging
-- v5.10 hyperbolic metrics support
+This module provides a unified TrainingMonitor that composes:
+- MetricsTracker: History and best value tracking
+- TensorBoardLogger: TensorBoard visualization
+- FileLogger: File and console logging
+- CoverageEvaluator: Model coverage evaluation
 
-Single responsibility: Monitoring and logging only.
+The TrainingMonitor maintains backward-compatible API while
+delegating to specialized components for each concern.
+
+Single responsibility: Orchestrating monitoring components.
 """
 
+from __future__ import annotations
+
 import datetime
-import logging
-import random
-import sys
-from collections import defaultdict  # noqa: F401
-from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import numpy as np
 import torch
 
-from src.data.generation import generate_all_ternary_operations
-
-# Module-level logger for fallback when no file logger is configured
-_module_logger = logging.getLogger(__name__)
-
-# TensorBoard integration (optional)
-try:
-    from torch.utils.tensorboard import SummaryWriter
-
-    TENSORBOARD_AVAILABLE = True
-except ImportError:
-    TENSORBOARD_AVAILABLE = False
-    SummaryWriter = None  # type: ignore[misc,assignment]
+from .monitoring import (
+    CoverageEvaluator,
+    FileLogger,
+    MetricsTracker,
+    TensorBoardLogger,
+)
 
 
 class TrainingMonitor:
-    """Monitors and logs training progress with unified observability."""
+    """Monitors and logs training progress with unified observability.
+
+    Composes specialized components for each monitoring concern
+    while maintaining a backward-compatible API.
+
+    Attributes:
+        metrics: MetricsTracker for history and best values
+        tensorboard: TensorBoardLogger for visualization
+        file_logger: FileLogger for file/console output
+        coverage_evaluator: CoverageEvaluator for model evaluation
+        experiment_name: Name of this experiment
+    """
 
     def __init__(
         self,
@@ -59,8 +60,8 @@ class TrainingMonitor:
 
         Args:
             eval_num_samples: Number of samples for coverage evaluation
-            tensorboard_dir: Base directory for TensorBoard logs (default: runs/)
-            experiment_name: Name for this experiment run (auto-generated if None)
+            tensorboard_dir: Base directory for TensorBoard logs
+            experiment_name: Name for this experiment run
             log_dir: Directory for persistent log files
             log_to_file: Whether to enable file logging
         """
@@ -71,78 +72,126 @@ class TrainingMonitor:
             experiment_name = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         self.experiment_name = experiment_name
 
-        # Training history
-        self.best_val_loss = float("inf")
-        self.patience_counter = 0
+        # Initialize components
+        self.metrics = MetricsTracker()
+        self.file_logger = FileLogger(
+            log_dir=log_dir,
+            experiment_name=experiment_name,
+            log_to_file=log_to_file,
+        )
+        self.tensorboard = TensorBoardLogger(
+            tensorboard_dir=tensorboard_dir,
+            experiment_name=experiment_name,
+            log_callback=self._log,
+        )
+        self.coverage_evaluator = CoverageEvaluator(num_samples=eval_num_samples)
 
-        # Coverage tracking
-        self.coverage_A_history: List[int] = []
-        self.coverage_B_history: List[int] = []
+    # =========================================================================
+    # Delegation properties for backward compatibility
+    # =========================================================================
 
-        # Entropy tracking
-        self.H_A_history: List[float] = []
-        self.H_B_history: List[float] = []
+    @property
+    def best_val_loss(self) -> float:
+        """Best validation loss seen."""
+        return self.metrics.best_val_loss
 
-        # v5.10 Hyperbolic metrics tracking
-        self.correlation_hyp_history: List[float] = []
-        self.correlation_euc_history: List[float] = []
-        self.best_corr_hyp = 0.0
-        self.best_corr_euc = 0.0
-        self.best_coverage = 0.0
+    @best_val_loss.setter
+    def best_val_loss(self, value: float) -> None:
+        self.metrics.best_val_loss = value
 
-        # Batch/step counter for TensorBoard
-        self.global_step = 0
-        self.batches_per_epoch = 0
+    @property
+    def patience_counter(self) -> int:
+        """Early stopping patience counter."""
+        return self.metrics.patience_counter
 
-        # Setup file logging
-        self.logger = self._setup_file_logging(log_dir, experiment_name) if log_to_file and log_dir else None
+    @patience_counter.setter
+    def patience_counter(self, value: int) -> None:
+        self.metrics.patience_counter = value
 
-        # TensorBoard setup
-        self.writer: Optional[SummaryWriter] = None
-        if TENSORBOARD_AVAILABLE and tensorboard_dir is not None:
-            log_path = Path(tensorboard_dir) / f"ternary_vae_{experiment_name}"
-            self.writer = SummaryWriter(str(log_path))
-            self._log(f"TensorBoard logging to: {log_path}")
-        elif tensorboard_dir is not None and not TENSORBOARD_AVAILABLE:
-            self._log("Warning: TensorBoard requested but not installed " "(pip install tensorboard)")
+    @property
+    def coverage_A_history(self) -> List[int]:
+        """VAE-A coverage history."""
+        return self.metrics.coverage_A_history
 
-    def _setup_file_logging(self, log_dir: str, experiment_name: str) -> logging.Logger:
-        """Setup persistent file logging."""
-        log_path = Path(log_dir)
-        log_path.mkdir(parents=True, exist_ok=True)
+    @property
+    def coverage_B_history(self) -> List[int]:
+        """VAE-B coverage history."""
+        return self.metrics.coverage_B_history
 
-        log_file = log_path / f"training_{experiment_name}.log"
+    @property
+    def H_A_history(self) -> List[float]:
+        """VAE-A entropy history."""
+        return self.metrics.H_A_history
 
-        logger = logging.getLogger(f"ternary_vae_{experiment_name}")
-        logger.setLevel(logging.INFO)
-        logger.handlers.clear()
+    @property
+    def H_B_history(self) -> List[float]:
+        """VAE-B entropy history."""
+        return self.metrics.H_B_history
 
-        # File handler with timestamps
-        file_handler = logging.FileHandler(log_file, encoding="utf-8")
-        file_handler.setLevel(logging.INFO)
-        file_formatter = logging.Formatter("%(asctime)s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
-        file_handler.setFormatter(file_formatter)
+    @property
+    def correlation_hyp_history(self) -> List[float]:
+        """Hyperbolic correlation history."""
+        return self.metrics.correlation_hyp_history
 
-        # Console handler without timestamps (cleaner output)
-        console_handler = logging.StreamHandler(sys.stdout)
-        console_handler.setLevel(logging.INFO)
-        console_formatter = logging.Formatter("%(message)s")
-        console_handler.setFormatter(console_formatter)
+    @property
+    def correlation_euc_history(self) -> List[float]:
+        """Euclidean correlation history."""
+        return self.metrics.correlation_euc_history
 
-        logger.addHandler(file_handler)
-        logger.addHandler(console_handler)
+    @property
+    def best_corr_hyp(self) -> float:
+        """Best hyperbolic correlation."""
+        return self.metrics.best_corr_hyp
 
-        logger.info(f"Logging to: {log_file}")
-        return logger
+    @property
+    def best_corr_euc(self) -> float:
+        """Best Euclidean correlation."""
+        return self.metrics.best_corr_euc
+
+    @property
+    def best_coverage(self) -> float:
+        """Best coverage percentage."""
+        return self.metrics.best_coverage
+
+    @property
+    def global_step(self) -> int:
+        """Global batch step counter."""
+        return self.metrics.global_step
+
+    @property
+    def batches_per_epoch(self) -> int:
+        """Batches per epoch."""
+        return self.metrics.batches_per_epoch
+
+    @batches_per_epoch.setter
+    def batches_per_epoch(self, value: int) -> None:
+        self.metrics.batches_per_epoch = value
+
+    @property
+    def writer(self):
+        """TensorBoard SummaryWriter (for direct access)."""
+        return self.tensorboard.writer
+
+    @property
+    def logger(self):
+        """Python logger instance."""
+        return self.file_logger.logger
+
+    # =========================================================================
+    # Logging methods
+    # =========================================================================
 
     def _log(self, message: str) -> None:
         """Log message to both file and console."""
-        if self.logger:
-            self.logger.info(message)
-        else:
-            _module_logger.info(message)
+        self.file_logger.log(message)
 
-    def update_histories(self, H_A: float, H_B: float, coverage_A: int, coverage_B: int) -> None:
+    def update_histories(
+        self,
+        H_A: float,
+        H_B: float,
+        coverage_A: int,
+        coverage_B: int,
+    ) -> None:
         """Update all tracked histories.
 
         Args:
@@ -151,10 +200,7 @@ class TrainingMonitor:
             coverage_A: VAE-A coverage count
             coverage_B: VAE-B coverage count
         """
-        self.H_A_history.append(H_A)
-        self.H_B_history.append(H_B)
-        self.coverage_A_history.append(coverage_A)
-        self.coverage_B_history.append(coverage_B)
+        self.metrics.update_histories(H_A, H_B, coverage_A, coverage_B)
 
     def log_batch(
         self,
@@ -168,7 +214,7 @@ class TrainingMonitor:
         kl_B: float = 0.0,
         log_interval: int = 10,
     ) -> None:
-        """Log batch-level metrics for real-time observability.
+        """Log batch-level metrics.
 
         Args:
             epoch: Current epoch
@@ -181,20 +227,13 @@ class TrainingMonitor:
             kl_B: VAE-B KL divergence
             log_interval: Log every N batches
         """
-        self.global_step += 1
+        step = self.metrics.increment_step()
 
-        # Log to TensorBoard every batch for real-time graphs
-        if self.writer is not None:
-            self.writer.add_scalar("Batch/Loss", loss, self.global_step)
-            self.writer.add_scalar("Batch/CE_A", ce_A, self.global_step)
-            self.writer.add_scalar("Batch/CE_B", ce_B, self.global_step)
-            self.writer.add_scalar("Batch/KL_A", kl_A, self.global_step)
-            self.writer.add_scalar("Batch/KL_B", kl_B, self.global_step)
+        # TensorBoard batch logging
+        self.tensorboard.log_batch(step, loss, ce_A, ce_B, kl_A, kl_B)
 
-        # Log to console/file at intervals
-        if batch_idx % log_interval == 0 or batch_idx == total_batches - 1:
-            progress = (batch_idx + 1) / total_batches * 100
-            self._log(f"  [Epoch {epoch}] Batch {batch_idx+1}/{total_batches} " f"({progress:.0f}%) | Loss: {loss:.4f}")
+        # Console/file batch logging
+        self.file_logger.log_batch(epoch, batch_idx, total_batches, loss, log_interval)
 
     def log_hyperbolic_batch(
         self,
@@ -204,22 +243,15 @@ class TrainingMonitor:
         hyp_kl_B: float = 0.0,
         centroid_loss: float = 0.0,
     ) -> None:
-        """Log v5.10 hyperbolic metrics at batch level.
-
-        Args:
-            ranking_loss: Hyperbolic ranking loss
-            radial_loss: Radial hierarchy loss
-            hyp_kl_A: Hyperbolic KL for VAE-A
-            hyp_kl_B: Hyperbolic KL for VAE-B
-            centroid_loss: Frechet centroid loss
-        """
-        if self.writer is not None:
-            self.writer.add_scalar("Batch/HypRankingLoss", ranking_loss, self.global_step)
-            self.writer.add_scalar("Batch/RadialLoss", radial_loss, self.global_step)
-            self.writer.add_scalar("Batch/HypKL_A", hyp_kl_A, self.global_step)
-            self.writer.add_scalar("Batch/HypKL_B", hyp_kl_B, self.global_step)
-            self.writer.add_scalar("Batch/CentroidLoss", centroid_loss, self.global_step)
-            # P0 FIX: Removed per-call flush() - will flush once at epoch end
+        """Log v5.10 hyperbolic metrics at batch level."""
+        self.tensorboard.log_hyperbolic_batch(
+            self.metrics.global_step,
+            ranking_loss,
+            radial_loss,
+            hyp_kl_A,
+            hyp_kl_B,
+            centroid_loss,
+        )
 
     def log_hyperbolic_epoch(
         self,
@@ -238,98 +270,27 @@ class TrainingMonitor:
         centroid_loss: float = 0.0,
         homeostatic_metrics: Optional[Dict[str, float]] = None,
     ) -> None:
-        """Log v5.10 hyperbolic metrics at epoch level.
+        """Log v5.10 hyperbolic metrics at epoch level."""
+        # Update correlation tracking
+        self.metrics.update_correlation(corr_A_hyp, corr_B_hyp, corr_A_euc, corr_B_euc)
 
-        Args:
-            epoch: Current epoch
-            corr_A_hyp: VAE-A hyperbolic correlation
-            corr_B_hyp: VAE-B hyperbolic correlation
-            corr_A_euc: VAE-A Euclidean correlation
-            corr_B_euc: VAE-B Euclidean correlation
-            mean_radius_A: VAE-A mean latent radius
-            mean_radius_B: VAE-B mean latent radius
-            ranking_weight: Current ranking loss weight
-            ranking_loss: Hyperbolic ranking loss
-            radial_loss: Radial hierarchy loss
-            hyp_kl_A: Hyperbolic KL for VAE-A
-            hyp_kl_B: Hyperbolic KL for VAE-B
-            centroid_loss: Frechet centroid loss
-            homeostatic_metrics: Dict of homeostatic adaptation metrics
-        """
-        corr_mean_hyp = (corr_A_hyp + corr_B_hyp) / 2
-        corr_mean_euc = (corr_A_euc + corr_B_euc) / 2
-
-        # Update tracking
-        self.correlation_hyp_history.append(corr_mean_hyp)
-        self.correlation_euc_history.append(corr_mean_euc)
-
-        if corr_mean_hyp > self.best_corr_hyp:
-            self.best_corr_hyp = corr_mean_hyp
-        if corr_mean_euc > self.best_corr_euc:
-            self.best_corr_euc = corr_mean_euc
-
-        # Log to TensorBoard
-        if self.writer is not None:
-            self.writer.add_scalars(
-                "Hyperbolic/Correlation_Hyp",
-                {
-                    "VAE_A": corr_A_hyp,
-                    "VAE_B": corr_B_hyp,
-                    "Mean": corr_mean_hyp,
-                },
-                epoch,
-            )
-
-            self.writer.add_scalars(
-                "Hyperbolic/Correlation_Euc",
-                {
-                    "VAE_A": corr_A_euc,
-                    "VAE_B": corr_B_euc,
-                    "Mean": corr_mean_euc,
-                },
-                epoch,
-            )
-
-            self.writer.add_scalars(
-                "Hyperbolic/MeanRadius",
-                {"VAE_A": mean_radius_A, "VAE_B": mean_radius_B},
-                epoch,
-            )
-
-            self.writer.add_scalar("Hyperbolic/RankingWeight", ranking_weight, epoch)
-            self.writer.add_scalar("Hyperbolic/RankingLoss", ranking_loss, epoch)
-            self.writer.add_scalar("Hyperbolic/RadialLoss", radial_loss, epoch)
-
-            # v5.10 specific
-            self.writer.add_scalars(
-                "v5.10/HyperbolicKL",
-                {"VAE_A": hyp_kl_A, "VAE_B": hyp_kl_B},
-                epoch,
-            )
-            self.writer.add_scalar("v5.10/CentroidLoss", centroid_loss, epoch)
-
-            # Homeostatic metrics
-            if homeostatic_metrics:
-                if "prior_sigma_A" in homeostatic_metrics:
-                    self.writer.add_scalars(
-                        "v5.10/HomeostaticSigma",
-                        {
-                            "VAE_A": homeostatic_metrics.get("prior_sigma_A", 1.0),
-                            "VAE_B": homeostatic_metrics.get("prior_sigma_B", 1.0),
-                        },
-                        epoch,
-                    )
-                if "prior_curvature_A" in homeostatic_metrics:
-                    self.writer.add_scalars(
-                        "v5.10/HomeostaticCurvature",
-                        {
-                            "VAE_A": homeostatic_metrics.get("prior_curvature_A", 2.0),
-                            "VAE_B": homeostatic_metrics.get("prior_curvature_B", 2.0),
-                        },
-                        epoch,
-                    )
-
-            # P0 FIX: Removed per-call flush() - will flush once at epoch end
+        # TensorBoard logging
+        self.tensorboard.log_hyperbolic_epoch(
+            epoch,
+            corr_A_hyp,
+            corr_B_hyp,
+            corr_A_euc,
+            corr_B_euc,
+            mean_radius_A,
+            mean_radius_B,
+            ranking_weight,
+            ranking_loss,
+            radial_loss,
+            hyp_kl_A,
+            hyp_kl_B,
+            centroid_loss,
+            homeostatic_metrics,
+        )
 
     def log_epoch_summary(
         self,
@@ -353,119 +314,50 @@ class TrainingMonitor:
         radial_loss: float = 0.0,
         homeostatic_metrics: Optional[Dict[str, float]] = None,
     ) -> None:
-        """Log comprehensive epoch summary to file and console.
+        """Log comprehensive epoch summary."""
+        # Update best coverage tracking
+        self.metrics.update_coverage(cov_A, cov_B)
 
-        Args:
-            epoch: Current epoch
-            total_epochs: Total epochs
-            loss: Total loss
-            cov_A: VAE-A coverage percentage
-            cov_B: VAE-B coverage percentage
-            corr_A_hyp: VAE-A hyperbolic correlation
-            corr_B_hyp: VAE-B hyperbolic correlation
-            corr_A_euc: VAE-A Euclidean correlation
-            corr_B_euc: VAE-B Euclidean correlation
-            mean_radius_A: VAE-A mean latent radius
-            mean_radius_B: VAE-B mean latent radius
-            ranking_weight: Current ranking loss weight
-            coverage_evaluated: Whether coverage was freshly evaluated
-            correlation_evaluated: Whether correlation was freshly evaluated
-            hyp_kl_A: Hyperbolic KL for VAE-A
-            hyp_kl_B: Hyperbolic KL for VAE-B
-            centroid_loss: Frechet centroid loss
-            radial_loss: Radial hierarchy loss
-            homeostatic_metrics: Dict of homeostatic adaptation metrics
-        """
-        current_coverage = (cov_A + cov_B) / 2
-        if current_coverage > self.best_coverage:
-            self.best_coverage = current_coverage
-
-        cov_status = "FRESH" if coverage_evaluated else "cached"
-        corr_status = "FRESH" if correlation_evaluated else "cached"
-
-        self._log(f"\nEpoch {epoch}/{total_epochs}")
-        self._log(f"  Loss: {loss:.4f} | Ranking Weight: {ranking_weight:.3f}")
-        self._log(f"  Coverage [{cov_status}]: A={cov_A:.1f}% B={cov_B:.1f}% " f"(best={self.best_coverage:.1f}%)")
-        self._log(f"  3-Adic Correlation [{corr_status}] (Hyp): " f"A={corr_A_hyp:.3f} B={corr_B_hyp:.3f} " f"(best={self.best_corr_hyp:.3f})")
-
-        if correlation_evaluated:
-            self._log(f"  3-Adic Correlation (Euclidean): " f"A={corr_A_euc:.3f} B={corr_B_euc:.3f}")
-
-        self._log(f"  Mean Radius: A={mean_radius_A:.3f} B={mean_radius_B:.3f}")
-
-        if radial_loss > 0:
-            self._log(f"  Radial Loss: {radial_loss:.4f}")
-
-        if hyp_kl_A > 0:
-            self._log(f"  Hyperbolic KL: A={hyp_kl_A:.4f} B={hyp_kl_B:.4f}")
-
-        if centroid_loss > 0:
-            self._log(f"  Centroid Loss: {centroid_loss:.4f}")
-
-        if homeostatic_metrics:
-            if "prior_sigma_A" in homeostatic_metrics:
-                self._log(f"  Homeostatic Sigma: " f"A={homeostatic_metrics['prior_sigma_A']:.3f} " f"B={homeostatic_metrics['prior_sigma_B']:.3f}")
-            if "prior_curvature_A" in homeostatic_metrics:
-                self._log(
-                    f"  Homeostatic Curvature: "
-                    f"A={homeostatic_metrics['prior_curvature_A']:.3f} "
-                    f"B={homeostatic_metrics['prior_curvature_B']:.3f}"
-                )
+        # File/console logging
+        self.file_logger.log_epoch_summary(
+            epoch,
+            total_epochs,
+            loss,
+            cov_A,
+            cov_B,
+            corr_A_hyp,
+            corr_B_hyp,
+            corr_A_euc,
+            corr_B_euc,
+            mean_radius_A,
+            mean_radius_B,
+            ranking_weight,
+            self.metrics.best_coverage,
+            self.metrics.best_corr_hyp,
+            coverage_evaluated,
+            correlation_evaluated,
+            hyp_kl_A,
+            hyp_kl_B,
+            centroid_loss,
+            radial_loss,
+            homeostatic_metrics,
+        )
 
     def check_best(self, val_loss: float) -> bool:
-        """Check if current validation loss is best.
-
-        Args:
-            val_loss: Current validation loss
-
-        Returns:
-            True if this is the best loss so far
-        """
-        is_best = val_loss < self.best_val_loss
-        if is_best:
-            self.best_val_loss = val_loss
-            self.patience_counter = 0
-        else:
-            self.patience_counter += 1
-        return is_best
+        """Check if current validation loss is best."""
+        return self.metrics.check_best(val_loss)
 
     def should_stop(self, patience: int) -> bool:
-        """Check if early stopping criterion is met.
+        """Check if early stopping criterion is met."""
+        return self.metrics.should_stop(patience)
 
-        Args:
-            patience: Patience threshold
-
-        Returns:
-            True if should stop training
-        """
-        return self.patience_counter >= patience
-
-    def has_coverage_plateaued(self, patience: int = 50, min_delta: float = 0.001) -> bool:
-        """Check if coverage improvement has plateaued.
-
-        Useful for manifold approach where 100% coverage is the goal.
-        Triggers when coverage improvement over `patience` epochs
-        is below threshold.
-
-        Args:
-            patience: Number of epochs to check for improvement
-            min_delta: Minimum improvement fraction required (relative to 19683 total ops)
-
-        Returns:
-            True if coverage has plateaued, False otherwise
-        """
-        if len(self.coverage_A_history) < patience:
-            return False
-
-        # Use max of A and B as coverage metric
-        recent_A = self.coverage_A_history[-patience:]
-        recent_B = self.coverage_B_history[-patience:]
-        recent_max = [max(a, b) for a, b in zip(recent_A, recent_B)]
-
-        # Compute improvement as fraction of total operations
-        improvement = (recent_max[-1] - recent_max[0]) / 19683
-
-        return improvement < min_delta
+    def has_coverage_plateaued(
+        self,
+        patience: int = 50,
+        min_delta: float = 0.001,
+    ) -> bool:
+        """Check if coverage improvement has plateaued."""
+        return self.metrics.has_coverage_plateaued(patience, min_delta)
 
     def evaluate_coverage(
         self,
@@ -474,40 +366,8 @@ class TrainingMonitor:
         device: str,
         vae: str = "A",
     ) -> tuple[int, float]:
-        """Evaluate operation coverage.
-
-        P0 FIX: Vectorized implementation using torch.unique.
-        Reduces 500+ GPU syncs to 1 sync per batch.
-
-        Args:
-            model: Model to evaluate
-            num_samples: Number of samples to generate
-            device: Device to run on
-            vae: Which VAE to evaluate ('A' or 'B')
-
-        Returns:
-            Tuple of (unique_count, coverage_percentage)
-        """
-        model.eval()
-
-        with torch.no_grad():
-            batch_size = 1000
-            num_batches = max(1, num_samples // batch_size)
-
-            # Collect all samples first (on GPU)
-            all_samples_list: List[torch.Tensor] = []
-            for _ in range(num_batches):
-                samples = model.sample(batch_size, device, vae)
-                samples_rounded = torch.round(samples).long()
-                all_samples_list.append(samples_rounded)
-
-            # Concatenate and find unique (vectorized, single GPU→CPU transfer)
-            all_samples = torch.cat(all_samples_list, dim=0)
-            unique_samples = torch.unique(all_samples, dim=0)
-            unique_count = unique_samples.size(0)
-
-        coverage_pct = (unique_count / 19683) * 100
-        return unique_count, coverage_pct
+        """Evaluate operation coverage."""
+        return self.coverage_evaluator.evaluate(model, device, vae, num_samples)
 
     def log_epoch(
         self,
@@ -523,63 +383,21 @@ class TrainingMonitor:
         use_statenet: bool,
         grad_balance_achieved: bool,
     ) -> None:
-        """Log epoch results to console and file.
-
-        Args:
-            epoch: Current epoch
-            total_epochs: Total epochs
-            train_losses: Training losses dict
-            val_losses: Validation losses dict
-            unique_A: VAE-A unique operations
-            cov_A: VAE-A coverage percentage
-            unique_B: VAE-B unique operations
-            cov_B: VAE-B coverage percentage
-            is_best: Whether this is best validation loss
-            use_statenet: Whether StateNet is enabled
-            grad_balance_achieved: Whether gradient balance is achieved
-        """
-        self._log(f"\nEpoch {epoch}/{total_epochs}")
-        self._log(f"  Loss: Train={train_losses['loss']:.4f} " f"Val={val_losses['loss']:.4f}")
-        self._log(f"  VAE-A: CE={train_losses['ce_A']:.4f} " f"KL={train_losses['kl_A']:.4f} " f"H={train_losses['H_A']:.3f}")
-        self._log(f"  VAE-B: CE={train_losses['ce_B']:.4f} " f"KL={train_losses['kl_B']:.4f} " f"H={train_losses['H_B']:.3f}")
-        self._log(f"  Weights: l1={train_losses['lambda1']:.3f} " f"l2={train_losses['lambda2']:.3f} " f"l3={train_losses['lambda3']:.3f}")
-        self._log(f"  Phase {train_losses['phase']}: " f"rho={train_losses['rho']:.3f} " f"(balance: {'Y' if grad_balance_achieved else 'N'})")
-        self._log(f"  Grad: ratio={train_losses['grad_ratio']:.3f} EMA_a={train_losses['ema_momentum']:.2f}")
-        self._log(
-            f"  Temp: A={train_losses['temp_A']:.3f} "
-            f"B={train_losses['temp_B']:.3f} | "
-            f"beta: A={train_losses['beta_A']:.3f} "
-            f"B={train_losses['beta_B']:.3f}"
+        """Log epoch results to console and file."""
+        self.file_logger.log_epoch(
+            epoch,
+            total_epochs,
+            train_losses,
+            val_losses,
+            unique_A,
+            cov_A,
+            unique_B,
+            cov_B,
+            is_best,
+            self.metrics.best_val_loss,
+            use_statenet,
+            grad_balance_achieved,
         )
-
-        if use_statenet and "lr_corrected" in train_losses:
-            self._log(
-                f"  LR: {train_losses['lr_scheduled']:.6f} -> " f"{train_losses['lr_corrected']:.6f} " f"(d={train_losses.get('delta_lr', 0):+.3f})"
-            )
-            self._log(
-                f"  StateNet: dl1={train_losses.get('delta_lambda1', 0):+.3f} "
-                f"dl2={train_losses.get('delta_lambda2', 0):+.3f} "
-                f"dl3={train_losses.get('delta_lambda3', 0):+.3f}"
-            )
-        else:
-            self._log(f"  LR: {train_losses['lr_scheduled']:.6f}")
-
-        self._log(f"  Coverage: A={unique_A} ({cov_A:.2f}%) | " f"B={unique_B} ({cov_B:.2f}%)")
-
-        # p-Adic losses (Phase 1A/1B)
-        has_padic = train_losses.get("padic_metric_A", 0) > 0 or train_losses.get("padic_ranking_A", 0) > 0 or train_losses.get("padic_norm_A", 0) > 0
-        if has_padic:
-            parts = []
-            if train_losses.get("padic_metric_A", 0) > 0:
-                parts.append(f"metric=" f"{train_losses.get('padic_metric_A', 0):.4f}/" f"{train_losses.get('padic_metric_B', 0):.4f}")
-            if train_losses.get("padic_ranking_A", 0) > 0:
-                parts.append(f"rank=" f"{train_losses.get('padic_ranking_A', 0):.4f}/" f"{train_losses.get('padic_ranking_B', 0):.4f}")
-            if train_losses.get("padic_norm_A", 0) > 0:
-                parts.append(f"norm=" f"{train_losses.get('padic_norm_A', 0):.4f}/" f"{train_losses.get('padic_norm_B', 0):.4f}")
-            self._log(f"  p-Adic: {' '.join(parts)}")
-
-        if is_best:
-            self._log(f"  Best val loss: {self.best_val_loss:.4f}")
 
     def log_tensorboard(
         self,
@@ -591,151 +409,20 @@ class TrainingMonitor:
         cov_A: float,
         cov_B: float,
     ) -> None:
-        """Log metrics to TensorBoard.
-
-        Args:
-            epoch: Current epoch
-            train_losses: Training losses dict
-            val_losses: Validation losses dict
-            unique_A: VAE-A unique operations
-            unique_B: VAE-B unique operations
-            cov_A: VAE-A coverage percentage
-            cov_B: VAE-B coverage percentage
-        """
-        if self.writer is None:
-            return
-
-        # Primary losses (grouped comparison)
-        self.writer.add_scalars(
-            "Loss/Total",
-            {"train": train_losses["loss"], "val": val_losses["loss"]},
+        """Log metrics to TensorBoard."""
+        self.tensorboard.log_epoch(
             epoch,
+            train_losses,
+            val_losses,
+            unique_A,
+            unique_B,
+            cov_A,
+            cov_B,
         )
-
-        # VAE-A metrics
-        self.writer.add_scalar("VAE_A/CrossEntropy", train_losses["ce_A"], epoch)
-        self.writer.add_scalar("VAE_A/KL_Divergence", train_losses["kl_A"], epoch)
-        self.writer.add_scalar("VAE_A/Entropy", train_losses["H_A"], epoch)
-        self.writer.add_scalar("VAE_A/Coverage_Count", unique_A, epoch)
-        self.writer.add_scalar("VAE_A/Coverage_Pct", cov_A, epoch)
-
-        # VAE-B metrics
-        self.writer.add_scalar("VAE_B/CrossEntropy", train_losses["ce_B"], epoch)
-        self.writer.add_scalar("VAE_B/KL_Divergence", train_losses["kl_B"], epoch)
-        self.writer.add_scalar("VAE_B/Entropy", train_losses["H_B"], epoch)
-        self.writer.add_scalar("VAE_B/Coverage_Count", unique_B, epoch)
-        self.writer.add_scalar("VAE_B/Coverage_Pct", cov_B, epoch)
-
-        # Comparative metrics
-        self.writer.add_scalars(
-            "Compare/Entropy",
-            {"VAE_A": train_losses["H_A"], "VAE_B": train_losses["H_B"]},
-            epoch,
-        )
-        self.writer.add_scalars("Compare/Coverage", {"VAE_A": cov_A, "VAE_B": cov_B}, epoch)
-
-        # Training dynamics
-        self.writer.add_scalar("Dynamics/Phase", train_losses["phase"], epoch)
-        self.writer.add_scalar("Dynamics/Rho", train_losses["rho"], epoch)
-        self.writer.add_scalar("Dynamics/GradRatio", train_losses["grad_ratio"], epoch)
-        self.writer.add_scalar("Dynamics/EMA_Momentum", train_losses["ema_momentum"], epoch)
-
-        # Lambda weights
-        self.writer.add_scalars(
-            "Lambdas",
-            {
-                "lambda1": train_losses["lambda1"],
-                "lambda2": train_losses["lambda2"],
-                "lambda3": train_losses["lambda3"],
-            },
-            epoch,
-        )
-
-        # Temperature scheduling
-        self.writer.add_scalars(
-            "Temperature",
-            {"VAE_A": train_losses["temp_A"], "VAE_B": train_losses["temp_B"]},
-            epoch,
-        )
-
-        # Beta scheduling
-        self.writer.add_scalars(
-            "Beta",
-            {"VAE_A": train_losses["beta_A"], "VAE_B": train_losses["beta_B"]},
-            epoch,
-        )
-
-        # Learning rate
-        self.writer.add_scalar("LR/Scheduled", train_losses["lr_scheduled"], epoch)
-        if "lr_corrected" in train_losses:
-            self.writer.add_scalar("LR/Corrected", train_losses["lr_corrected"], epoch)
-            self.writer.add_scalar("LR/Delta", train_losses.get("delta_lr", 0), epoch)
-
-        # StateNet corrections (if enabled)
-        if "delta_lambda1" in train_losses:
-            self.writer.add_scalars(
-                "StateNet/Deltas",
-                {
-                    "delta_lr": train_losses.get("delta_lr", 0),
-                    "delta_lambda1": train_losses.get("delta_lambda1", 0),
-                    "delta_lambda2": train_losses.get("delta_lambda2", 0),
-                    "delta_lambda3": train_losses.get("delta_lambda3", 0),
-                },
-                epoch,
-            )
-
-        # p-Adic losses (Phase 1A/1B from implement.md)
-        has_padic = train_losses.get("padic_metric_A", 0) > 0 or train_losses.get("padic_ranking_A", 0) > 0 or train_losses.get("padic_norm_A", 0) > 0
-        if has_padic:
-            if train_losses.get("padic_metric_A", 0) > 0:
-                self.writer.add_scalars(
-                    "PAdicLoss/Metric",
-                    {
-                        "VAE_A": train_losses.get("padic_metric_A", 0),
-                        "VAE_B": train_losses.get("padic_metric_B", 0),
-                    },
-                    epoch,
-                )
-            if train_losses.get("padic_ranking_A", 0) > 0:
-                self.writer.add_scalars(
-                    "PAdicLoss/Ranking",
-                    {
-                        "VAE_A": train_losses.get("padic_ranking_A", 0),
-                        "VAE_B": train_losses.get("padic_ranking_B", 0),
-                    },
-                    epoch,
-                )
-            if train_losses.get("padic_norm_A", 0) > 0:
-                self.writer.add_scalars(
-                    "PAdicLoss/Norm",
-                    {
-                        "VAE_A": train_losses.get("padic_norm_A", 0),
-                        "VAE_B": train_losses.get("padic_norm_B", 0),
-                    },
-                    epoch,
-                )
-
-        # P0 FIX: Single flush per epoch (was 3-5 flushes before)
-        # This is the ONLY flush point for epoch-level metrics
-        self.writer.flush()
 
     def log_histograms(self, epoch: int, model: torch.nn.Module) -> None:
-        """Log model weight histograms to TensorBoard.
-
-        Args:
-            epoch: Current epoch
-            model: Model to log weights from
-        """
-        if self.writer is None:
-            return
-
-        for name, param in model.named_parameters():
-            if param.requires_grad:
-                self.writer.add_histogram(f"Weights/{name}", param.data, epoch)
-                if param.grad is not None:
-                    self.writer.add_histogram(f"Gradients/{name}", param.grad, epoch)
-
-        # P0 FIX: Removed immediate flush - will flush with epoch end or close()
+        """Log model weight histograms to TensorBoard."""
+        self.tensorboard.log_histograms(epoch, model)
 
     def log_manifold_embedding(
         self,
@@ -745,186 +432,26 @@ class TrainingMonitor:
         n_samples: int = 5000,
         include_all: bool = False,
     ) -> None:
-        """Log latent embeddings to TensorBoard for 3D visualization.
-
-        Uses TensorBoard's embedding projector for interactive PCA/t-SNE/UMAP
-        visualization of the latent space with 3-adic structure metadata.
-
-        Args:
-            model: The VAE model to encode samples
-            epoch: Current epoch for step tracking
-            device: Device to run inference on
-            n_samples: Number of samples to embed (default 5000 for performance)
-            include_all: If True, embed all 19,683 operations (slower)
-        """
-        if self.writer is None:
-            return
-
-        model.eval()
-
-        # Generate operations
-        all_operations = generate_all_ternary_operations()
-        total_ops = len(all_operations)
-
-        # Sample or use all
-        if include_all or n_samples >= total_ops:
-            indices = list(range(total_ops))
-        else:
-            indices = sorted(random.sample(range(total_ops), n_samples))
-
-        operations = all_operations[np.array(indices)]  # Efficient numpy indexing
-        x = torch.from_numpy(operations).float().to(device)
-
-        with torch.no_grad():
-            # Forward pass - handle both v5.6 and v5.10 models
-            outputs = model(x, 1.0, 1.0, 0.5, 0.5)
-            z_A = outputs["z_A"]  # (n_samples, latent_dim)
-            z_B = outputs["z_B"]
-
-            # Project to Poincaré ball for visualization
-            z_A_norm = torch.norm(z_A, dim=1, keepdim=True)
-            z_A_poincare = z_A / (1 + z_A_norm) * 0.95
-
-            z_B_norm = torch.norm(z_B, dim=1, keepdim=True)
-            z_B_poincare = z_B / (1 + z_B_norm) * 0.95
-
-        # Compute 3-adic metadata for each operation
-        metadata = []
-        metadata_header = [
-            "index",
-            "prefix_1",  # First trit (3 values)
-            "prefix_2",  # First 2 trits (9 values)
-            "prefix_3",  # First 3 trits (27 values)
-            "tree_depth",  # 3-adic depth from origin
-            "radius_A",  # Poincaré radius
-            "radius_B",
-        ]
-
-        for idx, op_idx in enumerate(indices):
-            # 3-adic prefix hierarchy
-            prefix_1 = op_idx % 3
-            prefix_2 = op_idx % 9
-            prefix_3 = op_idx % 27
-
-            # 3-adic valuation from 0 (tree depth)
-            depth = self._compute_3adic_depth(op_idx)
-
-            # Poincaré radii
-            r_A = z_A_norm[idx, 0].item()
-            r_B = z_B_norm[idx, 0].item()
-
-            metadata.append(
-                [
-                    str(op_idx),
-                    str(prefix_1),
-                    str(prefix_2),
-                    str(prefix_3),
-                    str(depth),
-                    f"{r_A:.3f}",
-                    f"{r_B:.3f}",
-                ]
-            )
-
-        # Log VAE-A embeddings (Euclidean)
-        self.writer.add_embedding(
-            z_A.cpu(),
-            metadata=metadata,
-            metadata_header=metadata_header,
-            global_step=epoch,
-            tag="Embedding/VAE_A_Euclidean",
+        """Log latent embeddings to TensorBoard."""
+        self.tensorboard.log_manifold_embedding(
+            model, epoch, device, n_samples, include_all
         )
-
-        # Log VAE-A embeddings (Poincaré projected)
-        self.writer.add_embedding(
-            z_A_poincare.cpu(),
-            metadata=metadata,
-            metadata_header=metadata_header,
-            global_step=epoch,
-            tag="Embedding/VAE_A_Poincare",
-        )
-
-        # Log VAE-B embeddings (Euclidean)
-        self.writer.add_embedding(
-            z_B.cpu(),
-            metadata=metadata,
-            metadata_header=metadata_header,
-            global_step=epoch,
-            tag="Embedding/VAE_B_Euclidean",
-        )
-
-        # Log VAE-B embeddings (Poincaré projected)
-        self.writer.add_embedding(
-            z_B_poincare.cpu(),
-            metadata=metadata,
-            metadata_header=metadata_header,
-            global_step=epoch,
-            tag="Embedding/VAE_B_Poincare",
-        )
-
-        self.writer.flush()
-        self._log(f"Logged {len(indices)} embeddings to TensorBoard (epoch {epoch})")
-
-    def _compute_3adic_depth(self, n: int) -> int:
-        """Compute 3-adic valuation (tree depth) of integer n.
-
-        Returns the largest k such that 3^k divides n.
-        For n=0, returns 9 (maximum depth for 3^9 space).
-
-        Args:
-            n: Integer index
-
-        Returns:
-            3-adic valuation (depth in tree)
-        """
-        if n == 0:
-            return 9  # Origin has maximum depth
-
-        depth = 0
-        while n % 3 == 0:
-            depth += 1
-            n //= 3
-        return depth
 
     def close(self) -> None:
         """Close TensorBoard writer and flush all pending events."""
-        if self.writer is not None:
-            self.writer.close()
-            self._log("TensorBoard writer closed")
+        self.tensorboard.close()
 
     def get_metadata(self) -> Dict[str, Any]:
-        """Get all tracked metadata for checkpointing.
-
-        Returns:
-            Dict of all tracked metrics and history
-        """
-        return {
-            "best_val_loss": self.best_val_loss,
-            "H_A_history": self.H_A_history,
-            "H_B_history": self.H_B_history,
-            "coverage_A_history": self.coverage_A_history,
-            "coverage_B_history": self.coverage_B_history,
-            "correlation_hyp_history": self.correlation_hyp_history,
-            "correlation_euc_history": self.correlation_euc_history,
-            "best_corr_hyp": self.best_corr_hyp,
-            "best_corr_euc": self.best_corr_euc,
-            "best_coverage": self.best_coverage,
-            "global_step": self.global_step,
-        }
+        """Get all tracked metadata for checkpointing."""
+        return self.metrics.get_metadata()
 
     def print_training_summary(self) -> None:
         """Print training completion summary."""
-        self._log(f"\n{'='*80}")
-        self._log("Training Complete")
-        self._log(f"{'='*80}")
-        self._log(f"Best val loss: {self.best_val_loss:.4f}")
-        self._log(f"Best hyperbolic correlation: {self.best_corr_hyp:.4f}")
-        self._log(f"Best Euclidean correlation: {self.best_corr_euc:.4f}")
-        self._log(f"Best coverage: {self.best_coverage:.2f}%")
-
-        if self.coverage_A_history:
-            final_cov_A = self.coverage_A_history[-1]
-            final_cov_B = self.coverage_B_history[-1]
-            self._log(f"Final Coverage: A={final_cov_A} " f"({final_cov_A/19683*100:.2f}%)")
-            self._log(f"                B={final_cov_B} " f"({final_cov_B/19683*100:.2f}%)")
-
-        self._log("Target: r > 0.99, coverage > 99.7%")
+        self.file_logger.print_training_summary(
+            self.metrics.best_val_loss,
+            self.metrics.best_corr_hyp,
+            self.metrics.best_corr_euc,
+            self.metrics.best_coverage,
+            self.metrics.coverage_A_history,
+            self.metrics.coverage_B_history,
+        )

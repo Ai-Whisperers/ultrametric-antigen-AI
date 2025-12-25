@@ -26,15 +26,19 @@ from typing import Any, Dict, List, Optional
 
 import torch
 
-from ..losses.consequence_predictor import (ConsequencePredictor,
-                                            evaluate_addition_accuracy)
+from ..config.constants import N_TERNARY_OPERATIONS
+from ..losses.consequence_predictor import ConsequencePredictor, evaluate_addition_accuracy
 from ..losses.hyperbolic_prior import HomeostaticHyperbolicPrior
-from ..losses.hyperbolic_recon import (HomeostaticReconLoss,
-                                       HyperbolicCentroidLoss)
-from ..losses.padic_losses import PAdicRankingLossHyperbolic
+from ..losses.hyperbolic_recon import HomeostaticReconLoss, HyperbolicCentroidLoss
+from ..losses.padic import PAdicRankingLossHyperbolic
 from ..losses.radial_stratification import RadialStratificationLoss
 from ..metrics.hyperbolic import compute_ranking_correlation_hyperbolic
 from ..models.curriculum import ContinuousCurriculumModule
+from .feedback import (
+    ContinuousFeedbackController,
+    CorrelationEarlyStop,
+    ExplorationBoostController,
+)
 from .monitor import TrainingMonitor
 
 
@@ -86,8 +90,8 @@ class HyperbolicVAETrainer:
         self.embedding_n_samples = config.get("embedding_n_samples", 5000)
         self.log_interval = config.get("log_interval", 10)
 
-        # Initialize continuous feedback
-        self._init_continuous_feedback(config)
+        # Initialize feedback controllers (extracted to dedicated modules)
+        self._init_feedback_controllers(config)
 
         # Initialize hyperbolic loss modules
         self._init_hyperbolic_losses(config, device)
@@ -97,8 +101,7 @@ class HyperbolicVAETrainer:
         self._init_curriculum(config, device)
         self._init_consequence_predictor(config, device)
 
-        # P2 FIX: Initialize exploration boost and correlation loss
-        self._init_exploration_boost(config)
+        # P2 FIX: Initialize correlation loss config
         self._init_correlation_loss(config)
 
         # Initialize evaluation intervals and caching
@@ -117,101 +120,25 @@ class HyperbolicVAETrainer:
         self.best_corr_euc = 0.0
         self.best_coverage = 0.0
 
-    def _init_continuous_feedback(self, config: Dict[str, Any]) -> None:
-        """Initialize continuous feedback parameters."""
-        feedback_config = config.get("continuous_feedback", {})
-        self.feedback_enabled = feedback_config.get("enabled", True)
+    def _init_feedback_controllers(self, config: Dict[str, Any]) -> None:
+        """Initialize feedback controllers for adaptive training.
 
-        if self.feedback_enabled:
-            self.base_ranking_weight = feedback_config.get("base_ranking_weight", 0.5)
-            self.coverage_threshold = feedback_config.get("coverage_threshold", 90.0)
-            self.coverage_sensitivity = feedback_config.get("coverage_sensitivity", 0.1)
-            self.coverage_trend_sensitivity = feedback_config.get("coverage_trend_sensitivity", 2.0)
-            self.min_ranking_weight = feedback_config.get("min_ranking_weight", 0.0)
-            self.max_ranking_weight = feedback_config.get("max_ranking_weight", 1.0)
-            self.coverage_ema_alpha = feedback_config.get("coverage_ema_alpha", 0.9)
-        else:
-            self.base_ranking_weight = 0.5
-
-        # EMA tracking
-        self.coverage_ema = None
-        self.prev_coverage = None
-
-        # P1 FIX: Initialize correlation feedback
-        self._init_correlation_feedback(config)
-
-    def _init_correlation_feedback(self, config: Dict[str, Any]) -> None:
-        """P1 FIX: Initialize correlation feedback parameters for early stopping."""
-        corr_config = config.get("correlation_feedback", {})
-        self.correlation_feedback_enabled = corr_config.get("enabled", False)
-
-        if self.correlation_feedback_enabled:
-            self.correlation_loss_weight = corr_config.get("correlation_loss_weight", 0.1)
-            self.target_correlation = corr_config.get("target_correlation", 0.95)
-            self.correlation_drop_threshold = corr_config.get("correlation_drop_threshold", 0.05)
-            self.correlation_patience = corr_config.get("correlation_patience", 10)
-        else:
-            self.correlation_loss_weight = 0.0
-            self.target_correlation = 0.95
-            self.correlation_drop_threshold = 0.05
-            self.correlation_patience = 10
-
-        # Tracking for early stopping
-        self.correlation_drop_counter = 0
-        self.best_correlation_for_stopping = 0.0
-
-    def check_correlation_early_stop(self, current_correlation: float) -> bool:
-        """P1 FIX: Check if training should stop due to correlation drop.
-
-        Args:
-            current_correlation: Current epoch's correlation (mean of A and B)
-
-        Returns:
-            True if training should stop due to correlation degradation
+        Creates three controllers:
+        - ContinuousFeedbackController: Coverage-based ranking weight
+        - CorrelationEarlyStop: Correlation-based early stopping
+        - ExplorationBoostController: Coverage stall detection
         """
-        if not self.correlation_feedback_enabled:
-            return False
+        # Continuous feedback for ranking weight adaptation
+        feedback_config = config.get("continuous_feedback", {})
+        self.continuous_feedback = ContinuousFeedbackController.from_dict(feedback_config)
 
-        # Update best correlation
-        if current_correlation > self.best_correlation_for_stopping:
-            self.best_correlation_for_stopping = current_correlation
-            self.correlation_drop_counter = 0
-            return False
+        # Correlation-based early stopping
+        corr_config = config.get("correlation_feedback", {})
+        self.correlation_early_stop = CorrelationEarlyStop.from_dict(corr_config)
 
-        # Check if correlation dropped significantly
-        drop = self.best_correlation_for_stopping - current_correlation
-        if drop > self.correlation_drop_threshold:
-            self.correlation_drop_counter += 1
-            if self.correlation_drop_counter >= self.correlation_patience:
-                return True
-
-        return False
-
-    def _init_exploration_boost(self, config: Dict[str, Any]) -> None:
-        """P2 FIX: Initialize coverage-triggered exploration boost."""
+        # Exploration boost for coverage stall
         boost_config = config.get("exploration_boost", {})
-        self.exploration_boost_enabled = boost_config.get("enabled", False)
-
-        if self.exploration_boost_enabled:
-            self.coverage_stall_threshold = boost_config.get("coverage_stall_threshold", 0.5)
-            self.coverage_stall_patience = boost_config.get("coverage_stall_patience", 5)
-            self.temp_boost_factor = boost_config.get("temp_boost_factor", 1.15)
-            self.temp_boost_max = boost_config.get("temp_boost_max", 2.0)
-            self.ranking_reduction_factor = boost_config.get("ranking_reduction_factor", 0.9)
-            self.ranking_reduction_min = boost_config.get("ranking_reduction_min", 0.05)
-        else:
-            self.coverage_stall_threshold = 0.5
-            self.coverage_stall_patience = 5
-            self.temp_boost_factor = 1.15
-            self.temp_boost_max = 2.0
-            self.ranking_reduction_factor = 0.9
-            self.ranking_reduction_min = 0.05
-
-        # Tracking for stall detection
-        self.coverage_stall_counter = 0
-        self.prev_coverage_for_stall = 0.0
-        self.current_temp_multiplier = 1.0
-        self.current_ranking_multiplier = 1.0
+        self.exploration_boost = ExplorationBoostController.from_dict(boost_config)
 
     def _init_correlation_loss(self, config: Dict[str, Any]) -> None:
         """P2 FIX: Initialize correlation loss term."""
@@ -227,51 +154,6 @@ class HyperbolicVAETrainer:
             self.correlation_loss_warmup = 5
             self.correlation_loss_use_cached = True
 
-    def check_coverage_stall(self, current_coverage: float) -> bool:
-        """P2 FIX: Check if coverage is stalled and boost exploration if needed.
-
-        Args:
-            current_coverage: Current epoch's coverage percentage
-
-        Returns:
-            True if exploration boost was applied
-        """
-        if not self.exploration_boost_enabled:
-            return False
-
-        # Check coverage delta
-        coverage_delta = abs(current_coverage - self.prev_coverage_for_stall)
-        self.prev_coverage_for_stall = current_coverage
-
-        if coverage_delta < self.coverage_stall_threshold:
-            self.coverage_stall_counter += 1
-        else:
-            self.coverage_stall_counter = 0
-            # Reset multipliers when coverage improves
-            self.current_temp_multiplier = max(1.0, self.current_temp_multiplier * 0.95)
-            self.current_ranking_multiplier = min(1.0, self.current_ranking_multiplier * 1.05)
-
-        # Apply boost if stalled long enough
-        if self.coverage_stall_counter >= self.coverage_stall_patience:
-            self.current_temp_multiplier = min(
-                self.current_temp_multiplier * self.temp_boost_factor,
-                self.temp_boost_max,
-            )
-            self.current_ranking_multiplier = max(
-                self.current_ranking_multiplier * self.ranking_reduction_factor,
-                self.ranking_reduction_min,
-            )
-            return True
-
-        return False
-
-    def get_exploration_multipliers(self) -> tuple:
-        """P2 FIX: Get current exploration boost multipliers.
-
-        Returns:
-            (temp_multiplier, ranking_multiplier)
-        """
-        return (self.current_temp_multiplier, self.current_ranking_multiplier)
 
     def _init_hyperbolic_losses(self, config: Dict[str, Any], device: str) -> None:
         """Initialize hyperbolic loss modules based on config."""
@@ -447,47 +329,6 @@ class HyperbolicVAETrainer:
         self.consequence_eval_interval = config.get("consequence_eval_interval", 50)
         self.cached_addition_accuracy = 0.5
 
-    def compute_ranking_weight(self, current_coverage: float) -> float:
-        """Compute ranking weight using sigmoid-based continuous feedback.
-
-        The ranking weight modulates how strongly the hyperbolic ranking loss
-        affects training. It increases when coverage is high (can focus on
-        structure) and decreases when coverage is low (focus on exploration).
-
-        Args:
-            current_coverage: Current mean coverage percentage
-
-        Returns:
-            Ranking weight in [min_ranking_weight, max_ranking_weight]
-        """
-        if not self.feedback_enabled:
-            return self.base_ranking_weight
-
-        # Update coverage EMA
-        if self.coverage_ema is None:
-            self.coverage_ema = current_coverage
-        else:
-            self.coverage_ema = self.coverage_ema_alpha * self.coverage_ema + (1 - self.coverage_ema_alpha) * current_coverage
-
-        # Compute coverage trend
-        if self.prev_coverage is None:
-            coverage_trend = 0.0
-        else:
-            coverage_trend = current_coverage - self.prev_coverage
-
-        self.prev_coverage = current_coverage
-
-        # Sigmoid modulation
-        coverage_gap = current_coverage - self.coverage_threshold
-        signal = self.coverage_sensitivity * coverage_gap + self.coverage_trend_sensitivity * coverage_trend
-
-        modulation = torch.sigmoid(torch.tensor(signal)).item()
-
-        # Scale to [min, max] range
-        weight = self.min_ranking_weight + modulation * (self.max_ranking_weight - self.min_ranking_weight)
-
-        return weight
-
     def train_epoch(self, train_loader, val_loader, epoch: int) -> Dict[str, Any]:
         """Train one epoch with pure hyperbolic geometry and homeostatic adaptation.
 
@@ -517,12 +358,12 @@ class HyperbolicVAETrainer:
 
         current_coverage = (cov_A + cov_B) / 2
 
-        # Compute adaptive ranking weight
-        ranking_weight = self.compute_ranking_weight(current_coverage)
+        # Compute adaptive ranking weight using feedback controller
+        ranking_weight = self.continuous_feedback.compute_ranking_weight(current_coverage)
 
         # P2 FIX: Check coverage stall and apply exploration boost
-        self.check_coverage_stall(current_coverage)
-        temp_mult, ranking_mult = self.get_exploration_multipliers()
+        self.exploration_boost.check_coverage_stall(current_coverage)
+        temp_mult, ranking_mult = self.exploration_boost.get_multipliers()
 
         # Apply P2 exploration boost to ranking weight
         ranking_weight = ranking_weight * ranking_mult
@@ -630,8 +471,8 @@ class HyperbolicVAETrainer:
         self.correlation_history_euc.append(corr_mean_euc)
         self.coverage_history.append(current_coverage)
 
-        # P1 FIX: Check correlation early stopping
-        should_stop_correlation = self.check_correlation_early_stop(corr_mean_hyp)
+        # P1 FIX: Check correlation early stopping using controller
+        should_stop_correlation = self.correlation_early_stop.check_should_stop(corr_mean_hyp)
 
         # Build return dict
         return {
@@ -657,20 +498,20 @@ class HyperbolicVAETrainer:
             "cov_mean": current_coverage,
             "unique_A": unique_A,
             "unique_B": unique_B,
-            "coverage_ema": self.coverage_ema or current_coverage,
+            "coverage_ema": self.continuous_feedback.coverage_ema or current_coverage,
             "mean_radius_A": mean_radius_A,
             "mean_radius_B": mean_radius_B,
             "coverage_evaluated": should_check_coverage,
             "correlation_evaluated": should_check_correlation,
             # P1 FIX: Correlation early stopping signal
             "should_stop_correlation": should_stop_correlation,
-            "correlation_drop_counter": self.correlation_drop_counter,
-            "best_correlation_for_stopping": self.best_correlation_for_stopping,
+            "correlation_drop_counter": self.correlation_early_stop.drop_counter,
+            "best_correlation_for_stopping": self.correlation_early_stop.best_correlation,
             # P2 FIX: Exploration boost metrics
-            "exploration_boosted": self.coverage_stall_counter >= self.coverage_stall_patience,
-            "coverage_stall_counter": self.coverage_stall_counter,
-            "temp_multiplier": self.current_temp_multiplier,
-            "ranking_multiplier": self.current_ranking_multiplier,
+            "exploration_boosted": self.exploration_boost.is_boosting,
+            "coverage_stall_counter": self.exploration_boost.stall_counter,
+            "temp_multiplier": self.exploration_boost.temp_multiplier,
+            "ranking_multiplier": self.exploration_boost.ranking_multiplier,
             **{f"ranking_{k}": v for k, v in hyperbolic_metrics["ranking_metrics"].items()},
             **{f"homeo_{k}": v for k, v in hyperbolic_metrics["homeostatic_metrics"].items()},
         }
@@ -727,7 +568,7 @@ class HyperbolicVAETrainer:
         with torch.no_grad():
             # Sample for loss computation
             n_samples = min(2000, len(train_loader.dataset))
-            indices = torch.randint(0, 19683, (n_samples,), device=self.device)
+            indices = torch.randint(0, N_TERNARY_OPERATIONS, (n_samples,), device=self.device)
 
             ternary_data = torch.zeros(n_samples, 9, device=self.device)
             for i in range(9):

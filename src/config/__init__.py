@@ -57,9 +57,29 @@ from .constants import (
     TERNARY_BASE,
     # Loss functions
     DEFAULT_HARD_NEGATIVE_RATIO,
+    DEFAULT_MARGIN_BASE,
+    DEFAULT_MARGIN_SCALE,
+    DEFAULT_METRIC_LOSS_SCALE,
+    DEFAULT_METRIC_N_PAIRS,
     DEFAULT_N_TRIPLETS,
     DEFAULT_RANKING_MARGIN,
     DEFAULT_REPULSION_SIGMA,
+    # Hyperbolic geometry
+    DEFAULT_GEODESIC_WEIGHT,
+    DEFAULT_PRIOR_SIGMA,
+    DEFAULT_RADIAL_WEIGHT,
+    DEFAULT_RADIUS_POWER,
+    HYPERBOLIC_CURVATURE,
+    HYPERBOLIC_MAX_NORM,
+    # Homeostatic control
+    HOMEOSTATIC_CURVATURE_RATE,
+    HOMEOSTATIC_EMA_MOMENTUM,
+    HOMEOSTATIC_SIGMA_RATE,
+    HOMEOSTATIC_TARGET_RADIUS,
+    # Coverage tracking
+    COVERAGE_TARGET_PCT,
+    DEFAULT_PLATEAU_MIN_DELTA,
+    DEFAULT_PLATEAU_PATIENCE,
     # Observability
     DEFAULT_CHECKPOINT_DIR,
     DEFAULT_CHECKPOINT_FREQ,
@@ -70,6 +90,9 @@ from .constants import (
     DEFAULT_LOG_INTERVAL,
     DEFAULT_TENSORBOARD_DIR,
 )
+
+# Environment
+from .environment import Environment, EnvConfig, get_env_config, reset_env_config
 
 # Schema
 from .schema import (
@@ -97,10 +120,17 @@ __all__ = [
     "RankingConfig",
     "VAEConfig",
     "ConfigValidationError",
+    # Environment
+    "Environment",
+    "EnvConfig",
+    "get_env_config",
+    "reset_env_config",
     # Key constants (most commonly used)
     "EPSILON",
     "DEFAULT_CURVATURE",
     "DEFAULT_MAX_RADIUS",
     "DEFAULT_LATENT_DIM",
     "N_TERNARY_OPERATIONS",
+    "HYPERBOLIC_CURVATURE",
+    "HYPERBOLIC_MAX_NORM",
 ]

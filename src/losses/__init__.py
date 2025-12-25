@@ -55,8 +55,21 @@ from .hyperbolic_recon import (HomeostaticReconLoss, HyperbolicCentroidLoss,
 from .padic_geodesic import (CombinedGeodesicLoss, GlobalRankLoss,
                              MonotonicRadialLoss, PAdicGeodesicLoss,
                              RadialHierarchyLoss, poincare_distance)
-from .padic_losses import (PAdicMetricLoss, PAdicNormLoss, PAdicRankingLoss,
-                           PAdicRankingLossHyperbolic, PAdicRankingLossV2)
+# p-Adic losses - import from new modular subpackage (preferred)
+# Also maintains backward compatibility with existing imports
+from .padic import (
+    PAdicMetricLoss,
+    PAdicNormLoss,
+    PAdicRankingLoss,
+    PAdicRankingLossHyperbolic,
+    PAdicRankingLossV2,
+    # New exports from modular structure
+    EuclideanTripletMiner,
+    HyperbolicTripletMiner,
+    TripletBatch,
+    TripletMiner,
+    compute_3adic_valuation_batch,
+)
 from .radial_stratification import (RadialStratificationLoss,
                                     compute_single_index_valuation)
 from .registry import (
@@ -111,6 +124,12 @@ __all__ = [
     "PAdicRankingLossV2",
     "PAdicRankingLossHyperbolic",
     "PAdicNormLoss",
+    # Triplet mining utilities (new modular structure)
+    "TripletBatch",
+    "TripletMiner",
+    "EuclideanTripletMiner",
+    "HyperbolicTripletMiner",
+    "compute_3adic_valuation_batch",
     # Appetitive exports removed (archived)
     "HyperbolicPrior",
     "HomeostaticHyperbolicPrior",

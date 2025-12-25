@@ -341,7 +341,7 @@ def main():
 
     for name, data in HIV_CTL_EPITOPES.items():
         seq = data["wild_type"]["sequence"]
-        hla = data["wild_type"].get("hla", "Unknown")
+        hla = data.get("hla_restriction", "Unknown")
         print(f"\n{name} (HLA: {hla}): {seq}")
 
         epitope_data = {

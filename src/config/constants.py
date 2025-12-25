@@ -122,14 +122,106 @@ MAX_VALUATION = N_TERNARY_DIGITS  # 9
 # Repulsion loss bandwidth
 DEFAULT_REPULSION_SIGMA = 0.5
 
-# Ranking loss margin
+# Ranking loss margin (base margin for triplet losses)
 DEFAULT_RANKING_MARGIN = 0.1
+
+# Base margin for hierarchical ranking (v5.8+)
+DEFAULT_MARGIN_BASE = 0.05
+
+# Margin scale for hierarchical ranking (v5.8+)
+DEFAULT_MARGIN_SCALE = 0.15
 
 # Number of triplets for ranking loss
 DEFAULT_N_TRIPLETS = 500
 
 # Hard negative mining ratio
 DEFAULT_HARD_NEGATIVE_RATIO = 0.5
+
+# Number of pairs for metric loss
+DEFAULT_METRIC_N_PAIRS = 1000
+
+# Metric loss scale factor
+DEFAULT_METRIC_LOSS_SCALE = 1.0
+
+
+# =============================================================================
+# HYPERBOLIC GEOMETRY DEFAULTS (v5.9+)
+# =============================================================================
+
+# Default curvature for hyperbolic losses (Note: 2.0 for most hyperbolic modules)
+HYPERBOLIC_CURVATURE = 2.0
+
+# Default max norm for Poincare ball projection
+HYPERBOLIC_MAX_NORM = 0.95
+
+# Radial weight for hyperbolic ranking loss
+DEFAULT_RADIAL_WEIGHT = 0.1
+
+# Prior sigma for hyperbolic prior
+DEFAULT_PRIOR_SIGMA = 1.0
+
+# Geodesic weight for hyperbolic reconstruction
+DEFAULT_GEODESIC_WEIGHT = 0.3
+
+# Radius power for radius weighting
+DEFAULT_RADIUS_POWER = 2.0
+
+
+# =============================================================================
+# HOMEOSTATIC CONTROL DEFAULTS (v5.10+)
+# =============================================================================
+
+# EMA momentum for homeostatic adaptation
+HOMEOSTATIC_EMA_MOMENTUM = 0.99
+
+# Target radius for homeostatic control
+HOMEOSTATIC_TARGET_RADIUS = 0.7
+
+# Sigma adaptation rate
+HOMEOSTATIC_SIGMA_RATE = 0.01
+
+# Curvature adaptation rate
+HOMEOSTATIC_CURVATURE_RATE = 0.001
+
+
+# =============================================================================
+# COVERAGE TRACKING DEFAULTS
+# =============================================================================
+
+# Plateau detection patience (epochs)
+DEFAULT_PLATEAU_PATIENCE = 100
+
+# Minimum delta for plateau detection (fraction of N_TERNARY_OPERATIONS)
+DEFAULT_PLATEAU_MIN_DELTA = 0.0005
+
+# Coverage target percentage (100% = all 19,683 operations)
+COVERAGE_TARGET_PCT = 100.0
+
+
+# =============================================================================
+# CONTINUOUS FEEDBACK DEFAULTS
+# =============================================================================
+
+# Default base ranking weight
+DEFAULT_RANKING_WEIGHT = 0.5
+
+# Coverage threshold for feedback modulation (percentage)
+DEFAULT_COVERAGE_THRESHOLD = 90.0
+
+# Sensitivity to coverage gap
+DEFAULT_COVERAGE_SENSITIVITY = 0.1
+
+# Sensitivity to coverage trend (change rate)
+DEFAULT_COVERAGE_TREND_SENSITIVITY = 2.0
+
+# Minimum ranking weight
+DEFAULT_MIN_RANKING_WEIGHT = 0.0
+
+# Maximum ranking weight
+DEFAULT_MAX_RANKING_WEIGHT = 1.0
+
+# EMA alpha for coverage smoothing
+DEFAULT_EMA_ALPHA = 0.9
 
 
 # =============================================================================
@@ -200,8 +292,36 @@ __all__ = [
     # Loss functions
     "DEFAULT_REPULSION_SIGMA",
     "DEFAULT_RANKING_MARGIN",
+    "DEFAULT_MARGIN_BASE",
+    "DEFAULT_MARGIN_SCALE",
     "DEFAULT_N_TRIPLETS",
     "DEFAULT_HARD_NEGATIVE_RATIO",
+    "DEFAULT_METRIC_N_PAIRS",
+    "DEFAULT_METRIC_LOSS_SCALE",
+    # Hyperbolic geometry
+    "HYPERBOLIC_CURVATURE",
+    "HYPERBOLIC_MAX_NORM",
+    "DEFAULT_RADIAL_WEIGHT",
+    "DEFAULT_PRIOR_SIGMA",
+    "DEFAULT_GEODESIC_WEIGHT",
+    "DEFAULT_RADIUS_POWER",
+    # Homeostatic control
+    "HOMEOSTATIC_EMA_MOMENTUM",
+    "HOMEOSTATIC_TARGET_RADIUS",
+    "HOMEOSTATIC_SIGMA_RATE",
+    "HOMEOSTATIC_CURVATURE_RATE",
+    # Coverage tracking
+    "DEFAULT_PLATEAU_PATIENCE",
+    "DEFAULT_PLATEAU_MIN_DELTA",
+    "COVERAGE_TARGET_PCT",
+    # Continuous feedback
+    "DEFAULT_RANKING_WEIGHT",
+    "DEFAULT_COVERAGE_THRESHOLD",
+    "DEFAULT_COVERAGE_SENSITIVITY",
+    "DEFAULT_COVERAGE_TREND_SENSITIVITY",
+    "DEFAULT_MIN_RANKING_WEIGHT",
+    "DEFAULT_MAX_RANKING_WEIGHT",
+    "DEFAULT_EMA_ALPHA",
     # Observability
     "DEFAULT_LOG_INTERVAL",
     "DEFAULT_CHECKPOINT_FREQ",

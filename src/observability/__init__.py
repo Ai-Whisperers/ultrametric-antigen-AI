@@ -45,6 +45,7 @@ from .logging import (
     setup_logging,
 )
 from .metrics_buffer import MetricRecord, MetricsBuffer, ScopedMetrics
+from .training_history import TrainingHistory, TrainingState
 
 __all__ = [
     # Logging
@@ -65,4 +66,7 @@ __all__ = [
     "CoverageEvaluator",
     "CoverageStats",
     "evaluate_model_coverage",
+    # Training history
+    "TrainingHistory",
+    "TrainingState",
 ]

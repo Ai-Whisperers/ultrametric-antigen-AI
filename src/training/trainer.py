@@ -32,6 +32,7 @@ from torch.utils.data import DataLoader
 logger = logging.getLogger(__name__)
 
 from ..artifacts import CheckpointManager
+from ..config.constants import N_TERNARY_OPERATIONS
 from ..losses import DualVAELoss, RadialStratificationLoss
 from ..models.curriculum import ContinuousCurriculumModule
 from .base import BaseTrainer
@@ -615,7 +616,7 @@ class TernaryVAETrainer(BaseTrainer):
                     (self.monitor.coverage_A_history[-1] if self.monitor.coverage_A_history else 0),
                     (self.monitor.coverage_B_history[-1] if self.monitor.coverage_B_history else 0),
                 )
-                logger.info(f"Coverage plateaued at {current_cov/19683*100:.2f}% (no improvement for {coverage_plateau_patience} epochs)")
+                logger.info(f"Coverage plateaued at {current_cov/N_TERNARY_OPERATIONS*100:.2f}% (no improvement for {coverage_plateau_patience} epochs)")
                 break
 
         self.monitor.print_training_summary()
