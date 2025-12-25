@@ -2,16 +2,19 @@
 
 **[[Home]]**
 
-### Getting Started
-- [[Getting Started]]
-- [[Installation]]
-- [[Quick Start]]
+---
 
-### Architecture
+### Getting Started
+- [[Installation]]
+- [[Quick-Start]]
+- [[Tutorials]]
+
+### Core Concepts
 - [[Architecture]]
 - [[Models]]
 - [[Geometry]]
-- [[Loss Functions]]
+- [[Loss-Functions]]
+- [[Biological-Context]]
 
 ### Usage
 - [[Configuration]]
@@ -19,15 +22,26 @@
 - [[Evaluation]]
 
 ### Reference
-- [[API Reference]]
+- [[API-Reference]]
 - [[Constants]]
+- [[Glossary]]
+
+### Help
 - [[FAQ]]
+- [[Troubleshooting]]
 
 ### Contributing
-- [[Contributing Guide]]
-- [[Code Style]]
+- [[Contributing-Guide]]
 - [[Testing]]
 
 ---
 
-[View on GitHub](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics)
+**Links**
+
+[GitHub Repository](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics)
+
+[Report Issue](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics/issues)
+
+---
+
+*v5.11*

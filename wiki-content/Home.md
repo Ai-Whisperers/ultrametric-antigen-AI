@@ -1,56 +1,221 @@
 # Ternary VAE Bioinformatics
 
-Welcome to the **Ternary VAE** documentation wiki! This project implements a cutting-edge variational autoencoder that learns representations in **hyperbolic geometry** and **3-adic number spaces** for bioinformatics applications.
+[![Version](https://img.shields.io/badge/version-5.11-blue.svg)](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics)
+[![License](https://img.shields.io/badge/license-PolyForm%20NC-lightgrey.svg)](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics/blob/main/LICENSE)
+[![Python](https://img.shields.io/badge/python-3.11+-green.svg)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/pytorch-2.0+-orange.svg)](https://pytorch.org/)
+
+Welcome to the **Ternary VAE** documentation! A cutting-edge variational autoencoder using **hyperbolic geometry** and **3-adic number theory** for bioinformatics.
+
+---
+
+## What is Ternary VAE?
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     Biological Sequences                        │
+│                    (Codons, Proteins, DNA)                      │
+└─────────────────────────┬───────────────────────────────────────┘
+                          ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      Ternary Encoder                            │
+│              (19,683 operations → latent space)                 │
+└─────────────────────────┬───────────────────────────────────────┘
+                          ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Poincaré Ball Latent Space                   │
+│                                                                 │
+│     Boundary (leaves)           •                               │
+│           ╲                    ╱│╲                              │
+│            ╲    •    •    •   ╱ │ ╲                             │
+│             ╲  ╱ ╲  ╱ ╲  ╱ ╲ ╱  │  ╲                            │
+│              ••   ••   ••   ••  │   •                           │
+│                 ╲    ╲ ╱   ╱    │                               │
+│                  ╲    •   ╱     │                               │
+│                   ╲  ╱|╲ ╱      │ Hierarchical                  │
+│                    ╲╱ | ╲╱      │ structure                     │
+│                     ╲ │ ╱       │ preserved                     │
+│                      ╲│╱        │                               │
+│                    Center (root)                                │
+│                                                                 │
+│  Hyperbolic space naturally embeds trees with low distortion!  │
+└─────────────────────────────────────────────────────────────────┘
+                          ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      Ternary Decoder                            │
+│              (latent space → 19,683 operations)                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Key insight**: Biological data is hierarchical (phylogenies, protein families, codon usage). Hyperbolic space embeds hierarchies with exponentially less distortion than Euclidean space.
+
+---
+
+## 60-Second Quick Start
+
+```python
+from src.models import TernaryVAE
+from src.config import TrainingConfig
+import torch
+
+# Create model
+model = TernaryVAE(input_dim=19683, latent_dim=16, curvature=1.0)
+
+# Sample data (19683 = 3^9 ternary operations)
+x = torch.randint(0, 19683, (32,))
+x_onehot = torch.zeros(32, 19683).scatter_(1, x.unsqueeze(1), 1)
+
+# Forward pass
+outputs = model(x_onehot)
+z_hyperbolic = outputs["z_hyperbolic"]  # Points in Poincaré ball
+
+print(f"Latent points: {z_hyperbolic.shape}")  # (32, 16)
+print(f"All norms < 1: {(z_hyperbolic.norm(dim=1) < 1).all()}")  # True!
+```
+
+**[Full Quick Start Guide →](Quick-Start)**
+
+---
 
 ## Key Features
 
-- **Hyperbolic Latent Space**: Uses Poincare ball geometry for hierarchical biological data
-- **3-Adic Number Theory**: Encodes ternary codon operations with p-adic structure
-- **Geometric Vaccine Design**: Tools for HIV and emerging pathogen research
-- **Drug Interaction Modeling**: Manifold-centric embeddings for molecular interactions
-- **Codon Space Exploration**: Synthetic biology applications
-
-## Quick Navigation
-
-| Section | Description |
+| Feature | Description |
 |---------|-------------|
-| [[Getting Started]] | Installation and first steps |
-| [[Architecture]] | System design and components |
-| [[Configuration]] | Config system and parameters |
-| [[Models]] | TernaryVAE and SwarmVAE architectures |
-| [[Geometry]] | Hyperbolic and p-adic operations |
-| [[Loss Functions]] | Loss components and registry |
-| [[Training]] | Training workflows and callbacks |
-| [[API Reference]] | Module and class reference |
+| **Hyperbolic Latent Space** | Poincaré ball geometry for hierarchical biological data |
+| **3-Adic Number Theory** | Encodes ternary codon operations with p-adic structure |
+| **Riemannian Optimization** | Proper gradient descent on curved manifolds |
+| **Modular Loss System** | Registry pattern for flexible loss composition |
+| **Bioinformatics Focus** | Vaccine design, codon optimization, drug discovery |
+
+---
+
+## Documentation Map
+
+### Getting Started
+- **[[Installation]]** - Setup for all platforms
+- **[[Quick-Start]]** - Run in 5 minutes
+- **[[Tutorials]]** - Step-by-step guides
+
+### Core Concepts
+- **[[Architecture]]** - System design
+- **[[Models]]** - TernaryVAE, SwarmVAE
+- **[[Geometry]]** - Hyperbolic mathematics
+- **[[Loss-Functions]]** - Loss registry system
+
+### Usage
+- **[[Configuration]]** - Config system
+- **[[Training]]** - Training workflows
+- **[[Evaluation]]** - Metrics and benchmarks
+
+### Reference
+- **[[API-Reference]]** - Module reference
+- **[[Constants]]** - Configuration constants
+- **[[Glossary]]** - Term definitions
+
+### Help
+- **[[FAQ]]** - Common questions
+- **[[Troubleshooting]]** - Problem solutions
+- **[[Contributing-Guide]]** - How to contribute
+
+---
+
+## Why Hyperbolic + p-Adic?
+
+### The Problem
+
+Traditional VAEs use **Euclidean** latent spaces:
+- ❌ Poor at representing hierarchies
+- ❌ Distorts tree-like biological structures
+- ❌ Requires high dimensions for trees
+
+### Our Solution
+
+| Euclidean | Hyperbolic |
+|-----------|------------|
+| Circle circumference: C = 2πr | Circle circumference: C ≈ πe^r |
+| Linear growth | **Exponential growth** |
+| Trees need O(n²) space | Trees need O(n) space |
+
+**3-adic numbers** add another layer:
+- Divisibility by 3 creates natural hierarchy
+- Codon operations (3^9) map directly to p-adic structure
+- Higher valuation = closer to center = more fundamental
+
+---
 
 ## Project Philosophy
 
 ### Open Medicine Policy
 
-- **Research Outputs** (data, figures, models): Released under **CC-BY-4.0**
-- **Source Code**: Licensed under **PolyForm Non-Commercial 1.0.0**
-- **Commercial Use**: Requires separate license - contact `support@aiwhisperers.com`
+| Content | License | Use |
+|---------|---------|-----|
+| **Source Code** | PolyForm NC 1.0.0 | Academic/non-profit free |
+| **Research Outputs** | CC-BY-4.0 | Any use with attribution |
+| **Commercial Use** | Separate license | Contact us |
 
-### Core Mathematical Concepts
+We believe scientific discoveries should benefit humanity. Research outputs are freely available; commercial restrictions prevent exclusive exploitation.
 
-1. **Poincare Ball Model**: Latent representations live in hyperbolic space with curvature κ
-2. **3-Adic Valuations**: Codon operations encoded using ternary digit structure (3^9 = 19,683 operations)
-3. **Riemannian Optimization**: Gradient descent on curved manifolds using geoopt
+### Design Principles
 
-## Version
-
-Current stable version: **V5.11**
-
-- V5.11.7: Homeostasis controller
-- V5.11.8: Enhanced stability
-- V5.11.9: Zero structure loss
-
-## Getting Help
-
-- **Issues**: [GitHub Issues](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics/discussions)
-- **Email**: `support@aiwhisperers.com`
+1. **Geometry-First**: Respect mathematical structure
+2. **Modularity**: Composable, testable components
+3. **Reproducibility**: Config-driven experiments
+4. **Stability**: Numerical guards everywhere
+5. **Extensibility**: Registry patterns for customization
 
 ---
 
-*Last updated: 2025-12-25*
+## Version History
+
+| Version | Highlights |
+|---------|------------|
+| **5.11** | Stable release with homeostasis controller |
+| 5.11.9 | Zero structure loss |
+| 5.11.8 | Enhanced numerical stability |
+| 5.11.7 | Homeostasis controller |
+
+---
+
+## Applications
+
+### Vaccine Design
+Optimize antigens for immune response while avoiding autoimmunity.
+
+### Codon Optimization
+Select synonymous codons for improved expression and stability.
+
+### Drug Discovery
+Model molecular interactions in hyperbolic space.
+
+### Phylogenetics
+Learn evolutionary embeddings that preserve tree structure.
+
+**[Learn More: Biological Context →](Biological-Context)**
+
+---
+
+## Community
+
+| Resource | Link |
+|----------|------|
+| **GitHub** | [Ai-Whisperers/ternary-vaes-bioinformatics](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics) |
+| **Issues** | [Report bugs / Request features](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics/issues) |
+| **Discussions** | [Ask questions](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics/discussions) |
+| **Email** | support@aiwhisperers.com |
+
+---
+
+## Citation
+
+```bibtex
+@software{ternary_vae,
+  author = {{AI Whisperers}},
+  title = {Ternary VAE Bioinformatics},
+  year = {2025},
+  url = {https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics}
+}
+```
+
+---
+
+*Last updated: 2025-12-25 | Version 5.11*
