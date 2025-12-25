@@ -2,6 +2,36 @@
 
 The Ternary VAE uses hyperbolic geometry (Poincare ball model) and p-adic number theory for representing biological sequences.
 
+## Geometric Overview
+
+```mermaid
+flowchart LR
+    subgraph Tangent["Tangent Space T₀M"]
+        V["Euclidean Vectors<br/>(μ, σ samples)"]
+    end
+
+    EXP["exp_map_zero()"]
+
+    subgraph Ball["Poincaré Ball B^n"]
+        direction TB
+        Center["Center<br/>(origin)"]
+        Mid["Middle<br/>regions"]
+        Edge["Near boundary<br/>(‖x‖ → 1)"]
+
+        Center --- Mid --- Edge
+    end
+
+    LOG["log_map_zero()"]
+
+    V --> EXP --> Ball
+    Ball --> LOG --> V
+
+    style Tangent fill:#e3f2fd
+    style Ball fill:#fce4ec
+    style EXP fill:#c8e6c9
+    style LOG fill:#fff3e0
+```
+
 ## Hyperbolic Geometry Basics
 
 ### Why Hyperbolic Space?

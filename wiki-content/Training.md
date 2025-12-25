@@ -2,6 +2,48 @@
 
 This guide covers training workflows for Ternary VAE models.
 
+## Training Pipeline Overview
+
+```mermaid
+flowchart TB
+    subgraph Setup["⚙️ Setup Phase"]
+        Config["Load Config"] --> Model["Create TernaryVAE"]
+        Config --> Registry["Create LossRegistry"]
+        Model --> Optim["RiemannianAdam"]
+    end
+
+    subgraph Loop["🔄 Training Loop"]
+        Epoch["for epoch in epochs"]
+        Batch["for batch in dataloader"]
+
+        Forward["outputs = model(x)"]
+        Loss["result = registry.compose()"]
+        Back["result.total.backward()"]
+        Clip["clip_grad_norm_()"]
+        Step["optimizer.step()"]
+
+        Epoch --> Batch
+        Batch --> Forward --> Loss --> Back --> Clip --> Step
+        Step -->|"next batch"| Batch
+    end
+
+    subgraph Callbacks["📊 Callbacks"]
+        CB["on_epoch_end()"]
+        ES["EarlyStopping?"]
+        CK["Checkpoint?"]
+    end
+
+    Setup --> Loop
+    Batch -->|"epoch done"| CB
+    CB --> ES & CK
+    ES -->|"stop"| Done["✅ Training Complete"]
+    ES -->|"continue"| Epoch
+
+    style Setup fill:#e3f2fd
+    style Loop fill:#fff3e0
+    style Callbacks fill:#f3e5f5
+```
+
 ## Basic Training Loop
 
 ```python

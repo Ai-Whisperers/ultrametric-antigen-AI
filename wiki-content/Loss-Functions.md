@@ -4,6 +4,38 @@ The Ternary VAE uses a modular loss system based on the **LossRegistry** pattern
 
 ## Loss Registry Pattern
 
+```mermaid
+flowchart LR
+    subgraph Registry["LossRegistry"]
+        R["register()"]
+        C["compose()"]
+    end
+
+    subgraph Components["Loss Components"]
+        L1["ReconstructionLoss<br/>w=1.0"]
+        L2["KLDivergence<br/>w=0.5"]
+        L3["RankingLoss<br/>w=0.1"]
+    end
+
+    subgraph Outputs["Model Outputs"]
+        O["reconstruction<br/>mu, logvar<br/>z_hyperbolic"]
+    end
+
+    subgraph Result["LossResult"]
+        Total["total = Σ(wᵢ × lossᵢ)"]
+        Comp["components: {...}"]
+        Met["metrics: {...}"]
+    end
+
+    Components --> R
+    O --> C
+    C --> Result
+
+    style Registry fill:#e1bee7
+    style Components fill:#fff3e0
+    style Result fill:#c8e6c9
+```
+
 Instead of subclassing, losses are composed via a registry:
 
 ```python

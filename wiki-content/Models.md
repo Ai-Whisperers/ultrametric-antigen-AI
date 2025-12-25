@@ -45,6 +45,35 @@ outputs = model(x)
 
 Multi-agent swarm-based architecture for collaborative learning.
 
+```mermaid
+flowchart TB
+    subgraph Swarm["SwarmVAE Architecture"]
+        direction TB
+
+        subgraph Agents["Agent Pool"]
+            A1["🔍 Explorer<br/>(high variance)"]
+            A2["⚡ Exploiter<br/>(low variance)"]
+            A3["🎯 Scout<br/>(moderate)"]
+            A4["🔍 Explorer"]
+            A5["⚡ Exploiter"]
+        end
+
+        PH["📊 Pheromone Field<br/>(32×32 grid)"]
+
+        Agents <--> PH
+    end
+
+    Input["Input (B, 19683)"] --> Swarm
+    Swarm --> Output["Consensus z_hyperbolic"]
+
+    style A1 fill:#bbdefb
+    style A2 fill:#c8e6c9
+    style A3 fill:#ffe0b2
+    style A4 fill:#bbdefb
+    style A5 fill:#c8e6c9
+    style PH fill:#f3e5f5
+```
+
 ### Architecture
 
 ```python
