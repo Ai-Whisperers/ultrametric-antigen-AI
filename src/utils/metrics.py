@@ -9,7 +9,7 @@
 
 import torch
 import numpy as np
-from typing import Dict, Tuple
+from typing import Dict, Optional, Tuple
 from collections import defaultdict
 
 
@@ -215,7 +215,7 @@ class CoverageTracker:
         epoch: int,
         coverage_A: int,
         coverage_B: int,
-        intersection: int = None
+        intersection: Optional[int] = None
     ):
         """Update coverage history.
 

@@ -120,14 +120,7 @@ class GeometricAlignmentLoss(nn.Module):
         radius = torch.sqrt(1 - y * y)
         theta = phi * idx
 
-        x = torch.cos(theta) * radius
-        z = torch.sin(theta) * radius
-
-        # Stack to (N, 3)
-        # Note: x is scalar in math.cos, but here it broadcasts.
-        # Actually need to implement vectorized.
-
-        # Vectorized implementation:
+        # Generate points on sphere using Fibonacci lattice
         points = torch.stack(
             [torch.cos(theta) * radius, y, torch.sin(theta) * radius], dim=1
         )
@@ -149,7 +142,6 @@ class GeometricAlignmentLoss(nn.Module):
         Returns:
             loss, metrics
         """
-        batch_size = z.shape[0]
         z_3d = z[:, :3]  # Take first 3 dimensions
         z_3d = (
             F.normalize(z_3d, dim=1) * self.scale

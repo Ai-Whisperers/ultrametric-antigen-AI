@@ -3,7 +3,7 @@
 # Licensed under the PolyForm Noncommercial License 1.0.0
 # See LICENSE file in the repository root for full license text.
 
-from typing import Protocol, Tuple, Dict, runtime_checkable
+from typing import Dict, Optional, Protocol, Tuple, Union, runtime_checkable
 import torch
 
 

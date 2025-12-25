@@ -360,7 +360,6 @@ def poincare_distance_matrix(
         Distance matrix of shape (n, n)
     """
     manifold = get_manifold(c)
-    n = z.size(0)
 
     # Expand for pairwise computation: (n, 1, dim) and (1, n, dim)
     z_i = z.unsqueeze(1)  # (n, 1, dim)

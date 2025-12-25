@@ -245,7 +245,7 @@ class TrainingConfig:
     target_ranking_correlation: float = 0.99
 
 
-def _build_nested_config(raw: Dict[str, Any], cls, defaults: Dict[str, Any] = None) -> Any:
+def _build_nested_config(raw: Dict[str, Any], cls, defaults: Optional[Dict[str, Any]] = None) -> Any:
     """Build a dataclass from raw dict, using defaults for missing keys."""
     if raw is None:
         raw = {}

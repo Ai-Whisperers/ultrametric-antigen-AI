@@ -22,7 +22,7 @@ V5.11.8: Q-gated annealing progressively relaxes thresholds when Q improves,
 enabling exploration of higher Q values while maintaining coverage floors.
 """
 
-from typing import Dict, Optional
+from typing import Any, Dict, List, Optional
 from collections import deque
 
 
@@ -140,7 +140,7 @@ class HomeostasisController:
         hierarchy_B: float,
         dist_corr_A: float = 0.0,
         controller_grad_norm: Optional[float] = None,
-    ) -> Dict[str, bool]:
+    ) -> Dict[str, Any]:
         """Update homeostasis state based on current metrics.
 
         Args:

@@ -21,7 +21,7 @@ Single responsibility: Manage curriculum state and loss modulation.
 
 import torch
 import torch.nn as nn
-from typing import Tuple, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 
 
 class ContinuousCurriculumModule(nn.Module):
@@ -141,13 +141,13 @@ class ContinuousCurriculumModule(nn.Module):
         tau = self.tau.item()
         return (1 - tau, tau)
 
-    def get_state_dict_extra(self) -> Dict[str, any]:
+    def get_state_dict_extra(self) -> Dict[str, Any]:
         """Return extra state for checkpointing."""
         return {
             'tau_history': self.tau_history[-1000:],  # Last 1000 values
         }
 
-    def load_state_dict_extra(self, state_dict: Dict[str, any]):
+    def load_state_dict_extra(self, state_dict: Dict[str, Any]):
         """Load extra state from checkpoint."""
         if 'tau_history' in state_dict:
             self.tau_history = state_dict['tau_history']
