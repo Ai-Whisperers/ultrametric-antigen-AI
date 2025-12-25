@@ -13,9 +13,16 @@ and structures through geometric and p-adic lenses.
 Modules:
     - geometry: Geometric analysis of embeddings (hyperbolicity, distances)
     - extremophile_codons: Codon usage patterns in extremophile organisms
+    - extraterrestrial_aminoacids: Asteroid/meteorite amino acid analysis
 """
 
 from .extremophile_codons import ExtremophileCategory, ExtremophileCodonAnalyzer
+from .extraterrestrial_aminoacids import (
+    AminoAcidSource,
+    AsteroidAminoAcidAnalyzer,
+    CompatibilityResult,
+    ExtraterrestrialSample,
+)
 from .geometry import compute_delta_hyperbolicity, compute_pairwise_distances
 
 __all__ = [
@@ -23,4 +30,8 @@ __all__ = [
     "compute_delta_hyperbolicity",
     "ExtremophileCodonAnalyzer",
     "ExtremophileCategory",
+    "AsteroidAminoAcidAnalyzer",
+    "ExtraterrestrialSample",
+    "CompatibilityResult",
+    "AminoAcidSource",
 ]
