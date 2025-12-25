@@ -9,7 +9,7 @@
 
 import torch
 import numpy as np
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Union
 from collections import defaultdict
 
 
@@ -159,7 +159,7 @@ def compute_reconstruction_accuracy(
 def analyze_coverage_distribution(
     samples: torch.Tensor,
     dimension: int = 9
-) -> Dict[str, float]:
+) -> Dict[str, Union[float, Dict[int, float]]]:
     """Analyze the distribution of covered operations.
 
     Args:
@@ -172,9 +172,9 @@ def analyze_coverage_distribution(
     samples_rounded = torch.round(samples).long()
 
     # Value distribution
-    value_counts = {-1: 0, 0: 0, 1: 0}
+    value_counts: Dict[int, float] = {-1: 0.0, 0: 0.0, 1: 0.0}
     for v in [-1, 0, 1]:
-        value_counts[v] = (samples_rounded == v).sum().item()
+        value_counts[v] = float((samples_rounded == v).sum().item())
 
     total = samples_rounded.numel()
     value_dist = {k: v/total for k, v in value_counts.items()}
@@ -183,7 +183,7 @@ def analyze_coverage_distribution(
     sparsity = value_dist[0]
 
     # Balance (std of distribution)
-    balance_std = np.std(list(value_dist.values()))
+    balance_std = float(np.std(list(value_dist.values())))
 
     # Per-dimension statistics
     dim_stats = []
@@ -196,7 +196,7 @@ def analyze_coverage_distribution(
         'value_distribution': value_dist,
         'sparsity': sparsity,
         'balance_std': balance_std,
-        'avg_unique_per_dim': np.mean(dim_stats),
+        'avg_unique_per_dim': float(np.mean(dim_stats)),
         'min_unique_per_dim': min(dim_stats),
         'max_unique_per_dim': max(dim_stats)
     }

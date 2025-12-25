@@ -98,11 +98,11 @@ class HomeostasisController:
         self.controller_patience_ceiling = controller_patience_ceiling
 
         # Metric history (moving windows)
-        self.coverage_history = deque(maxlen=window_size)
-        self.hierarchy_A_history = deque(maxlen=window_size)
-        self.hierarchy_B_history = deque(maxlen=window_size)
-        self.controller_grad_history = deque(maxlen=window_size)
-        self.Q_history = deque(maxlen=window_size * 2)  # Longer window for Q
+        self.coverage_history: deque[float] = deque(maxlen=window_size)
+        self.hierarchy_A_history: deque[float] = deque(maxlen=window_size)
+        self.hierarchy_B_history: deque[float] = deque(maxlen=window_size)
+        self.controller_grad_history: deque[float] = deque(maxlen=window_size)
+        self.Q_history: deque[float] = deque(maxlen=window_size * 2)  # Longer window for Q
 
         # Freeze states
         self.encoder_a_frozen = True  # Starts frozen

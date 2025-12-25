@@ -19,7 +19,7 @@ Single responsibility: Learn and predict consequence of metric structure.
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from typing import Dict, Tuple, Optional
+from typing import Dict, List, Optional, Tuple
 
 
 class ConsequencePredictor(nn.Module):
@@ -58,8 +58,8 @@ class ConsequencePredictor(nn.Module):
         self.register_buffer('n_updates', torch.tensor(0))
 
         # History for computing actual addition accuracy
-        self.actual_accuracy_history = []
-        self.predicted_accuracy_history = []
+        self.actual_accuracy_history: List[float] = []
+        self.predicted_accuracy_history: List[float] = []
 
     def compute_z_statistics(self, z: torch.Tensor) -> Tuple[float, float]:
         """Compute latent space statistics.

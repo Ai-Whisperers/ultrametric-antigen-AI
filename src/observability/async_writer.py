@@ -35,7 +35,7 @@ Usage:
 import threading
 import queue
 from pathlib import Path
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Tuple, Union
 import time
 
 from .metrics_buffer import MetricRecord
@@ -46,7 +46,7 @@ try:
     TENSORBOARD_AVAILABLE = True
 except ImportError:
     TENSORBOARD_AVAILABLE = False
-    SummaryWriter = None
+    SummaryWriter = None  # type: ignore[misc,assignment]
 
 
 class AsyncTensorBoardWriter:
@@ -87,7 +87,7 @@ class AsyncTensorBoardWriter:
         self._log_path = log_path
 
         # Async infrastructure
-        self._queue = queue.Queue(maxsize=queue_size)
+        self._queue: queue.Queue[Union[List[MetricRecord], Tuple[str, None]]] = queue.Queue(maxsize=queue_size)
         self._flush_interval = flush_interval
         self._running = True
         self._last_flush = time.time()

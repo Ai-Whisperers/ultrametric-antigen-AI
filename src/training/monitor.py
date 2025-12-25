@@ -33,11 +33,10 @@ from src.data.generation import generate_all_ternary_operations
 # TensorBoard integration (optional)
 try:
     from torch.utils.tensorboard import SummaryWriter
-
     TENSORBOARD_AVAILABLE = True
 except ImportError:
     TENSORBOARD_AVAILABLE = False
-    SummaryWriter = None
+    SummaryWriter = None  # type: ignore[misc,assignment]
 
 
 class TrainingMonitor:
@@ -92,7 +91,7 @@ class TrainingMonitor:
 
         # Setup file logging
         self.logger = (
-            self._setup_file_logging(log_dir, experiment_name) if log_to_file else None
+            self._setup_file_logging(log_dir, experiment_name) if log_to_file and log_dir else None
         )
 
         # TensorBoard setup
@@ -523,14 +522,14 @@ class TrainingMonitor:
             num_batches = max(1, num_samples // batch_size)
 
             # Collect all samples first (on GPU)
-            all_samples = []
+            all_samples_list: List[torch.Tensor] = []
             for _ in range(num_batches):
                 samples = model.sample(batch_size, device, vae)
                 samples_rounded = torch.round(samples).long()
-                all_samples.append(samples_rounded)
+                all_samples_list.append(samples_rounded)
 
             # Concatenate and find unique (vectorized, single GPU→CPU transfer)
-            all_samples = torch.cat(all_samples, dim=0)
+            all_samples = torch.cat(all_samples_list, dim=0)
             unique_samples = torch.unique(all_samples, dim=0)
             unique_count = unique_samples.size(0)
 

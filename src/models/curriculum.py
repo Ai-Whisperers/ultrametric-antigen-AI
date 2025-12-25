@@ -21,7 +21,7 @@ Single responsibility: Manage curriculum state and loss modulation.
 
 import torch
 import torch.nn as nn
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 
 class ContinuousCurriculumModule(nn.Module):
@@ -68,7 +68,7 @@ class ContinuousCurriculumModule(nn.Module):
 
         # History tracking for analysis
         self.register_buffer('tau_ema', torch.tensor(initial_tau, dtype=torch.float32))
-        self.tau_history = []  # For logging/visualization
+        self.tau_history: List[float] = []  # For logging/visualization
 
     def update_tau(self, delta_curriculum: float) -> torch.Tensor:
         """Update tau based on StateNet's delta_curriculum output.
@@ -177,9 +177,9 @@ class CurriculumScheduler:
 
     def __init__(self, curriculum: ContinuousCurriculumModule):
         self.curriculum = curriculum
-        self.delta_history = []
-        self.radial_loss_history = []
-        self.ranking_loss_history = []
+        self.delta_history: List[float] = []
+        self.radial_loss_history: List[float] = []
+        self.ranking_loss_history: List[float] = []
 
     def record_step(
         self,
@@ -192,7 +192,7 @@ class CurriculumScheduler:
         self.radial_loss_history.append(radial_loss)
         self.ranking_loss_history.append(ranking_loss)
 
-    def get_stats(self) -> Dict[str, float]:
+    def get_stats(self) -> Dict[str, Union[float, str, int]]:
         """Get curriculum statistics."""
         tau_history = self.curriculum.tau_history
 
