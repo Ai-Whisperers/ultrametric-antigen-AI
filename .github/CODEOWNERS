@@ -1,0 +1,25 @@
+# CODEOWNERS - Define code ownership for automatic review requests
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global owners - all changes require review from at least one owner
+* @IvanWeissVanDerPol @gesttaltt
+
+# Core model architecture
+/src/models/ @IvanWeissVanDerPol @gesttaltt
+
+# Loss functions and training
+/src/losses/ @IvanWeissVanDerPol @gesttaltt
+/src/training/ @IvanWeissVanDerPol @gesttaltt
+
+# Configuration and infrastructure
+/src/config/ @IvanWeissVanDerPol @gesttaltt
+/.github/ @IvanWeissVanDerPol
+
+# Critical files requiring owner review
+/LICENSE @IvanWeissVanDerPol
+/CLA.md @IvanWeissVanDerPol
+/pyproject.toml @IvanWeissVanDerPol @gesttaltt
+/requirements*.txt @IvanWeissVanDerPol @gesttaltt
+
+# Documentation
+/DOCUMENTATION/ @IvanWeissVanDerPol @gesttaltt
