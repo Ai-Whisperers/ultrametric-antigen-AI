@@ -14,6 +14,7 @@ Modules:
     - geometry: Geometric analysis of embeddings (hyperbolicity, distances)
     - extremophile_codons: Codon usage patterns in extremophile organisms
     - extraterrestrial_aminoacids: Asteroid/meteorite amino acid analysis
+    - crispr_offtarget: CRISPR off-target landscape analysis using hyperbolic geometry
 """
 
 from .extremophile_codons import ExtremophileCategory, ExtremophileCodonAnalyzer
@@ -37,6 +38,18 @@ from .protein_landscape import (
     UltrametricDistanceMatrix,
 )
 
+# CRISPR off-target landscape analysis
+from .crispr_offtarget import (
+    CRISPROfftargetAnalyzer,
+    GuideDesignOptimizer,
+    GuideSafetyProfile,
+    HyperbolicOfftargetEmbedder,
+    MismatchType,
+    OffTargetSite,
+    OfftargetActivityPredictor,
+    PAdicSequenceDistance,
+)
+
 __all__ = [
     "compute_pairwise_distances",
     "compute_delta_hyperbolicity",
@@ -55,4 +68,13 @@ __all__ = [
     "EnergyBasin",
     "TransitionPath",
     "LandscapeMetrics",
+    # CRISPR off-target landscape
+    "CRISPROfftargetAnalyzer",
+    "GuideDesignOptimizer",
+    "GuideSafetyProfile",
+    "HyperbolicOfftargetEmbedder",
+    "MismatchType",
+    "OffTargetSite",
+    "OfftargetActivityPredictor",
+    "PAdicSequenceDistance",
 ]

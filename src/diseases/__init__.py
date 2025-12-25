@@ -13,6 +13,8 @@ through the p-adic and geometric lens of the Ternary VAE framework.
 Modules:
     - repeat_expansion: Trinucleotide repeat expansion diseases (HD, SCA, etc.)
     - long_covid: SARS-CoV-2 spike protein and Long COVID analysis
+    - multiple_sclerosis: MS molecular mimicry and demyelination analysis
+    - rheumatoid_arthritis: RA citrullination and Goldilocks Zone analysis
 
 Usage:
     from src.diseases import RepeatExpansionAnalyzer, LongCOVIDAnalyzer
@@ -36,6 +38,19 @@ from .multiple_sclerosis import (
 from .repeat_expansion import (RepeatDiseaseInfo, RepeatExpansionAnalyzer,
                                TrinucleotideRepeat)
 
+# Rheumatoid Arthritis analysis
+from .rheumatoid_arthritis import (
+    CitrullinationPredictor,
+    CitrullinationSite,
+    EpitopeAnalysis,
+    GoldilocksZoneDetector,
+    PADEnzyme,
+    PAdicCitrullinationShift,
+    RARiskProfile,
+    RASubtype,
+    RheumatoidArthritisAnalyzer,
+)
+
 __all__ = [
     "RepeatExpansionAnalyzer",
     "RepeatDiseaseInfo",
@@ -51,4 +66,14 @@ __all__ = [
     "EpitopePair",
     "MSRiskProfile",
     "DemyelinationPrediction",
+    # Rheumatoid Arthritis
+    "RheumatoidArthritisAnalyzer",
+    "CitrullinationPredictor",
+    "PAdicCitrullinationShift",
+    "GoldilocksZoneDetector",
+    "CitrullinationSite",
+    "RARiskProfile",
+    "EpitopeAnalysis",
+    "PADEnzyme",
+    "RASubtype",
 ]
