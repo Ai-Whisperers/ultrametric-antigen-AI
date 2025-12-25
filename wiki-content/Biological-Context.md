@@ -8,22 +8,34 @@ Understanding why hyperbolic geometry and p-adic numbers matter for bioinformati
 
 Biology is fundamentally **hierarchical**:
 
-```
-                    Life
-                     │
-         ┌──────────┼──────────┐
-      Bacteria    Archaea    Eukarya
-         │                      │
-    ┌────┴────┐          ┌──────┴──────┐
-  E.coli   Bacillus   Animals      Plants
-                         │
-                    ┌────┴────┐
-                  Mammals   Birds
-                    │
-               ┌────┴────┐
-            Primates  Rodents
-               │
-            Humans
+```mermaid
+flowchart TB
+    Life["🌍 Life"]
+
+    Life --> Bacteria["🦠 Bacteria"]
+    Life --> Archaea["🔬 Archaea"]
+    Life --> Eukarya["🧬 Eukarya"]
+
+    Bacteria --> Ecoli["E. coli"]
+    Bacteria --> Bacillus["Bacillus"]
+
+    Eukarya --> Animals["🐾 Animals"]
+    Eukarya --> Plants["🌱 Plants"]
+
+    Animals --> Mammals["🐘 Mammals"]
+    Animals --> Birds["🐦 Birds"]
+
+    Mammals --> Primates["🐵 Primates"]
+    Mammals --> Rodents["🐀 Rodents"]
+
+    Primates --> Humans["👤 Humans"]
+
+    style Life fill:#ffeb3b
+    style Eukarya fill:#e1bee7
+    style Animals fill:#bbdefb
+    style Mammals fill:#b2dfdb
+    style Primates fill:#c8e6c9
+    style Humans fill:#81c784
 ```
 
 **The challenge**: Representing this tree structure in a way that:
@@ -80,21 +92,39 @@ This means hyperbolic space has "room" for exponentially growing trees!
 
 ### Visualization
 
-```
-Euclidean (distorted):         Hyperbolic (accurate):
+```mermaid
+flowchart LR
+    subgraph Euclidean["❌ Euclidean Space"]
+        direction TB
+        EA["A (root)"]
+        EB["B"] & EC["C"]
+        ED["D"] & EE["E"] & EF["F"] & EG["G"]
 
-    D   E       F   G              D E     F G
-     \ /         \ /                \/       \/
-      B           C                  B       C
-       \         /                    \     /
-        \       /                      \   /
-         \     /                        \ /
-          \   /                          A
-           \ /
-            A
+        EA --- EB & EC
+        EB --- ED & EE
+        EC --- EF & EG
+    end
 
-   Leaves crushed together        Leaves well-separated
+    subgraph Hyperbolic["✅ Hyperbolic Space"]
+        direction TB
+        HA["A (center)"]
+        HB["B"] & HC["C"]
+        HD["D"] & HE["E"] & HF["F"] & HG["G"]
+
+        HA --- HB & HC
+        HB --- HD & HE
+        HC --- HF & HG
+    end
+
+    style Euclidean fill:#ffcdd2
+    style Hyperbolic fill:#c8e6c9
 ```
+
+| Property | Euclidean | Hyperbolic |
+|----------|-----------|------------|
+| Leaf separation | Crushed together | Well-separated |
+| Distortion | O(n) | O(log n) |
+| Dimensions needed | O(n) for trees | 2D sufficient |
 
 ---
 
@@ -255,15 +285,26 @@ Ternary VAE learns these biases from data.
 
 Viruses (especially HIV) use **glycan shields** - sugar molecules that block antibodies:
 
-```
-    Antibody → X blocked
-                │
-           ┌────┴────┐
-      Glycan  Glycan  Glycan
-           │    │     │
-    ═══════╪════╪═════╪═══════ Viral surface
-              Epitope
-           (hidden target)
+```mermaid
+flowchart TB
+    subgraph Shield["Glycan Shield Mechanism"]
+        AB["🔴 Antibody"] -->|"❌ Blocked"| G2
+
+        subgraph Glycans["Sugar Shield Layer"]
+            G1["🍭"] & G2["🍭"] & G3["🍭"] & G4["🍭"]
+        end
+
+        subgraph Surface["═══ Viral Envelope ═══"]
+            EP["🎯 Hidden Epitope<br/>(Conserved Target)"]
+        end
+
+        Glycans --> Surface
+    end
+
+    style AB fill:#ef5350,color:#fff
+    style EP fill:#4caf50,color:#fff
+    style Glycans fill:#fff9c4
+    style Surface fill:#90a4ae
 ```
 
 **How Ternary VAE helps**:

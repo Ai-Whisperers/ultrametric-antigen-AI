@@ -4,21 +4,32 @@ The Ternary VAE system is built on a modular architecture combining hyperbolic g
 
 ## System Overview
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                      TernaryVAE V5.11                       │
-├─────────────────────────────────────────────────────────────┤
-│  ┌─────────────┐    ┌──────────────┐    ┌───────────────┐  │
-│  │   Encoder   │ -> │ Latent Space │ -> │    Decoder    │  │
-│  │  (MLP/GVP)  │    │ (Poincare)   │    │     (MLP)     │  │
-│  └─────────────┘    └──────────────┘    └───────────────┘  │
-│         │                  │                    │          │
-│         v                  v                    v          │
-│  ┌─────────────┐    ┌──────────────┐    ┌───────────────┐  │
-│  │   μ, σ      │    │  exp_map_0   │    │  Softmax(19683)│ │
-│  │ Euclidean   │    │  Hyperbolic  │    │    Ternary    │  │
-│  └─────────────┘    └──────────────┘    └───────────────┘  │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph TernaryVAE["TernaryVAE V5.11"]
+        direction LR
+
+        subgraph Enc["Encoder"]
+            E1["MLP/GVP"] --> E2["μ, σ<br/>(Euclidean)"]
+        end
+
+        subgraph Lat["Latent Space"]
+            L1["exp_map_zero()"] --> L2["Poincaré Ball"]
+        end
+
+        subgraph Dec["Decoder"]
+            D1["MLP"] --> D2["Softmax<br/>(19,683)"]
+        end
+
+        Enc --> Lat --> Dec
+    end
+
+    Input[/"One-Hot<br/>(B, 19683)"/] --> TernaryVAE
+    TernaryVAE --> Output[/"Reconstruction<br/>(B, 19683)"/]
+
+    style Enc fill:#fff3e0
+    style Lat fill:#f3e5f5
+    style Dec fill:#e8f5e9
 ```
 
 ## Core Components
@@ -96,16 +107,36 @@ loss_result = registry.compose(outputs, targets)
 
 ## Module Dependencies
 
-```
-src/
-├── config/          # No internal deps
-├── geometry/        # config
-├── losses/          # config, geometry
-├── models/          # config, geometry, losses
-├── training/        # config, models, losses
-├── encoders/        # geometry
-├── diseases/        # models, losses
-└── observability/   # config
+```mermaid
+flowchart BT
+    config["📁 config<br/>(No dependencies)"]
+    geometry["📁 geometry"]
+    losses["📁 losses"]
+    models["📁 models"]
+    training["📁 training"]
+    encoders["📁 encoders"]
+    diseases["📁 diseases"]
+    observability["📁 observability"]
+
+    config --> geometry
+    config --> losses
+    config --> observability
+    geometry --> losses
+    geometry --> encoders
+    config --> models
+    geometry --> models
+    losses --> models
+    config --> training
+    models --> training
+    losses --> training
+    models --> diseases
+    losses --> diseases
+
+    style config fill:#c8e6c9
+    style geometry fill:#bbdefb
+    style losses fill:#ffe0b2
+    style models fill:#e1bee7
+    style training fill:#fff9c4
 ```
 
 ## Design Principles

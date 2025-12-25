@@ -11,40 +11,50 @@ Welcome to the **Ternary VAE** documentation! A cutting-edge variational autoenc
 
 ## What is Ternary VAE?
 
+```mermaid
+flowchart TB
+    subgraph Input["🧬 Input Layer"]
+        A[/"Biological Sequences<br/>(Codons, Proteins, DNA)"/]
+    end
+
+    subgraph Encoder["📥 Ternary Encoder"]
+        B["MLP Layers<br/>(19,683 → hidden)"] --> C["μ, σ in Euclidean Space"]
+        C --> D["Reparameterization<br/>z = μ + σ·ε"]
+    end
+
+    subgraph Latent["🔮 Hyperbolic Latent Space"]
+        E["exp_map_zero()"] --> F[("Poincaré Ball<br/>‖z‖ < 1")]
+    end
+
+    subgraph Decoder["📤 Ternary Decoder"]
+        G["MLP Layers"] --> H[/"Softmax(19,683)"/]
+    end
+
+    A --> B
+    D --> E
+    F --> G
+
+    style Input fill:#e1f5fe
+    style Encoder fill:#fff3e0
+    style Latent fill:#f3e5f5
+    style Decoder fill:#e8f5e9
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     Biological Sequences                        │
-│                    (Codons, Proteins, DNA)                      │
-└─────────────────────────┬───────────────────────────────────────┘
-                          ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      Ternary Encoder                            │
-│              (19,683 operations → latent space)                 │
-└─────────────────────────┬───────────────────────────────────────┘
-                          ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    Poincaré Ball Latent Space                   │
-│                                                                 │
-│     Boundary (leaves)           •                               │
-│           ╲                    ╱│╲                              │
-│            ╲    •    •    •   ╱ │ ╲                             │
-│             ╲  ╱ ╲  ╱ ╲  ╱ ╲ ╱  │  ╲                            │
-│              ••   ••   ••   ••  │   •                           │
-│                 ╲    ╲ ╱   ╱    │                               │
-│                  ╲    •   ╱     │                               │
-│                   ╲  ╱|╲ ╱      │ Hierarchical                  │
-│                    ╲╱ | ╲╱      │ structure                     │
-│                     ╲ │ ╱       │ preserved                     │
-│                      ╲│╱        │                               │
-│                    Center (root)                                │
-│                                                                 │
-│  Hyperbolic space naturally embeds trees with low distortion!  │
-└─────────────────────────────────────────────────────────────────┘
-                          ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      Ternary Decoder                            │
-│              (latent space → 19,683 operations)                 │
-└─────────────────────────────────────────────────────────────────┘
+
+### Why Poincaré Ball for Biology?
+
+```mermaid
+flowchart LR
+    subgraph Problem["❌ Euclidean Problem"]
+        E1["Trees need O(n²) dimensions"]
+        E2["High distortion inevitable"]
+    end
+
+    subgraph Solution["✅ Hyperbolic Solution"]
+        H1["Trees fit in 2D"]
+        H2["O(log n) distortion"]
+    end
+
+    Problem --> |"Hyperbolic<br/>Geometry"| Solution
 ```
 
 **Key insight**: Biological data is hierarchical (phylogenies, protein families, codon usage). Hyperbolic space embeds hierarchies with exponentially less distortion than Euclidean space.
