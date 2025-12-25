@@ -23,8 +23,15 @@ from .poincare import (ManifoldParameter, ManifoldTensor, PoincareModule,
                        lambda_x, log_map_zero, mobius_add, parallel_transport,
                        poincare_distance, poincare_distance_matrix,
                        project_to_poincare)
+from .holographic_poincare import (
+    BoundaryPoint,
+    HolographicLoss,
+    HolographicPoincareManifold,
+    HolographicProjection,
+)
 
 __all__ = [
+    # Core Poincare operations
     "get_manifold",
     "poincare_distance",
     "poincare_distance_matrix",
@@ -42,4 +49,9 @@ __all__ = [
     "ManifoldTensor",
     "RiemannianAdam",
     "RiemannianSGD",
+    # Holographic extensions
+    "HolographicPoincareManifold",
+    "HolographicProjection",
+    "HolographicLoss",
+    "BoundaryPoint",
 ]

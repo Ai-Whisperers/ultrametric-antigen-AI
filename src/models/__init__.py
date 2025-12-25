@@ -13,6 +13,7 @@ from .differentiable_controller import (DifferentiableController,
 from .homeostasis import HomeostasisController, compute_Q
 from .hyperbolic_projection import (DualHyperbolicProjection,
                                     HyperbolicProjection)
+from .swarm_vae import AgentConfig, AgentRole, PheromoneField, SwarmAgent, SwarmVAE
 from .ternary_vae import (FrozenDecoder, FrozenEncoder, TernaryVAEV5_11,
                           TernaryVAEV5_11_OptionC)
 
@@ -40,4 +41,10 @@ __all__ = [
     # Homeostasis (V5.11.7 + V5.11.8)
     "HomeostasisController",
     "compute_Q",
+    # Swarm VAE (multi-agent architecture)
+    "SwarmVAE",
+    "SwarmAgent",
+    "AgentConfig",
+    "AgentRole",
+    "PheromoneField",
 ]
