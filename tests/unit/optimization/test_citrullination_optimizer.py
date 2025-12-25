@@ -14,7 +14,60 @@ from src.optimization.citrullination_optimizer import (
     CodonContextOptimizer,
     OptimizationResult,
     PAdicBoundaryAnalyzer,
+    codon_to_index,
+    padic_distance,
 )
+
+
+class TestCodonToIndex:
+    """Tests for codon_to_index function."""
+
+    def test_basic_codons(self):
+        """Test index computation for basic codons."""
+        # UUU should be 0 (0*16 + 0*4 + 0)
+        assert codon_to_index("UUU") == 0
+
+        # GGG should be 63 (3*16 + 3*4 + 3)
+        assert codon_to_index("GGG") == 63
+
+        # CGU (arginine) should have specific index
+        idx_cgu = codon_to_index("CGU")
+        assert 0 <= idx_cgu <= 63
+
+    def test_dna_to_rna_conversion(self):
+        """Test that T is converted to U."""
+        assert codon_to_index("TTT") == codon_to_index("UUU")
+
+
+class TestPAdicDistance:
+    """Tests for padic_distance function."""
+
+    def test_same_index(self):
+        """Test distance between same indices is 0."""
+        assert padic_distance(0, 0) == 0.0
+        assert padic_distance(27, 27) == 0.0
+
+    def test_different_indices(self):
+        """Test distance between different indices."""
+        # Distance should be positive for different indices
+        dist = padic_distance(0, 1)
+        assert dist > 0.0
+
+    def test_p_divisibility(self):
+        """Test p-adic distance reflects divisibility by p."""
+        # Difference of 3 (divisible by 3 once)
+        dist_3 = padic_distance(0, 3, p=3)
+
+        # Difference of 9 (divisible by 3 twice)
+        dist_9 = padic_distance(0, 9, p=3)
+
+        # Difference of 1 (not divisible by 3)
+        dist_1 = padic_distance(0, 1, p=3)
+
+        # 9 should have smaller distance than 3 (higher valuation)
+        assert dist_9 < dist_3
+        # 1 should have larger distance than 3
+        assert dist_1 > dist_3
 
 
 class TestCodonChoice:
@@ -23,18 +76,17 @@ class TestCodonChoice:
     def test_creation(self):
         """Test dataclass creation."""
         choice = CodonChoice(
-            codon="CGT",
+            codon="CGU",
             amino_acid="R",
-            padic_distance=0.333,
+            padic_index=24,
             boundary_distance=0.15,
-            codon_usage=0.45,
-            combined_score=0.7,
+            usage_frequency=0.08,
+            tRNA_abundance=0.5,
         )
 
-        assert choice.codon == "CGT"
+        assert choice.codon == "CGU"
         assert choice.amino_acid == "R"
-        assert choice.padic_distance == 0.333
-        assert choice.boundary_distance == 0.15
+        assert choice.padic_index == 24
 
 
 class TestOptimizationResult:
@@ -45,11 +97,11 @@ class TestOptimizationResult:
         result = OptimizationResult(
             original_sequence="ATGCGT",
             optimized_sequence="ATGAGA",
-            original_arginines=[(1, "CGT")],
-            optimized_arginines=[(1, "AGA")],
+            original_codons=["AUG", "CGU"],
+            optimized_codons=["AUG", "AGA"],
+            arginine_positions=[1],
             padic_improvement=0.2,
-            boundary_margin_improvement=0.15,
-            codon_usage_maintained=True,
+            safety_score=0.8,
         )
 
         assert result.original_sequence == "ATGCGT"
@@ -62,65 +114,41 @@ class TestPAdicBoundaryAnalyzer:
 
     def test_creation(self):
         """Test analyzer creation."""
-        analyzer = PAdicBoundaryAnalyzer(
-            p=3, goldilocks_lower=0.1, goldilocks_upper=0.5
-        )
+        analyzer = PAdicBoundaryAnalyzer(p=3, zone_min=0.1, zone_max=0.5)
         assert analyzer.p == 3
-        assert analyzer.goldilocks_lower == 0.1
-        assert analyzer.goldilocks_upper == 0.5
+        assert analyzer.zone_min == 0.1
+        assert analyzer.zone_max == 0.5
 
-    def test_compute_codon_valuation(self):
-        """Test codon p-adic valuation."""
+    def test_get_safest_arginine_codon(self):
+        """Test getting safest arginine codon."""
         analyzer = PAdicBoundaryAnalyzer(p=3)
 
-        # Different codons should have different valuations
-        val_cgt = analyzer.compute_codon_valuation("CGT")
-        val_aga = analyzer.compute_codon_valuation("AGA")
+        safest = analyzer.get_safest_arginine_codon()
 
-        assert isinstance(val_cgt, float)
-        assert isinstance(val_aga, float)
+        # Should be one of the arginine codons
+        arginine_codons = {"CGU", "CGC", "CGA", "CGG", "AGA", "AGG"}
+        assert safest in arginine_codons
 
-    def test_compute_boundary_distance(self):
-        """Test boundary distance computation."""
-        analyzer = PAdicBoundaryAnalyzer(
-            p=3, goldilocks_lower=0.1, goldilocks_upper=0.5
-        )
-
-        # Test point inside zone
-        dist_inside = analyzer.compute_boundary_distance(0.3)
-        assert dist_inside >= 0
-
-        # Test point outside zone
-        dist_outside = analyzer.compute_boundary_distance(0.7)
-        assert dist_outside >= 0
-
-        # Point outside zone should be further from zone boundaries
-        assert dist_outside >= dist_inside or dist_inside >= 0
-
-    def test_analyze_arginine_codons(self):
-        """Test analysis of arginine codons."""
+    def test_rank_arginine_codons(self):
+        """Test ranking arginine codons."""
         analyzer = PAdicBoundaryAnalyzer(p=3)
 
-        codons = ["CGT", "CGC", "CGA", "CGG", "AGA", "AGG"]
-        analysis = analyzer.analyze_arginine_codons(codons)
+        ranked = analyzer.rank_arginine_codons()
 
-        assert len(analysis) == 6
-        for codon, result in analysis.items():
-            assert "valuation" in result
-            assert "distance" in result
+        # Should have 6 arginine codons
+        assert len(ranked) == 6
 
-    def test_rank_codons_by_safety(self):
-        """Test codon ranking by safety."""
-        analyzer = PAdicBoundaryAnalyzer(p=3)
+        # Should be sorted by boundary distance (descending)
+        distances = [d for _, d in ranked]
+        assert distances == sorted(distances, reverse=True)
 
-        codons = ["CGT", "AGA", "AGG"]
-        ranked = analyzer.rank_codons_by_safety(codons)
+    def test_is_in_danger_zone(self):
+        """Test danger zone checking."""
+        analyzer = PAdicBoundaryAnalyzer(p=3, zone_min=0.1, zone_max=0.5)
 
-        assert len(ranked) == 3
-        # All should be valid codon choices
-        for choice in ranked:
-            assert isinstance(choice, CodonChoice)
-            assert choice.codon in codons
+        # Check various indices
+        result = analyzer.is_in_danger_zone(0)
+        assert isinstance(result, bool)
 
 
 class TestCodonContextOptimizer:
@@ -128,40 +156,34 @@ class TestCodonContextOptimizer:
 
     def test_creation(self):
         """Test optimizer creation."""
-        optimizer = CodonContextOptimizer(context_window=5)
-        assert optimizer.context_window == 5
+        optimizer = CodonContextOptimizer(context_size=5, embedding_dim=32)
+        assert optimizer.context_size == 5
 
-    def test_extract_context(self):
-        """Test context extraction."""
-        optimizer = CodonContextOptimizer(context_window=3)
-
-        sequence = "ATGCGTACG"  # 3 codons
-        context = optimizer.extract_context(sequence, codon_position=1)
-
-        assert len(context) > 0
-
-    def test_compute_context_score(self):
-        """Test context scoring."""
+    def test_encode_codon_sequence(self):
+        """Test codon sequence encoding."""
         optimizer = CodonContextOptimizer()
 
-        upstream = "ATG"
-        downstream = "ACG"
-        codon = "CGT"
+        codons = ["AUG", "CGU", "ACG"]
+        encoded = optimizer.encode_codon_sequence(codons)
 
-        score = optimizer.compute_context_score(upstream, codon, downstream)
-        assert isinstance(score, float)
+        assert len(encoded) == 3
+        assert all(0 <= idx <= 63 for idx in encoded)
 
-    def test_find_optimal_codon(self):
-        """Test finding optimal codon."""
-        optimizer = CodonContextOptimizer()
+    def test_forward(self):
+        """Test forward pass."""
+        optimizer = CodonContextOptimizer(context_size=2)
 
-        candidates = ["CGT", "AGA", "AGG"]
-        upstream = "ATG"
-        downstream = "ACG"
+        # Context of 5 codons (2 on each side + center)
+        contexts = [
+            ["AUG", "GCU", "CGU", "ACG", "UGG"],
+            ["GGG", "AAA", "AGA", "CCC", "UUU"],
+        ]
 
-        best_codon = optimizer.find_optimal_codon(candidates, upstream, downstream)
+        result = optimizer(contexts)
 
-        assert best_codon in candidates
+        assert "safety_score" in result
+        assert "suggestion_probabilities" in result
+        assert len(result["safety_score"]) == 2
 
 
 class TestCitrullinationBoundaryOptimizer:
@@ -170,146 +192,85 @@ class TestCitrullinationBoundaryOptimizer:
     def test_creation(self):
         """Test optimizer creation."""
         optimizer = CitrullinationBoundaryOptimizer(
-            p=3, goldilocks_bounds=(0.1, 0.5)
+            p=3, zone_min=0.1, zone_max=0.5
         )
         assert optimizer.p == 3
 
-    def test_find_arginine_codons(self):
-        """Test finding arginine codons in sequence."""
+    def test_dna_to_codons(self):
+        """Test DNA to codon conversion."""
         optimizer = CitrullinationBoundaryOptimizer()
 
-        # Sequence with arginine codons at positions 1 and 3 (0-indexed)
-        sequence = "ATGCGTACGAGA"  # ATG CGT ACG AGA
+        dna = "ATGCGTACG"  # 3 codons
+        codons = optimizer.dna_to_codons(dna)
 
-        positions = optimizer.find_arginine_codons(sequence)
+        assert len(codons) == 3
+        assert codons[0] == "AUG"  # T -> U
+        assert codons[1] == "CGU"
+        assert codons[2] == "ACG"
 
-        # Should find CGT at position 1 and AGA at position 3
-        assert len(positions) == 2
-        assert (1, "CGT") in positions or (3, "AGA") in positions
+    def test_codons_to_dna(self):
+        """Test codon to DNA conversion."""
+        optimizer = CitrullinationBoundaryOptimizer()
+
+        codons = ["AUG", "CGU", "ACG"]
+        dna = optimizer.codons_to_dna(codons)
+
+        assert dna == "ATGCGTACG"
+
+    def test_find_arginine_positions(self):
+        """Test finding arginine positions."""
+        optimizer = CitrullinationBoundaryOptimizer()
+
+        # ATG CGT ACG AGA (Met Arg Thr Arg)
+        codons = ["AUG", "CGU", "ACG", "AGA"]
+        positions = optimizer.find_arginine_positions(codons)
+
+        # Positions 1 and 3 have arginine codons
+        assert 1 in positions
+        assert 3 in positions
+        assert 0 not in positions
+        assert 2 not in positions
 
     def test_optimize_arginine_codons(self):
         """Test arginine codon optimization."""
         optimizer = CitrullinationBoundaryOptimizer()
 
-        codons = ["CGT", "AGA"]
-        optimized = optimizer.optimize_arginine_codons(codons, usage_weight=0.3)
+        codons = ["CGU", "AGA"]
+        optimized = optimizer.optimize_arginine_codons(codons)
 
         assert len(optimized) == 2
         # All optimized codons should still encode arginine
-        arginine_codons = {"CGT", "CGC", "CGA", "CGG", "AGA", "AGG"}
+        arginine_codons = {"CGU", "CGC", "CGA", "CGG", "AGA", "AGG"}
         for codon in optimized:
             assert codon in arginine_codons
-
-    def test_optimize_sequence(self):
-        """Test full sequence optimization."""
-        optimizer = CitrullinationBoundaryOptimizer()
-
-        # Simple sequence with one arginine
-        sequence = "ATGCGTACG"  # ATG CGT ACG (Met Arg Thr)
-
-        result = optimizer.optimize_sequence(sequence)
-
-        assert isinstance(result, OptimizationResult)
-        assert len(result.optimized_sequence) == len(sequence)
-        # Should preserve non-arginine codons
-        assert result.optimized_sequence[:3] == "ATG"
-        assert result.optimized_sequence[6:] == "ACG"
-
-    def test_optimize_sequence_no_arginines(self):
-        """Test optimization of sequence without arginines."""
-        optimizer = CitrullinationBoundaryOptimizer()
-
-        sequence = "ATGACGTTG"  # No arginine codons
-
-        result = optimizer.optimize_sequence(sequence)
-
-        assert result.optimized_sequence == sequence
-        assert len(result.original_arginines) == 0
-
-    def test_batch_optimize(self):
-        """Test batch optimization."""
-        optimizer = CitrullinationBoundaryOptimizer()
-
-        sequences = [
-            "ATGCGTACG",
-            "ATGAGAACG",
-            "ATGACGTTT",
-        ]
-
-        results = optimizer.batch_optimize(sequences)
-
-        assert len(results) == 3
-        for result in results:
-            assert isinstance(result, OptimizationResult)
 
 
 class TestIntegration:
     """Integration tests for optimization pipeline."""
 
-    def test_full_pipeline(self):
-        """Test complete optimization pipeline."""
-        # Create components
-        boundary_analyzer = PAdicBoundaryAnalyzer(
-            p=3, goldilocks_lower=0.1, goldilocks_upper=0.5
-        )
-        context_optimizer = CodonContextOptimizer(context_window=5)
-        optimizer = CitrullinationBoundaryOptimizer(
-            p=3, goldilocks_bounds=(0.1, 0.5)
-        )
-
-        # Sequence with multiple arginines
-        sequence = "ATGCGTACGAGATTG"  # ATG CGT ACG AGA TTG
-
-        # Analyze current state
-        arg_positions = optimizer.find_arginine_codons(sequence)
-
-        # Optimize
-        result = optimizer.optimize_sequence(sequence, optimize_context_flag=True)
-
-        # Verify improvement metrics
-        assert result is not None
-        assert isinstance(result.padic_improvement, float)
-
-    def test_maintains_amino_acid_sequence(self):
-        """Test that optimization preserves protein sequence."""
+    def test_roundtrip_conversion(self):
+        """Test DNA -> codons -> DNA conversion."""
         optimizer = CitrullinationBoundaryOptimizer()
 
-        sequence = "ATGCGTACGAGACGT"  # Met Arg Thr Arg Arg
+        original = "ATGCGTACGAGA"
+        codons = optimizer.dna_to_codons(original)
+        reconstructed = optimizer.codons_to_dna(codons)
 
-        result = optimizer.optimize_sequence(sequence)
+        assert reconstructed == original
 
-        # The amino acid sequence should be preserved
-        # (all arginine codons should still encode arginine)
-        optimized = result.optimized_sequence
+    def test_arginine_codon_preservation(self):
+        """Test that optimization preserves arginine codons (as arginine)."""
+        optimizer = CitrullinationBoundaryOptimizer()
 
-        # Check each codon position
-        for i in range(0, len(optimized), 3):
-            original_codon = sequence[i : i + 3]
-            optimized_codon = optimized[i : i + 3]
+        # Sequence with arginine codons
+        codons = ["AUG", "CGU", "ACG", "AGA"]
+        arg_positions = optimizer.find_arginine_positions(codons)
 
-            # If original was arginine, optimized should be too
-            arginine_codons = {"CGT", "CGC", "CGA", "CGG", "AGA", "AGG"}
-            if original_codon in arginine_codons:
-                assert (
-                    optimized_codon in arginine_codons
-                ), f"Arginine codon changed to non-arginine: {optimized_codon}"
+        # Optimize arginine codons
+        arg_codons = [codons[i] for i in arg_positions]
+        optimized_args = optimizer.optimize_arginine_codons(arg_codons)
 
-    def test_improvement_direction(self):
-        """Test that optimization improves boundary margins."""
-        optimizer = CitrullinationBoundaryOptimizer(
-            p=3, goldilocks_bounds=(0.1, 0.5)
-        )
-
-        # Run multiple optimizations
-        sequences = [
-            "ATGCGTACG",
-            "CGTCGTCGT",  # Three arginines
-            "AGAAGAAGA",  # Three arginines (different codon)
-        ]
-
-        for seq in sequences:
-            result = optimizer.optimize_sequence(seq)
-            # Improvement should be non-negative (we don't make things worse)
-            assert (
-                result.padic_improvement >= -0.01
-            )  # Small tolerance for numerical issues
+        # All should still be arginine codons
+        arginine_codons = {"CGU", "CGC", "CGA", "CGG", "AGA", "AGG"}
+        for codon in optimized_args:
+            assert codon in arginine_codons

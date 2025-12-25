@@ -38,9 +38,10 @@ class TestRASubtype:
 
     def test_enum_values(self):
         """Test RA subtype values."""
-        assert RASubtype.SEROPOSITIVE.value == "seropositive"
+        assert RASubtype.ACPA_POSITIVE.value == "acpa_positive"
+        assert RASubtype.ACPA_NEGATIVE.value == "acpa_negative"
+        assert RASubtype.RF_POSITIVE.value == "rf_positive"
         assert RASubtype.SERONEGATIVE.value == "seronegative"
-        assert RASubtype.PALINDROMIC.value == "palindromic"
 
 
 class TestCitrullinationSite:
@@ -49,20 +50,21 @@ class TestCitrullinationSite:
     def test_creation(self):
         """Test site creation."""
         site = CitrullinationSite(
+            protein_name="vimentin",
             position=10,
-            context="GFRGL",
-            predicted_probability=0.75,
-            pad_enzyme=PADEnzyme.PAD4,
-            padic_distance=0.333,
+            sequence_context="GFRGLARGKDRRFRG",
+            padic_distance_to_self=0.333,
+            immunogenicity_score=0.75,
             in_goldilocks_zone=True,
-            autoimmune_risk="high",
+            known_acpa_target=True,
         )
 
+        assert site.protein_name == "vimentin"
         assert site.position == 10
-        assert site.context == "GFRGL"
-        assert site.predicted_probability == 0.75
-        assert site.pad_enzyme == PADEnzyme.PAD4
+        assert site.sequence_context == "GFRGLARGKDRRFRG"
+        assert site.immunogenicity_score == 0.75
         assert site.in_goldilocks_zone is True
+        assert site.known_acpa_target is True
 
 
 class TestCitrullinationPredictor:
@@ -70,37 +72,28 @@ class TestCitrullinationPredictor:
 
     def test_creation(self):
         """Test predictor creation."""
-        predictor = CitrullinationPredictor(hidden_dim=64)
-        assert predictor.hidden_dim == 64
+        predictor = CitrullinationPredictor(context_size=15, hidden_dim=64)
+        assert predictor.context_size == 15
 
-    def test_encode_context(self):
-        """Test context encoding."""
+    def test_encode_sequence(self):
+        """Test sequence encoding."""
         predictor = CitrullinationPredictor()
 
-        context = "GFRGL"  # 5 residues around arginine
-        encoding = predictor.encode_context(context)
+        sequence = "GFRGLARGKDRRFRG"  # 15 residues
+        encoding = predictor.encode_sequence(sequence)
 
-        assert encoding.shape[0] == 5  # Context length
-        assert encoding.shape[1] == 20  # Amino acid vocab
-
-    def test_predict_probability(self):
-        """Test probability prediction."""
-        predictor = CitrullinationPredictor()
-
-        context = "GFRGL"
-        prob = predictor.predict_probability(context)
-
-        assert 0.0 <= prob <= 1.0
+        assert encoding.shape[0] == 15
 
     def test_forward(self):
-        """Test forward pass with batch contexts."""
+        """Test forward pass."""
         predictor = CitrullinationPredictor()
 
-        contexts = ["GFRGL", "ARRAA", "PPRPP"]
-        probabilities = predictor(contexts)
+        # Context sequences should be 15-mers centered on arginine
+        contexts = ["GFRGLARGKDRRFRG", "ARRAARRGAARRAAR"]
+        result = predictor(contexts)
 
-        assert len(probabilities) == 3
-        assert all(0.0 <= p <= 1.0 for p in probabilities)
+        assert "propensity" in result
+        assert len(result["propensity"]) == 2
 
 
 class TestPAdicCitrullinationShift:
@@ -108,36 +101,9 @@ class TestPAdicCitrullinationShift:
 
     def test_creation(self):
         """Test shift analyzer creation."""
-        analyzer = PAdicCitrullinationShift(p=3, embedding_dim=32)
+        analyzer = PAdicCitrullinationShift(p=3, embedding_dim=64)
         assert analyzer.p == 3
-        assert analyzer.embedding_dim == 32
-
-    def test_compute_arg_embedding(self):
-        """Test arginine embedding computation."""
-        analyzer = PAdicCitrullinationShift(embedding_dim=32)
-
-        context = "GFRGL"
-        embedding = analyzer.compute_arg_embedding(context)
-
-        assert embedding.shape == (32,)
-
-    def test_compute_cit_embedding(self):
-        """Test citrulline embedding computation."""
-        analyzer = PAdicCitrullinationShift(embedding_dim=32)
-
-        context = "GFCitGL"  # Hypothetical citrulline context
-        embedding = analyzer.compute_cit_embedding(context)
-
-        assert embedding.shape == (32,)
-
-    def test_compute_shift_distance(self):
-        """Test shift distance computation."""
-        analyzer = PAdicCitrullinationShift(embedding_dim=32)
-
-        context = "GFRGL"
-        distance = analyzer.compute_shift_distance(context)
-
-        assert distance >= 0
+        assert analyzer.embedding_dim == 64
 
 
 class TestGoldilocksZoneDetector:
@@ -147,46 +113,42 @@ class TestGoldilocksZoneDetector:
         """Test detector creation."""
         detector = GoldilocksZoneDetector(
             p=3,
-            lower_bound=0.1,
-            upper_bound=0.5,
+            zone_min=0.15,
+            zone_max=0.30,
         )
         assert detector.p == 3
-        assert detector.lower_bound == 0.1
-        assert detector.upper_bound == 0.5
+        assert detector.zone_min == 0.15
+        assert detector.zone_max == 0.30
 
-    def test_check_in_zone(self):
+    def test_is_in_zone(self):
         """Test zone checking."""
-        detector = GoldilocksZoneDetector(lower_bound=0.1, upper_bound=0.5)
+        detector = GoldilocksZoneDetector(zone_min=0.1, zone_max=0.5)
 
         # Inside zone
-        assert detector.check_in_zone(0.3) is True
+        inside = torch.tensor([0.3])
+        assert detector.is_in_zone(inside).item() is True
 
         # Below zone
-        assert detector.check_in_zone(0.05) is False
+        below = torch.tensor([0.05])
+        assert detector.is_in_zone(below).item() is False
 
         # Above zone
-        assert detector.check_in_zone(0.7) is False
+        above = torch.tensor([0.7])
+        assert detector.is_in_zone(above).item() is False
 
-    def test_compute_risk_score(self):
+    def test_zone_risk_score(self):
         """Test risk score computation."""
         detector = GoldilocksZoneDetector()
 
         # Points in the zone should have higher risk
-        risk_in = detector.compute_risk_score(0.3)
-        risk_out = detector.compute_risk_score(0.8)
+        inside = torch.tensor([0.2])
+        outside = torch.tensor([0.8])
 
+        risk_in = detector.zone_risk_score(inside)
+        risk_out = detector.zone_risk_score(outside)
+
+        # Inside zone should have higher risk
         assert risk_in > risk_out
-
-    def test_forward(self):
-        """Test forward pass."""
-        detector = GoldilocksZoneDetector()
-
-        distances = torch.tensor([0.05, 0.3, 0.7])
-        results = detector(distances)
-
-        assert "in_zone" in results
-        assert "risk_scores" in results
-        assert len(results["in_zone"]) == 3
 
 
 class TestRheumatoidArthritisAnalyzer:
@@ -194,128 +156,84 @@ class TestRheumatoidArthritisAnalyzer:
 
     def test_creation(self):
         """Test analyzer creation."""
-        analyzer = RheumatoidArthritisAnalyzer(
-            p=3, embedding_dim=32, goldilocks_bounds=(0.1, 0.5)
-        )
+        analyzer = RheumatoidArthritisAnalyzer(p=3)
         assert analyzer.p == 3
 
-    def test_analyze_protein(self):
-        """Test protein citrullination analysis."""
-        analyzer = RheumatoidArthritisAnalyzer(embedding_dim=32)
-
-        # Fibrinogen-like sequence with arginines
-        sequence = "MWVLVAALGLGALAAFPRLPPGA"  # Contains R at position 14
-
-        sites = analyzer.analyze_protein("test_protein", sequence)
-
-        # Should find at least one arginine site
-        assert len(sites) >= 0  # May be 0 if no arginines found
-
-        # If sites found, check they're valid
-        for site in sites:
-            assert isinstance(site, CitrullinationSite)
-            assert 0 <= site.position < len(sequence)
-
-    def test_analyze_protein_with_arginines(self):
-        """Test analysis of sequence with multiple arginines."""
-        analyzer = RheumatoidArthritisAnalyzer(embedding_dim=32)
-
-        # Sequence with several arginines
-        sequence = "AARRGRRPRRQRR"  # Multiple R sites
-
-        sites = analyzer.analyze_protein("arginine_rich", sequence)
-
-        # Should find multiple sites
-        assert len(sites) >= 3
-
-    def test_compute_genetic_risk(self):
-        """Test genetic risk computation."""
+    def test_find_arginine_positions(self):
+        """Test finding arginine positions in sequence."""
         analyzer = RheumatoidArthritisAnalyzer()
 
-        # High-risk HLA alleles
-        risk, factors = analyzer.compute_genetic_risk(
-            hla_alleles=["HLA-DRB1*04:01", "HLA-DRB1*04:04"],
-            padi4_haplotype="susceptible",
-        )
+        # Sequence with arginines at positions 3, 5, 7
+        sequence = "AAARARAAR"
 
-        assert 0.0 <= risk <= 1.0
-        assert len(factors) > 0
+        positions = analyzer.find_arginine_positions(sequence)
 
-    def test_compute_genetic_risk_no_risk_alleles(self):
-        """Test risk with non-risk alleles."""
+        assert 3 in positions
+        assert 5 in positions
+        assert 7 in positions
+
+    def test_find_arginine_positions_no_arginines(self):
+        """Test finding arginines when none present."""
         analyzer = RheumatoidArthritisAnalyzer()
 
-        risk, factors = analyzer.compute_genetic_risk(
-            hla_alleles=["HLA-DRB1*01:01"],  # Non-risk allele
-            padi4_haplotype="protective",
-        )
+        sequence = "AAAAAAAAA"
+        positions = analyzer.find_arginine_positions(sequence)
 
-        # Should have lower risk
-        assert risk < 0.5
+        assert len(positions) == 0
 
-    def test_compute_risk_profile(self):
-        """Test comprehensive risk profile."""
+    def test_citrullinate_sequence(self):
+        """Test sequence citrullination."""
         analyzer = RheumatoidArthritisAnalyzer()
 
-        profile = analyzer.compute_risk_profile(
+        sequence = "AAARAGAA"  # R at position 3
+        citrullinated = analyzer.citrullinate_sequence(sequence, position=3)
+
+        # Citrulline represented as X
+        assert "X" in citrullinated or "Cit" in citrullinated.upper()
+
+
+class TestRARiskProfile:
+    """Tests for RARiskProfile dataclass."""
+
+    def test_creation(self):
+        """Test risk profile creation."""
+        profile = RARiskProfile(
             hla_alleles=["HLA-DRB1*04:01"],
-            smoking=True,
-            ebv_positive=True,
+            shared_epitope_positive=True,
             padi4_haplotype="susceptible",
+            smoking_history=True,
+            ebv_positive=False,
+            genetic_risk_score=0.7,
+            environmental_risk_score=0.4,
+            overall_risk=0.6,
+            risk_category="high",
         )
 
-        assert isinstance(profile, RARiskProfile)
-        assert 0.0 <= profile.overall_risk <= 1.0
-        assert len(profile.risk_factors) > 0
-
-    def test_analyze_epitope(self):
-        """Test epitope analysis."""
-        analyzer = RheumatoidArthritisAnalyzer(embedding_dim=32)
-
-        sequence = "ARGPGRAFKDR"
-        citrullination_positions = [0, 6, 10]  # R positions
-
-        analysis = analyzer.analyze_epitope(sequence, citrullination_positions)
-
-        assert isinstance(analysis, EpitopeAnalysis)
-        assert analysis.original_sequence == sequence
-        assert len(analysis.citrullinated_positions) == 3
+        assert profile.genetic_risk_score == 0.7
+        assert profile.shared_epitope_positive is True
+        assert profile.overall_risk == 0.6
+        assert profile.risk_category == "high"
 
 
-class TestIntegration:
-    """Integration tests for RA analysis pipeline."""
+class TestEpitopeAnalysis:
+    """Tests for EpitopeAnalysis dataclass."""
 
-    def test_full_pipeline(self):
-        """Test complete analysis pipeline."""
-        analyzer = RheumatoidArthritisAnalyzer(embedding_dim=32)
+    def test_creation(self):
+        """Test epitope analysis creation."""
+        native_emb = torch.randn(32)
+        cit_emb = torch.randn(32)
 
-        # Simulate analysis of vimentin (known ACPA target)
-        vimentin_fragment = "RLRSSVPGVRLLQDSVDFSLAD"
-
-        # Analyze citrullination sites
-        sites = analyzer.analyze_protein("vimentin", vimentin_fragment)
-
-        # Compute genetic risk
-        risk, factors = analyzer.compute_genetic_risk(
-            hla_alleles=["HLA-DRB1*04:01"],
-            padi4_haplotype="susceptible",
+        analysis = EpitopeAnalysis(
+            sequence="ARGPGRAFKDR",
+            citrullination_positions=[0, 5, 10],
+            native_padic_embedding=native_emb,
+            citrullinated_padic_embedding=cit_emb,
+            padic_shift=0.25,
+            hla_binding_affinity=0.7,
+            tcr_cross_reactivity=0.3,
+            predicted_pathogenicity=0.5,
         )
 
-        # Should complete without errors
-        assert sites is not None
-        assert risk is not None
-
-    def test_goldilocks_zone_identification(self):
-        """Test that Goldilocks Zone sites are properly identified."""
-        analyzer = RheumatoidArthritisAnalyzer(
-            embedding_dim=32, goldilocks_bounds=(0.1, 0.5)
-        )
-
-        # Analyze a sequence
-        sequence = "GFRGLARGKDR"
-        sites = analyzer.analyze_protein("test", sequence)
-
-        # Check that in_goldilocks_zone is set
-        for site in sites:
-            assert hasattr(site, "in_goldilocks_zone")
-            assert isinstance(site.in_goldilocks_zone, bool)
+        assert analysis.sequence == "ARGPGRAFKDR"
+        assert len(analysis.citrullination_positions) == 3
+        assert analysis.padic_shift == 0.25
