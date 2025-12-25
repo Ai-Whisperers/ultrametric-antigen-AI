@@ -64,6 +64,10 @@ from .zero_structure import (CombinedZeroStructureLoss, ZeroSparsityLoss,
                              ZeroValuationLoss, compute_operation_zero_count,
                              compute_operation_zero_valuation)
 
+# Autoimmune-aware regularization
+from .autoimmunity import (AutoimmuneCodonRegularizer, CD4CD8AwareRegularizer,
+                           HUMAN_CODON_RSCU)
+
 # Appetitive losses archived (unused in active training)
 # See src/losses/archive/appetitive_losses.py for legacy code
 
@@ -119,4 +123,8 @@ __all__ = [
     "PAdicRankingLossComponent",
     "PAdicHyperbolicLossComponent",
     "RadialStratificationLossComponent",
+    # Autoimmune-aware regularization
+    "AutoimmuneCodonRegularizer",
+    "CD4CD8AwareRegularizer",
+    "HUMAN_CODON_RSCU",
 ]
