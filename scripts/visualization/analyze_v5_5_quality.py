@@ -33,9 +33,7 @@ from src.data.generation import generate_all_ternary_operations
 
 def load_v5_5_checkpoint(device: str = "cpu"):
     """Load v5.5 checkpoint."""
-    checkpoint_path = (
-        PROJECT_ROOT / "sandbox-training" / "checkpoints" / "v5_5" / "latest.pt"
-    )
+    checkpoint_path = PROJECT_ROOT / "sandbox-training" / "checkpoints" / "v5_5" / "latest.pt"
     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
     return checkpoint
 
@@ -86,27 +84,15 @@ def build_encoder_decoder(checkpoint, device):
     model_state = checkpoint["model"]
 
     # Filter and load encoder_A
-    enc_A_state = {
-        k.replace("encoder_A.", ""): v
-        for k, v in model_state.items()
-        if k.startswith("encoder_A.")
-    }
+    enc_A_state = {k.replace("encoder_A.", ""): v for k, v in model_state.items() if k.startswith("encoder_A.")}
     encoder_A.load_state_dict(enc_A_state)
 
     # Filter and load encoder_B
-    enc_B_state = {
-        k.replace("encoder_B.", ""): v
-        for k, v in model_state.items()
-        if k.startswith("encoder_B.")
-    }
+    enc_B_state = {k.replace("encoder_B.", ""): v for k, v in model_state.items() if k.startswith("encoder_B.")}
     encoder_B.load_state_dict(enc_B_state)
 
     # Filter and load decoder_A
-    dec_A_state = {
-        k.replace("decoder_A.", ""): v
-        for k, v in model_state.items()
-        if k.startswith("decoder_A.")
-    }
+    dec_A_state = {k.replace("decoder_A.", ""): v for k, v in model_state.items() if k.startswith("decoder_A.")}
     decoder_A.load_state_dict(dec_A_state)
 
     return encoder_A, encoder_B, decoder_A
@@ -176,12 +162,8 @@ def analyze_manifold_quality(encoder_A, encoder_B, decoder_A, device="cpu"):
     overall_acc = correct.mean().item()
 
     print(f"\nOverall element accuracy: {overall_acc*100:.2f}%")
-    print(
-        f"Perfect reconstructions: {perfect_recon}/{n_ops} ({perfect_recon/n_ops*100:.2f}%)"
-    )
-    print(
-        f"Coverage (>0 correct): {(sample_acc > 0).sum().item()}/{n_ops} ({(sample_acc > 0).sum().item()/n_ops*100:.2f}%)"
-    )
+    print(f"Perfect reconstructions: {perfect_recon}/{n_ops} ({perfect_recon/n_ops*100:.2f}%)")
+    print(f"Coverage (>0 correct): {(sample_acc > 0).sum().item()}/{n_ops} ({(sample_acc > 0).sum().item()/n_ops*100:.2f}%)")
 
     # 2. RADIAL DISTRIBUTION
     print("\n" + "-" * 70)
@@ -191,12 +173,8 @@ def analyze_manifold_quality(encoder_A, encoder_B, decoder_A, device="cpu"):
     radii_A = torch.norm(z_A, dim=1).cpu().numpy()
     radii_B = torch.norm(z_B, dim=1).cpu().numpy()
 
-    print(
-        f"\nVAE-A radii: mean={radii_A.mean():.4f}, std={radii_A.std():.4f}, min={radii_A.min():.4f}, max={radii_A.max():.4f}"
-    )
-    print(
-        f"VAE-B radii: mean={radii_B.mean():.4f}, std={radii_B.std():.4f}, min={radii_B.min():.4f}, max={radii_B.max():.4f}"
-    )
+    print(f"\nVAE-A radii: mean={radii_A.mean():.4f}, std={radii_A.std():.4f}, min={radii_A.min():.4f}, max={radii_A.max():.4f}")
+    print(f"VAE-B radii: mean={radii_B.mean():.4f}, std={radii_B.std():.4f}, min={radii_B.min():.4f}, max={radii_B.max():.4f}")
 
     # Analyze radius vs 3-adic valuation
     valuations = np.array([compute_3adic_valuation(i) for i in range(n_ops)])
@@ -204,9 +182,7 @@ def analyze_manifold_quality(encoder_A, encoder_B, decoder_A, device="cpu"):
     corr_A_rad, p_A_rad = spearmanr(valuations, radii_A)
     corr_B_rad, p_B_rad = spearmanr(valuations, radii_B)
 
-    print(
-        "\nRadius vs 3-adic valuation correlation (expect NEGATIVE for proper hierarchy):"
-    )
+    print("\nRadius vs 3-adic valuation correlation (expect NEGATIVE for proper hierarchy):")
     print(f"  VAE-A: r={corr_A_rad:.4f} (p={p_A_rad:.2e})")
     print(f"  VAE-B: r={corr_B_rad:.4f} (p={p_B_rad:.2e})")
 
@@ -283,9 +259,7 @@ def analyze_manifold_quality(encoder_A, encoder_B, decoder_A, device="cpu"):
         if count > 0:
             region_correct = correct[mask].mean().item()
             region_perfect = (sample_acc[mask] == 1.0).sum().item()
-            print(
-                f"  v={v:6d} | {count:5d} | {region_correct*100:7.2f}% | {region_perfect:5d}"
-            )
+            print(f"  v={v:6d} | {count:5d} | {region_correct*100:7.2f}% | {region_perfect:5d}")
 
     # 5. SPECIAL OPERATIONS ANALYSIS
     print("\n" + "-" * 70)
@@ -324,9 +298,7 @@ def analyze_manifold_quality(encoder_A, encoder_B, decoder_A, device="cpu"):
         radius_A = radii_A[idx]
         radius_B = radii_B[idx]
         v = compute_3adic_valuation(idx)
-        print(
-            f"  {name:10s}: idx={idx:5d}, v_3={v}, acc={acc*100:.0f}%, r_A={radius_A:.3f}, r_B={radius_B:.3f}"
-        )
+        print(f"  {name:10s}: idx={idx:5d}, v_3={v}, acc={acc*100:.0f}%, r_A={radius_A:.3f}, r_B={radius_B:.3f}")
 
     # 6. SUMMARY METRICS
     print("\n" + "=" * 70)

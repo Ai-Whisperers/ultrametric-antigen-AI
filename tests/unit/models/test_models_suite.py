@@ -1,9 +1,4 @@
-import pytest
-import torch
-import torch.nn as nn
-
 from tests.core.builders import VAEBuilder
-from tests.core.helpers import MockFrozenModule
 from tests.core.matchers import expect_poincare
 from tests.factories.data import TernaryOperationFactory
 

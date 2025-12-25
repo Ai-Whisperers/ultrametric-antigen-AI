@@ -17,10 +17,8 @@ Uses the 3-adic codon encoder (V5.11.3) for hyperbolic embeddings.
 
 import json
 import sys
-from collections import defaultdict
-from itertools import combinations
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -36,8 +34,8 @@ sys.path.insert(0, str(CODON_RESEARCH_DIR / "rheumatoid_arthritis" / "scripts"))
 from hyperbolic_utils import (AA_TO_CODON, encode_codon_hyperbolic,
                               hyperbolic_centroid, load_hyperbolic_encoder,
                               poincare_distance)
-from tau_phospho_database import (KXGS_MOTIFS, TAU_2N4R_SEQUENCE, TAU_DOMAINS,
-                                  TAU_EPITOPES, TAU_PHOSPHO_SITES)
+from tau_phospho_database import (TAU_2N4R_SEQUENCE, TAU_DOMAINS, TAU_EPITOPES,
+                                  TAU_PHOSPHO_SITES)
 
 # ============================================================================
 # CONFIGURATION
@@ -105,9 +103,7 @@ def apply_phosphomimics(sequence: str, positions: List[int]) -> str:
 # ============================================================================
 
 
-def compute_trajectory_step(
-    sequence: str, positions_so_far: List[int], new_position: int, encoder
-) -> Dict:
+def compute_trajectory_step(sequence: str, positions_so_far: List[int], new_position: int, encoder) -> Dict:
     """Compute geometric change when adding one phosphorylation."""
 
     # Sequence before adding new phosphorylation
@@ -151,7 +147,10 @@ def compute_trajectory_step(
 
 
 def compute_full_trajectory(
-    sequence: str, phospho_order: List[int], encoder, region_name: str = "Full tau"
+    sequence: str,
+    phospho_order: List[int],
+    encoder,
+    region_name: str = "Full tau",
 ) -> Dict:
     """Compute complete trajectory through phosphorylation states."""
 
@@ -194,13 +193,9 @@ def compute_full_trajectory(
         "total_steps": len(step_distances),
         "total_distance": sum(step_distances),
         "max_step": max(step_distances) if step_distances else 0,
-        "max_step_site": (
-            steps[step_distances.index(max(step_distances)) + 1]["new_site"]
-            if step_distances
-            else None
-        ),
+        "max_step_site": (steps[step_distances.index(max(step_distances)) + 1]["new_site"] if step_distances else None),
         "final_radius": steps[-1]["radius"] if steps else 0,
-        "final_distance_from_healthy": steps[-1]["cumulative_distance"] if steps else 0,
+        "final_distance_from_healthy": (steps[-1]["cumulative_distance"] if steps else 0),
     }
 
     return trajectory
@@ -251,9 +246,7 @@ def compare_trajectories(trajectories: List[Dict]) -> Dict:
         summary = traj["summary"]
         comparison["final_distances"].append(summary["final_distance_from_healthy"])
         comparison["path_lengths"].append(summary["total_distance"])
-        comparison["max_steps"].append(
-            {"site": summary["max_step_site"], "distance": summary["max_step"]}
-        )
+        comparison["max_steps"].append({"site": summary["max_step_site"], "distance": summary["max_step"]})
 
         if traj["steps"]:
             final_centroids.append(np.array(traj["steps"][-1]["centroid"]))
@@ -362,7 +355,10 @@ def plot_trajectory_2d(trajectory: Dict, output_path: Path, title: str = None):
 
     ax2.bar(range(len(steps)), step_distances, alpha=0.7, label="Step Distance")
     ax2.plot(
-        range(len(steps)), cumulative_distances, "r-o", label="Cumulative Distance"
+        range(len(steps)),
+        cumulative_distances,
+        "r-o",
+        label="Cumulative Distance",
     )
 
     # Highlight KXGS sites
@@ -492,32 +488,29 @@ def main():
     print("1. Full Tau Trajectory (Pathological Order)")
     print("-" * 70)
 
-    print(f"\nPhosphorylation order (Braak staging):")
+    print("\nPhosphorylation order (Braak staging):")
     print(f"  {PATHOLOGICAL_ORDER}")
 
     traj_full = compute_full_trajectory(
-        TAU_2N4R_SEQUENCE, PATHOLOGICAL_ORDER, encoder, "Full Tau (Pathological Order)"
+        TAU_2N4R_SEQUENCE,
+        PATHOLOGICAL_ORDER,
+        encoder,
+        "Full Tau (Pathological Order)",
     )
 
     print(f"\nTrajectory computed: {traj_full['summary']['total_steps']} steps")
     print(f"  Total path length: {traj_full['summary']['total_distance']:.4f}")
-    print(
-        f"  Final distance from healthy: {traj_full['summary']['final_distance_from_healthy']:.4f}"
-    )
-    print(
-        f"  Largest step: S{traj_full['summary']['max_step_site']} ({traj_full['summary']['max_step']:.4f})"
-    )
+    print(f"  Final distance from healthy: {traj_full['summary']['final_distance_from_healthy']:.4f}")
+    print(f"  Largest step: S{traj_full['summary']['max_step_site']} ({traj_full['summary']['max_step']:.4f})")
 
     results["trajectories"]["pathological"] = traj_full
 
     # Find inflection points
     inflections = find_inflection_points(traj_full)
     if inflections:
-        print(f"\n  Inflection points (sudden trajectory changes):")
+        print("\n  Inflection points (sudden trajectory changes):")
         for inf in inflections[:5]:
-            print(
-                f"    - After pS{inf['site']}: {inf['ratio_to_previous']:.2f}x acceleration"
-            )
+            print(f"    - After pS{inf['site']}: {inf['ratio_to_previous']:.2f}x acceleration")
 
     results["inflection_points"]["pathological"] = inflections
 
@@ -529,12 +522,7 @@ def main():
     print("-" * 70)
 
     # MTBR phospho sites only
-    mtbr_sites = [
-        pos
-        for pos in PATHOLOGICAL_ORDER
-        if pos in TAU_PHOSPHO_SITES
-        and TAU_PHOSPHO_SITES[pos]["domain"] in ["R1", "R2", "R3", "R4"]
-    ]
+    mtbr_sites = [pos for pos in PATHOLOGICAL_ORDER if pos in TAU_PHOSPHO_SITES and TAU_PHOSPHO_SITES[pos]["domain"] in ["R1", "R2", "R3", "R4"]]
 
     print(f"MTBR phospho-sites: {mtbr_sites}")
 
@@ -549,9 +537,7 @@ def main():
 
     print(f"\nMTBR trajectory: {traj_mtbr['summary']['total_steps']} steps")
     print(f"  Total path length: {traj_mtbr['summary']['total_distance']:.4f}")
-    print(
-        f"  Final distance: {traj_mtbr['summary']['final_distance_from_healthy']:.4f}"
-    )
+    print(f"  Final distance: {traj_mtbr['summary']['final_distance_from_healthy']:.4f}")
 
     results["trajectories"]["mtbr"] = traj_mtbr
 
@@ -567,9 +553,7 @@ def main():
 
     for i in range(RANDOM_ORDERS):
         random_order = np.random.permutation(PATHOLOGICAL_ORDER).tolist()
-        traj = compute_full_trajectory(
-            TAU_2N4R_SEQUENCE, random_order, encoder, f"Random Order {i+1}"
-        )
+        traj = compute_full_trajectory(TAU_2N4R_SEQUENCE, random_order, encoder, f"Random Order {i+1}")
         random_trajectories.append(traj)
         print(
             f"  Random {i+1}: path length = {traj['summary']['total_distance']:.4f}, "
@@ -582,19 +566,11 @@ def main():
     all_trajectories = [traj_full] + random_trajectories
     comparison = compare_trajectories(all_trajectories)
 
-    print(f"\n  Trajectory Comparison:")
-    print(
-        f"    Pathological order final distance: {traj_full['summary']['final_distance_from_healthy']:.4f}"
-    )
-    print(
-        f"    Random orders mean final distance: {np.mean(comparison['final_distances'][1:]):.4f}"
-    )
-    print(
-        f"    Endpoint convergence: {'YES' if comparison['convergence']['converged'] else 'NO'}"
-    )
-    print(
-        f"    Mean endpoint distance: {comparison['convergence']['mean_endpoint_distance']:.4f}"
-    )
+    print("\n  Trajectory Comparison:")
+    print(f"    Pathological order final distance: {traj_full['summary']['final_distance_from_healthy']:.4f}")
+    print(f"    Random orders mean final distance: {np.mean(comparison['final_distances'][1:]):.4f}")
+    print(f"    Endpoint convergence: {'YES' if comparison['convergence']['converged'] else 'NO'}")
+    print(f"    Mean endpoint distance: {comparison['convergence']['mean_endpoint_distance']:.4f}")
 
     results["comparison"] = comparison
 
@@ -633,10 +609,7 @@ def main():
             else:
                 stage = "Severe AD"
 
-            print(
-                f"  {n:2d} phospho ({stage:12s}): distance = {step['cumulative_distance']:.4f}, "
-                f"radius = {step['radius']:.4f}"
-            )
+            print(f"  {n:2d} phospho ({stage:12s}): distance = {step['cumulative_distance']:.4f}, " f"radius = {step['radius']:.4f}")
 
     results["critical_transitions"] = critical_points
 
@@ -670,15 +643,11 @@ def main():
 
     print(f"Epitope order: {list(zip(epitope_order, epitope_labels))}")
 
-    traj_epitope = compute_full_trajectory(
-        TAU_2N4R_SEQUENCE, epitope_order, encoder, "Epitope Order"
-    )
+    traj_epitope = compute_full_trajectory(TAU_2N4R_SEQUENCE, epitope_order, encoder, "Epitope Order")
 
     print(f"\nEpitope trajectory: {traj_epitope['summary']['total_steps']} steps")
     print(f"  Total path length: {traj_epitope['summary']['total_distance']:.4f}")
-    print(
-        f"  Final distance: {traj_epitope['summary']['final_distance_from_healthy']:.4f}"
-    )
+    print(f"  Final distance: {traj_epitope['summary']['final_distance_from_healthy']:.4f}")
 
     # Show distance at each epitope completion
     print("\n  Distance at epitope completions:")
@@ -690,9 +659,7 @@ def main():
             seen_epitopes.add(label)
 
         # Check if this is the last site for an epitope
-        remaining_labels = (
-            epitope_labels[i + 1 :] if i < len(epitope_labels) - 1 else []
-        )
+        remaining_labels = epitope_labels[i + 1 :] if i < len(epitope_labels) - 1 else []
         if label not in remaining_labels and i < len(traj_epitope["steps"]) - 1:
             step = traj_epitope["steps"][i + 1]
             epitope_checkpoints[label] = step["cumulative_distance"]
@@ -718,7 +685,9 @@ def main():
 
         print("  Plotting MTBR trajectory...")
         plot_trajectory_2d(
-            traj_mtbr, viz_dir / "trajectory_mtbr.png", "MTBR Region Trajectory"
+            traj_mtbr,
+            viz_dir / "trajectory_mtbr.png",
+            "MTBR Region Trajectory",
         )
 
         print("  Plotting Poincare disk representation...")

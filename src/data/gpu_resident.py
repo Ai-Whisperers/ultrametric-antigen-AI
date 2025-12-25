@@ -181,9 +181,7 @@ class GPUBatchIterator:
         self.drop_last = drop_last
 
     def __iter__(self):
-        return self.dataset.get_batches(
-            self.split, self.batch_size, self.shuffle, self.drop_last
-        )
+        return self.dataset.get_batches(self.split, self.batch_size, self.shuffle, self.drop_last)
 
     def __len__(self):
         return self.dataset.num_batches(self.split, self.batch_size)
@@ -210,9 +208,7 @@ def create_gpu_resident_loaders(
     Returns:
         Tuple of (train_loader, val_loader, test_loader)
     """
-    dataset = GPUResidentTernaryDataset(
-        device=device, train_split=train_split, val_split=val_split, seed=seed
-    )
+    dataset = GPUResidentTernaryDataset(device=device, train_split=train_split, val_split=val_split, seed=seed)
 
     train_loader = GPUBatchIterator(dataset, "train", batch_size, shuffle=True)
     val_loader = GPUBatchIterator(dataset, "val", batch_size, shuffle=False)

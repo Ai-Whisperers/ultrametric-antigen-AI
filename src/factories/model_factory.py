@@ -3,7 +3,7 @@
 # Licensed under the PolyForm Noncommercial License 1.0.0
 # See LICENSE file in the repository root for full license text.
 
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict
 
 import torch.nn as nn
 

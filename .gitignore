@@ -46,6 +46,7 @@ radon_results.json
 bandit_results.json
 dataset_*.json
 *_results.json
+detected_vocabulary.txt
 *.log
 
 

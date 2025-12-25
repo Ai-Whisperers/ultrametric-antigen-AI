@@ -18,7 +18,6 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 import numpy as np
 import torch
-from tqdm import tqdm
 
 from src.data.generation import generate_all_ternary_operations
 from src.models.ternary_vae import TernaryVAEV5_11
@@ -33,7 +32,8 @@ def load_v5_5_checkpoint(checkpoint_path: Path, device: str = "cpu"):
 
     # Check what model type this is
     model_state = checkpoint.get(
-        "model_state", checkpoint.get("model", checkpoint.get("model_state_dict", {}))
+        "model_state",
+        checkpoint.get("model", checkpoint.get("model_state_dict", {})),
     )
 
     # Detect model type from keys
@@ -46,9 +46,7 @@ def load_v5_5_checkpoint(checkpoint_path: Path, device: str = "cpu"):
     return checkpoint, model_state
 
 
-def extract_embeddings_v5_5(
-    model_state: dict, operations: torch.Tensor, device: str = "cpu"
-):
+def extract_embeddings_v5_5(model_state: dict, operations: torch.Tensor, device: str = "cpu"):
     """Extract Euclidean embeddings from v5.5 encoder (no hyperbolic projection)."""
     from src.models.ternary_vae import FrozenEncoder
 
@@ -85,9 +83,7 @@ def extract_embeddings_v5_5(
     return z_euclidean
 
 
-def extract_embeddings_v5_11(
-    checkpoint_path: Path, operations: torch.Tensor, device: str = "cpu"
-):
+def extract_embeddings_v5_11(checkpoint_path: Path, operations: torch.Tensor, device: str = "cpu"):
     """Extract hyperbolic embeddings from v5.11 model with projection."""
     # Load checkpoint to get config
     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
@@ -103,9 +99,7 @@ def extract_embeddings_v5_11(
     proj_layers = config.get("projection_layers", 1)
     proj_dropout = config.get("projection_dropout", 0.0)
 
-    print(
-        f"Projection config: hidden_dim={proj_hidden_dim}, layers={proj_layers}, dropout={proj_dropout}"
-    )
+    print(f"Projection config: hidden_dim={proj_hidden_dim}, layers={proj_layers}, dropout={proj_dropout}")
 
     # Create model with matching config (using Option C if encoder_b present)
     has_encoder_b = any("encoder_B" in k for k in model_state.keys())
@@ -160,9 +154,7 @@ def extract_embeddings_v5_11(
     }
 
 
-def project_to_poincare(
-    z_euclidean: torch.Tensor, max_radius: float = 0.95
-) -> torch.Tensor:
+def project_to_poincare(z_euclidean: torch.Tensor, max_radius: float = 0.95) -> torch.Tensor:
     """Project Euclidean embeddings to Poincaré ball (simple approach)."""
     # Normalize to unit ball, then scale
     norms = torch.norm(z_euclidean, dim=-1, keepdim=True)
@@ -177,7 +169,9 @@ def project_to_poincare(
     # Ensure we're strictly inside the ball
     norms = torch.norm(z_poincare, dim=-1, keepdim=True)
     z_poincare = torch.where(
-        norms > max_radius, z_poincare * max_radius / (norms + 1e-8), z_poincare
+        norms > max_radius,
+        z_poincare * max_radius / (norms + 1e-8),
+        z_poincare,
     )
 
     return z_poincare
@@ -198,7 +192,9 @@ def main():
         help="Output directory",
     )
     parser.add_argument(
-        "--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu"
+        "--device",
+        type=str,
+        default="cuda" if torch.cuda.is_available() else "cpu",
     )
     args = parser.parse_args()
 
@@ -250,17 +246,13 @@ def main():
     z_B_euc = z_B_euc.cpu()
 
     # Stats
-    print(f"\n=== Embedding Statistics ===")
+    print("\n=== Embedding Statistics ===")
     print(f"Shape: {z_hyp.shape}")
 
     radii_A = torch.norm(z_A_hyp, dim=-1)
     radii_B = torch.norm(z_B_hyp, dim=-1)
-    print(
-        f"VAE-A radii: min={radii_A.min():.4f}, max={radii_A.max():.4f}, mean={radii_A.mean():.4f}"
-    )
-    print(
-        f"VAE-B radii: min={radii_B.min():.4f}, max={radii_B.max():.4f}, mean={radii_B.mean():.4f}"
-    )
+    print(f"VAE-A radii: min={radii_A.min():.4f}, max={radii_A.max():.4f}, mean={radii_A.mean():.4f}")
+    print(f"VAE-B radii: min={radii_B.min():.4f}, max={radii_B.max():.4f}, mean={radii_B.mean():.4f}")
 
     # Save embeddings
     output_file = output_dir / "embeddings.pt"

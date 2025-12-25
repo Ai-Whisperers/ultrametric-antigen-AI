@@ -14,7 +14,7 @@ import torch
 # Use local hyperbolic_utils
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot, load_codon_encoder,
+from hyperbolic_utils import (codon_to_onehot, load_codon_encoder,
                               poincare_distance)
 
 CODON_TABLE = {
@@ -91,7 +91,17 @@ HIV_CTL_EPITOPES = {
         "position": "77-85",
         "wild_type": {
             "sequence": "SLYNTVATL",
-            "codons": ["AGC", "CTG", "TAC", "AAC", "ACC", "GTG", "GCC", "ACC", "CTG"],
+            "codons": [
+                "AGC",
+                "CTG",
+                "TAC",
+                "AAC",
+                "ACC",
+                "GTG",
+                "GCC",
+                "ACC",
+                "CTG",
+            ],
         },
         "escape_variants": [
             {
@@ -213,7 +223,17 @@ HIV_CTL_EPITOPES = {
         "position": "179-187",
         "wild_type": {
             "sequence": "ILKEPVHGV",
-            "codons": ["ATC", "CTG", "AAG", "GAG", "CCG", "GTG", "CAC", "GGC", "GTG"],
+            "codons": [
+                "ATC",
+                "CTG",
+                "AAG",
+                "GAG",
+                "CCG",
+                "GTG",
+                "CAC",
+                "GGC",
+                "GTG",
+            ],
         },
         "escape_variants": [
             {
@@ -232,7 +252,17 @@ HIV_CTL_EPITOPES = {
         "position": "311-319",
         "wild_type": {
             "sequence": "RLRDLLLIW",
-            "codons": ["CGG", "CTG", "CGG", "GAC", "CTG", "CTG", "CTG", "ATC", "TGG"],
+            "codons": [
+                "CGG",
+                "CTG",
+                "CGG",
+                "GAC",
+                "CTG",
+                "CTG",
+                "CTG",
+                "ATC",
+                "TGG",
+            ],
         },
         "escape_variants": [
             {
@@ -270,7 +300,8 @@ def analyze_escape(encoder, wt_codons, escape_info, mapping):
     for esc_codon in get_codons_for_aa(escape_aa):
         esc_emb = get_embedding(encoder, esc_codon)
         d = poincare_distance(
-            torch.tensor(wt_emb).unsqueeze(0), torch.tensor(esc_emb).unsqueeze(0)
+            torch.tensor(wt_emb).unsqueeze(0),
+            torch.tensor(esc_emb).unsqueeze(0),
         ).item()
         results.append(
             {
@@ -295,9 +326,7 @@ def main():
     print("=" * 60)
 
     encoder, mapping, _ = load_codon_encoder(device="cpu", version="3adic")
-    pos_to_cluster = {
-        pos: idx % 21 for idx, pos in enumerate(sorted(set(mapping.values())))
-    }
+    pos_to_cluster = {pos: idx % 21 for idx, pos in enumerate(sorted(set(mapping.values())))}
     cluster_map = {c: pos_to_cluster.get(p, -1) for c, p in mapping.items()}
 
     all_results = []
@@ -332,9 +361,7 @@ def main():
     summary = {
         "total_mutations": len(all_results),
         "boundary_crossed": boundary_crossed,
-        "boundary_crossing_rate": (
-            boundary_crossed / len(all_results) if all_results else 0
-        ),
+        "boundary_crossing_rate": (boundary_crossed / len(all_results) if all_results else 0),
         "mean_distance": float(np.mean(distances)) if distances else 0,
         "std_distance": float(np.std(distances)) if distances else 0,
         "min_distance": float(np.min(distances)) if distances else 0,
@@ -342,7 +369,7 @@ def main():
     }
 
     print(f"\n{'='*60}")
-    print(f"SUMMARY:")
+    print("SUMMARY:")
     print(f"  Total mutations analyzed: {summary['total_mutations']}")
     print(f"  Boundary crossing rate: {summary['boundary_crossing_rate']:.1%}")
     print(f"  Mean hyperbolic distance: {summary['mean_distance']:.3f}")

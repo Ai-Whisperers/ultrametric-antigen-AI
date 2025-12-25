@@ -31,9 +31,7 @@ ckpt = torch.load(
     map_location="cpu",
     weights_only=False,
 )
-print(
-    f"Epoch {ckpt['epoch']}, Coverage: {ckpt['best_coverage']:.2f}%, Correlation: {ckpt['best_corr']:.4f}"
-)
+print(f"Epoch {ckpt['epoch']}, Coverage: {ckpt['best_coverage']:.2f}%, Correlation: {ckpt['best_corr']:.4f}")
 
 state = ckpt["model"]
 
@@ -57,19 +55,25 @@ def encoder_forward(ops, prefix):
     h = ops
     h = torch.relu(
         F.linear(
-            h, state[f"{prefix}.encoder.0.weight"], state[f"{prefix}.encoder.0.bias"]
+            h,
+            state[f"{prefix}.encoder.0.weight"],
+            state[f"{prefix}.encoder.0.bias"],
         )
     )
     layer1 = h.clone()
     h = torch.relu(
         F.linear(
-            h, state[f"{prefix}.encoder.2.weight"], state[f"{prefix}.encoder.2.bias"]
+            h,
+            state[f"{prefix}.encoder.2.weight"],
+            state[f"{prefix}.encoder.2.bias"],
         )
     )
     layer2 = h.clone()
     h = torch.relu(
         F.linear(
-            h, state[f"{prefix}.encoder.4.weight"], state[f"{prefix}.encoder.4.bias"]
+            h,
+            state[f"{prefix}.encoder.4.weight"],
+            state[f"{prefix}.encoder.4.bias"],
         )
     )
     layer3 = h.clone()
@@ -83,12 +87,15 @@ acts_B = encoder_forward(ops, "encoder_B")
 # Create embeddings of different dimensions
 emb_32d = torch.cat([acts_A["mu"], acts_B["mu"]], dim=1)
 emb_64d = torch.cat(
-    [acts_A["mu"], acts_B["mu"], acts_A["layer3"][:, :16], acts_B["layer3"][:, :16]],
+    [
+        acts_A["mu"],
+        acts_B["mu"],
+        acts_A["layer3"][:, :16],
+        acts_B["layer3"][:, :16],
+    ],
     dim=1,
 )
-emb_128d = torch.cat(
-    [acts_A["mu"], acts_B["mu"], acts_A["layer3"], acts_B["layer3"]], dim=1
-)
+emb_128d = torch.cat([acts_A["mu"], acts_B["mu"], acts_A["layer3"], acts_B["layer3"]], dim=1)
 
 print(f"32D: {emb_32d.shape}, 64D: {emb_64d.shape}, 128D: {emb_128d.shape}")
 
@@ -133,10 +140,7 @@ def k3_projection(z):
     z_norm = z / (np.linalg.norm(z, axis=1, keepdims=True) + 1e-8)
 
     dim = z.shape[1]
-    g = [
-        np.sum(z_norm[:, i * (dim // 4) : (i + 1) * (dim // 4)], axis=1)
-        for i in range(4)
-    ]
+    g = [np.sum(z_norm[:, i * (dim // 4) : (i + 1) * (dim // 4)], axis=1) for i in range(4)]
 
     # K3 quartic structure
     x = g[0] * g[1] - g[2] * g[3]
@@ -240,9 +244,7 @@ def smooth_fiber(points, fiber_indices, n_samples=50):
         return pts
 
     try:
-        tck, u = splprep(
-            [pts[:, 0], pts[:, 1], pts[:, 2]], s=0.1, k=min(3, len(pts) - 1)
-        )
+        tck, u = splprep([pts[:, 0], pts[:, 1], pts[:, 2]], s=0.1, k=min(3, len(pts) - 1))
         u_new = np.linspace(0, 1, n_samples)
         return np.array(splev(u_new, tck)).T
     except:
@@ -276,9 +278,7 @@ def create_tube_mesh(path, radius=0.012, n_sides=8):
         # Ring
         for j in range(n_sides):
             angle = 2 * np.pi * j / n_sides
-            vertices.append(
-                path[i] + radius * (np.cos(angle) * p1 + np.sin(angle) * p2)
-            )
+            vertices.append(path[i] + radius * (np.cos(angle) * p1 + np.sin(angle) * p2))
 
         # Faces
         if i > 0:
@@ -401,19 +401,27 @@ for idx, (name, result) in enumerate(all_results.items()):
     # 2D projection
     ax2 = fig.add_subplot(2, 4, idx + 5)
     ax2.scatter(
-        points[:, 0], points[:, 1], c=points[:, 2], cmap="viridis", s=0.3, alpha=0.3
+        points[:, 0],
+        points[:, 1],
+        c=points[:, 2],
+        cmap="viridis",
+        s=0.3,
+        alpha=0.3,
     )
     for i, fiber in enumerate(fibers[:15]):
         sf = smooth_fiber(points, fiber)
         ax2.plot(
-            sf[:, 0], sf[:, 1], linewidth=1, alpha=0.7, color=plt.cm.plasma(i / 15)
+            sf[:, 0],
+            sf[:, 1],
+            linewidth=1,
+            alpha=0.7,
+            color=plt.cm.plasma(i / 15),
         )
     ax2.set_title(f"{name} (XY proj)", fontsize=10)
     ax2.set_aspect("equal")
 
 plt.suptitle(
-    "v5.8 Multi-Layer Embeddings: Calabi-Yau Fibration Projections\n"
-    f'Coverage: {ckpt["best_coverage"]:.1f}%, Correlation: {ckpt["best_corr"]:.3f}',
+    "v5.8 Multi-Layer Embeddings: Calabi-Yau Fibration Projections\n" f'Coverage: {ckpt["best_coverage"]:.1f}%, Correlation: {ckpt["best_corr"]:.3f}',
     fontsize=14,
 )
 plt.tight_layout()

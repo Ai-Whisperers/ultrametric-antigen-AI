@@ -23,7 +23,29 @@ import torch
 from sklearn.cluster import KMeans
 
 # Genetic code degeneracy: 21 groups with sizes [1,1,2,2,2,2,2,2,2,2,2,3,3,4,4,4,4,4,6,6,6]
-DEGENERACY_PATTERN = [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4, 6, 6, 6]
+DEGENERACY_PATTERN = [
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+]
 
 
 def poincare_distance_matrix(embeddings, c=1.0, eps=1e-7):
@@ -209,9 +231,7 @@ def main():
                 for center_idx, cluster_indices in band_clusters.get(band, []):
                     if center_idx in used_clusters:
                         continue
-                    available = [
-                        i for i in cluster_indices if i not in selected_indices
-                    ]
+                    available = [i for i in cluster_indices if i not in selected_indices]
                     if len(available) >= target_size:
                         chosen = available[:target_size]
                         selected_indices.extend(chosen)
@@ -248,7 +268,7 @@ def main():
     # Check ball quality
     n_valid, n_total_clusters, margins = compute_ball_quality(D, selected_labels)
 
-    print(f"\n  P-ADIC BALL VERIFICATION:")
+    print("\n  P-ADIC BALL VERIFICATION:")
     print(f"    Valid balls: {n_valid}/{n_total_clusters}")
     print(f"    Mean margin: {np.mean(margins):.4f}")
     print(f"    Positive margins: {sum(1 for m in margins if m > 0)}/{len(margins)}")
@@ -262,13 +282,11 @@ def main():
     selected_bands = band_assignments[selected_indices]
 
     print(f"\n  Radius range: [{selected_radii.min():.4f}, {selected_radii.max():.4f}]")
-    print(
-        f"  Mean radius: {selected_radii.mean():.4f} (all points: {radii.mean():.4f})"
-    )
+    print(f"  Mean radius: {selected_radii.mean():.4f} (all points: {radii.mean():.4f})")
     print(f"  Band distribution: {dict(Counter(selected_bands))}")
 
     # The key output: these 64 ternary indices
-    print(f"\n  SELECTED TERNARY INDICES (these are the 'natural codon positions'):")
+    print("\n  SELECTED TERNARY INDICES (these are the 'natural codon positions'):")
     print(f"  {sorted(selected_indices)[:20]}... (showing first 20)")
 
     # Step 7: Visualization

@@ -8,7 +8,6 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Circle, FancyArrowPatch, FancyBboxPatch
@@ -295,7 +294,9 @@ def create_pathway_distances_chart():
         fontsize=10,
         ha="center",
         bbox=dict(
-            boxstyle="round", facecolor="#E3F2FD", edgecolor=PALETTE["parasympathetic"]
+            boxstyle="round",
+            facecolor="#E3F2FD",
+            edgecolor=PALETTE["parasympathetic"],
         ),
     )
 

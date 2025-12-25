@@ -90,7 +90,10 @@ class RadialStratificationLoss(nn.Module):
         return target
 
     def forward(
-        self, z: torch.Tensor, batch_indices: torch.Tensor, return_metrics: bool = False
+        self,
+        z: torch.Tensor,
+        batch_indices: torch.Tensor,
+        return_metrics: bool = False,
     ) -> torch.Tensor:
         """Compute radial stratification loss.
 
@@ -114,9 +117,7 @@ class RadialStratificationLoss(nn.Module):
 
         # 4. Compute loss
         if self.loss_type == "smooth_l1":
-            loss_per_sample = F.smooth_l1_loss(
-                actual_radius, target_radius, reduction="none"
-            )
+            loss_per_sample = F.smooth_l1_loss(actual_radius, target_radius, reduction="none")
         else:  # mse
             loss_per_sample = F.mse_loss(actual_radius, target_radius, reduction="none")
 
@@ -135,33 +136,18 @@ class RadialStratificationLoss(nn.Module):
                 # Higher valuation should correlate with smaller radius
                 # So we correlate valuation with -radius (or equivalently, -valuation with radius)
                 v_ranks = valuations.argsort().argsort().float()
-                r_ranks = (
-                    (-actual_radius).argsort().argsort().float()
-                )  # Negative because high-v = low radius
+                r_ranks = (-actual_radius).argsort().argsort().float()  # Negative because high-v = low radius
                 n = len(v_ranks)
-                correlation = 1 - 6 * ((v_ranks - r_ranks) ** 2).sum() / (
-                    n * (n**2 - 1) + 1e-8
-                )
+                correlation = 1 - 6 * ((v_ranks - r_ranks) ** 2).sum() / (n * (n**2 - 1) + 1e-8)
 
                 metrics = {
                     "loss": loss.item(),
                     "radial_correlation": correlation.item(),
                     "mean_actual_radius": actual_radius.mean().item(),
                     "mean_target_radius": target_radius.mean().item(),
-                    "mean_radius_error": (actual_radius - target_radius)
-                    .abs()
-                    .mean()
-                    .item(),
-                    "high_v_radius": (
-                        actual_radius[valuations >= 4].mean().item()
-                        if (valuations >= 4).any()
-                        else 0.0
-                    ),
-                    "low_v_radius": (
-                        actual_radius[valuations <= 1].mean().item()
-                        if (valuations <= 1).any()
-                        else 0.0
-                    ),
+                    "mean_radius_error": (actual_radius - target_radius).abs().mean().item(),
+                    "high_v_radius": (actual_radius[valuations >= 4].mean().item() if (valuations >= 4).any() else 0.0),
+                    "low_v_radius": (actual_radius[valuations <= 1].mean().item() if (valuations <= 1).any() else 0.0),
                 }
                 return loss, metrics
 

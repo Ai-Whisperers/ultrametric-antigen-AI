@@ -24,11 +24,10 @@ Version: 2.0 - Updated to use Poincaré ball geometry
 import json
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List
 
 import numpy as np
 import torch
-import torch.nn as nn
 # Import hyperbolic utilities
 from hyperbolic_utils import (CodonEncoder, codon_to_onehot, get_results_dir,
                               load_codon_encoder)
@@ -208,9 +207,7 @@ class BoundaryAnalyzer:
         # Project cluster centers to Poincaré ball
         raw_centers = encoder.cluster_centers.detach().numpy()
         if use_hyperbolic:
-            self.cluster_centers = np.array(
-                [project_to_poincare(c, max_radius=0.95).squeeze() for c in raw_centers]
-            )
+            self.cluster_centers = np.array([project_to_poincare(c, max_radius=0.95).squeeze() for c in raw_centers])
         else:
             self.cluster_centers = raw_centers
         self.n_clusters = len(self.cluster_centers)
@@ -244,9 +241,7 @@ class BoundaryAnalyzer:
                 emb = project_to_poincare(emb, max_radius=0.95).squeeze()
         return emb
 
-    def get_codon_score(
-        self, codon: str, weight_margin: float = 1.0, weight_usage: float = 0.3
-    ) -> float:
+    def get_codon_score(self, codon: str, weight_margin: float = 1.0, weight_usage: float = 0.3) -> float:
         """
         Score a codon for boundary safety.
 
@@ -265,9 +260,7 @@ class BoundaryAnalyzer:
 
         Returns embedding centroid, cluster, and margin (using Poincaré distance).
         """
-        embeddings = [
-            self.codon_embeddings[c] for c in codons if c in self.codon_embeddings
-        ]
+        embeddings = [self.codon_embeddings[c] for c in codons if c in self.codon_embeddings]
         if not embeddings:
             return {"valid": False}
 
@@ -318,19 +311,13 @@ class BoundaryAnalyzer:
             modified_emb = np.zeros_like(self.codon_embeddings[codons[r_position]])
 
         # Compute modified centroid
-        embeddings = [
-            self.codon_embeddings[c]
-            for i, c in enumerate(codons)
-            if i != r_position and c in self.codon_embeddings
-        ]
+        embeddings = [self.codon_embeddings[c] for i, c in enumerate(codons) if i != r_position and c in self.codon_embeddings]
         embeddings.append(modified_emb)
         mod_centroid = np.mean(embeddings, axis=0)
 
         # Find cluster for modified (using Poincaré distance if hyperbolic)
         if self.use_hyperbolic:
-            mod_dists = [
-                poincare_distance(mod_centroid, c) for c in self.cluster_centers
-            ]
+            mod_dists = [poincare_distance(mod_centroid, c) for c in self.cluster_centers]
             shift = poincare_distance(original["centroid"], mod_centroid)
         else:
             mod_dists = [np.linalg.norm(mod_centroid - c) for c in self.cluster_centers]
@@ -425,7 +412,11 @@ class CodonOptimizer:
 
                 best_codon = current_codons[i]
                 best_score = self._score_position(
-                    current_codons, i, weight_margin, weight_usage, weight_cit_safety
+                    current_codons,
+                    i,
+                    weight_margin,
+                    weight_usage,
+                    weight_cit_safety,
                 )
 
                 for codon in synonymous:
@@ -437,7 +428,11 @@ class CodonOptimizer:
                     test_codons[i] = codon
 
                     score = self._score_position(
-                        test_codons, i, weight_margin, weight_usage, weight_cit_safety
+                        test_codons,
+                        i,
+                        weight_margin,
+                        weight_usage,
+                        weight_cit_safety,
                     )
 
                     if score > best_score:
@@ -508,11 +503,7 @@ class CodonOptimizer:
                 "n_epitope_windows": len(window_analyses),
                 "n_r_positions": len(r_positions),
                 "n_cit_boundary_crossings": n_boundary_crossings,
-                "cit_safety_rate": (
-                    1 - (n_boundary_crossings / len(r_positions))
-                    if r_positions
-                    else 1.0
-                ),
+                "cit_safety_rate": (1 - (n_boundary_crossings / len(r_positions)) if r_positions else 1.0),
             },
             "epitope_windows": window_analyses,
             "citrullination_analysis": cit_analyses,
@@ -602,10 +593,9 @@ class CodonOptimizer:
         return {
             "naive_dna": naive_dna,
             "optimized_dna": optimized["optimized_dna"],
-            "naive_mean_margin": float(np.mean(naive_windows)) if naive_windows else 0,
+            "naive_mean_margin": (float(np.mean(naive_windows)) if naive_windows else 0),
             "optimized_mean_margin": optimized["metrics"]["mean_margin"],
-            "improvement": optimized["metrics"]["mean_margin"]
-            - (np.mean(naive_windows) if naive_windows else 0),
+            "improvement": optimized["metrics"]["mean_margin"] - (np.mean(naive_windows) if naive_windows else 0),
             "naive_cit_crossings": None,  # Would need full analysis
             "optimized_cit_crossings": optimized["metrics"]["n_cit_boundary_crossings"],
         }
@@ -685,10 +675,7 @@ def create_visualization(results: Dict, output_path: Path):
         ax2.bar(r_positions, shifts, color=colors, alpha=0.7)
         ax2.set_xlabel("R Position")
         ax2.set_ylabel("Citrullination Shift")
-        ax2.set_title(
-            f"Citrullination Sensitivity at R Positions\n"
-            f"(Red=Boundary Crossed, Green=Safe)"
-        )
+        ax2.set_title("Citrullination Sensitivity at R Positions\n" "(Red=Boundary Crossed, Green=Safe)")
 
         # Add safety rate
         safety_rate = results["metrics"]["cit_safety_rate"]
@@ -711,11 +698,7 @@ def create_visualization(results: Dict, output_path: Path):
         if codon in HUMAN_CODON_USAGE:
             usage = HUMAN_CODON_USAGE[codon]
             # Find windows containing this position
-            margins_at_pos = [
-                w["margin"]
-                for w in results["epitope_windows"]
-                if w["start"] <= i < w["end"]
-            ]
+            margins_at_pos = [w["margin"] for w in results["epitope_windows"] if w["start"] <= i < w["end"]]
             if margins_at_pos:
                 codon_data.append((usage, np.mean(margins_at_pos)))
 
@@ -838,20 +821,15 @@ def main():
         # Compare to naive
         comparison = optimizer.compare_to_naive(protein["sequence"])
 
-        print(f"\n  Results:")
+        print("\n  Results:")
         print(f"    Length: {result['length_aa']} AA, {result['length_nt']} nt")
-        print(
-            f"    Mean Margin: {result['metrics']['mean_margin']:.4f} "
-            f"(naive: {comparison['naive_mean_margin']:.4f})"
-        )
+        print(f"    Mean Margin: {result['metrics']['mean_margin']:.4f} " f"(naive: {comparison['naive_mean_margin']:.4f})")
         print(f"    Improvement: {comparison['improvement']:.4f}")
         print(f"    R positions: {result['metrics']['n_r_positions']}")
-        print(
-            f"    Cit boundary crossings: {result['metrics']['n_cit_boundary_crossings']}"
-        )
+        print(f"    Cit boundary crossings: {result['metrics']['n_cit_boundary_crossings']}")
         print(f"    Cit safety rate: {result['metrics']['cit_safety_rate']:.1%}")
 
-        print(f"\n  Optimized DNA:")
+        print("\n  Optimized DNA:")
         dna = result["optimized_dna"]
         for i in range(0, len(dna), 60):
             print(f"    {dna[i:i+60]}")

@@ -150,9 +150,7 @@ def analyze_pad_substrate(samples: list) -> dict:
                     pad_results["by_motif"][motif] += 1
 
     pad_results["by_motif"] = dict(pad_results["by_motif"])
-    pad_results["pad_substrate_rate"] = pad_results["predicted_substrates"] / len(
-        rq_samples
-    )
+    pad_results["pad_substrate_rate"] = pad_results["predicted_substrates"] / len(rq_samples)
 
     return pad_results
 
@@ -170,8 +168,7 @@ def analyze_known_acpa_pattern(samples: list) -> dict:
             "position": s["position"],
             "simple_shift": s["centroid_shift"],
             "tcr_shift": s["tcr_interface"]["tcr_interface_shift"],
-            "amplification": s["tcr_interface"]["tcr_interface_shift"]
-            / s["centroid_shift"],
+            "amplification": s["tcr_interface"]["tcr_interface_shift"] / s["centroid_shift"],
             "tcr_goldilocks": s["tcr_interface"]["goldilocks_zone"],
             "tcr_class": s["tcr_interface"]["immunogenic_class"],
             "hla_converges": s["hla_interface"]["converges_to_risk_se"],
@@ -190,25 +187,18 @@ def analyze_known_acpa_pattern(samples: list) -> dict:
 
     # Summary statistics
     analysis["summary"] = {
-        "tcr_goldilocks_rate": sum(1 for s in analysis["sites"] if s["tcr_goldilocks"])
-        / len(known),
-        "hla_converges_rate": sum(1 for s in analysis["sites"] if s["hla_converges"])
-        / len(known),
-        "pad_substrate_rate": sum(1 for s in analysis["sites"] if s["pad_substrate"])
-        / len(known),
+        "tcr_goldilocks_rate": sum(1 for s in analysis["sites"] if s["tcr_goldilocks"]) / len(known),
+        "hla_converges_rate": sum(1 for s in analysis["sites"] if s["hla_converges"]) / len(known),
+        "pad_substrate_rate": sum(1 for s in analysis["sites"] if s["pad_substrate"]) / len(known),
         "mean_amplification": np.mean([s["amplification"] for s in analysis["sites"]]),
-        "mean_interface_score": np.mean(
-            [s["interface_score"] for s in analysis["sites"]]
-        ),
+        "mean_interface_score": np.mean([s["interface_score"] for s in analysis["sites"]]),
         "all_high_priority": all(s["interface_score"] >= 2 for s in analysis["sites"]),
     }
 
     return analysis
 
 
-def generate_mechanistic_model(
-    amplification: dict, hla: dict, pad: dict, known: dict
-) -> dict:
+def generate_mechanistic_model(amplification: dict, hla: dict, pad: dict, known: dict) -> dict:
     """Generate a mechanistic model of citrullination immunogenicity."""
 
     model = {
@@ -308,12 +298,10 @@ def main():
     handshake_path = data_dir / "ra_handshake_results.json"
 
     if not handshake_path.exists():
-        print(
-            f"ERROR: Handshake results not found. Run 20_ra_handshake_analysis.py first."
-        )
+        print("ERROR: Handshake results not found. Run 20_ra_handshake_analysis.py first.")
         return 1
 
-    print(f"\nLoading handshake results...")
+    print("\nLoading handshake results...")
     with open(handshake_path) as f:
         handshake = json.load(f)
 
@@ -356,19 +344,13 @@ def main():
     for ptm in ["R->Q", "S->D"]:
         if ptm in hla:
             h = hla[ptm]
-            print(
-                f"  {ptm}: {h['converges_to_risk_rate']*100:.1f}% converge to risk SE"
-            )
+            print(f"  {ptm}: {h['converges_to_risk_rate']*100:.1f}% converge to risk SE")
             print(f"       SE distribution: {h['best_se_distribution']}")
 
     print("\n3. PAD4 SUBSTRATE ANALYSIS (R->Q only)")
     print("-" * 50)
-    print(
-        f"  Predicted substrates: {pad['predicted_substrates']}/{pad['total_rq_sites']} ({pad['pad_substrate_rate']*100:.1f}%)"
-    )
-    print(
-        f"  Both PAD + TCR goldilocks: {pad['substrate_vs_interface']['both_pad_and_tcr_gold']}"
-    )
+    print(f"  Predicted substrates: {pad['predicted_substrates']}/{pad['total_rq_sites']} ({pad['pad_substrate_rate']*100:.1f}%)")
+    print(f"  Both PAD + TCR goldilocks: {pad['substrate_vs_interface']['both_pad_and_tcr_gold']}")
     print(f"  Motif patterns: {pad['by_motif']}")
 
     print("\n4. KNOWN ACPA VALIDATION")
@@ -379,9 +361,7 @@ def main():
             f"(amp={site['amplification']:.2f}x, TCR={site['tcr_goldilocks']}, "
             f"HLA={site['hla_converges']}, PAD={site['pad_substrate']})"
         )
-    print(
-        f"\n  All known ACPA in high-priority: {known['summary']['all_high_priority']}"
-    )
+    print(f"\n  All known ACPA in high-priority: {known['summary']['all_high_priority']}")
 
     print("\n5. MECHANISTIC MODEL")
     print("-" * 50)

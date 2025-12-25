@@ -7,7 +7,6 @@ immunogenicity analysis results.
 
 import json
 import warnings
-from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
@@ -22,16 +21,13 @@ import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 # Import utilities
 from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot, get_results_dir,
-                              load_codon_encoder, poincare_distance)
+                              load_codon_encoder)
 from matplotlib.patches import Circle
-from mpl_toolkits.mplot3d import Axes3D
 from scipy import stats
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 
-spec = importlib.util.spec_from_file_location(
-    "augmented_db", Path(__file__).parent / "08_augmented_epitope_database.py"
-)
+spec = importlib.util.spec_from_file_location("augmented_db", Path(__file__).parent / "08_augmented_epitope_database.py")
 augmented_db = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(augmented_db)
 RA_AUTOANTIGENS_AUGMENTED = augmented_db.RA_AUTOANTIGENS_AUGMENTED
@@ -54,11 +50,7 @@ def encode_epitope(sequence: str, encoder, device="cpu") -> np.ndarray:
         codon = AA_TO_CODON.get(aa, "NNN")
         if codon == "NNN":
             continue
-        onehot = (
-            torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-            .unsqueeze(0)
-            .to(device)
-        )
+        onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
         with torch.no_grad():
             emb = encoder.encode(onehot).cpu().numpy().squeeze()
         embeddings.append(emb)
@@ -120,11 +112,7 @@ def plot_poincare_disk_2d(data, encoder, output_path):
 
     # Plot points
     for i, (x, y) in enumerate(centroids_2d):
-        color = (
-            COLORS["immunodominant"]
-            if data["labels"][i] == "immunodominant"
-            else COLORS["silent"]
-        )
+        color = COLORS["immunodominant"] if data["labels"][i] == "immunodominant" else COLORS["silent"]
         ax1.scatter(x, y, c=color, s=100, alpha=0.7, edgecolors="white", linewidth=0.5)
 
     ax1.set_xlim(-1.15, 1.15)
@@ -155,9 +143,7 @@ def plot_poincare_disk_2d(data, encoder, output_path):
     ax2.add_patch(circle2)
 
     protein_colors = plt.cm.tab10(np.linspace(0, 1, len(set(data["proteins"]))))
-    protein_color_map = {
-        p: protein_colors[i] for i, p in enumerate(sorted(set(data["proteins"])))
-    }
+    protein_color_map = {p: protein_colors[i] for i, p in enumerate(sorted(set(data["proteins"])))}
 
     for i, (x, y) in enumerate(centroids_2d):
         color = protein_color_map[data["proteins"][i]]
@@ -184,10 +170,7 @@ def plot_poincare_disk_2d(data, encoder, output_path):
     )
 
     # Protein legend
-    handles = [
-        mpatches.Patch(color=protein_color_map[p], label=p)
-        for p in sorted(set(data["proteins"]))
-    ]
+    handles = [mpatches.Patch(color=protein_color_map[p], label=p) for p in sorted(set(data["proteins"]))]
     ax2.legend(handles=handles, loc="upper right", fontsize=8, ncol=2)
 
     plt.tight_layout()
@@ -314,9 +297,7 @@ def plot_3d_poincare_ball(data, encoder, output_path):
     x_sphere = np.outer(np.cos(u), np.sin(v))
     y_sphere = np.outer(np.sin(u), np.sin(v))
     z_sphere = np.outer(np.ones(np.size(u)), np.cos(v))
-    ax.plot_wireframe(
-        x_sphere, y_sphere, z_sphere, color="gray", alpha=0.1, linewidth=0.5
-    )
+    ax.plot_wireframe(x_sphere, y_sphere, z_sphere, color="gray", alpha=0.1, linewidth=0.5)
 
     # Plot points
     imm_mask = np.array([l == "immunodominant" for l in data["labels"]])
@@ -435,7 +416,8 @@ def plot_statistical_comparisons(results_path, output_path):
         )
 
         ax.set_title(
-            f'{metric_name}\n(p={p_val:.4f}, d={comp["cohens_d"]:.2f})', fontsize=11
+            f'{metric_name}\n(p={p_val:.4f}, d={comp["cohens_d"]:.2f})',
+            fontsize=11,
         )
         ax.set_ylabel("Value", fontsize=10)
 
@@ -532,7 +514,10 @@ def plot_entropy_change_detail(results_path, output_path):
         linewidth=2,
     )
     ax2.axvline(
-        x=np.mean(sil_entropy), color=COLORS["silent"], linestyle="-", linewidth=2
+        x=np.mean(sil_entropy),
+        color=COLORS["silent"],
+        linestyle="-",
+        linewidth=2,
     )
     ax2.set_xlabel("Entropy Change (ΔS)", fontsize=12)
     ax2.set_ylabel("Count", fontsize=12)
@@ -553,12 +538,21 @@ def plot_entropy_change_detail(results_path, output_path):
         edgecolors="white",
     )
     ax3.scatter(
-        x_sil, sil_entropy, c=COLORS["silent"], alpha=0.6, s=60, edgecolors="white"
+        x_sil,
+        sil_entropy,
+        c=COLORS["silent"],
+        alpha=0.6,
+        s=60,
+        edgecolors="white",
     )
 
     # Mean bars
     ax3.hlines(
-        np.mean(imm_entropy), -0.2, 0.2, colors=COLORS["immunodominant"], linewidth=3
+        np.mean(imm_entropy),
+        -0.2,
+        0.2,
+        colors=COLORS["immunodominant"],
+        linewidth=3,
     )
     ax3.hlines(np.mean(sil_entropy), 0.8, 1.2, colors=COLORS["silent"], linewidth=3)
 
@@ -588,8 +582,7 @@ def plot_entropy_change_detail(results_path, output_path):
     )
 
     plt.suptitle(
-        "KEY FINDING: Entropy Preservation Upon Citrullination\n"
-        "Immunodominant epitopes INCREASE entropy; Silent epitopes DECREASE entropy",
+        "KEY FINDING: Entropy Preservation Upon Citrullination\n" "Immunodominant epitopes INCREASE entropy; Silent epitopes DECREASE entropy",
         fontsize=13,
         fontweight="bold",
         y=1.05,
@@ -665,7 +658,10 @@ def plot_3d_tsne(data, output_path):
     cbar.set_label("ACPA Reactivity", fontsize=10)
 
     plt.suptitle(
-        "t-SNE 3D Embedding Visualization", fontsize=14, fontweight="bold", y=1.02
+        "t-SNE 3D Embedding Visualization",
+        fontsize=14,
+        fontweight="bold",
+        y=1.02,
     )
     plt.tight_layout()
     plt.savefig(output_path, dpi=DPI, bbox_inches="tight", facecolor="white")
@@ -696,11 +692,7 @@ def plot_cluster_distribution_heatmap(data, encoder, output_path):
                 codon = AA_TO_CODON.get(aa, "NNN")
                 if codon == "NNN":
                     continue
-                onehot = (
-                    torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-                    .unsqueeze(0)
-                    .to(device)
-                )
+                onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
                 with torch.no_grad():
                     cluster_id, _ = encoder.get_cluster(onehot)
                 clusters.append(cluster_id.item())
@@ -722,9 +714,7 @@ def plot_cluster_distribution_heatmap(data, encoder, output_path):
 
     # Heatmaps
     ax1 = axes[0]
-    im1 = ax1.imshow(
-        imm_distributions, aspect="auto", cmap="Reds", interpolation="nearest"
-    )
+    im1 = ax1.imshow(imm_distributions, aspect="auto", cmap="Reds", interpolation="nearest")
     ax1.set_xlabel("Cluster ID", fontsize=12)
     ax1.set_ylabel("Epitope Index", fontsize=12)
     ax1.set_title(
@@ -735,9 +725,7 @@ def plot_cluster_distribution_heatmap(data, encoder, output_path):
     plt.colorbar(im1, ax=ax1, label="Frequency")
 
     ax2 = axes[1]
-    im2 = ax2.imshow(
-        sil_distributions, aspect="auto", cmap="Blues", interpolation="nearest"
-    )
+    im2 = ax2.imshow(sil_distributions, aspect="auto", cmap="Blues", interpolation="nearest")
     ax2.set_xlabel("Cluster ID", fontsize=12)
     ax2.set_ylabel("Epitope Index", fontsize=12)
     ax2.set_title(
@@ -747,9 +735,7 @@ def plot_cluster_distribution_heatmap(data, encoder, output_path):
     )
     plt.colorbar(im2, ax=ax2, label="Frequency")
 
-    plt.suptitle(
-        "Cluster Distribution Patterns", fontsize=14, fontweight="bold", y=1.02
-    )
+    plt.suptitle("Cluster Distribution Patterns", fontsize=14, fontweight="bold", y=1.02)
     plt.tight_layout()
     plt.savefig(output_path, dpi=DPI, bbox_inches="tight", facecolor="white")
     plt.close()
@@ -793,9 +779,7 @@ def main():
     print("\n[4/7] Statistical comparisons...")
     results_path = results_dir / "immunogenicity_analysis_augmented.json"
     if results_path.exists():
-        plot_statistical_comparisons(
-            results_path, viz_dir / "statistical_comparisons.png"
-        )
+        plot_statistical_comparisons(results_path, viz_dir / "statistical_comparisons.png")
 
     print("\n[5/7] Entropy change detail...")
     if results_path.exists():

@@ -14,9 +14,8 @@ Version: 1.0
 """
 
 import json
-from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -33,9 +32,7 @@ import importlib.util
 from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot, load_codon_encoder,
                               poincare_distance)
 
-spec = importlib.util.spec_from_file_location(
-    "augmented_db", Path(__file__).parent / "08_augmented_epitope_database.py"
-)
+spec = importlib.util.spec_from_file_location("augmented_db", Path(__file__).parent / "08_augmented_epitope_database.py")
 augmented_db = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(augmented_db)
 RA_AUTOANTIGENS_AUGMENTED = augmented_db.RA_AUTOANTIGENS_AUGMENTED
@@ -76,11 +73,7 @@ def compute_epitope_metrics(epitope: dict, encoder, device="cpu") -> Dict:
         codon = AA_TO_CODON.get(aa, "NNN")
         if codon == "NNN":
             continue
-        onehot = (
-            torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-            .unsqueeze(0)
-            .to(device)
-        )
+        onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
         with torch.no_grad():
             probs, emb = encoder.get_cluster_probs(onehot)
             embeddings.append(emb.cpu().numpy().squeeze())
@@ -109,14 +102,7 @@ def compute_epitope_metrics(epitope: dict, encoder, device="cpu") -> Dict:
 
     for r_idx, r_pos in enumerate(arg_positions):
         # Find embedding index (accounting for any skipped AAs)
-        emb_idx = (
-            sum(
-                1
-                for i, aa in enumerate(sequence[: r_pos + 1])
-                if AA_TO_CODON.get(aa) is not None
-            )
-            - 1
-        )
+        emb_idx = sum(1 for i, aa in enumerate(sequence[: r_pos + 1]) if AA_TO_CODON.get(aa) is not None) - 1
 
         if emb_idx >= len(embeddings):
             continue
@@ -134,7 +120,8 @@ def compute_epitope_metrics(epitope: dict, encoder, device="cpu") -> Dict:
 
         # Centroid shift (Poincaré distance)
         centroid_shift = poincare_distance(
-            torch.tensor(original_centroid).float(), torch.tensor(cit_centroid).float()
+            torch.tensor(original_centroid).float(),
+            torch.tensor(cit_centroid).float(),
         ).item()
 
         # Relative shift (normalized by original norm)
@@ -183,17 +170,13 @@ def compute_epitope_metrics(epitope: dict, encoder, device="cpu") -> Dict:
         "mean_relative_shift": np.mean([m["relative_shift"] for m in per_r_metrics]),
         "mean_js_divergence": np.mean([m["js_divergence"] for m in per_r_metrics]),
         "mean_entropy_change": np.mean([m["entropy_change"] for m in per_r_metrics]),
-        "mean_relative_entropy_change": np.mean(
-            [m["relative_entropy_change"] for m in per_r_metrics]
-        ),
+        "mean_relative_entropy_change": np.mean([m["relative_entropy_change"] for m in per_r_metrics]),
         # Per-position details
         "per_r_metrics": per_r_metrics,
     }
 
 
-def compute_goldilocks_boundaries(
-    imm_values: List[float], silent_values: List[float]
-) -> Dict:
+def compute_goldilocks_boundaries(imm_values: List[float], silent_values: List[float]) -> Dict:
     """
     Compute precise boundaries for the Goldilocks zone using statistical methods.
     """
@@ -209,10 +192,7 @@ def compute_goldilocks_boundaries(
     u_stat, u_p = stats.mannwhitneyu(imm, silent, alternative="two-sided")
 
     # Effect size (Cohen's d)
-    pooled_std = np.sqrt(
-        ((len(imm) - 1) * imm_std**2 + (len(silent) - 1) * silent_std**2)
-        / (len(imm) + len(silent) - 2)
-    )
+    pooled_std = np.sqrt(((len(imm) - 1) * imm_std**2 + (len(silent) - 1) * silent_std**2) / (len(imm) + len(silent) - 2))
     cohens_d = (imm_mean - silent_mean) / pooled_std if pooled_std > 0 else 0
 
     # Optimal threshold (ROC-based)
@@ -275,11 +255,7 @@ def compute_goldilocks_boundaries(
             "u_statistic": float(u_stat),
             "p_value_mann_whitney": float(u_p),
             "cohens_d": float(cohens_d),
-            "effect_magnitude": (
-                "large"
-                if abs(cohens_d) > 0.8
-                else "medium" if abs(cohens_d) > 0.5 else "small"
-            ),
+            "effect_magnitude": ("large" if abs(cohens_d) > 0.8 else "medium" if abs(cohens_d) > 0.5 else "small"),
         },
         "goldilocks_zone": {
             "lower_bound": float(goldilocks_lower),
@@ -354,14 +330,12 @@ def plot_goldilocks_zones(results: Dict, output_dir: Path):
         # Statistics annotation
         p_val = data["statistics"]["p_value_t"]
         d = data["statistics"]["cohens_d"]
-        sig = (
-            "***"
-            if p_val < 0.001
-            else "**" if p_val < 0.01 else "*" if p_val < 0.05 else "ns"
-        )
+        sig = "***" if p_val < 0.001 else "**" if p_val < 0.01 else "*" if p_val < 0.05 else "ns"
 
         ax.set_title(
-            f"{title}\np={p_val:.4f} {sig}, d={d:.2f}", fontsize=12, fontweight="bold"
+            f"{title}\np={p_val:.4f} {sig}, d={d:.2f}",
+            fontsize=12,
+            fontweight="bold",
         )
         ax.set_ylabel(title, fontsize=11)
         ax.grid(True, alpha=0.3, axis="y")
@@ -376,7 +350,7 @@ def plot_goldilocks_zones(results: Dict, output_dir: Path):
     plt.tight_layout()
     plt.savefig(output_dir / "goldilocks_zones.png", dpi=300, bbox_inches="tight")
     plt.close()
-    print(f"  Saved: goldilocks_zones.png")
+    print("  Saved: goldilocks_zones.png")
 
 
 def plot_entropy_detail(results: Dict, output_dir: Path):
@@ -398,11 +372,20 @@ def plot_entropy_detail(results: Dict, output_dir: Path):
         density=True,
     )
     ax.hist(
-        silent_vals, bins=15, alpha=0.6, color="#1e88e5", label="Silent", density=True
+        silent_vals,
+        bins=15,
+        alpha=0.6,
+        color="#1e88e5",
+        label="Silent",
+        density=True,
     )
     ax.axvline(0, color="black", linestyle="-", lw=1, label="No change")
     ax.axvline(
-        zone["center"], color="gold", linestyle="--", lw=2, label="Goldilocks center"
+        zone["center"],
+        color="gold",
+        linestyle="--",
+        lw=2,
+        label="Goldilocks center",
     )
     ax.axvspan(zone["lower_bound"], zone["upper_bound"], alpha=0.2, color="gold")
     ax.set_xlabel("Entropy Change upon Citrullination", fontsize=12)
@@ -415,16 +398,8 @@ def plot_entropy_detail(results: Dict, output_dir: Path):
     ax = axes[1]
     all_epitopes = results["epitope_details"]
 
-    imm_epitopes = [
-        (e["epitope_id"], e["mean_entropy_change"], e["acpa_reactivity"])
-        for e in all_epitopes
-        if e["immunodominant"]
-    ]
-    silent_epitopes = [
-        (e["epitope_id"], e["mean_entropy_change"], e["acpa_reactivity"])
-        for e in all_epitopes
-        if not e["immunodominant"]
-    ]
+    imm_epitopes = [(e["epitope_id"], e["mean_entropy_change"], e["acpa_reactivity"]) for e in all_epitopes if e["immunodominant"]]
+    silent_epitopes = [(e["epitope_id"], e["mean_entropy_change"], e["acpa_reactivity"]) for e in all_epitopes if not e["immunodominant"]]
 
     # Sort by entropy change
     imm_epitopes.sort(key=lambda x: x[1], reverse=True)
@@ -474,7 +449,9 @@ def plot_entropy_detail(results: Dict, output_dir: Path):
     ax.set_xlabel("Entropy Change", fontsize=12)
     ax.set_ylabel("ACPA Reactivity", fontsize=12)
     ax.set_title(
-        f"Entropy Change vs ACPA\nr={r:.3f}, p={p:.3f}", fontsize=12, fontweight="bold"
+        f"Entropy Change vs ACPA\nr={r:.3f}, p={p:.3f}",
+        fontsize=12,
+        fontweight="bold",
     )
     ax.axvline(0, color="gray", linestyle="--", lw=1, alpha=0.5)
     ax.axvspan(zone["lower_bound"], zone["upper_bound"], alpha=0.2, color="gold")
@@ -483,7 +460,7 @@ def plot_entropy_detail(results: Dict, output_dir: Path):
     plt.tight_layout()
     plt.savefig(output_dir / "entropy_detail.png", dpi=300, bbox_inches="tight")
     plt.close()
-    print(f"  Saved: entropy_detail.png")
+    print("  Saved: entropy_detail.png")
 
 
 def main():
@@ -549,23 +526,13 @@ def main():
         results[metric.replace("mean_", "")] = boundaries
 
         print(f"\n{metric.upper().replace('_', ' ')}:")
-        print(
-            f"  Immunodominant: {boundaries['immunodominant']['mean']:.4f} ± {boundaries['immunodominant']['std']:.4f}"
-        )
-        print(
-            f"  Silent: {boundaries['silent']['mean']:.4f} ± {boundaries['silent']['std']:.4f}"
-        )
+        print(f"  Immunodominant: {boundaries['immunodominant']['mean']:.4f} ± {boundaries['immunodominant']['std']:.4f}")
+        print(f"  Silent: {boundaries['silent']['mean']:.4f} ± {boundaries['silent']['std']:.4f}")
         print(f"  p-value: {boundaries['statistics']['p_value_t']:.4f}")
-        print(
-            f"  Cohen's d: {boundaries['statistics']['cohens_d']:.3f} ({boundaries['statistics']['effect_magnitude']})"
-        )
-        print(
-            f"  Goldilocks Zone: [{boundaries['goldilocks_zone']['lower_bound']:.4f}, {boundaries['goldilocks_zone']['upper_bound']:.4f}]"
-        )
+        print(f"  Cohen's d: {boundaries['statistics']['cohens_d']:.3f} ({boundaries['statistics']['effect_magnitude']})")
+        print(f"  Goldilocks Zone: [{boundaries['goldilocks_zone']['lower_bound']:.4f}, {boundaries['goldilocks_zone']['upper_bound']:.4f}]")
         print(f"  IMM in zone: {boundaries['goldilocks_zone']['imm_in_zone_pct']:.1f}%")
-        print(
-            f"  Silent in zone: {boundaries['goldilocks_zone']['silent_in_zone_pct']:.1f}%"
-        )
+        print(f"  Silent in zone: {boundaries['goldilocks_zone']['silent_in_zone_pct']:.1f}%")
 
     # Generate visualizations
     print("\n" + "=" * 80)
@@ -580,9 +547,7 @@ def main():
 
     # Remove raw values for JSON (keep only statistics)
     json_results = {k: v for k, v in results.items() if k != "raw_values"}
-    json_results["epitope_details"] = [
-        {k: v for k, v in e.items() if k != "per_r_metrics"} for e in epitope_metrics
-    ]
+    json_results["epitope_details"] = [{k: v for k, v in e.items() if k != "per_r_metrics"} for e in epitope_metrics]
 
     results_path = output_dir / "goldilocks_validation_results.json"
     with open(results_path, "w") as f:

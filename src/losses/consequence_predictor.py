@@ -75,7 +75,10 @@ class ConsequencePredictor(nn.Module):
         return norms.mean().item(), z.std().item()
 
     def forward(
-        self, ranking_correlation: float, z: torch.Tensor, coverage_pct: float = 0.0
+        self,
+        ranking_correlation: float,
+        z: torch.Tensor,
+        coverage_pct: float = 0.0,
     ) -> torch.Tensor:
         """Predict addition accuracy from current state.
 
@@ -105,9 +108,7 @@ class ConsequencePredictor(nn.Module):
 
         return predicted_accuracy.squeeze()
 
-    def compute_loss(
-        self, predicted_accuracy: torch.Tensor, actual_accuracy: float
-    ) -> torch.Tensor:
+    def compute_loss(self, predicted_accuracy: torch.Tensor, actual_accuracy: float) -> torch.Tensor:
         """Compute prediction error.
 
         Args:
@@ -160,9 +161,7 @@ class ConsequencePredictor(nn.Module):
         return (numerator / denominator).item()
 
 
-def evaluate_addition_accuracy(
-    model: nn.Module, device: str, n_samples: int = 1000
-) -> float:
+def evaluate_addition_accuracy(model: nn.Module, device: str, n_samples: int = 1000) -> float:
     """Evaluate model's emergent addition capability.
 
     Tests: z_a + z_b - z_0 ≈ z_{a∘b}
@@ -253,11 +252,7 @@ def evaluate_addition_accuracy(
             # Simplified: check correlation between v_3adic and -latent_dist
             correlation = torch.corrcoef(torch.stack([v_norm, -d_norm]))[0, 1].item()
             # Map correlation [-1, 1] to accuracy [0, 1]
-            structure_accuracy = (
-                (correlation + 1) / 2
-                if not torch.isnan(torch.tensor(correlation))
-                else 0.5
-            )
+            structure_accuracy = (correlation + 1) / 2 if not torch.isnan(torch.tensor(correlation)) else 0.5
         else:
             structure_accuracy = 0.5
 
@@ -317,15 +312,11 @@ class PurposefulRankingLoss(nn.Module):
 
         # If we have ground truth, compute prediction error
         if actual_addition_accuracy is not None:
-            consequence_loss = self.consequence_predictor.compute_loss(
-                predicted, actual_addition_accuracy
-            )
+            consequence_loss = self.consequence_predictor.compute_loss(predicted, actual_addition_accuracy)
             result["consequence_loss"] = consequence_loss * self.consequence_weight
 
             # Update history for tracking
-            self.consequence_predictor.update_history(
-                predicted.item(), actual_addition_accuracy
-            )
+            self.consequence_predictor.update_history(predicted.item(), actual_addition_accuracy)
 
         return result
 

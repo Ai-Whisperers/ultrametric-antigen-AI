@@ -22,21 +22,17 @@ Version: 1.0
 
 import json
 import sys
-from collections import defaultdict
-from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict
 
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-from scipy import stats
 from scipy.stats import mannwhitneyu, pearsonr, spearmanr
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import (average_precision_score, precision_recall_curve,
-                             roc_auc_score, roc_curve)
+from sklearn.metrics import roc_auc_score, roc_curve
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 
 matplotlib.use("Agg")
@@ -85,7 +81,10 @@ def extract_cluster_info(encoder: CodonEncoder, device: str = "cpu") -> Dict:
 
 
 def compute_epitope_hierarchical_features(
-    epitope_seq: str, encoder: CodonEncoder, cluster_info: Dict, device: str = "cpu"
+    epitope_seq: str,
+    encoder: CodonEncoder,
+    cluster_info: Dict,
+    device: str = "cpu",
 ) -> Dict:
     """
     Compute hierarchical features for an epitope sequence.
@@ -107,11 +106,7 @@ def compute_epitope_hierarchical_features(
         if codon is None or codon == "NNN":
             continue
 
-        onehot = (
-            torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-            .unsqueeze(0)
-            .to(device)
-        )
+        onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
 
         with torch.no_grad():
             probs, emb = encoder.get_cluster_probs(onehot)
@@ -140,7 +135,8 @@ def compute_epitope_hierarchical_features(
     for i in range(len(embeddings)):
         for j in range(i + 1, len(embeddings)):
             d = poincare_distance(
-                torch.tensor(embeddings[i]).float(), torch.tensor(embeddings[j]).float()
+                torch.tensor(embeddings[i]).float(),
+                torch.tensor(embeddings[j]).float(),
             ).item()
             pairwise_dists.append(d)
 
@@ -160,24 +156,14 @@ def compute_epitope_hierarchical_features(
         r_codon = AA_TO_CODON["R"]
         q_codon = AA_TO_CODON["Q"]
 
-        r_onehot = (
-            torch.tensor(codon_to_onehot(r_codon), dtype=torch.float32)
-            .unsqueeze(0)
-            .to(device)
-        )
-        q_onehot = (
-            torch.tensor(codon_to_onehot(q_codon), dtype=torch.float32)
-            .unsqueeze(0)
-            .to(device)
-        )
+        r_onehot = torch.tensor(codon_to_onehot(r_codon), dtype=torch.float32).unsqueeze(0).to(device)
+        q_onehot = torch.tensor(codon_to_onehot(q_codon), dtype=torch.float32).unsqueeze(0).to(device)
 
         with torch.no_grad():
             _, r_emb = encoder.get_cluster_probs(r_onehot)
             _, q_emb = encoder.get_cluster_probs(q_onehot)
 
-        r_to_q_effect = poincare_distance(
-            r_emb.cpu().squeeze(), q_emb.cpu().squeeze()
-        ).item()
+        r_to_q_effect = poincare_distance(r_emb.cpu().squeeze(), q_emb.cpu().squeeze()).item()
 
     # Feature 7: Cluster transition potential
     # How much would citrullination move the centroid?
@@ -189,18 +175,15 @@ def compute_epitope_hierarchical_features(
         for idx in r_indices:
             if idx < len(modified_embeddings):
                 q_codon = AA_TO_CODON["Q"]
-                q_onehot = (
-                    torch.tensor(codon_to_onehot(q_codon), dtype=torch.float32)
-                    .unsqueeze(0)
-                    .to(device)
-                )
+                q_onehot = torch.tensor(codon_to_onehot(q_codon), dtype=torch.float32).unsqueeze(0).to(device)
                 with torch.no_grad():
                     _, q_emb = encoder.get_cluster_probs(q_onehot)
                 modified_embeddings[idx] = q_emb.cpu().numpy().squeeze()
 
         modified_centroid = np.mean(modified_embeddings, axis=0)
         centroid_shift = poincare_distance(
-            torch.tensor(centroid).float(), torch.tensor(modified_centroid).float()
+            torch.tensor(centroid).float(),
+            torch.tensor(modified_centroid).float(),
         ).item()
 
         relative_shift = centroid_shift / (centroid_norm + 1e-10)
@@ -217,9 +200,7 @@ def compute_epitope_hierarchical_features(
     elif relative_shift > goldilocks_upper:
         goldilocks_score = goldilocks_upper / relative_shift
     else:
-        goldilocks_score = 1.0 - abs(relative_shift - goldilocks_center) / (
-            goldilocks_center
-        )
+        goldilocks_score = 1.0 - abs(relative_shift - goldilocks_center) / (goldilocks_center)
 
     in_goldilocks = goldilocks_lower <= relative_shift <= goldilocks_upper
 
@@ -240,7 +221,10 @@ def compute_epitope_hierarchical_features(
 
 
 def validate_against_ground_truth(
-    epitope_data: Dict, encoder: CodonEncoder, cluster_info: Dict, device: str = "cpu"
+    epitope_data: Dict,
+    encoder: CodonEncoder,
+    cluster_info: Dict,
+    device: str = "cpu",
 ) -> Dict:
     """
     Validate hierarchical features against immunodominant/silent labels.
@@ -250,9 +234,7 @@ def validate_against_ground_truth(
 
     for protein_id, protein_data in epitope_data["proteins"].items():
         for epitope in protein_data["epitopes"]:
-            features = compute_epitope_hierarchical_features(
-                epitope["sequence"], encoder, cluster_info, device
-            )
+            features = compute_epitope_hierarchical_features(epitope["sequence"], encoder, cluster_info, device)
 
             if features is None:
                 continue
@@ -298,9 +280,7 @@ def validate_against_ground_truth(
 
         # Mann-Whitney U test (non-parametric)
         if len(imm_values) > 0 and len(sil_values) > 0:
-            u_stat, p_value = mannwhitneyu(
-                imm_values, sil_values, alternative="two-sided"
-            )
+            u_stat, p_value = mannwhitneyu(imm_values, sil_values, alternative="two-sided")
 
             # Effect size (rank-biserial correlation)
             n1, n2 = len(imm_values), len(sil_values)
@@ -308,9 +288,7 @@ def validate_against_ground_truth(
 
             # Cohen's d
             pooled_std = np.sqrt((np.var(imm_values) + np.var(sil_values)) / 2)
-            cohens_d = (np.mean(imm_values) - np.mean(sil_values)) / (
-                pooled_std + 1e-10
-            )
+            cohens_d = (np.mean(imm_values) - np.mean(sil_values)) / (pooled_std + 1e-10)
 
             statistical_tests[feature] = {
                 "imm_mean": float(np.mean(imm_values)),
@@ -343,7 +321,7 @@ def validate_against_ground_truth(
                 "auc": float(max(auc, auc_inv)),
                 "direction": "positive" if auc >= auc_inv else "negative",
             }
-        except Exception as e:
+        except Exception:
             continue
 
     # Correlation with ACPA reactivity (continuous validation)
@@ -379,7 +357,7 @@ def validate_against_ground_truth(
         cv_scores = cross_val_score(lr, X, y, cv=cv, scoring="roc_auc")
         combined_auc = float(np.mean(cv_scores))
         combined_auc_std = float(np.std(cv_scores))
-    except Exception as e:
+    except Exception:
         combined_auc = 0
         combined_auc_std = 0
 
@@ -390,7 +368,7 @@ def validate_against_ground_truth(
     goldilocks_validation = {
         "imm_in_goldilocks": goldilocks_imm,
         "imm_total": len(immunodominant),
-        "imm_rate": goldilocks_imm / len(immunodominant) if immunodominant else 0,
+        "imm_rate": (goldilocks_imm / len(immunodominant) if immunodominant else 0),
         "sil_in_goldilocks": goldilocks_sil,
         "sil_total": len(silent),
         "sil_rate": goldilocks_sil / len(silent) if silent else 0,
@@ -429,9 +407,7 @@ def generate_validation_plots(results: Dict, output_dir: Path):
     # 1. Feature comparison (immunodominant vs silent)
     ax = axes[0, 0]
 
-    significant_features = [
-        (f, d) for f, d in results["statistical_tests"].items() if d["significant"]
-    ]
+    significant_features = [(f, d) for f, d in results["statistical_tests"].items() if d["significant"]]
 
     if significant_features:
         features = [f[0] for f in significant_features[:6]]
@@ -506,9 +482,7 @@ def generate_validation_plots(results: Dict, output_dir: Path):
     features_sorted = [features[i] for i in sorted_idx]
     aucs_sorted = [aucs[i] for i in sorted_idx]
 
-    colors = [
-        "green" if a > 0.65 else "orange" if a > 0.55 else "gray" for a in aucs_sorted
-    ]
+    colors = ["green" if a > 0.65 else "orange" if a > 0.55 else "gray" for a in aucs_sorted]
 
     ax.barh(range(len(features_sorted)), aucs_sorted, color=colors, alpha=0.7)
     ax.axvline(0.5, color="red", linestyle="--", lw=2, label="Random (0.5)")
@@ -537,7 +511,12 @@ def generate_validation_plots(results: Dict, output_dir: Path):
     width = 0.35
 
     bars1 = ax.bar(
-        x - width / 2, in_gold, width, label="In Goldilocks", color="gold", alpha=0.8
+        x - width / 2,
+        in_gold,
+        width,
+        label="In Goldilocks",
+        color="gold",
+        alpha=0.8,
     )
     bars2 = ax.bar(
         x + width / 2,
@@ -576,7 +555,8 @@ def generate_validation_plots(results: Dict, output_dir: Path):
 
     # Best correlating feature
     best_corr_feature = max(
-        results["correlation_results"].items(), key=lambda x: abs(x[1]["spearman_r"])
+        results["correlation_results"].items(),
+        key=lambda x: abs(x[1]["spearman_r"]),
     )[0]
 
     acpa_epitopes = [e for e in epitopes if e["acpa_reactivity"] > 0]
@@ -654,10 +634,12 @@ Best individual features:
     )
     plt.tight_layout()
     plt.savefig(
-        output_dir / "hierarchical_validation.png", dpi=300, bbox_inches="tight"
+        output_dir / "hierarchical_validation.png",
+        dpi=300,
+        bbox_inches="tight",
     )
     plt.close()
-    print(f"  Saved: hierarchical_validation.png")
+    print("  Saved: hierarchical_validation.png")
 
 
 def main():
@@ -672,9 +654,7 @@ def main():
     # Load encoder
     print("\nLoading codon encoder (3-adic, V5.11.3)...")
     device = "cpu"
-    encoder, mapping, native_hyperbolic = load_codon_encoder(
-        device=device, version="3adic"
-    )
+    encoder, mapping, native_hyperbolic = load_codon_encoder(device=device, version="3adic")
 
     # Extract cluster info
     print("\nExtracting cluster hierarchy...")
@@ -702,9 +682,7 @@ def main():
 
     # Significant features
     print("\n1. SIGNIFICANT FEATURES (p < 0.05):")
-    sig_features = [
-        (f, d) for f, d in results["statistical_tests"].items() if d["significant"]
-    ]
+    sig_features = [(f, d) for f, d in results["statistical_tests"].items() if d["significant"]]
     if sig_features:
         for f, d in sorted(sig_features, key=lambda x: x[1]["p_value"]):
             print(f"   {f}: p={d['p_value']:.4f}, Cohen's d={d['cohens_d']:.3f}")
@@ -726,20 +704,15 @@ def main():
     # Goldilocks validation
     print("\n4. GOLDILOCKS ZONE VALIDATION:")
     gv = results["goldilocks_validation"]
-    print(
-        f"   Immunodominant in Goldilocks: {gv['imm_in_goldilocks']}/{gv['imm_total']} ({gv['imm_rate']*100:.1f}%)"
-    )
-    print(
-        f"   Silent in Goldilocks: {gv['sil_in_goldilocks']}/{gv['sil_total']} ({gv['sil_rate']*100:.1f}%)"
-    )
-    print(
-        f"   Fisher's exact test: OR={gv['fisher_odds_ratio']:.2f}, p={gv['fisher_p_value']:.4f}"
-    )
+    print(f"   Immunodominant in Goldilocks: {gv['imm_in_goldilocks']}/{gv['imm_total']} ({gv['imm_rate']*100:.1f}%)")
+    print(f"   Silent in Goldilocks: {gv['sil_in_goldilocks']}/{gv['sil_total']} ({gv['sil_rate']*100:.1f}%)")
+    print(f"   Fisher's exact test: OR={gv['fisher_odds_ratio']:.2f}, p={gv['fisher_p_value']:.4f}")
 
     # ACPA correlation
     print("\n5. CORRELATION WITH ACPA REACTIVITY:")
     for f, c in sorted(
-        results["correlation_results"].items(), key=lambda x: -abs(x[1]["spearman_r"])
+        results["correlation_results"].items(),
+        key=lambda x: -abs(x[1]["spearman_r"]),
     )[:3]:
         print(f"   {f}: Spearman r={c['spearman_r']:.3f}, p={c['spearman_p']:.4f}")
 
@@ -784,9 +757,7 @@ def main():
 
     best_auc = max(r["auc"] for r in results["roc_results"].values())
     combined_auc = cm["cv_auc_mean"]
-    any_significant = any(
-        d["significant"] for d in results["statistical_tests"].values()
-    )
+    any_significant = any(d["significant"] for d in results["statistical_tests"].values())
     goldilocks_significant = gv["fisher_p_value"] < 0.05
 
     proof_level = 0

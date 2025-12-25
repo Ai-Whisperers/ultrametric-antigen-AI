@@ -23,8 +23,7 @@ from pathlib import Path
 
 # Add parent to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
-from data.tau_phospho_database import (KXGS_MOTIFS, TAU_2N4R_SEQUENCE,
-                                       TAU_DOMAINS, TAU_PHOSPHO_SITES)
+from data.tau_phospho_database import TAU_2N4R_SEQUENCE
 
 # Output directory
 OUTPUT_DIR = Path(__file__).parent / "alphafold3_jobs"
@@ -159,7 +158,11 @@ def create_tau_tubulin_jobs():
     jobs.append(
         create_job(
             "tau_tubulin_S262D",
-            [tau_s262d, ALPHA_TUBULIN_BINDING_REGION, BETA_TUBULIN_BINDING_REGION],
+            [
+                tau_s262d,
+                ALPHA_TUBULIN_BINDING_REGION,
+                BETA_TUBULIN_BINDING_REGION,
+            ],
         )
     )
 
@@ -169,7 +172,11 @@ def create_tau_tubulin_jobs():
     jobs.append(
         create_job(
             "tau_tubulin_all_KXGS",
-            [tau_all_kxgs, ALPHA_TUBULIN_BINDING_REGION, BETA_TUBULIN_BINDING_REGION],
+            [
+                tau_all_kxgs,
+                ALPHA_TUBULIN_BINDING_REGION,
+                BETA_TUBULIN_BINDING_REGION,
+            ],
         )
     )
 
@@ -223,14 +230,10 @@ def main():
     print(f"\nOutput directory: {OUTPUT_DIR}")
 
     # Verify sequences
-    print(f"\nSequence lengths:")
+    print("\nSequence lengths:")
     print(f"  Full tau (2N4R): {len(TAU_2N4R_SEQUENCE)} aa")
-    print(
-        f"  MTBR region: {len(TAU_MTBR_SEQUENCE)} aa (residues {MTBR_START+1}-{MTBR_END})"
-    )
-    print(
-        f"  Extended region: {len(TAU_EXTENDED_SEQUENCE)} aa (residues {EXTENDED_START+1}-{EXTENDED_END})"
-    )
+    print(f"  MTBR region: {len(TAU_MTBR_SEQUENCE)} aa (residues {MTBR_START+1}-{MTBR_END})")
+    print(f"  Extended region: {len(TAU_EXTENDED_SEQUENCE)} aa (residues {EXTENDED_START+1}-{EXTENDED_END})")
     print(f"  Alpha-tubulin fragment: {len(ALPHA_TUBULIN_BINDING_REGION)} aa")
     print(f"  Beta-tubulin fragment: {len(BETA_TUBULIN_BINDING_REGION)} aa")
 
@@ -287,9 +290,7 @@ def main():
     print("\nJobs in batch:")
     for i, job in enumerate(all_jobs, 1):
         n_chains = len(job["sequences"])
-        print(
-            f"  {i:2d}. {job['name']} ({n_chains} chain{'s' if n_chains > 1 else ''})"
-        )
+        print(f"  {i:2d}. {job['name']} ({n_chains} chain{'s' if n_chains > 1 else ''})")
 
     # ========================================================================
     # Summary

@@ -1,0 +1,6 @@
+Starting audit in C:\Users\Alejandro\Documents\Ivan\Work\ternary-vaes-bioinformatics...
+Found 282 Python files.
+
+==================================================
+AUDIT REPORT
+==================================================

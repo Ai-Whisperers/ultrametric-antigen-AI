@@ -256,7 +256,7 @@ def main():
     counting_results = analyze_counting_function(radii, valuations)
     results["counting_function"] = counting_results
     print(f"Power law fit: N(r) ~ r^{counting_results['power_law_alpha']:.3f}")
-    print(f"  (effective dimension of learned manifold)")
+    print("  (effective dimension of learned manifold)")
 
     # Analysis 2: Functional equation
     print("\n=== Functional Equation Test ===")
@@ -267,21 +267,15 @@ def main():
     print(f"Approximate symmetry: {func_eq_results['has_approximate_symmetry']}")
 
     # Convert numpy bool to Python bool for JSON
-    func_eq_results["has_approximate_symmetry"] = bool(
-        func_eq_results["has_approximate_symmetry"]
-    )
+    func_eq_results["has_approximate_symmetry"] = bool(func_eq_results["has_approximate_symmetry"])
 
     # Analysis 3: Exact statistics
     print("\n=== Exact Valuation Statistics ===")
     exact_results = exact_valuation_statistics(valuations, radii)
     results["exact_statistics"] = exact_results
     print(f"Ultrametric holds exactly: {exact_results['ultrametric_holds']}")
-    print(
-        f"Valuation-radius correlation: {exact_results['valuation_radius_correlation']:.4f}"
-    )
-    print(
-        f"Radius fit: r(v) = {exact_results['power3_fit_a']:.3f} * 3^(-{exact_results['power3_fit_c']:.3f}*v)"
-    )
+    print(f"Valuation-radius correlation: {exact_results['valuation_radius_correlation']:.4f}")
+    print(f"Radius fit: r(v) = {exact_results['power3_fit_a']:.3f} * 3^(-{exact_results['power3_fit_c']:.3f}*v)")
 
     # Visualization
     fig, axes = plt.subplots(2, 2, figsize=(14, 12))
@@ -349,7 +343,10 @@ def main():
     ax4 = axes[1, 1]
     v_dist = exact_results["valuation_distribution"]
     ax4.bar(
-        list(v_dist.keys()), list(v_dist.values()), color="steelblue", edgecolor="black"
+        list(v_dist.keys()),
+        list(v_dist.values()),
+        color="steelblue",
+        edgecolor="black",
     )
     ax4.set_xlabel("3-adic valuation v₃")
     ax4.set_ylabel("Count")

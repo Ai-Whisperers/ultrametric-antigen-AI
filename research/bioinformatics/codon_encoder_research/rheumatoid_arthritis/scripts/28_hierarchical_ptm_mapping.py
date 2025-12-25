@@ -24,17 +24,15 @@ Version: 1.0
 import json
 import sys
 from collections import defaultdict
-from dataclasses import asdict, dataclass
 from datetime import datetime
-from itertools import combinations, product
+from itertools import combinations
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, Tuple
 
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-from scipy import stats
 from scipy.cluster.hierarchy import dendrogram, fcluster, linkage, to_tree
 from scipy.spatial.distance import squareform
 
@@ -45,8 +43,7 @@ SCRIPT_DIR = Path(__file__).parent
 sys.path.insert(0, str(SCRIPT_DIR))
 
 from hyperbolic_utils import (AA_TO_CODON, CodonEncoder, codon_to_onehot,
-                              load_codon_encoder, poincare_distance,
-                              poincare_distance_matrix)
+                              load_codon_encoder, poincare_distance)
 
 # =============================================================================
 # AMINO ACID PROPERTIES
@@ -61,7 +58,12 @@ AA_PROPERTIES = {
     "Q": {"hydrophobic": False, "charge": 0, "size": "medium", "polar": True},
     "E": {"hydrophobic": False, "charge": -1, "size": "medium", "polar": True},
     "G": {"hydrophobic": True, "charge": 0, "size": "tiny", "polar": False},
-    "H": {"hydrophobic": False, "charge": 0.5, "size": "medium", "polar": True},
+    "H": {
+        "hydrophobic": False,
+        "charge": 0.5,
+        "size": "medium",
+        "polar": True,
+    },
     "I": {"hydrophobic": True, "charge": 0, "size": "large", "polar": False},
     "L": {"hydrophobic": True, "charge": 0, "size": "large", "polar": False},
     "K": {"hydrophobic": False, "charge": 1, "size": "large", "polar": True},
@@ -76,14 +78,44 @@ AA_PROPERTIES = {
 }
 
 PTM_TRANSITIONS = {
-    "R→Q": {"from": "R", "to": "Q", "name": "Citrullination", "charge_change": -1},
+    "R→Q": {
+        "from": "R",
+        "to": "Q",
+        "name": "Citrullination",
+        "charge_change": -1,
+    },
     "N→Q": {"from": "N", "to": "Q", "name": "Deamidation", "charge_change": 0},
-    "N→D": {"from": "N", "to": "D", "name": "Deamidation-D", "charge_change": -1},
-    "S→D": {"from": "S", "to": "D", "name": "Phosphorylation-S", "charge_change": -1},
-    "T→D": {"from": "T", "to": "D", "name": "Phosphorylation-T", "charge_change": -1},
-    "K→Q": {"from": "K", "to": "Q", "name": "Acetylation", "charge_change": -1},
+    "N→D": {
+        "from": "N",
+        "to": "D",
+        "name": "Deamidation-D",
+        "charge_change": -1,
+    },
+    "S→D": {
+        "from": "S",
+        "to": "D",
+        "name": "Phosphorylation-S",
+        "charge_change": -1,
+    },
+    "T→D": {
+        "from": "T",
+        "to": "D",
+        "name": "Phosphorylation-T",
+        "charge_change": -1,
+    },
+    "K→Q": {
+        "from": "K",
+        "to": "Q",
+        "name": "Acetylation",
+        "charge_change": -1,
+    },
     "M→Q": {"from": "M", "to": "Q", "name": "Oxidation", "charge_change": 0},
-    "Y→D": {"from": "Y", "to": "D", "name": "Phosphorylation-Y", "charge_change": -1},
+    "Y→D": {
+        "from": "Y",
+        "to": "D",
+        "name": "Phosphorylation-Y",
+        "charge_change": -1,
+    },
 }
 
 
@@ -117,9 +149,7 @@ def extract_cluster_hierarchy(encoder: CodonEncoder, device: str = "cpu") -> Dic
             dist_matrix[i, j] = d
             dist_matrix[j, i] = d
 
-    print(
-        f"  Distance matrix range: [{dist_matrix.min():.3f}, {dist_matrix.max():.3f}]"
-    )
+    print(f"  Distance matrix range: [{dist_matrix.min():.3f}, {dist_matrix.max():.3f}]")
 
     # Build hierarchical clustering
     condensed_dist = squareform(dist_matrix)
@@ -133,7 +163,8 @@ def extract_cluster_hierarchy(encoder: CodonEncoder, device: str = "cpu") -> Dic
         if node.is_leaf():
             return depth
         return max(
-            get_tree_depth(node.left, depth + 1), get_tree_depth(node.right, depth + 1)
+            get_tree_depth(node.left, depth + 1),
+            get_tree_depth(node.right, depth + 1),
         )
 
     max_depth = get_tree_depth(tree_root)
@@ -171,11 +202,7 @@ def map_amino_acids_to_clusters(encoder: CodonEncoder, device: str = "cpu") -> D
         if codon == "NNN" or aa == "*":
             continue
 
-        onehot = (
-            torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-            .unsqueeze(0)
-            .to(device)
-        )
+        onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
 
         with torch.no_grad():
             probs, emb = encoder.get_cluster_probs(onehot)
@@ -193,7 +220,10 @@ def map_amino_acids_to_clusters(encoder: CodonEncoder, device: str = "cpu") -> D
 
 
 def compute_ptm_cluster_transitions(
-    aa_clusters: Dict, hierarchy: Dict, encoder: CodonEncoder, device: str = "cpu"
+    aa_clusters: Dict,
+    hierarchy: Dict,
+    encoder: CodonEncoder,
+    device: str = "cpu",
 ) -> Dict:
     """
     Compute how each PTM moves amino acids between clusters.
@@ -242,10 +272,7 @@ def compute_ptm_cluster_transitions(
         from_probs = np.array(from_data["cluster_probs"])
         to_probs = np.array(to_data["cluster_probs"])
         m = 0.5 * (from_probs + to_probs)
-        js_div = 0.5 * (
-            np.sum(from_probs * np.log((from_probs + 1e-10) / (m + 1e-10)))
-            + np.sum(to_probs * np.log((to_probs + 1e-10) / (m + 1e-10)))
-        )
+        js_div = 0.5 * (np.sum(from_probs * np.log((from_probs + 1e-10) / (m + 1e-10))) + np.sum(to_probs * np.log((to_probs + 1e-10) / (m + 1e-10))))
 
         # Entropy change
         from_entropy = -np.sum(from_probs * np.log(from_probs + 1e-10))
@@ -271,9 +298,7 @@ def compute_ptm_cluster_transitions(
     return transitions
 
 
-def build_ptm_pair_hierarchy(
-    transitions: Dict, aa_clusters: Dict, hierarchy: Dict
-) -> Dict:
+def build_ptm_pair_hierarchy(transitions: Dict, aa_clusters: Dict, hierarchy: Dict) -> Dict:
     """
     Build hierarchy of PTM pairs based on their combined effect.
 
@@ -375,9 +400,7 @@ def compute_hierarchical_goldilocks(
     # Pair Goldilocks (common via antagonism)
     pair_goldilocks = []
 
-    for pair_data in (
-        pair_hierarchy["same_branch_pairs"] + pair_hierarchy["cross_branch_pairs"]
-    ):
+    for pair_data in pair_hierarchy["same_branch_pairs"] + pair_hierarchy["cross_branch_pairs"]:
         t1 = transitions[pair_data["ptm1"]]
         t2 = transitions[pair_data["ptm2"]]
 
@@ -398,34 +421,23 @@ def compute_hierarchical_goldilocks(
                     "individual_sum": individual_sum,
                     "antagonism_factor": antagonism_factor,
                     "combined_estimate": combined_estimate,
-                    "branch_type": (
-                        "same"
-                        if pair_data in pair_hierarchy["same_branch_pairs"]
-                        else "cross"
-                    ),
+                    "branch_type": ("same" if pair_data in pair_hierarchy["same_branch_pairs"] else "cross"),
                 }
             )
 
     return {
         "single_goldilocks": single_goldilocks,
         "pair_goldilocks": pair_goldilocks,
-        "single_rate": len(single_goldilocks) / len(transitions) if transitions else 0,
+        "single_rate": (len(single_goldilocks) / len(transitions) if transitions else 0),
         "pair_rate": (
-            len(pair_goldilocks)
-            / (
-                len(pair_hierarchy["same_branch_pairs"])
-                + len(pair_hierarchy["cross_branch_pairs"])
-            )
-            if pair_hierarchy["same_branch_pairs"]
-            or pair_hierarchy["cross_branch_pairs"]
+            len(pair_goldilocks) / (len(pair_hierarchy["same_branch_pairs"]) + len(pair_hierarchy["cross_branch_pairs"]))
+            if pair_hierarchy["same_branch_pairs"] or pair_hierarchy["cross_branch_pairs"]
             else 0
         ),
     }
 
 
-def generate_hierarchy_visualizations(
-    hierarchy: Dict, aa_clusters: Dict, transitions: Dict, output_dir: Path
-):
+def generate_hierarchy_visualizations(hierarchy: Dict, aa_clusters: Dict, transitions: Dict, output_dir: Path):
     """Generate comprehensive hierarchy visualizations."""
 
     fig, axes = plt.subplots(2, 2, figsize=(16, 14))
@@ -455,9 +467,7 @@ def generate_hierarchy_visualizations(
     ax.set_yticklabels(aa_order, fontsize=10)
     ax.set_xlabel("Cluster ID", fontsize=12)
     ax.set_ylabel("Amino Acid", fontsize=12)
-    ax.set_title(
-        "AA → Cluster Probability Distribution", fontsize=12, fontweight="bold"
-    )
+    ax.set_title("AA → Cluster Probability Distribution", fontsize=12, fontweight="bold")
     plt.colorbar(im, ax=ax, label="Probability")
 
     # 3. PTM Transition Map
@@ -489,9 +499,7 @@ def generate_hierarchy_visualizations(
         ax.scatter([to_c], [i], c=[color], s=100, marker="s", zorder=5)
 
     ax.set_yticks(range(n_ptms))
-    ax.set_yticklabels(
-        [f"{p}\n({transitions[p]['name']})" for p in ptm_names], fontsize=9
-    )
+    ax.set_yticklabels([f"{p}\n({transitions[p]['name']})" for p in ptm_names], fontsize=9)
     ax.set_xlabel("Cluster ID", fontsize=12)
     ax.set_ylabel("PTM Transition", fontsize=12)
     ax.set_title("PTM Cluster Transitions", fontsize=12, fontweight="bold")
@@ -502,9 +510,7 @@ def generate_hierarchy_visualizations(
     ax = axes[1, 1]
 
     # Sort PTMs by embedding distance
-    sorted_ptms = sorted(
-        transitions.keys(), key=lambda x: transitions[x]["embedding_distance"]
-    )
+    sorted_ptms = sorted(transitions.keys(), key=lambda x: transitions[x]["embedding_distance"])
 
     distances = [transitions[p]["embedding_distance"] for p in sorted_ptms]
     js_divs = [transitions[p]["js_divergence"] for p in sorted_ptms]
@@ -522,7 +528,12 @@ def generate_hierarchy_visualizations(
         alpha=0.7,
     )
     bars2 = ax.bar(
-        x + width / 2, js_divs, width, label="JS Divergence", color="coral", alpha=0.7
+        x + width / 2,
+        js_divs,
+        width,
+        label="JS Divergence",
+        color="coral",
+        alpha=0.7,
     )
 
     # Add divergence level as text
@@ -549,19 +560,22 @@ def generate_hierarchy_visualizations(
     ax.grid(True, alpha=0.3, axis="y")
 
     plt.suptitle(
-        "Hierarchical PTM Space Mapping", fontsize=14, fontweight="bold", y=1.02
+        "Hierarchical PTM Space Mapping",
+        fontsize=14,
+        fontweight="bold",
+        y=1.02,
     )
     plt.tight_layout()
     plt.savefig(
-        output_dir / "hierarchical_ptm_mapping.png", dpi=300, bbox_inches="tight"
+        output_dir / "hierarchical_ptm_mapping.png",
+        dpi=300,
+        bbox_inches="tight",
     )
     plt.close()
-    print(f"  Saved: hierarchical_ptm_mapping.png")
+    print("  Saved: hierarchical_ptm_mapping.png")
 
 
-def generate_ultrametric_tree(
-    hierarchy: Dict, aa_clusters: Dict, transitions: Dict, output_dir: Path
-):
+def generate_ultrametric_tree(hierarchy: Dict, aa_clusters: Dict, transitions: Dict, output_dir: Path):
     """Generate ultrametric tree visualization with PTM annotations."""
 
     fig, ax = plt.subplots(figsize=(14, 10))
@@ -598,14 +612,13 @@ def generate_ultrametric_tree(
             if t["embedding_distance"] > 0.3:
                 ax.annotate(
                     ptm_name,
-                    xy=(0.02, 0.98 - list(transitions.keys()).index(ptm_name) * 0.04),
+                    xy=(
+                        0.02,
+                        0.98 - list(transitions.keys()).index(ptm_name) * 0.04,
+                    ),
                     xycoords="axes fraction",
                     fontsize=8,
-                    color=(
-                        "red"
-                        if t["divergence_level"] and t["divergence_level"] > 2
-                        else "blue"
-                    ),
+                    color=("red" if t["divergence_level"] and t["divergence_level"] > 2 else "blue"),
                 )
 
     ax.set_xlabel("Cluster (with assigned AAs)", fontsize=12)
@@ -619,7 +632,7 @@ def generate_ultrametric_tree(
     plt.tight_layout()
     plt.savefig(output_dir / "ultrametric_tree.png", dpi=300, bbox_inches="tight")
     plt.close()
-    print(f"  Saved: ultrametric_tree.png")
+    print("  Saved: ultrametric_tree.png")
 
 
 def main():
@@ -634,9 +647,7 @@ def main():
     # Load encoder
     print("\nLoading codon encoder (3-adic, V5.11.3)...")
     device = "cpu"
-    encoder, mapping, native_hyperbolic = load_codon_encoder(
-        device=device, version="3adic"
-    )
+    encoder, mapping, native_hyperbolic = load_codon_encoder(device=device, version="3adic")
     print(f"  Native hyperbolic: {native_hyperbolic}")
 
     # 1. Extract cluster hierarchy
@@ -662,18 +673,11 @@ def main():
 
     # 3. Compute PTM transitions
     print("\n3. Computing PTM cluster transitions...")
-    transitions = compute_ptm_cluster_transitions(
-        aa_clusters, hierarchy, encoder, device
-    )
+    transitions = compute_ptm_cluster_transitions(aa_clusters, hierarchy, encoder, device)
 
     print("  PTM transition summary:")
-    for ptm_name, t in sorted(
-        transitions.items(), key=lambda x: -x[1]["embedding_distance"]
-    ):
-        print(
-            f"    {ptm_name}: C{t['from_cluster']}→C{t['to_cluster']}, "
-            f"dist={t['embedding_distance']:.3f}, div_level={t['divergence_level']}"
-        )
+    for ptm_name, t in sorted(transitions.items(), key=lambda x: -x[1]["embedding_distance"]):
+        print(f"    {ptm_name}: C{t['from_cluster']}→C{t['to_cluster']}, " f"dist={t['embedding_distance']:.3f}, div_level={t['divergence_level']}")
 
     # 4. Build PTM pair hierarchy
     print("\n4. Building PTM pair hierarchy...")
@@ -681,26 +685,18 @@ def main():
 
     print(f"  Same-branch pairs: {len(pair_hierarchy['same_branch_pairs'])}")
     print(f"  Cross-branch pairs: {len(pair_hierarchy['cross_branch_pairs'])}")
-    print(
-        f"  By effect magnitude: {[(k, len(v)) for k, v in pair_hierarchy['by_effect_magnitude'].items()]}"
-    )
+    print(f"  By effect magnitude: {[(k, len(v)) for k, v in pair_hierarchy['by_effect_magnitude'].items()]}")
 
     # 5. Compute hierarchical Goldilocks
     print("\n5. Computing hierarchical Goldilocks zones...")
     goldilocks = compute_hierarchical_goldilocks(transitions, pair_hierarchy)
 
-    print(
-        f"  Single PTM Goldilocks: {len(goldilocks['single_goldilocks'])} ({goldilocks['single_rate']*100:.1f}%)"
-    )
-    print(
-        f"  Pair PTM Goldilocks: {len(goldilocks['pair_goldilocks'])} ({goldilocks['pair_rate']*100:.1f}%)"
-    )
+    print(f"  Single PTM Goldilocks: {len(goldilocks['single_goldilocks'])} ({goldilocks['single_rate']*100:.1f}%)")
+    print(f"  Pair PTM Goldilocks: {len(goldilocks['pair_goldilocks'])} ({goldilocks['pair_rate']*100:.1f}%)")
 
     if goldilocks["pair_goldilocks"]:
         print("  Top Goldilocks pairs:")
-        for pg in sorted(
-            goldilocks["pair_goldilocks"], key=lambda x: x["combined_estimate"]
-        )[:5]:
+        for pg in sorted(goldilocks["pair_goldilocks"], key=lambda x: x["combined_estimate"])[:5]:
             print(
                 f"    {pg['ptm1']} + {pg['ptm2']}: est={pg['combined_estimate']:.2f}, "
                 f"antag={pg['antagonism_factor']:.2f}, branch={pg['branch_type']}"
@@ -750,24 +746,14 @@ def main():
         "pair_hierarchy": {
             "same_branch_count": len(pair_hierarchy["same_branch_pairs"]),
             "cross_branch_count": len(pair_hierarchy["cross_branch_pairs"]),
-            "by_effect_magnitude": {
-                k: len(v) for k, v in pair_hierarchy["by_effect_magnitude"].items()
-            },
+            "by_effect_magnitude": {k: len(v) for k, v in pair_hierarchy["by_effect_magnitude"].items()},
         },
         "goldilocks": convert_for_json(goldilocks),
         "key_findings": {
-            "dominant_clusters": [
-                c for c, aas in cluster_counts.items() if len(aas) >= 2
-            ],
-            "high_distance_ptms": [
-                p for p, t in transitions.items() if t["embedding_distance"] > 0.4
-            ],
-            "low_distance_ptms": [
-                p for p, t in transitions.items() if t["embedding_distance"] < 0.2
-            ],
-            "goldilocks_optimal_pairs": [
-                f"{g['ptm1']}+{g['ptm2']}" for g in goldilocks["pair_goldilocks"]
-            ][:10],
+            "dominant_clusters": [c for c, aas in cluster_counts.items() if len(aas) >= 2],
+            "high_distance_ptms": [p for p, t in transitions.items() if t["embedding_distance"] > 0.4],
+            "low_distance_ptms": [p for p, t in transitions.items() if t["embedding_distance"] < 0.2],
+            "goldilocks_optimal_pairs": [f"{g['ptm1']}+{g['ptm2']}" for g in goldilocks["pair_goldilocks"]][:10],
         },
     }
 
@@ -795,14 +781,10 @@ def main():
 ║  PTM TRANSITION MAGNITUDES:                                                  ║"""
     )
 
-    for ptm_name, t in sorted(
-        transitions.items(), key=lambda x: -x[1]["embedding_distance"]
-    )[:5]:
+    for ptm_name, t in sorted(transitions.items(), key=lambda x: -x[1]["embedding_distance"])[:5]:
         bar_len = int(t["embedding_distance"] * 30)
         bar = "█" * bar_len + "░" * (30 - bar_len)
-        print(
-            f"║    {ptm_name:6s}: [{bar}] {t['embedding_distance']:.3f}             ║"
-        )
+        print(f"║    {ptm_name:6s}: [{bar}] {t['embedding_distance']:.3f}             ║")
 
     print(
         f"""║                                                                              ║

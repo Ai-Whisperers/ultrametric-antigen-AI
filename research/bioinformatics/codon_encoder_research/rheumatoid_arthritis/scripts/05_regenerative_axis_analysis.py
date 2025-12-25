@@ -35,14 +35,13 @@ Version: 2.0 - Updated to use Poincaré ball geometry
 import json
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict
 
 import numpy as np
 import torch
-import torch.nn as nn
 # Import hyperbolic utilities
-from hyperbolic_utils import (AA_TO_CODON, CodonEncoder, codon_to_onehot,
-                              get_results_dir, load_codon_encoder)
+from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot, get_results_dir,
+                              load_codon_encoder)
 from hyperbolic_utils import poincare_distance as hyp_poincare_distance
 from hyperbolic_utils import project_to_poincare
 
@@ -252,9 +251,7 @@ def encode_sequence(aa_sequence, encoder, use_hyperbolic=True):
     for aa in aa_sequence.upper():
         if aa in AA_TO_CODON:
             codon = AA_TO_CODON[aa]
-            onehot = torch.tensor(
-                codon_to_onehot(codon), dtype=torch.float32
-            ).unsqueeze(0)
+            onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0)
             with torch.no_grad():
                 emb = encoder.encode(onehot).cpu().numpy().squeeze()
                 if use_hyperbolic:
@@ -310,9 +307,7 @@ def analyze_pathway_geometry(proteins: Dict, encoder) -> Dict:
         between_dists = {}
         for other in pathways:
             if other != pathway:
-                between_dists[other] = np.linalg.norm(
-                    centroid - pathway_centroids[other]
-                )
+                between_dists[other] = np.linalg.norm(centroid - pathway_centroids[other])
 
         pathway_stats[pathway] = {
             "n_proteins": len(embs),
@@ -406,20 +401,12 @@ def analyze_autonomic_balance(analysis: Dict) -> Dict:
     }
 
     if regen:
-        results["para_regen_distance"] = np.linalg.norm(
-            para_centroid - regen["centroid"]
-        )
-        results["symp_regen_distance"] = np.linalg.norm(
-            symp_centroid - regen["centroid"]
-        )
+        results["para_regen_distance"] = np.linalg.norm(para_centroid - regen["centroid"])
+        results["symp_regen_distance"] = np.linalg.norm(symp_centroid - regen["centroid"])
 
     if inflam:
-        results["para_inflam_distance"] = np.linalg.norm(
-            para_centroid - inflam["centroid"]
-        )
-        results["symp_inflam_distance"] = np.linalg.norm(
-            symp_centroid - inflam["centroid"]
-        )
+        results["para_inflam_distance"] = np.linalg.norm(para_centroid - inflam["centroid"])
+        results["symp_inflam_distance"] = np.linalg.norm(symp_centroid - inflam["centroid"])
 
     return results
 
@@ -429,9 +416,7 @@ def analyze_autonomic_balance(analysis: Dict) -> Dict:
 # ============================================================================
 
 
-def create_visualization(
-    analysis: Dict, regen_test: Dict, autonomic: Dict, output_path: Path
-):
+def create_visualization(analysis: Dict, regen_test: Dict, autonomic: Dict, output_path: Path):
     """Create comprehensive visualization of regenerative axis."""
     import matplotlib.pyplot as plt
     from sklearn.decomposition import PCA
@@ -527,9 +512,7 @@ def create_visualization(
 
         ax3.bar(categories, values, color=colors_bar, alpha=0.7)
         ax3.set_ylabel("Mean Distance")
-        ax3.set_title(
-            f'Regeneration vs Anti-Regeneration\nSeparation Ratio: {regen_test["separation_ratio"]:.2f}x'
-        )
+        ax3.set_title(f'Regeneration vs Anti-Regeneration\nSeparation Ratio: {regen_test["separation_ratio"]:.2f}x')
 
     # 4. Autonomic balance
     ax4 = axes[1, 0]
@@ -667,16 +650,12 @@ def main():
         print(f"\n  Pro-regeneration proteins: {regen_test['n_pro_regen']}")
         print(f"  Anti-regeneration proteins: {regen_test['n_anti_regen']}")
         print(f"  Pro-regen within-group distance: {regen_test['pro_within_dist']:.4f}")
-        print(
-            f"  Anti-regen within-group distance: {regen_test['anti_within_dist']:.4f}"
-        )
+        print(f"  Anti-regen within-group distance: {regen_test['anti_within_dist']:.4f}")
         print(f"  Between-group distance: {regen_test['between_dist']:.4f}")
         print(f"  Separation ratio: {regen_test['separation_ratio']:.2f}x")
 
         if regen_test["separation_ratio"] > 1.0:
-            print(
-                "\n  *** HYPOTHESIS SUPPORTED: Pro/Anti regeneration are geometrically separated ***"
-            )
+            print("\n  *** HYPOTHESIS SUPPORTED: Pro/Anti regeneration are geometrically separated ***")
 
     # Analyze autonomic balance
     print("\n" + "-" * 70)
@@ -686,41 +665,25 @@ def main():
     autonomic = analyze_autonomic_balance(analysis)
 
     if autonomic["valid"]:
-        print(
-            f"\n  Parasympathetic ↔ Sympathetic distance: {autonomic['para_symp_distance']:.4f}"
-        )
+        print(f"\n  Parasympathetic ↔ Sympathetic distance: {autonomic['para_symp_distance']:.4f}")
         print(f"  Parasympathetic variance: {autonomic['para_variance']:.4f}")
         print(f"  Sympathetic variance: {autonomic['symp_variance']:.4f}")
 
         if "para_regen_distance" in autonomic:
-            print(
-                f"\n  Parasympathetic ↔ Regeneration: {autonomic['para_regen_distance']:.4f}"
-            )
-            print(
-                f"  Sympathetic ↔ Regeneration: {autonomic['symp_regen_distance']:.4f}"
-            )
+            print(f"\n  Parasympathetic ↔ Regeneration: {autonomic['para_regen_distance']:.4f}")
+            print(f"  Sympathetic ↔ Regeneration: {autonomic['symp_regen_distance']:.4f}")
 
             if autonomic["para_regen_distance"] < autonomic["symp_regen_distance"]:
-                print(
-                    "\n  *** FINDING: Parasympathetic is CLOSER to regeneration pathway ***"
-                )
+                print("\n  *** FINDING: Parasympathetic is CLOSER to regeneration pathway ***")
             else:
-                print(
-                    "\n  *** FINDING: Sympathetic is closer to regeneration pathway ***"
-                )
+                print("\n  *** FINDING: Sympathetic is closer to regeneration pathway ***")
 
         if "para_inflam_distance" in autonomic:
-            print(
-                f"\n  Parasympathetic ↔ Inflammation: {autonomic['para_inflam_distance']:.4f}"
-            )
-            print(
-                f"  Sympathetic ↔ Inflammation: {autonomic['symp_inflam_distance']:.4f}"
-            )
+            print(f"\n  Parasympathetic ↔ Inflammation: {autonomic['para_inflam_distance']:.4f}")
+            print(f"  Sympathetic ↔ Inflammation: {autonomic['symp_inflam_distance']:.4f}")
 
             if autonomic["symp_inflam_distance"] < autonomic["para_inflam_distance"]:
-                print(
-                    "\n  *** FINDING: Sympathetic is CLOSER to inflammation pathway ***"
-                )
+                print("\n  *** FINDING: Sympathetic is CLOSER to inflammation pathway ***")
 
     # Create visualization
     print("\nGenerating visualization...")
@@ -780,14 +743,8 @@ def main():
         },
         "autonomic_analysis": {
             "para_symp_distance": float(autonomic.get("para_symp_distance", 0)),
-            "para_closer_to_regen": bool(
-                autonomic.get("para_regen_distance", 1)
-                < autonomic.get("symp_regen_distance", 0)
-            ),
-            "symp_closer_to_inflam": bool(
-                autonomic.get("symp_inflam_distance", 1)
-                < autonomic.get("para_inflam_distance", 0)
-            ),
+            "para_closer_to_regen": bool(autonomic.get("para_regen_distance", 1) < autonomic.get("symp_regen_distance", 0)),
+            "symp_closer_to_inflam": bool(autonomic.get("symp_inflam_distance", 1) < autonomic.get("para_inflam_distance", 0)),
         },
     }
 

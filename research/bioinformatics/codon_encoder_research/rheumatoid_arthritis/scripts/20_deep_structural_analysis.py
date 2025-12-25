@@ -18,16 +18,14 @@ Version: 1.0
 """
 
 import json
-from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List
 
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy import stats
-from scipy.cluster.hierarchy import fcluster, linkage
 from scipy.spatial.distance import pdist
 
 matplotlib.use("Agg")
@@ -177,28 +175,20 @@ def analyze_disorder_regions(structure: Dict) -> Dict:
         else:
             if current_region is not None:
                 current_region["length"] = len(current_region["residues"])
-                current_region["mean_plddt"] = np.mean(
-                    [r["plddt"] for r in current_region["residues"]]
-                )
+                current_region["mean_plddt"] = np.mean([r["plddt"] for r in current_region["residues"]])
                 disordered_regions.append(current_region)
                 current_region = None
 
     # Don't forget last region
     if current_region is not None:
         current_region["length"] = len(current_region["residues"])
-        current_region["mean_plddt"] = np.mean(
-            [r["plddt"] for r in current_region["residues"]]
-        )
+        current_region["mean_plddt"] = np.mean([r["plddt"] for r in current_region["residues"]])
         disordered_regions.append(current_region)
 
     # Statistics
     n_disordered = sum(1 for r in disorder_profile if r["is_disordered"])
     n_flexible = sum(1 for r in disorder_profile if r["disorder_class"] == "flexible")
-    n_ordered = sum(
-        1
-        for r in disorder_profile
-        if r["disorder_class"] in ["ordered", "ordered_high"]
-    )
+    n_ordered = sum(1 for r in disorder_profile if r["disorder_class"] in ["ordered", "ordered_high"])
 
     return {
         "profile": disorder_profile,
@@ -208,15 +198,9 @@ def analyze_disorder_regions(structure: Dict) -> Dict:
             "n_disordered": n_disordered,
             "n_flexible": n_flexible,
             "n_ordered": n_ordered,
-            "pct_disordered": (
-                100 * n_disordered / len(disorder_profile) if disorder_profile else 0
-            ),
+            "pct_disordered": (100 * n_disordered / len(disorder_profile) if disorder_profile else 0),
             "n_disordered_regions": len(disordered_regions),
-            "mean_plddt": (
-                np.mean([r["plddt"] for r in disorder_profile])
-                if disorder_profile
-                else 0
-            ),
+            "mean_plddt": (np.mean([r["plddt"] for r in disorder_profile]) if disorder_profile else 0),
         },
     }
 
@@ -246,9 +230,7 @@ def detect_domain_boundaries(structure: Dict, window_size: int = 20) -> List[int
     plddt_values = [residues[r]["plddt"] for r in resnums]
 
     # Smooth pLDDT with running average
-    smoothed = np.convolve(
-        plddt_values, np.ones(window_size) / window_size, mode="valid"
-    )
+    smoothed = np.convolve(plddt_values, np.ones(window_size) / window_size, mode="valid")
 
     # Find significant drops in pLDDT (potential linkers)
     gradient = np.gradient(smoothed)
@@ -297,9 +279,7 @@ def analyze_domains(structure: Dict) -> Dict:
                         "start": prev_boundary,
                         "end": boundary - 1,
                         "length": len(domain_residues),
-                        "mean_plddt": np.mean(
-                            [residues[r]["plddt"] for r in domain_residues]
-                        ),
+                        "mean_plddt": np.mean([residues[r]["plddt"] for r in domain_residues]),
                     }
                 )
             prev_boundary = boundary
@@ -312,9 +292,7 @@ def analyze_domains(structure: Dict) -> Dict:
                     "start": prev_boundary,
                     "end": resnums[-1],
                     "length": len(domain_residues),
-                    "mean_plddt": np.mean(
-                        [residues[r]["plddt"] for r in domain_residues]
-                    ),
+                    "mean_plddt": np.mean([residues[r]["plddt"] for r in domain_residues]),
                 }
             )
 
@@ -368,25 +346,17 @@ def compute_spatial_clustering(sites: List[Dict]) -> Dict:
 
     # Within-group distances
     if len(imm_indices) > 1:
-        imm_dists = [
-            dist_matrix[i, j] for i in imm_indices for j in imm_indices if i < j
-        ]
+        imm_dists = [dist_matrix[i, j] for i in imm_indices for j in imm_indices if i < j]
         results["mean_imm_imm_distance"] = np.mean(imm_dists) if imm_dists else 0
 
     if len(silent_indices) > 1:
-        silent_dists = [
-            dist_matrix[i, j] for i in silent_indices for j in silent_indices if i < j
-        ]
-        results["mean_silent_silent_distance"] = (
-            np.mean(silent_dists) if silent_dists else 0
-        )
+        silent_dists = [dist_matrix[i, j] for i in silent_indices for j in silent_indices if i < j]
+        results["mean_silent_silent_distance"] = np.mean(silent_dists) if silent_dists else 0
 
     # Between-group distances
     if imm_indices and silent_indices:
         between_dists = [dist_matrix[i, j] for i in imm_indices for j in silent_indices]
-        results["mean_imm_silent_distance"] = (
-            np.mean(between_dists) if between_dists else 0
-        )
+        results["mean_imm_silent_distance"] = np.mean(between_dists) if between_dists else 0
 
     # Overall clustering
     results["mean_all_distance"] = np.mean(distances)
@@ -395,9 +365,7 @@ def compute_spatial_clustering(sites: List[Dict]) -> Dict:
     return results
 
 
-def compute_burial_depth(
-    structure: Dict, target_resnum: int, radius: float = 8.0
-) -> float:
+def compute_burial_depth(structure: Dict, target_resnum: int, radius: float = 8.0) -> float:
     """
     Estimate burial depth based on number of neighbors.
 
@@ -553,20 +521,14 @@ def generate_visualizations(all_analyses: List[Dict], output_dir: Path):
     ax.axvline(70, color="green", linestyle="--", lw=2, label="High confidence")
     ax.set_xlabel("AlphaFold pLDDT Score", fontsize=12)
     ax.set_ylabel("Density", fontsize=12)
-    ax.set_title(
-        "pLDDT Distribution by Immunodominance", fontsize=12, fontweight="bold"
-    )
+    ax.set_title("pLDDT Distribution by Immunodominance", fontsize=12, fontweight="bold")
     ax.legend(fontsize=10)
     ax.grid(True, alpha=0.3)
 
     # 1b. Disorder class breakdown
     ax = axes[0, 1]
-    disorder_counts = (
-        df.groupby(["immunodominant", "disorder_class"]).size().unstack(fill_value=0)
-    )
-    disorder_counts.plot(
-        kind="bar", ax=ax, color=["#ff9999", "#99ff99", "#9999ff", "#ffff99"]
-    )
+    disorder_counts = df.groupby(["immunodominant", "disorder_class"]).size().unstack(fill_value=0)
+    disorder_counts.plot(kind="bar", ax=ax, color=["#ff9999", "#99ff99", "#9999ff", "#ffff99"])
     ax.set_xlabel("Immunodominant", fontsize=12)
     ax.set_ylabel("Count", fontsize=12)
     ax.set_title("Disorder Class Distribution", fontsize=12, fontweight="bold")
@@ -576,12 +538,8 @@ def generate_visualizations(all_analyses: List[Dict], output_dir: Path):
     # 1c. Entropy vs pLDDT with disorder regions highlighted
     ax = axes[1, 0]
     colors = ["#e53935" if imm else "#1e88e5" for imm in df["immunodominant"]]
-    sizes = [
-        150 if dc in ["disordered", "flexible"] else 80 for dc in df["disorder_class"]
-    ]
-    markers = [
-        "s" if dc in ["disordered", "flexible"] else "o" for dc in df["disorder_class"]
-    ]
+    sizes = [150 if dc in ["disordered", "flexible"] else 80 for dc in df["disorder_class"]]
+    markers = ["s" if dc in ["disordered", "flexible"] else "o" for dc in df["disorder_class"]]
 
     for i, (_, row) in enumerate(df.iterrows()):
         ax.scatter(
@@ -590,7 +548,7 @@ def generate_visualizations(all_analyses: List[Dict], output_dir: Path):
             c=colors[i],
             s=sizes[i],
             alpha=0.7,
-            marker="s" if row["disorder_class"] in ["disordered", "flexible"] else "o",
+            marker=("s" if row["disorder_class"] in ["disordered", "flexible"] else "o"),
             edgecolors="black" if row["immunodominant"] else "none",
         )
 
@@ -664,18 +622,14 @@ def generate_visualizations(all_analyses: List[Dict], output_dir: Path):
     plt.tight_layout()
     plt.savefig(output_dir / "disorder_analysis.png", dpi=300, bbox_inches="tight")
     plt.close()
-    print(f"  Saved: disorder_analysis.png")
+    print("  Saved: disorder_analysis.png")
 
     # Figure 2: Domain and spatial analysis
     fig, axes = plt.subplots(1, 2, figsize=(14, 6))
 
     # 2a. Sites near domain boundaries
     ax = axes[0]
-    near_boundary = (
-        df.groupby(["immunodominant", "near_domain_boundary"])
-        .size()
-        .unstack(fill_value=0)
-    )
+    near_boundary = df.groupby(["immunodominant", "near_domain_boundary"]).size().unstack(fill_value=0)
     near_boundary.plot(kind="bar", ax=ax, color=["#66b3ff", "#ff6666"])
     ax.set_xlabel("Immunodominant", fontsize=12)
     ax.set_ylabel("Count", fontsize=12)
@@ -724,11 +678,11 @@ def generate_visualizations(all_analyses: List[Dict], output_dir: Path):
     plt.tight_layout()
     plt.savefig(output_dir / "domain_analysis.png", dpi=300, bbox_inches="tight")
     plt.close()
-    print(f"  Saved: domain_analysis.png")
+    print("  Saved: domain_analysis.png")
 
     # Save detailed data
     df.to_csv(output_dir / "deep_structural_analysis.csv", index=False)
-    print(f"  Saved: deep_structural_analysis.csv")
+    print("  Saved: deep_structural_analysis.csv")
 
 
 def main():
@@ -755,11 +709,7 @@ def main():
     print(f"  Loaded {len(sites_df)} sites")
 
     # Group sites by protein
-    sites_by_protein = (
-        sites_df.groupby("epitope_id")
-        .apply(lambda x: x.iloc[0]["epitope_id"].split("_")[0])
-        .to_dict()
-    )
+    sites_by_protein = sites_df.groupby("epitope_id").apply(lambda x: x.iloc[0]["epitope_id"].split("_")[0]).to_dict()
 
     # Get unique proteins
     proteins = set()
@@ -776,7 +726,7 @@ def main():
 
     for gene in proteins:
         # Find PDB file
-        pdb_files = list(pdb_dir.glob(f"AF-*-F1-model_v*.pdb"))
+        pdb_files = list(pdb_dir.glob("AF-*-F1-model_v*.pdb"))
 
         # Map gene to UniProt ID
         gene_to_uniprot = {
@@ -805,9 +755,7 @@ def main():
             continue
 
         # Get sites for this protein
-        protein_sites = sites_df[sites_df["epitope_id"].str.startswith(gene)].to_dict(
-            "records"
-        )
+        protein_sites = sites_df[sites_df["epitope_id"].str.startswith(gene)].to_dict("records")
 
         if not protein_sites:
             continue
@@ -830,17 +778,9 @@ def main():
         df = pd.DataFrame(all_sites)
 
         # Test: Are immunodominant sites more likely to be in disordered regions?
-        imm_disordered = (
-            df[df["immunodominant"]]["disorder_class"]
-            .isin(["disordered", "flexible"])
-            .sum()
-        )
+        imm_disordered = df[df["immunodominant"]]["disorder_class"].isin(["disordered", "flexible"]).sum()
         imm_total = df["immunodominant"].sum()
-        silent_disordered = (
-            df[~df["immunodominant"]]["disorder_class"]
-            .isin(["disordered", "flexible"])
-            .sum()
-        )
+        silent_disordered = df[~df["immunodominant"]]["disorder_class"].isin(["disordered", "flexible"]).sum()
         silent_total = (~df["immunodominant"]).sum()
 
         # Fisher's exact test
@@ -850,13 +790,9 @@ def main():
         ]
         odds_ratio, fisher_p = stats.fisher_exact(contingency)
 
-        print(f"\n  DISORDER VS IMMUNODOMINANCE:")
-        print(
-            f"    Immunodominant in disordered regions: {imm_disordered}/{imm_total} ({100*imm_disordered/imm_total:.1f}%)"
-        )
-        print(
-            f"    Silent in disordered regions: {silent_disordered}/{silent_total} ({100*silent_disordered/silent_total:.1f}%)"
-        )
+        print("\n  DISORDER VS IMMUNODOMINANCE:")
+        print(f"    Immunodominant in disordered regions: {imm_disordered}/{imm_total} ({100*imm_disordered/imm_total:.1f}%)")
+        print(f"    Silent in disordered regions: {silent_disordered}/{silent_total} ({100*silent_disordered/silent_total:.1f}%)")
         print(f"    Fisher's exact test: OR={odds_ratio:.2f}, p={fisher_p:.4f}")
 
         # pLDDT comparison
@@ -864,13 +800,9 @@ def main():
         silent_plddt = df[~df["immunodominant"]]["plddt"].values
         t_stat, t_p = stats.ttest_ind(imm_plddt, silent_plddt)
 
-        print(f"\n  pLDDT COMPARISON:")
-        print(
-            f"    Immunodominant mean pLDDT: {np.mean(imm_plddt):.1f} +/- {np.std(imm_plddt):.1f}"
-        )
-        print(
-            f"    Silent mean pLDDT: {np.mean(silent_plddt):.1f} +/- {np.std(silent_plddt):.1f}"
-        )
+        print("\n  pLDDT COMPARISON:")
+        print(f"    Immunodominant mean pLDDT: {np.mean(imm_plddt):.1f} +/- {np.std(imm_plddt):.1f}")
+        print(f"    Silent mean pLDDT: {np.mean(silent_plddt):.1f} +/- {np.std(silent_plddt):.1f}")
         print(f"    t-test: t={t_stat:.2f}, p={t_p:.4f}")
 
         # Burial depth comparison
@@ -878,7 +810,7 @@ def main():
         silent_burial = df[~df["immunodominant"]]["burial_depth"].values
         t_stat_b, t_p_b = stats.ttest_ind(imm_burial, silent_burial)
 
-        print(f"\n  BURIAL DEPTH COMPARISON:")
+        print("\n  BURIAL DEPTH COMPARISON:")
         print(f"    Immunodominant mean burial: {np.mean(imm_burial):.3f}")
         print(f"    Silent mean burial: {np.mean(silent_burial):.3f}")
         print(f"    t-test: t={t_stat_b:.2f}, p={t_p_b:.4f}")
@@ -902,7 +834,7 @@ def main():
             {
                 "imm_in_disordered": int(imm_disordered) if all_sites else 0,
                 "imm_total": int(imm_total) if all_sites else 0,
-                "silent_in_disordered": int(silent_disordered) if all_sites else 0,
+                "silent_in_disordered": (int(silent_disordered) if all_sites else 0),
                 "silent_total": int(silent_total) if all_sites else 0,
                 "odds_ratio": float(odds_ratio) if all_sites else 0,
                 "p_value": float(fisher_p) if all_sites else 1,

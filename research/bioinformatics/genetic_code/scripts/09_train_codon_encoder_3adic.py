@@ -23,13 +23,11 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[5]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from scipy.stats import spearmanr
 
 # =============================================================================
 # GENETIC CODE DATA
@@ -322,9 +320,7 @@ def center_alignment_loss_poincare(embeddings, clusters, cluster_centers):
 # =============================================================================
 
 
-def train_model(
-    model, data, vae_embeddings, cluster_to_positions, n_epochs=500, lr=0.01
-):
+def train_model(model, data, vae_embeddings, cluster_to_positions, n_epochs=500, lr=0.01):
     """Train the codon encoder with Poincaré losses."""
     optimizer = optim.Adam(model.parameters(), lr=lr)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, n_epochs)
@@ -348,12 +344,8 @@ def train_model(
 
         # Losses (using Poincaré distance)
         loss_cluster = F.cross_entropy(cluster_logits, clusters)
-        loss_contrastive = contrastive_loss_poincare(
-            embeddings, positive_pairs, negative_pairs
-        )
-        loss_center = center_alignment_loss_poincare(
-            embeddings, clusters, model.cluster_centers
-        )
+        loss_contrastive = contrastive_loss_poincare(embeddings, positive_pairs, negative_pairs)
+        loss_center = center_alignment_loss_poincare(embeddings, clusters, model.cluster_centers)
 
         # Total loss
         loss = loss_cluster + 0.5 * loss_contrastive + 0.3 * loss_center
@@ -372,10 +364,7 @@ def train_model(
         history["contrastive"].append(loss_contrastive.item())
 
         if epoch % 50 == 0 or epoch == n_epochs - 1:
-            print(
-                f"  Epoch {epoch:3d}: loss={loss.item():.4f}, "
-                f"cluster_acc={acc*100:.1f}%, contrastive={loss_contrastive.item():.4f}"
-            )
+            print(f"  Epoch {epoch:3d}: loss={loss.item():.4f}, " f"cluster_acc={acc*100:.1f}%, contrastive={loss_contrastive.item():.4f}")
 
     return history
 
@@ -400,9 +389,7 @@ def evaluate_mapping(model, data, vae_embeddings):
     cluster_acc = (preds == clusters).float().mean().item()
 
     # Synonymous accuracy
-    synonymous_correct = sum(
-        1 for i, j in data["positive_pairs"] if preds[i] == preds[j]
-    )
+    synonymous_correct = sum(1 for i, j in data["positive_pairs"] if preds[i] == preds[j])
     synonymous_acc = synonymous_correct / len(data["positive_pairs"])
 
     # Compute Poincaré distances
@@ -411,9 +398,7 @@ def evaluate_mapping(model, data, vae_embeddings):
 
     for i in range(64):
         for j in range(i + 1, 64):
-            dist = poincare_distance(
-                embeddings[i : i + 1], embeddings[j : j + 1]
-            ).item()
+            dist = poincare_distance(embeddings[i : i + 1], embeddings[j : j + 1]).item()
             if clusters[i] == clusters[j]:
                 within_dists.append(dist)
             else:
@@ -426,7 +411,7 @@ def evaluate_mapping(model, data, vae_embeddings):
     # Check hierarchy correlation (embeddings should inherit V5.11.3 structure)
     radii = torch.norm(embeddings, dim=1).numpy()
 
-    print(f"\n  Evaluation Results:")
+    print("\n  Evaluation Results:")
     print(f"    Cluster accuracy: {cluster_acc*100:.1f}%")
     print(f"    Synonymous pair accuracy: {synonymous_acc*100:.1f}%")
     print(f"    Mean within-cluster distance: {mean_within:.4f}")
@@ -473,9 +458,7 @@ def assign_codons_to_positions(model, data, vae_embeddings, cluster_to_positions
 
         for pos in cluster_positions:
             pos_emb = vae_embeddings[pos]
-            dist = poincare_distance(
-                codon_emb.unsqueeze(0), pos_emb.unsqueeze(0)
-            ).item()
+            dist = poincare_distance(codon_emb.unsqueeze(0), pos_emb.unsqueeze(0)).item()
             if dist < min_dist:
                 min_dist = dist
                 best_pos = pos
@@ -509,9 +492,7 @@ def main():
     vae_embeddings = emb_data["z_B_hyp"]  # Use VAE-B (stronger hierarchy)
 
     print(f"  Shape: {vae_embeddings.shape}")
-    print(
-        f"  Hierarchy correlation: {emb_data['metadata']['hierarchy_correlation']:.4f}"
-    )
+    print(f"  Hierarchy correlation: {emb_data['metadata']['hierarchy_correlation']:.4f}")
 
     # Load natural positions
     print("\nLoading natural positions...")
@@ -545,7 +526,10 @@ def main():
     # Assign codons to positions
     print("\nAssigning codons to natural positions...")
     codon_to_position = assign_codons_to_positions(
-        model, codon_data, vae_embeddings, positions_data["cluster_to_positions"]
+        model,
+        codon_data,
+        vae_embeddings,
+        positions_data["cluster_to_positions"],
     )
 
     # Save model
@@ -588,8 +572,8 @@ def main():
     print("\n" + "=" * 70)
     print("SUMMARY")
     print("=" * 70)
-    print(f"  Model version: codon-encoder-3-adic")
-    print(f"  Source: V5.11.3 hyperbolic embeddings")
+    print("  Model version: codon-encoder-3-adic")
+    print("  Source: V5.11.3 hyperbolic embeddings")
     print(f"  Cluster accuracy: {results['cluster_acc']*100:.1f}%")
     print(f"  Synonymous accuracy: {results['synonymous_acc']*100:.1f}%")
     print(f"  Separation ratio: {results['separation_ratio']:.2f}x")

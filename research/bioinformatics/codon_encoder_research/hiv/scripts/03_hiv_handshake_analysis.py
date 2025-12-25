@@ -25,9 +25,9 @@ Date: 2025-12-24
 
 import json
 import sys
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 import numpy as np
 import torch
@@ -192,7 +192,9 @@ class HIV_CD4_Handshake:
     }
 
     def __init__(
-        self, encoder_path: Optional[Path] = None, convergence_threshold: float = 0.25
+        self,
+        encoder_path: Optional[Path] = None,
+        convergence_threshold: float = 0.25,
     ):
         """
         Initialize the handshake analyzer.
@@ -211,16 +213,14 @@ class HIV_CD4_Handshake:
         # Try to load encoder using hyperbolic_utils
         if ENCODER_AVAILABLE:
             try:
-                self.hyp_encoder, mapping = load_hyperbolic_encoder(
-                    device="cpu", version="3adic"
-                )
+                self.hyp_encoder, mapping = load_hyperbolic_encoder(device="cpu", version="3adic")
                 print("Loaded 3-adic hyperbolic encoder (V5.11.3)")
                 self.encoder_loaded = True
             except FileNotFoundError as e:
                 print(f"Warning: {e}")
                 self._init_random_encoder()
         else:
-            print(f"Warning: hyperbolic_utils not available, using random embeddings")
+            print("Warning: hyperbolic_utils not available, using random embeddings")
             self._init_random_encoder()
 
     def _load_encoder(self, path: Path):
@@ -277,11 +277,7 @@ class HIV_CD4_Handshake:
                 return emb
 
         # Fallback: Demo mode with consistent hash-based pseudo-embeddings
-        if (
-            hasattr(self, "encoder_data")
-            and isinstance(self.encoder_data, dict)
-            and self.encoder_data.get("type") == "random_demo"
-        ):
+        if hasattr(self, "encoder_data") and isinstance(self.encoder_data, dict) and self.encoder_data.get("type") == "random_demo":
             np.random.seed(hash(context) % (2**32))
             emb = np.random.randn(16) * 0.1
             norm = np.linalg.norm(emb)
@@ -424,16 +420,18 @@ class HIV_CD4_Handshake:
         targets = []
 
         for contact in self.contacts[:50]:  # Focus on closest contacts
-            for mod_name, (from_aa, to_aa, mechanism) in self.MODIFICATIONS.items():
+            for mod_name, (
+                from_aa,
+                to_aa,
+                mechanism,
+            ) in self.MODIFICATIONS.items():
                 # Check if modification applies to viral context
                 if from_aa in contact.viral_context:
                     # Compute viral shift
                     modified_viral = contact.viral_context.replace(from_aa, to_aa, 1)
                     viral_orig_emb = self.encode_context(contact.viral_context)
                     viral_mod_emb = self.encode_context(modified_viral)
-                    viral_shift = self.compute_poincare_distance(
-                        viral_orig_emb, viral_mod_emb
-                    )
+                    viral_shift = self.compute_poincare_distance(viral_orig_emb, viral_mod_emb)
 
                     # Compute host shift (if applicable)
                     host_shift = 0.0
@@ -441,9 +439,7 @@ class HIV_CD4_Handshake:
                         modified_host = contact.host_context.replace(from_aa, to_aa, 1)
                         host_orig_emb = self.encode_context(contact.host_context)
                         host_mod_emb = self.encode_context(modified_host)
-                        host_shift = self.compute_poincare_distance(
-                            host_orig_emb, host_mod_emb
-                        )
+                        host_shift = self.compute_poincare_distance(host_orig_emb, host_mod_emb)
 
                     asymmetry = viral_shift - host_shift
 
@@ -560,16 +556,12 @@ class HIV_CD4_Handshake:
         contacts = self.map_interface()
         convergent = [c for c in contacts if c.is_convergent]
         print(f"  Total contact pairs: {len(contacts)}")
-        print(
-            f"  Convergent pairs (d < {self.convergence_threshold}): {len(convergent)}"
-        )
+        print(f"  Convergent pairs (d < {self.convergence_threshold}): {len(convergent)}")
 
         if convergent:
-            print(f"\n  Top 5 handshake points:")
+            print("\n  Top 5 handshake points:")
             for i, c in enumerate(convergent[:5]):
-                print(
-                    f"    {i+1}. gp120-{c.viral_pos} ({c.viral_aa}) <-> CD4-{c.host_pos} ({c.host_aa})"
-                )
+                print(f"    {i+1}. gp120-{c.viral_pos} ({c.viral_aa}) <-> CD4-{c.host_pos} ({c.host_aa})")
                 print(f"       Distance: {c.distance:.4f}")
 
         # 2. Find asymmetric targets
@@ -581,15 +573,11 @@ class HIV_CD4_Handshake:
         print(f"  HIGH potential: {len(high)}")
 
         if targets:
-            print(f"\n  Top 5 asymmetric targets (REVEAL candidates):")
+            print("\n  Top 5 asymmetric targets (REVEAL candidates):")
             for i, t in enumerate(targets[:5]):
                 print(f"    {i+1}. {t.modification} at gp120-{t.contact.viral_pos}")
-                print(
-                    f"       Viral shift: {t.viral_shift:.3f}, Host shift: {t.host_shift:.3f}"
-                )
-                print(
-                    f"       Asymmetry: {t.asymmetry:.3f} ({t.therapeutic_potential})"
-                )
+                print(f"       Viral shift: {t.viral_shift:.3f}, Host shift: {t.host_shift:.3f}")
+                print(f"       Asymmetry: {t.asymmetry:.3f} ({t.therapeutic_potential})")
 
         # 3. Generate pro-drug candidates
         print("\n[3/3] Generating pro-drug candidates...")
@@ -597,7 +585,7 @@ class HIV_CD4_Handshake:
         print(f"  Candidate mechanisms: {len(candidates)}")
 
         if candidates:
-            print(f"\n  Top 3 pro-drug strategies:")
+            print("\n  Top 3 pro-drug strategies:")
             for i, c in enumerate(candidates[:3]):
                 print(f"    {i+1}. {c['modification_type']} ({c['mechanism']})")
                 print(f"       Target: gp120-{c['target_site']}")
@@ -616,9 +604,7 @@ class HIV_CD4_Handshake:
                 "total_contacts": len(contacts),
                 "convergent_contacts": len(convergent),
                 "mean_distance": float(np.mean([c.distance for c in contacts])),
-                "min_distance": (
-                    float(min(c.distance for c in contacts)) if contacts else None
-                ),
+                "min_distance": (float(min(c.distance for c in contacts)) if contacts else None),
             },
             "top_handshakes": [
                 {

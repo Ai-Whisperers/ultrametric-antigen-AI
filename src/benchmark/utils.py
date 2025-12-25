@@ -13,7 +13,7 @@ to eliminate code duplication (D1.5 from DUPLICATION_REPORT).
 
 import json
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Dict
 
 import numpy as np
 import torch
@@ -149,9 +149,7 @@ def load_checkpoint_safe(
 
     try:
         manager = CheckpointManager(checkpoint_path)
-        checkpoint = manager.load_checkpoint(
-            model, checkpoint_name=checkpoint_name, device=device
-        )
+        checkpoint = manager.load_checkpoint(model, checkpoint_name=checkpoint_name, device=device)
         print(f"Loaded checkpoint from epoch {checkpoint['epoch']}")
         return checkpoint
     except Exception as e:
@@ -160,7 +158,10 @@ def load_checkpoint_safe(
 
 
 def save_results(
-    results: Dict, output_name: str, epoch: Any, output_dir: str = "reports/benchmarks"
+    results: Dict,
+    output_name: str,
+    epoch: Any,
+    output_dir: str = "reports/benchmarks",
 ) -> Path:
     """Save benchmark results to JSON file.
 

@@ -6,16 +6,12 @@ from setuptools import find_packages, setup
 
 # Read README for long description
 readme_path = Path(__file__).parent / "README.md"
-long_description = (
-    readme_path.read_text(encoding="utf-8") if readme_path.exists() else ""
-)
+long_description = readme_path.read_text(encoding="utf-8") if readme_path.exists() else ""
 
 setup(
     name="ternary-vae",
     version="5.11.0",
-    description=(
-        "Ternary VAE v5.11: Frozen Encoder + Hyperbolic Projection " "for 100% Coverage"
-    ),
+    description=("Ternary VAE v5.11: Frozen Encoder + Hyperbolic Projection " "for 100% Coverage"),
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="AI Whisperers",

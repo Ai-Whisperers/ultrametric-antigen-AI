@@ -54,7 +54,8 @@ class AppetitiveDualVAE(nn.Module):
             n_triplets=config.get("ranking_n_triplets", 1000),
         )
         self.hierarchy = HierarchicalNormLoss(
-            latent_dim=self.latent_dim, n_groups=config.get("hierarchy_n_groups", 4)
+            latent_dim=self.latent_dim,
+            n_groups=config.get("hierarchy_n_groups", 4),
         )
         self.curiosity = CuriosityModule(
             latent_dim=self.latent_dim,
@@ -66,25 +67,28 @@ class AppetitiveDualVAE(nn.Module):
             hidden_dim=config.get("symbiosis_hidden_dim", 32),
         )
         self.closure = AlgebraicClosureLoss()
-        self.violation_buffer = ViolationBuffer(
-            capacity=config.get("violation_capacity", 10000)
-        )
+        self.violation_buffer = ViolationBuffer(capacity=config.get("violation_capacity", 10000))
 
         # Appetite weights (can be learned or scheduled)
         self.register_buffer(
-            "appetite_ranking", torch.tensor(config.get("appetite_ranking", 0.5))
+            "appetite_ranking",
+            torch.tensor(config.get("appetite_ranking", 0.5)),
         )
         self.register_buffer(
-            "appetite_hierarchy", torch.tensor(config.get("appetite_hierarchy", 0.1))
+            "appetite_hierarchy",
+            torch.tensor(config.get("appetite_hierarchy", 0.1)),
         )
         self.register_buffer(
-            "appetite_curiosity", torch.tensor(config.get("appetite_curiosity", 0.1))
+            "appetite_curiosity",
+            torch.tensor(config.get("appetite_curiosity", 0.1)),
         )
         self.register_buffer(
-            "appetite_symbiosis", torch.tensor(config.get("appetite_symbiosis", 0.1))
+            "appetite_symbiosis",
+            torch.tensor(config.get("appetite_symbiosis", 0.1)),
         )
         self.register_buffer(
-            "appetite_closure", torch.tensor(config.get("appetite_closure", 0.0))
+            "appetite_closure",
+            torch.tensor(config.get("appetite_closure", 0.0)),
         )
 
         # Phase tracking
@@ -268,14 +272,10 @@ class AppetitiveDualVAE(nn.Module):
             4: "2B: Algebraic Awakening (+ closure)",
             5: "3: Algebraic Satiation (closure dominant)",
         }
-        return descriptions.get(
-            self.current_phase, f"Unknown phase {self.current_phase}"
-        )
+        return descriptions.get(self.current_phase, f"Unknown phase {self.current_phase}")
 
 
-def create_appetitive_vae(
-    config: Dict[str, Any], device: str = "cuda"
-) -> AppetitiveDualVAE:
+def create_appetitive_vae(config: Dict[str, Any], device: str = "cuda") -> AppetitiveDualVAE:
     """Create a new AppetitiveDualVAE from config.
 
     Args:

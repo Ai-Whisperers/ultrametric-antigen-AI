@@ -39,9 +39,7 @@ from src.models import TernaryVAE as DualNeuralVAEV5
 from src.models import TernaryVAE as DualNeuralVAEV5_10
 
 
-def load_checkpoint(
-    checkpoint_path: Path, device: str = "cpu", model_version: str = "v5.6"
-):
+def load_checkpoint(checkpoint_path: Path, device: str = "cpu", model_version: str = "v5.6"):
     """Load model from checkpoint."""
     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
 
@@ -53,9 +51,7 @@ def load_checkpoint(
             latent_dim=16,
             use_statenet=model_config.get("use_statenet", True),
             statenet_version=model_config.get("statenet_version", 4),
-            statenet_curriculum_scale=model_config.get(
-                "statenet_curriculum_scale", 0.1
-            ),
+            statenet_curriculum_scale=model_config.get("statenet_curriculum_scale", 0.1),
         )
         print("Loading v5.10.1 model (Radial-First Curriculum Learning)")
     else:
@@ -114,11 +110,7 @@ def encode_all_operations(model, device: str = "cpu", use_vae: str = "A"):
         # Compute per-sample reconstruction loss (cross-entropy)
         # Shape: [19683, 9, 3] -> [19683]
         targets = (x + 1).long()  # Convert {-1,0,1} to {0,1,2}
-        losses = (
-            F.cross_entropy(logits.view(-1, 3), targets.view(-1), reduction="none")
-            .view(-1, 9)
-            .mean(dim=1)
-        )
+        losses = F.cross_entropy(logits.view(-1, 3), targets.view(-1), reduction="none").view(-1, 9).mean(dim=1)
 
         # Compute reconstruction accuracy per sample
         preds = logits.argmax(dim=-1) - 1  # Back to {-1,0,1}
@@ -244,7 +236,13 @@ def plot_loss_landscape(data: dict, output_path: Path, vae_name: str = "A"):
     # Surface plot
     ax1 = fig.add_subplot(121, projection="3d")
     surf = ax1.plot_surface(
-        Xi, Yi, Zi_smooth, cmap="viridis", edgecolor="none", alpha=0.9, antialiased=True
+        Xi,
+        Yi,
+        Zi_smooth,
+        cmap="viridis",
+        edgecolor="none",
+        alpha=0.9,
+        antialiased=True,
     )
     ax1.set_xlabel("PC1", fontsize=10)
     ax1.set_ylabel("PC2", fontsize=10)
@@ -308,7 +306,13 @@ def plot_real_manifold(data: dict, pca: PCA, output_path: Path, vae_name: str = 
     # Main 3D scatter - colored by reconstruction accuracy
     ax1 = fig.add_subplot(221, projection="3d")
     scatter1 = ax1.scatter(
-        z_3d[:, 0], z_3d[:, 1], z_3d[:, 2], c=accuracy, cmap="RdYlGn", s=3, alpha=0.7
+        z_3d[:, 0],
+        z_3d[:, 1],
+        z_3d[:, 2],
+        c=accuracy,
+        cmap="RdYlGn",
+        s=3,
+        alpha=0.7,
     )
     ax1.set_xlabel("PC1")
     ax1.set_ylabel("PC2")
@@ -320,7 +324,13 @@ def plot_real_manifold(data: dict, pca: PCA, output_path: Path, vae_name: str = 
     # 3D scatter - colored by loss (inverse view for peaks/valleys)
     ax2 = fig.add_subplot(222, projection="3d")
     scatter2 = ax2.scatter(
-        z_3d[:, 0], z_3d[:, 1], z_3d[:, 2], c=losses, cmap="viridis_r", s=3, alpha=0.7
+        z_3d[:, 0],
+        z_3d[:, 1],
+        z_3d[:, 2],
+        c=losses,
+        cmap="viridis_r",
+        s=3,
+        alpha=0.7,
     )
     ax2.set_xlabel("PC1")
     ax2.set_ylabel("PC2")
@@ -432,11 +442,15 @@ def plot_combined_high_res(data_A: dict, data_B: dict, output_path: Path):
     fig.colorbar(scatter2, ax=ax2, shrink=0.5, label="Accuracy")
 
     plt.suptitle(
-        "Dual-VAE Ternary Manifold Comparison\n(Same PCA Basis)", fontsize=14, y=1.02
+        "Dual-VAE Ternary Manifold Comparison\n(Same PCA Basis)",
+        fontsize=14,
+        y=1.02,
     )
     plt.tight_layout()
     plt.savefig(
-        output_path / "manifold_comparison_dual_vae.png", dpi=200, bbox_inches="tight"
+        output_path / "manifold_comparison_dual_vae.png",
+        dpi=200,
+        bbox_inches="tight",
     )
     plt.close()
 
@@ -469,7 +483,13 @@ def plot_kl_divergence_surface(data: dict, output_path: Path, vae_name: str = "A
     # 3D surface
     ax1 = fig.add_subplot(131, projection="3d")
     surf = ax1.plot_surface(
-        Xi, Yi, Zi_smooth, cmap="magma", edgecolor="none", alpha=0.9, antialiased=True
+        Xi,
+        Yi,
+        Zi_smooth,
+        cmap="magma",
+        edgecolor="none",
+        alpha=0.9,
+        antialiased=True,
     )
     ax1.set_xlabel("PC1")
     ax1.set_ylabel("PC2")
@@ -482,13 +502,17 @@ def plot_kl_divergence_surface(data: dict, output_path: Path, vae_name: str = "A
     ax2 = fig.add_subplot(132)
     contour = ax2.contourf(Xi, Yi, Zi_smooth, levels=40, cmap="magma")
     ax2.scatter(
-        z_2d[:, 0], z_2d[:, 1], c=kl, cmap="magma", s=2, alpha=0.5, edgecolors="none"
+        z_2d[:, 0],
+        z_2d[:, 1],
+        c=kl,
+        cmap="magma",
+        s=2,
+        alpha=0.5,
+        edgecolors="none",
     )
     ax2.set_xlabel("PC1")
     ax2.set_ylabel("PC2")
-    ax2.set_title(
-        f"VAE-{vae_name} KL Divergence Map\nHigh KL = Rare/Complex Operations"
-    )
+    ax2.set_title(f"VAE-{vae_name} KL Divergence Map\nHigh KL = Rare/Complex Operations")
     fig.colorbar(contour, ax=ax2, label="KL (nats)")
 
     # Histogram of KL values
@@ -545,7 +569,13 @@ def plot_variance_surface(data: dict, output_path: Path, vae_name: str = "A"):
     # 3D surface
     ax1 = fig.add_subplot(221, projection="3d")
     surf = ax1.plot_surface(
-        Xi, Yi, Zi_smooth, cmap="plasma", edgecolor="none", alpha=0.9, antialiased=True
+        Xi,
+        Yi,
+        Zi_smooth,
+        cmap="plasma",
+        edgecolor="none",
+        alpha=0.9,
+        antialiased=True,
     )
     ax1.set_xlabel("PC1")
     ax1.set_ylabel("PC2")
@@ -592,9 +622,7 @@ def plot_variance_surface(data: dict, output_path: Path, vae_name: str = "A"):
     )
     ax4.set_xlabel("Latent Dimension")
     ax4.set_ylabel("Mean Variance")
-    ax4.set_title(
-        f"VAE-{vae_name} Variance by Dimension\n(Active vs Inactive Dimensions)"
-    )
+    ax4.set_title(f"VAE-{vae_name} Variance by Dimension\n(Active vs Inactive Dimensions)")
     ax4.legend()
 
     plt.tight_layout()
@@ -609,9 +637,7 @@ def plot_variance_surface(data: dict, output_path: Path, vae_name: str = "A"):
     print(f"  Variance stats: mean={variance.mean():.4f}, std={variance.std():.4f}")
 
 
-def plot_operation_clustering(
-    data: dict, props: dict, output_path: Path, vae_name: str = "A"
-):
+def plot_operation_clustering(data: dict, props: dict, output_path: Path, vae_name: str = "A"):
     """Plot manifold colored by operation properties - reveals semantic structure."""
     z = data["z"]
 
@@ -624,7 +650,12 @@ def plot_operation_clustering(
         ("symmetry", "Symmetry", "op(a,b) = op(b,a)", "RdYlGn"),
         ("linearity", "Linearity", "How linear the operation is", "viridis"),
         ("zero_preserving", "Zero-Preserving", "op(0,0) = 0", "coolwarm"),
-        ("balance", "Output Balance", "Entropy of output distribution", "plasma"),
+        (
+            "balance",
+            "Output Balance",
+            "Entropy of output distribution",
+            "plasma",
+        ),
         ("idempotent", "Idempotent", "op(a,a) = a", "PiYG"),
         ("output_entropy", "Output Entropy", "H(outputs)", "inferno"),
     ]
@@ -634,7 +665,13 @@ def plot_operation_clustering(
         prop_vals = props[prop_key]
 
         scatter = ax.scatter(
-            z_3d[:, 0], z_3d[:, 1], z_3d[:, 2], c=prop_vals, cmap=cmap, s=3, alpha=0.6
+            z_3d[:, 0],
+            z_3d[:, 1],
+            z_3d[:, 2],
+            c=prop_vals,
+            cmap=cmap,
+            s=3,
+            alpha=0.6,
         )
         ax.set_xlabel("PC1")
         ax.set_ylabel("PC2")
@@ -644,8 +681,7 @@ def plot_operation_clustering(
         fig.colorbar(scatter, ax=ax, shrink=0.5, label=prop_key)
 
     plt.suptitle(
-        f"VAE-{vae_name} Manifold Colored by Operation Properties\n"
-        f"(Semantic Structure of the Ternary Space)",
+        f"VAE-{vae_name} Manifold Colored by Operation Properties\n" f"(Semantic Structure of the Ternary Space)",
         fontsize=14,
         y=1.02,
     )
@@ -658,20 +694,12 @@ def plot_operation_clustering(
     plt.close()
 
     print(f"Saved: {output_path / f'operation_clustering_vae_{vae_name.lower()}.png'}")
-    print(
-        f"  Symmetric ops: {int(props['symmetry'].sum())} ({props['symmetry'].mean()*100:.1f}%)"
-    )
-    print(
-        f"  Zero-preserving: {int(props['zero_preserving'].sum())} ({props['zero_preserving'].mean()*100:.1f}%)"
-    )
-    print(
-        f"  Idempotent: {int(props['idempotent'].sum())} ({props['idempotent'].mean()*100:.1f}%)"
-    )
+    print(f"  Symmetric ops: {int(props['symmetry'].sum())} ({props['symmetry'].mean()*100:.1f}%)")
+    print(f"  Zero-preserving: {int(props['zero_preserving'].sum())} ({props['zero_preserving'].mean()*100:.1f}%)")
+    print(f"  Idempotent: {int(props['idempotent'].sum())} ({props['idempotent'].mean()*100:.1f}%)")
 
 
-def plot_semantic_surface(
-    data: dict, props: dict, output_path: Path, vae_name: str = "A"
-):
+def plot_semantic_surface(data: dict, props: dict, output_path: Path, vae_name: str = "A"):
     """Plot 3D surface where height = semantic property value."""
     z = data["z"]
 
@@ -705,7 +733,13 @@ def plot_semantic_surface(
         # 3D surface
         ax1 = fig.add_subplot(2, 3, idx + 1, projection="3d")
         ax1.plot_surface(
-            Xi, Yi, Zi_smooth, cmap=cmap, edgecolor="none", alpha=0.9, antialiased=True
+            Xi,
+            Yi,
+            Zi_smooth,
+            cmap=cmap,
+            edgecolor="none",
+            alpha=0.9,
+            antialiased=True,
         )
         ax1.set_xlabel("PC1")
         ax1.set_ylabel("PC2")
@@ -741,9 +775,7 @@ def plot_semantic_surface(
     print(f"Saved: {output_path / f'semantic_surfaces_vae_{vae_name.lower()}.png'}")
 
 
-def plot_manifold_with_gradient_flow(
-    data: dict, output_path: Path, vae_name: str = "A"
-):
+def plot_manifold_with_gradient_flow(data: dict, output_path: Path, vae_name: str = "A"):
     """Plot manifold surface with gradient flow visualization."""
     z = data["z"]
     losses = data["losses"]
@@ -773,7 +805,13 @@ def plot_manifold_with_gradient_flow(
     # 3D surface with wireframe
     ax1 = fig.add_subplot(221, projection="3d")
     ax1.plot_surface(
-        Xi, Yi, Zi_smooth, cmap="viridis", alpha=0.8, antialiased=True, edgecolor="none"
+        Xi,
+        Yi,
+        Zi_smooth,
+        cmap="viridis",
+        alpha=0.8,
+        antialiased=True,
+        edgecolor="none",
     )
     ax1.plot_wireframe(
         Xi[::5, ::5],
@@ -856,9 +894,7 @@ def plot_manifold_with_gradient_flow(
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Visualize Ternary Manifold (v5.6 or v5.10)"
-    )
+    parser = argparse.ArgumentParser(description="Visualize Ternary Manifold (v5.6 or v5.10)")
     parser.add_argument(
         "--checkpoint",
         type=str,
@@ -880,10 +916,15 @@ def main():
         help="Which VAE to visualize",
     )
     parser.add_argument(
-        "--output", type=str, default="outputs/manifold_viz", help="Output directory"
+        "--output",
+        type=str,
+        default="outputs/manifold_viz",
+        help="Output directory",
     )
     parser.add_argument(
-        "--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu"
+        "--device",
+        type=str,
+        default="cuda" if torch.cuda.is_available() else "cpu",
     )
 
     args = parser.parse_args()

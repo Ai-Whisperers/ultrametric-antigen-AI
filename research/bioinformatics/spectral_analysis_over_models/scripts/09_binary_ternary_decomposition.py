@@ -29,11 +29,9 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[5]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from scipy import stats
-from scipy.linalg import svd
 from sklearn.decomposition import PCA
 
 
@@ -79,30 +77,14 @@ def analyze_dimension_factorization(embeddings):
         z_pca = pca.fit_transform(z_level)
 
         # How much variance is explained by first 2 vs first 3 components?
-        var_2 = (
-            pca.explained_variance_ratio_[:2].sum()
-            if len(pca.explained_variance_ratio_) >= 2
-            else 0
-        )
-        var_3 = (
-            pca.explained_variance_ratio_[:3].sum()
-            if len(pca.explained_variance_ratio_) >= 3
-            else 0
-        )
-        var_6 = (
-            pca.explained_variance_ratio_[:6].sum()
-            if len(pca.explained_variance_ratio_) >= 6
-            else pca.explained_variance_ratio_.sum()
-        )
+        var_2 = pca.explained_variance_ratio_[:2].sum() if len(pca.explained_variance_ratio_) >= 2 else 0
+        var_3 = pca.explained_variance_ratio_[:3].sum() if len(pca.explained_variance_ratio_) >= 3 else 0
+        var_6 = pca.explained_variance_ratio_[:6].sum() if len(pca.explained_variance_ratio_) >= 6 else pca.explained_variance_ratio_.sum()
 
         # Test if PC1 or PC2 correlates with mod-2 structure
         if len(z_pca) > 10:
             corr_pc1_mod2, p1 = stats.pointbiserialr(mod2, z_pca[:, 0])
-            corr_pc2_mod2, p2 = (
-                stats.pointbiserialr(mod2, z_pca[:, 1])
-                if z_pca.shape[1] > 1
-                else (0, 1)
-            )
+            corr_pc2_mod2, p2 = stats.pointbiserialr(mod2, z_pca[:, 1]) if z_pca.shape[1] > 1 else (0, 1)
         else:
             corr_pc1_mod2, p1, corr_pc2_mod2, p2 = 0, 1, 0, 1
 
@@ -148,9 +130,7 @@ def analyze_joint_valuation_structure(embeddings):
     reg.fit(X, y)
 
     # Individual contributions
-    print(
-        f"\n  Linear model: radius = {reg.intercept_:.4f} + {reg.coef_[0]:.4f}×v₂ + {reg.coef_[1]:.4f}×v₃ + {reg.coef_[2]:.4f}×v₂v₃"
-    )
+    print(f"\n  Linear model: radius = {reg.intercept_:.4f} + {reg.coef_[0]:.4f}×v₂ + {reg.coef_[1]:.4f}×v₃ + {reg.coef_[2]:.4f}×v₂v₃")
     print(f"  R² = {reg.score(X, y):.4f}")
 
     # Compare to v3-only model
@@ -169,18 +149,14 @@ def analyze_joint_valuation_structure(embeddings):
     reg_mult = LinearRegression()
     reg_mult.fit(X_mult, log_radii)
 
-    print(
-        f"\n  Multiplicative model: r = exp({reg_mult.intercept_:.4f}) × 2^({reg_mult.coef_[0]:.4f}×v₂) × 3^({reg_mult.coef_[1]:.4f}×v₃)"
-    )
-    print(
-        f"  Predicted: 2-exponent = {reg_mult.coef_[0]/np.log(2):.4f}, 3-exponent = {reg_mult.coef_[1]/np.log(3):.4f}"
-    )
+    print(f"\n  Multiplicative model: r = exp({reg_mult.intercept_:.4f}) × 2^({reg_mult.coef_[0]:.4f}×v₂) × 3^({reg_mult.coef_[1]:.4f}×v₃)")
+    print(f"  Predicted: 2-exponent = {reg_mult.coef_[0]/np.log(2):.4f}, 3-exponent = {reg_mult.coef_[1]/np.log(3):.4f}")
 
     # The key question: does the 3-exponent ≈ 1/6 and is there a 2-exponent?
     exp_2 = reg_mult.coef_[0] / np.log(2)
     exp_3 = reg_mult.coef_[1] / np.log(3)
 
-    print(f"\n  KEY TEST: Is exponent ≈ 1/(2×3) = 1/6?")
+    print("\n  KEY TEST: Is exponent ≈ 1/(2×3) = 1/6?")
     print(f"    3-adic exponent: {exp_3:.4f} (expected: -0.167 = -1/6)")
     print(f"    2-adic exponent: {exp_2:.4f} (expected: ~0 if not trained on v₂)")
 
@@ -244,14 +220,8 @@ def analyze_within_level_binary_structure(embeddings):
                 "p_value": float(p_val),
             }
 
-            sig = (
-                "***"
-                if p_val < 0.001
-                else "**" if p_val < 0.01 else "*" if p_val < 0.05 else ""
-            )
-            print(
-                f"    v₃={v3}: r_even={r_even.mean():.4f}, r_odd={r_odd.mean():.4f}, diff={diff:.4f} {sig}"
-            )
+            sig = "***" if p_val < 0.001 else "**" if p_val < 0.01 else "*" if p_val < 0.05 else ""
+            print(f"    v₃={v3}: r_even={r_even.mean():.4f}, r_odd={r_odd.mean():.4f}, diff={diff:.4f} {sig}")
 
     return results
 
@@ -277,9 +247,7 @@ def test_six_equals_two_times_three(embeddings):
     pca = PCA(n_components=6)
     z_pca = pca.fit_transform(z_B)
 
-    print(
-        f"\n  6D PCA explains {pca.explained_variance_ratio_.sum()*100:.1f}% of variance"
-    )
+    print(f"\n  6D PCA explains {pca.explained_variance_ratio_.sum()*100:.1f}% of variance")
 
     # Test if each PC correlates with one of the 6 classes
     print("\n  PC correlations with 6-class structure:")
@@ -291,11 +259,7 @@ def test_six_equals_two_times_three(embeddings):
 
         if len(groups) >= 2:
             f_stat, p_val = stats.f_oneway(*groups)
-            sig = (
-                "***"
-                if p_val < 0.001
-                else "**" if p_val < 0.01 else "*" if p_val < 0.05 else ""
-            )
+            sig = "***" if p_val < 0.001 else "**" if p_val < 0.01 else "*" if p_val < 0.05 else ""
             print(f"    PC{pc+1}: F={f_stat:.1f}, p={p_val:.2e} {sig}")
 
     # Alternative: test if (v2 mod 2) and (v3 mod 3) independently predict different PCs
@@ -310,9 +274,7 @@ def test_six_equals_two_times_three(embeddings):
         groups_3 = [z_pca[mod3 == m, pc] for m in range(3)]
         f3, p3 = stats.f_oneway(*groups_3)
 
-        print(
-            f"    PC{pc+1}: mod2 r={corr2:.3f} (p={p2:.2e}), mod3 F={f3:.1f} (p={p3:.2e})"
-        )
+        print(f"    PC{pc+1}: mod2 r={corr2:.3f} (p={p2:.2e}), mod3 F={f3:.1f} (p={p3:.2e})")
 
     return {"pca_variance": pca.explained_variance_ratio_.tolist()}
 
@@ -354,15 +316,15 @@ def analyze_radial_formula_decomposition(embeddings):
     print(f"    Interpretation: r = {a:.3f} × 2^(-{b:.4f}×v₂) × 3^(-{c:.4f}×v₃)")
 
     # 2. Test if c ≈ 1/6 and b ≈ 0
-    print(f"\n  KEY FINDING:")
+    print("\n  KEY FINDING:")
     print(f"    3-adic exponent c = {c:.4f}")
-    print(f"    Expected if 6 = 2×3 structure: c ≈ 1/6 = 0.1667")
+    print("    Expected if 6 = 2×3 structure: c ≈ 1/6 = 0.1667")
     print(f"    Difference: {abs(c - 1/6):.4f}")
 
     # 3. Test if there's hidden 2-adic contribution even though not trained
     print(f"\n    2-adic exponent b = {b:.4f}")
     print(f"    If model implicitly captures 2×3: expect b ≈ {1/6:.4f}")
-    print(f"    If model is purely 3-adic: expect b ≈ 0")
+    print("    If model is purely 3-adic: expect b ≈ 0")
 
     # 4. Alternative: r = a × 6^(-d×v6) where v6 = v2 + v3 (joint valuation?)
     v6_sum = v2_vals + v3_vals
@@ -370,7 +332,7 @@ def analyze_radial_formula_decomposition(embeddings):
     reg6.fit(v6_sum.reshape(-1, 1), log_r)
     d = -reg6.coef_[0] / np.log(6)
 
-    print(f"\n  Model 2: r = a × 6^(-d×(v₂+v₃))")
+    print("\n  Model 2: r = a × 6^(-d×(v₂+v₃))")
     print(f"    d = {d:.4f}")
     print(f"    R² = {reg6.score(v6_sum.reshape(-1, 1), log_r):.4f}")
 

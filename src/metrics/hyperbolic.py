@@ -165,7 +165,14 @@ def compute_ranking_correlation_hyperbolic(
     if was_training:
         model.train()
 
-    return corr_A_hyp, corr_B_hyp, corr_A_euc, corr_B_euc, mean_radius_A, mean_radius_B
+    return (
+        corr_A_hyp,
+        corr_B_hyp,
+        corr_A_euc,
+        corr_B_euc,
+        mean_radius_A,
+        mean_radius_B,
+    )
 
 
 __all__ = [

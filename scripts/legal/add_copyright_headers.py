@@ -20,7 +20,7 @@ Options:
 import argparse
 import sys
 from pathlib import Path
-from typing import List, Tuple
+from typing import List
 
 # Copyright header to add
 COPYRIGHT_HEADER = """# Copyright 2024-2025 AI Whisperers (https://github.com/Ai-Whisperers)
@@ -96,9 +96,7 @@ def find_python_files(repo_root: Path) -> List[Path]:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Add copyright headers to Python source files"
-    )
+    parser = argparse.ArgumentParser(description="Add copyright headers to Python source files")
     parser.add_argument(
         "--dry-run",
         action="store_true",

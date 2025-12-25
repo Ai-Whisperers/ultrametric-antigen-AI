@@ -22,19 +22,18 @@ __version__ = "5.11.0"
 __author__ = "AI Whisperers"
 __license__ = "PolyForm-Noncommercial-1.0.0"
 
-# Canonical model (V5.11)
-from .models.ternary_vae import TernaryVAEV5_11, TernaryVAEV5_11_OptionC
-
-# Canonical aliases
-TernaryVAE = TernaryVAEV5_11
-TernaryVAE_OptionC = TernaryVAEV5_11_OptionC
-
 # Data
 from .data import TernaryOperationDataset, generate_all_ternary_operations
 # Metrics
 from .metrics import compute_ranking_correlation_hyperbolic
+# Canonical model (V5.11)
+from .models.ternary_vae import TernaryVAEV5_11, TernaryVAEV5_11_OptionC
 # Training
 from .training import HyperbolicVAETrainer, TernaryVAETrainer, TrainingMonitor
+
+# Canonical aliases (after imports)
+TernaryVAE = TernaryVAEV5_11
+TernaryVAE_OptionC = TernaryVAEV5_11_OptionC
 
 __all__ = [
     # Canonical (V5.11)

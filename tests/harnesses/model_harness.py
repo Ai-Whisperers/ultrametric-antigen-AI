@@ -3,9 +3,8 @@
 # Licensed under the PolyForm Noncommercial License 1.0.0
 # See LICENSE file in the repository root for full license text.
 
-from typing import Dict, List, Optional
+from typing import Dict, List
 
-import pytest
 import torch
 import torch.nn as nn
 
@@ -64,8 +63,6 @@ class ModelTestHarness:
             if param.requires_grad:
                 trainable_params_found = True
                 assert param.grad is not None, f"No gradient for {name}"
-                assert (
-                    param.grad.abs().sum() > 0 or param.grad.sum() == 0
-                ), f"Gradient check for {name}"
+                assert param.grad.abs().sum() > 0 or param.grad.sum() == 0, f"Gradient check for {name}"
 
         assert trainable_params_found, "No trainable parameters found in model"

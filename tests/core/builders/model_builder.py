@@ -1,6 +1,4 @@
-from unittest.mock import MagicMock, patch
-
-from torch import nn
+from unittest.mock import patch
 
 from src.models.ternary_vae import TernaryVAEV5_11, TernaryVAEV5_11_OptionC
 from tests.core.helpers import MockFrozenModule
@@ -54,22 +52,19 @@ class VAEBuilder:
         # This is tricky because constructing the model triggers __init__ which instantiates FrozenEncoder
         # We need to temporarily patch while building
 
-        with patch("src.models.ternary_vae.FrozenEncoder") as mock_enc_cls, patch(
-            "src.models.ternary_vae.FrozenDecoder"
-        ) as mock_dec_cls:
+        with patch("src.models.ternary_vae.FrozenEncoder") as mock_enc_cls, patch("src.models.ternary_vae.FrozenDecoder") as mock_dec_cls:
 
             # Use our MockFrozenModule helper
             def create_enc(*args, **kwargs):
                 return MockFrozenModule(
-                    output_shape=(self._config["latent_dim"],), return_tuple=True
+                    output_shape=(self._config["latent_dim"],),
+                    return_tuple=True,
                 )
 
             mock_enc_cls.side_effect = create_enc
 
             def create_dec(*args, **kwargs):
-                return MockFrozenModule(
-                    output_shape=(9, 3), return_tuple=False  # Fixed input dim 9
-                )
+                return MockFrozenModule(output_shape=(9, 3), return_tuple=False)  # Fixed input dim 9
 
             mock_dec_cls.side_effect = create_dec
 

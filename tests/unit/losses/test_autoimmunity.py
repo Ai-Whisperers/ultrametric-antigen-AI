@@ -1,4 +1,3 @@
-import pytest
 import torch
 
 from src.data.autoimmunity import AutoimmunityLoader

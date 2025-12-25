@@ -8,7 +8,7 @@
 Tests the PyTorch module for Poincare ball geometry.
 """
 
-import pytest
+import pytest  # noqa: F401 - used for fixtures
 import torch
 
 from src.geometry.poincare import PoincareModule, project_to_poincare

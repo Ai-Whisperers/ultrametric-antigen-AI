@@ -79,12 +79,10 @@ def main():
             print(f"  - {mf}")
 
     # Validate format
-    print(f"\nFormat validation:")
+    print("\nFormat validation:")
     print(f"  - Is list: {isinstance(batch_jobs, list)}")
     print(f"  - All have 'dialect': {all('dialect' in j for j in batch_jobs)}")
-    print(
-        f"  - All alphafoldserver: {all(j.get('dialect') == 'alphafoldserver' for j in batch_jobs)}"
-    )
+    print(f"  - All alphafoldserver: {all(j.get('dialect') == 'alphafoldserver' for j in batch_jobs)}")
     print(f"  - All have 'sequences': {all('sequences' in j for j in batch_jobs)}")
     print(f"  - All have 'modelSeeds': {all('modelSeeds' in j for j in batch_jobs)}")
 

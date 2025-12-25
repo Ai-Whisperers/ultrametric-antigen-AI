@@ -71,15 +71,11 @@ def _compute_ternary(n: int) -> tuple:
 
 # Precompute valuation for all 19,683 possible indices
 # Memory: 19,683 * 8 bytes (int64) = ~157 KB
-VALUATION_LUT = torch.tensor(
-    [_compute_valuation(i) for i in range(19683)], dtype=torch.long
-)
+VALUATION_LUT = torch.tensor([_compute_valuation(i) for i in range(19683)], dtype=torch.long)
 
 # Precompute ternary representation for all 19,683 indices
 # Memory: 19,683 * 9 * 4 bytes (float32) = ~708 KB
-TERNARY_LUT = torch.tensor(
-    [list(_compute_ternary(i)) for i in range(19683)], dtype=torch.float32
-)
+TERNARY_LUT = torch.tensor([list(_compute_ternary(i)) for i in range(19683)], dtype=torch.float32)
 
 
 def get_valuation_batch(indices: torch.Tensor) -> torch.Tensor:
@@ -133,9 +129,7 @@ def get_3adic_distance(i: int, j: int) -> float:
     return 3.0 ** (-v)
 
 
-def get_3adic_distance_batch(
-    indices_i: torch.Tensor, indices_j: torch.Tensor
-) -> torch.Tensor:
+def get_3adic_distance_batch(indices_i: torch.Tensor, indices_j: torch.Tensor) -> torch.Tensor:
     """Compute 3-adic distances between pairs of indices.
 
     Args:

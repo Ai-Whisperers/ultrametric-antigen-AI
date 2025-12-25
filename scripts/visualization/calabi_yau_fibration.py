@@ -369,9 +369,7 @@ def render_fibration_matplotlib(points, fibers, helices, output_path):
         smooth_path = smooth_fiber_spline(points, fiber, n_samples=30)
         verts, faces = create_tube_mesh(smooth_path, radius=0.015, n_sides=6)
         if verts is not None:
-            mesh = Poly3DCollection(
-                verts[faces], alpha=0.7, facecolor=color, edgecolor="none"
-            )
+            mesh = Poly3DCollection(verts[faces], alpha=0.7, facecolor=color, edgecolor="none")
             ax.add_collection3d(mesh)
 
     ax.set_xlim(-1, 1)
@@ -403,7 +401,13 @@ def render_fibration_matplotlib(points, fibers, helices, output_path):
     ax = fig.add_subplot(2, 3, 4, projection="3d")
     ao = compute_ambient_occlusion(points, radius=0.15)
     scatter = ax.scatter(
-        points[:, 0], points[:, 1], points[:, 2], c=ao, cmap="bone", s=2, alpha=0.8
+        points[:, 0],
+        points[:, 1],
+        points[:, 2],
+        c=ao,
+        cmap="bone",
+        s=2,
+        alpha=0.8,
     )
     ax.set_title("Ambient Occlusion (Depth)")
     ax.view_init(elev=20, azim=45)
@@ -444,7 +448,13 @@ def render_fibration_matplotlib(points, fibers, helices, output_path):
 
     # Background points with AO
     ax.scatter(
-        points[:, 0], points[:, 1], points[:, 2], c=ao, cmap="gray_r", s=1, alpha=0.2
+        points[:, 0],
+        points[:, 1],
+        points[:, 2],
+        c=ao,
+        cmap="gray_r",
+        s=1,
+        alpha=0.2,
     )
 
     # Overlay key fibers

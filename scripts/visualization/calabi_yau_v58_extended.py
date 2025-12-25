@@ -36,9 +36,7 @@ ckpt = torch.load(
     map_location="cpu",
     weights_only=False,
 )
-print(
-    f"Epoch {ckpt['epoch']}, Coverage: {ckpt['best_coverage']:.2f}%, Correlation: {ckpt['best_corr']:.4f}"
-)
+print(f"Epoch {ckpt['epoch']}, Coverage: {ckpt['best_coverage']:.2f}%, Correlation: {ckpt['best_corr']:.4f}")
 
 state = ckpt["model"]
 
@@ -62,25 +60,29 @@ def encoder_forward(ops, prefix):
     h = ops
     h = torch.relu(
         F.linear(
-            h, state[f"{prefix}.encoder.0.weight"], state[f"{prefix}.encoder.0.bias"]
+            h,
+            state[f"{prefix}.encoder.0.weight"],
+            state[f"{prefix}.encoder.0.bias"],
         )
     )
     layer1 = h.clone()  # 256D
     h = torch.relu(
         F.linear(
-            h, state[f"{prefix}.encoder.2.weight"], state[f"{prefix}.encoder.2.bias"]
+            h,
+            state[f"{prefix}.encoder.2.weight"],
+            state[f"{prefix}.encoder.2.bias"],
         )
     )
     layer2 = h.clone()  # 128D
     h = torch.relu(
         F.linear(
-            h, state[f"{prefix}.encoder.4.weight"], state[f"{prefix}.encoder.4.bias"]
+            h,
+            state[f"{prefix}.encoder.4.weight"],
+            state[f"{prefix}.encoder.4.bias"],
         )
     )
     layer3 = h.clone()  # 64D
-    mu = F.linear(
-        h, state[f"{prefix}.fc_mu.weight"], state[f"{prefix}.fc_mu.bias"]
-    )  # 16D
+    mu = F.linear(h, state[f"{prefix}.fc_mu.weight"], state[f"{prefix}.fc_mu.bias"])  # 16D
     return {"layer1": layer1, "layer2": layer2, "layer3": layer3, "mu": mu}
 
 
@@ -99,9 +101,7 @@ embeddings = {
         ],
         dim=1,
     ),
-    "128d": torch.cat(
-        [acts_A["mu"], acts_B["mu"], acts_A["layer3"], acts_B["layer3"]], dim=1
-    ),
+    "128d": torch.cat([acts_A["mu"], acts_B["mu"], acts_A["layer3"], acts_B["layer3"]], dim=1),
     "192d": torch.cat(
         [
             acts_A["mu"],
@@ -114,7 +114,13 @@ embeddings = {
         dim=1,
     ),
     "256d": torch.cat(
-        [acts_A["layer3"], acts_B["layer3"], acts_A["layer2"], acts_B["layer2"]], dim=1
+        [
+            acts_A["layer3"],
+            acts_B["layer3"],
+            acts_A["layer2"],
+            acts_B["layer2"],
+        ],
+        dim=1,
     ),
     "512d": torch.cat([acts_A["layer1"], acts_B["layer1"]], dim=1),
 }
@@ -175,10 +181,7 @@ def k3_surface(z):
     z = z.numpy() if torch.is_tensor(z) else z
     z_norm = z / (np.linalg.norm(z, axis=1, keepdims=True) + 1e-8)
     dim = z.shape[1]
-    g = [
-        np.sum(z_norm[:, i * (dim // 4) : (i + 1) * (dim // 4)], axis=1)
-        for i in range(4)
-    ]
+    g = [np.sum(z_norm[:, i * (dim // 4) : (i + 1) * (dim // 4)], axis=1) for i in range(4)]
 
     x = g[0] * g[1] - g[2] * g[3]
     y = g[0] * g[2] + g[1] * g[3]
@@ -355,9 +358,7 @@ def smooth_fiber(points, fiber_indices, n_samples=60):
     if len(pts) < 4:
         return pts
     try:
-        tck, u = splprep(
-            [pts[:, 0], pts[:, 1], pts[:, 2]], s=0.1, k=min(3, len(pts) - 1)
-        )
+        tck, u = splprep([pts[:, 0], pts[:, 1], pts[:, 2]], s=0.1, k=min(3, len(pts) - 1))
         u_new = np.linspace(0, 1, n_samples)
         return np.array(splev(u_new, tck)).T
     except:
@@ -388,9 +389,7 @@ def create_tube_mesh(path, radius=0.008, n_sides=6):
 
         for j in range(n_sides):
             angle = 2 * np.pi * j / n_sides
-            vertices.append(
-                path[i] + radius * (np.cos(angle) * p1 + np.sin(angle) * p2)
-            )
+            vertices.append(path[i] + radius * (np.cos(angle) * p1 + np.sin(angle) * p2))
 
         if i > 0:
             for j in range(n_sides):
@@ -442,7 +441,11 @@ for name, emb_key, proj_func in projections:
     fibers = trace_fibers_kdtree(points)
     print(f"  Traced {len(fibers)} fibers")
 
-    all_results[name] = {"points": points, "fibers": fibers, "emb_dim": emb_key}
+    all_results[name] = {
+        "points": points,
+        "fibers": fibers,
+        "emb_dim": emb_key,
+    }
 
     # Export JSON
     safe_name = name.lower().replace(" ", "_")
@@ -559,7 +562,14 @@ ax.set_yticklabels([n.split()[0] for n in proj_names])
 
 for i in range(n_proj):
     for j in range(n_proj):
-        ax.text(j, i, f"{corr_matrix[i,j]:.2f}", ha="center", va="center", fontsize=9)
+        ax.text(
+            j,
+            i,
+            f"{corr_matrix[i,j]:.2f}",
+            ha="center",
+            va="center",
+            fontsize=9,
+        )
 
 plt.colorbar(im, label="Distance Correlation")
 plt.title("Cross-Projection Correlation Matrix")

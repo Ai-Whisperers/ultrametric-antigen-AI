@@ -11,7 +11,6 @@ Usage:
     python 07d_analyze_natural_positions.py
 """
 
-import json
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -264,16 +263,16 @@ def analyze_valuations():
 
     valuations = [valuation_3(idx) for idx in SELECTED_INDICES]
 
-    print(f"\n  Valuation distribution:")
+    print("\n  Valuation distribution:")
     val_counts = Counter(valuations)
     for v in sorted(val_counts.keys()):
         print(f"    v₃ = {v}: {val_counts[v]} indices")
 
     print(f"\n  Mean valuation: {np.mean(valuations):.2f}")
-    print(f"  Expected for random 64: ~0.5")
+    print("  Expected for random 64: ~0.5")
 
     # By cluster
-    print(f"\n  Valuations by cluster:")
+    print("\n  Valuations by cluster:")
     clusters = defaultdict(list)
     for idx, label in zip(SELECTED_INDICES, CLUSTER_LABELS):
         clusters[label].append(valuation_3(idx))
@@ -295,16 +294,14 @@ def analyze_ternary_patterns():
     ternary = [index_to_ternary_unsigned(idx) for idx in SELECTED_INDICES]
 
     # Analyze digit frequency by position
-    print(f"\n  Digit frequency by position (0=MSB, 8=LSB):")
+    print("\n  Digit frequency by position (0=MSB, 8=LSB):")
     for pos in range(9):
         digits = [t[pos] for t in ternary]
         counts = Counter(digits)
-        print(
-            f"    Position {pos}: 0={counts[0]:2d}, 1={counts[1]:2d}, 2={counts[2]:2d}"
-        )
+        print(f"    Position {pos}: 0={counts[0]:2d}, 1={counts[1]:2d}, 2={counts[2]:2d}")
 
     # Look for patterns within clusters
-    print(f"\n  Shared digits within clusters (positions where all members agree):")
+    print("\n  Shared digits within clusters (positions where all members agree):")
 
     clusters = defaultdict(list)
     for idx, label, tern in zip(SELECTED_INDICES, CLUSTER_LABELS, ternary):
@@ -328,22 +325,16 @@ def analyze_ternary_patterns():
             print(f"    Cluster {c} (n={len(members)}): {positions_str}")
 
     # Analyze which positions are most conserved
-    print(f"\n  Position conservation across all clusters:")
+    print("\n  Position conservation across all clusters:")
     conserved_counts = Counter()
     for c, positions in cluster_patterns.items():
         for pos, _ in positions:
             conserved_counts[pos] += 1
 
     for pos in range(9):
-        pct = (
-            100 * conserved_counts[pos] / len(cluster_patterns)
-            if cluster_patterns
-            else 0
-        )
+        pct = 100 * conserved_counts[pos] / len(cluster_patterns) if cluster_patterns else 0
         bar = "█" * int(pct / 5)
-        print(
-            f"    Position {pos}: {conserved_counts[pos]:2d} clusters ({pct:5.1f}%) {bar}"
-        )
+        print(f"    Position {pos}: {conserved_counts[pos]:2d} clusters ({pct:5.1f}%) {bar}")
 
     return ternary, cluster_patterns
 
@@ -361,7 +352,7 @@ def analyze_codon_mapping_hypothesis():
     ternary = [index_to_ternary_unsigned(idx) for idx in SELECTED_INDICES]
 
     # Group by first 6 positions (1st + 2nd nucleotide)
-    print(f"\n  Grouping by first 6 trits (positions 0-5):")
+    print("\n  Grouping by first 6 trits (positions 0-5):")
     prefix_groups = defaultdict(list)
     for idx, tern, label in zip(SELECTED_INDICES, ternary, CLUSTER_LABELS):
         prefix = tuple(tern[:6])
@@ -377,12 +368,10 @@ def analyze_codon_mapping_hypothesis():
         if len(set(labels)) == 1:
             prefix_cluster_match += 1
 
-    print(
-        f"    Prefixes with single cluster: {prefix_cluster_match}/{len(prefix_groups)}"
-    )
+    print(f"    Prefixes with single cluster: {prefix_cluster_match}/{len(prefix_groups)}")
 
     # Analyze the "wobble" positions (6-8)
-    print(f"\n  Wobble position analysis (positions 6-8):")
+    print("\n  Wobble position analysis (positions 6-8):")
     clusters = defaultdict(list)
     for idx, tern, label in zip(SELECTED_INDICES, ternary, CLUSTER_LABELS):
         clusters[label].append(tern[6:])
@@ -397,8 +386,8 @@ def analyze_codon_mapping_hypothesis():
         var = np.var(wobble_arr, axis=0).sum()
         wobble_variance.append((c, len(wobbles), var))
 
-    print(f"    Cluster | Size | Wobble Variance")
-    print(f"    --------|------|----------------")
+    print("    Cluster | Size | Wobble Variance")
+    print("    --------|------|----------------")
     for c, size, var in sorted(wobble_variance, key=lambda x: -x[1])[:10]:
         print(f"    {c:7d} | {size:4d} | {var:.2f}")
 
@@ -407,18 +396,12 @@ def analyze_codon_mapping_hypothesis():
     small_clusters = [v for c, s, v in wobble_variance if s == 2]
 
     if large_clusters and small_clusters:
-        print(
-            f"\n    Mean wobble variance (large clusters, n≥4): {np.mean(large_clusters):.2f}"
-        )
-        print(
-            f"    Mean wobble variance (small clusters, n=2): {np.mean(small_clusters):.2f}"
-        )
+        print(f"\n    Mean wobble variance (large clusters, n≥4): {np.mean(large_clusters):.2f}")
+        print(f"    Mean wobble variance (small clusters, n=2): {np.mean(small_clusters):.2f}")
 
         if np.mean(large_clusters) > np.mean(small_clusters):
-            print(f"\n    *** PATTERN: Larger clusters have MORE wobble variation ***")
-            print(
-                f"    This matches genetic code: 6-codon AAs have more 3rd-position flexibility!"
-            )
+            print("\n    *** PATTERN: Larger clusters have MORE wobble variation ***")
+            print("    This matches genetic code: 6-codon AAs have more 3rd-position flexibility!")
 
 
 def find_optimal_nucleotide_mapping():
@@ -467,13 +450,11 @@ def find_optimal_nucleotide_mapping():
             idx += t * (3 ** (8 - i))
         return idx
 
-    print(f"\n  Testing different nucleotide→trit encodings:")
+    print("\n  Testing different nucleotide→trit encodings:")
 
     for enc_name, encoding in encodings.items():
         # Map all 64 codons
-        codon_indices = {
-            codon: codon_to_index(codon, encoding) for codon in GENETIC_CODE.keys()
-        }
+        codon_indices = {codon: codon_to_index(codon, encoding) for codon in GENETIC_CODE.keys()}
 
         # How many codon indices are in our selected 64?
         overlap = sum(1 for idx in codon_indices.values() if idx in SELECTED_INDICES)
@@ -486,9 +467,7 @@ def find_optimal_nucleotide_mapping():
                 cluster = CLUSTER_LABELS[SELECTED_INDICES.index(idx)]
                 aa_to_clusters[aa].add(cluster)
 
-        single_cluster_aas = sum(
-            1 for clusters in aa_to_clusters.values() if len(clusters) == 1
-        )
+        single_cluster_aas = sum(1 for clusters in aa_to_clusters.values() if len(clusters) == 1)
 
         print(f"\n    {enc_name}:")
         print(f"      Overlap with selected 64: {overlap}/64")
@@ -496,12 +475,8 @@ def find_optimal_nucleotide_mapping():
 
         # Show which codons hit selected indices
         if overlap > 0:
-            hits = [
-                (c, idx) for c, idx in codon_indices.items() if idx in SELECTED_INDICES
-            ]
-            print(
-                f"      Matching codons: {[c for c, _ in hits[:5]]}{'...' if len(hits) > 5 else ''}"
-            )
+            hits = [(c, idx) for c, idx in codon_indices.items() if idx in SELECTED_INDICES]
+            print(f"      Matching codons: {[c for c, _ in hits[:5]]}{'...' if len(hits) > 5 else ''}")
 
 
 def analyze_cluster_properties():
@@ -516,9 +491,9 @@ def analyze_cluster_properties():
     for idx, tern, label in zip(SELECTED_INDICES, ternary, CLUSTER_LABELS):
         clusters[label].append((idx, tern))
 
-    print(f"\n  Cluster signatures (showing ternary patterns):")
-    print(f"  Format: [pos0 pos1 pos2 | pos3 pos4 pos5 | pos6 pos7 pos8]")
-    print(f"          (1st nuc-like)   (2nd nuc-like)   (wobble-like)")
+    print("\n  Cluster signatures (showing ternary patterns):")
+    print("  Format: [pos0 pos1 pos2 | pos3 pos4 pos5 | pos6 pos7 pos8]")
+    print("          (1st nuc-like)   (2nd nuc-like)   (wobble-like)")
     print()
 
     for c in sorted(clusters.keys()):

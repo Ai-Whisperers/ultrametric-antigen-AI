@@ -71,9 +71,7 @@ class LossRegistry(nn.Module):
         self._enabled: Dict[str, bool] = {}
         self._weight_overrides: Dict[str, float] = {}
 
-    def register(
-        self, name: str, loss: LossComponent, enabled: bool = True
-    ) -> "LossRegistry":
+    def register(self, name: str, loss: LossComponent, enabled: bool = True) -> "LossRegistry":
         """Register a loss component.
 
         Args:
@@ -186,9 +184,7 @@ class LossRegistry(nn.Module):
         """
         return [name for name, enabled in self._enabled.items() if enabled]
 
-    def compose(
-        self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs
-    ) -> LossResult:
+    def compose(self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs) -> LossResult:
         """Compose all enabled losses into single result.
 
         This is the main entry point during training. It:
@@ -242,9 +238,7 @@ class LossRegistry(nn.Module):
             weight=1.0,  # Total is already weighted
         )
 
-    def compose_with_gradients(
-        self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs
-    ) -> tuple:
+    def compose_with_gradients(self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs) -> tuple:
         """Compose losses and return individual gradients for analysis.
 
         Useful for gradient balancing and StateNet feedback.
@@ -334,22 +328,12 @@ def create_registry_from_config(config: Dict[str, Any]) -> LossRegistry:
 
     # Register each loss type if enabled
     loss_factories: Dict[str, Callable] = {
-        "reconstruction": lambda cfg: ReconstructionLossComponent(
-            weight=cfg.get("weight", 1.0)
-        ),
-        "kl": lambda cfg: KLDivergenceLossComponent(
-            weight=cfg.get("weight", 0.1), free_bits=cfg.get("free_bits", 0.0)
-        ),
+        "reconstruction": lambda cfg: ReconstructionLossComponent(weight=cfg.get("weight", 1.0)),
+        "kl": lambda cfg: KLDivergenceLossComponent(weight=cfg.get("weight", 0.1), free_bits=cfg.get("free_bits", 0.0)),
         "entropy": lambda cfg: EntropyLossComponent(weight=cfg.get("weight", 0.01)),
-        "repulsion": lambda cfg: RepulsionLossComponent(
-            weight=cfg.get("weight", 0.01), sigma=cfg.get("sigma", 0.5)
-        ),
-        "padic_ranking": lambda cfg: PAdicRankingLossComponent(
-            weight=cfg.get("weight", 0.5), config=cfg
-        ),
-        "padic_hyperbolic": lambda cfg: PAdicHyperbolicLossComponent(
-            weight=cfg.get("weight", 0.5), config=cfg
-        ),
+        "repulsion": lambda cfg: RepulsionLossComponent(weight=cfg.get("weight", 0.01), sigma=cfg.get("sigma", 0.5)),
+        "padic_ranking": lambda cfg: PAdicRankingLossComponent(weight=cfg.get("weight", 0.5), config=cfg),
+        "padic_hyperbolic": lambda cfg: PAdicHyperbolicLossComponent(weight=cfg.get("weight", 0.5), config=cfg),
     }
 
     for loss_name, factory in loss_factories.items():

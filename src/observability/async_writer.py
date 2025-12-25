@@ -75,9 +75,7 @@ class AsyncTensorBoardWriter:
         self._enabled = TENSORBOARD_AVAILABLE
 
         if not self._enabled:
-            print(
-                "Warning: TensorBoard not available. Install with: pip install tensorboard"
-            )
+            print("Warning: TensorBoard not available. Install with: pip install tensorboard")
             return
 
         # Generate experiment name if not provided
@@ -91,9 +89,7 @@ class AsyncTensorBoardWriter:
         self._log_path = log_path
 
         # Async infrastructure
-        self._queue: queue.Queue[Union[List[MetricRecord], Tuple[str, None]]] = (
-            queue.Queue(maxsize=queue_size)
-        )
+        self._queue: queue.Queue[Union[List[MetricRecord], Tuple[str, None]]] = queue.Queue(maxsize=queue_size)
         self._flush_interval = flush_interval
         self._running = True
         self._last_flush = time.time()
@@ -122,9 +118,7 @@ class AsyncTensorBoardWriter:
         try:
             self._queue.put_nowait(records)
         except queue.Full:
-            print(
-                f"Warning: TensorBoard write queue full, dropping {len(records)} records"
-            )
+            print(f"Warning: TensorBoard write queue full, dropping {len(records)} records")
 
     def write_scalar(self, name: str, value: float, step: int) -> None:
         """Write a single scalar.
@@ -223,9 +217,7 @@ class AsyncTensorBoardWriter:
         # Close TensorBoard writer
         self._writer.close()
 
-        print(
-            f"AsyncTensorBoardWriter closed: {self._records_written} records, {self._flushes} flushes"
-        )
+        print(f"AsyncTensorBoardWriter closed: {self._records_written} records, {self._flushes} flushes")
 
 
 class NullWriter:
@@ -253,9 +245,7 @@ class NullWriter:
         pass
 
 
-def create_writer(
-    log_dir: Optional[str], experiment_name: Optional[str] = None
-) -> "AsyncTensorBoardWriter | NullWriter":
+def create_writer(log_dir: Optional[str], experiment_name: Optional[str] = None) -> "AsyncTensorBoardWriter | NullWriter":
     """Factory to create appropriate writer.
 
     Args:

@@ -18,7 +18,7 @@ import json
 import sys
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, Tuple
 
 import numpy as np
 
@@ -33,9 +33,8 @@ sys.path.insert(0, str(CODON_RESEARCH_DIR / "rheumatoid_arthritis" / "scripts"))
 from hyperbolic_utils import (AA_TO_CODON, encode_codon_hyperbolic,
                               hyperbolic_centroid, load_hyperbolic_encoder,
                               poincare_distance)
-from tau_phospho_database import (KXGS_MOTIFS, TAU_2N4R_SEQUENCE, TAU_DOMAINS,
-                                  TAU_EPITOPES, TAU_PHOSPHO_SITES,
-                                  TAU_TUBULIN_CONTACTS)
+from tau_phospho_database import (TAU_2N4R_SEQUENCE, TAU_EPITOPES,
+                                  TAU_PHOSPHO_SITES, TAU_TUBULIN_CONTACTS)
 
 # ============================================================================
 # CONFIGURATION
@@ -68,9 +67,7 @@ def encode_sequence(sequence: str, encoder) -> np.ndarray:
     return np.array(embeddings) if embeddings else np.array([])
 
 
-def extract_context(
-    sequence: str, position: int, window: int = CONTEXT_WINDOW
-) -> Tuple[str, int]:
+def extract_context(sequence: str, position: int, window: int = CONTEXT_WINDOW) -> Tuple[str, int]:
     """
     Extract sequence context around a position.
 
@@ -176,14 +173,11 @@ def analyze_single_site(position: int, site_data: Dict, sequence: str, encoder) 
         "dysfunction_score": dysfunction_score,
         "is_mtbr": site_data["domain"] in ["R1", "R2", "R3", "R4", "MTBR"],
         "is_kxgs": position in [262, 293, 324, 356],  # KXGS motif serines
-        "near_tubulin_contact": position in TAU_TUBULIN_CONTACTS
-        or any(abs(position - tc) <= 3 for tc in TAU_TUBULIN_CONTACTS),
+        "near_tubulin_contact": position in TAU_TUBULIN_CONTACTS or any(abs(position - tc) <= 3 for tc in TAU_TUBULIN_CONTACTS),
     }
 
 
-def analyze_epitope_combination(
-    epitope_name: str, epitope_data: Dict, sequence: str, encoder
-) -> Dict:
+def analyze_epitope_combination(epitope_name: str, epitope_data: Dict, sequence: str, encoder) -> Dict:
     """Analyze combined phosphorylation at an epitope."""
 
     sites = epitope_data["sites"]
@@ -275,9 +269,7 @@ def main():
             site_results.append(result)
 
             # Print progress
-            zone_marker = {"tolerated": ".", "transition": "*", "severe": "!"}[
-                result["zone"]
-            ]
+            zone_marker = {"tolerated": ".", "transition": "*", "severe": "!"}[result["zone"]]
             print(
                 f"  {result['aa']}{position:3d} ({result['domain']:12s}): "
                 f"shift={result['centroid_shift']*100:5.1f}% [{result['zone']:10s}] {zone_marker}"
@@ -355,9 +347,7 @@ def main():
     print(f"\nMTBR phospho-sites: {len(mtbr_sites)}")
 
     if mtbr_sites:
-        mtbr_sorted = sorted(
-            mtbr_sites, key=lambda x: x["centroid_shift"], reverse=True
-        )
+        mtbr_sorted = sorted(mtbr_sites, key=lambda x: x["centroid_shift"], reverse=True)
         print("\nMTBR sites ranked by dysfunction potential:")
         for r in mtbr_sorted:
             kxgs_str = "[KXGS]" if r["is_kxgs"] else ""
@@ -378,9 +368,7 @@ def main():
     epitope_results = []
 
     for epitope_name, epitope_data in TAU_EPITOPES.items():
-        result = analyze_epitope_combination(
-            epitope_name, epitope_data, TAU_2N4R_SEQUENCE, encoder
-        )
+        result = analyze_epitope_combination(epitope_name, epitope_data, TAU_2N4R_SEQUENCE, encoder)
         if result:
             epitope_results.append(result)
             print(f"\n  {epitope_name}:")
@@ -416,16 +404,10 @@ def main():
 
                 if additive_expected > 0:
                     synergy_ratio = actual / additive_expected
-                    synergy_type = (
-                        "SYNERGISTIC"
-                        if synergy_ratio > 1.2
-                        else "ANTAGONISTIC" if synergy_ratio < 0.8 else "ADDITIVE"
-                    )
+                    synergy_type = "SYNERGISTIC" if synergy_ratio > 1.2 else ("ANTAGONISTIC" if synergy_ratio < 0.8 else "ADDITIVE")
 
                     print(f"\n  {epi['epitope']}:")
-                    print(
-                        f"    Individual shifts: {[f'{s*100:.1f}%' for s in individual_shifts]}"
-                    )
+                    print(f"    Individual shifts: {[f'{s*100:.1f}%' for s in individual_shifts]}")
                     print(f"    Expected (additive): {additive_expected*100:.1f}%")
                     print(f"    Actual (combined): {actual*100:.1f}%")
                     print(f"    Synergy ratio: {synergy_ratio:.2f} [{synergy_type}]")
@@ -477,9 +459,7 @@ def main():
         "zone_distribution": dict(zone_counts),
         "mean_shift": float(np.mean([r["centroid_shift"] for r in site_results])),
         "top_sites": [r["position"] for r in sorted_sites[:10]],
-        "mtbr_sites_in_transition_or_severe": len(
-            [r for r in mtbr_sites if r["zone"] in ["transition", "severe"]]
-        ),
+        "mtbr_sites_in_transition_or_severe": len([r for r in mtbr_sites if r["zone"] in ["transition", "severe"]]),
     }
 
     output_path = SCRIPT_DIR / "results" / "tau_phospho_sweep_results.json"

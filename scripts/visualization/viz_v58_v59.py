@@ -11,7 +11,6 @@ Usage:
     python scripts/visualization/viz_v58_v59.py --ckpt-v58 path/to/v58.pt --ckpt-v59 path/to/v59.pt
 """
 import argparse
-import sys
 from pathlib import Path
 
 import matplotlib
@@ -25,15 +24,9 @@ from matplotlib.gridspec import GridSpec
 
 def main():
     parser = argparse.ArgumentParser(description="Compare v5.8 vs v5.9 training")
-    parser.add_argument(
-        "--ckpt-v58", type=str, required=True, help="Path to v5.8 checkpoint"
-    )
-    parser.add_argument(
-        "--ckpt-v59", type=str, required=True, help="Path to v5.9 checkpoint"
-    )
-    parser.add_argument(
-        "--output", type=str, default="outputs/viz", help="Output directory"
-    )
+    parser.add_argument("--ckpt-v58", type=str, required=True, help="Path to v5.8 checkpoint")
+    parser.add_argument("--ckpt-v59", type=str, required=True, help="Path to v5.9 checkpoint")
+    parser.add_argument("--output", type=str, default="outputs/viz", help="Output directory")
     args = parser.parse_args()
 
     output_path = Path(args.output)
@@ -74,7 +67,13 @@ def generate_comparison(ckpt_v58, ckpt_v59, output_path):
     # Coverage A comparison
     ax = fig.add_subplot(gs[0, 0])
     ax.plot(epochs, cov_A_58, label="v5.8", color="#3498db", linewidth=2)
-    ax.plot(epochs, cov_A_59, label="v5.9 (Hyperbolic)", color="#9b59b6", linewidth=2)
+    ax.plot(
+        epochs,
+        cov_A_59,
+        label="v5.9 (Hyperbolic)",
+        color="#9b59b6",
+        linewidth=2,
+    )
     ax.axhline(99, color="green", linestyle="--", alpha=0.5, label="99% target")
     ax.set_xlabel("Epoch")
     ax.set_ylabel("Coverage (%)")
@@ -85,7 +84,13 @@ def generate_comparison(ckpt_v58, ckpt_v59, output_path):
     # Coverage B comparison
     ax = fig.add_subplot(gs[0, 1])
     ax.plot(epochs, cov_B_58, label="v5.8", color="#e74c3c", linewidth=2)
-    ax.plot(epochs, cov_B_59, label="v5.9 (Hyperbolic)", color="#e67e22", linewidth=2)
+    ax.plot(
+        epochs,
+        cov_B_59,
+        label="v5.9 (Hyperbolic)",
+        color="#e67e22",
+        linewidth=2,
+    )
     ax.axhline(99, color="green", linestyle="--", alpha=0.5, label="99% target")
     ax.set_xlabel("Epoch")
     ax.set_ylabel("Coverage (%)")
@@ -96,7 +101,13 @@ def generate_comparison(ckpt_v58, ckpt_v59, output_path):
     # Correlation comparison
     ax = fig.add_subplot(gs[0, 2])
     ax.plot(epochs, corr_58, label="v5.8 (Euclidean)", color="#2ecc71", linewidth=2)
-    ax.plot(epochs, corr_hyp_59, label="v5.9 Hyperbolic", color="#9b59b6", linewidth=2)
+    ax.plot(
+        epochs,
+        corr_hyp_59,
+        label="v5.9 Hyperbolic",
+        color="#9b59b6",
+        linewidth=2,
+    )
     ax.plot(
         epochs,
         corr_euc_59,
@@ -137,10 +148,18 @@ def generate_comparison(ckpt_v58, ckpt_v59, output_path):
     ax = fig.add_subplot(gs[1, 2])
     if len(H_A_58) > 0:
         ax.plot(
-            range(len(H_A_58)), H_A_58, label="v5.8 H_A", color="#3498db", linewidth=1.5
+            range(len(H_A_58)),
+            H_A_58,
+            label="v5.8 H_A",
+            color="#3498db",
+            linewidth=1.5,
         )
         ax.plot(
-            range(len(H_B_58)), H_B_58, label="v5.8 H_B", color="#e74c3c", linewidth=1.5
+            range(len(H_B_58)),
+            H_B_58,
+            label="v5.8 H_B",
+            color="#e74c3c",
+            linewidth=1.5,
         )
     if len(H_A_59) > 0:
         ax.plot(
@@ -214,10 +233,22 @@ def generate_comparison(ckpt_v58, ckpt_v59, output_path):
     diff = corr_hyp_59 - corr_euc_59
     ax.plot(epochs, diff, color="#9b59b6", linewidth=2)
     ax.fill_between(
-        epochs, 0, diff, where=(diff > 0), alpha=0.3, color="green", label="Hyp > Euc"
+        epochs,
+        0,
+        diff,
+        where=(diff > 0),
+        alpha=0.3,
+        color="green",
+        label="Hyp > Euc",
     )
     ax.fill_between(
-        epochs, 0, diff, where=(diff <= 0), alpha=0.3, color="red", label="Euc > Hyp"
+        epochs,
+        0,
+        diff,
+        where=(diff <= 0),
+        alpha=0.3,
+        color="red",
+        label="Euc > Hyp",
     )
     ax.axhline(0, color="gray", linestyle="-")
     ax.set_xlabel("Epoch")

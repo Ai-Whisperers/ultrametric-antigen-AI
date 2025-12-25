@@ -8,7 +8,7 @@
 Tests exp_map_zero and log_map_zero operations.
 """
 
-import pytest
+import pytest  # noqa: F401 - used for fixtures
 import torch
 
 from src.geometry.poincare import exp_map_zero, log_map_zero

@@ -66,13 +66,9 @@ def inject_diagrams(content, file_path):
             # Skip existing code block if present immediately after
             # We look ahead to check if the next lines are a mermaid block we previously generated
             next_idx = i + 1
-            if next_idx < len(lines) and lines[next_idx].strip().startswith(
-                "```mermaid"
-            ):
+            if next_idx < len(lines) and lines[next_idx].strip().startswith("```mermaid"):
                 # Skip until end of block
-                while next_idx < len(lines) and not lines[next_idx].strip().startswith(
-                    "```"
-                ):
+                while next_idx < len(lines) and not lines[next_idx].strip().startswith("```"):
                     next_idx += 1
                 if next_idx < len(lines) and lines[next_idx].strip().startswith("```"):
                     next_idx += 1  # Skip the closing ```

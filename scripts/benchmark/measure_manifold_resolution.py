@@ -69,10 +69,7 @@ class ManifoldResolutionBenchmark(BenchmarkBase):
             "median_bit_error": np.median(bit_errors),
             "max_bit_error": bit_errors.max(),
             "zero_error_count": (bit_errors == 0).sum(),
-            "error_histogram": {
-                int(k): int(v)
-                for k, v in zip(*np.unique(bit_errors, return_counts=True))
-            },
+            "error_histogram": {int(k): int(v) for k, v in zip(*np.unique(bit_errors, return_counts=True))},
         }
 
     @torch.no_grad()
@@ -112,9 +109,7 @@ class ManifoldResolutionBenchmark(BenchmarkBase):
         }
 
     @torch.no_grad()
-    def measure_sampling_coverage(
-        self, vae="A", n_samples=50000, batch_size=1000
-    ) -> Dict:
+    def measure_sampling_coverage(self, vae="A", n_samples=50000, batch_size=1000) -> Dict:
         """Measure what fraction of discrete operations can be sampled"""
         sampled_ops = set()
 
@@ -146,7 +141,10 @@ class ManifoldResolutionBenchmark(BenchmarkBase):
         mean_errors = []
 
         for idx1, idx2 in indices:
-            op1, op2 = self.all_ops[idx1 : idx1 + 1], self.all_ops[idx2 : idx2 + 1]
+            op1, op2 = (
+                self.all_ops[idx1 : idx1 + 1],
+                self.all_ops[idx2 : idx2 + 1],
+            )
 
             # Encode
             if vae == "A":
@@ -172,9 +170,7 @@ class ManifoldResolutionBenchmark(BenchmarkBase):
                 recon = torch.argmax(logits, dim=-1) - 1
 
                 # Check if valid operation
-                if tuple(recon[0].cpu().numpy().astype(int)) in set(
-                    tuple(op.cpu().numpy().astype(int)) for op in self.all_ops
-                ):
+                if tuple(recon[0].cpu().numpy().astype(int)) in set(tuple(op.cpu().numpy().astype(int)) for op in self.all_ops):
                     valid_interpolations += 1
 
                 # Measure error relative to linear interpolation in discrete space
@@ -185,8 +181,7 @@ class ManifoldResolutionBenchmark(BenchmarkBase):
             mean_errors.append(np.mean(errors))
 
         return {
-            "valid_interpolation_rate": valid_interpolations
-            / (n_pairs * 9),  # 9 intermediate points
+            "valid_interpolation_rate": valid_interpolations / (n_pairs * 9),  # 9 intermediate points
             "mean_interpolation_error": np.mean(mean_errors),
             "std_interpolation_error": np.std(mean_errors),
         }
@@ -290,9 +285,7 @@ class ManifoldResolutionBenchmark(BenchmarkBase):
             "latent_separation": self.measure_latent_separation("A"),
             "sampling_coverage": self.measure_sampling_coverage("A", n_samples=50000),
             "interpolation": self.measure_interpolation_quality("A", n_pairs=100),
-            "nearest_neighbor": self.measure_nearest_neighbor_consistency(
-                "A", n_queries=500
-            ),
+            "nearest_neighbor": self.measure_nearest_neighbor_consistency("A", n_queries=500),
             "dimensionality": self.measure_manifold_dimensionality("A", n_samples=1000),
         }
 
@@ -302,9 +295,7 @@ class ManifoldResolutionBenchmark(BenchmarkBase):
             "latent_separation": self.measure_latent_separation("B"),
             "sampling_coverage": self.measure_sampling_coverage("B", n_samples=50000),
             "interpolation": self.measure_interpolation_quality("B", n_pairs=100),
-            "nearest_neighbor": self.measure_nearest_neighbor_consistency(
-                "B", n_queries=500
-            ),
+            "nearest_neighbor": self.measure_nearest_neighbor_consistency("B", n_queries=500),
             "dimensionality": self.measure_manifold_dimensionality("B", n_samples=1000),
         }
 
@@ -321,25 +312,14 @@ class ManifoldResolutionBenchmark(BenchmarkBase):
             recon_score = vae_results["reconstruction"]["exact_match_rate"]
             coverage_score = vae_results["sampling_coverage"]["coverage_rate"]
             interp_score = vae_results["interpolation"]["valid_interpolation_rate"]
-            nn_score = vae_results["nearest_neighbor"][
-                "hamming_1_rate"
-            ]  # Close neighbors
+            nn_score = vae_results["nearest_neighbor"]["hamming_1_rate"]  # Close neighbors
 
             # Dimensionality efficiency (want effective_dim close to but less than nominal)
-            dim_ratio = (
-                vae_results["dimensionality"]["effective_dim"]
-                / vae_results["dimensionality"]["nominal_dim"]
-            )
+            dim_ratio = vae_results["dimensionality"]["effective_dim"] / vae_results["dimensionality"]["nominal_dim"]
             dim_score = 1.0 - abs(dim_ratio - 0.7)  # Target ~70% effective usage
 
             # Weighted average
-            overall = (
-                0.30 * recon_score
-                + 0.25 * coverage_score
-                + 0.20 * interp_score
-                + 0.15 * nn_score
-                + 0.10 * max(0, dim_score)
-            )
+            overall = 0.30 * recon_score + 0.25 * coverage_score + 0.20 * interp_score + 0.15 * nn_score + 0.10 * max(0, dim_score)
 
             return {
                 "reconstruction": recon_score,
@@ -353,11 +333,7 @@ class ManifoldResolutionBenchmark(BenchmarkBase):
         return {
             "vae_a": score_vae(results["vae_a"]),
             "vae_b": score_vae(results["vae_b"]),
-            "combined": (
-                score_vae(results["vae_a"])["overall"]
-                + score_vae(results["vae_b"])["overall"]
-            )
-            / 2,
+            "combined": (score_vae(results["vae_a"])["overall"] + score_vae(results["vae_b"])["overall"]) / 2,
         }
 
 
@@ -370,9 +346,7 @@ def main():
     # Initialize model
     print("Initializing model...")
     model = create_v5_6_model(config)
-    checkpoint = load_checkpoint_safe(
-        model, "sandbox-training/checkpoints/v5_6", device
-    )
+    checkpoint = load_checkpoint_safe(model, "sandbox-training/checkpoints/v5_6", device)
 
     # Run benchmark
     print("\nRunning manifold resolution benchmark...")

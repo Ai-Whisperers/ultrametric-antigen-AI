@@ -28,15 +28,27 @@ TOOLS_CONFIG = {
         "type": "type_checker",
         "json": False,
     },
-    "radon_cc": {"cmd": "radon cc . --json", "type": "complexity", "json": True},
-    "radon_mi": {"cmd": "radon mi . --json", "type": "maintainability", "json": True},
+    "radon_cc": {
+        "cmd": "radon cc . --json",
+        "type": "complexity",
+        "json": True,
+    },
+    "radon_mi": {
+        "cmd": "radon mi . --json",
+        "type": "maintainability",
+        "json": True,
+    },
     "bandit": {"cmd": "bandit -r . -f json", "type": "security", "json": True},
     "vulture": {
         "cmd": "vulture . --min-confidence 80",
         "type": "dead_code",
         "json": False,
     },
-    "pygount": {"cmd": "pygount --format=json .", "type": "metrics", "json": True},
+    "pygount": {
+        "cmd": "pygount --format=json .",
+        "type": "metrics",
+        "json": True,
+    },
 }
 
 
@@ -217,9 +229,7 @@ def generate_markdown(results):
             if results_list:
                 f.write(f"Found {len(results_list)} security issues.\n\n")
                 for issue in results_list:
-                    f.write(
-                        f"- **{issue['issue_severity']}**: {issue['issue_text']} in `{issue['filename']}:{issue['line_number']}`\n"
-                    )
+                    f.write(f"- **{issue['issue_severity']}**: {issue['issue_text']} in `{issue['filename']}:{issue['line_number']}`\n")
             else:
                 f.write("No security issues found. 🔒\n")
             f.write("\n")

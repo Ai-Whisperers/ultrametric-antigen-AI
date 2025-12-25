@@ -192,7 +192,10 @@ class ThreeBodyController(nn.Module):
             self.controller_head[-1].bias.zero_()
 
     def forward(
-        self, z_A_mean: torch.Tensor, z_B_mean: torch.Tensor, batch_stats: torch.Tensor
+        self,
+        z_A_mean: torch.Tensor,
+        z_B_mean: torch.Tensor,
+        batch_stats: torch.Tensor,
     ) -> Dict[str, torch.Tensor]:
         """Compute position-aware control signals.
 
@@ -252,9 +255,7 @@ class PositionDependentControl(nn.Module):
         super().__init__()
         self.sensitivity = sensitivity
 
-    def forward(
-        self, base_control: Dict[str, torch.Tensor], z_hyp: torch.Tensor
-    ) -> Dict[str, torch.Tensor]:
+    def forward(self, base_control: Dict[str, torch.Tensor], z_hyp: torch.Tensor) -> Dict[str, torch.Tensor]:
         """Modulate control based on position.
 
         Args:
@@ -278,14 +279,10 @@ class PositionDependentControl(nn.Module):
         modulated["rho"] = base_control["rho"] * (0.5 + 0.5 * position_factor)
 
         # Geodesic weight: higher at boundary (more structure enforcement)
-        modulated["weight_geodesic"] = base_control["weight_geodesic"] * (
-            0.5 + 0.5 * position_factor
-        )
+        modulated["weight_geodesic"] = base_control["weight_geodesic"] * (0.5 + 0.5 * position_factor)
 
         # Radial weight: higher near origin (maintain hierarchy)
-        modulated["weight_radial"] = base_control["weight_radial"] * (
-            1.5 - 0.5 * position_factor
-        )
+        modulated["weight_radial"] = base_control["weight_radial"] * (1.5 - 0.5 * position_factor)
 
         # Beta: higher at boundary (more regularization to control chaos)
         modulated["beta_A"] = base_control["beta_A"] * (0.8 + 0.4 * position_factor)

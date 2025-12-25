@@ -33,9 +33,7 @@ from ..geometry import (poincare_distance, poincare_distance_matrix,
 # Use TERNARY.distance() for efficient on-demand computation.
 
 
-def compute_3adic_distance_batch(
-    idx_i: torch.Tensor, idx_j: torch.Tensor, device: torch.device
-) -> torch.Tensor:
+def compute_3adic_distance_batch(idx_i: torch.Tensor, idx_j: torch.Tensor, device: torch.device) -> torch.Tensor:
     """Compute 3-adic distances for batches of index pairs.
 
     Delegates to TERNARY.distance() for O(1) lookups.
@@ -51,9 +49,7 @@ def compute_3adic_distance_batch(
     return TERNARY.distance(idx_i, idx_j)
 
 
-def compute_3adic_valuation_batch(
-    idx_i: torch.Tensor, idx_j: torch.Tensor
-) -> torch.Tensor:
+def compute_3adic_valuation_batch(idx_i: torch.Tensor, idx_j: torch.Tensor) -> torch.Tensor:
     """Compute 3-adic valuations for batches of index pairs.
 
     Delegates to TERNARY.valuation() for O(1) lookups.
@@ -119,9 +115,7 @@ class PAdicMetricLoss(nn.Module):
         d_latent = torch.norm(z[i_idx] - z[j_idx], dim=1)
 
         # Compute 3-adic distances
-        d_3adic = compute_3adic_distance_batch(
-            batch_indices[i_idx], batch_indices[j_idx], z.device
-        )
+        d_3adic = compute_3adic_distance_batch(batch_indices[i_idx], batch_indices[j_idx], z.device)
 
         # MSE loss: (d_latent - C * d_3adic)^2
         loss = F.mse_loss(d_latent, self.scale * d_3adic)
@@ -183,12 +177,8 @@ class PAdicRankingLoss(nn.Module):
         neg_idx[same_an] = (neg_idx[same_an] + 2) % batch_size
 
         # Compute 3-adic distances
-        d3_anchor_pos = compute_3adic_distance_batch(
-            batch_indices[anchor_idx], batch_indices[pos_idx], z.device
-        )
-        d3_anchor_neg = compute_3adic_distance_batch(
-            batch_indices[anchor_idx], batch_indices[neg_idx], z.device
-        )
+        d3_anchor_pos = compute_3adic_distance_batch(batch_indices[anchor_idx], batch_indices[pos_idx], z.device)
+        d3_anchor_neg = compute_3adic_distance_batch(batch_indices[anchor_idx], batch_indices[neg_idx], z.device)
 
         # Compute latent distances
         d_anchor_pos = torch.norm(z[anchor_idx] - z[pos_idx], dim=1)
@@ -245,9 +235,7 @@ class PAdicRankingLossV2(nn.Module):
         self.hard_negative_ratio = hard_negative_ratio
         self.semi_hard = semi_hard
 
-    def forward(
-        self, z: torch.Tensor, batch_indices: torch.Tensor
-    ) -> Tuple[torch.Tensor, dict]:
+    def forward(self, z: torch.Tensor, batch_indices: torch.Tensor) -> Tuple[torch.Tensor, dict]:
         """Compute enhanced p-Adic ranking loss.
 
         Args:
@@ -366,9 +354,7 @@ class PAdicRankingLossV2(nn.Module):
             anchor_idx_val = batch_indices[anchor]
 
             # Compute 3-adic valuations from anchor to all others
-            v_to_all = compute_3adic_valuation_batch(
-                anchor_idx_val.expand(batch_size), batch_indices
-            )
+            v_to_all = compute_3adic_valuation_batch(anchor_idx_val.expand(batch_size), batch_indices)
 
             # Find candidate positives (high valuation = close in 3-adic)
             # and negatives (low valuation = far in 3-adic)
@@ -405,9 +391,7 @@ class PAdicRankingLossV2(nn.Module):
                     # Check for violation or semi-hard condition
                     if self.semi_hard:
                         # Semi-hard: d_ap < d_an < d_ap + margin OR d_an < d_ap
-                        is_hard = d_an < d_ap + self.base_margin + self.margin_scale * (
-                            v_pos_val - v_neg_val
-                        )
+                        is_hard = d_an < d_ap + self.base_margin + self.margin_scale * (v_pos_val - v_neg_val)
                     else:
                         # Pure hard: d_an <= d_ap (actual violation)
                         is_hard = d_an <= d_ap
@@ -469,12 +453,8 @@ class PAdicRankingLossV2(nn.Module):
             )
 
         # Compute valuations
-        v_pos = compute_3adic_valuation_batch(
-            batch_indices[anchor_idx], batch_indices[pos_idx]
-        )
-        v_neg = compute_3adic_valuation_batch(
-            batch_indices[anchor_idx], batch_indices[neg_idx]
-        )
+        v_pos = compute_3adic_valuation_batch(batch_indices[anchor_idx], batch_indices[pos_idx])
+        v_neg = compute_3adic_valuation_batch(batch_indices[anchor_idx], batch_indices[neg_idx])
 
         # Filter to valid triplets (pos is 3-adically closer)
         valid_order = v_pos > v_neg
@@ -561,9 +541,7 @@ class PAdicRankingLossHyperbolic(nn.Module):
         """
         return poincare_distance_matrix(z, c=self.curvature)
 
-    def _compute_radial_loss(
-        self, z_hyp: torch.Tensor, batch_indices: torch.Tensor
-    ) -> torch.Tensor:
+    def _compute_radial_loss(self, z_hyp: torch.Tensor, batch_indices: torch.Tensor) -> torch.Tensor:
         """Compute radial hierarchy loss.
 
         Points with high 3-adic valuation (divisible by large powers of 3)
@@ -597,9 +575,7 @@ class PAdicRankingLossHyperbolic(nn.Module):
         """
         return TERNARY.valuation(indices).float()
 
-    def forward(
-        self, z: torch.Tensor, batch_indices: torch.Tensor
-    ) -> Tuple[torch.Tensor, dict]:
+    def forward(self, z: torch.Tensor, batch_indices: torch.Tensor) -> Tuple[torch.Tensor, dict]:
         """Compute hyperbolic p-Adic ranking loss.
 
         Args:
@@ -635,17 +611,13 @@ class PAdicRankingLossHyperbolic(nn.Module):
 
         # Hard negative mining using Poincaré distances
         if n_hard > 0:
-            hard_triplets = self._mine_hard_negatives_hyperbolic(
-                z_hyp, batch_indices, n_hard
-            )
+            hard_triplets = self._mine_hard_negatives_hyperbolic(z_hyp, batch_indices, n_hard)
             if hard_triplets[0].size(0) > 0:
                 all_triplets.append(hard_triplets)
 
         # Random triplets for diversity
         if n_random > 0:
-            random_triplets = self._sample_random_triplets(
-                z_hyp, batch_indices, n_random
-            )
+            random_triplets = self._sample_random_triplets(z_hyp, batch_indices, n_random)
             if random_triplets[0].size(0) > 0:
                 all_triplets.append(random_triplets)
 
@@ -751,9 +723,7 @@ class PAdicRankingLossHyperbolic(nn.Module):
                     if v_pos_val <= v_neg_val:
                         continue
 
-                    margin = self.base_margin + self.margin_scale * (
-                        v_pos_val - v_neg_val
-                    )
+                    margin = self.base_margin + self.margin_scale * (v_pos_val - v_neg_val)
                     is_hard = d_an < d_ap + margin
 
                     if is_hard:
@@ -810,12 +780,8 @@ class PAdicRankingLossHyperbolic(nn.Module):
                 torch.tensor([], device=device),
             )
 
-        v_pos = compute_3adic_valuation_batch(
-            batch_indices[anchor_idx], batch_indices[pos_idx]
-        )
-        v_neg = compute_3adic_valuation_batch(
-            batch_indices[anchor_idx], batch_indices[neg_idx]
-        )
+        v_pos = compute_3adic_valuation_batch(batch_indices[anchor_idx], batch_indices[pos_idx])
+        v_neg = compute_3adic_valuation_batch(batch_indices[anchor_idx], batch_indices[neg_idx])
 
         valid_order = v_pos > v_neg
         anchor_idx = anchor_idx[valid_order]

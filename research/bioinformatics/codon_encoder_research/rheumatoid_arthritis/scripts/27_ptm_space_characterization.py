@@ -24,7 +24,7 @@ import sys
 from collections import defaultdict
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from itertools import combinations, product
+from itertools import combinations
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
@@ -152,9 +152,7 @@ class SpacePoint:
 
 def get_output_dir() -> Path:
     """Get output directory for results."""
-    output_dir = (
-        SCRIPT_DIR.parent / "results" / "hyperbolic" / "ptm_space_characterization"
-    )
+    output_dir = SCRIPT_DIR.parent / "results" / "hyperbolic" / "ptm_space_characterization"
     output_dir.mkdir(parents=True, exist_ok=True)
     return output_dir
 
@@ -199,11 +197,7 @@ def compute_effect(
             codon = AA_TO_CODON.get(aa)
             if codon is None or codon == "NNN":
                 continue
-            onehot = (
-                torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-                .unsqueeze(0)
-                .to(device)
-            )
+            onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
             with torch.no_grad():
                 probs, emb = encoder.get_cluster_probs(onehot)
                 embeddings.append(emb.cpu().numpy().squeeze())
@@ -219,9 +213,7 @@ def compute_effect(
     orig_centroid = np.mean(orig_emb, axis=0)
     mod_centroid = np.mean(mod_emb, axis=0)
 
-    centroid_shift = poincare_distance(
-        torch.tensor(orig_centroid).float(), torch.tensor(mod_centroid).float()
-    ).item()
+    centroid_shift = poincare_distance(torch.tensor(orig_centroid).float(), torch.tensor(mod_centroid).float()).item()
 
     orig_mean_probs = np.mean(orig_probs, axis=0)
     mod_mean_probs = np.mean(mod_probs, axis=0)
@@ -248,9 +240,7 @@ def compute_effect(
     )
 
 
-def find_modifiable_sites(
-    sequence: str, residue_types: Set[str]
-) -> Dict[str, List[int]]:
+def find_modifiable_sites(sequence: str, residue_types: Set[str]) -> Dict[str, List[int]]:
     """Find all positions of specified residue types in sequence."""
     sites = defaultdict(list)
     for i, aa in enumerate(sequence):
@@ -260,7 +250,10 @@ def find_modifiable_sites(
 
 
 def generate_combinations_up_to_order(
-    sites: Dict[str, List[int]], max_order: int, max_span: int, protein_name: str
+    sites: Dict[str, List[int]],
+    max_order: int,
+    max_span: int,
+    protein_name: str,
 ) -> List[PTMCombination]:
     """Generate all PTM combinations up to specified order."""
     combinations_list = []
@@ -311,9 +304,7 @@ def analyze_space_point(
     """Analyze a single point in the PTM space."""
 
     # Create modification list
-    mods = [
-        (p, r, t) for p, r, t in zip(combo.positions, combo.residues, combo.targets)
-    ]
+    mods = [(p, r, t) for p, r, t in zip(combo.positions, combo.residues, combo.targets)]
 
     effect = compute_effect(sequence, mods, encoder, device)
     if effect is None:
@@ -367,7 +358,7 @@ def characterize_order_transition(points: List[SpacePoint]) -> Dict:
             "shift_max": float(np.max(shifts)),
             "shift_median": float(np.median(shifts)),
             "goldilocks_count": sum(goldilocks),
-            "goldilocks_rate": sum(goldilocks) / len(goldilocks) if goldilocks else 0,
+            "goldilocks_rate": (sum(goldilocks) / len(goldilocks) if goldilocks else 0),
             "synergy_mean": float(np.mean(synergies)),
             "synergy_std": float(np.std(synergies)),
         }
@@ -380,11 +371,7 @@ def characterize_order_transition(points: List[SpacePoint]) -> Dict:
             transitions[f"{order}_to_{next_order}"] = {
                 "shift_change": float(np.mean(next_shifts) - np.mean(shifts)),
                 "goldilocks_change": (
-                    (
-                        sum(p.effect.in_goldilocks for p in by_order[next_order])
-                        / len(by_order[next_order])
-                        - sum(goldilocks) / len(goldilocks)
-                    )
+                    (sum(p.effect.in_goldilocks for p in by_order[next_order]) / len(by_order[next_order]) - sum(goldilocks) / len(goldilocks))
                     if goldilocks and by_order[next_order]
                     else 0
                 ),
@@ -412,8 +399,7 @@ def characterize_span_effect(points: List[SpacePoint]) -> Dict:
             "shift_mean": float(np.mean(shifts)),
             "shift_std": float(np.std(shifts)),
             "synergy_mean": float(np.mean(synergies)),
-            "goldilocks_rate": sum(p.effect.in_goldilocks for p in span_points)
-            / len(span_points),
+            "goldilocks_rate": sum(p.effect.in_goldilocks for p in span_points) / len(span_points),
         }
 
     # Fit linear relationship
@@ -451,8 +437,7 @@ def characterize_residue_pair_effects(points: List[SpacePoint]) -> Dict:
             "shift_mean": float(np.mean(shifts)),
             "shift_std": float(np.std(shifts)),
             "synergy_mean": float(np.mean(synergies)),
-            "goldilocks_rate": sum(p.effect.in_goldilocks for p in pair_points)
-            / len(pair_points),
+            "goldilocks_rate": sum(p.effect.in_goldilocks for p in pair_points) / len(pair_points),
         }
 
     return results
@@ -507,7 +492,7 @@ def fit_non_monotonic_model(points: List[SpacePoint]) -> Dict:
                     "stds": [float(s) for s in stds],
                 },
             }
-        except Exception as e:
+        except Exception:
             pass
 
     return {
@@ -554,15 +539,11 @@ def identify_goldilocks_boundary(points: List[SpacePoint]) -> Dict:
             float(min(gold_synergies)),
             float(max(gold_synergies)),
         ],
-        "non_goldilocks_synergy_mean": (
-            float(np.mean(nongold_synergies)) if nongold_synergies else 0
-        ),
+        "non_goldilocks_synergy_mean": (float(np.mean(nongold_synergies)) if nongold_synergies else 0),
     }
 
     # By span
-    gold_spans = [
-        p.combination.max_span for p in goldilocks_points if p.combination.order > 1
-    ]
+    gold_spans = [p.combination.max_span for p in goldilocks_points if p.combination.order > 1]
     if gold_spans:
         results["span_boundary"] = {
             "goldilocks_span_mean": float(np.mean(gold_spans)),
@@ -580,9 +561,7 @@ def identify_goldilocks_boundary(points: List[SpacePoint]) -> Dict:
     return results
 
 
-def generate_visualizations(
-    points: List[SpacePoint], transitions: Dict, output_dir: Path
-):
+def generate_visualizations(points: List[SpacePoint], transitions: Dict, output_dir: Path):
     """Generate comprehensive visualizations."""
 
     fig, axes = plt.subplots(2, 3, figsize=(18, 12))
@@ -618,11 +597,14 @@ def generate_visualizations(
 
     # 2. Goldilocks rate by order
     ax = axes[0, 1]
-    gold_rates = [
-        transitions.get(o, {}).get("goldilocks_rate", 0) * 100 for o in orders
-    ]
+    gold_rates = [transitions.get(o, {}).get("goldilocks_rate", 0) * 100 for o in orders]
     bars = ax.bar(
-        orders, gold_rates, color="gold", alpha=0.7, edgecolor="orange", linewidth=2
+        orders,
+        gold_rates,
+        color="gold",
+        alpha=0.7,
+        edgecolor="orange",
+        linewidth=2,
     )
 
     for bar, rate in zip(bars, gold_rates):
@@ -695,7 +677,13 @@ def generate_visualizations(
             z = np.polyfit(spans, synergies, 1)
             p = np.poly1d(z)
             x_line = np.linspace(min(spans), max(spans), 100)
-            ax.plot(x_line, p(x_line), "r-", lw=2, label=f"Trend (slope={z[0]:.3f})")
+            ax.plot(
+                x_line,
+                p(x_line),
+                "r-",
+                lw=2,
+                label=f"Trend (slope={z[0]:.3f})",
+            )
 
         ax.axhline(1.0, color="gray", linestyle="--", lw=1)
         ax.set_xlabel("Pair Span (residues)", fontsize=12)
@@ -762,10 +750,12 @@ def generate_visualizations(
     )
     plt.tight_layout()
     plt.savefig(
-        output_dir / "ptm_space_characterization.png", dpi=300, bbox_inches="tight"
+        output_dir / "ptm_space_characterization.png",
+        dpi=300,
+        bbox_inches="tight",
     )
     plt.close()
-    print(f"  Saved: ptm_space_characterization.png")
+    print("  Saved: ptm_space_characterization.png")
 
 
 def main():
@@ -806,9 +796,7 @@ def main():
         print(f"    Sites found: {total_sites}")
 
         # Generate combinations up to order 4
-        combos = generate_combinations_up_to_order(
-            sites, max_order=4, max_span=15, protein_name=name
-        )
+        combos = generate_combinations_up_to_order(sites, max_order=4, max_span=15, protein_name=name)
         print(f"    Combinations generated: {len(combos)}")
 
         # Limit combinations per protein
@@ -847,56 +835,34 @@ def main():
     span_effects = characterize_span_effect(all_points)
     if "linear_fit" in span_effects:
         fit = span_effects["linear_fit"]
-        print(
-            f"   Linear fit: synergy = {fit['slope']:.4f} × span + {fit['intercept']:.3f}"
-        )
+        print(f"   Linear fit: synergy = {fit['slope']:.4f} × span + {fit['intercept']:.3f}")
         print(f"   R² = {fit['r_squared']:.3f}, p = {fit['p_value']:.4f}")
 
     # Residue pair effects
     print("\n3. Residue Pair Effects:")
     pair_effects = characterize_residue_pair_effects(all_points)
-    for pair, effects in sorted(
-        pair_effects.items(), key=lambda x: -x[1]["goldilocks_rate"]
-    ):
-        print(
-            f"   {pair}: n={effects['count']}, shift={effects['shift_mean']*100:.1f}%, "
-            f"Goldilocks={effects['goldilocks_rate']*100:.1f}%"
-        )
+    for pair, effects in sorted(pair_effects.items(), key=lambda x: -x[1]["goldilocks_rate"]):
+        print(f"   {pair}: n={effects['count']}, shift={effects['shift_mean']*100:.1f}%, " f"Goldilocks={effects['goldilocks_rate']*100:.1f}%")
 
     # Non-monotonic model
     print("\n4. Non-Monotonic Model:")
     model = fit_non_monotonic_model(all_points)
     if model["model"] == "quadratic":
-        print(
-            f"   Model: y = {model['coefficients']['a']:.4f}x² + {model['coefficients']['b']:.4f}x + {model['coefficients']['c']:.4f}"
-        )
-        print(
-            f"   Extremum at order {model['extremum_order']:.2f} with shift {model['extremum_shift']*100:.1f}%"
-        )
+        print(f"   Model: y = {model['coefficients']['a']:.4f}x² + {model['coefficients']['b']:.4f}x + {model['coefficients']['c']:.4f}")
+        print(f"   Extremum at order {model['extremum_order']:.2f} with shift {model['extremum_shift']*100:.1f}%")
         print(f"   R² = {model['r_squared']:.3f}")
-        print(
-            f"   Shape: {'Concave (peak in middle)' if model['is_concave'] else 'Convex (trough in middle)'}"
-        )
+        print(f"   Shape: {'Concave (peak in middle)' if model['is_concave'] else 'Convex (trough in middle)'}")
 
     # Goldilocks boundary
     print("\n5. Goldilocks Boundary Conditions:")
     boundary = identify_goldilocks_boundary(all_points)
     if boundary["boundary_found"]:
-        print(
-            f"   Total Goldilocks cases: {boundary['goldilocks_count']}/{boundary['total_count']} "
-            f"({boundary['goldilocks_rate']*100:.1f}%)"
-        )
+        print(f"   Total Goldilocks cases: {boundary['goldilocks_count']}/{boundary['total_count']} " f"({boundary['goldilocks_rate']*100:.1f}%)")
         print(f"   Orders with Goldilocks: {boundary['by_order']['goldilocks_orders']}")
-        print(
-            f"   Synergy range: {boundary['synergy_boundary']['goldilocks_synergy_range']}"
-        )
+        print(f"   Synergy range: {boundary['synergy_boundary']['goldilocks_synergy_range']}")
         if "span_boundary" in boundary:
-            print(
-                f"   Span range: {boundary['span_boundary']['goldilocks_span_range']}"
-            )
-        print(
-            f"   Top residue combos: {dict(list(boundary['residue_combinations'].items())[:5])}"
-        )
+            print(f"   Span range: {boundary['span_boundary']['goldilocks_span_range']}")
+        print(f"   Top residue combos: {dict(list(boundary['residue_combinations'].items())[:5])}")
 
     # Generate visualizations
     print("\n" + "=" * 80)
@@ -941,9 +907,7 @@ def main():
         "goldilocks_boundary": convert_for_json(boundary),
         "key_invariants": {
             "pair_synergy_ratio": float(transitions.get(2, {}).get("synergy_mean", 0)),
-            "triple_synergy_ratio": float(
-                transitions.get(3, {}).get("synergy_mean", 0)
-            ),
+            "triple_synergy_ratio": float(transitions.get(3, {}).get("synergy_mean", 0)),
             "optimal_order": 2,  # Pairs have highest Goldilocks rate
             "span_slope": float(span_effects.get("linear_fit", {}).get("slope", 0)),
         },

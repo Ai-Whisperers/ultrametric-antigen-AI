@@ -13,9 +13,8 @@ Expands the handshake analysis with:
 import json
 import sys
 from collections import defaultdict
-from itertools import product
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 import numpy as np
 
@@ -190,9 +189,7 @@ def extract_context(sequence: str, position: int, window: int = 7) -> str:
     return sequence[start:end]
 
 
-def encode_all_interfaces(
-    sequence: str, contacts: Dict, seq_offset: int, encoder, window: int = 7
-) -> Dict[int, Dict]:
+def encode_all_interfaces(sequence: str, contacts: Dict, seq_offset: int, encoder, window: int = 7) -> Dict[int, Dict]:
     """Encode all contact residues with extended metadata."""
     results = {}
     seq = clean_sequence(sequence)
@@ -268,7 +265,10 @@ def compute_all_distances(viral: Dict, host: Dict) -> List[Dict]:
 
 
 def deep_asymmetric_scan(
-    viral_data: Dict, host_data: Dict, encoder, modifications: Dict = MODIFICATIONS
+    viral_data: Dict,
+    host_data: Dict,
+    encoder,
+    modifications: Dict = MODIFICATIONS,
 ) -> List[Dict]:
     """
     Comprehensive asymmetric perturbation scan across all positions
@@ -301,9 +301,7 @@ def deep_asymmetric_scan(
                 v_new_emb = encode_sequence("".join(v_new), encoder)
 
                 if len(v_new_emb) > 0:
-                    v_shift = float(
-                        poincare_distance(v_orig, hyperbolic_centroid(v_new_emb))
-                    )
+                    v_shift = float(poincare_distance(v_orig, hyperbolic_centroid(v_new_emb)))
 
                     # Check corresponding host position if exists
                     h_shift = 0.0
@@ -314,11 +312,7 @@ def deep_asymmetric_scan(
                             h_new[v_pos] = mod_map[h_aa]
                             h_new_emb = encode_sequence("".join(h_new), encoder)
                             if len(h_new_emb) > 0:
-                                h_shift = float(
-                                    poincare_distance(
-                                        h_orig, hyperbolic_centroid(h_new_emb)
-                                    )
-                                )
+                                h_shift = float(poincare_distance(h_orig, hyperbolic_centroid(h_new_emb)))
 
                     asymmetry = v_shift - h_shift
 
@@ -336,10 +330,8 @@ def deep_asymmetric_scan(
 
                     results.append(
                         {
-                            "viral_interface_pos": viral_data["aa"]
-                            + str(viral_data.get("pos", "")),
-                            "host_interface_pos": host_data["aa"]
-                            + str(host_data.get("pos", "")),
+                            "viral_interface_pos": viral_data["aa"] + str(viral_data.get("pos", "")),
+                            "host_interface_pos": host_data["aa"] + str(host_data.get("pos", "")),
                             "context_position": v_pos,
                             "viral_aa": v_aa,
                             "modification": mod_name,
@@ -369,9 +361,7 @@ def find_hotspots(asymmetric_results: List[Dict]) -> Dict:
         by_viral_aa[r["viral_aa"]].append(r)
 
     # Find top performers
-    excellent = [
-        r for r in asymmetric_results if r["therapeutic_potential"] == "EXCELLENT"
-    ]
+    excellent = [r for r in asymmetric_results if r["therapeutic_potential"] == "EXCELLENT"]
     high = [r for r in asymmetric_results if r["therapeutic_potential"] == "HIGH"]
 
     return {
@@ -380,10 +370,7 @@ def find_hotspots(asymmetric_results: List[Dict]) -> Dict:
         "excellent_count": len(excellent),
         "high_count": len(high),
         "top_modifications": sorted(
-            [
-                (k, np.mean([r["asymmetry"] for r in v]))
-                for k, v in by_modification.items()
-            ],
+            [(k, np.mean([r["asymmetry"] for r in v])) for k, v in by_modification.items()],
             key=lambda x: x[1],
             reverse=True,
         )[:10],
@@ -422,16 +409,10 @@ def main():
     ace2_seq = clean_sequence(ACE2_ECTODOMAIN)
 
     print(f"RBD: {len(rbd_seq)} residues, {len(RBD_CONTACTS_EXTENDED)} contact sites")
-    print(
-        f"ACE2: {len(ace2_seq)} residues, {len(ACE2_CONTACTS_EXTENDED)} contact sites"
-    )
+    print(f"ACE2: {len(ace2_seq)} residues, {len(ACE2_CONTACTS_EXTENDED)} contact sites")
 
-    rbd_interfaces = encode_all_interfaces(
-        SPIKE_RBD, RBD_CONTACTS_EXTENDED, 319, encoder
-    )
-    ace2_interfaces = encode_all_interfaces(
-        ACE2_ECTODOMAIN, ACE2_CONTACTS_EXTENDED, 19, encoder
-    )
+    rbd_interfaces = encode_all_interfaces(SPIKE_RBD, RBD_CONTACTS_EXTENDED, 319, encoder)
+    ace2_interfaces = encode_all_interfaces(ACE2_ECTODOMAIN, ACE2_CONTACTS_EXTENDED, 19, encoder)
 
     print(f"\nEncoded {len(rbd_interfaces)} RBD interfaces")
     print(f"Encoded {len(ace2_interfaces)} ACE2 interfaces")
@@ -455,10 +436,7 @@ def main():
     # Top convergences
     print("\n--- Top 15 Convergent Handshakes ---")
     for i, d in enumerate(all_distances[:15]):
-        print(
-            f"  {i+1:2d}. RBD-{d['viral_pos']} ({d['viral_aa']}) ↔ "
-            f"ACE2-{d['host_pos']} ({d['host_aa']}): dist={d['distance']:.4f}"
-        )
+        print(f"  {i+1:2d}. RBD-{d['viral_pos']} ({d['viral_aa']}) ↔ " f"ACE2-{d['host_pos']} ({d['host_aa']}): dist={d['distance']:.4f}")
         print(f"      V: {d['viral_context']}")
         print(f"      H: {d['host_context']}")
 
@@ -470,9 +448,7 @@ def main():
     print("\n" + "-" * 70)
     print("3. Deep Asymmetric Perturbation Scan")
     print("-" * 70)
-    print(
-        f"Scanning top 20 convergent pairs across {len(MODIFICATIONS)} modifications..."
-    )
+    print(f"Scanning top 20 convergent pairs across {len(MODIFICATIONS)} modifications...")
 
     all_asymmetric = []
     for d in all_distances[:20]:
@@ -509,13 +485,8 @@ def main():
     print("\n--- Top 20 Asymmetric Targets ---")
     for i, a in enumerate(sorted_asym[:20]):
         print(f"  {i+1:2d}. RBD-{a['viral_interface']} → {a['modification']}")
-        print(
-            f"      {a['viral_aa']}→{a['new_aa']} at context pos {a['context_position']}"
-        )
-        print(
-            f"      Viral: {a['viral_shift']:.3f} | Host: {a['host_shift']:.3f} | "
-            f"Asym: {a['asymmetry']:.3f} [{a['therapeutic_potential']}]"
-        )
+        print(f"      {a['viral_aa']}→{a['new_aa']} at context pos {a['context_position']}")
+        print(f"      Viral: {a['viral_shift']:.3f} | Host: {a['host_shift']:.3f} | " f"Asym: {a['asymmetry']:.3f} [{a['therapeutic_potential']}]")
 
     results["asymmetric_targets"] = sorted_asym[:100]
 
@@ -534,9 +505,7 @@ def main():
         print(f"  {mod}: mean_asymmetry={mean_asym:.4f} (n={count})")
 
     print("\n--- Modifications by Target Amino Acid ---")
-    for aa, count in sorted(
-        hotspots["by_viral_aa"].items(), key=lambda x: x[1], reverse=True
-    )[:10]:
+    for aa, count in sorted(hotspots["by_viral_aa"].items(), key=lambda x: x[1], reverse=True)[:10]:
         print(f"  {aa}: {count} modifications tested")
 
     results["hotspots"] = {
@@ -559,18 +528,12 @@ def main():
         actionable[r["modification"]].append(r)
 
     print("\n--- Grouped by Modification Type ---")
-    for mod, targets in sorted(
-        actionable.items(), key=lambda x: len(x[1]), reverse=True
-    ):
+    for mod, targets in sorted(actionable.items(), key=lambda x: len(x[1]), reverse=True):
         if len(targets) >= 2:
             best = max(targets, key=lambda x: x["asymmetry"])
             print(f"\n  {mod} ({len(targets)} targets)")
-            print(
-                f"    Best: RBD-{best['viral_interface']} context pos {best['context_position']}"
-            )
-            print(
-                f"    {best['viral_aa']}→{best['new_aa']}: asymmetry={best['asymmetry']:.3f}"
-            )
+            print(f"    Best: RBD-{best['viral_interface']} context pos {best['context_position']}")
+            print(f"    {best['viral_aa']}→{best['new_aa']}: asymmetry={best['asymmetry']:.3f}")
             print(f"    Context: {best['viral_context']}")
 
     # ========================================================================
@@ -605,26 +568,17 @@ def main():
     print("\n1. PHOSPHORYLATION MIMICS (S→D, T→D, Y→D)")
     phospho = [r for r in sorted_asym if "to_D" in r["modification"]][:5]
     for p in phospho:
-        print(
-            f"   - {p['viral_aa']}→D at RBD-{p['viral_interface']}: "
-            f"viral shift {p['viral_shift']:.1%}, host shift {p['host_shift']:.1%}"
-        )
+        print(f"   - {p['viral_aa']}→D at RBD-{p['viral_interface']}: " f"viral shift {p['viral_shift']:.1%}, host shift {p['host_shift']:.1%}")
 
     print("\n2. CITRULLINATION (R→Q)")
     cit = [r for r in sorted_asym if r["modification"] == "R_to_Q"][:5]
     for c in cit:
-        print(
-            f"   - R→Q at RBD-{c['viral_interface']}: "
-            f"viral shift {c['viral_shift']:.1%}, host shift {c['host_shift']:.1%}"
-        )
+        print(f"   - R→Q at RBD-{c['viral_interface']}: " f"viral shift {c['viral_shift']:.1%}, host shift {c['host_shift']:.1%}")
 
     print("\n3. ACETYLATION (K→Q)")
     acet = [r for r in sorted_asym if r["modification"] == "K_to_Q"][:5]
     for a in acet:
-        print(
-            f"   - K→Q at RBD-{a['viral_interface']}: "
-            f"viral shift {a['viral_shift']:.1%}, host shift {a['host_shift']:.1%}"
-        )
+        print(f"   - K→Q at RBD-{a['viral_interface']}: " f"viral shift {a['viral_shift']:.1%}, host shift {a['host_shift']:.1%}")
 
 
 if __name__ == "__main__":

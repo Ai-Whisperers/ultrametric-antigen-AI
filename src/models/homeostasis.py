@@ -23,7 +23,7 @@ enabling exploration of higher Q values while maintaining coverage floors.
 """
 
 from collections import deque
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 
 def compute_Q(dist_corr: float, hierarchy: float) -> float:
@@ -98,9 +98,7 @@ class HomeostasisController:
         self.hierarchy_A_history: deque[float] = deque(maxlen=window_size)
         self.hierarchy_B_history: deque[float] = deque(maxlen=window_size)
         self.controller_grad_history: deque[float] = deque(maxlen=window_size)
-        self.Q_history: deque[float] = deque(
-            maxlen=window_size * 2
-        )  # Longer window for Q
+        self.Q_history: deque[float] = deque(maxlen=window_size * 2)  # Longer window for Q
 
         # Freeze states
         self.encoder_a_frozen = True  # Starts frozen
@@ -187,15 +185,11 @@ class HomeostasisController:
                 was_frozen = self.encoder_a_frozen
                 self.encoder_a_frozen = encoder_a_decision
                 self.encoder_a_last_change = epoch
-                events.append(
-                    f"encoder_A {'frozen' if encoder_a_decision else 'unfrozen'}"
-                )
+                events.append(f"encoder_A {'frozen' if encoder_a_decision else 'unfrozen'}")
 
                 # Q-gated annealing: check cycle completion
                 if self.enable_annealing:
-                    anneal_event = self._handle_cycle(
-                        "encoder_a", was_frozen, encoder_a_decision, current_Q
-                    )
+                    anneal_event = self._handle_cycle("encoder_a", was_frozen, encoder_a_decision, current_Q)
                     if anneal_event:
                         events.append(anneal_event)
 
@@ -206,15 +200,11 @@ class HomeostasisController:
                 was_frozen = self.encoder_b_frozen
                 self.encoder_b_frozen = encoder_b_decision
                 self.encoder_b_last_change = epoch
-                events.append(
-                    f"encoder_B {'frozen' if encoder_b_decision else 'unfrozen'}"
-                )
+                events.append(f"encoder_B {'frozen' if encoder_b_decision else 'unfrozen'}")
 
                 # Q-gated annealing
                 if self.enable_annealing:
-                    anneal_event = self._handle_cycle(
-                        "encoder_b", was_frozen, encoder_b_decision, current_Q
-                    )
+                    anneal_event = self._handle_cycle("encoder_b", was_frozen, encoder_b_decision, current_Q)
                     if anneal_event:
                         events.append(anneal_event)
 
@@ -226,14 +216,15 @@ class HomeostasisController:
                     was_frozen = self.controller_frozen
                     self.controller_frozen = controller_decision
                     self.controller_last_change = epoch
-                    events.append(
-                        f"controller {'frozen' if controller_decision else 'unfrozen'}"
-                    )
+                    events.append(f"controller {'frozen' if controller_decision else 'unfrozen'}")
 
                     # Q-gated annealing
                     if self.enable_annealing:
                         anneal_event = self._handle_cycle(
-                            "controller", was_frozen, controller_decision, current_Q
+                            "controller",
+                            was_frozen,
+                            controller_decision,
+                            current_Q,
                         )
                         if anneal_event:
                             events.append(anneal_event)
@@ -248,7 +239,11 @@ class HomeostasisController:
         }
 
     def _handle_cycle(
-        self, component: str, was_frozen: bool, now_frozen: bool, current_Q: float
+        self,
+        component: str,
+        was_frozen: bool,
+        now_frozen: bool,
+        current_Q: float,
     ) -> Optional[str]:
         """Handle Q-gated annealing when a cycle completes.
 
@@ -412,10 +407,7 @@ class HomeostasisController:
         else:
             # Currently frozen - unfreeze if hierarchy degraded
             if len(self.hierarchy_B_history) >= 2:
-                if (
-                    abs(self.hierarchy_B_history[-1])
-                    < abs(self.hierarchy_B_history[-2]) - 0.01
-                ):
+                if abs(self.hierarchy_B_history[-1]) < abs(self.hierarchy_B_history[-2]) - 0.01:
                     self.hierarchy_b_plateau_count = 0
                     return False  # Unfreeze - hierarchy degraded
 
@@ -446,9 +438,7 @@ class HomeostasisController:
                 return True  # Freeze - controller stabilized
         else:
             # Check for gradient spike (need to adapt again)
-            avg_grad = sum(self.controller_grad_history) / len(
-                self.controller_grad_history
-            )
+            avg_grad = sum(self.controller_grad_history) / len(self.controller_grad_history)
             if current_grad > avg_grad * 2:  # Spike = 2x average
                 self.controller_low_grad_count = 0
                 return False  # Unfreeze

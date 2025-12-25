@@ -7,8 +7,8 @@ for all 3-adic operations in the codebase.
 import pytest
 import torch
 
-from src.core.ternary import (TERNARY, TernarySpace, distance, from_ternary,
-                              to_ternary, valuation)
+from src.core.ternary import (TERNARY, distance, from_ternary, to_ternary,
+                              valuation)
 
 
 class TestTernarySpaceConstants:
@@ -77,9 +77,7 @@ class TestValuation:
 
     def test_valuation_clamping(self):
         """Indices out of range should be clamped."""
-        indices = torch.tensor(
-            [-1, 0, TERNARY.N_OPERATIONS, TERNARY.N_OPERATIONS + 100]
-        )
+        indices = torch.tensor([-1, 0, TERNARY.N_OPERATIONS, TERNARY.N_OPERATIONS + 100])
         v = TERNARY.valuation(indices)
         # Should not raise, values should be within valid range
         assert v.shape == indices.shape
@@ -155,7 +153,6 @@ class TestTernaryConversion:
     def test_to_ternary_index_one(self):
         """Index 1 should map to [0, -1, -1, ..., -1] (1 in base-3)."""
         ternary = TERNARY.to_ternary(torch.tensor([1]))
-        expected = torch.tensor([[-1, -1, -1, -1, -1, -1, -1, -1, 0]]).float()
         # First digit is (1 % 3) - 1 = 0
         assert ternary[0, 0] == 0
         assert (ternary[0, 1:] == -1).all()

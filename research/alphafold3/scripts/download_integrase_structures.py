@@ -172,9 +172,7 @@ def create_manifest(output_dir: Path) -> None:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Download minimal PDB subset for HIV integrase validation"
-    )
+    parser = argparse.ArgumentParser(description="Download minimal PDB subset for HIV integrase validation")
     parser.add_argument(
         "--output-dir",
         type=Path,
@@ -188,7 +186,9 @@ def main():
         help="Structure file format (default: cif)",
     )
     parser.add_argument(
-        "--dry-run", action="store_true", help="List structures without downloading"
+        "--dry-run",
+        action="store_true",
+        help="List structures without downloading",
     )
 
     args = parser.parse_args()
@@ -198,13 +198,13 @@ def main():
         for entry in INTEGRASE_STRUCTURES:
             print(f"{entry.pdb_id}: {entry.description} [{entry.category}]")
         print(f"\nTotal: {len(INTEGRASE_STRUCTURES)} structures")
-        print(f"Estimated size: ~100MB compressed")
+        print("Estimated size: ~100MB compressed")
         return
 
     stats = download_all(args.output_dir, args.format)
     create_manifest(args.output_dir)
 
-    print(f"\n=== Download Summary ===")
+    print("\n=== Download Summary ===")
     print(f"  Success: {stats['success']}")
     print(f"  Skipped: {stats['skipped']}")
     print(f"  Failed:  {stats['failed']}")

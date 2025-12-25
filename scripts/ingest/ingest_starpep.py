@@ -31,9 +31,7 @@ try:
     from research.bioinformatics.codon_encoder_research.hiv.src.hyperbolic_utils import (
         AA_TO_CODON, encode_sequence_hyperbolic, load_hyperbolic_encoder)
 except ImportError:
-    print(
-        "Error: Could not import hyperbolic_utils. Please ensure the project structure is correct."
-    )
+    print("Error: Could not import hyperbolic_utils. Please ensure the project structure is correct.")
     sys.exit(1)
 
 
@@ -53,9 +51,7 @@ def ingest_starpep(input_path: str, output_path: str):
 
     print(f"Loading data from {input_file}...")
     if not input_file.exists():
-        print(
-            f"Warning: Input file {input_file} not found. Creating dummy data for demonstration."
-        )
+        print(f"Warning: Input file {input_file} not found. Creating dummy data for demonstration.")
         # Create dummy dataframe for testing/demo
         df = pd.DataFrame(
             {
@@ -128,9 +124,7 @@ def ingest_starpep(input_path: str, output_path: str):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Ingest StarPepDB data")
-    parser.add_argument(
-        "--input", default="data/raw/starpep.csv", help="Path to input CSV"
-    )
+    parser.add_argument("--input", default="data/raw/starpep.csv", help="Path to input CSV")
     parser.add_argument(
         "--output",
         default="data/processed/starpep_hyperbolic.pt",

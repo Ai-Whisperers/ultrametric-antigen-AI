@@ -23,9 +23,7 @@ def compute_pairwise_distances(embeddings: torch.Tensor) -> torch.Tensor:
     return torch.cdist(embeddings, embeddings, p=2)
 
 
-def compute_delta_hyperbolicity(
-    embeddings: torch.Tensor, sample_size: int = 100
-) -> float:
+def compute_delta_hyperbolicity(embeddings: torch.Tensor, sample_size: int = 100) -> float:
     """Compute the Gromov delta-hyperbolicity of the finite metric space.
 
     Based on the 4-point condition:
@@ -115,9 +113,7 @@ def compute_delta_hyperbolicity(
     return float(torch.max(deltas).item())
 
 
-def compute_ultrametricity_score(
-    embeddings: torch.Tensor, sample_size: int = 100
-) -> float:
+def compute_ultrametricity_score(embeddings: torch.Tensor, sample_size: int = 100) -> float:
     """Compute ultrametricity score (fraction of triangles satisfying isosceles condition).
 
     Strong ultrametricity: d(x,y) <= max(d(x,z), d(z,y))
@@ -183,9 +179,7 @@ def compute_ultrametricity_score(
     return score
 
 
-def compute_tree_correlation(
-    embeddings: torch.Tensor, labels: Optional[torch.Tensor] = None
-) -> float:
+def compute_tree_correlation(embeddings: torch.Tensor, labels: Optional[torch.Tensor] = None) -> float:
     """Compute correlation with tree distance if ground truth structure is known.
 
     Since we don't always have tree labels, we might compute 'hierarchical' score.

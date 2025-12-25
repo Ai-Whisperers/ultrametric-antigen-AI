@@ -112,7 +112,10 @@ class HyperbolicPrior(nn.Module):
         return log_map_zero(z, self.curvature, self.max_norm)
 
     def kl_divergence(
-        self, mu: torch.Tensor, logvar: torch.Tensor, use_hyperbolic: bool = True
+        self,
+        mu: torch.Tensor,
+        logvar: torch.Tensor,
+        use_hyperbolic: bool = True,
     ) -> torch.Tensor:
         """Compute KL divergence from posterior to hyperbolic prior.
 
@@ -198,9 +201,7 @@ class HyperbolicPrior(nn.Module):
 
         return z
 
-    def forward(
-        self, mu: torch.Tensor, logvar: torch.Tensor
-    ) -> Tuple[torch.Tensor, torch.Tensor]:
+    def forward(self, mu: torch.Tensor, logvar: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
         """Compute KL divergence and return projected samples.
 
         Args:
@@ -293,7 +294,10 @@ class HomeostaticHyperbolicPrior(HyperbolicPrior):
         self.register_buffer("kl_ema", torch.tensor(1.0))
 
     def update_homeostatic_state(
-        self, z_hyperbolic: torch.Tensor, kl: torch.Tensor, coverage: float = 0.0
+        self,
+        z_hyperbolic: torch.Tensor,
+        kl: torch.Tensor,
+        coverage: float = 0.0,
     ):
         """Update homeostatic parameters based on current state.
 
@@ -307,9 +311,7 @@ class HomeostaticHyperbolicPrior(HyperbolicPrior):
 
         # Update EMAs using configured alpha
         alpha = self.ema_alpha
-        self.mean_radius_ema = (
-            alpha * current_radius + (1 - alpha) * self.mean_radius_ema
-        )
+        self.mean_radius_ema = alpha * current_radius + (1 - alpha) * self.mean_radius_ema
         self.kl_ema = alpha * kl + (1 - alpha) * self.kl_ema
 
         # Homeostatic adaptation of sigma
@@ -331,9 +333,7 @@ class HomeostaticHyperbolicPrior(HyperbolicPrior):
         curvature_delta = self.adaptation_rate * kl_error * 0.1  # Slower adaptation
 
         new_curvature = self.adaptive_curvature + curvature_delta
-        self.adaptive_curvature = torch.clamp(
-            new_curvature, self.curvature_min, self.curvature_max
-        )
+        self.adaptive_curvature = torch.clamp(new_curvature, self.curvature_min, self.curvature_max)
         self.curvature = self.adaptive_curvature.item()
 
     def get_homeostatic_state(self) -> dict:
@@ -356,10 +356,6 @@ class HomeostaticHyperbolicPrior(HyperbolicPrior):
         self.adaptive_sigma = torch.clamp(new_sigma, self.sigma_min, self.sigma_max)
         self.prior_sigma = self.adaptive_sigma.item()
 
-        new_curvature = (
-            self.adaptive_curvature + delta_curvature * self.adaptation_rate * 10
-        )
-        self.adaptive_curvature = torch.clamp(
-            new_curvature, self.curvature_min, self.curvature_max
-        )
+        new_curvature = self.adaptive_curvature + delta_curvature * self.adaptation_rate * 10
+        self.adaptive_curvature = torch.clamp(new_curvature, self.curvature_min, self.curvature_max)
         self.curvature = self.adaptive_curvature.item()

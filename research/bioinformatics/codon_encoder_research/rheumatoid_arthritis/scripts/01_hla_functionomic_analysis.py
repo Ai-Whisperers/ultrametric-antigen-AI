@@ -12,19 +12,16 @@ Version: 2.0 - Updated to use Poincaré ball geometry
 """
 
 import json
-from collections import defaultdict
 from itertools import combinations
 from pathlib import Path
 
 import numpy as np
 import torch
-import torch.nn as nn
 # Import hyperbolic utilities
-from hyperbolic_utils import (CodonEncoder, HyperbolicCodonEncoder,
-                              codon_to_onehot, get_results_dir,
-                              load_codon_encoder, load_hyperbolic_encoder)
+from hyperbolic_utils import (codon_to_onehot, get_results_dir,
+                              load_codon_encoder)
 from hyperbolic_utils import poincare_distance as hyp_poincare_distance
-from hyperbolic_utils import poincare_distance_matrix, project_to_poincare
+from hyperbolic_utils import project_to_poincare
 
 # ============================================================================
 # HLA-DRB1 ALLELE DATA
@@ -206,11 +203,7 @@ def encode_allele(allele_data, encoder, device="cpu", use_hyperbolic=True):
     """
     embeddings = {}
     for pos, codon in allele_data["codons"].items():
-        onehot = (
-            torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-            .unsqueeze(0)
-            .to(device)
-        )
+        onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
         with torch.no_grad():
             emb = encoder.encode(onehot).cpu().numpy().squeeze()
             if use_hyperbolic:
@@ -232,9 +225,7 @@ def compute_distance_matrix(alleles_embeddings, distance_fn="euclidean"):
     n = len(allele_names)
 
     # Get centroids
-    centroids = {
-        name: compute_allele_centroid(embs) for name, embs in alleles_embeddings.items()
-    }
+    centroids = {name: compute_allele_centroid(embs) for name, embs in alleles_embeddings.items()}
 
     # Compute distances
     dist_matrix = np.zeros((n, n))
@@ -272,19 +263,13 @@ def test_ultrametric_property(dist_matrix, allele_names, allele_data):
         # Check all three orientations
         if d_ij > max(d_ik, d_jk) + 1e-6:
             violations += 1
-            violation_details.append(
-                (allele_names[i], allele_names[j], allele_names[k], "d_ij")
-            )
+            violation_details.append((allele_names[i], allele_names[j], allele_names[k], "d_ij"))
         if d_ik > max(d_ij, d_jk) + 1e-6:
             violations += 1
-            violation_details.append(
-                (allele_names[i], allele_names[j], allele_names[k], "d_ik")
-            )
+            violation_details.append((allele_names[i], allele_names[j], allele_names[k], "d_ik"))
         if d_jk > max(d_ij, d_ik) + 1e-6:
             violations += 1
-            violation_details.append(
-                (allele_names[i], allele_names[j], allele_names[k], "d_jk")
-            )
+            violation_details.append((allele_names[i], allele_names[j], allele_names[k], "d_jk"))
 
     return violations, total, violation_details
 
@@ -294,16 +279,8 @@ def test_ra_separation(dist_matrix, allele_names, allele_data):
     Test if RA-associated alleles are closer to each other than to controls.
     """
     # Identify RA and control indices
-    ra_indices = [
-        i
-        for i, name in enumerate(allele_names)
-        if allele_data[name]["ra_status"] == "risk"
-    ]
-    control_indices = [
-        i
-        for i, name in enumerate(allele_names)
-        if allele_data[name]["ra_status"] != "risk"
-    ]
+    ra_indices = [i for i, name in enumerate(allele_names) if allele_data[name]["ra_status"] == "risk"]
+    control_indices = [i for i, name in enumerate(allele_names) if allele_data[name]["ra_status"] != "risk"]
 
     # Within-group distances
     ra_within = []
@@ -323,7 +300,7 @@ def test_ra_separation(dist_matrix, allele_names, allele_data):
     return {
         "ra_within_mean": np.mean(ra_within) if ra_within else 0,
         "ra_within_std": np.std(ra_within) if ra_within else 0,
-        "control_within_mean": np.mean(control_within) if control_within else 0,
+        "control_within_mean": (np.mean(control_within) if control_within else 0),
         "control_within_std": np.std(control_within) if control_within else 0,
         "between_mean": np.mean(between) if between else 0,
         "between_std": np.std(between) if between else 0,
@@ -333,9 +310,7 @@ def test_ra_separation(dist_matrix, allele_names, allele_data):
     }
 
 
-def test_position_specific_patterns(
-    alleles_embeddings, allele_data, distance_fn="euclidean"
-):
+def test_position_specific_patterns(alleles_embeddings, allele_data, distance_fn="euclidean"):
     """
     Analyze each position (70-74) separately.
     """
@@ -349,16 +324,8 @@ def test_position_specific_patterns(
         pos_embeddings = {name: embs[pos] for name, embs in alleles_embeddings.items()}
 
         # Identify RA vs control
-        ra_embs = [
-            pos_embeddings[name]
-            for name in allele_names
-            if allele_data[name]["ra_status"] == "risk"
-        ]
-        control_embs = [
-            pos_embeddings[name]
-            for name in allele_names
-            if allele_data[name]["ra_status"] != "risk"
-        ]
+        ra_embs = [pos_embeddings[name] for name in allele_names if allele_data[name]["ra_status"] == "risk"]
+        control_embs = [pos_embeddings[name] for name in allele_names if allele_data[name]["ra_status"] != "risk"]
 
         # Compute RA centroid and control centroid
         ra_centroid = np.mean(ra_embs, axis=0)
@@ -373,12 +340,8 @@ def test_position_specific_patterns(
             centroid_distance = ultrametric_distance(ra_centroid, control_centroid)
 
         # Variance within groups
-        ra_variance = np.mean(
-            [euclidean_distance(e, ra_centroid) ** 2 for e in ra_embs]
-        )
-        control_variance = np.mean(
-            [euclidean_distance(e, control_centroid) ** 2 for e in control_embs]
-        )
+        ra_variance = np.mean([euclidean_distance(e, ra_centroid) ** 2 for e in ra_embs])
+        control_variance = np.mean([euclidean_distance(e, control_centroid) ** 2 for e in control_embs])
 
         position_results[pos] = {
             "centroid_distance": centroid_distance,
@@ -437,9 +400,7 @@ def create_visualization(alleles_embeddings, allele_data, results, output_path):
 
     # 1. PCA of allele centroids
     ax1 = axes[0, 0]
-    centroids = np.array(
-        [compute_allele_centroid(embs) for embs in alleles_embeddings.values()]
-    )
+    centroids = np.array([compute_allele_centroid(embs) for embs in alleles_embeddings.values()])
     allele_names = list(alleles_embeddings.keys())
 
     if centroids.shape[1] > 2:
@@ -448,10 +409,7 @@ def create_visualization(alleles_embeddings, allele_data, results, output_path):
     else:
         centroids_2d = centroids
 
-    colors = [
-        "red" if allele_data[name]["ra_status"] == "risk" else "blue"
-        for name in allele_names
-    ]
+    colors = ["red" if allele_data[name]["ra_status"] == "risk" else "blue" for name in allele_names]
 
     ax1.scatter(centroids_2d[:, 0], centroids_2d[:, 1], c=colors, s=150, alpha=0.7)
     for i, name in enumerate(allele_names):
@@ -473,7 +431,10 @@ def create_visualization(alleles_embeddings, allele_data, results, output_path):
     ax2.set_xticks(range(len(allele_names)))
     ax2.set_yticks(range(len(allele_names)))
     ax2.set_xticklabels(
-        [n.split("*")[1] for n in allele_names], rotation=45, ha="right", fontsize=8
+        [n.split("*")[1] for n in allele_names],
+        rotation=45,
+        ha="right",
+        fontsize=8,
     )
     ax2.set_yticklabels([n.split("*")[1] for n in allele_names], fontsize=8)
     ax2.set_title("Pairwise Distance Matrix")
@@ -483,8 +444,16 @@ def create_visualization(alleles_embeddings, allele_data, results, output_path):
     ax3 = axes[1, 0]
     sep = results["separation"]
     categories = ["RA within", "Control within", "Between groups"]
-    means = [sep["ra_within_mean"], sep["control_within_mean"], sep["between_mean"]]
-    stds = [sep["ra_within_std"], sep["control_within_std"], sep["between_std"]]
+    means = [
+        sep["ra_within_mean"],
+        sep["control_within_mean"],
+        sep["between_mean"],
+    ]
+    stds = [
+        sep["ra_within_std"],
+        sep["control_within_std"],
+        sep["between_std"],
+    ]
     colors_bar = ["red", "blue", "gray"]
 
     bars = ax3.bar(categories, means, yerr=stds, color=colors_bar, alpha=0.7, capsize=5)
@@ -510,7 +479,12 @@ def create_visualization(alleles_embeddings, allele_data, results, output_path):
     positions = sorted(pos_results.keys())
     centroid_dists = [pos_results[p]["centroid_distance"] for p in positions]
 
-    ax4.bar([f"Pos {p}" for p in positions], centroid_dists, color="purple", alpha=0.7)
+    ax4.bar(
+        [f"Pos {p}" for p in positions],
+        centroid_dists,
+        color="purple",
+        alpha=0.7,
+    )
     ax4.set_ylabel("RA-Control Centroid Distance")
     ax4.set_title("Position-Specific RA vs Control Separation\n(Shared Epitope: 70-74)")
     ax4.axhline(y=np.mean(centroid_dists), color="red", linestyle="--", label="Mean")
@@ -547,9 +521,7 @@ def main():
     # Using '3adic' version (native hyperbolic from V5.11.3)
     print("\nLoading codon encoder (3-adic, V5.11.3)...")
     encoder, codon_mapping, _ = load_codon_encoder(device="cpu", version="3adic")
-    print(
-        f"  Loaded encoder with {sum(p.numel() for p in encoder.parameters())} parameters"
-    )
+    print(f"  Loaded encoder with {sum(p.numel() for p in encoder.parameters())} parameters")
 
     # Encode all alleles with hyperbolic projection
     print("\nEncoding HLA-DRB1 alleles (projecting to Poincaré ball)...")
@@ -557,9 +529,7 @@ def main():
     for allele_name, allele_data in HLA_DRB1_SHARED_EPITOPE.items():
         embeddings = encode_allele(allele_data, encoder, use_hyperbolic=True)
         alleles_embeddings[allele_name] = embeddings
-        print(
-            f"  {allele_name}: {allele_data['amino_acids']} (OR={allele_data['odds_ratio']}, {allele_data['ra_status']})"
-        )
+        print(f"  {allele_name}: {allele_data['amino_acids']} (OR={allele_data['odds_ratio']}, {allele_data['ra_status']})")
 
     # Compute distance matrix (try all distance functions)
     print("\nComputing distance matrices...")
@@ -568,26 +538,16 @@ def main():
     for dist_fn in ["euclidean", "poincare", "ultrametric"]:
         print(f"\n  Distance function: {dist_fn}")
 
-        dist_matrix, allele_names = compute_distance_matrix(
-            alleles_embeddings, distance_fn=dist_fn
-        )
+        dist_matrix, allele_names = compute_distance_matrix(alleles_embeddings, distance_fn=dist_fn)
 
         # Test ultrametric property
-        violations, total, _ = test_ultrametric_property(
-            dist_matrix, allele_names, HLA_DRB1_SHARED_EPITOPE
-        )
+        violations, total, _ = test_ultrametric_property(dist_matrix, allele_names, HLA_DRB1_SHARED_EPITOPE)
         ultrametric_score = 1 - (violations / total) if total > 0 else 0
-        print(
-            f"    Ultrametric property: {ultrametric_score:.1%} ({violations}/{total} violations)"
-        )
+        print(f"    Ultrametric property: {ultrametric_score:.1%} ({violations}/{total} violations)")
 
         # Test RA separation
-        separation = test_ra_separation(
-            dist_matrix, allele_names, HLA_DRB1_SHARED_EPITOPE
-        )
-        within_avg = (
-            separation["ra_within_mean"] + separation["control_within_mean"]
-        ) / 2
+        separation = test_ra_separation(dist_matrix, allele_names, HLA_DRB1_SHARED_EPITOPE)
+        within_avg = (separation["ra_within_mean"] + separation["control_within_mean"]) / 2
         ratio = separation["between_mean"] / within_avg if within_avg > 0 else 0
         print(f"    RA within-group mean: {separation['ra_within_mean']:.4f}")
         print(f"    Control within-group mean: {separation['control_within_mean']:.4f}")
@@ -595,26 +555,23 @@ def main():
         print(f"    Separation ratio: {ratio:.2f}x")
 
         # Position-specific analysis
-        pos_results = test_position_specific_patterns(
-            alleles_embeddings, HLA_DRB1_SHARED_EPITOPE, distance_fn=dist_fn
-        )
+        pos_results = test_position_specific_patterns(alleles_embeddings, HLA_DRB1_SHARED_EPITOPE, distance_fn=dist_fn)
         max_pos = max(
-            pos_results.keys(), key=lambda p: pos_results[p]["centroid_distance"]
+            pos_results.keys(),
+            key=lambda p: pos_results[p]["centroid_distance"],
         )
-        print(
-            f"    Most discriminative position: {max_pos} (dist={pos_results[max_pos]['centroid_distance']:.4f})"
-        )
+        print(f"    Most discriminative position: {max_pos} (dist={pos_results[max_pos]['centroid_distance']:.4f})")
 
         # Odds ratio correlation
         try:
-            or_corr = odds_ratio_correlation(
-                dist_matrix, allele_names, HLA_DRB1_SHARED_EPITOPE
-            )
-            print(
-                f"    OR correlation: r={or_corr['correlation']:.3f}, p={or_corr['pvalue']:.4f}"
-            )
+            or_corr = odds_ratio_correlation(dist_matrix, allele_names, HLA_DRB1_SHARED_EPITOPE)
+            print(f"    OR correlation: r={or_corr['correlation']:.3f}, p={or_corr['pvalue']:.4f}")
         except Exception as e:
-            or_corr = {"correlation": 0, "pvalue": 1, "reference_allele": "N/A"}
+            or_corr = {
+                "correlation": 0,
+                "pvalue": 1,
+                "reference_allele": "N/A",
+            }
             print(f"    OR correlation: could not compute ({e})")
 
         results[dist_fn] = {
@@ -630,23 +587,14 @@ def main():
     best_fn = max(
         results.keys(),
         key=lambda k: results[k]["separation"]["between_mean"]
-        / (
-            (
-                results[k]["separation"]["ra_within_mean"]
-                + results[k]["separation"]["control_within_mean"]
-            )
-            / 2
-            + 1e-6
-        ),
+        / ((results[k]["separation"]["ra_within_mean"] + results[k]["separation"]["control_within_mean"]) / 2 + 1e-6),
     )
     print(f"\n  Best distance function: {best_fn}")
 
     # Create visualization
     print("\nGenerating visualization...")
     vis_path = results_dir / "hla_functionomic_analysis.png"
-    create_visualization(
-        alleles_embeddings, HLA_DRB1_SHARED_EPITOPE, results[best_fn], vis_path
-    )
+    create_visualization(alleles_embeddings, HLA_DRB1_SHARED_EPITOPE, results[best_fn], vis_path)
 
     # Summary
     print("\n" + "=" * 70)

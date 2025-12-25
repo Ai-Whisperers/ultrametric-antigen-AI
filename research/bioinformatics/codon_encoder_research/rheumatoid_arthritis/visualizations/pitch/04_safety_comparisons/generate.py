@@ -12,8 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from utils.data_loader import get_loader
-from utils.plotting import (PALETTE, get_safety_cmap, save_figure,
-                            setup_pitch_style)
+from utils.plotting import PALETTE, save_figure, setup_pitch_style
 
 OUTPUT_DIR = Path(__file__).parent
 
@@ -50,23 +49,18 @@ def create_safety_comparison():
 
     # Left: Safety rate bars
     ax1 = axes[0]
-    colors = [
-        (
-            PALETTE["safe"]
-            if s == 100
-            else PALETTE["partial"] if s >= 50 else PALETTE["unsafe"]
-        )
-        for s in safety_rates
-    ]
+    colors = [(PALETTE["safe"] if s == 100 else PALETTE["partial"] if s >= 50 else PALETTE["unsafe"]) for s in safety_rates]
 
     bars = ax1.barh(
-        range(len(proteins)), safety_rates, color=colors, edgecolor="white", linewidth=2
+        range(len(proteins)),
+        safety_rates,
+        color=colors,
+        edgecolor="white",
+        linewidth=2,
     )
 
     ax1.set_yticks(range(len(proteins)))
-    ax1.set_yticklabels(
-        [f"{p}\n({f})" for p, f in zip(proteins, functions)], fontsize=10
-    )
+    ax1.set_yticklabels([f"{p}\n({f})" for p, f in zip(proteins, functions)], fontsize=10)
     ax1.set_xlabel("Citrullination Safety Rate (%)", fontsize=12)
     ax1.set_title("Codon-Optimized Protein Safety", fontsize=16, fontweight="bold")
     ax1.set_xlim(0, 110)

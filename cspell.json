@@ -1,0 +1,18 @@
+{
+    "version": "0.2",
+    "language": "en",
+    "words": [],
+    "ignorePaths": [
+        ".git",
+        ".venv",
+        ".vscode",
+        "node_modules",
+        "__pycache__",
+        "*.lock",
+        "integrity_report.md",
+        "detected_vocabulary.txt"
+    ],
+    "import": [
+        ".vscode/settings.json"
+    ]
+}

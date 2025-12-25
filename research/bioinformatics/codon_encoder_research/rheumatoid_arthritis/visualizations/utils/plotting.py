@@ -7,7 +7,6 @@ from pathlib import Path
 
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
-import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
 
 # =============================================================================
@@ -194,20 +193,16 @@ def add_goldilocks_zones(ax, ymin=0, ymax=1, alpha=0.15):
 
 def add_significance_annotation(ax, x1, x2, y, p_value, height=0.02):
     """Add significance bracket with p-value."""
-    stars = (
-        "***"
-        if p_value < 0.001
-        else "**" if p_value < 0.01 else "*" if p_value < 0.05 else "ns"
-    )
+    stars = "***" if p_value < 0.001 else "**" if p_value < 0.01 else "*" if p_value < 0.05 else "ns"
     ax.plot(
-        [x1, x1, x2, x2], [y, y + height, y + height, y], color="black", linewidth=1
+        [x1, x1, x2, x2],
+        [y, y + height, y + height, y],
+        color="black",
+        linewidth=1,
     )
     ax.text((x1 + x2) / 2, y + height, stars, ha="center", va="bottom", fontsize=12)
 
 
 def create_legend_handles(labels_colors: dict):
     """Create legend handles from label-color dict."""
-    return [
-        mpatches.Patch(color=color, label=label)
-        for label, color in labels_colors.items()
-    ]
+    return [mpatches.Patch(color=color, label=label) for label, color in labels_colors.items()]

@@ -12,7 +12,6 @@ Visualize HIV Approach Clusters in Hyperbolic Latent Space
 Creates 2D Poincare disk visualization of approach centroids and mutations.
 """
 
-import json
 import sys
 from pathlib import Path
 
@@ -26,8 +25,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from importlib import import_module
 
 import torch
-from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot, load_codon_encoder,
-                              poincare_distance, project_to_poincare)
+from hyperbolic_utils import AA_TO_CODON, codon_to_onehot, load_codon_encoder
 
 approaches_module = import_module("09_cluster_approaches_by_codon")
 APPROACHES = approaches_module.APPROACHES
@@ -209,22 +207,14 @@ def main():
         f.write("### Cross-Category Connections (Hyperbolic Distance)\n\n")
         f.write("| Approach 1 | Approach 2 | Distance | Implication |\n")
         f.write("|------------|------------|----------|-------------|\n")
-        f.write(
-            "| DTG/BIC 2-Drug | EC Immune Escape | 0.472 | Treatment targets overlap with immune escape pathways |\n"
-        )
-        f.write(
-            "| Third-Gen INSTI | Lymphoid Reservoir | 0.580 | Novel drugs target reservoir-associated mutations |\n"
-        )
-        f.write(
-            "| CTL Targets | CNS Sanctuary | 0.525 | Immune surveillance shares codon space with tissue sanctuary |\n"
-        )
+        f.write("| DTG/BIC 2-Drug | EC Immune Escape | 0.472 | Treatment targets overlap with immune escape pathways |\n")
+        f.write("| Third-Gen INSTI | Lymphoid Reservoir | 0.580 | Novel drugs target reservoir-associated mutations |\n")
+        f.write("| CTL Targets | CNS Sanctuary | 0.525 | Immune surveillance shares codon space with tissue sanctuary |\n")
         f.write("\n")
         f.write("### Category Cohesion\n\n")
         f.write("| Category | Within-Category Distance | Interpretation |\n")
         f.write("|----------|--------------------------|----------------|\n")
-        f.write(
-            "| Treatment | 0.720 | Tight clustering - drugs target similar codon changes |\n"
-        )
+        f.write("| Treatment | 0.720 | Tight clustering - drugs target similar codon changes |\n")
         f.write("| Immune | 0.949 | Moderate spread - diverse immune targets |\n")
         f.write("| Reservoir | 1.030 | Widest spread - tissue-specific adaptation |\n")
         f.write("\n")
@@ -232,16 +222,12 @@ def main():
         f.write("- **R263K (INSTI)**: d=7.413 - DTG-selected, high fitness cost\n")
         f.write("- **K65R (NRTI)**: d=7.413 - TAF resistance\n")
         f.write("- **R264K (Gag)**: d=7.413 - KK10 epitope escape\n")
-        f.write(
-            "- **Q148H (INSTI)**: d=2.978 - Primary resistance, moderate distance\n"
-        )
+        f.write("- **Q148H (INSTI)**: d=2.978 - Primary resistance, moderate distance\n")
         f.write("- **Y181C (NNRTI)**: d=3.079 - Persistent reservoir variant\n")
         f.write("\n")
         f.write("## Interpretation\n\n")
         f.write("The hyperbolic embedding reveals that:\n\n")
-        f.write(
-            "1. **Treatment-Immune Connection**: DTG/BIC regimens target the same codon\n"
-        )
+        f.write("1. **Treatment-Immune Connection**: DTG/BIC regimens target the same codon\n")
         f.write("   space as immune escape mutations, suggesting these drugs may\n")
         f.write("   exploit evolutionary constraints on viral immune evasion.\n\n")
         f.write("2. **INSTI-Reservoir Link**: Third-gen INSTIs target mutations also\n")

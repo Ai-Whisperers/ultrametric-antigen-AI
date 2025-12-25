@@ -11,12 +11,9 @@ Output directory: results/proteome_wide/12_human_proteome/
 Version: 1.0
 """
 
-import gzip
 import json
-import time
-from io import StringIO
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict
 
 import requests
 
@@ -270,20 +267,10 @@ def parse_metadata(tsv_path: Path) -> Dict[str, Dict]:
                     "entry_name": row.get("Entry Name", ""),
                     "gene_names": row.get("Gene Names", ""),
                     "protein_name": row.get("Protein names", ""),
-                    "length": (
-                        int(row.get("Length", 0))
-                        if row.get("Length", "").isdigit()
-                        else 0
-                    ),
-                    "go_cellular_component": row.get(
-                        "Gene Ontology (cellular component)", ""
-                    ),
-                    "go_molecular_function": row.get(
-                        "Gene Ontology (molecular function)", ""
-                    ),
-                    "go_biological_process": row.get(
-                        "Gene Ontology (biological process)", ""
-                    ),
+                    "length": (int(row.get("Length", 0)) if row.get("Length", "").isdigit() else 0),
+                    "go_cellular_component": row.get("Gene Ontology (cellular component)", ""),
+                    "go_molecular_function": row.get("Gene Ontology (molecular function)", ""),
+                    "go_biological_process": row.get("Gene Ontology (biological process)", ""),
                     "subcellular_location": row.get("Subcellular location [CC]", ""),
                     "tissue_specificity": row.get("Tissue specificity", ""),
                     "disease": row.get("Involvement in disease", ""),
@@ -348,13 +335,9 @@ def compute_statistics(data: Dict, output_dir: Path):
         "total_residues": sum(p["length"] for p in data.values()),
         "total_arginines": sum(p["n_arginines"] for p in data.values()),
         "proteins_with_arginine": sum(1 for p in data.values() if p["n_arginines"] > 0),
-        "proteins_with_go": sum(
-            1 for p in data.values() if p.get("go_biological_process")
-        ),
+        "proteins_with_go": sum(1 for p in data.values() if p.get("go_biological_process")),
         "proteins_with_disease": sum(1 for p in data.values() if p.get("disease")),
-        "proteins_with_structure": sum(
-            1 for p in data.values() if p.get("pdb_structures")
-        ),
+        "proteins_with_structure": sum(1 for p in data.values() if p.get("pdb_structures")),
     }
 
     # Length distribution
@@ -429,10 +412,7 @@ def main():
     print(f"  Saved: {full_path} ({full_path.stat().st_size:,} bytes)")
 
     # Save index (without sequences) for quick loading
-    index = {
-        acc: {k: v for k, v in prot.items() if k != "sequence"}
-        for acc, prot in data.items()
-    }
+    index = {acc: {k: v for k, v in prot.items() if k != "sequence"} for acc, prot in data.items()}
     index_path = output_dir / "human_proteome_index.json"
     with open(index_path, "w") as f:
         json.dump(index, f, indent=2)

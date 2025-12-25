@@ -18,7 +18,7 @@ import sys
 from collections import defaultdict
 from itertools import combinations
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 import numpy as np
 
@@ -33,8 +33,7 @@ sys.path.insert(0, str(CODON_RESEARCH_DIR / "rheumatoid_arthritis" / "scripts"))
 from hyperbolic_utils import (AA_TO_CODON, encode_codon_hyperbolic,
                               hyperbolic_centroid, load_hyperbolic_encoder,
                               poincare_distance)
-from tau_phospho_database import (KXGS_MOTIFS, TAU_2N4R_SEQUENCE, TAU_DOMAINS,
-                                  TAU_EPITOPES, TAU_PHOSPHO_SITES)
+from tau_phospho_database import TAU_2N4R_SEQUENCE, TAU_PHOSPHO_SITES
 
 # ============================================================================
 # PATHOLOGICAL COMBINATIONS TO TEST
@@ -179,9 +178,7 @@ def compute_centroid_shift(sequence: str, positions: List[int], encoder) -> floa
     return float(poincare_distance(wt_centroid, phospho_centroid))
 
 
-def compute_individual_shifts(
-    sequence: str, positions: List[int], encoder
-) -> Dict[int, float]:
+def compute_individual_shifts(sequence: str, positions: List[int], encoder) -> Dict[int, float]:
     """Compute individual shifts for each site."""
     shifts = {}
     for pos in positions:
@@ -196,7 +193,9 @@ def compute_individual_shifts(
 
 
 def analyze_synergy(
-    combined_shift: float, individual_shifts: Dict[int, float], positions: List[int]
+    combined_shift: float,
+    individual_shifts: Dict[int, float],
+    positions: List[int],
 ) -> Dict:
     """
     Analyze whether a combination is synergistic, additive, or antagonistic.
@@ -235,9 +234,7 @@ def analyze_synergy(
     }
 
 
-def find_minimal_tipping_point(
-    sequence: str, available_sites: List[int], encoder, threshold: float = 0.35
-) -> Dict:
+def find_minimal_tipping_point(sequence: str, available_sites: List[int], encoder, threshold: float = 0.35) -> Dict:
     """
     Find the minimal set of phosphorylations that crosses the dysfunction threshold.
 
@@ -382,9 +379,7 @@ def main():
         print(f"    Sites: {sites}")
         print(f"    Combined shift: {combined_shift*100:.1f}%")
         print(f"    Expected (additive): {synergy['expected_additive']*100:.1f}%")
-        print(
-            f"    Synergy ratio: {synergy['synergy_ratio']:.2f} [{synergy['synergy_type']}] {synergy_marker}"
-        )
+        print(f"    Synergy ratio: {synergy['synergy_ratio']:.2f} [{synergy['synergy_type']}] {synergy_marker}")
 
     results["combination_results"] = combination_results
 
@@ -397,28 +392,20 @@ def main():
 
     # Sort by synergy ratio
     synergistic = [r for r in combination_results if r["synergy_type"] == "SYNERGISTIC"]
-    antagonistic = [
-        r for r in combination_results if r["synergy_type"] == "ANTAGONISTIC"
-    ]
+    antagonistic = [r for r in combination_results if r["synergy_type"] == "ANTAGONISTIC"]
     additive = [r for r in combination_results if r["synergy_type"] == "ADDITIVE"]
 
     print(f"\n  SYNERGISTIC combinations: {len(synergistic)}")
     for r in sorted(synergistic, key=lambda x: x["synergy_ratio"], reverse=True):
-        print(
-            f"    {r['name']}: ratio={r['synergy_ratio']:.2f}, shift={r['combined_shift_pct']:.1f}%"
-        )
+        print(f"    {r['name']}: ratio={r['synergy_ratio']:.2f}, shift={r['combined_shift_pct']:.1f}%")
 
     print(f"\n  ANTAGONISTIC combinations: {len(antagonistic)}")
     for r in sorted(antagonistic, key=lambda x: x["synergy_ratio"]):
-        print(
-            f"    {r['name']}: ratio={r['synergy_ratio']:.2f}, shift={r['combined_shift_pct']:.1f}%"
-        )
+        print(f"    {r['name']}: ratio={r['synergy_ratio']:.2f}, shift={r['combined_shift_pct']:.1f}%")
 
     print(f"\n  ADDITIVE combinations: {len(additive)}")
     for r in additive:
-        print(
-            f"    {r['name']}: ratio={r['synergy_ratio']:.2f}, shift={r['combined_shift_pct']:.1f}%"
-        )
+        print(f"    {r['name']}: ratio={r['synergy_ratio']:.2f}, shift={r['combined_shift_pct']:.1f}%")
 
     results["synergy_analysis"] = {
         "synergistic": [r["name"] for r in synergistic],
@@ -441,9 +428,7 @@ def main():
 
     for threshold in thresholds:
         print(f"\n  Threshold: {threshold*100:.0f}%")
-        tipping = find_minimal_tipping_point(
-            TAU_2N4R_SEQUENCE, all_phospho_sites, encoder, threshold
-        )
+        tipping = find_minimal_tipping_point(TAU_2N4R_SEQUENCE, all_phospho_sites, encoder, threshold)
 
         results["tipping_points"][str(threshold)] = tipping
 
@@ -501,10 +486,7 @@ def main():
     for n in range(1, len(kxgs_sites) + 1):
         combos_n = [t for t in mtbr_trajectory if t["n_sites"] == n]
         shifts = [t["shift"] for t in combos_n]
-        print(
-            f"    {n} KXGS site(s): mean shift = {np.mean(shifts)*100:.1f}%, "
-            f"max = {np.max(shifts)*100:.1f}%"
-        )
+        print(f"    {n} KXGS site(s): mean shift = {np.mean(shifts)*100:.1f}%, " f"max = {np.max(shifts)*100:.1f}%")
 
     results["mtbr_analysis"] = mtbr_trajectory
 

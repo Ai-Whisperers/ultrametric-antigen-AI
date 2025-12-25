@@ -21,7 +21,12 @@ def test_perfect_alignment_tetrahedral():
 
     # Vertices of tetrahedron
     targets = torch.tensor(
-        [[1.0, 1.0, 1.0], [1.0, -1.0, -1.0], [-1.0, 1.0, -1.0], [-1.0, -1.0, 1.0]]
+        [
+            [1.0, 1.0, 1.0],
+            [1.0, -1.0, -1.0],
+            [-1.0, 1.0, -1.0],
+            [-1.0, -1.0, 1.0],
+        ]
     )
     # Normalize to match loss internal normalization
     targets = torch.nn.functional.normalize(targets, dim=1)

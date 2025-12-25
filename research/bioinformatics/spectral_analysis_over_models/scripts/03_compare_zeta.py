@@ -11,7 +11,6 @@ Usage:
 import argparse
 import json
 import sys
-import urllib.request
 from datetime import datetime
 from pathlib import Path
 
@@ -149,8 +148,8 @@ def download_zeta_zeros(n_zeros: int = 10000, output_dir: Path = None) -> np.nda
     if n_zeros <= 100:
         zeros = ZETA_ZEROS_100[:n_zeros]
     else:
-        print(f"Note: Only have 100 hardcoded zeros, returning those")
-        print(f"For more zeros, download from https://www.lmfdb.org/zeros/zeta/")
+        print("Note: Only have 100 hardcoded zeros, returning those")
+        print("For more zeros, download from https://www.lmfdb.org/zeros/zeta/")
         zeros = ZETA_ZEROS_100
 
     np.save(cache_file, zeros)
@@ -171,15 +170,11 @@ def compute_zeta_spacings(zeros: np.ndarray, normalize: bool = True) -> np.ndarr
     return spacings
 
 
-def compare_spectra(
-    eigenvalues: np.ndarray, zeta_zeros: np.ndarray, output_dir: Path
-) -> dict:
+def compare_spectra(eigenvalues: np.ndarray, zeta_zeros: np.ndarray, output_dir: Path) -> dict:
     """Compare eigenvalue spectrum to zeta zeros."""
 
     # Normalize both spectra to same range
-    eigen_norm = (eigenvalues - eigenvalues.min()) / (
-        eigenvalues.max() - eigenvalues.min()
-    )
+    eigen_norm = (eigenvalues - eigenvalues.min()) / (eigenvalues.max() - eigenvalues.min())
     zeta_norm = (zeta_zeros - zeta_zeros.min()) / (zeta_zeros.max() - zeta_zeros.min())
 
     # Compute spacings
@@ -198,15 +193,24 @@ def compare_spectra(
 
     # 1. Pearson correlation of spacings
     r_spacings, p_spacings = stats.pearsonr(eigen_spacings, zeta_spacings)
-    results["pearson_spacings"] = {"r": float(r_spacings), "p": float(p_spacings)}
+    results["pearson_spacings"] = {
+        "r": float(r_spacings),
+        "p": float(p_spacings),
+    }
 
     # 2. Spearman rank correlation
     rho_spacings, p_spearman = stats.spearmanr(eigen_spacings, zeta_spacings)
-    results["spearman_spacings"] = {"rho": float(rho_spacings), "p": float(p_spearman)}
+    results["spearman_spacings"] = {
+        "rho": float(rho_spacings),
+        "p": float(p_spearman),
+    }
 
     # 3. KS test on spacing distributions
     ks_stat, ks_pval = stats.ks_2samp(eigen_spacings, zeta_spacings)
-    results["ks_test"] = {"statistic": float(ks_stat), "p_value": float(ks_pval)}
+    results["ks_test"] = {
+        "statistic": float(ks_stat),
+        "p_value": float(ks_pval),
+    }
 
     # 4. Compare cumulative distributions
     eigen_cdf = np.sort(eigen_spacings)
@@ -270,7 +274,12 @@ def compare_spectra(
 
     # 3. CDFs
     ax3 = axes[1, 0]
-    ax3.plot(common_grid, eigen_cdf_interp, label="Laplacian eigenvalues", linewidth=2)
+    ax3.plot(
+        common_grid,
+        eigen_cdf_interp,
+        label="Laplacian eigenvalues",
+        linewidth=2,
+    )
     ax3.plot(common_grid, zeta_cdf_interp, label="Zeta zeros", linewidth=2)
     ax3.set_xlabel("Spacing")
     ax3.set_ylabel("Cumulative probability")
@@ -340,7 +349,13 @@ def compute_pair_correlation(spacings: np.ndarray, output_dir: Path = None) -> d
             label="Observed",
             color="steelblue",
         )
-        plt.plot(x, montgomery, "r-", linewidth=2, label="Montgomery prediction (GUE)")
+        plt.plot(
+            x,
+            montgomery,
+            "r-",
+            linewidth=2,
+            label="Montgomery prediction (GUE)",
+        )
         plt.xlabel("Normalized spacing difference")
         plt.ylabel("Pair correlation R₂(x)")
         plt.title("Pair Correlation Function")
@@ -351,9 +366,7 @@ def compute_pair_correlation(spacings: np.ndarray, output_dir: Path = None) -> d
         plt.close()
 
     # Compute fit to Montgomery
-    montgomery_at_bins = (
-        1 - (np.sin(np.pi * bin_centers + 1e-10) / (np.pi * bin_centers + 1e-10)) ** 2
-    )
+    montgomery_at_bins = 1 - (np.sin(np.pi * bin_centers + 1e-10) / (np.pi * bin_centers + 1e-10)) ** 2
     mse = np.mean((hist - montgomery_at_bins) ** 2)
 
     return {
@@ -372,7 +385,10 @@ def main():
         help="Directory with eigenvalues",
     )
     parser.add_argument(
-        "--n-zeta-zeros", type=int, default=100, help="Number of zeta zeros to use"
+        "--n-zeta-zeros",
+        type=int,
+        default=100,
+        help="Number of zeta zeros to use",
     )
     args = parser.parse_args()
 
@@ -400,14 +416,10 @@ def main():
     print("\nComparing spectra...")
     comparison_results = compare_spectra(eigenvalues, zeta_zeros, output_dir)
 
-    print(f"\n=== Comparison Results ===")
-    print(
-        f"Pearson correlation (spacings): r = {comparison_results['pearson_spacings']['r']:.4f}"
-    )
+    print("\n=== Comparison Results ===")
+    print(f"Pearson correlation (spacings): r = {comparison_results['pearson_spacings']['r']:.4f}")
     print(f"  p-value: {comparison_results['pearson_spacings']['p']:.4e}")
-    print(
-        f"Spearman correlation (spacings): rho = {comparison_results['spearman_spacings']['rho']:.4f}"
-    )
+    print(f"Spearman correlation (spacings): rho = {comparison_results['spearman_spacings']['rho']:.4f}")
     print(f"  p-value: {comparison_results['spearman_spacings']['p']:.4e}")
     print(f"KS test: D = {comparison_results['ks_test']['statistic']:.4f}")
     print(f"  p-value: {comparison_results['ks_test']['p_value']:.4e}")
@@ -445,9 +457,7 @@ def main():
         print("  4. Consultation with number theorists")
     elif r > 0.3:
         print("\n** MODERATE CORRELATION DETECTED **")
-        print(
-            "There is a notable correlation between eigenvalue spacings and zeta zeros."
-        )
+        print("There is a notable correlation between eigenvalue spacings and zeta zeros.")
         print("This is suggestive but not conclusive.")
         print("Further analysis recommended.")
     else:

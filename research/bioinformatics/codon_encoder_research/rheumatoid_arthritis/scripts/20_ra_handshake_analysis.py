@@ -43,14 +43,22 @@ from hyperbolic_utils import (AA_TO_CODON, encode_codon_hyperbolic,
 # P1, P4, P6, P7, P9 pockets are key for peptide binding
 # Shared epitope (SE) is at positions 70-74 (QKRAA, QRRAA, or RRRAA)
 HLA_POCKETS = {
-    "P1": {"positions": [85, 86], "function": "anchor", "preference": "hydrophobic"},
+    "P1": {
+        "positions": [85, 86],
+        "function": "anchor",
+        "preference": "hydrophobic",
+    },
     "P4": {
         "positions": [13, 70, 71, 74],
         "function": "shared_epitope_contact",
         "preference": "charged",
     },
     "P6": {"positions": [11, 13], "function": "anchor", "preference": "small"},
-    "P7": {"positions": [28, 47], "function": "TCR_contact", "preference": "exposed"},
+    "P7": {
+        "positions": [28, 47],
+        "function": "TCR_contact",
+        "preference": "exposed",
+    },
     "P9": {
         "positions": [9, 37, 57],
         "function": "anchor",
@@ -60,13 +68,41 @@ HLA_POCKETS = {
 
 # Risk-associated HLA alleles with known RA associations
 HLA_RISK_ALLELES = {
-    "DRB1*04:01": {"odds_ratio": 4.44, "shared_epitope": "QKRAA", "risk": "high"},
-    "DRB1*04:04": {"odds_ratio": 3.68, "shared_epitope": "QRRAA", "risk": "high"},
-    "DRB1*04:05": {"odds_ratio": 3.20, "shared_epitope": "QRRAA", "risk": "high"},
-    "DRB1*01:01": {"odds_ratio": 2.50, "shared_epitope": "QRRAA", "risk": "moderate"},
-    "DRB1*10:01": {"odds_ratio": 2.30, "shared_epitope": "RRRAA", "risk": "moderate"},
-    "DRB1*04:02": {"odds_ratio": 0.46, "shared_epitope": None, "risk": "protective"},
-    "DRB1*13:02": {"odds_ratio": 0.34, "shared_epitope": None, "risk": "protective"},
+    "DRB1*04:01": {
+        "odds_ratio": 4.44,
+        "shared_epitope": "QKRAA",
+        "risk": "high",
+    },
+    "DRB1*04:04": {
+        "odds_ratio": 3.68,
+        "shared_epitope": "QRRAA",
+        "risk": "high",
+    },
+    "DRB1*04:05": {
+        "odds_ratio": 3.20,
+        "shared_epitope": "QRRAA",
+        "risk": "high",
+    },
+    "DRB1*01:01": {
+        "odds_ratio": 2.50,
+        "shared_epitope": "QRRAA",
+        "risk": "moderate",
+    },
+    "DRB1*10:01": {
+        "odds_ratio": 2.30,
+        "shared_epitope": "RRRAA",
+        "risk": "moderate",
+    },
+    "DRB1*04:02": {
+        "odds_ratio": 0.46,
+        "shared_epitope": None,
+        "risk": "protective",
+    },
+    "DRB1*13:02": {
+        "odds_ratio": 0.34,
+        "shared_epitope": None,
+        "risk": "protective",
+    },
 }
 
 # Shared epitope sequences for embedding comparison
@@ -79,7 +115,10 @@ SHARED_EPITOPE_SEQS = {
 
 # PAD4 recognition motif patterns
 PAD4_MOTIFS = {
-    "canonical": {"pattern": "G-R-G", "description": "Glycine-flanked arginine"},
+    "canonical": {
+        "pattern": "G-R-G",
+        "description": "Glycine-flanked arginine",
+    },
     "extended": {"pattern": "X-R-S", "description": "Serine C-terminal"},
     "histone": {"pattern": "R-K-X", "description": "Adjacent to lysine"},
 }
@@ -401,9 +440,7 @@ def run_handshake_analysis(sweep_results: dict, encoder) -> dict:
     results["summary"]["by_ptm_type"] = dict(results["summary"]["by_ptm_type"])
 
     # Sort high-priority targets
-    results["summary"]["high_priority_targets"].sort(
-        key=lambda x: (x["priority_score"], x["is_known_acpa"]), reverse=True
-    )
+    results["summary"]["high_priority_targets"].sort(key=lambda x: (x["priority_score"], x["is_known_acpa"]), reverse=True)
 
     return results
 
@@ -419,9 +456,7 @@ def main():
     sweep_path = data_dir / "ra_ptm_sweep_results.json"
 
     if not sweep_path.exists():
-        print(
-            f"ERROR: PTM sweep results not found. Run 19_comprehensive_ra_ptm_sweep.py first."
-        )
+        print("ERROR: PTM sweep results not found. Run 19_comprehensive_ra_ptm_sweep.py first.")
         return 1
 
     print(f"\nLoading PTM sweep results from: {sweep_path}")
@@ -453,31 +488,22 @@ def main():
 
     print(f"\n  Total samples analyzed: {total}")
 
-    print(f"\n  Interface Hits:")
+    print("\n  Interface Hits:")
     for interface, count in summary["by_interface"].items():
         pct = count / total * 100 if total > 0 else 0
         print(f"    {interface}: {count} ({pct:.1f}%)")
 
-    print(f"\n  By PTM Type:")
+    print("\n  By PTM Type:")
     for ptm, stats in summary["by_ptm_type"].items():
-        tcr_rate = (
-            stats["tcr_goldilocks"] / stats["total"] * 100 if stats["total"] > 0 else 0
-        )
-        print(
-            f"    {ptm}: {stats['total']} total, {stats['tcr_goldilocks']} TCR goldilocks ({tcr_rate:.1f}%)"
-        )
+        tcr_rate = stats["tcr_goldilocks"] / stats["total"] * 100 if stats["total"] > 0 else 0
+        print(f"    {ptm}: {stats['total']} total, {stats['tcr_goldilocks']} TCR goldilocks ({tcr_rate:.1f}%)")
 
-    print(
-        f"\n  High-Priority Targets (2+ interface hits): {len(summary['high_priority_targets'])}"
-    )
+    print(f"\n  High-Priority Targets (2+ interface hits): {len(summary['high_priority_targets'])}")
     if summary["high_priority_targets"][:5]:
         print("    Top 5:")
         for target in summary["high_priority_targets"][:5]:
             known = " [KNOWN ACPA]" if target["is_known_acpa"] else ""
-            print(
-                f"      {target['protein']} {target['ptm_type']} @ {target['position']} "
-                f"(score={target['priority_score']}){known}"
-            )
+            print(f"      {target['protein']} {target['ptm_type']} @ {target['position']} " f"(score={target['priority_score']}){known}")
 
     # Save results
     output_path = data_dir / "ra_handshake_results.json"
@@ -492,9 +518,7 @@ def main():
     print(f"  Saved: {targets_path}")
 
     print("\n" + "=" * 70)
-    print(
-        "NEXT STEP: Run 21_ra_alphafold_jobs.py to generate structural validation jobs"
-    )
+    print("NEXT STEP: Run 21_ra_alphafold_jobs.py to generate structural validation jobs")
     print("=" * 70)
 
     return 0

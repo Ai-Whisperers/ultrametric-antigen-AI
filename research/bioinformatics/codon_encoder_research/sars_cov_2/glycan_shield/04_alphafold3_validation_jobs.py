@@ -72,7 +72,10 @@ def create_alphafold3_job(name: str, sequences: list, description: str = "") -> 
     sequence_entries = []
     for seq in sequences:
         entry = {
-            "proteinChain": {"sequence": seq["sequence"], "count": seq.get("count", 1)}
+            "proteinChain": {
+                "sequence": seq["sequence"],
+                "count": seq.get("count", 1),
+            }
         }
         sequence_entries.append(entry)
 
@@ -123,9 +126,7 @@ def create_job1_rbd_ace2_complexes():
     if motif_start >= 0:
         # S at position 6 of motif = motif_start + 5 (0-indexed)
         s439_pos = motif_start + 5  # This is the S in VIAWNSNNLDS
-        s440_pos = (
-            motif_start + 10
-        )  # This is the S in VIAWNSNNLDS (second S after NNLD)
+        s440_pos = motif_start + 10  # This is the S in VIAWNSNNLDS (second S after NNLD)
 
         # Create mutant with S→D at first S position
         rbd_s439d = list(RBD_SEQUENCE)

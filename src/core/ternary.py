@@ -73,9 +73,7 @@ class TernarySpace:
         self._ternary_lut = self._build_ternary_lut()
 
         # Base-3 weights for index computation: [1, 3, 9, 27, ...]
-        self._base3_weights = torch.tensor(
-            [3**i for i in range(self.N_DIGITS)], dtype=torch.long
-        )
+        self._base3_weights = torch.tensor([3**i for i in range(self.N_DIGITS)], dtype=torch.long)
 
         # Device-cached versions (populated on first use)
         self._device_cache = {}
@@ -107,9 +105,7 @@ class TernarySpace:
             ternary.append(digits)
         return torch.tensor(ternary, dtype=torch.float32)
 
-    def _get_cached_lut(
-        self, name: str, lut: torch.Tensor, device: torch.device
-    ) -> torch.Tensor:
+    def _get_cached_lut(self, name: str, lut: torch.Tensor, device: torch.device) -> torch.Tensor:
         """Get device-cached version of a LUT."""
         device_str = str(device)
         cache_key = f"{name}_{device_str}"
@@ -142,9 +138,7 @@ class TernarySpace:
         indices = torch.clamp(indices.long(), 0, self.N_OPERATIONS - 1)
         return lut[indices]
 
-    def valuation_of_difference(
-        self, idx_i: torch.Tensor, idx_j: torch.Tensor
-    ) -> torch.Tensor:
+    def valuation_of_difference(self, idx_i: torch.Tensor, idx_j: torch.Tensor) -> torch.Tensor:
         """Compute v_3(|i - j|) for pairs of indices.
 
         This is the key operation for 3-adic distance computation.
@@ -231,9 +225,7 @@ class TernarySpace:
         """Check if ternary representation is valid."""
         return ((ternary == -1) | (ternary == 0) | (ternary == 1)).all(dim=-1)
 
-    def sample_indices(
-        self, n: int, device: Optional[torch.device] = None
-    ) -> torch.Tensor:
+    def sample_indices(self, n: int, device: Optional[torch.device] = None) -> torch.Tensor:
         """Sample random operation indices.
 
         Args:

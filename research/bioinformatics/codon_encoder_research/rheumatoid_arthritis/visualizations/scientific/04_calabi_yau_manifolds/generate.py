@@ -20,7 +20,6 @@ try:
 except ImportError:
     HAS_PLOTLY = False
     import matplotlib.pyplot as plt
-    from mpl_toolkits.mplot3d import Axes3D
 
 
 def calabi_yau_surface(u, v, n=3):
@@ -153,7 +152,9 @@ def create_plotly_calabi_yau():
                 z=[z],
                 mode="markers+text",
                 marker=dict(
-                    size=12, color=data["color"], line=dict(width=2, color="white")
+                    size=12,
+                    color=data["color"],
+                    line=dict(width=2, color="white"),
                 ),
                 text=[protein],
                 textposition="top center",
@@ -179,7 +180,8 @@ def create_plotly_calabi_yau():
     # Layout
     fig.update_layout(
         title=dict(
-            text="Regenerative Axis: Calabi-Yau Manifold Projection", font=dict(size=20)
+            text="Regenerative Axis: Calabi-Yau Manifold Projection",
+            font=dict(size=20),
         ),
         scene=dict(
             xaxis_title="Re(z₁)",
@@ -268,9 +270,7 @@ def create_regenerative_distance_viz():
     # Calculate pathway centroids
     centroids = {}
     for pathway in pathway_names:
-        proteins_in_pathway = [
-            p for p, d in embeddings.items() if d["pathway"] == pathway
-        ]
+        proteins_in_pathway = [p for p, d in embeddings.items() if d["pathway"] == pathway]
         us = [embeddings[p]["u"] for p in proteins_in_pathway]
         vs = [embeddings[p]["v"] for p in proteins_in_pathway]
         centroids[pathway] = (np.mean(us), np.mean(vs))
@@ -297,16 +297,14 @@ def create_regenerative_distance_viz():
         col=2,
     )
 
-    fig.update_layout(
-        title="Pathway Geometry on Calabi-Yau Manifold", height=700, width=1200
-    )
+    fig.update_layout(title="Pathway Geometry on Calabi-Yau Manifold", height=700, width=1200)
 
     return fig
 
 
 def create_matplotlib_fallback():
     """Matplotlib fallback for systems without plotly."""
-    from utils.plotting import save_figure, setup_scientific_style
+    from utils.plotting import setup_scientific_style
 
     setup_scientific_style()
     embeddings, pathways = generate_pathway_embeddings()
@@ -341,7 +339,11 @@ def create_matplotlib_fallback():
     for pathway, pdata in pathways.items():
         ax2.scatter([0.1], [y_pos], c=pdata["color"], s=200)
         ax2.text(
-            0.2, y_pos, pathway.replace("_", " ").title(), fontsize=12, va="center"
+            0.2,
+            y_pos,
+            pathway.replace("_", " ").title(),
+            fontsize=12,
+            va="center",
         )
         ax2.text(
             0.2,
@@ -385,7 +387,7 @@ def main():
                 height=900,
                 scale=2,
             )
-            print(f"Saved static PNG")
+            print("Saved static PNG")
         except Exception as e:
             print(f"Static export skipped: {e}")
     else:

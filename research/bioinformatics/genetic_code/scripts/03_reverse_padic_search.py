@@ -27,9 +27,8 @@ sys.path.insert(0, str(PROJECT_ROOT))
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-from scipy import stats
 from scipy.cluster.hierarchy import fcluster, linkage
-from scipy.spatial.distance import pdist, squareform
+from scipy.spatial.distance import pdist
 
 # Genetic code degeneracy pattern: how many codons per amino acid
 # Sorted: [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4, 6, 6, 6]
@@ -192,9 +191,7 @@ def find_natural_clusters(embeddings, n_points=64, n_clusters=21, n_samples=1000
             best_labels = labels
 
             if i % 100 == 0:
-                print(
-                    f"    Iter {i}: quality={quality:.3f}, valid_balls={n_valid}/{n_clusters}"
-                )
+                print(f"    Iter {i}: quality={quality:.3f}, valid_balls={n_valid}/{n_clusters}")
 
     print(f"\n  Best configuration: quality={best_quality:.3f}")
 
@@ -207,7 +204,7 @@ def find_by_valuation_structure(embeddings, valuations, n_clusters=21):
     Idea: The genetic code has a specific degeneracy pattern.
     We look for points at different valuation levels that cluster naturally.
     """
-    print(f"\n  Searching using valuation structure...")
+    print("\n  Searching using valuation structure...")
 
     # Target degeneracy pattern (sorted)
     target_pattern = sorted(GENETIC_CODE_DEGENERACY)
@@ -220,9 +217,7 @@ def find_by_valuation_structure(embeddings, valuations, n_clusters=21):
             val_to_indices[v_int] = []
         val_to_indices[v_int].append(i)
 
-    print(
-        f"    Valuation distribution: {[(v, len(idx)) for v, idx in sorted(val_to_indices.items())]}"
-    )
+    print(f"    Valuation distribution: {[(v, len(idx)) for v, idx in sorted(val_to_indices.items())]}")
 
     # Strategy: Select from high-valuation levels first (they're rarer and more structured)
     # Then fill with lower-valuation points
@@ -261,9 +256,7 @@ def find_by_valuation_structure(embeddings, valuations, n_clusters=21):
             chosen_val = np.random.choice(valid_vals, p=weights)
 
             # Pick cluster_size points from this valuation
-            available = [
-                i for i in val_to_indices[chosen_val] if i not in selected_indices
-            ]
+            available = [i for i in val_to_indices[chosen_val] if i not in selected_indices]
             chosen_points = np.random.choice(available, cluster_size, replace=False)
 
             selected_indices.extend(chosen_points)
@@ -274,9 +267,7 @@ def find_by_valuation_structure(embeddings, valuations, n_clusters=21):
             continue
 
         # Evaluate quality
-        quality, n_valid = compute_ball_quality(
-            np.array(selected_indices), embeddings, selected_labels
-        )
+        quality, n_valid = compute_ball_quality(np.array(selected_indices), embeddings, selected_labels)
 
         if quality > best_quality:
             best_quality = quality
@@ -293,7 +284,7 @@ def find_by_radius_bands(embeddings, n_clusters=21):
 
     Idea: Points at similar radius (= similar valuation) should cluster together.
     """
-    print(f"\n  Searching using radius bands...")
+    print("\n  Searching using radius bands...")
 
     radii = np.linalg.norm(embeddings, axis=1)
 
@@ -333,9 +324,7 @@ def find_by_radius_bands(embeddings, n_clusters=21):
         if len(selected_indices) != 64:
             continue
 
-        quality, n_valid = compute_ball_quality(
-            np.array(selected_indices), embeddings, selected_labels
-        )
+        quality, n_valid = compute_ball_quality(np.array(selected_indices), embeddings, selected_labels)
 
         if quality > best_quality:
             best_quality = quality
@@ -353,11 +342,9 @@ def find_optimal_64_greedy(embeddings, valuations, n_clusters=21):
     Start with highest-valuation points (most structured), add points
     that maximize cluster separation.
     """
-    print(f"\n  Greedy search for optimal 64 points...")
+    print("\n  Greedy search for optimal 64 points...")
 
-    target_pattern = sorted(
-        GENETIC_CODE_DEGENERACY, reverse=True
-    )  # Start with largest clusters
+    target_pattern = sorted(GENETIC_CODE_DEGENERACY, reverse=True)  # Start with largest clusters
 
     # Sort all points by valuation (descending) then radius
     radii = np.linalg.norm(embeddings, axis=1)
@@ -389,11 +376,7 @@ def find_optimal_64_greedy(embeddings, valuations, n_clusters=21):
             cluster_points = []
 
             # Seed with a random high-valuation unused point
-            candidates = [
-                sorted_indices[i]
-                for i in range(min(1000, len(sorted_indices)))
-                if sorted_indices[i] not in used
-            ]
+            candidates = [sorted_indices[i] for i in range(min(1000, len(sorted_indices))) if sorted_indices[i] not in used]
 
             if not candidates:
                 candidates = [i for i in range(len(embeddings)) if i not in used]
@@ -434,9 +417,7 @@ def find_optimal_64_greedy(embeddings, valuations, n_clusters=21):
         if len(selected_indices) != 64:
             continue
 
-        quality, n_valid = compute_ball_quality(
-            np.array(selected_indices), embeddings, selected_labels
-        )
+        quality, n_valid = compute_ball_quality(np.array(selected_indices), embeddings, selected_labels)
 
         if quality > best_quality:
             best_quality = quality
@@ -471,31 +452,27 @@ def analyze_best_configuration(indices, labels, embeddings, valuations):
     target_sizes = sorted(GENETIC_CODE_DEGENERACY)
 
     if actual_sizes == target_sizes:
-        print(f"\n  *** PERFECT MATCH to genetic code degeneracy pattern! ***")
+        print("\n  *** PERFECT MATCH to genetic code degeneracy pattern! ***")
 
     # Valuation distribution
-    print(f"\n  Valuation distribution of selected points:")
+    print("\n  Valuation distribution of selected points:")
     val_counts = Counter(selected_valuations.astype(int))
     for v in sorted(val_counts.keys()):
         print(f"    v={v}: {val_counts[v]} points")
 
     # Radius by cluster
-    print(f"\n  Mean radius by cluster:")
+    print("\n  Mean radius by cluster:")
     for c in unique_labels[:5]:  # Show first 5
         c_mask = np.array(labels) == c
         c_radii = selected_radii[c_mask]
-        print(
-            f"    Cluster {c} (n={c_mask.sum()}): radius = {c_radii.mean():.4f} +/- {c_radii.std():.4f}"
-        )
+        print(f"    Cluster {c} (n={c_mask.sum()}): radius = {c_radii.mean():.4f} +/- {c_radii.std():.4f}")
 
     # Valuation by cluster
-    print(f"\n  Mean valuation by cluster:")
+    print("\n  Mean valuation by cluster:")
     for c in unique_labels[:5]:
         c_mask = np.array(labels) == c
         c_vals = selected_valuations[c_mask]
-        print(
-            f"    Cluster {c} (n={c_mask.sum()}): valuation = {c_vals.mean():.2f} +/- {c_vals.std():.2f}"
-        )
+        print(f"    Cluster {c} (n={c_mask.sum()}): valuation = {c_vals.mean():.2f} +/- {c_vals.std():.2f}")
 
     return {
         "n_clusters": len(unique_labels),
@@ -545,7 +522,11 @@ def visualize_configuration(indices, labels, embeddings, valuations, output_dir)
     for i, c in enumerate(unique_labels):
         mask = np.array(labels) == c
         ax2.scatter(
-            selected_vals[mask], selected_radii[mask], c=[colors[i]], s=80, alpha=0.7
+            selected_vals[mask],
+            selected_radii[mask],
+            c=[colors[i]],
+            s=80,
+            alpha=0.7,
         )
 
     ax2.set_xlabel("3-adic Valuation")
@@ -633,18 +614,14 @@ def main():
     print("\n" + "-" * 50)
     print("METHOD 1: Random Sampling + Hierarchical Clustering")
     print("-" * 50)
-    idx1, labels1, quality1 = find_natural_clusters(
-        z_B, n_points=64, n_clusters=21, n_samples=500
-    )
+    idx1, labels1, quality1 = find_natural_clusters(z_B, n_points=64, n_clusters=21, n_samples=500)
     results["methods"]["random_clustering"] = {"quality": quality1}
 
     # Method 2: Valuation-based selection
     print("\n" + "-" * 50)
     print("METHOD 2: Valuation-Based Selection")
     print("-" * 50)
-    idx2, labels2, quality2 = find_by_valuation_structure(
-        z_B, valuations, n_clusters=21
-    )
+    idx2, labels2, quality2 = find_by_valuation_structure(z_B, valuations, n_clusters=21)
     results["methods"]["valuation_based"] = {"quality": quality2}
 
     # Method 3: Radius bands
@@ -678,17 +655,13 @@ def main():
 
     if best_method[1] is not None:
         # Analyze best configuration
-        analysis = analyze_best_configuration(
-            best_method[1], best_method[2], z_B, valuations
-        )
+        analysis = analyze_best_configuration(best_method[1], best_method[2], z_B, valuations)
         results["best_method"] = best_method[0]
         results["best_quality"] = best_method[3]
         results["best_analysis"] = analysis
 
         # Visualize
-        visualize_configuration(
-            best_method[1], best_method[2], z_B, valuations, output_dir
-        )
+        visualize_configuration(best_method[1], best_method[2], z_B, valuations, output_dir)
 
         # Key insight: What makes these 64 points special?
         print("\n" + "=" * 70)
@@ -703,12 +676,8 @@ def main():
         print(f"  Mean valuation (selected 64): {selected_vals_mean:.3f}")
 
         if selected_vals_mean > all_vals_mean + 0.5:
-            print(
-                f"\n  *** Selected points have HIGHER valuation (more divisible by 3) ***"
-            )
-            print(
-                f"  This suggests the genetic code maps to 'deeper' algebraic operations!"
-            )
+            print("\n  *** Selected points have HIGHER valuation (more divisible by 3) ***")
+            print("  This suggests the genetic code maps to 'deeper' algebraic operations!")
 
         # Check if high-valuation points cluster better
         high_val_mask = selected_vals >= 2

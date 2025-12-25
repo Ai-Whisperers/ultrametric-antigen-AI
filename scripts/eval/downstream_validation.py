@@ -71,9 +71,7 @@ def load_model(checkpoint_path: Path, device: str = "cuda"):
         state = checkpoint
 
     # Load all trainable weights (projection + encoder_B for Option C)
-    trainable_state = {
-        k: v for k, v in state.items() if "projection" in k or "encoder_B" in k
-    }
+    trainable_state = {k: v for k, v in state.items() if "projection" in k or "encoder_B" in k}
     if trainable_state:
         model.load_state_dict(trainable_state, strict=False)
         print(f"Loaded {len(trainable_state)} weight tensors from {checkpoint_path}")
@@ -122,7 +120,10 @@ def test_nearest_neighbor_retrieval(embeddings: dict, k: int = 10):
 
     results = {}
 
-    for name, z in [("VAE-A", embeddings["z_A"]), ("VAE-B", embeddings["z_B"])]:
+    for name, z in [
+        ("VAE-A", embeddings["z_A"]),
+        ("VAE-B", embeddings["z_B"]),
+    ]:
         valuations = embeddings["valuations"]
 
         # Fit k-NN
@@ -188,7 +189,10 @@ def test_hierarchy_preservation(embeddings: dict):
 
     results = {}
 
-    for name, z in [("VAE-A", embeddings["z_A"]), ("VAE-B", embeddings["z_B"])]:
+    for name, z in [
+        ("VAE-A", embeddings["z_A"]),
+        ("VAE-B", embeddings["z_B"]),
+    ]:
         valuations = embeddings["valuations"]
         radii = np.linalg.norm(z, axis=1)
 
@@ -255,7 +259,10 @@ def test_arithmetic_structure(embeddings: dict):
     operations = embeddings["operations"]
     valuations = embeddings["valuations"]
 
-    for name, z in [("VAE-A", embeddings["z_A"]), ("VAE-B", embeddings["z_B"])]:
+    for name, z in [
+        ("VAE-A", embeddings["z_A"]),
+        ("VAE-B", embeddings["z_B"]),
+    ]:
         # Task 1: Predict valuation level (multi-class classification)
         # Bin valuations into 3 classes: low (0-2), mid (3-5), high (6-9)
         val_classes = np.zeros(len(valuations), dtype=int)
@@ -280,22 +287,14 @@ def test_arithmetic_structure(embeddings: dict):
         result_c0 = np.array([op[6] for op in operations])  # First result component
         result_c0_class = result_c0 + 1  # Map to 0, 1, 2
 
-        clf_c0 = LogisticRegression(
-            max_iter=1000, random_state=42, multi_class="multinomial"
-        )
+        clf_c0 = LogisticRegression(max_iter=1000, random_state=42, multi_class="multinomial")
         c0_scores = cross_val_score(clf_c0, z, result_c0_class, cv=5)
         c0_accuracy = c0_scores.mean()
 
         print(f"\n{name}:")
-        print(
-            f"  Valuation class prediction (3-class): {val_accuracy*100:.1f}% (baseline: 33.3%)"
-        )
-        print(
-            f"  Has-zero prediction (binary): {zero_accuracy*100:.1f}% (baseline: ~50%)"
-        )
-        print(
-            f"  Result component prediction (3-class): {c0_accuracy*100:.1f}% (baseline: 33.3%)"
-        )
+        print(f"  Valuation class prediction (3-class): {val_accuracy*100:.1f}% (baseline: 33.3%)")
+        print(f"  Has-zero prediction (binary): {zero_accuracy*100:.1f}% (baseline: ~50%)")
+        print(f"  Result component prediction (3-class): {c0_accuracy*100:.1f}% (baseline: 33.3%)")
 
         results[name] = {
             "valuation_accuracy": val_accuracy,
@@ -306,9 +305,7 @@ def test_arithmetic_structure(embeddings: dict):
     return results
 
 
-def compute_production_readiness_score(
-    nn_results, hierarchy_results, arithmetic_results
-):
+def compute_production_readiness_score(nn_results, hierarchy_results, arithmetic_results):
     """Compute overall production readiness score."""
     print("\n" + "=" * 60)
     print("PRODUCTION READINESS ASSESSMENT")
@@ -383,9 +380,7 @@ def main():
         help="Path to model checkpoint",
     )
     parser.add_argument("--device", type=str, default="cuda", help="Device to use")
-    parser.add_argument(
-        "--k", type=int, default=10, help="Number of neighbors for NN test"
-    )
+    parser.add_argument("--k", type=int, default=10, help="Number of neighbors for NN test")
     args = parser.parse_args()
 
     device = args.device if torch.cuda.is_available() else "cpu"
@@ -396,16 +391,8 @@ def main():
     if not checkpoint_path.exists():
         # Try to find latest checkpoint
         alt_paths = [
-            PROJECT_ROOT
-            / "sandbox-training"
-            / "checkpoints"
-            / "ternary_option_c_dual"
-            / "best.pt",
-            PROJECT_ROOT
-            / "sandbox-training"
-            / "checkpoints"
-            / "ternary_option_c_dual"
-            / "latest.pt",
+            PROJECT_ROOT / "sandbox-training" / "checkpoints" / "ternary_option_c_dual" / "best.pt",
+            PROJECT_ROOT / "sandbox-training" / "checkpoints" / "ternary_option_c_dual" / "latest.pt",
         ]
         for alt in alt_paths:
             if alt.exists():
@@ -429,9 +416,7 @@ def main():
     arithmetic_results = test_arithmetic_structure(embeddings)
 
     # Production readiness assessment
-    passed, total = compute_production_readiness_score(
-        nn_results, hierarchy_results, arithmetic_results
-    )
+    passed, total = compute_production_readiness_score(nn_results, hierarchy_results, arithmetic_results)
 
     print("\n" + "=" * 60)
     print("VALIDATION COMPLETE")

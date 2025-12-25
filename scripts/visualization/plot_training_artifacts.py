@@ -57,7 +57,8 @@ def plot_benchmark_summary(output_path):
     ax.set_ylim(98, 100)
     ax.legend()
     for bar, val in zip(
-        bars, [coverage["vae_a_mean_coverage"], coverage["vae_b_mean_coverage"]]
+        bars,
+        [coverage["vae_a_mean_coverage"], coverage["vae_b_mean_coverage"]],
     ):
         ax.text(
             bar.get_x() + bar.get_width() / 2,
@@ -145,12 +146,8 @@ def plot_benchmark_summary(output_path):
     # Coverage distribution (simulated from mean/std)
     ax = fig.add_subplot(gs[1, 1])
     np.random.seed(42)
-    cov_A = np.random.normal(
-        coverage["vae_a_mean_coverage"], coverage["vae_a_std_coverage"], 1000
-    )
-    cov_B = np.random.normal(
-        coverage["vae_b_mean_coverage"], coverage["vae_b_std_coverage"], 1000
-    )
+    cov_A = np.random.normal(coverage["vae_a_mean_coverage"], coverage["vae_a_std_coverage"], 1000)
+    cov_B = np.random.normal(coverage["vae_b_mean_coverage"], coverage["vae_b_std_coverage"], 1000)
     ax.hist(cov_A, bins=30, alpha=0.5, label="VAE-A", color="#3498db", density=True)
     ax.hist(cov_B, bins=30, alpha=0.5, label="VAE-B", color="#e74c3c", density=True)
     ax.axvline(99.0, color="green", linestyle="--", label="99% target")
@@ -202,9 +199,7 @@ def plot_benchmark_summary(output_path):
 
 def plot_manifold_resolution(output_path):
     """Plot manifold resolution analysis."""
-    data = load_json(
-        PROJECT_ROOT / "reports" / "benchmarks" / "manifold_resolution_3.json"
-    )
+    data = load_json(PROJECT_ROOT / "reports" / "benchmarks" / "manifold_resolution_3.json")
 
     fig = plt.figure(figsize=(18, 12))
     gs = GridSpec(3, 3, figure=fig)
@@ -333,10 +328,14 @@ def plot_manifold_resolution(output_path):
         return max_ev * np.exp(-decay * np.arange(n_dims))
 
     ev_A = make_spectrum(
-        dim_A["max_eigenvalue"], dim_A["min_eigenvalue"], dim_A["effective_dim"]
+        dim_A["max_eigenvalue"],
+        dim_A["min_eigenvalue"],
+        dim_A["effective_dim"],
     )
     ev_B = make_spectrum(
-        dim_B["max_eigenvalue"], dim_B["min_eigenvalue"], dim_B["effective_dim"]
+        dim_B["max_eigenvalue"],
+        dim_B["min_eigenvalue"],
+        dim_B["effective_dim"],
     )
     ax.semilogy(range(1, 17), ev_A, "o-", label="VAE-A", color="#3498db")
     ax.semilogy(range(1, 17), ev_B, "s-", label="VAE-B", color="#e74c3c")
@@ -365,8 +364,14 @@ def plot_manifold_resolution(output_path):
     interp_A = data["vae_a"]["interpolation"]
     interp_B = data["vae_b"]["interpolation"]
     metrics = ["Mean Error", "Std Error"]
-    vals_A = [interp_A["mean_interpolation_error"], interp_A["std_interpolation_error"]]
-    vals_B = [interp_B["mean_interpolation_error"], interp_B["std_interpolation_error"]]
+    vals_A = [
+        interp_A["mean_interpolation_error"],
+        interp_A["std_interpolation_error"],
+    ]
+    vals_B = [
+        interp_B["mean_interpolation_error"],
+        interp_B["std_interpolation_error"],
+    ]
     x = np.arange(len(metrics))
     ax.bar(x - width / 2, vals_A, width, label="VAE-A", color="#3498db", alpha=0.8)
     ax.bar(x + width / 2, vals_B, width, label="VAE-B", color="#e74c3c", alpha=0.8)
@@ -434,9 +439,7 @@ def plot_manifold_resolution(output_path):
 
 def plot_coupled_system(output_path):
     """Plot coupled dual-VAE system analysis."""
-    data = load_json(
-        PROJECT_ROOT / "reports" / "benchmarks" / "coupled_resolution_3.json"
-    )
+    data = load_json(PROJECT_ROOT / "reports" / "benchmarks" / "coupled_resolution_3.json")
 
     fig = plt.figure(figsize=(16, 10))
     gs = GridSpec(2, 3, figure=fig)
@@ -502,7 +505,12 @@ def plot_coupled_system(output_path):
     # Complementarity
     ax = fig.add_subplot(gs[0, 2])
     comp = data["complementary_coverage"]
-    categories = ["Both\nPerfect", "VAE-A\nBest", "VAE-B\nBest", "Both\nImperfect"]
+    categories = [
+        "Both\nPerfect",
+        "VAE-A\nBest",
+        "VAE-B\nBest",
+        "Both\nImperfect",
+    ]
     counts = [
         comp["both_perfect"],
         comp["vae_a_best"],
@@ -534,9 +542,7 @@ def plot_coupled_system(output_path):
     # Distance distribution (simulated)
     ax = fig.add_subplot(gs[1, 1])
     np.random.seed(42)
-    distances = np.random.normal(
-        coupling["mean_distance"], coupling["std_distance"], 1000
-    )
+    distances = np.random.normal(coupling["mean_distance"], coupling["std_distance"], 1000)
     ax.hist(distances, bins=50, color="purple", alpha=0.7, edgecolor="black")
     ax.axvline(
         coupling["mean_distance"],
@@ -558,9 +564,7 @@ def plot_coupled_system(output_path):
     )
     ax.set_xlabel("Inter-VAE Latent Distance")
     ax.set_ylabel("Count")
-    ax.set_title(
-        "Distance Between VAE-A and VAE-B Encodings\n(Same operation encoded by both)"
-    )
+    ax.set_title("Distance Between VAE-A and VAE-B Encodings\n(Same operation encoded by both)")
     ax.legend()
 
     # System resolution breakdown
@@ -574,7 +578,10 @@ def plot_coupled_system(output_path):
         sys_res["overall"],
     ]
     bars = ax.barh(
-        categories, values, color=["green", "blue", "purple", "gold"], alpha=0.8
+        categories,
+        values,
+        color=["green", "blue", "purple", "gold"],
+        alpha=0.8,
     )
     ax.set_xlabel("Score")
     ax.set_title("System Resolution Breakdown")
@@ -662,9 +669,7 @@ def plot_checkpoint_evolution(output_path):
     ax.plot(epochs, coverage_A / 19683 * 100, "o-", label="VAE-A", color="#3498db")
     ax.plot(epochs, coverage_B / 19683 * 100, "s-", label="VAE-B", color="#e74c3c")
     ax.axhline(99, color="green", linestyle="--", alpha=0.5, label="99% target")
-    ax.fill_between(
-        [0, 40], [90, 90], [100, 100], alpha=0.1, color="blue", label="Phase 1"
-    )
+    ax.fill_between([0, 40], [90, 90], [100, 100], alpha=0.1, color="blue", label="Phase 1")
     ax.fill_between([40, 120], [90, 90], [100, 100], alpha=0.1, color="green")
     ax.set_xlabel("Epoch")
     ax.set_ylabel("Coverage (%)")
@@ -739,7 +744,12 @@ def main():
     for f in sorted(output_path.glob("*.png")):
         if any(
             x in f.name
-            for x in ["benchmark", "manifold_resolution", "coupled", "checkpoint"]
+            for x in [
+                "benchmark",
+                "manifold_resolution",
+                "coupled",
+                "checkpoint",
+            ]
         ):
             print(f"  - {f.name}")
 

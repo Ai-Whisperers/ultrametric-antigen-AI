@@ -4,7 +4,6 @@
 # See LICENSE file in the repository root for full license text.
 
 import copy
-from typing import Dict, List, Optional
 
 import torch
 import torch.nn as nn
@@ -65,9 +64,7 @@ class SwarmTrainer:
                 else:
                     # For int buffers (like num_batches_tracked), median or mode?
                     # Usually take mode or just the first one. Rounding mean for now.
-                    avg_state_dict[key] = torch.round(
-                        torch.mean(stack.float(), dim=0)
-                    ).long()
+                    avg_state_dict[key] = torch.round(torch.mean(stack.float(), dim=0)).long()
 
         # 3. Redistribute to swarm
         for agent in self.agents:

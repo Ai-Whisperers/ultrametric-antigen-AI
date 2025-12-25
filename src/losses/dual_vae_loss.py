@@ -49,10 +49,7 @@ class ReconstructionLoss(nn.Module):
         batch_size = x.size(0)
         x_classes = (x + 1).long()  # Convert {-1, 0, 1} to {0, 1, 2}
 
-        loss = (
-            F.cross_entropy(logits.view(-1, 3), x_classes.view(-1), reduction="sum")
-            / batch_size
-        )
+        loss = F.cross_entropy(logits.view(-1, 3), x_classes.view(-1), reduction="sum") / batch_size
 
         return loss
 
@@ -209,9 +206,7 @@ class DualVAELoss(nn.Module):
             self.norm_loss_weight = self.padic_config.get("norm_loss_weight", 0.05)
 
         # v5.8: PAdicRankingLossV2 (hard negative mining + hierarchical margin)
-        self.enable_ranking_loss_v2 = self.padic_config.get(
-            "enable_ranking_loss_v2", False
-        )
+        self.enable_ranking_loss_v2 = self.padic_config.get("enable_ranking_loss_v2", False)
         if self.enable_ranking_loss_v2:
             v2_config = self.padic_config.get("ranking_v2", {})
             self.padic_ranking_loss_v2 = PAdicRankingLossV2(
@@ -224,9 +219,7 @@ class DualVAELoss(nn.Module):
             self.ranking_v2_weight = self.padic_config.get("ranking_v2_weight", 0.5)
 
         # v5.9: PAdicRankingLossHyperbolic (Poincare distance + radial hierarchy)
-        self.enable_ranking_loss_hyperbolic = self.padic_config.get(
-            "enable_ranking_loss_hyperbolic", False
-        )
+        self.enable_ranking_loss_hyperbolic = self.padic_config.get("enable_ranking_loss_hyperbolic", False)
         if self.enable_ranking_loss_hyperbolic:
             hyp_config = self.padic_config.get("ranking_hyperbolic", {})
             self.padic_ranking_loss_hyperbolic = PAdicRankingLossHyperbolic(
@@ -248,9 +241,7 @@ class DualVAELoss(nn.Module):
         if self.use_hyperbolic_prior:
             prior_config = hyp_config_v10.get("prior", {})
             use_homeostatic = prior_config.get("homeostatic", True)
-            PriorClass = (
-                HomeostaticHyperbolicPrior if use_homeostatic else HyperbolicPrior
-            )
+            PriorClass = HomeostaticHyperbolicPrior if use_homeostatic else HyperbolicPrior
             self.hyperbolic_prior_A = PriorClass(
                 latent_dim=prior_config.get("latent_dim", 16),
                 curvature=prior_config.get("curvature", 2.0),
@@ -269,9 +260,7 @@ class DualVAELoss(nn.Module):
         if self.use_hyperbolic_recon:
             recon_config = hyp_config_v10.get("recon", {})
             use_homeostatic = recon_config.get("homeostatic", True)
-            ReconClass = (
-                HomeostaticReconLoss if use_homeostatic else HyperbolicReconLoss
-            )
+            ReconClass = HomeostaticReconLoss if use_homeostatic else HyperbolicReconLoss
             self.hyperbolic_recon_A = ReconClass(
                 mode=recon_config.get("mode", "hybrid"),
                 curvature=recon_config.get("curvature", 2.0),
@@ -349,18 +338,11 @@ class DualVAELoss(nn.Module):
         loss_A = ce_A + outputs["beta_A"] * kl_A
 
         # VAE-B losses
-        entropy_B = -self.entropy_loss(
-            outputs["logits_B"]
-        )  # Negate to get actual entropy
+        entropy_B = -self.entropy_loss(outputs["logits_B"])  # Negate to get actual entropy
         entropy_loss_B = -entropy_B  # Loss term (negative entropy)
         repulsion_B = self.repulsion_loss(outputs["z_B"])
 
-        loss_B = (
-            ce_B
-            + outputs["beta_B"] * kl_B
-            + entropy_weight_B * entropy_loss_B
-            + repulsion_weight_B * repulsion_B
-        )
+        loss_B = ce_B + outputs["beta_B"] * kl_B + entropy_weight_B * entropy_loss_B + repulsion_weight_B * repulsion_B
 
         # Gradient normalization
         if gradient_balance and training:
@@ -377,11 +359,7 @@ class DualVAELoss(nn.Module):
         entropy_align = torch.abs(outputs["H_A"] - outputs["H_B"])
 
         # Total loss (base)
-        total_loss = (
-            lambda1 * loss_A * grad_scale_A
-            + lambda2 * loss_B * grad_scale_B
-            + lambda3 * entropy_align
-        )
+        total_loss = lambda1 * loss_A * grad_scale_A + lambda2 * loss_B * grad_scale_B + lambda3 * entropy_align
 
         # P0 FIX: Use Python floats instead of GPU tensor zeros for disabled modules.
         # Only allocate tensors when modules are actually enabled and called.
@@ -433,52 +411,32 @@ class DualVAELoss(nn.Module):
             if self.enable_metric_loss:
                 padic_metric_A = self.padic_metric_loss(outputs["z_A"], batch_indices)
                 padic_metric_B = self.padic_metric_loss(outputs["z_B"], batch_indices)
-                total_loss = total_loss + self.metric_loss_weight * (
-                    padic_metric_A + padic_metric_B
-                )
+                total_loss = total_loss + self.metric_loss_weight * (padic_metric_A + padic_metric_B)
 
             # Phase 1A-alt: p-Adic Ranking Loss (triplet-based, better for scale mismatch)
             if self.enable_ranking_loss:
                 padic_ranking_A = self.padic_ranking_loss(outputs["z_A"], batch_indices)
                 padic_ranking_B = self.padic_ranking_loss(outputs["z_B"], batch_indices)
-                total_loss = total_loss + self.ranking_loss_weight * (
-                    padic_ranking_A + padic_ranking_B
-                )
+                total_loss = total_loss + self.ranking_loss_weight * (padic_ranking_A + padic_ranking_B)
 
             # Phase 1B: p-Adic Norm Loss
             if self.enable_norm_loss:
                 padic_norm_A = self.padic_norm_loss(outputs["z_A"], batch_indices)
                 padic_norm_B = self.padic_norm_loss(outputs["z_B"], batch_indices)
-                total_loss = total_loss + self.norm_loss_weight * (
-                    padic_norm_A + padic_norm_B
-                )
+                total_loss = total_loss + self.norm_loss_weight * (padic_norm_A + padic_norm_B)
 
             # v5.8: PAdicRankingLossV2 (hard negative mining + hierarchical margin)
             if self.enable_ranking_loss_v2:
-                padic_ranking_v2_A, metrics_v2_A = self.padic_ranking_loss_v2(
-                    outputs["z_A"], batch_indices
-                )
-                padic_ranking_v2_B, metrics_v2_B = self.padic_ranking_loss_v2(
-                    outputs["z_B"], batch_indices
-                )
-                total_loss = total_loss + self.ranking_v2_weight * (
-                    padic_ranking_v2_A + padic_ranking_v2_B
-                )
+                padic_ranking_v2_A, metrics_v2_A = self.padic_ranking_loss_v2(outputs["z_A"], batch_indices)
+                padic_ranking_v2_B, metrics_v2_B = self.padic_ranking_loss_v2(outputs["z_B"], batch_indices)
+                total_loss = total_loss + self.ranking_v2_weight * (padic_ranking_v2_A + padic_ranking_v2_B)
 
             # v5.9: PAdicRankingLossHyperbolic (Poincare distance + radial hierarchy)
             if self.enable_ranking_loss_hyperbolic:
                 # Use override weight if provided (for continuous feedback)
-                hyp_weight = (
-                    ranking_weight_override
-                    if ranking_weight_override is not None
-                    else self.ranking_hyperbolic_weight
-                )
-                padic_hyp_A, metrics_hyp_A = self.padic_ranking_loss_hyperbolic(
-                    outputs["z_A"], batch_indices
-                )
-                padic_hyp_B, metrics_hyp_B = self.padic_ranking_loss_hyperbolic(
-                    outputs["z_B"], batch_indices
-                )
+                hyp_weight = ranking_weight_override if ranking_weight_override is not None else self.ranking_hyperbolic_weight
+                padic_hyp_A, metrics_hyp_A = self.padic_ranking_loss_hyperbolic(outputs["z_A"], batch_indices)
+                padic_hyp_B, metrics_hyp_B = self.padic_ranking_loss_hyperbolic(outputs["z_B"], batch_indices)
                 total_loss = total_loss + hyp_weight * (padic_hyp_A + padic_hyp_B)
 
         # v5.10: Hyperbolic metrics initialization - lazy init
@@ -488,33 +446,21 @@ class DualVAELoss(nn.Module):
 
         # v5.10: Hyperbolic Centroid Loss (tree structure) - requires batch_indices
         if batch_indices is not None and self.use_centroid_loss:
-            centroid_loss_A, centroid_metrics_A = self.centroid_loss(
-                outputs["z_A"], batch_indices
-            )
-            centroid_loss_B, centroid_metrics_B = self.centroid_loss(
-                outputs["z_B"], batch_indices
-            )
-            total_loss = total_loss + self.centroid_loss_weight * (
-                centroid_loss_A + centroid_loss_B
-            )
+            centroid_loss_A, centroid_metrics_A = self.centroid_loss(outputs["z_A"], batch_indices)
+            centroid_loss_B, centroid_metrics_B = self.centroid_loss(outputs["z_B"], batch_indices)
+            total_loss = total_loss + self.centroid_loss_weight * (centroid_loss_A + centroid_loss_B)
             hyp_v10_metrics["centroid_loss_A"] = centroid_loss_A.item()
             hyp_v10_metrics["centroid_loss_B"] = centroid_loss_B.item()
 
         if self.use_hyperbolic_prior:
-            hyp_kl_A, z_hyp_A = self.hyperbolic_prior_A(
-                outputs["mu_A"], outputs["logvar_A"]
-            )
-            hyp_kl_B, z_hyp_B = self.hyperbolic_prior_B(
-                outputs["mu_B"], outputs["logvar_B"]
-            )
+            hyp_kl_A, z_hyp_A = self.hyperbolic_prior_A(outputs["mu_A"], outputs["logvar_A"])
+            hyp_kl_B, z_hyp_B = self.hyperbolic_prior_B(outputs["mu_B"], outputs["logvar_B"])
 
             # Replace Euclidean KL in loss_A and loss_B
             # Note: This modifies the already-computed total_loss
             kl_replacement_A = outputs["beta_A"] * (hyp_kl_A - kl_A)
             kl_replacement_B = outputs["beta_B"] * (hyp_kl_B - kl_B)
-            total_loss = (
-                total_loss + lambda1 * kl_replacement_A + lambda2 * kl_replacement_B
-            )
+            total_loss = total_loss + lambda1 * kl_replacement_A + lambda2 * kl_replacement_B
 
             hyp_v10_metrics["hyp_kl_A"] = hyp_kl_A.item()
             hyp_v10_metrics["hyp_kl_B"] = hyp_kl_B.item()
@@ -537,15 +483,9 @@ class DualVAELoss(nn.Module):
         hyp_recon_B = 0.0
 
         if self.use_hyperbolic_recon:
-            hyp_recon_A, recon_metrics_A = self.hyperbolic_recon_A(
-                outputs["logits_A"], x, outputs["z_A"]
-            )
-            hyp_recon_B, recon_metrics_B = self.hyperbolic_recon_B(
-                outputs["logits_B"], x, outputs["z_B"]
-            )
-            total_loss = total_loss + self.hyperbolic_recon_weight * (
-                hyp_recon_A + hyp_recon_B
-            )
+            hyp_recon_A, recon_metrics_A = self.hyperbolic_recon_A(outputs["logits_A"], x, outputs["z_A"])
+            hyp_recon_B, recon_metrics_B = self.hyperbolic_recon_B(outputs["logits_B"], x, outputs["z_B"])
+            total_loss = total_loss + self.hyperbolic_recon_weight * (hyp_recon_A + hyp_recon_B)
 
             hyp_v10_metrics["hyp_recon_A"] = hyp_recon_A.item()
             hyp_v10_metrics["hyp_recon_B"] = hyp_recon_B.item()
@@ -570,100 +510,36 @@ class DualVAELoss(nn.Module):
             "entropy_align": entropy_align,
             "H_A": outputs["H_A"],
             "H_B": outputs["H_B"],
-            "grad_scale_A": (
-                grad_scale_A.item()
-                if isinstance(grad_scale_A, torch.Tensor)
-                else grad_scale_A
-            ),
-            "grad_scale_B": (
-                grad_scale_B.item()
-                if isinstance(grad_scale_B, torch.Tensor)
-                else grad_scale_B
-            ),
+            "grad_scale_A": (grad_scale_A.item() if isinstance(grad_scale_A, torch.Tensor) else grad_scale_A),
+            "grad_scale_B": (grad_scale_B.item() if isinstance(grad_scale_B, torch.Tensor) else grad_scale_B),
             "lambda1": lambda1,
             "lambda2": lambda2,
             "lambda3": lambda3,
             # p-Adic losses (Phase 1A/1B)
-            "padic_metric_A": (
-                padic_metric_A.item()
-                if torch.is_tensor(padic_metric_A)
-                else padic_metric_A
-            ),
-            "padic_metric_B": (
-                padic_metric_B.item()
-                if torch.is_tensor(padic_metric_B)
-                else padic_metric_B
-            ),
-            "padic_ranking_A": (
-                padic_ranking_A.item()
-                if torch.is_tensor(padic_ranking_A)
-                else padic_ranking_A
-            ),
-            "padic_ranking_B": (
-                padic_ranking_B.item()
-                if torch.is_tensor(padic_ranking_B)
-                else padic_ranking_B
-            ),
-            "padic_norm_A": (
-                padic_norm_A.item() if torch.is_tensor(padic_norm_A) else padic_norm_A
-            ),
-            "padic_norm_B": (
-                padic_norm_B.item() if torch.is_tensor(padic_norm_B) else padic_norm_B
-            ),
+            "padic_metric_A": (padic_metric_A.item() if torch.is_tensor(padic_metric_A) else padic_metric_A),
+            "padic_metric_B": (padic_metric_B.item() if torch.is_tensor(padic_metric_B) else padic_metric_B),
+            "padic_ranking_A": (padic_ranking_A.item() if torch.is_tensor(padic_ranking_A) else padic_ranking_A),
+            "padic_ranking_B": (padic_ranking_B.item() if torch.is_tensor(padic_ranking_B) else padic_ranking_B),
+            "padic_norm_A": (padic_norm_A.item() if torch.is_tensor(padic_norm_A) else padic_norm_A),
+            "padic_norm_B": (padic_norm_B.item() if torch.is_tensor(padic_norm_B) else padic_norm_B),
             # v5.8: PAdicRankingLossV2 metrics
-            "padic_ranking_v2_A": (
-                padic_ranking_v2_A.item()
-                if torch.is_tensor(padic_ranking_v2_A)
-                else padic_ranking_v2_A
-            ),
-            "padic_ranking_v2_B": (
-                padic_ranking_v2_B.item()
-                if torch.is_tensor(padic_ranking_v2_B)
-                else padic_ranking_v2_B
-            ),
-            "ranking_v2_hard_ratio": (
-                metrics_v2_A.get("hard_ratio", 0) + metrics_v2_B.get("hard_ratio", 0)
-            )
-            / 2,
-            "ranking_v2_violations": metrics_v2_A.get("violations", 0)
-            + metrics_v2_B.get("violations", 0),
+            "padic_ranking_v2_A": (padic_ranking_v2_A.item() if torch.is_tensor(padic_ranking_v2_A) else padic_ranking_v2_A),
+            "padic_ranking_v2_B": (padic_ranking_v2_B.item() if torch.is_tensor(padic_ranking_v2_B) else padic_ranking_v2_B),
+            "ranking_v2_hard_ratio": (metrics_v2_A.get("hard_ratio", 0) + metrics_v2_B.get("hard_ratio", 0)) / 2,
+            "ranking_v2_violations": metrics_v2_A.get("violations", 0) + metrics_v2_B.get("violations", 0),
             # v5.9: Hyperbolic p-Adic metrics
-            "padic_hyp_A": (
-                padic_hyp_A.item() if torch.is_tensor(padic_hyp_A) else padic_hyp_A
-            ),
-            "padic_hyp_B": (
-                padic_hyp_B.item() if torch.is_tensor(padic_hyp_B) else padic_hyp_B
-            ),
+            "padic_hyp_A": (padic_hyp_A.item() if torch.is_tensor(padic_hyp_A) else padic_hyp_A),
+            "padic_hyp_B": (padic_hyp_B.item() if torch.is_tensor(padic_hyp_B) else padic_hyp_B),
             "hyp_ranking_weight": hyp_weight,
-            "hyp_hard_ratio": (
-                metrics_hyp_A.get("hard_ratio", 0) + metrics_hyp_B.get("hard_ratio", 0)
-            )
-            / 2,
-            "hyp_violations": metrics_hyp_A.get("violations", 0)
-            + metrics_hyp_B.get("violations", 0),
-            "hyp_poincare_dist_mean": (
-                metrics_hyp_A.get("poincare_dist_mean", 0)
-                + metrics_hyp_B.get("poincare_dist_mean", 0)
-            )
-            / 2,
-            "hyp_radial_loss": (
-                metrics_hyp_A.get("radial_loss", 0)
-                + metrics_hyp_B.get("radial_loss", 0)
-            )
-            / 2,
-            "hyp_ranking_loss": (
-                metrics_hyp_A.get("ranking_loss", 0)
-                + metrics_hyp_B.get("ranking_loss", 0)
-            )
-            / 2,
+            "hyp_hard_ratio": (metrics_hyp_A.get("hard_ratio", 0) + metrics_hyp_B.get("hard_ratio", 0)) / 2,
+            "hyp_violations": metrics_hyp_A.get("violations", 0) + metrics_hyp_B.get("violations", 0),
+            "hyp_poincare_dist_mean": (metrics_hyp_A.get("poincare_dist_mean", 0) + metrics_hyp_B.get("poincare_dist_mean", 0)) / 2,
+            "hyp_radial_loss": (metrics_hyp_A.get("radial_loss", 0) + metrics_hyp_B.get("radial_loss", 0)) / 2,
+            "hyp_ranking_loss": (metrics_hyp_A.get("ranking_loss", 0) + metrics_hyp_B.get("ranking_loss", 0)) / 2,
             # v5.10: Pure Hyperbolic metrics
-            "hyp_kl_A": hyp_kl_A.item() if torch.is_tensor(hyp_kl_A) else hyp_kl_A,
-            "hyp_kl_B": hyp_kl_B.item() if torch.is_tensor(hyp_kl_B) else hyp_kl_B,
-            "hyp_recon_A": (
-                hyp_recon_A.item() if torch.is_tensor(hyp_recon_A) else hyp_recon_A
-            ),
-            "hyp_recon_B": (
-                hyp_recon_B.item() if torch.is_tensor(hyp_recon_B) else hyp_recon_B
-            ),
+            "hyp_kl_A": (hyp_kl_A.item() if torch.is_tensor(hyp_kl_A) else hyp_kl_A),
+            "hyp_kl_B": (hyp_kl_B.item() if torch.is_tensor(hyp_kl_B) else hyp_kl_B),
+            "hyp_recon_A": (hyp_recon_A.item() if torch.is_tensor(hyp_recon_A) else hyp_recon_A),
+            "hyp_recon_B": (hyp_recon_B.item() if torch.is_tensor(hyp_recon_B) else hyp_recon_B),
             **hyp_v10_metrics,  # Spread all v5.10 homeostatic metrics
         }

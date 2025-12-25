@@ -114,24 +114,21 @@ def generate_report(ruff_issues, mypy_issues):
         f.write("\n")
 
         f.write("## Detailed Verification Audit\n")
-        f.write(
-            "> Issues grouped by file. Fix priority: Type Errors > Syntax Errors > Style.\n\n"
-        )
+        f.write("> Issues grouped by file. Fix priority: Type Errors > Syntax Errors > Style.\n\n")
 
         for filename, issues in sorted_files:
             f.write(f"### 📄 `{filename}` ({len(issues)} issues)\n")
 
             # Group by source for clarity
             errors = sorted(
-                issues, key=lambda x: int(x["line"]) if str(x["line"]).isdigit() else 0
+                issues,
+                key=lambda x: (int(x["line"]) if str(x["line"]).isdigit() else 0),
             )
 
             f.write("| Line | Tool | Code | Message |\n")
             f.write("| :--- | :--- | :--- | :--- |\n")
             for err in errors:
-                f.write(
-                    f"| {err['line']} | **{err['source']}** | `{err['code']}` | {err['message']} |\n"
-                )
+                f.write(f"| {err['line']} | **{err['source']}** | `{err['code']}` | {err['message']} |\n")
             f.write("\n")
 
     print(f"Report generated: {os.path.abspath(REPORT_FILE)}")

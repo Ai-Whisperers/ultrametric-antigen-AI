@@ -94,9 +94,7 @@ class HyperbolicProjection(nn.Module):
         return z_hyp
 
 
-def load_checkpoint_embeddings(
-    checkpoint_path: Path, device: str = "cpu"
-) -> Dict[str, Any]:
+def load_checkpoint_embeddings(checkpoint_path: Path, device: str = "cpu") -> Dict[str, Any]:
     """Load checkpoint and extract projection weights."""
     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=True)
     return {
@@ -107,9 +105,7 @@ def load_checkpoint_embeddings(
     }
 
 
-def create_projection_from_state_dict(
-    state_dict: Dict, device: str = "cpu"
-) -> nn.Module:
+def create_projection_from_state_dict(state_dict: Dict, device: str = "cpu") -> nn.Module:
     """Dynamically create projection module matching state dict architecture."""
     # Build the modules dynamically from state dict
     direction_layers = []
@@ -133,10 +129,7 @@ def create_projection_from_state_dict(
             # Build direction_net
             dir_layers = []
             i = 0
-            while (
-                f"direction_net.{i}.weight" in dir_state
-                or f"direction_net.{i}.bias" in dir_state
-            ):
+            while f"direction_net.{i}.weight" in dir_state or f"direction_net.{i}.bias" in dir_state:
                 if f"direction_net.{i}.weight" in dir_state:
                     w = dir_state[f"direction_net.{i}.weight"]
                     b = dir_state.get(f"direction_net.{i}.bias")
@@ -153,10 +146,7 @@ def create_projection_from_state_dict(
             # Build radius_net
             rad_layers = []
             i = 0
-            while (
-                f"radius_net.{i}.weight" in rad_state
-                or f"radius_net.{i}.bias" in rad_state
-            ):
+            while f"radius_net.{i}.weight" in rad_state or f"radius_net.{i}.bias" in rad_state:
                 if f"radius_net.{i}.weight" in rad_state:
                     w = rad_state[f"radius_net.{i}.weight"]
                     if len(w.shape) == 2:
@@ -181,9 +171,7 @@ def create_projection_from_state_dict(
     return proj
 
 
-def create_projection_from_state(
-    model_state: Dict, device: str = "cpu"
-) -> Tuple[nn.Module, nn.Module]:
+def create_projection_from_state(model_state: Dict, device: str = "cpu") -> Tuple[nn.Module, nn.Module]:
     """Create HyperbolicProjection and load weights from checkpoint.
 
     Returns proj_A and proj_B (dual projection architecture).
@@ -229,20 +217,14 @@ def create_manual_projection(state_dict: Dict, device: str = "cpu") -> nn.Module
         hidden_dim = 64
 
     # Count layers
-    n_layers = sum(
-        1
-        for k in state_dict
-        if "direction_net" in k and "weight" in k and len(state_dict[k].shape) == 2
-    )
+    n_layers = sum(1 for k in state_dict if "direction_net" in k and "weight" in k and len(state_dict[k].shape) == 2)
 
     # Create appropriate architecture
     if hidden_dim == 128:
         # Deeper architecture with hidden_dim=128
         proj = HyperbolicProjectionDeep(latent_dim=16, hidden_dim=128, max_radius=0.95)
     else:
-        proj = HyperbolicProjection(
-            latent_dim=16, hidden_dim=hidden_dim, max_radius=0.95
-        )
+        proj = HyperbolicProjection(latent_dim=16, hidden_dim=hidden_dim, max_radius=0.95)
 
     try:
         proj.load_state_dict(state_dict, strict=False)
@@ -296,9 +278,7 @@ class HyperbolicProjectionDeep(nn.Module):
         return direction * radius
 
 
-def load_frozen_encoder_weights(
-    v5_5_checkpoint: Path, device: str = "cpu"
-) -> Dict[str, torch.Tensor]:
+def load_frozen_encoder_weights(v5_5_checkpoint: Path, device: str = "cpu") -> Dict[str, torch.Tensor]:
     """Load frozen encoder weights from v5.5 checkpoint."""
     checkpoint = torch.load(v5_5_checkpoint, map_location=device, weights_only=True)
     model_state = checkpoint["model"]
@@ -312,9 +292,7 @@ def load_frozen_encoder_weights(
     return encoder_state
 
 
-def extract_euclidean_embeddings(
-    data: torch.Tensor, encoder_state: Dict, device: str = "cpu"
-) -> torch.Tensor:
+def extract_euclidean_embeddings(data: torch.Tensor, encoder_state: Dict, device: str = "cpu") -> torch.Tensor:
     """Extract Euclidean embeddings using frozen encoder."""
     import torch.nn as nn
 
@@ -363,9 +341,7 @@ def compute_padic_valuations(data: np.ndarray) -> np.ndarray:
     return np.array(valuations)
 
 
-def analyze_embedding_space(
-    embeddings: torch.Tensor, valuations: np.ndarray, name: str
-) -> Dict[str, Any]:
+def analyze_embedding_space(embeddings: torch.Tensor, valuations: np.ndarray, name: str) -> Dict[str, Any]:
     """Perform comprehensive analysis of embedding space."""
     emb_np = embeddings.cpu().numpy()
 
@@ -411,7 +387,7 @@ def analyze_embedding_space(
     dist_val_corr = np.corrcoef(distances, val_diff_flat)[0, 1]
 
     # Clustering analysis by valuation
-    from scipy.cluster.hierarchy import fcluster, linkage
+    from scipy.cluster.hierarchy import linkage
 
     Z = linkage(sample_emb, method="ward")
 
@@ -462,9 +438,7 @@ def analyze_embedding_space(
     }
 
 
-def compute_hyperbolic_metrics(
-    embeddings: torch.Tensor, curvature: float = 1.0
-) -> Dict[str, float]:
+def compute_hyperbolic_metrics(embeddings: torch.Tensor, curvature: float = 1.0) -> Dict[str, float]:
     """Compute hyperbolic geometry specific metrics."""
     emb = embeddings.cpu().numpy()
     radii = np.linalg.norm(emb, axis=1)
@@ -524,15 +498,9 @@ def main():
     print("\n" + "=" * 60)
     print("EUCLIDEAN EMBEDDING ANALYSIS (Frozen v5.5 Encoder)")
     print("=" * 60)
-    euclidean_analysis = analyze_embedding_space(
-        euclidean_emb, valuations, "euclidean_v5.5"
-    )
-    print(
-        f"Valuation-radial correlation: {euclidean_analysis['valuation_radial_correlation']:.4f}"
-    )
-    print(
-        f"Distance-valuation correlation: {euclidean_analysis['distance_valuation_correlation']:.4f}"
-    )
+    euclidean_analysis = analyze_embedding_space(euclidean_emb, valuations, "euclidean_v5.5")
+    print(f"Valuation-radial correlation: {euclidean_analysis['valuation_radial_correlation']:.4f}")
+    print(f"Distance-valuation correlation: {euclidean_analysis['distance_valuation_correlation']:.4f}")
     print(f"Separation ratio: {euclidean_analysis['separation_ratio']:.4f}")
 
     # Results storage
@@ -564,39 +532,29 @@ def main():
         hyp_analysis = analyze_embedding_space(hyp_emb, valuations, name)
         hyp_metrics = compute_hyperbolic_metrics(hyp_emb)
 
-        print(f"\nRadial statistics:")
+        print("\nRadial statistics:")
         print(f"  Mean radius: {hyp_analysis['radial_stats']['mean']:.4f}")
-        print(
-            f"  Radius range: [{hyp_analysis['radial_stats']['min']:.4f}, {hyp_analysis['radial_stats']['max']:.4f}]"
-        )
+        print(f"  Radius range: [{hyp_analysis['radial_stats']['min']:.4f}, {hyp_analysis['radial_stats']['max']:.4f}]")
 
-        print(f"\nStructural correlations:")
+        print("\nStructural correlations:")
         print(f"  Valuation-radial: {hyp_analysis['valuation_radial_correlation']:.4f}")
-        print(
-            f"  Distance-valuation: {hyp_analysis['distance_valuation_correlation']:.4f}"
-        )
+        print(f"  Distance-valuation: {hyp_analysis['distance_valuation_correlation']:.4f}")
         print(f"  Separation ratio: {hyp_analysis['separation_ratio']:.4f}")
 
-        print(f"\nHyperbolic geometry:")
-        print(
-            f"  Mean hyperbolic distance: {hyp_metrics['mean_hyperbolic_distance']:.4f}"
-        )
+        print("\nHyperbolic geometry:")
+        print(f"  Mean hyperbolic distance: {hyp_metrics['mean_hyperbolic_distance']:.4f}")
         print(f"  Boundary fraction (r>0.9): {hyp_metrics['boundary_fraction']:.4f}")
         print(f"  Core fraction (r<0.3): {hyp_metrics['core_fraction']:.4f}")
 
-        print(f"\nPCA analysis:")
+        print("\nPCA analysis:")
         print(f"  Intrinsic dim (90%): {hyp_analysis['pca']['intrinsic_dim_90pct']}")
         print(f"  Intrinsic dim (95%): {hyp_analysis['pca']['intrinsic_dim_95pct']}")
-        print(
-            f"  Top 3 variance: {hyp_analysis['pca']['explained_variance_ratio'][:3]}"
-        )
+        print(f"  Top 3 variance: {hyp_analysis['pca']['explained_variance_ratio'][:3]}")
 
-        print(f"\nPer-valuation radii:")
+        print("\nPer-valuation radii:")
         for v in sorted(hyp_analysis["per_valuation_stats"].keys()):
             stats = hyp_analysis["per_valuation_stats"][v]
-            print(
-                f"  v={v}: mean={stats['mean_radius']:.4f}, std={stats['std_radius']:.4f}, n={stats['count']}"
-            )
+            print(f"  v={v}: mean={stats['mean_radius']:.4f}, std={stats['std_radius']:.4f}, n={stats['count']}")
 
         # Store results
         all_results[name] = {
@@ -604,9 +562,7 @@ def main():
             "hyperbolic_metrics": hyp_metrics,
             "checkpoint_epoch": ckpt_data["epoch"],
             "checkpoint_metrics": {
-                k: float(v) if hasattr(v, "item") else v
-                for k, v in ckpt_data["metrics"].items()
-                if not isinstance(v, np.ndarray)
+                k: float(v) if hasattr(v, "item") else v for k, v in ckpt_data["metrics"].items() if not isinstance(v, np.ndarray)
             },
         }
 
@@ -615,11 +571,7 @@ def main():
     print("COMPARATIVE SUMMARY")
     print("=" * 60)
 
-    print(
-        "\n{:<20} {:>12} {:>12} {:>12} {:>12}".format(
-            "Metric", "v5_11", "overnight", "structural", "Best"
-        )
-    )
+    print("\n{:<20} {:>12} {:>12} {:>12} {:>12}".format("Metric", "v5_11", "overnight", "structural", "Best"))
     print("-" * 68)
 
     metrics_to_compare = [
@@ -644,11 +596,7 @@ def main():
         for name in ["v5_11", "v5_11_overnight", "v5_11_structural"]:
             values[name] = extractor(all_results[name])
 
-        best_name = (
-            max(values, key=values.get)
-            if metric_name != "intrinsic_dim"
-            else min(values, key=values.get)
-        )
+        best_name = max(values, key=values.get) if metric_name != "intrinsic_dim" else min(values, key=values.get)
 
         print(
             "{:<20} {:>12.4f} {:>12.4f} {:>12.4f} {:>12}".format(
@@ -693,21 +641,17 @@ def main():
 
     print("\nv5_11 (production baseline):")
     print(f"  - Early convergence (epoch {v5_11['checkpoint_epoch']})")
-    print(f"  - Stable training dynamics")
+    print("  - Stable training dynamics")
 
     print("\nv5_11_overnight (extended exploration):")
-    print(
-        f"  - Highest distance-valuation correlation: {overnight['embedding_analysis']['distance_valuation_correlation']:.4f}"
-    )
-    print(
-        f"  - Best hyperbolic spread: {overnight['hyperbolic_metrics']['hyperbolic_spread']:.4f}"
-    )
+    print(f"  - Highest distance-valuation correlation: {overnight['embedding_analysis']['distance_valuation_correlation']:.4f}")
+    print(f"  - Best hyperbolic spread: {overnight['hyperbolic_metrics']['hyperbolic_spread']:.4f}")
     print(f"  - Most thorough exploration ({overnight['checkpoint_epoch']} epochs)")
 
     print("\nv5_11_structural (structural focus):")
-    print(f"  - Targeted structural learning")
+    print("  - Targeted structural learning")
     if "composite_score" in structural.get("checkpoint_metrics", {}):
-        print(f"  - Composite score tracking enabled")
+        print("  - Composite score tracking enabled")
 
 
 if __name__ == "__main__":

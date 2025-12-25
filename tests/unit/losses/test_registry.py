@@ -14,7 +14,7 @@ Tests the dynamic loss composition system:
 import pytest
 import torch
 
-from src.losses.base import LossComponent, LossResult
+from src.losses.base import LossResult
 from src.losses.components import (EntropyLossComponent,
                                    KLDivergenceLossComponent,
                                    ReconstructionLossComponent)
@@ -211,9 +211,7 @@ class TestLossRegistryWithKwargs:
         targets = torch.randint(-1, 2, (32, 9), device=device).float()
         batch_indices = torch.randint(0, 19683, (32,), device=device)
 
-        result = registry.compose(
-            loss_test_outputs, targets, batch_indices=batch_indices
-        )
+        result = registry.compose(loss_test_outputs, targets, batch_indices=batch_indices)
 
         assert hasattr(result, "loss")
         assert torch.isfinite(result.loss)
@@ -350,10 +348,7 @@ class TestRegistryIntegration:
         assert "entropy/loss" in result.metrics
 
         # Verify total is sum
-        total = sum(
-            registry.get_weight(name) * result.metrics[f"{name}/loss"]
-            for name in registry.list_losses()
-        )
+        total = sum(registry.get_weight(name) * result.metrics[f"{name}/loss"] for name in registry.list_losses())
         assert torch.allclose(result.loss, torch.tensor(total), atol=1e-4)
 
     def test_gradient_flow_through_registry(self, device):

@@ -21,15 +21,11 @@ from pathlib import Path
 
 import numpy as np
 import torch
-import torch.nn as nn
 # Import hyperbolic utilities
-from hyperbolic_utils import (AA_TO_CODON, ARGININE_CODONS, CodonEncoder,
-                              codon_to_onehot, get_results_dir,
-                              load_codon_encoder)
+from hyperbolic_utils import (AA_TO_CODON, ARGININE_CODONS, codon_to_onehot,
+                              get_results_dir, load_codon_encoder)
 from hyperbolic_utils import poincare_distance as hyp_poincare_distance
-from hyperbolic_utils import project_to_poincare
 from scipy import stats
-from scipy.spatial.distance import pdist, squareform
 
 # ============================================================================
 # COMPREHENSIVE RA AUTOANTIGEN DATABASE
@@ -334,11 +330,7 @@ def compute_epitope_padic_profile(epitope_sequence, encoder, mapping, device="cp
         results["amino_acids"].append(aa)
 
         # Get embedding
-        onehot = (
-            torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-            .unsqueeze(0)
-            .to(device)
-        )
+        onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
         with torch.no_grad():
             cluster_id, emb = encoder.get_cluster(onehot)
             results["embeddings"].append(emb.cpu().numpy().squeeze())
@@ -384,16 +376,8 @@ def analyze_arginine_positions(epitope_profile, arg_positions):
         emb_norm = np.linalg.norm(emb)
 
         # Cluster homogeneity (are neighbors in same cluster?)
-        neighbor_clusters = [
-            epitope_profile["clusters"][i]
-            for i in range(len(epitope_profile["clusters"]))
-            if i != idx
-        ]
-        cluster_homogeneity = (
-            neighbor_clusters.count(cluster) / len(neighbor_clusters)
-            if neighbor_clusters
-            else 0
-        )
+        neighbor_clusters = [epitope_profile["clusters"][i] for i in range(len(epitope_profile["clusters"])) if i != idx]
+        cluster_homogeneity = neighbor_clusters.count(cluster) / len(neighbor_clusters) if neighbor_clusters else 0
 
         analysis.append(
             {
@@ -401,15 +385,9 @@ def analyze_arginine_positions(epitope_profile, arg_positions):
                 "codon": epitope_profile["codons"][idx],
                 "cluster": cluster,
                 "embedding_norm": emb_norm,
-                "mean_neighbor_distance": (
-                    np.mean(neighbor_dists) if neighbor_dists else 0
-                ),
-                "min_neighbor_distance": (
-                    np.min(neighbor_dists) if neighbor_dists else 0
-                ),
-                "max_neighbor_distance": (
-                    np.max(neighbor_dists) if neighbor_dists else 0
-                ),
+                "mean_neighbor_distance": (np.mean(neighbor_dists) if neighbor_dists else 0),
+                "min_neighbor_distance": (np.min(neighbor_dists) if neighbor_dists else 0),
+                "max_neighbor_distance": (np.max(neighbor_dists) if neighbor_dists else 0),
                 "cluster_homogeneity": cluster_homogeneity,
                 "padic_position": epitope_profile["padic_positions"][idx],
             }
@@ -431,9 +409,7 @@ def compute_boundary_crossing_potential(arg_analysis, all_cluster_centers):
     results = []
     for arg in arg_analysis:
         # High neighbor distance + low homogeneity = higher boundary crossing potential
-        boundary_score = arg["mean_neighbor_distance"] * (
-            1 - arg["cluster_homogeneity"]
-        )
+        boundary_score = arg["mean_neighbor_distance"] * (1 - arg["cluster_homogeneity"])
 
         results.append(
             {
@@ -487,8 +463,7 @@ def compare_immunodominant_vs_silent(all_analyses):
                 "t_statistic": t_stat,
                 "p_value": p_value,
                 "effect_size": (
-                    (np.mean(imm_values) - np.mean(sil_values))
-                    / np.sqrt((np.var(imm_values) + np.var(sil_values)) / 2)
+                    (np.mean(imm_values) - np.mean(sil_values)) / np.sqrt((np.var(imm_values) + np.var(sil_values)) / 2)
                     if np.var(imm_values) + np.var(sil_values) > 0
                     else 0
                 ),
@@ -566,11 +541,7 @@ def compute_epitope_centroid_shift(epitope_profile, arg_positions):
                 {
                     "position": idx,
                     "centroid_shift": shift,
-                    "relative_shift": (
-                        shift / np.linalg.norm(original_centroid)
-                        if np.linalg.norm(original_centroid) > 0
-                        else 0
-                    ),
+                    "relative_shift": (shift / np.linalg.norm(original_centroid) if np.linalg.norm(original_centroid) > 0 else 0),
                 }
             )
 
@@ -625,25 +596,19 @@ def main():
             print(f"  ACPA reactivity: {epitope['acpa_reactivity']*100:.0f}%")
 
             # Compute p-adic profile
-            profile = compute_epitope_padic_profile(
-                epitope["sequence"], encoder, mapping, device
-            )
+            profile = compute_epitope_padic_profile(epitope["sequence"], encoder, mapping, device)
 
             # Analyze arginine positions
             arg_analysis = analyze_arginine_positions(profile, epitope["arg_positions"])
 
             # Compute boundary crossing potential
-            arg_analysis = compute_boundary_crossing_potential(
-                arg_analysis, encoder.cluster_centers.detach().cpu().numpy()
-            )
+            arg_analysis = compute_boundary_crossing_potential(arg_analysis, encoder.cluster_centers.detach().cpu().numpy())
 
             # Compute centroid shift
-            centroid_shifts = compute_epitope_centroid_shift(
-                profile, epitope["arg_positions"]
-            )
+            centroid_shifts = compute_epitope_centroid_shift(profile, epitope["arg_positions"])
 
             if arg_analysis:
-                print(f"\n  Arginine analysis:")
+                print("\n  Arginine analysis:")
                 for arg in arg_analysis:
                     print(
                         f"    Position {arg['position']}: Codon={arg['codon']}, "
@@ -652,12 +617,10 @@ def main():
                     )
 
             if centroid_shifts:
-                print(f"\n  Centroid shifts upon citrullination:")
+                print("\n  Centroid shifts upon citrullination:")
                 for shift in centroid_shifts:
                     print(
-                        f"    Position {shift['position']}: "
-                        f"Shift={shift['centroid_shift']:.4f} "
-                        f"({shift['relative_shift']*100:.1f}% relative)"
+                        f"    Position {shift['position']}: " f"Shift={shift['centroid_shift']:.4f} " f"({shift['relative_shift']*100:.1f}% relative)"
                     )
 
             protein_analyses.append(
@@ -691,22 +654,12 @@ def main():
     if comparisons:
         for metric, stats_data in comparisons.items():
             significance = (
-                "***"
-                if stats_data["p_value"] < 0.001
-                else (
-                    "**"
-                    if stats_data["p_value"] < 0.01
-                    else "*" if stats_data["p_value"] < 0.05 else ""
-                )
+                "***" if stats_data["p_value"] < 0.001 else ("**" if stats_data["p_value"] < 0.01 else "*" if stats_data["p_value"] < 0.05 else "")
             )
 
             print(f"\n{metric.upper()}:")
-            print(
-                f"  Immunodominant: {stats_data['immunodominant_mean']:.4f} ± {stats_data['immunodominant_std']:.4f}"
-            )
-            print(
-                f"  Silent:         {stats_data['silent_mean']:.4f} ± {stats_data['silent_std']:.4f}"
-            )
+            print(f"  Immunodominant: {stats_data['immunodominant_mean']:.4f} ± {stats_data['immunodominant_std']:.4f}")
+            print(f"  Silent:         {stats_data['silent_mean']:.4f} ± {stats_data['silent_std']:.4f}")
             print(f"  t-statistic:    {stats_data['t_statistic']:.3f}")
             print(f"  p-value:        {stats_data['p_value']:.4f} {significance}")
             print(f"  Effect size:    {stats_data['effect_size']:.3f}")
@@ -730,9 +683,7 @@ def main():
         sil = codon_analysis["silent_codons"].get(codon, 0)
         print(f"  {codon:<6} {imm:<8} {sil:<8} {props['family']:<8} {props['wobble']}")
 
-    print(
-        f"\nChi-square test: χ² = {codon_analysis['chi2']:.2f}, p = {codon_analysis['p_value']:.4f}"
-    )
+    print(f"\nChi-square test: χ² = {codon_analysis['chi2']:.2f}, p = {codon_analysis['p_value']:.4f}")
 
     # =========================================================================
     # KEY FINDINGS SUMMARY
@@ -744,9 +695,7 @@ def main():
 
     # Count statistics
     total_epitopes = sum(len(e) for e in all_analyses.values())
-    immunodominant_count = sum(
-        1 for protein in all_analyses.values() for e in protein if e["immunodominant"]
-    )
+    immunodominant_count = sum(1 for protein in all_analyses.values() for e in protein if e["immunodominant"])
 
     # Compute average boundary crossing potential
     imm_boundary = []
@@ -760,35 +709,28 @@ def main():
                     else:
                         sil_boundary.append(arg["boundary_crossing_potential"])
 
-    print(f"\n1. DATASET OVERVIEW:")
+    print("\n1. DATASET OVERVIEW:")
     print(f"   - Analyzed {len(RA_AUTOANTIGENS_EXTENDED)} proteins")
     print(f"   - Total epitopes: {total_epitopes}")
     print(f"   - Immunodominant: {immunodominant_count}")
     print(f"   - Silent/control: {total_epitopes - immunodominant_count}")
 
     if imm_boundary and sil_boundary:
-        print(f"\n2. BOUNDARY CROSSING POTENTIAL:")
+        print("\n2. BOUNDARY CROSSING POTENTIAL:")
         print(f"   - Immunodominant mean: {np.mean(imm_boundary):.4f}")
         print(f"   - Silent mean:         {np.mean(sil_boundary):.4f}")
-        print(
-            f"   - Ratio: {np.mean(imm_boundary)/np.mean(sil_boundary):.2f}x higher in immunodominant"
-        )
+        print(f"   - Ratio: {np.mean(imm_boundary)/np.mean(sil_boundary):.2f}x higher in immunodominant")
 
     if comparisons and "mean_neighbor_distance" in comparisons:
         mnd = comparisons["mean_neighbor_distance"]
-        print(f"\n3. P-ADIC NEIGHBOR DISTANCE:")
-        print(
-            f"   - Immunodominant arginines are {mnd['immunodominant_mean']/mnd['silent_mean']:.2f}x "
-            f"more distant from neighbors"
-        )
+        print("\n3. P-ADIC NEIGHBOR DISTANCE:")
+        print(f"   - Immunodominant arginines are {mnd['immunodominant_mean']/mnd['silent_mean']:.2f}x " f"more distant from neighbors")
         print(f"   - Statistical significance: p = {mnd['p_value']:.4f}")
 
     if comparisons and "cluster_homogeneity" in comparisons:
         ch = comparisons["cluster_homogeneity"]
-        print(f"\n4. CLUSTER HOMOGENEITY:")
-        print(
-            f"   - Immunodominant: {ch['immunodominant_mean']:.2f} (lower = more boundary exposure)"
-        )
+        print("\n4. CLUSTER HOMOGENEITY:")
+        print(f"   - Immunodominant: {ch['immunodominant_mean']:.2f} (lower = more boundary exposure)")
         print(f"   - Silent:         {ch['silent_mean']:.2f}")
 
     # =========================================================================
@@ -820,12 +762,7 @@ def main():
                 "centroid_shifts": epitope["centroid_shifts"],
             }
             for arg in epitope["arg_analysis"]:
-                epitope_clean["arg_analysis"].append(
-                    {
-                        k: float(v) if isinstance(v, (np.floating, np.integer)) else v
-                        for k, v in arg.items()
-                    }
-                )
+                epitope_clean["arg_analysis"].append({k: (float(v) if isinstance(v, (np.floating, np.integer)) else v) for k, v in arg.items()})
             output["analyses"][protein_id].append(epitope_clean)
 
     output_path = results_dir / "autoantigen_padic_analysis.json"

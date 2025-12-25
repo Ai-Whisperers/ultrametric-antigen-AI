@@ -39,17 +39,13 @@ class TernaryOperationDataset(Dataset):
 
         # Validate shape
         if len(self.operations.shape) != 2 or self.operations.shape[1] != 9:
-            raise ValueError(
-                f"Operations must have shape (N, 9), got {self.operations.shape}"
-            )
+            raise ValueError(f"Operations must have shape (N, 9), got {self.operations.shape}")
 
         # Validate values
         unique_vals = torch.unique(self.operations)
         expected = torch.tensor([-1.0, 0.0, 1.0])
         if not torch.allclose(torch.sort(unique_vals)[0], expected):
-            raise ValueError(
-                f"Operations must contain only {{-1, 0, 1}}, got unique values: {unique_vals.tolist()}"
-            )
+            raise ValueError(f"Operations must contain only {{-1, 0, 1}}, got unique values: {unique_vals.tolist()}")
 
     def __len__(self) -> int:
         """Return number of operations in dataset."""

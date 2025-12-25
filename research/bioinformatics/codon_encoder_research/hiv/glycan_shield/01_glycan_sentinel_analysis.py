@@ -20,15 +20,14 @@ import json
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
 import numpy as np
 import torch
 
 # Import shared utilities from local scripts folder
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
-from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot, load_codon_encoder,
-                              poincare_distance)
+from hyperbolic_utils import AA_TO_CODON, codon_to_onehot, load_codon_encoder
 
 # =============================================================================
 # HIV ENV SEQUENCE DATA
@@ -150,9 +149,7 @@ def get_embedding_for_sequence(encoder, sequence: str, aa_to_codon: dict) -> np.
     return np.mean(embeddings, axis=0)
 
 
-def get_cluster_distribution(
-    encoder, sequence: str, aa_to_codon: dict, n_clusters: int = 21
-) -> np.ndarray:
+def get_cluster_distribution(encoder, sequence: str, aa_to_codon: dict, n_clusters: int = 21) -> np.ndarray:
     """Get cluster probability distribution for a sequence."""
     cluster_counts = np.zeros(n_clusters)
     for aa in sequence:
@@ -169,9 +166,7 @@ def get_cluster_distribution(
     return cluster_counts
 
 
-def jensen_shannon_divergence(
-    p: np.ndarray, q: np.ndarray, eps: float = 1e-10
-) -> float:
+def jensen_shannon_divergence(p: np.ndarray, q: np.ndarray, eps: float = 1e-10) -> float:
     """Compute Jensen-Shannon divergence between two distributions."""
     p = p + eps
     q = q + eps
@@ -322,15 +317,13 @@ def main():
 
     # Analyze all sequons
     results = []
-    print(f"\nAnalyzing all glycosylation sites in BG505 Env...")
+    print("\nAnalyzing all glycosylation sites in BG505 Env...")
     print("-" * 70)
 
     for pos_idx, name in sequons:
         region, relevance = assign_region(pos_idx, len(BG505_GP120))
 
-        result = analyze_glycan_site(
-            encoder, BG505_GP120, pos_idx, name, region, relevance, AA_TO_CODON
-        )
+        result = analyze_glycan_site(encoder, BG505_GP120, pos_idx, name, region, relevance, AA_TO_CODON)
         results.append(result)
 
         zone_marker = "***" if result.goldilocks_zone == "goldilocks" else "   "
@@ -351,21 +344,15 @@ def main():
 
     goldilocks_sites = [r for r in results if r.goldilocks_zone == "goldilocks"]
 
-    print(
-        f"\nSites in Goldilocks Zone (15-30% shift): {len(goldilocks_sites)}/{len(results)}"
-    )
+    print(f"\nSites in Goldilocks Zone (15-30% shift): {len(goldilocks_sites)}/{len(results)}")
     print("-" * 70)
-    print(
-        f"{'Rank':<5} {'Site':<8} {'Region':<12} {'Shift':<10} {'Score':<8} {'bnAb Relevance'}"
-    )
+    print(f"{'Rank':<5} {'Site':<8} {'Region':<12} {'Shift':<10} {'Score':<8} {'bnAb Relevance'}")
     print("-" * 70)
 
     for i, r in enumerate(results[:15], 1):
         shift_str = f"{r.centroid_shift*100:.1f}%"
         zone_flag = "*" if r.goldilocks_zone == "goldilocks" else " "
-        print(
-            f"{i:<5} {r.name:<8} {r.region:<12} {shift_str:<10} {r.goldilocks_score:.3f}{zone_flag}   {r.bnab_relevance}"
-        )
+        print(f"{i:<5} {r.name:<8} {r.region:<12} {shift_str:<10} {r.goldilocks_score:.3f}{zone_flag}   {r.bnab_relevance}")
 
     # Validate against known bnAb glycans
     print("\n" + "=" * 70)
@@ -378,14 +365,8 @@ def main():
             matching = [r for r in results if r.name == glycan_name]
             if matching:
                 r = matching[0]
-                zone_str = (
-                    "GOLDILOCKS"
-                    if r.goldilocks_zone == "goldilocks"
-                    else r.goldilocks_zone
-                )
-                print(
-                    f"  {glycan_name}: {r.centroid_shift*100:.1f}% shift -> {zone_str}"
-                )
+                zone_str = "GOLDILOCKS" if r.goldilocks_zone == "goldilocks" else r.goldilocks_zone
+                print(f"  {glycan_name}: {r.centroid_shift*100:.1f}% shift -> {zone_str}")
             else:
                 print(f"  {glycan_name}: Not found in analysis")
 

@@ -46,10 +46,19 @@ gs = GridSpec(3, 3, figure=fig)
 # Main correlation plot with both metrics
 ax = fig.add_subplot(gs[0, :2])
 ax.plot(
-    epochs, corr_hyp, label="Hyperbolic (Poincare Ball)", color="#9b59b6", linewidth=2.5
+    epochs,
+    corr_hyp,
+    label="Hyperbolic (Poincare Ball)",
+    color="#9b59b6",
+    linewidth=2.5,
 )
 ax.plot(
-    epochs, corr_euc, label="Euclidean", color="#3498db", linewidth=2, linestyle="--"
+    epochs,
+    corr_euc,
+    label="Euclidean",
+    color="#3498db",
+    linewidth=2,
+    linestyle="--",
 )
 ax.fill_between(
     epochs,
@@ -131,10 +140,20 @@ smoothed = np.convolve(improvement, np.ones(5) / 5, mode="valid")
 ax.plot(range(len(smoothed)), smoothed, color="#9b59b6", linewidth=1.5, alpha=0.7)
 ax.axhline(0, color="gray", linestyle="-")
 ax.fill_between(
-    range(len(smoothed)), 0, smoothed, where=(smoothed > 0), alpha=0.3, color="green"
+    range(len(smoothed)),
+    0,
+    smoothed,
+    where=(smoothed > 0),
+    alpha=0.3,
+    color="green",
 )
 ax.fill_between(
-    range(len(smoothed)), 0, smoothed, where=(smoothed <= 0), alpha=0.3, color="red"
+    range(len(smoothed)),
+    0,
+    smoothed,
+    where=(smoothed <= 0),
+    alpha=0.3,
+    color="red",
 )
 ax.set_xlabel("Epoch")
 ax.set_ylabel("d(Correlation)/d(Epoch)")
@@ -147,13 +166,28 @@ phase1 = range(0, 50)
 phase2 = range(50, 100)
 phase3 = range(100, 151)
 ax.scatter(
-    phase1, corr_hyp[:50], s=20, alpha=0.6, label="Phase 1 (0-50)", color="#3498db"
+    phase1,
+    corr_hyp[:50],
+    s=20,
+    alpha=0.6,
+    label="Phase 1 (0-50)",
+    color="#3498db",
 )
 ax.scatter(
-    phase2, corr_hyp[50:100], s=20, alpha=0.6, label="Phase 2 (50-100)", color="#e67e22"
+    phase2,
+    corr_hyp[50:100],
+    s=20,
+    alpha=0.6,
+    label="Phase 2 (50-100)",
+    color="#e67e22",
 )
 ax.scatter(
-    phase3, corr_hyp[100:], s=20, alpha=0.6, label="Phase 3 (100-150)", color="#2ecc71"
+    phase3,
+    corr_hyp[100:],
+    s=20,
+    alpha=0.6,
+    label="Phase 3 (100-150)",
+    color="#2ecc71",
 )
 ax.set_xlabel("Epoch")
 ax.set_ylabel("Hyperbolic Correlation")
@@ -164,10 +198,20 @@ ax.grid(True, alpha=0.3)
 # Distribution of correlation values
 ax = fig.add_subplot(gs[2, 1])
 ax.hist(
-    corr_hyp, bins=30, alpha=0.7, color="#9b59b6", edgecolor="black", label="Hyperbolic"
+    corr_hyp,
+    bins=30,
+    alpha=0.7,
+    color="#9b59b6",
+    edgecolor="black",
+    label="Hyperbolic",
 )
 ax.hist(
-    corr_euc, bins=30, alpha=0.5, color="#3498db", edgecolor="black", label="Euclidean"
+    corr_euc,
+    bins=30,
+    alpha=0.5,
+    color="#3498db",
+    edgecolor="black",
+    label="Euclidean",
 )
 ax.axvline(
     np.mean(corr_hyp),

@@ -8,14 +8,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import FancyBboxPatch, Wedge
 
 from utils.data_loader import get_loader
-from utils.plotting import (PALETTE, add_goldilocks_zones, save_figure,
-                            setup_pitch_style)
+from utils.plotting import PALETTE, save_figure, setup_pitch_style
 
 OUTPUT_DIR = Path(__file__).parent
 
@@ -122,10 +120,24 @@ def create_goldilocks_gauge():
     )
 
     # Percentage markers
-    ax.text(-1.15, 0.15, "0%", fontsize=10, ha="center", color=PALETTE["text_light"])
+    ax.text(
+        -1.15,
+        0.15,
+        "0%",
+        fontsize=10,
+        ha="center",
+        color=PALETTE["text_light"],
+    )
     ax.text(-0.6, 0.9, "15%", fontsize=10, ha="center", color=PALETTE["text_light"])
     ax.text(0.6, 0.9, "30%", fontsize=10, ha="center", color=PALETTE["text_light"])
-    ax.text(1.15, 0.15, "50%+", fontsize=10, ha="center", color=PALETTE["text_light"])
+    ax.text(
+        1.15,
+        0.15,
+        "50%+",
+        fontsize=10,
+        ha="center",
+        color=PALETTE["text_light"],
+    )
 
     # Outcome descriptions below gauge
     outcomes = [
@@ -232,10 +244,7 @@ def create_epitope_shift_chart():
     is_immunodominant = [is_immunodominant[i] for i in sorted_idx]
 
     # Create bar chart
-    colors = [
-        PALETTE["immunodominant"] if imm else PALETTE["silent"]
-        for imm in is_immunodominant
-    ]
+    colors = [PALETTE["immunodominant"] if imm else PALETTE["silent"] for imm in is_immunodominant]
     x = np.arange(len(epitopes))
 
     bars = ax.bar(x, shifts, color=colors, edgecolor="white", linewidth=1.5, alpha=0.8)
@@ -400,7 +409,7 @@ def create_statistics_summary():
 
         # P-value
         p = metric["p"]
-        p_text = f"p = {p:.4f}" if p >= 0.001 else f"p < 0.001"
+        p_text = f"p = {p:.4f}" if p >= 0.001 else "p < 0.001"
         p_color = PALETTE["safe"] if p < 0.05 else PALETTE["text_light"]
         stars = "***" if p < 0.001 else "**" if p < 0.01 else "*" if p < 0.05 else ""
         ax.text(

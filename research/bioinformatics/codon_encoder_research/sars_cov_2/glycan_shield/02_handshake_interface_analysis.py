@@ -19,10 +19,9 @@ The goal is to find:
 
 import json
 import sys
-from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 import numpy as np
 
@@ -251,9 +250,7 @@ def simulate_disruption(
     orig_centroid = hyperbolic_centroid(orig_embeddings)
 
     results = {}
-    target_aa = (
-        context[position_in_context] if position_in_context < len(context) else None
-    )
+    target_aa = context[position_in_context] if position_in_context < len(context) else None
 
     for mod_name, mod_map in modifications.items():
         if target_aa and target_aa in mod_map:
@@ -272,9 +269,7 @@ def simulate_disruption(
     return results
 
 
-def analyze_asymmetric_perturbation(
-    viral_context: str, host_context: str, encoder
-) -> Dict:
+def analyze_asymmetric_perturbation(viral_context: str, host_context: str, encoder) -> Dict:
     """
     Find modifications that maximally disrupt viral geometry while
     minimally affecting host geometry - the key to selective therapeutics.
@@ -317,9 +312,7 @@ def analyze_asymmetric_perturbation(
                 v_new[pos] = mod_map[v_aa]
                 v_new_emb = encode_sequence("".join(v_new), encoder)
                 if len(v_new_emb) > 0:
-                    v_shift = float(
-                        poincare_distance(v_orig, hyperbolic_centroid(v_new_emb))
-                    )
+                    v_shift = float(poincare_distance(v_orig, hyperbolic_centroid(v_new_emb)))
 
             # Test on host sequence
             if h_aa in mod_map:
@@ -327,9 +320,7 @@ def analyze_asymmetric_perturbation(
                 h_new[pos] = mod_map[h_aa]
                 h_new_emb = encode_sequence("".join(h_new), encoder)
                 if len(h_new_emb) > 0:
-                    h_shift = float(
-                        poincare_distance(h_orig, hyperbolic_centroid(h_new_emb))
-                    )
+                    h_shift = float(poincare_distance(h_orig, hyperbolic_centroid(h_new_emb)))
 
             if v_shift > 0 or h_shift > 0:
                 # Asymmetry ratio: positive = disrupts viral more than host
@@ -344,11 +335,7 @@ def analyze_asymmetric_perturbation(
                         "host_shift": h_shift,
                         "asymmetry": asymmetry,
                         "therapeutic_potential": (
-                            "HIGH"
-                            if v_shift > 0.15 and h_shift < 0.10
-                            else (
-                                "MEDIUM" if v_shift > 0.10 and h_shift < 0.15 else "LOW"
-                            )
+                            "HIGH" if v_shift > 0.15 and h_shift < 0.10 else ("MEDIUM" if v_shift > 0.10 and h_shift < 0.15 else "LOW")
                         ),
                     }
                 )
@@ -390,18 +377,14 @@ def main():
     print(f"RBD sequence length: {len(rbd_seq)} residues")
     print(f"Contact residues to analyze: {len(RBD_ACE2_CONTACTS)}")
 
-    rbd_interfaces = encode_interface_contexts(
-        SPIKE_RBD, RBD_ACE2_CONTACTS, 319, encoder
-    )
+    rbd_interfaces = encode_interface_contexts(SPIKE_RBD, RBD_ACE2_CONTACTS, 319, encoder)
 
     # Encode ACE2 contact residues
     ace2_seq = clean_sequence(ACE2_ECTODOMAIN)
     print(f"ACE2 sequence length: {len(ace2_seq)} residues")
     print(f"Contact residues to analyze: {len(ACE2_RBD_CONTACTS)}")
 
-    ace2_interfaces = encode_interface_contexts(
-        ACE2_ECTODOMAIN, ACE2_RBD_CONTACTS, 19, encoder
-    )
+    ace2_interfaces = encode_interface_contexts(ACE2_ECTODOMAIN, ACE2_RBD_CONTACTS, 19, encoder)
 
     print(f"\nEncoded {len(rbd_interfaces)} RBD interface contexts")
     print(f"Encoded {len(ace2_interfaces)} ACE2 interface contexts")
@@ -416,10 +399,7 @@ def main():
 
     print("\n--- Top 10 Convergent Handshakes ---")
     for i, c in enumerate(convergence[:10]):
-        print(
-            f"  {i+1}. RBD-{c['viral_pos']} ↔ ACE2-{c['host_pos']}: "
-            f"dist={c['distance']:.4f}"
-        )
+        print(f"  {i+1}. RBD-{c['viral_pos']} ↔ ACE2-{c['host_pos']}: " f"dist={c['distance']:.4f}")
         print(f"      Viral: {c['viral_context']}")
         print(f"      Host:  {c['host_context']}")
 
@@ -453,24 +433,15 @@ def main():
             asymmetric_results.append(a)
 
     # Filter for high therapeutic potential
-    high_potential = [
-        a for a in asymmetric_results if a["therapeutic_potential"] == "HIGH"
-    ]
-    medium_potential = [
-        a for a in asymmetric_results if a["therapeutic_potential"] == "MEDIUM"
-    ]
+    high_potential = [a for a in asymmetric_results if a["therapeutic_potential"] == "HIGH"]
+    medium_potential = [a for a in asymmetric_results if a["therapeutic_potential"] == "MEDIUM"]
 
     print(f"\nHigh therapeutic potential modifications: {len(high_potential)}")
     print(f"Medium therapeutic potential modifications: {len(medium_potential)}")
 
     print("\n--- Top Asymmetric Targets (Viral >> Host disruption) ---")
-    for i, a in enumerate(
-        sorted(asymmetric_results, key=lambda x: x["asymmetry"], reverse=True)[:10]
-    ):
-        print(
-            f"  {i+1}. RBD-{a['viral_position']} pos-{a['position']}: "
-            f"{a['viral_aa']}→{a['modification']}"
-        )
+    for i, a in enumerate(sorted(asymmetric_results, key=lambda x: x["asymmetry"], reverse=True)[:10]):
+        print(f"  {i+1}. RBD-{a['viral_position']} pos-{a['position']}: " f"{a['viral_aa']}→{a['modification']}")
         print(
             f"      Viral shift: {a['viral_shift']:.3f} | Host shift: {a['host_shift']:.3f} | "
             f"Asymmetry: {a['asymmetry']:.3f} [{a['therapeutic_potential']}]"
@@ -489,9 +460,7 @@ def main():
     furin_emb = encode_sequence(SPIKE_FURIN_SITE, encoder)
     if len(furin_emb) > 0:
         furin_centroid = hyperbolic_centroid(furin_emb)
-        print(
-            f"Furin site (PRRAR): encoded, centroid norm = {np.linalg.norm(furin_centroid):.4f}"
-        )
+        print(f"Furin site (PRRAR): encoded, centroid norm = {np.linalg.norm(furin_centroid):.4f}")
 
         # Test disruption
         print("\nFurin site modification analysis:")
@@ -510,9 +479,7 @@ def main():
     tmprss2_emb = encode_sequence(SPIKE_S2PRIME_SITE, encoder)
     if len(tmprss2_emb) > 0:
         tmprss2_centroid = hyperbolic_centroid(tmprss2_emb)
-        print(
-            f"\nTMPRSS2 site (S2'): encoded, centroid norm = {np.linalg.norm(tmprss2_centroid):.4f}"
-        )
+        print(f"\nTMPRSS2 site (S2'): encoded, centroid norm = {np.linalg.norm(tmprss2_centroid):.4f}")
 
     results["interfaces"]["cleavage_sites"] = {
         "furin_site": SPIKE_FURIN_SITE,
@@ -540,12 +507,8 @@ def main():
         host_centroid = hyperbolic_centroid(np.array(all_host_emb))
         interface_distance = poincare_distance(viral_centroid, host_centroid)
 
-        print(
-            f"Overall RBD interface centroid norm: {np.linalg.norm(viral_centroid):.4f}"
-        )
-        print(
-            f"Overall ACE2 interface centroid norm: {np.linalg.norm(host_centroid):.4f}"
-        )
+        print(f"Overall RBD interface centroid norm: {np.linalg.norm(viral_centroid):.4f}")
+        print(f"Overall ACE2 interface centroid norm: {np.linalg.norm(host_centroid):.4f}")
         print(f"Interface geometric distance: {interface_distance:.4f}")
 
         results["geometry"] = {
@@ -587,20 +550,13 @@ def main():
     print("   These are positions where viral and host geometry MUST align:")
     if convergence:
         for c in convergence[:3]:
-            print(
-                f"   - RBD-{c['viral_pos']} ↔ ACE2-{c['host_pos']}: distance {c['distance']:.4f}"
-            )
+            print(f"   - RBD-{c['viral_pos']} ↔ ACE2-{c['host_pos']}: distance {c['distance']:.4f}")
 
     print("\n2. THERAPEUTIC TARGETS (Asymmetric Perturbation)")
     print("   Modifications that disrupt viral binding while preserving host:")
-    high_asym = sorted(asymmetric_results, key=lambda x: x["asymmetry"], reverse=True)[
-        :3
-    ]
+    high_asym = sorted(asymmetric_results, key=lambda x: x["asymmetry"], reverse=True)[:3]
     for a in high_asym:
-        print(
-            f"   - {a['modification']} at RBD-{a['viral_position']}: "
-            f"viral shift {a['viral_shift']:.3f} vs host {a['host_shift']:.3f}"
-        )
+        print(f"   - {a['modification']} at RBD-{a['viral_position']}: " f"viral shift {a['viral_shift']:.3f} vs host {a['host_shift']:.3f}")
 
     print("\n3. FORBIDDEN ZONE CANDIDATES")
     print("   Host geometry regions unreachable by viral evolution:")

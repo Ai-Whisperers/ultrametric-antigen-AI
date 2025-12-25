@@ -10,7 +10,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
 
 from utils.data_loader import get_loader
 from utils.plotting import PALETTE, save_figure, setup_scientific_style
@@ -63,7 +62,8 @@ def create_epitope_distance_heatmap():
     ax1.set_xticklabels(epitopes, rotation=45, ha="right", fontsize=9)
     ax1.set_yticklabels(epitopes, fontsize=9)
     ax1.set_title(
-        "Epitope Distance Matrix\n(Centroid Shift Differences)", fontweight="bold"
+        "Epitope Distance Matrix\n(Centroid Shift Differences)",
+        fontweight="bold",
     )
 
     # Add colorbar
@@ -85,10 +85,7 @@ def create_epitope_distance_heatmap():
 
     # Right: JS Divergence vs Centroid Shift
     ax2 = axes[1]
-    colors = [
-        PALETTE["immunodominant"] if imm else PALETTE["silent"]
-        for imm in immunodominant
-    ]
+    colors = [PALETTE["immunodominant"] if imm else PALETTE["silent"] for imm in immunodominant]
     sizes = [120 if imm else 80 for imm in immunodominant]
 
     scatter = ax2.scatter(
@@ -143,7 +140,12 @@ def create_comparison_heatmap():
     comparisons = data.comparisons
 
     # Prepare comparison data
-    metrics = ["centroid_shift", "relative_shift", "js_divergence", "entropy_change"]
+    metrics = [
+        "centroid_shift",
+        "relative_shift",
+        "js_divergence",
+        "entropy_change",
+    ]
     metric_labels = [
         "Centroid Shift",
         "Relative Shift",
@@ -197,14 +199,25 @@ def create_comparison_heatmap():
     ax2 = axes[0, 1]
     colors = ["#4CAF50" if p < 0.05 else "#9E9E9E" for p in p_values]
     bars = ax2.barh(
-        metric_labels, [-np.log10(p) for p in p_values], color=colors, alpha=0.8
+        metric_labels,
+        [-np.log10(p) for p in p_values],
+        color=colors,
+        alpha=0.8,
     )
 
     ax2.axvline(
-        -np.log10(0.05), color="red", linestyle="--", linewidth=1.5, label="p = 0.05"
+        -np.log10(0.05),
+        color="red",
+        linestyle="--",
+        linewidth=1.5,
+        label="p = 0.05",
     )
     ax2.axvline(
-        -np.log10(0.01), color="orange", linestyle="--", linewidth=1.5, label="p = 0.01"
+        -np.log10(0.01),
+        color="orange",
+        linestyle="--",
+        linewidth=1.5,
+        label="p = 0.01",
     )
     ax2.set_xlabel("-log₁₀(p-value)")
     ax2.set_title("Statistical Significance", fontweight="bold")
@@ -223,10 +236,7 @@ def create_comparison_heatmap():
 
     # Bottom left: Effect sizes
     ax3 = axes[1, 0]
-    colors_es = [
-        "#D32F2F" if abs(es) > 0.8 else "#FF9800" if abs(es) > 0.5 else "#4CAF50"
-        for es in effect_sizes
-    ]
+    colors_es = [("#D32F2F" if abs(es) > 0.8 else "#FF9800" if abs(es) > 0.5 else "#4CAF50") for es in effect_sizes]
     ax3.barh(metric_labels, effect_sizes, color=colors_es, alpha=0.8)
     ax3.axvline(0, color="gray", linewidth=1)
     ax3.axvline(-0.8, color="gray", linestyle=":", alpha=0.5)
@@ -253,11 +263,7 @@ def create_comparison_heatmap():
     table_data = []
     for i, m in enumerate(metrics):
         sig = "✓" if p_values[i] < 0.05 else "✗"
-        es_label = (
-            "Large"
-            if abs(effect_sizes[i]) > 0.8
-            else "Medium" if abs(effect_sizes[i]) > 0.5 else "Small"
-        )
+        es_label = "Large" if abs(effect_sizes[i]) > 0.8 else "Medium" if abs(effect_sizes[i]) > 0.5 else "Small"
         table_data.append(
             [
                 metric_labels[i],
@@ -271,7 +277,14 @@ def create_comparison_heatmap():
 
     table = ax4.table(
         cellText=table_data,
-        colLabels=["Metric", "Imm. Mean", "Silent Mean", "p-value", "Effect", "Sig."],
+        colLabels=[
+            "Metric",
+            "Imm. Mean",
+            "Silent Mean",
+            "p-value",
+            "Effect",
+            "Sig.",
+        ],
         loc="center",
         cellLoc="center",
         colColours=["#E3F2FD"] * 6,

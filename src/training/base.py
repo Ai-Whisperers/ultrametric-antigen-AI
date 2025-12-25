@@ -21,7 +21,6 @@ Single responsibility: Provide safe training utilities and common boilerplate.
 
 from abc import ABC, abstractmethod
 from collections import defaultdict
-from pathlib import Path
 from typing import Any, Dict, Optional
 
 import torch
@@ -38,7 +37,10 @@ class BaseTrainer(ABC):
     """
 
     def __init__(
-        self, model: torch.nn.Module, config: Dict[str, Any], device: str = "cuda"
+        self,
+        model: torch.nn.Module,
+        config: Dict[str, Any],
+        device: str = "cuda",
     ):
         """Initialize base trainer.
 
@@ -81,9 +83,7 @@ class BaseTrainer(ABC):
         return averaged
 
     @staticmethod
-    def accumulate_losses(
-        epoch_losses: Dict[str, float], batch_losses: Dict[str, Any]
-    ) -> None:
+    def accumulate_losses(epoch_losses: Dict[str, float], batch_losses: Dict[str, Any]) -> None:
         """Accumulate batch losses into epoch losses (in-place).
 
         Handles both Tensor and scalar values.
@@ -98,9 +98,7 @@ class BaseTrainer(ABC):
             else:
                 epoch_losses[key] += val
 
-    def run_validation(
-        self, val_loader: Optional[DataLoader], train_losses: Dict[str, float]
-    ) -> tuple[Dict[str, float], bool]:
+    def run_validation(self, val_loader: Optional[DataLoader], train_losses: Dict[str, float]) -> tuple[Dict[str, float], bool]:
         """Run validation with proper None-check.
 
         Args:

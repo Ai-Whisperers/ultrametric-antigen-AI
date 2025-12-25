@@ -3,9 +3,6 @@
 # Licensed under the PolyForm Noncommercial License 1.0.0
 # See LICENSE file in the repository root for full license text.
 
-import random
-from typing import Dict, List, Optional
-
 import torch
 
 
@@ -41,7 +38,8 @@ class AutoimmunityLoader:
         if sequence.dim() > 1:
             # Batch mode
             return torch.tensor(
-                [self.get_risk_score(s) for s in sequence], device=sequence.device
+                [self.get_risk_score(s) for s in sequence],
+                device=sequence.device,
             )
 
         # Heuristic 1: Repetitive tracks (often immunogenic)

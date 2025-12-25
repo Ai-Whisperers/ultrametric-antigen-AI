@@ -30,9 +30,7 @@ class DecoderProtocol(Protocol):
 class ProjectionProtocol(Protocol):
     """Protocol for Hyperbolic Projections."""
 
-    def forward(
-        self, z_A: torch.Tensor, z_B: Optional[torch.Tensor] = None
-    ) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
+    def forward(self, z_A: torch.Tensor, z_B: Optional[torch.Tensor] = None) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
         """Projects Euclidean vectors to Hyperbolic space."""
         ...
 

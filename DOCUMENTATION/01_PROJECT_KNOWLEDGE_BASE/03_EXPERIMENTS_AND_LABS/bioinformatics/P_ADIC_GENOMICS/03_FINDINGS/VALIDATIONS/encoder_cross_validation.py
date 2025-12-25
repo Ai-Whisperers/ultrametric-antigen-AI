@@ -28,7 +28,8 @@ import torch
 SCRIPT_DIR = Path(__file__).parent
 RESEARCH_DIR = SCRIPT_DIR.parent.parent
 sys.path.insert(
-    0, str(RESEARCH_DIR / "bioinformatics" / "rheumatoid_arthritis" / "scripts")
+    0,
+    str(RESEARCH_DIR / "bioinformatics" / "rheumatoid_arthritis" / "scripts"),
 )
 sys.path.insert(0, str(RESEARCH_DIR.parent / "src"))
 
@@ -275,7 +276,7 @@ def test_synonymous_codon_clustering(checkpoint=None) -> Dict:
 
         results["amino_acids"][aa] = {
             "n_codons": len(codons),
-            "mean_within_distance": float(np.mean(within_dists)) if within_dists else 0,
+            "mean_within_distance": (float(np.mean(within_dists)) if within_dists else 0),
         }
 
     # Between-AA distances (sample)
@@ -320,7 +321,11 @@ def test_phosphomimic_geometry(checkpoint=None) -> Dict:
     print("TEST 2: Phosphomimic Geometry (S→D, T→D)")
     print("-" * 70)
 
-    results = {"test": "phosphomimic_geometry", "transitions": [], "statistics": {}}
+    results = {
+        "test": "phosphomimic_geometry",
+        "transitions": [],
+        "statistics": {},
+    }
 
     # Test each phosphorylatable AA → phosphomimic transition
     transitions = [
@@ -349,9 +354,7 @@ def test_phosphomimic_geometry(checkpoint=None) -> Dict:
         shift = poincare_distance(from_centroid, to_centroid)
 
         # Variance within each cluster
-        from_var = np.mean(
-            [poincare_distance(e, from_centroid) for e in from_embeddings]
-        )
+        from_var = np.mean([poincare_distance(e, from_centroid) for e in from_embeddings])
         to_var = np.mean([poincare_distance(e, to_centroid) for e in to_embeddings])
 
         results["transitions"].append(
@@ -366,9 +369,7 @@ def test_phosphomimic_geometry(checkpoint=None) -> Dict:
             }
         )
 
-        print(
-            f"  {desc}: shift = {shift:.4f}, ratio = {shift/(from_var+to_var+1e-10):.2f}x"
-        )
+        print(f"  {desc}: shift = {shift:.4f}, ratio = {shift/(from_var+to_var+1e-10):.2f}x")
 
     # Summary
     shifts = [t["centroid_shift"] for t in results["transitions"]]
@@ -426,16 +427,13 @@ def test_degeneracy_hierarchy(checkpoint=None) -> Dict:
                 "n_amino_acids": len(aas),
             }
 
-            print(
-                f"  {deg}-fold degenerate ({len(aas)} AAs): mean spread = {np.mean(spreads):.4f}"
-            )
+            print(f"  {deg}-fold degenerate ({len(aas)} AAs): mean spread = {np.mean(spreads):.4f}")
 
     # Check hierarchy: higher degeneracy → larger spread
     degs = sorted(results["by_degeneracy"].keys())
     if len(degs) >= 2:
         is_hierarchical = all(
-            results["by_degeneracy"][degs[i]]["mean_spread"]
-            <= results["by_degeneracy"][degs[i + 1]]["mean_spread"] + 0.1
+            results["by_degeneracy"][degs[i]]["mean_spread"] <= results["by_degeneracy"][degs[i + 1]]["mean_spread"] + 0.1
             for i in range(len(degs) - 1)
         )
         results["hierarchy_valid"] = is_hierarchical
@@ -485,9 +483,7 @@ def test_wobble_position_effect(checkpoint=None) -> Dict:
                 "std_distance": float(np.std(dists)),
                 "n_pairs": len(dists),
             }
-            print(
-                f"  Position {pos} differences: mean = {np.mean(dists):.4f} (n={len(dists)})"
-            )
+            print(f"  Position {pos} differences: mean = {np.mean(dists):.4f} (n={len(dists)})")
 
     # Check: position 3 should have smallest effect
     if all(f"position_{p}" in results["summary"] for p in [1, 2, 3]):
@@ -560,12 +556,8 @@ def test_disease_sequence_perturbation(checkpoint=None) -> Dict:
         }
 
         # Get embeddings
-        wt_embeddings = [
-            get_codon_embedding(aa_to_codon.get(aa, "NNN"), checkpoint) for aa in wt
-        ]
-        mut_embeddings = [
-            get_codon_embedding(aa_to_codon.get(aa, "NNN"), checkpoint) for aa in mut
-        ]
+        wt_embeddings = [get_codon_embedding(aa_to_codon.get(aa, "NNN"), checkpoint) for aa in wt]
+        mut_embeddings = [get_codon_embedding(aa_to_codon.get(aa, "NNN"), checkpoint) for aa in mut]
 
         # Compute centroids
         wt_centroid = np.mean(wt_embeddings, axis=0)
@@ -623,17 +615,11 @@ def run_cross_validation():
     }
 
     # Run all tests
-    all_results["tests"]["synonymous_clustering"] = test_synonymous_codon_clustering(
-        checkpoint
-    )
-    all_results["tests"]["phosphomimic_geometry"] = test_phosphomimic_geometry(
-        checkpoint
-    )
+    all_results["tests"]["synonymous_clustering"] = test_synonymous_codon_clustering(checkpoint)
+    all_results["tests"]["phosphomimic_geometry"] = test_phosphomimic_geometry(checkpoint)
     all_results["tests"]["degeneracy_hierarchy"] = test_degeneracy_hierarchy(checkpoint)
     all_results["tests"]["wobble_effect"] = test_wobble_position_effect(checkpoint)
-    all_results["tests"]["disease_validation"] = test_disease_sequence_perturbation(
-        checkpoint
-    )
+    all_results["tests"]["disease_validation"] = test_disease_sequence_perturbation(checkpoint)
 
     # ========================================================================
     # Summary
@@ -643,15 +629,9 @@ def run_cross_validation():
     print("=" * 70)
 
     validations = {
-        "synonymous_clustering": all_results["tests"]["synonymous_clustering"]
-        .get("summary", {})
-        .get("valid", False),
-        "degeneracy_hierarchy": all_results["tests"]["degeneracy_hierarchy"].get(
-            "hierarchy_valid", False
-        ),
-        "wobble_minimal": all_results["tests"]["wobble_effect"].get(
-            "wobble_minimal", False
-        ),
+        "synonymous_clustering": all_results["tests"]["synonymous_clustering"].get("summary", {}).get("valid", False),
+        "degeneracy_hierarchy": all_results["tests"]["degeneracy_hierarchy"].get("hierarchy_valid", False),
+        "wobble_minimal": all_results["tests"]["wobble_effect"].get("wobble_minimal", False),
     }
 
     n_valid = sum(validations.values())

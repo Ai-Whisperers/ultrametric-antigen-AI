@@ -53,7 +53,10 @@ class CoverageEvaluator:
     """
 
     def __init__(
-        self, model: torch.nn.Module, device: str = "cuda", batch_size: int = 1000
+        self,
+        model: torch.nn.Module,
+        device: str = "cuda",
+        batch_size: int = 1000,
     ):
         """Initialize coverage evaluator.
 
@@ -99,9 +102,7 @@ class CoverageEvaluator:
         coverage_pct = (unique_count / TERNARY.N_OPERATIONS) * 100
         return unique_count, coverage_pct
 
-    def evaluate_detailed(
-        self, vae: str = "A", n_samples: int = 10000
-    ) -> CoverageStats:
+    def evaluate_detailed(self, vae: str = "A", n_samples: int = 10000) -> CoverageStats:
         """Evaluate coverage with detailed statistics.
 
         Args:
@@ -153,7 +154,10 @@ class CoverageEvaluator:
 
 
 def evaluate_model_coverage(
-    model: torch.nn.Module, device: str = "cuda", n_samples: int = 10000, vae: str = "A"
+    model: torch.nn.Module,
+    device: str = "cuda",
+    n_samples: int = 10000,
+    vae: str = "A",
 ) -> Tuple[int, float]:
     """Convenience function for one-off coverage evaluation.
 

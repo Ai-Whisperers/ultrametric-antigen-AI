@@ -97,9 +97,7 @@ class FrozenEncoder(nn.Module):
         Returns:
             FrozenEncoder with loaded weights
         """
-        checkpoint = torch.load(
-            checkpoint_path, map_location=device, weights_only=False
-        )
+        checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
         model_state = checkpoint["model"]
 
         # Create encoder
@@ -158,9 +156,7 @@ class FrozenDecoder(nn.Module):
         device: str = "cpu",
     ) -> "FrozenDecoder":
         """Load frozen decoder from v5.5 checkpoint."""
-        checkpoint = torch.load(
-            checkpoint_path, map_location=device, weights_only=False
-        )
+        checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
         model_state = checkpoint["model"]
 
         decoder = cls()
@@ -241,17 +237,11 @@ class TernaryVAEV5_11(nn.Module):
 
         # Frozen encoders (will be loaded from checkpoint)
         # Injection allows mocks for testing
-        self.encoder_A = kwargs.pop("encoder_A", None) or FrozenEncoder(
-            latent_dim=latent_dim
-        )
-        self.encoder_B = kwargs.pop("encoder_B", None) or FrozenEncoder(
-            latent_dim=latent_dim
-        )
+        self.encoder_A = kwargs.pop("encoder_A", None) or FrozenEncoder(latent_dim=latent_dim)
+        self.encoder_B = kwargs.pop("encoder_B", None) or FrozenEncoder(latent_dim=latent_dim)
 
         # Frozen decoder (for verification only)
-        self.decoder_A = kwargs.pop("decoder_A", None) or FrozenDecoder(
-            latent_dim=latent_dim
-        )
+        self.decoder_A = kwargs.pop("decoder_A", None) or FrozenDecoder(latent_dim=latent_dim)
 
         # Trainable hyperbolic projection
         self.projection = kwargs.pop("projection", None)
@@ -302,33 +292,19 @@ class TernaryVAEV5_11(nn.Module):
             checkpoint_path: Path to v5.5 checkpoint file
             device: Device to load to
         """
-        checkpoint = torch.load(
-            checkpoint_path, map_location=device, weights_only=False
-        )
+        checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
         model_state = checkpoint["model"]
 
         # Load encoder_A
-        enc_A_state = {
-            k.replace("encoder_A.", ""): v
-            for k, v in model_state.items()
-            if k.startswith("encoder_A.")
-        }
+        enc_A_state = {k.replace("encoder_A.", ""): v for k, v in model_state.items() if k.startswith("encoder_A.")}
         self.encoder_A.load_state_dict(enc_A_state)
 
         # Load encoder_B
-        enc_B_state = {
-            k.replace("encoder_B.", ""): v
-            for k, v in model_state.items()
-            if k.startswith("encoder_B.")
-        }
+        enc_B_state = {k.replace("encoder_B.", ""): v for k, v in model_state.items() if k.startswith("encoder_B.")}
         self.encoder_B.load_state_dict(enc_B_state)
 
         # Load decoder_A
-        dec_A_state = {
-            k.replace("decoder_A.", ""): v
-            for k, v in model_state.items()
-            if k.startswith("decoder_A.")
-        }
+        dec_A_state = {k.replace("decoder_A.", ""): v for k, v in model_state.items() if k.startswith("decoder_A.")}
         self.decoder_A.load_state_dict(dec_A_state)
 
         # Move to device
@@ -351,9 +327,7 @@ class TernaryVAEV5_11(nn.Module):
         eps = torch.randn_like(std)
         return mu + eps * std
 
-    def forward(
-        self, x: torch.Tensor, compute_control: bool = True
-    ) -> Dict[str, torch.Tensor]:
+    def forward(self, x: torch.Tensor, compute_control: bool = True) -> Dict[str, torch.Tensor]:
         """Forward pass through the model.
 
         Args:
@@ -384,12 +358,8 @@ class TernaryVAEV5_11(nn.Module):
             radius_B = torch.norm(z_B_hyp, dim=-1).mean()
 
             # Use mean embeddings for other stats
-            kl_A = (
-                -0.5 * (1 + logvar_A - mu_A.pow(2) - logvar_A.exp()).sum(dim=-1).mean()
-            )
-            kl_B = (
-                -0.5 * (1 + logvar_B - mu_B.pow(2) - logvar_B.exp()).sum(dim=-1).mean()
-            )
+            kl_A = -0.5 * (1 + logvar_A - mu_A.pow(2) - logvar_A.exp()).sum(dim=-1).mean()
+            kl_B = -0.5 * (1 + logvar_B - mu_B.pow(2) - logvar_B.exp()).sum(dim=-1).mean()
 
             # Placeholder for loss-based stats (will be filled during training)
             geo_loss_placeholder = torch.tensor(0.0, device=x.device)
@@ -412,10 +382,7 @@ class TernaryVAEV5_11(nn.Module):
             # Squeeze batch dimension
             control = {k: v.squeeze(0) for k, v in control.items()}
         else:
-            control = {
-                k: torch.tensor(v, device=x.device)
-                for k, v in self.default_control.items()
-            }
+            control = {k: torch.tensor(v, device=x.device) for k, v in self.default_control.items()}
 
         # Verification reconstruction (no gradients, for monitoring only)
         with torch.no_grad():
@@ -588,9 +555,7 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
         states.append(f"ctrl:{ctrl_state}")
         return " ".join(states)
 
-    def forward(
-        self, x: torch.Tensor, compute_control: bool = True
-    ) -> Dict[str, torch.Tensor]:
+    def forward(self, x: torch.Tensor, compute_control: bool = True) -> Dict[str, torch.Tensor]:
         """Forward pass with conditional gradient flow for both encoders.
 
         Override parent to allow gradients through encoder_A and encoder_B
@@ -627,12 +592,8 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
         if compute_control and self.controller is not None:
             radius_A = torch.norm(z_A_hyp, dim=-1).mean()
             radius_B = torch.norm(z_B_hyp, dim=-1).mean()
-            kl_A = (
-                -0.5 * (1 + logvar_A - mu_A.pow(2) - logvar_A.exp()).sum(dim=-1).mean()
-            )
-            kl_B = (
-                -0.5 * (1 + logvar_B - mu_B.pow(2) - logvar_B.exp()).sum(dim=-1).mean()
-            )
+            kl_A = -0.5 * (1 + logvar_A - mu_A.pow(2) - logvar_A.exp()).sum(dim=-1).mean()
+            kl_B = -0.5 * (1 + logvar_B - mu_B.pow(2) - logvar_B.exp()).sum(dim=-1).mean()
 
             batch_stats = torch.stack(
                 [
@@ -650,10 +611,7 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
             control = self.controller(batch_stats)
             control = {k: v.squeeze(0) for k, v in control.items()}
         else:
-            control = {
-                k: torch.tensor(v, device=x.device)
-                for k, v in self.default_control.items()
-            }
+            control = {k: torch.tensor(v, device=x.device) for k, v in self.default_control.items()}
 
         # Verification reconstruction
         with torch.no_grad():
@@ -706,9 +664,7 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
                 proj_b_params = list(self.projection.proj_B.parameters())
             else:
                 proj_b_params = list(self.projection.proj_B_radius.parameters())
-            param_groups.append(
-                {"params": proj_b_params, "lr": base_lr, "name": "proj_B"}
-            )
+            param_groups.append({"params": proj_b_params, "lr": base_lr, "name": "proj_B"})
         else:
             param_groups.append(
                 {
@@ -719,9 +675,7 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
             )
 
         # Controller (can be frozen by homeostasis)
-        if self.controller is not None and not getattr(
-            self, "freeze_controller", False
-        ):
+        if self.controller is not None and not getattr(self, "freeze_controller", False):
             param_groups.append(
                 {
                     "params": list(self.controller.parameters()),
@@ -760,7 +714,8 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
         """
         param_groups = self.get_param_groups(base_lr)
         new_optimizer = optim.AdamW(
-            param_groups, weight_decay=optimizer.defaults.get("weight_decay", 1e-4)
+            param_groups,
+            weight_decay=optimizer.defaults.get("weight_decay", 1e-4),
         )
         return new_optimizer
 

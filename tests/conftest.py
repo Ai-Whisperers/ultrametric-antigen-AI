@@ -22,7 +22,7 @@ Categories:
     - Training: Training utilities and mocks
 """
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 from unittest.mock import MagicMock
 
 import numpy as np
@@ -180,9 +180,7 @@ def special_ternary_ops(device) -> Dict[str, torch.Tensor]:
         "all_zero": torch.zeros((1, 9), device=device),
         "all_positive": torch.full((1, 9), 1.0, device=device),
         "mixed": torch.tensor([[-1, 0, 1, -1, 0, 1, -1, 0, 1]], device=device).float(),
-        "identity_like": torch.tensor(
-            [[0, 0, 0, 0, 0, 0, 0, 0, 0]], device=device
-        ).float(),
+        "identity_like": torch.tensor([[0, 0, 0, 0, 0, 0, 0, 0, 0]], device=device).float(),
     }
 
 
@@ -478,7 +476,8 @@ def cleanup_cuda():
 def pytest_configure(config):
     """Register custom markers."""
     config.addinivalue_line(
-        "markers", "slow: marks tests as slow (deselect with '-m \"not slow\"')"
+        "markers",
+        "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     )
     config.addinivalue_line("markers", "gpu: marks tests that require GPU")
     config.addinivalue_line("markers", "integration: marks integration tests")

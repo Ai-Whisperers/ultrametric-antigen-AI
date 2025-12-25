@@ -21,15 +21,13 @@ Usage:
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Type
-from unittest.mock import MagicMock
+from typing import Any, Dict, List, Type
 
 import pytest
 import torch
 import torch.nn as nn
 
-from .assertions import (GeometryAssertions, LossAssertions, ModelAssertions,
-                         TensorAssertions, TernaryAssertions)
+from .assertions import GeometryAssertions, ModelAssertions, TensorAssertions
 
 
 class BaseTestCase(ABC):
@@ -47,9 +45,7 @@ class BaseTestCase(ABC):
         """Move tensor to test device."""
         return tensor.to(self.device)
 
-    def _create_random_tensor(
-        self, *shape, requires_grad: bool = False
-    ) -> torch.Tensor:
+    def _create_random_tensor(self, *shape, requires_grad: bool = False) -> torch.Tensor:
         """Create random tensor on test device."""
         return torch.randn(*shape, device=self.device, requires_grad=requires_grad)
 
@@ -150,11 +146,7 @@ class LossTestCase(BaseTestCase):
         loss.backward()
 
         # Check at least one input has gradients
-        has_grad = any(
-            inp.grad is not None and inp.grad.abs().sum() > 0
-            for inp in inputs
-            if isinstance(inp, torch.Tensor) and inp.requires_grad
-        )
+        has_grad = any(inp.grad is not None and inp.grad.abs().sum() > 0 for inp in inputs if isinstance(inp, torch.Tensor) and inp.requires_grad)
         assert has_grad, "No gradients found in any input"
 
     def test_batch_size_flexibility(self, loss_fn):
@@ -168,9 +160,7 @@ class LossTestCase(BaseTestCase):
             else:
                 loss = result
 
-            TensorAssertions.assert_finite(
-                loss, f"Loss should be finite for batch_size={batch_size}"
-            )
+            TensorAssertions.assert_finite(loss, f"Loss should be finite for batch_size={batch_size}")
 
     @abstractmethod
     def _get_test_inputs(self, batch_size: int = 32, requires_grad: bool = False):
@@ -254,9 +244,7 @@ class ModelTestCase(BaseTestCase):
                 else:
                     pytest.skip("No tensor output found")
         else:
-            loss = (
-                output.mean() if isinstance(output, torch.Tensor) else output[0].mean()
-            )
+            loss = output.mean() if isinstance(output, torch.Tensor) else output[0].mean()
 
         loss.backward()
 
@@ -324,9 +312,7 @@ class GeometryTestCase(BaseTestCase):
         points = torch.randn(n_points, dim, device=self.device)
         norms = torch.norm(points, dim=-1, keepdim=True)
         # Scale to be inside disk with max radius 0.9
-        points = (
-            points / (norms + 1e-8) * 0.9 * torch.rand(n_points, 1, device=self.device)
-        )
+        points = points / (norms + 1e-8) * 0.9 * torch.rand(n_points, 1, device=self.device)
         return points
 
     def test_distance_symmetry(self, manifold):

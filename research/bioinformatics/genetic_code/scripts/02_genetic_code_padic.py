@@ -28,7 +28,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from scipy import stats
-from scipy.spatial.distance import squareform
 
 # Suppress warnings for cleaner output
 warnings.filterwarnings("ignore")
@@ -210,7 +209,7 @@ def phase_1_1_geodesic_matrix(embeddings, codons, ternary_indices):
     codon_embeddings = embeddings[ternary_indices]
 
     print(f"\n  Codon embeddings shape: {codon_embeddings.shape}")
-    print(f"  Using Poincare geodesic distance (curvature c=1.0)")
+    print("  Using Poincare geodesic distance (curvature c=1.0)")
 
     # Compute pairwise geodesic distances
     geodesic_matrix = compute_pairwise_geodesic(codon_embeddings)
@@ -225,13 +224,13 @@ def phase_1_1_geodesic_matrix(embeddings, codons, ternary_indices):
     geo_flat = geodesic_matrix[upper_tri]
     euc_flat = euclidean_matrix[upper_tri]
 
-    print(f"\n  Geodesic distances:")
+    print("\n  Geodesic distances:")
     print(f"    Mean: {geo_flat.mean():.4f}")
     print(f"    Std:  {geo_flat.std():.4f}")
     print(f"    Min:  {geo_flat.min():.4f}")
     print(f"    Max:  {geo_flat.max():.4f}")
 
-    print(f"\n  Euclidean distances (for comparison):")
+    print("\n  Euclidean distances (for comparison):")
     print(f"    Mean: {euc_flat.mean():.4f}")
     print(f"    Std:  {euc_flat.std():.4f}")
 
@@ -279,8 +278,8 @@ def phase_1_2_padic_balls(geodesic_matrix, codons, amino_acids):
     balls_valid = 0
     balls_total = 0
 
-    print(f"\n  Testing p-adic ball property for each amino acid:")
-    print(f"  (epsilon_within < epsilon_between = valid ball)")
+    print("\n  Testing p-adic ball property for each amino acid:")
+    print("  (epsilon_within < epsilon_between = valid ball)")
     print()
 
     for aa in sorted(aa_to_indices.keys()):
@@ -330,30 +329,23 @@ def phase_1_2_padic_balls(geodesic_matrix, codons, amino_acids):
         }
 
         status = "BALL" if is_valid else "FAIL"
-        print(
-            f"    {aa} ({n_codons} codons): eps_in={epsilon_within:.4f}, "
-            f"eps_out={epsilon_between:.4f}, margin={margin:+.4f} [{status}]"
-        )
+        print(f"    {aa} ({n_codons} codons): eps_in={epsilon_within:.4f}, " f"eps_out={epsilon_between:.4f}, margin={margin:+.4f} [{status}]")
 
     # Summary
     success_rate = balls_valid / balls_total if balls_total > 0 else 0
 
-    print(f"\n  SUMMARY:")
-    print(
-        f"    Valid p-adic balls: {balls_valid}/{balls_total} ({success_rate*100:.1f}%)"
-    )
+    print("\n  SUMMARY:")
+    print(f"    Valid p-adic balls: {balls_valid}/{balls_total} ({success_rate*100:.1f}%)")
 
     # Statistical test: is margin > 0 on average?
     margins = [r["margin"] for r in results.values() if r["margin"] is not None]
     if len(margins) >= 3:
         t_stat, p_value = stats.ttest_1samp(margins, 0)
         print(f"    Mean margin: {np.mean(margins):.4f}")
-        print(
-            f"    T-test (margin > 0): t={t_stat:.3f}, p={p_value/2:.2e} (one-tailed)"
-        )
+        print(f"    T-test (margin > 0): t={t_stat:.3f}, p={p_value/2:.2e} (one-tailed)")
 
         if p_value / 2 < 0.05 and np.mean(margins) > 0:
-            print(f"\n  *** SIGNIFICANT: Synonymous codons form p-adic balls! ***")
+            print("\n  *** SIGNIFICANT: Synonymous codons form p-adic balls! ***")
 
     return {
         "by_aa": results,
@@ -415,21 +407,19 @@ def phase_1_3_ultrametric(geodesic_matrix, codons, n_samples=10000):
         print(f"  Max violation magnitude: {np.max(violation_magnitudes):.4f}")
 
     # Compare to random baseline (uniform random points would give ~33% violations)
-    print(f"\n  Random baseline would give ~33% violations")
+    print("\n  Random baseline would give ~33% violations")
     print(f"  Our rate: {violation_rate*100:.2f}%")
 
     if violation_rate < 0.05:
-        print(f"\n  *** STRONG ULTRAMETRIC STRUCTURE (< 5% violations) ***")
+        print("\n  *** STRONG ULTRAMETRIC STRUCTURE (< 5% violations) ***")
     elif violation_rate < 0.15:
-        print(f"\n  ** Moderate ultrametric structure (< 15% violations) **")
+        print("\n  ** Moderate ultrametric structure (< 15% violations) **")
 
     return {
         "violations": violations,
         "total_tested": total_tested,
         "violation_rate": float(violation_rate),
-        "mean_violation_magnitude": (
-            float(np.mean(violation_magnitudes)) if violations > 0 else 0
-        ),
+        "mean_violation_magnitude": (float(np.mean(violation_magnitudes)) if violations > 0 else 0),
         "is_strongly_ultrametric": violation_rate < 0.05,
     }
 
@@ -457,29 +447,27 @@ def phase_1_4_degeneracy_radius(codon_embeddings, amino_acids):
     # Correlation
     corr, p_value = stats.spearmanr(degeneracies, radii)
 
-    print(f"\n  Degeneracy vs Radius correlation:")
+    print("\n  Degeneracy vs Radius correlation:")
     print(f"    Spearman r = {corr:.4f}")
     print(f"    p-value = {p_value:.2e}")
 
     # Mean radius by degeneracy level
-    print(f"\n  Mean radius by degeneracy:")
+    print("\n  Mean radius by degeneracy:")
     for deg in sorted(set(degeneracies)):
         mask = degeneracies == deg
         mean_r = radii[mask].mean()
         std_r = radii[mask].std()
         count = mask.sum()
-        print(
-            f"    Degeneracy {deg}: radius = {mean_r:.4f} +/- {std_r:.4f} (n={count})"
-        )
+        print(f"    Degeneracy {deg}: radius = {mean_r:.4f} +/- {std_r:.4f} (n={count})")
 
     # Interpretation
     if corr < -0.1 and p_value < 0.05:
-        print(f"\n  *** CONFIRMED: High degeneracy AAs are closer to origin ***")
-        print(f"  This supports the 'fundamental operations' hypothesis!")
+        print("\n  *** CONFIRMED: High degeneracy AAs are closer to origin ***")
+        print("  This supports the 'fundamental operations' hypothesis!")
     elif corr > 0.1 and p_value < 0.05:
-        print(f"\n  OPPOSITE: High degeneracy AAs are at boundary")
+        print("\n  OPPOSITE: High degeneracy AAs are at boundary")
     else:
-        print(f"\n  No significant correlation found")
+        print("\n  No significant correlation found")
 
     return {
         "correlation": float(corr),
@@ -493,9 +481,7 @@ def phase_1_4_degeneracy_radius(codon_embeddings, amino_acids):
 # =============================================================================
 
 
-def visualize_padic_balls(
-    geodesic_matrix, codons, amino_acids, codon_embeddings, output_dir
-):
+def visualize_padic_balls(geodesic_matrix, codons, amino_acids, codon_embeddings, output_dir):
     """Visualize p-adic ball structure."""
     from sklearn.manifold import MDS
 
@@ -541,7 +527,11 @@ def visualize_padic_balls(
     for deg in sorted(set(degeneracies)):
         mask = degeneracies == deg
         ax2.scatter(
-            [deg] * mask.sum(), radii[mask], alpha=0.6, s=50, label=f"Deg {deg}"
+            [deg] * mask.sum(),
+            radii[mask],
+            alpha=0.6,
+            s=50,
+            label=f"Deg {deg}",
         )
 
     ax2.set_xlabel("Degeneracy (# codons for AA)")
@@ -667,9 +657,7 @@ def main():
     amino_acids = [GENETIC_CODE[c] for c in codons]
     ternary_indices = [codon_to_ternary_index(c) for c in codons]
 
-    print(
-        f"Mapped 64 codons to ternary indices: {min(ternary_indices)} - {max(ternary_indices)}"
-    )
+    print(f"Mapped 64 codons to ternary indices: {min(ternary_indices)} - {max(ternary_indices)}")
 
     # Results container
     results = {
@@ -690,9 +678,7 @@ def main():
     }
 
     # Phase 1.2: P-adic ball test
-    phase_1_2_results = phase_1_2_padic_balls(
-        phase_1_1_results["geodesic_matrix"], codons, amino_acids
-    )
+    phase_1_2_results = phase_1_2_padic_balls(phase_1_1_results["geodesic_matrix"], codons, amino_acids)
     results["phase_1_2"] = {
         "balls_valid": phase_1_2_results["balls_valid"],
         "balls_total": phase_1_2_results["balls_total"],
@@ -703,15 +689,11 @@ def main():
     }
 
     # Phase 1.3: Ultrametric test
-    phase_1_3_results = phase_1_3_ultrametric(
-        phase_1_1_results["geodesic_matrix"], codons
-    )
+    phase_1_3_results = phase_1_3_ultrametric(phase_1_1_results["geodesic_matrix"], codons)
     results["phase_1_3"] = phase_1_3_results
 
     # Phase 1.4: Degeneracy vs radius
-    phase_1_4_results = phase_1_4_degeneracy_radius(
-        phase_1_1_results["codon_embeddings"], amino_acids
-    )
+    phase_1_4_results = phase_1_4_degeneracy_radius(phase_1_1_results["codon_embeddings"], amino_acids)
     results["phase_1_4"] = phase_1_4_results
 
     # Visualization
@@ -754,11 +736,7 @@ def main():
     # Overall conclusion
     n_positive = sum(
         [
-            (
-                phase_1_2_results["p_value"] < 0.05
-                if phase_1_2_results["p_value"]
-                else False
-            ),
+            (phase_1_2_results["p_value"] < 0.05 if phase_1_2_results["p_value"] else False),
             phase_1_3_results["is_strongly_ultrametric"],
             phase_1_4_results["prediction_confirmed"],
         ]

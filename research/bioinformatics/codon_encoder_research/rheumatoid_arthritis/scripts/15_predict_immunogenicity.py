@@ -11,7 +11,6 @@ Version: 1.0
 """
 
 import json
-import pickle
 from collections import Counter
 from pathlib import Path
 from typing import Dict, List
@@ -97,7 +96,8 @@ def load_training_data() -> tuple:
     import importlib.util
 
     spec = importlib.util.spec_from_file_location(
-        "augmented_db", Path(__file__).parent / "08_augmented_epitope_database.py"
+        "augmented_db",
+        Path(__file__).parent / "08_augmented_epitope_database.py",
     )
     augmented_db = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(augmented_db)
@@ -126,9 +126,7 @@ def load_training_data() -> tuple:
                 codon = AA_TO_CODON.get(aa, "NNN")
                 if codon == "NNN":
                     continue
-                onehot = torch.tensor(
-                    codon_to_onehot(codon), dtype=torch.float32
-                ).unsqueeze(0)
+                onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0)
                 with torch.no_grad():
                     probs, emb = encoder.get_cluster_probs(onehot)
                     embeddings.append(emb.numpy().squeeze())
@@ -192,16 +190,11 @@ def load_training_data() -> tuple:
                         js_divs.append(
                             0.5
                             * (
-                                np.sum(
-                                    orig_probs
-                                    * np.log((orig_probs + 1e-10) / (m + 1e-10))
-                                )
+                                np.sum(orig_probs * np.log((orig_probs + 1e-10) / (m + 1e-10)))
                                 + np.sum(cit_p * np.log((cit_p + 1e-10) / (m + 1e-10)))
                             )
                         )
-                        ent_changes.append(
-                            -np.sum(cit_p * np.log(cit_p + 1e-10)) - orig_entropy
-                        )
+                        ent_changes.append(-np.sum(cit_p * np.log(cit_p + 1e-10)) - orig_entropy)
 
                 centroid_shift = np.mean(shifts) if shifts else 0.0
                 js_div = np.mean(js_divs) if js_divs else 0.0
@@ -216,10 +209,8 @@ def load_training_data() -> tuple:
                 np.mean(norms),  # embedding_norm
                 np.std(norms),  # embedding_norm_std
                 homogeneity,  # cluster_homogeneity
-                (
-                    np.mean(neighbor_dists) if neighbor_dists else 0.0
-                ),  # mean_neighbor_distance
-                np.mean(boundary_pots) if boundary_pots else 0.0,  # boundary_potential
+                (np.mean(neighbor_dists) if neighbor_dists else 0.0),  # mean_neighbor_distance
+                (np.mean(boundary_pots) if boundary_pots else 0.0),  # boundary_potential
                 seq_len,  # sequence_length
                 n_arginines,  # n_arginines
                 centroid_shift,  # centroid_shift
@@ -288,9 +279,7 @@ def predict_immunogenicity(sites: List[Dict], model, scaler) -> List[Dict]:
     for i, site in enumerate(sites):
         try:
             features = [site.get(col, 0.0) for col in FEATURE_COLUMNS]
-            if any(
-                f is None or (isinstance(f, float) and np.isnan(f)) for f in features
-            ):
+            if any(f is None or (isinstance(f, float) and np.isnan(f)) for f in features):
                 continue
             X_list.append(features)
             valid_indices.append(i)
@@ -335,18 +324,21 @@ def predict_immunogenicity(sites: List[Dict], model, scaler) -> List[Dict]:
         results.append(result)
 
     # Statistics
-    valid_probs = [
-        r["immunogenic_probability"]
-        for r in results
-        if r["immunogenic_probability"] is not None
-    ]
+    valid_probs = [r["immunogenic_probability"] for r in results if r["immunogenic_probability"] is not None]
     risk_counts = Counter(r["risk_category"] for r in results)
 
-    print(f"\n  Prediction statistics:")
+    print("\n  Prediction statistics:")
     print(f"    Mean probability: {np.mean(valid_probs):.3f}")
     print(f"    Median probability: {np.median(valid_probs):.3f}")
-    print(f"\n  Risk distribution:")
-    for category in ["very_high", "high", "moderate", "low", "very_low", "unknown"]:
+    print("\n  Risk distribution:")
+    for category in [
+        "very_high",
+        "high",
+        "moderate",
+        "low",
+        "very_low",
+        "unknown",
+    ]:
         count = risk_counts.get(category, 0)
         pct = 100 * count / len(results) if results else 0
         print(f"    {category}: {count:,} ({pct:.1f}%)")
@@ -397,7 +389,9 @@ def save_predictions(results: List[Dict], output_dir: Path):
     # Top candidates (high risk)
     high_risk = [r for r in results if r.get("risk_category") in ["very_high", "high"]]
     high_risk_sorted = sorted(
-        high_risk, key=lambda x: x.get("immunogenic_probability", 0), reverse=True
+        high_risk,
+        key=lambda x: x.get("immunogenic_probability", 0),
+        reverse=True,
     )
 
     top_path = output_dir / "high_risk_candidates.csv"
@@ -447,23 +441,13 @@ def save_statistics(results: List[Dict], output_dir: Path):
         "valid_predictions": len(valid_results),
         "risk_distribution": dict(Counter(r["risk_category"] for r in results)),
         "probability_stats": {
-            "mean": float(
-                np.mean([r["immunogenic_probability"] for r in valid_results])
-            ),
+            "mean": float(np.mean([r["immunogenic_probability"] for r in valid_results])),
             "std": float(np.std([r["immunogenic_probability"] for r in valid_results])),
-            "median": float(
-                np.median([r["immunogenic_probability"] for r in valid_results])
-            ),
+            "median": float(np.median([r["immunogenic_probability"] for r in valid_results])),
             "min": float(np.min([r["immunogenic_probability"] for r in valid_results])),
             "max": float(np.max([r["immunogenic_probability"] for r in valid_results])),
         },
-        "high_risk_proteins": len(
-            set(
-                r["protein_id"]
-                for r in valid_results
-                if r.get("risk_category") in ["very_high", "high"]
-            )
-        ),
+        "high_risk_proteins": len(set(r["protein_id"] for r in valid_results if r.get("risk_category") in ["very_high", "high"])),
     }
 
     stats_path = output_dir / "prediction_statistics.json"
@@ -524,10 +508,8 @@ def main():
     for f in sorted(output_dir.iterdir()):
         print(f"  {f.name}")
 
-    print(f"\nKey results:")
-    print(
-        f"  High-risk sites: {stats['risk_distribution'].get('very_high', 0) + stats['risk_distribution'].get('high', 0):,}"
-    )
+    print("\nKey results:")
+    print(f"  High-risk sites: {stats['risk_distribution'].get('very_high', 0) + stats['risk_distribution'].get('high', 0):,}")
     print(f"  High-risk proteins: {stats['high_risk_proteins']:,}")
 
     return results

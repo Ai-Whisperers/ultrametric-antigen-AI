@@ -159,13 +159,7 @@ class HybridStructurePredictor:
 
         # Model path defaults
         if model_path is None:
-            model_path = (
-                project_root
-                / "sandbox-training"
-                / "checkpoints"
-                / "v5_11_11_production"
-                / "best.pt"
-            )
+            model_path = project_root / "sandbox-training" / "checkpoints" / "v5_11_11_production" / "best.pt"
 
         self.model_path = model_path
         self.model = None
@@ -190,9 +184,7 @@ class HybridStructurePredictor:
             return
 
         try:
-            checkpoint = torch.load(
-                self.model_path, map_location=self.device, weights_only=False
-            )
+            checkpoint = torch.load(self.model_path, map_location=self.device, weights_only=False)
 
             # Extract config from checkpoint
             config = checkpoint.get("config", {})
@@ -236,7 +228,13 @@ class HybridStructurePredictor:
         Returns:
             9-dimensional ternary vector (3 positions x 3 digits each)
         """
-        nuc_to_val = {"T": 0, "U": 0, "C": 1, "A": 2, "G": 0}  # G maps to 0 (mod 3)
+        nuc_to_val = {
+            "T": 0,
+            "U": 0,
+            "C": 1,
+            "A": 2,
+            "G": 0,
+        }  # G maps to 0 (mod 3)
         result = np.zeros(9, dtype=np.float32)
 
         for i, nuc in enumerate(codon.upper()):
@@ -322,9 +320,7 @@ class HybridStructurePredictor:
                 mut_z = mut_output["z_A_hyp"]
 
             # Compute hyperbolic distance
-            return self._poincare_distance(
-                wt_z.numpy().flatten(), mut_z.numpy().flatten()
-            )
+            return self._poincare_distance(wt_z.numpy().flatten(), mut_z.numpy().flatten())
         else:
             # Fallback calculation
             return self._fallback_codon_distance(wt_codon, mut_codon)
@@ -371,15 +367,11 @@ class HybridStructurePredictor:
 
         # Validate mutation against sequence
         if position <= 0 or position > len(wt_sequence):
-            raise ValueError(
-                f"Position {position} out of range for sequence length {len(wt_sequence)}"
-            )
+            raise ValueError(f"Position {position} out of range for sequence length {len(wt_sequence)}")
 
         seq_aa = wt_sequence[position - 1]
         if seq_aa != wt_aa:
-            print(
-                f"Warning: Sequence has {seq_aa} at position {position}, mutation specifies {wt_aa}"
-            )
+            print(f"Warning: Sequence has {seq_aa} at position {position}, mutation specifies {wt_aa}")
 
         # Get structural context from PDB (if BioPython available)
         if self.pdb_analyzer is not None:
@@ -438,11 +430,7 @@ class HybridStructurePredictor:
 
         # Determine overall mechanism
         mechanisms = structural_analysis["mechanisms"]
-        is_ledgf = (
-            self.pdb_analyzer.is_ledgf_interface(position)
-            if self.pdb_analyzer is not None
-            else structural_analysis["is_ledgf_interface"]
-        )
+        is_ledgf = self.pdb_analyzer.is_ledgf_interface(position) if self.pdb_analyzer is not None else structural_analysis["is_ledgf_interface"]
 
         if is_ledgf:
             primary_mechanism = "LEDGF interface disruption"
@@ -484,7 +472,10 @@ class HybridStructurePredictor:
         }
 
     def batch_predict(
-        self, wt_sequence: str, mutations: List[str], pdb_id: Optional[str] = None
+        self,
+        wt_sequence: str,
+        mutations: List[str],
+        pdb_id: Optional[str] = None,
     ) -> List[Dict]:
         """Predict effects for multiple mutations.
 
@@ -537,9 +528,7 @@ def main():
         for mutation in reveal_mutations:
             print(f"\n--- {mutation} ---")
             try:
-                result = predictor.predict_reveal_effect(
-                    wt_sequence=integrase_sequence, mutation=mutation
-                )
+                result = predictor.predict_reveal_effect(wt_sequence=integrase_sequence, mutation=mutation)
                 print(f"Reveal Score: {result['reveal_score']:.2f}")
                 print(f"Mechanism: {result['primary_mechanism']}")
                 print(f"LEDGF Interface: {result['is_ledgf_interface']}")

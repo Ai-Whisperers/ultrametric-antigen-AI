@@ -29,7 +29,10 @@ ACPA_TARGETS = [
         "name": "Fibrinogen alpha",
         "uniprot": "P02671",
         "gene": "FGA",
-        "known_cit_sites": [271, 573],  # Literature-validated citrullination sites
+        "known_cit_sites": [
+            271,
+            573,
+        ],  # Literature-validated citrullination sites
         "acpa_association": "Strong",
         "notes": "Major ACPA target, forms fibrin clots",
     },
@@ -139,12 +142,7 @@ def fetch_uniprot_sequence(uniprot_id: str, max_retries: int = 3) -> dict:
                 length = data.get("sequence", {}).get("length", 0)
 
                 # Extract protein name
-                protein_name = (
-                    data.get("proteinDescription", {})
-                    .get("recommendedName", {})
-                    .get("fullName", {})
-                    .get("value", "")
-                )
+                protein_name = data.get("proteinDescription", {}).get("recommendedName", {}).get("fullName", {}).get("value", "")
 
                 # Extract organism
                 organism = data.get("organism", {}).get("scientificName", "")
@@ -159,20 +157,20 @@ def fetch_uniprot_sequence(uniprot_id: str, max_retries: int = 3) -> dict:
                 }
 
         except urllib.error.HTTPError as e:
-            print(
-                f"  HTTP Error {e.code} for {uniprot_id}, attempt {attempt + 1}/{max_retries}"
-            )
+            print(f"  HTTP Error {e.code} for {uniprot_id}, attempt {attempt + 1}/{max_retries}")
             time.sleep(1)
         except urllib.error.URLError as e:
-            print(
-                f"  URL Error for {uniprot_id}: {e.reason}, attempt {attempt + 1}/{max_retries}"
-            )
+            print(f"  URL Error for {uniprot_id}: {e.reason}, attempt {attempt + 1}/{max_retries}")
             time.sleep(1)
         except Exception as e:
             print(f"  Error for {uniprot_id}: {e}, attempt {attempt + 1}/{max_retries}")
             time.sleep(1)
 
-    return {"uniprot_id": uniprot_id, "success": False, "error": "Max retries exceeded"}
+    return {
+        "uniprot_id": uniprot_id,
+        "success": False,
+        "error": "Max retries exceeded",
+    }
 
 
 def extract_context(sequence: str, position: int, window: int = 5) -> str:
@@ -298,9 +296,7 @@ def extract_all_acpa_proteins():
             results["summary"]["sites_by_residue"][res] += count
 
     # Convert defaultdict to dict for JSON serialization
-    results["summary"]["sites_by_residue"] = dict(
-        results["summary"]["sites_by_residue"]
-    )
+    results["summary"]["sites_by_residue"] = dict(results["summary"]["sites_by_residue"])
 
     return results
 
@@ -318,7 +314,7 @@ def main():
     print(f"  Total residues: {summary['total_residues']}")
     print(f"  Total modifiable sites: {summary['total_modifiable_sites']}")
     print(f"  Known citrullination sites: {summary['known_cit_sites']}")
-    print(f"\n  Sites by residue type:")
+    print("\n  Sites by residue type:")
     for res, count in sorted(summary["sites_by_residue"].items()):
         print(f"    {res} ({MODIFIABLE_RESIDUES[res]}): {count}")
 

@@ -19,16 +19,12 @@ Version: 2.0 - Updated to use Poincaré ball geometry
 
 import json
 from collections import defaultdict
-from pathlib import Path
 
 import numpy as np
 import torch
-import torch.nn as nn
 # Import hyperbolic utilities
-from hyperbolic_utils import (AA_TO_CODON, CodonEncoder, codon_to_onehot,
-                              get_results_dir, load_codon_encoder)
-from hyperbolic_utils import poincare_distance as hyp_poincare_distance
-from hyperbolic_utils import project_to_poincare
+from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot, get_results_dir,
+                              load_codon_encoder)
 from scipy import stats
 
 # ============================================================================
@@ -183,11 +179,7 @@ def compute_epitope_shift_profile(epitope, encoder, device="cpu"):
 
     for codon in codons:
         if codon != "NNN":
-            onehot = (
-                torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-                .unsqueeze(0)
-                .to(device)
-            )
+            onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
             with torch.no_grad():
                 probs, emb = encoder.get_cluster_probs(onehot)
                 embeddings.append(emb.cpu().numpy().squeeze())
@@ -202,9 +194,7 @@ def compute_epitope_shift_profile(epitope, encoder, device="cpu"):
     # Original centroid and cluster distribution
     original_centroid = np.mean(embeddings, axis=0)
     original_cluster_dist = np.mean(cluster_probs, axis=0)
-    original_entropy = -np.sum(
-        original_cluster_dist * np.log(original_cluster_dist + 1e-10)
-    )
+    original_entropy = -np.sum(original_cluster_dist * np.log(original_cluster_dist + 1e-10))
 
     # Analyze each arginine
     arg_shifts = []
@@ -229,24 +219,14 @@ def compute_epitope_shift_profile(epitope, encoder, device="cpu"):
 
         # Compute shifts
         centroid_shift = np.linalg.norm(cit_centroid - original_centroid)
-        relative_shift = (
-            centroid_shift / np.linalg.norm(original_centroid)
-            if np.linalg.norm(original_centroid) > 0
-            else 0
-        )
+        relative_shift = centroid_shift / np.linalg.norm(original_centroid) if np.linalg.norm(original_centroid) > 0 else 0
 
         # KL divergence between original and citrullinated cluster distributions
-        kl_div = np.sum(
-            original_cluster_dist
-            * np.log((original_cluster_dist + 1e-10) / (cit_cluster_dist + 1e-10))
-        )
+        kl_div = np.sum(original_cluster_dist * np.log((original_cluster_dist + 1e-10) / (cit_cluster_dist + 1e-10)))
 
         # Jensen-Shannon divergence (symmetric)
         m = 0.5 * (original_cluster_dist + cit_cluster_dist)
-        js_div = 0.5 * np.sum(
-            original_cluster_dist
-            * np.log((original_cluster_dist + 1e-10) / (m + 1e-10))
-        ) + 0.5 * np.sum(
+        js_div = 0.5 * np.sum(original_cluster_dist * np.log((original_cluster_dist + 1e-10) / (m + 1e-10))) + 0.5 * np.sum(
             cit_cluster_dist * np.log((cit_cluster_dist + 1e-10) / (m + 1e-10))
         )
 
@@ -312,7 +292,12 @@ def analyze_shift_patterns(all_shifts):
 
     # Statistical comparison
     comparisons = {}
-    metrics = ["centroid_shift", "relative_shift", "js_divergence", "entropy_change"]
+    metrics = [
+        "centroid_shift",
+        "relative_shift",
+        "js_divergence",
+        "entropy_change",
+    ]
 
     for metric in metrics:
         if imm_data[metric] and sil_data[metric]:
@@ -320,9 +305,7 @@ def analyze_shift_patterns(all_shifts):
 
             imm_mean = np.mean(imm_data[metric])
             sil_mean = np.mean(sil_data[metric])
-            pooled_std = np.sqrt(
-                (np.var(imm_data[metric]) + np.var(sil_data[metric])) / 2
-            )
+            pooled_std = np.sqrt((np.var(imm_data[metric]) + np.var(sil_data[metric])) / 2)
             effect = (imm_mean - sil_mean) / pooled_std if pooled_std > 0 else 0
 
             comparisons[metric] = {
@@ -397,9 +380,7 @@ def main():
 
         if result:
             status = "IMMUNODOMINANT" if result["immunodominant"] else "Silent"
-            print(
-                f"\n{result['epitope_id']} ({status}, ACPA={result['acpa']*100:.0f}%)"
-            )
+            print(f"\n{result['epitope_id']} ({status}, ACPA={result['acpa']*100:.0f}%)")
 
             for shift in result["arg_shifts"]:
                 print(
@@ -421,26 +402,12 @@ def main():
     comparisons, imm_data, sil_data = analyze_shift_patterns(all_shifts)
 
     for metric, stats_data in comparisons.items():
-        sig = (
-            "***"
-            if stats_data["p_value"] < 0.001
-            else (
-                "**"
-                if stats_data["p_value"] < 0.01
-                else "*" if stats_data["p_value"] < 0.05 else ""
-            )
-        )
+        sig = "***" if stats_data["p_value"] < 0.001 else ("**" if stats_data["p_value"] < 0.01 else "*" if stats_data["p_value"] < 0.05 else "")
 
         print(f"\n{metric.upper().replace('_', ' ')}:")
-        print(
-            f"  Immunodominant: {stats_data['imm_mean']:.4f} ± {stats_data['imm_std']:.4f}"
-        )
-        print(
-            f"  Silent:         {stats_data['sil_mean']:.4f} ± {stats_data['sil_std']:.4f}"
-        )
-        print(
-            f"  t = {stats_data['t_stat']:.3f}, p = {stats_data['p_value']:.4f} {sig}"
-        )
+        print(f"  Immunodominant: {stats_data['imm_mean']:.4f} ± {stats_data['imm_std']:.4f}")
+        print(f"  Silent:         {stats_data['sil_mean']:.4f} ± {stats_data['sil_std']:.4f}")
+        print(f"  t = {stats_data['t_stat']:.3f}, p = {stats_data['p_value']:.4f} {sig}")
         print(f"  Cohen's d = {stats_data['effect_size']:.3f}")
 
     # =========================================================================
@@ -453,11 +420,7 @@ def main():
 
     corr = correlate_shift_with_acpa(all_shifts)
     if corr:
-        sig = (
-            "***"
-            if corr["p"] < 0.001
-            else "**" if corr["p"] < 0.01 else "*" if corr["p"] < 0.05 else ""
-        )
+        sig = "***" if corr["p"] < 0.001 else "**" if corr["p"] < 0.01 else "*" if corr["p"] < 0.05 else ""
         print(f"\nPearson correlation: r = {corr['r']:.3f}, p = {corr['p']:.4f} {sig}")
         print(f"Sample size: n = {corr['n']}")
 
@@ -480,34 +443,25 @@ def main():
         rs = comparisons["relative_shift"]
         if rs["imm_mean"] < rs["sil_mean"] and rs["p_value"] < 0.1:
             print("\n✓ GOLDILOCKS ZONE HYPOTHESIS SUPPORTED:")
-            print(
-                f"  Immunodominant epitopes show SMALLER shifts ({rs['imm_mean']*100:.1f}%)"
-            )
+            print(f"  Immunodominant epitopes show SMALLER shifts ({rs['imm_mean']*100:.1f}%)")
             print(f"  than silent epitopes ({rs['sil_mean']*100:.1f}%)")
             print("\n  Interpretation: Citrullination at immunodominant sites causes")
             print("  a moderate perturbation - enough to break self-tolerance but not")
-            print(
-                "  so large that the epitope appears completely foreign and is ignored."
-            )
+            print("  so large that the epitope appears completely foreign and is ignored.")
 
     if "js_divergence" in comparisons:
         js = comparisons["js_divergence"]
-        print(f"\n✓ CLUSTER DISTRIBUTION SHIFT:")
+        print("\n✓ CLUSTER DISTRIBUTION SHIFT:")
         print(f"  Immunodominant JS divergence: {js['imm_mean']:.4f}")
         print(f"  Silent JS divergence:         {js['sil_mean']:.4f}")
-        print(
-            f"  The cluster probability distribution changes {'less' if js['imm_mean'] < js['sil_mean'] else 'more'} "
-            f"in immunodominant sites"
-        )
+        print(f"  The cluster probability distribution changes {'less' if js['imm_mean'] < js['sil_mean'] else 'more'} " f"in immunodominant sites")
 
     if "entropy_change" in comparisons:
         ec = comparisons["entropy_change"]
         direction = "increases" if ec["imm_mean"] > 0 else "decreases"
-        print(f"\n✓ ENTROPY EFFECT:")
-        print(
-            f"  Citrullination {direction} epitope entropy by {abs(ec['imm_mean']):.4f}"
-        )
-        print(f"  in immunodominant sites")
+        print("\n✓ ENTROPY EFFECT:")
+        print(f"  Citrullination {direction} epitope entropy by {abs(ec['imm_mean']):.4f}")
+        print("  in immunodominant sites")
 
     # =========================================================================
     # SAVE RESULTS
@@ -517,24 +471,12 @@ def main():
         "all_shifts": [
             {
                 **r,
-                "arg_shifts": [
-                    {
-                        k: float(v) if isinstance(v, np.floating) else v
-                        for k, v in s.items()
-                    }
-                    for s in r["arg_shifts"]
-                ],
+                "arg_shifts": [{k: float(v) if isinstance(v, np.floating) else v for k, v in s.items()} for s in r["arg_shifts"]],
             }
             for r in all_shifts
             if r
         ],
-        "comparisons": {
-            k: {
-                kk: float(vv) if isinstance(vv, np.floating) else vv
-                for kk, vv in v.items()
-            }
-            for k, v in comparisons.items()
-        },
+        "comparisons": {k: {kk: float(vv) if isinstance(vv, np.floating) else vv for kk, vv in v.items()} for k, v in comparisons.items()},
         "acpa_correlation": corr,
     }
 

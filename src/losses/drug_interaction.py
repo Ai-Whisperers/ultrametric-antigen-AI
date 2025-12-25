@@ -24,9 +24,7 @@ class DrugInteractionPenalty(nn.Module):
         self.curvature = curvature
         self.margin = margin
 
-    def forward(
-        self, z1: torch.Tensor, z2: torch.Tensor, interaction: torch.Tensor
-    ) -> torch.Tensor:
+    def forward(self, z1: torch.Tensor, z2: torch.Tensor, interaction: torch.Tensor) -> torch.Tensor:
         """Compute drug interaction penalty.
 
         Args:

@@ -26,7 +26,11 @@ TOOLS = [
         "category": "Linter",
         "description": "Fast Rust-based linter/formatter",
     },
-    {"name": "mypy", "category": "Type Checker", "description": "Static type checker"},
+    {
+        "name": "mypy",
+        "category": "Type Checker",
+        "description": "Static type checker",
+    },
     {
         "name": "pyright",
         "category": "Type Checker",
@@ -57,7 +61,11 @@ TOOLS = [
         "category": "Security",
         "description": "Checks installed dependencies for known vulnerabilities",
     },
-    {"name": "vulture", "category": "Dead Code", "description": "Finds unused code"},
+    {
+        "name": "vulture",
+        "category": "Dead Code",
+        "description": "Finds unused code",
+    },
     {
         "name": "eradicate",
         "category": "Dead Code",
@@ -69,19 +77,31 @@ TOOLS = [
         "description": "The uncompromising code formatter",
     },
     {"name": "isort", "category": "Formatter", "description": "Sorts imports"},
-    {"name": "yapf", "category": "Formatter", "description": "Google's formatter"},
+    {
+        "name": "yapf",
+        "category": "Formatter",
+        "description": "Google's formatter",
+    },
     {
         "name": "coverage",
         "category": "Testing",
         "description": "Code coverage measurement",
     },
-    {"name": "pytest", "category": "Testing", "description": "Testing framework"},
+    {
+        "name": "pytest",
+        "category": "Testing",
+        "description": "Testing framework",
+    },
     {
         "name": "hypothesis",
         "category": "Testing",
         "description": "Property-based testing",
     },
-    {"name": "mutmut", "category": "Testing", "description": "Mutation testing"},
+    {
+        "name": "mutmut",
+        "category": "Testing",
+        "description": "Mutation testing",
+    },
     {
         "name": "deptry",
         "category": "Dependencies",
@@ -92,7 +112,11 @@ TOOLS = [
         "category": "Dependencies",
         "description": "Audits dependencies for vulnerabilities",
     },
-    {"name": "pygount", "category": "Metrics", "description": "Lines of code counter"},
+    {
+        "name": "pygount",
+        "category": "Metrics",
+        "description": "Lines of code counter",
+    },
 ]
 
 
@@ -135,23 +159,17 @@ def generate_report():
         else:
             missing.append(tool)
 
-        print(
-            f"| **{tool['name']}** | {tool['category']} | {status} | {tool['description']} |"
-        )
+        print(f"| **{tool['name']}** | {tool['category']} | {status} | {tool['description']} |")
 
     print(f"\n**Summary:** {installed_count}/{len(TOOLS)} tools detected.\n")
 
     print("## Recommendations for Implementation")
-    print(
-        "Based on the 'Missing' list, the following high-value tools are recommended for immediate integration:\n"
-    )
+    print("Based on the 'Missing' list, the following high-value tools are recommended for immediate integration:\n")
 
     for tool in missing[:10]:  # Top 10 recommendations
         print(f"### 🔹 Implement `{tool['name']}` ({tool['category']})")
         print(f"- **Why:** {tool['description']}")
-        print(
-            f"- **Action:** Create `scripts/analysis/run_{tool['name']}.py` to automate this check."
-        )
+        print(f"- **Action:** Create `scripts/analysis/run_{tool['name']}.py` to automate this check.")
         print("")
 
 

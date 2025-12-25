@@ -87,9 +87,7 @@ def main():
     z_hyp = data["z_hyperbolic"]
     n_ops = z_hyp.shape[0]
 
-    print(
-        f"Full embedding space: {n_ops} operations in {z_hyp.shape[1]}D Poincaré ball"
-    )
+    print(f"Full embedding space: {n_ops} operations in {z_hyp.shape[1]}D Poincaré ball")
 
     # Analyze radial distribution by 3-adic level
     print("\n=== Radial Structure by 3-adic Level ===")
@@ -99,7 +97,7 @@ def main():
     # v_3(i) for i = 0, 1, ..., 19682
     valuations = np.array([v3(i) if i > 0 else 9 for i in range(n_ops)])
 
-    print(f"\n3-adic valuation distribution:")
+    print("\n3-adic valuation distribution:")
     for v in range(10):
         count = np.sum(valuations == v)
         if count > 0:
@@ -202,9 +200,7 @@ def main():
         mask = padic_dists == pd
         mean_poincare = poincare_dists[mask].mean()
         v = -int(np.log(pd) / np.log(3)) if pd > 0 else "inf"
-        print(
-            f"  3^(-{v}) = {pd:.4f}: mean Poincaré = {mean_poincare:.4f} ({mask.sum()} pairs)"
-        )
+        print(f"  3^(-{v}) = {pd:.4f}: mean Poincaré = {mean_poincare:.4f} ({mask.sum()} pairs)")
 
     # Visualization
     fig, axes = plt.subplots(2, 2, figsize=(14, 12))

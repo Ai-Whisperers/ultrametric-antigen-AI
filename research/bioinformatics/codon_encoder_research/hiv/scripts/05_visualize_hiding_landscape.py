@@ -144,7 +144,7 @@ def plot_distance_heatmap(results: Dict, output_dir: Path):
         bbox_inches="tight",
     )
     plt.close()
-    print(f"  Saved: hiv_hiding_distance_matrix.png")
+    print("  Saved: hiv_hiding_distance_matrix.png")
 
 
 def plot_vulnerability_network(results: Dict, output_dir: Path):
@@ -187,17 +187,11 @@ def plot_vulnerability_network(results: Dict, output_dir: Path):
 
     # Draw nodes
     node_colors = [G.nodes[n]["color"] for n in G.nodes()]
-    nx.draw_networkx_nodes(
-        G, pos, node_color=node_colors, node_size=2000, alpha=0.9, ax=ax
-    )
+    nx.draw_networkx_nodes(G, pos, node_color=node_colors, node_size=2000, alpha=0.9, ax=ax)
 
     # Draw edges
-    vuln_edges = [
-        (u, v) for u, v, d in G.edges(data=True) if d.get("vulnerability", False)
-    ]
-    close_edges = [
-        (u, v) for u, v, d in G.edges(data=True) if not d.get("vulnerability", False)
-    ]
+    vuln_edges = [(u, v) for u, v, d in G.edges(data=True) if d.get("vulnerability", False)]
+    close_edges = [(u, v) for u, v, d in G.edges(data=True) if not d.get("vulnerability", False)]
 
     # Vulnerability zones (red, dashed)
     if vuln_edges:
@@ -237,7 +231,11 @@ def plot_vulnerability_network(results: Dict, output_dir: Path):
         mpatches.Patch(color=COLORS["regulatory"], label="Regulatory (Tat/Rev)"),
         mpatches.Patch(color=COLORS["accessory"], label="Accessory (Nef/Vif/Vpr/Vpu)"),
         plt.Line2D(
-            [0], [0], color="red", linestyle="--", label="Vulnerability zones (d > 2.0)"
+            [0],
+            [0],
+            color="red",
+            linestyle="--",
+            label="Vulnerability zones (d > 2.0)",
         ),
         plt.Line2D(
             [0],
@@ -263,7 +261,7 @@ def plot_vulnerability_network(results: Dict, output_dir: Path):
         bbox_inches="tight",
     )
     plt.close()
-    print(f"  Saved: hiv_vulnerability_network.png")
+    print("  Saved: hiv_vulnerability_network.png")
 
 
 def plot_hierarchy_distribution(results: Dict, output_dir: Path):
@@ -317,10 +315,12 @@ def plot_hierarchy_distribution(results: Dict, output_dir: Path):
 
     plt.tight_layout()
     plt.savefig(
-        output_dir / "hiv_hiding_distribution.png", dpi=FIGURE_DPI, bbox_inches="tight"
+        output_dir / "hiv_hiding_distribution.png",
+        dpi=FIGURE_DPI,
+        bbox_inches="tight",
     )
     plt.close()
-    print(f"  Saved: hiv_hiding_distribution.png")
+    print("  Saved: hiv_hiding_distribution.png")
 
 
 def plot_evolutionary_space(results: Dict, output_dir: Path):
@@ -383,7 +383,7 @@ def plot_evolutionary_space(results: Dict, output_dir: Path):
     overall_norm = geometry["overall_centroid_norm"]
     ax1.scatter([0], [0], s=100, c="black", marker="x", linewidths=2, zorder=6)
     ax1.annotate(
-        f"Center\n(flexibility)",
+        "Center\n(flexibility)",
         (0, 0),
         xytext=(-50, -30),
         textcoords="offset points",
@@ -393,7 +393,13 @@ def plot_evolutionary_space(results: Dict, output_dir: Path):
 
     # Add concentric circles for norm reference
     for r in [0.3, 0.6, 0.9]:
-        ax1.plot(r * np.cos(theta), r * np.sin(theta), "k--", alpha=0.3, linewidth=0.5)
+        ax1.plot(
+            r * np.cos(theta),
+            r * np.sin(theta),
+            "k--",
+            alpha=0.3,
+            linewidth=0.5,
+        )
         ax1.text(r, 0.05, f"{r}", fontsize=7, alpha=0.5)
 
     ax1.set_xlim(-1.2, 1.2)
@@ -417,10 +423,18 @@ def plot_evolutionary_space(results: Dict, output_dir: Path):
 
     # Add reference lines
     ax2.axhline(
-        y=0.3, color="green", linestyle="--", alpha=0.7, label="Flexible zone (< 0.3)"
+        y=0.3,
+        color="green",
+        linestyle="--",
+        alpha=0.7,
+        label="Flexible zone (< 0.3)",
     )
     ax2.axhline(
-        y=0.7, color="red", linestyle="--", alpha=0.7, label="Constrained zone (> 0.7)"
+        y=0.7,
+        color="red",
+        linestyle="--",
+        alpha=0.7,
+        label="Constrained zone (> 0.7)",
     )
 
     # Add overall centroid line
@@ -435,7 +449,8 @@ def plot_evolutionary_space(results: Dict, output_dir: Path):
     ax2.set_ylabel("Centroid Norm (distance from center)", fontsize=11)
     ax2.set_xlabel("Hierarchy Level", fontsize=11)
     ax2.set_title(
-        "Evolutionary Flexibility by Level\n(lower = more flexible)", fontsize=11
+        "Evolutionary Flexibility by Level\n(lower = more flexible)",
+        fontsize=11,
     )
     ax2.legend(fontsize=9)
     ax2.set_ylim(0, 1.0)
@@ -453,10 +468,12 @@ def plot_evolutionary_space(results: Dict, output_dir: Path):
 
     plt.tight_layout()
     plt.savefig(
-        output_dir / "hiv_evolutionary_space.png", dpi=FIGURE_DPI, bbox_inches="tight"
+        output_dir / "hiv_evolutionary_space.png",
+        dpi=FIGURE_DPI,
+        bbox_inches="tight",
     )
     plt.close()
-    print(f"  Saved: hiv_evolutionary_space.png")
+    print("  Saved: hiv_evolutionary_space.png")
 
 
 def plot_integrase_isolation(results: Dict, output_dir: Path):
@@ -489,8 +506,7 @@ def plot_integrase_isolation(results: Dict, output_dir: Path):
 
     ax.set_xlabel("Poincaré Distance from Pol_IN (Integrase)", fontsize=11)
     ax.set_title(
-        "INTEGRASE ISOLATION: Distance from All Other HIV Proteins\n"
-        "(Largest distances = weakest hiding connections)",
+        "INTEGRASE ISOLATION: Distance from All Other HIV Proteins\n" "(Largest distances = weakest hiding connections)",
         fontsize=12,
     )
     ax.legend(fontsize=10)
@@ -511,10 +527,12 @@ def plot_integrase_isolation(results: Dict, output_dir: Path):
 
     plt.tight_layout()
     plt.savefig(
-        output_dir / "hiv_integrase_isolation.png", dpi=FIGURE_DPI, bbox_inches="tight"
+        output_dir / "hiv_integrase_isolation.png",
+        dpi=FIGURE_DPI,
+        bbox_inches="tight",
     )
     plt.close()
-    print(f"  Saved: hiv_integrase_isolation.png")
+    print("  Saved: hiv_integrase_isolation.png")
 
 
 def main():
@@ -526,10 +544,7 @@ def main():
     # Load results
     print("\n[1] Loading analysis results...")
     results = load_results()
-    print(
-        f"  Loaded: {results['metadata']['total_proteins']} proteins, "
-        f"{results['metadata']['total_mechanisms']} mechanisms"
-    )
+    print(f"  Loaded: {results['metadata']['total_proteins']} proteins, " f"{results['metadata']['total_mechanisms']} mechanisms")
 
     # Output directory
     output_dir = Path(__file__).parent.parent / "results"

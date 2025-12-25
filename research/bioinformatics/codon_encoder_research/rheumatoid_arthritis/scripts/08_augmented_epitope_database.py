@@ -17,7 +17,7 @@ Sources:
 
 import json
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict
 
 # ============================================================================
 # AUGMENTED AUTOANTIGEN DATABASE
@@ -653,7 +653,7 @@ def get_database_stats(database: Dict) -> Dict:
         "silent": silent_count,
         "with_arginine": epitopes_with_r,
         "without_arginine": epitopes_without_r,
-        "imm_ratio": immunodominant_count / total_epitopes if total_epitopes > 0 else 0,
+        "imm_ratio": (immunodominant_count / total_epitopes if total_epitopes > 0 else 0),
     }
 
 
@@ -689,17 +689,15 @@ if __name__ == "__main__":
 
     stats = get_database_stats(RA_AUTOANTIGENS_AUGMENTED)
 
-    print(f"\nDatabase Statistics:")
+    print("\nDatabase Statistics:")
     print(f"  Total proteins: {stats['total_proteins']}")
     print(f"  Total epitopes: {stats['total_epitopes']}")
-    print(
-        f"  Immunodominant: {stats['immunodominant']} ({stats['imm_ratio']*100:.1f}%)"
-    )
+    print(f"  Immunodominant: {stats['immunodominant']} ({stats['imm_ratio']*100:.1f}%)")
     print(f"  Silent/control: {stats['silent']}")
     print(f"  With arginine:  {stats['with_arginine']}")
     print(f"  Without arginine (controls): {stats['without_arginine']}")
 
-    print(f"\nPer-protein breakdown:")
+    print("\nPer-protein breakdown:")
     for protein_id, protein in RA_AUTOANTIGENS_AUGMENTED.items():
         n_epitopes = len(protein["epitopes"])
         n_imm = sum(1 for e in protein["epitopes"] if e["immunodominant"])

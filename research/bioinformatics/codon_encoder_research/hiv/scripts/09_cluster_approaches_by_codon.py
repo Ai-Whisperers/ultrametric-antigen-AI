@@ -154,9 +154,7 @@ def encode_mutation(encoder, wt_aa, mut_aa):
 
     wt_emb = get_embedding(encoder, wt_codon)
     mut_emb = get_embedding(encoder, mut_codon)
-    dist = poincare_distance(
-        torch.tensor(wt_emb).unsqueeze(0), torch.tensor(mut_emb).unsqueeze(0)
-    ).item()
+    dist = poincare_distance(torch.tensor(wt_emb).unsqueeze(0), torch.tensor(mut_emb).unsqueeze(0)).item()
 
     return wt_emb, mut_emb, dist
 
@@ -251,9 +249,7 @@ def main():
             print(f"  Mean mutation distance: {result['mean_mutation_distance']:.3f}")
             print(f"  Hyperbolic variance: {result['variance']:.4f}")
             for md in result["mutation_details"]:
-                print(
-                    f"    {md['mutation']:>8s} ({md['gene']:>10s}): d={md['distance']:.3f}"
-                )
+                print(f"    {md['mutation']:>8s} ({md['gene']:>10s}): d={md['distance']:.3f}")
 
     # Compute pairwise distances between approaches
     print("\n" + "=" * 70)
@@ -288,18 +284,14 @@ def main():
 
         if len(members) > 1:
             # Compute within-category distances
-            member_centroids = np.array(
-                [approach_results[m]["centroid"] for m in members]
-            )
+            member_centroids = np.array([approach_results[m]["centroid"] for m in members])
             within_dists = poincare_distance_matrix(member_centroids)
             mean_within = within_dists[np.triu_indices(len(members), k=1)].mean()
             print(f"  Within-category mean distance: {mean_within:.3f}")
 
         for member in members:
             r = approach_results[member]
-            print(
-                f"  - {r['title']}: var={r['variance']:.4f}, mean_d={r['mean_mutation_distance']:.3f}"
-            )
+            print(f"  - {r['title']}: var={r['variance']:.4f}, mean_d={r['mean_mutation_distance']:.3f}")
 
     # Find closest approaches across categories
     print("\n" + "=" * 70)
@@ -337,9 +329,7 @@ def main():
     print("-" * 70)
 
     # Find which treatment approaches are closest to immune/reservoir
-    treatment_names = [
-        n for n in names if approach_results[n]["category"] == "treatment"
-    ]
+    treatment_names = [n for n in names if approach_results[n]["category"] == "treatment"]
     other_names = [n for n in names if approach_results[n]["category"] != "treatment"]
 
     for t_name in treatment_names:
@@ -375,9 +365,7 @@ def main():
             "distances": dist_matrix.tolist(),
         },
         "categories": categories,
-        "connections": [
-            {**c, "distance": float(c["distance"])} for c in connections[:10]
-        ],
+        "connections": [{**c, "distance": float(c["distance"])} for c in connections[:10]],
     }
 
     for name, result in approach_results.items():

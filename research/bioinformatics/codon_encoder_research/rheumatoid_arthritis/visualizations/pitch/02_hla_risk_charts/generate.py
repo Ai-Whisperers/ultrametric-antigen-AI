@@ -11,9 +11,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 import matplotlib.pyplot as plt
 import numpy as np
 
-from utils.data_loader import HLA_RISK_CATEGORIES, get_loader
-from utils.plotting import (HLA_RISK_COLORS, PALETTE, get_risk_cmap,
-                            save_figure, setup_pitch_style)
+from utils.data_loader import HLA_RISK_CATEGORIES
+from utils.plotting import (HLA_RISK_COLORS, PALETTE, save_figure,
+                            setup_pitch_style)
 
 OUTPUT_DIR = Path(__file__).parent
 
@@ -48,10 +48,18 @@ def create_risk_chart():
 
     # Reference line at OR=1
     ax1.axvline(
-        x=1.0, color=PALETTE["text_light"], linestyle="--", linewidth=1.5, alpha=0.7
+        x=1.0,
+        color=PALETTE["text_light"],
+        linestyle="--",
+        linewidth=1.5,
+        alpha=0.7,
     )
     ax1.text(
-        1.05, len(alleles) - 0.5, "Baseline", fontsize=9, color=PALETTE["text_light"]
+        1.05,
+        len(alleles) - 0.5,
+        "Baseline",
+        fontsize=9,
+        color=PALETTE["text_light"],
     )
 
     # Risk zones
@@ -143,10 +151,7 @@ def create_position_importance_chart():
         "Pos 37",
     ]
 
-    colors = [
-        "#D32F2F" if i == 0 else "#FF9800" if i == 1 else "#2196F3"
-        for i in range(len(positions))
-    ]
+    colors = ["#D32F2F" if i == 0 else "#FF9800" if i == 1 else "#2196F3" for i in range(len(positions))]
 
     bars = ax.bar(
         range(len(positions)),
@@ -160,7 +165,9 @@ def create_position_importance_chart():
     ax.set_xticklabels(labels, rotation=45, ha="right")
     ax.set_ylabel("Discriminative Power (Fisher Ratio)", fontsize=12)
     ax.set_title(
-        "HLA-DRB1 Position Importance for RA Prediction", fontsize=18, fontweight="bold"
+        "HLA-DRB1 Position Importance for RA Prediction",
+        fontsize=18,
+        fontweight="bold",
     )
 
     # Highlight the key finding

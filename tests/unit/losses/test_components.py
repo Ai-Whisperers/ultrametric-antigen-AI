@@ -452,22 +452,14 @@ class TestComponentIntegration:
         logvar = torch.randn(batch_size, latent_dim, device=device, requires_grad=True)
 
         outputs = {
-            "logits_A": torch.randn(
-                batch_size, 9, 3, device=device, requires_grad=True
-            ),
-            "logits_B": torch.randn(
-                batch_size, 9, 3, device=device, requires_grad=True
-            ),
+            "logits_A": torch.randn(batch_size, 9, 3, device=device, requires_grad=True),
+            "logits_B": torch.randn(batch_size, 9, 3, device=device, requires_grad=True),
             "mu_A": mu,
             "mu_B": mu.clone(),
             "logvar_A": logvar,
             "logvar_B": logvar.clone(),
-            "z_A": torch.randn(
-                batch_size, latent_dim, device=device, requires_grad=True
-            ),
-            "z_B": torch.randn(
-                batch_size, latent_dim, device=device, requires_grad=True
-            ),
+            "z_A": torch.randn(batch_size, latent_dim, device=device, requires_grad=True),
+            "z_B": torch.randn(batch_size, latent_dim, device=device, requires_grad=True),
             "H_A": torch.tensor(2.0, device=device),
             "H_B": torch.tensor(2.1, device=device),
             "beta_A": 1.0,

@@ -40,9 +40,7 @@ class ReconstructionLossComponent(LossComponent):
         """
         super().__init__(weight=weight, name="reconstruction")
 
-    def forward(
-        self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs
-    ) -> LossResult:
+    def forward(self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs) -> LossResult:
         """Compute reconstruction loss for both VAEs.
 
         Args:
@@ -58,7 +56,9 @@ class ReconstructionLossComponent(LossComponent):
         # VAE-A reconstruction
         ce_A = (
             F.cross_entropy(
-                outputs["logits_A"].view(-1, 3), x_classes.view(-1), reduction="sum"
+                outputs["logits_A"].view(-1, 3),
+                x_classes.view(-1),
+                reduction="sum",
             )
             / batch_size
         )
@@ -66,7 +66,9 @@ class ReconstructionLossComponent(LossComponent):
         # VAE-B reconstruction
         ce_B = (
             F.cross_entropy(
-                outputs["logits_B"].view(-1, 3), x_classes.view(-1), reduction="sum"
+                outputs["logits_B"].view(-1, 3),
+                x_classes.view(-1),
+                reduction="sum",
             )
             / batch_size
         )
@@ -111,9 +113,7 @@ class KLDivergenceLossComponent(LossComponent):
 
         return torch.sum(kl_per_dim) / mu.size(0)
 
-    def forward(
-        self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs
-    ) -> LossResult:
+    def forward(self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs) -> LossResult:
         """Compute KL divergence for both VAEs.
 
         Args:
@@ -137,8 +137,8 @@ class KLDivergenceLossComponent(LossComponent):
             metrics={
                 "kl_A": kl_A.item(),
                 "kl_B": kl_B.item(),
-                "beta_A": beta_A if isinstance(beta_A, float) else beta_A.item(),
-                "beta_B": beta_B if isinstance(beta_B, float) else beta_B.item(),
+                "beta_A": (beta_A if isinstance(beta_A, float) else beta_A.item()),
+                "beta_B": (beta_B if isinstance(beta_B, float) else beta_B.item()),
             },
             weight=self.weight,
         )
@@ -173,9 +173,7 @@ class EntropyLossComponent(LossComponent):
         entropy = -(probs * torch.log(probs + 1e-10)).sum()
         return entropy
 
-    def forward(
-        self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs
-    ) -> LossResult:
+    def forward(self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs) -> LossResult:
         """Compute entropy regularization.
 
         Args:
@@ -238,9 +236,7 @@ class RepulsionLossComponent(LossComponent):
 
         return repulsion
 
-    def forward(
-        self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs
-    ) -> LossResult:
+    def forward(self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs) -> LossResult:
         """Compute repulsion loss.
 
         Args:
@@ -280,9 +276,7 @@ class EntropyAlignmentComponent(LossComponent):
         """
         super().__init__(weight=weight, name="entropy_align")
 
-    def forward(
-        self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs
-    ) -> LossResult:
+    def forward(self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs) -> LossResult:
         """Compute entropy alignment loss.
 
         Args:
@@ -331,14 +325,7 @@ class PAdicRankingLossComponent(DualVAELossComponent):
             semi_hard=config.get("semi_hard", True),
         )
 
-    def compute_single(
-        self,
-        z: torch.Tensor,
-        outputs: Dict[str, torch.Tensor],
-        targets: torch.Tensor,
-        vae: str,
-        **kwargs
-    ) -> LossResult:
+    def compute_single(self, z: torch.Tensor, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, vae: str, **kwargs) -> LossResult:
         """Compute ranking loss for single VAE.
 
         Args:
@@ -398,14 +385,7 @@ class PAdicHyperbolicLossComponent(DualVAELossComponent):
             max_norm=config.get("max_norm", 0.95),
         )
 
-    def compute_single(
-        self,
-        z: torch.Tensor,
-        outputs: Dict[str, torch.Tensor],
-        targets: torch.Tensor,
-        vae: str,
-        **kwargs
-    ) -> LossResult:
+    def compute_single(self, z: torch.Tensor, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, vae: str, **kwargs) -> LossResult:
         """Compute hyperbolic ranking loss for single VAE.
 
         Args:
@@ -475,14 +455,7 @@ class RadialStratificationLossComponent(DualVAELossComponent):
 
         self.ternary = TERNARY
 
-    def compute_single(
-        self,
-        z: torch.Tensor,
-        outputs: Dict[str, torch.Tensor],
-        targets: torch.Tensor,
-        vae: str,
-        **kwargs
-    ) -> LossResult:
+    def compute_single(self, z: torch.Tensor, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, vae: str, **kwargs) -> LossResult:
         """Compute radial stratification for single VAE.
 
         Args:
@@ -511,9 +484,7 @@ class RadialStratificationLossComponent(DualVAELossComponent):
         actual_radius = torch.norm(z, dim=1)
 
         # Compute target radius (inverse relationship: high v -> small r)
-        target_radius = self.outer_radius - normalized_v * (
-            self.outer_radius - self.inner_radius
-        )
+        target_radius = self.outer_radius - normalized_v * (self.outer_radius - self.inner_radius)
 
         # Compute loss with optional valuation weighting
         if self.valuation_weighting:
@@ -526,9 +497,7 @@ class RadialStratificationLossComponent(DualVAELossComponent):
 
         # Compute correlation for monitoring
         if actual_radius.numel() > 1:
-            radial_corr = torch.corrcoef(torch.stack([actual_radius, valuations]))[
-                0, 1
-            ].item()
+            radial_corr = torch.corrcoef(torch.stack([actual_radius, valuations]))[0, 1].item()
         else:
             radial_corr = 0.0
 
@@ -537,9 +506,7 @@ class RadialStratificationLossComponent(DualVAELossComponent):
             metrics={
                 "mean_actual_radius": actual_radius.mean().item(),
                 "mean_target_radius": target_radius.mean().item(),
-                "radial_correlation": (
-                    radial_corr if not torch.isnan(torch.tensor(radial_corr)) else 0.0
-                ),
+                "radial_correlation": (radial_corr if not torch.isnan(torch.tensor(radial_corr)) else 0.0),
             },
             weight=self.weight,
         )

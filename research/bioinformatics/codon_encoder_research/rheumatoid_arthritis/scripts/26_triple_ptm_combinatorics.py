@@ -25,7 +25,6 @@ import sys
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime
-from itertools import combinations
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
@@ -33,7 +32,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-from scipy import stats
 
 matplotlib.use("Agg")
 
@@ -51,15 +49,27 @@ from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot, load_codon_encoder,
 PTM_TYPES = {
     "R": {"target": "Q", "name": "Citrullination", "category": "deimination"},
     "N": {"target": "Q", "name": "Deglycosylation", "category": "glycan_loss"},
-    "S": {"target": "D", "name": "Phosphorylation-S", "category": "phosphorylation"},
-    "T": {"target": "D", "name": "Phosphorylation-T", "category": "phosphorylation"},
+    "S": {
+        "target": "D",
+        "name": "Phosphorylation-S",
+        "category": "phosphorylation",
+    },
+    "T": {
+        "target": "D",
+        "name": "Phosphorylation-T",
+        "category": "phosphorylation",
+    },
     "K": {"target": "Q", "name": "Acetylation", "category": "acetylation"},
     "M": {"target": "Q", "name": "Oxidation", "category": "oxidation"},
 }
 
 # Alternative targets for testing PTM type effects
 ALTERNATIVE_TARGETS = {
-    "R": ["Q", "A", "E"],  # Citrulline-like, Alanine (size), Glutamate (charge)
+    "R": [
+        "Q",
+        "A",
+        "E",
+    ],  # Citrulline-like, Alanine (size), Glutamate (charge)
     "N": ["Q", "D", "A"],  # Deamidated, Aspartate, Alanine
     "S": ["D", "E", "A"],  # Phospho-mimetic, Alt phospho, Alanine
 }
@@ -91,7 +101,9 @@ def load_acpa_proteins() -> Dict:
 
 
 def find_triplets(
-    protein: Dict, max_distance: int = 12, third_residues: Set[str] = {"S", "T", "K"}
+    protein: Dict,
+    max_distance: int = 12,
+    third_residues: Set[str] = {"S", "T", "K"},
 ) -> List[PTMTriplet]:
     """
     Find all R-N-X triplets within proximity threshold.
@@ -192,11 +204,7 @@ def compute_multi_ptm_effect(
             codon = AA_TO_CODON.get(aa)
             if codon is None or codon == "NNN":
                 continue
-            onehot = (
-                torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-                .unsqueeze(0)
-                .to(device)
-            )
+            onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
             with torch.no_grad():
                 probs, emb = encoder.get_cluster_probs(onehot)
                 embeddings.append(emb.cpu().numpy().squeeze())
@@ -214,9 +222,7 @@ def compute_multi_ptm_effect(
     mod_centroid = np.mean(mod_emb, axis=0)
 
     # Centroid shift (Poincaré distance)
-    centroid_shift = poincare_distance(
-        torch.tensor(orig_centroid).float(), torch.tensor(mod_centroid).float()
-    ).item()
+    centroid_shift = poincare_distance(torch.tensor(orig_centroid).float(), torch.tensor(mod_centroid).float()).item()
 
     # Entropy
     orig_mean_probs = np.mean(orig_probs, axis=0)
@@ -245,9 +251,7 @@ def compute_multi_ptm_effect(
     }
 
 
-def analyze_triplet(
-    triplet: PTMTriplet, sequence: str, encoder, device: str = "cpu"
-) -> Optional[Dict]:
+def analyze_triplet(triplet: PTMTriplet, sequence: str, encoder, device: str = "cpu") -> Optional[Dict]:
     """
     Analyze all 7 combinations for a triplet: singles, pairs, triple.
 
@@ -299,18 +303,12 @@ def analyze_triplet(
     # Triple synergy metrics
     # Method 1: vs sum of singles
     triple_vs_singles = effects["RNX"]["relative_shift"] / (
-        effects["R"]["relative_shift"]
-        + effects["N"]["relative_shift"]
-        + effects["X"]["relative_shift"]
-        + 1e-10
+        effects["R"]["relative_shift"] + effects["N"]["relative_shift"] + effects["X"]["relative_shift"] + 1e-10
     )
 
     # Method 2: vs sum of pairs (higher-order interaction)
     triple_vs_pairs = effects["RNX"]["relative_shift"] / (
-        effects["RN"]["relative_shift"]
-        + effects["RX"]["relative_shift"]
-        + effects["NX"]["relative_shift"]
-        + 1e-10
+        effects["RN"]["relative_shift"] + effects["RX"]["relative_shift"] + effects["NX"]["relative_shift"] + 1e-10
     )
 
     # Method 3: vs best pair + remaining single (incremental effect)
@@ -347,14 +345,10 @@ def analyze_triplet(
     triple_in_goldilocks = in_goldilocks(effects["RNX"]["relative_shift"])
 
     # Triple potentiation: enters Goldilocks only as triple
-    triple_potentiation = (
-        triple_in_goldilocks and singles_in_goldilocks == 0 and pairs_in_goldilocks == 0
-    )
+    triple_potentiation = triple_in_goldilocks and singles_in_goldilocks == 0 and pairs_in_goldilocks == 0
 
     # Progressive potentiation: pair needed, then triple
-    progressive_potentiation = (
-        triple_in_goldilocks and pairs_in_goldilocks > 0 and singles_in_goldilocks == 0
-    )
+    progressive_potentiation = triple_in_goldilocks and pairs_in_goldilocks > 0 and singles_in_goldilocks == 0
 
     return {
         "triplet": {
@@ -392,9 +386,7 @@ def analyze_triplet(
     }
 
 
-def test_ptm_type_variation(
-    triplet: PTMTriplet, sequence: str, encoder, device: str = "cpu"
-) -> Optional[Dict]:
+def test_ptm_type_variation(triplet: PTMTriplet, sequence: str, encoder, device: str = "cpu") -> Optional[Dict]:
     """
     Test how changing the PTM target residue affects the outcome.
 
@@ -428,10 +420,7 @@ def plot_triple_analysis(results: List[Dict], output_dir: Path):
     # Extract data
     triple_shifts = [r["shifts"]["RNX"] * 100 for r in results]
     rn_shifts = [r["shifts"]["RN"] * 100 for r in results]
-    best_pair_shifts = [
-        max(r["shifts"]["RN"], r["shifts"]["RX"], r["shifts"]["NX"]) * 100
-        for r in results
-    ]
+    best_pair_shifts = [max(r["shifts"]["RN"], r["shifts"]["RX"], r["shifts"]["NX"]) * 100 for r in results]
     triple_vs_singles = [r["synergy"]["triple_vs_singles"] for r in results]
     triple_vs_pairs = [r["synergy"]["triple_vs_pairs"] for r in results]
     x_types = [r["triplet"]["x_type"] for r in results]
@@ -456,7 +445,9 @@ def plot_triple_analysis(results: List[Dict], output_dir: Path):
     ax.set_xlabel("Best Pair Shift (%)", fontsize=12)
     ax.set_ylabel("Triple Shift (%)", fontsize=12)
     ax.set_title(
-        "Triple vs Best Pair: Does Third PTM Help?", fontsize=12, fontweight="bold"
+        "Triple vs Best Pair: Does Third PTM Help?",
+        fontsize=12,
+        fontweight="bold",
     )
     ax.legend(loc="upper left")
     ax.grid(True, alpha=0.3)
@@ -464,9 +455,19 @@ def plot_triple_analysis(results: List[Dict], output_dir: Path):
     # 2. Synergy ratio distributions
     ax = axes[0, 1]
     ax.hist(
-        triple_vs_singles, bins=25, alpha=0.6, label="Triple/Singles", color="steelblue"
+        triple_vs_singles,
+        bins=25,
+        alpha=0.6,
+        label="Triple/Singles",
+        color="steelblue",
     )
-    ax.hist(triple_vs_pairs, bins=25, alpha=0.6, label="Triple/Pairs", color="coral")
+    ax.hist(
+        triple_vs_pairs,
+        bins=25,
+        alpha=0.6,
+        label="Triple/Pairs",
+        color="coral",
+    )
     ax.axvline(1.0, color="black", linestyle="--", lw=2)
     ax.axvline(0.33, color="green", linestyle=":", lw=2, label="Expected (1/3)")
 
@@ -505,15 +506,8 @@ def plot_triple_analysis(results: List[Dict], output_dir: Path):
     ax = axes[1, 1]
 
     triple_pot = sum(1 for r in results if r["goldilocks"]["triple_potentiation"])
-    progressive_pot = sum(
-        1 for r in results if r["goldilocks"]["progressive_potentiation"]
-    )
-    pair_pot = sum(
-        1
-        for r in results
-        if r["goldilocks"]["pairs_in_zone"] > 0
-        and not r["goldilocks"]["triple_in_zone"]
-    )
+    progressive_pot = sum(1 for r in results if r["goldilocks"]["progressive_potentiation"])
+    pair_pot = sum(1 for r in results if r["goldilocks"]["pairs_in_zone"] > 0 and not r["goldilocks"]["triple_in_zone"])
     no_pot = len(results) - triple_pot - progressive_pot - pair_pot
 
     categories = [
@@ -526,7 +520,12 @@ def plot_triple_analysis(results: List[Dict], output_dir: Path):
     colors = ["#9c27b0", "#2196f3", "#ff9800", "#757575"]
 
     bars = ax.bar(
-        categories, values, color=colors, alpha=0.7, edgecolor="white", linewidth=2
+        categories,
+        values,
+        color=colors,
+        alpha=0.7,
+        edgecolor="white",
+        linewidth=2,
     )
     for bar, val in zip(bars, values):
         ax.text(
@@ -541,17 +540,22 @@ def plot_triple_analysis(results: List[Dict], output_dir: Path):
 
     ax.set_ylabel("Count", fontsize=12)
     ax.set_title(
-        f"Potentiation Categories (n={len(results)})", fontsize=12, fontweight="bold"
+        f"Potentiation Categories (n={len(results)})",
+        fontsize=12,
+        fontweight="bold",
     )
     ax.grid(True, alpha=0.3, axis="y")
 
     plt.suptitle(
-        "Triple PTM Combinatorics Analysis", fontsize=14, fontweight="bold", y=1.02
+        "Triple PTM Combinatorics Analysis",
+        fontsize=14,
+        fontweight="bold",
+        y=1.02,
     )
     plt.tight_layout()
     plt.savefig(output_dir / "triple_ptm_analysis.png", dpi=300, bbox_inches="tight")
     plt.close()
-    print(f"  Saved: triple_ptm_analysis.png")
+    print("  Saved: triple_ptm_analysis.png")
 
 
 def plot_ptm_type_comparison(type_results: List[Dict], output_dir: Path):
@@ -591,7 +595,7 @@ def plot_ptm_type_comparison(type_results: List[Dict], output_dir: Path):
     plt.tight_layout()
     plt.savefig(output_dir / "ptm_type_comparison.png", dpi=300, bbox_inches="tight")
     plt.close()
-    print(f"  Saved: ptm_type_comparison.png")
+    print("  Saved: ptm_type_comparison.png")
 
 
 def main():
@@ -618,9 +622,7 @@ def main():
     print("\nFinding R-N-X triplets (max distance 12 residues)...")
     all_triplets = []
     for protein in proteins:
-        triplets = find_triplets(
-            protein, max_distance=12, third_residues={"S", "T", "K"}
-        )
+        triplets = find_triplets(protein, max_distance=12, third_residues={"S", "T", "K"})
         all_triplets.extend([(t, protein["sequence"]) for t in triplets])
 
     print(f"  Found {len(all_triplets)} triplets across all proteins")
@@ -664,39 +666,27 @@ def main():
     triple_vs_pairs = [r["synergy"]["triple_vs_pairs"] for r in results]
     incremental_gains = [r["synergy"]["incremental_gain"] for r in results]
 
-    print(f"\n  Triple vs Sum of Singles:")
-    print(
-        f"    Mean ratio: {np.mean(triple_vs_singles):.3f} ± {np.std(triple_vs_singles):.3f}"
-    )
+    print("\n  Triple vs Sum of Singles:")
+    print(f"    Mean ratio: {np.mean(triple_vs_singles):.3f} ± {np.std(triple_vs_singles):.3f}")
     print(f"    Range: [{min(triple_vs_singles):.3f}, {max(triple_vs_singles):.3f}]")
 
-    print(f"\n  Triple vs Sum of Pairs:")
-    print(
-        f"    Mean ratio: {np.mean(triple_vs_pairs):.3f} ± {np.std(triple_vs_pairs):.3f}"
-    )
+    print("\n  Triple vs Sum of Pairs:")
+    print(f"    Mean ratio: {np.mean(triple_vs_pairs):.3f} ± {np.std(triple_vs_pairs):.3f}")
 
-    print(f"\n  Incremental Gain (Triple - Best Pair):")
+    print("\n  Incremental Gain (Triple - Best Pair):")
     print(f"    Mean: {np.mean(incremental_gains)*100:.2f}%")
-    print(
-        f"    Positive gains: {sum(1 for g in incremental_gains if g > 0)} ({100*sum(1 for g in incremental_gains if g > 0)/len(results):.1f}%)"
-    )
+    print(f"    Positive gains: {sum(1 for g in incremental_gains if g > 0)} ({100*sum(1 for g in incremental_gains if g > 0)/len(results):.1f}%)")
 
     # Potentiation analysis
     triple_pot = [r for r in results if r["goldilocks"]["triple_potentiation"]]
-    progressive_pot = [
-        r for r in results if r["goldilocks"]["progressive_potentiation"]
-    ]
+    progressive_pot = [r for r in results if r["goldilocks"]["progressive_potentiation"]]
 
-    print(f"\n  Potentiation Cases:")
-    print(
-        f"    Triple-only potentiation: {len(triple_pot)} ({100*len(triple_pot)/len(results):.1f}%)"
-    )
-    print(
-        f"    Progressive potentiation: {len(progressive_pot)} ({100*len(progressive_pot)/len(results):.1f}%)"
-    )
+    print("\n  Potentiation Cases:")
+    print(f"    Triple-only potentiation: {len(triple_pot)} ({100*len(triple_pot)/len(results):.1f}%)")
+    print(f"    Progressive potentiation: {len(progressive_pot)} ({100*len(progressive_pot)/len(results):.1f}%)")
 
     if triple_pot:
-        print(f"\n  Top Triple Potentiation Cases:")
+        print("\n  Top Triple Potentiation Cases:")
         for p in triple_pot[:5]:
             print(
                 f"    {p['triplet']['protein']}: R{p['triplet']['positions'][0]}/"
@@ -712,24 +702,16 @@ def main():
             shifts = [r["shifts"]["RNX"] for r in x_results]
             pot_count = sum(1 for r in x_results if r["goldilocks"]["triple_in_zone"])
             print(
-                f"    {x_type} ({PTM_TYPES[x_type]['name']}): "
-                f"mean shift={np.mean(shifts)*100:.1f}%, "
-                f"Goldilocks={pot_count}/{len(x_results)}"
+                f"    {x_type} ({PTM_TYPES[x_type]['name']}): " f"mean shift={np.mean(shifts)*100:.1f}%, " f"Goldilocks={pot_count}/{len(x_results)}"
             )
 
     # PTM type variation analysis
     if type_variation_results:
         print("\n  PTM Target Variation (R→Q vs R→A vs R→E):")
         for target in ["R→Q", "R→A", "R→E"]:
-            shifts = [
-                r[target]["relative_shift"]
-                for r in type_variation_results
-                if target in r
-            ]
+            shifts = [r[target]["relative_shift"] for r in type_variation_results if target in r]
             if shifts:
-                print(
-                    f"    {target}: mean={np.mean(shifts)*100:.1f}%, std={np.std(shifts)*100:.1f}%"
-                )
+                print(f"    {target}: mean={np.mean(shifts)*100:.1f}%, std={np.std(shifts)*100:.1f}%")
 
     # Generate visualizations
     print("\n" + "=" * 80)
@@ -763,8 +745,7 @@ def main():
     # Find critical triplets
     critical_triplets = sorted(
         results,
-        key=lambda r: r["goldilocks"]["triple_potentiation"] * 10
-        + r["goldilocks"]["triple_in_zone"],
+        key=lambda r: r["goldilocks"]["triple_potentiation"] * 10 + r["goldilocks"]["triple_in_zone"],
         reverse=True,
     )[:30]
 
@@ -782,15 +763,7 @@ def main():
             x_type: {
                 "count": len([r for r in results if r["triplet"]["x_type"] == x_type]),
                 "mean_shift": (
-                    float(
-                        np.mean(
-                            [
-                                r["shifts"]["RNX"]
-                                for r in results
-                                if r["triplet"]["x_type"] == x_type
-                            ]
-                        )
-                    )
+                    float(np.mean([r["shifts"]["RNX"] for r in results if r["triplet"]["x_type"] == x_type]))
                     if any(r["triplet"]["x_type"] == x_type for r in results)
                     else 0
                 ),
@@ -824,15 +797,9 @@ Question 2: Does PTM type matter?
     )
 
     for x_type in ["S", "T", "K"]:
-        x_shifts = [
-            r["shifts"]["RNX"] * 100
-            for r in results
-            if r["triplet"]["x_type"] == x_type
-        ]
+        x_shifts = [r["shifts"]["RNX"] * 100 for r in results if r["triplet"]["x_type"] == x_type]
         if x_shifts:
-            print(
-                f"  → {x_type} ({PTM_TYPES[x_type]['name']}): {np.mean(x_shifts):.1f}% shift"
-            )
+            print(f"  → {x_type} ({PTM_TYPES[x_type]['name']}): {np.mean(x_shifts):.1f}% shift")
 
     print(
         f"""
@@ -845,22 +812,22 @@ Interpretation:
     )
 
     if len(triple_pot) > 0:
-        print(f"  ✓ HIGHER-ORDER POTENTIATION DETECTED")
+        print("  ✓ HIGHER-ORDER POTENTIATION DETECTED")
         print(f"    {len(triple_pot)} triplets require ALL THREE modifications")
-        print(f"    to enter immunogenic Goldilocks Zone")
+        print("    to enter immunogenic Goldilocks Zone")
     else:
-        print(f"  ✗ No triple-specific potentiation")
-        print(f"    Third PTM does not add unique immunogenic potential")
+        print("  ✗ No triple-specific potentiation")
+        print("    Third PTM does not add unique immunogenic potential")
 
     if np.mean(triple_vs_singles) < 0.4:
-        print(f"\n  Overall trend: STRONGLY ANTAGONISTIC")
-        print(f"    Triple modifications compensate geometrically")
+        print("\n  Overall trend: STRONGLY ANTAGONISTIC")
+        print("    Triple modifications compensate geometrically")
     elif np.mean(triple_vs_singles) < 0.6:
-        print(f"\n  Overall trend: MODERATELY ANTAGONISTIC")
-        print(f"    Some geometric compensation with third PTM")
+        print("\n  Overall trend: MODERATELY ANTAGONISTIC")
+        print("    Some geometric compensation with third PTM")
     else:
-        print(f"\n  Overall trend: NEAR-ADDITIVE")
-        print(f"    Third PTM adds independent contribution")
+        print("\n  Overall trend: NEAR-ADDITIVE")
+        print("    Third PTM adds independent contribution")
 
     print(f"\nOutput: {output_dir}")
     print("=" * 80)

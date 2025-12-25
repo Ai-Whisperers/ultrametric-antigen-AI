@@ -114,9 +114,7 @@ class ContinuousCurriculumModule(nn.Module):
         """Return smoothed curriculum position."""
         return self.tau_ema
 
-    def modulate_losses(
-        self, radial_loss: torch.Tensor, ranking_loss: torch.Tensor
-    ) -> torch.Tensor:
+    def modulate_losses(self, radial_loss: torch.Tensor, ranking_loss: torch.Tensor) -> torch.Tensor:
         """Blend radial and ranking losses based on current tau.
 
         Loss = (1 - tau) * radial_loss + tau * ranking_loss
@@ -154,9 +152,7 @@ class ContinuousCurriculumModule(nn.Module):
     def reset(self, initial_tau: Optional[float] = None):
         """Reset curriculum to initial state."""
         if initial_tau is not None:
-            self.tau = torch.tensor(
-                initial_tau, dtype=torch.float32, device=self.tau.device
-            )
+            self.tau = torch.tensor(initial_tau, dtype=torch.float32, device=self.tau.device)
             self.tau_ema = self.tau.clone()
         else:
             self.tau = torch.tensor(0.0, dtype=torch.float32, device=self.tau.device)
@@ -164,11 +160,7 @@ class ContinuousCurriculumModule(nn.Module):
         self.tau_history = []
 
     def extra_repr(self) -> str:
-        return (
-            f"tau={self.tau.item():.3f}, "
-            f"tau_min={self.tau_min}, tau_max={self.tau_max}, "
-            f"tau_scale={self.tau_scale}"
-        )
+        return f"tau={self.tau.item():.3f}, " f"tau_min={self.tau_min}, tau_max={self.tau_max}, " f"tau_scale={self.tau_scale}"
 
 
 class CurriculumScheduler:
@@ -184,9 +176,7 @@ class CurriculumScheduler:
         self.radial_loss_history: List[float] = []
         self.ranking_loss_history: List[float] = []
 
-    def record_step(
-        self, delta_curriculum: float, radial_loss: float, ranking_loss: float
-    ):
+    def record_step(self, delta_curriculum: float, radial_loss: float, ranking_loss: float):
         """Record a curriculum step for analysis."""
         self.delta_history.append(delta_curriculum)
         self.radial_loss_history.append(radial_loss)
@@ -205,9 +195,7 @@ class CurriculumScheduler:
 
         tau_current = tau_history[-1]
         tau_prev = tau_history[-min(10, len(tau_history)) : -1]
-        tau_velocity = (
-            tau_current - (sum(tau_prev) / len(tau_prev)) if tau_prev else 0.0
-        )
+        tau_velocity = tau_current - (sum(tau_prev) / len(tau_prev)) if tau_prev else 0.0
 
         # Determine trend
         if tau_velocity > 0.01:

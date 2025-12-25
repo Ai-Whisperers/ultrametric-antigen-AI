@@ -7,7 +7,7 @@ Due to the trainer's many dependencies, we focus on:
 - Basic mechanics
 """
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 import torch
@@ -27,13 +27,9 @@ class TestComputeBatchIndices:
         from src.training.trainer import TernaryVAETrainer
 
         # Create a stub without calling __init__
-        with patch.object(
-            TernaryVAETrainer, "__init__", lambda self, *args, **kwargs: None
-        ):
+        with patch.object(TernaryVAETrainer, "__init__", lambda self, *args, **kwargs: None):
             trainer = TernaryVAETrainer.__new__(TernaryVAETrainer)
-            trainer._base3_weights = torch.tensor(
-                [3**i for i in range(9)], dtype=torch.long
-            )
+            trainer._base3_weights = torch.tensor([3**i for i in range(9)], dtype=torch.long)
             return trainer
 
     def test_all_negative_one_returns_zero(self, trainer_stub):
@@ -148,13 +144,9 @@ class TestBatchIndexRoundtrip:
         """Create a minimal trainer stub."""
         from src.training.trainer import TernaryVAETrainer
 
-        with patch.object(
-            TernaryVAETrainer, "__init__", lambda self, *args, **kwargs: None
-        ):
+        with patch.object(TernaryVAETrainer, "__init__", lambda self, *args, **kwargs: None):
             trainer = TernaryVAETrainer.__new__(TernaryVAETrainer)
-            trainer._base3_weights = torch.tensor(
-                [3**i for i in range(9)], dtype=torch.long
-            )
+            trainer._base3_weights = torch.tensor([3**i for i in range(9)], dtype=torch.long)
             return trainer
 
     def test_roundtrip_single(self, trainer_stub):
@@ -217,15 +209,11 @@ class TestSchedulerHelpers:
         from src.training.schedulers import linear_schedule
 
         # Before start_epoch, should return start_val
-        val_before = linear_schedule(
-            5, start_val=1.0, end_val=0.0, total_epochs=100, start_epoch=10
-        )
+        val_before = linear_schedule(5, start_val=1.0, end_val=0.0, total_epochs=100, start_epoch=10)
         assert val_before == pytest.approx(1.0)
 
         # At start_epoch
-        val_at_start = linear_schedule(
-            10, start_val=1.0, end_val=0.0, total_epochs=100, start_epoch=10
-        )
+        val_at_start = linear_schedule(10, start_val=1.0, end_val=0.0, total_epochs=100, start_epoch=10)
         assert val_at_start == pytest.approx(1.0)
 
     def test_cyclic_schedule(self):
@@ -279,9 +267,7 @@ class TestBaseTrainerSafeAverageLosses:
         from src.training.base import BaseTrainer
 
         losses = {"loss": 10.0, "lr": 0.001}
-        averaged = BaseTrainer.safe_average_losses(
-            losses, num_batches=2, exclude_keys={"lr"}
-        )
+        averaged = BaseTrainer.safe_average_losses(losses, num_batches=2, exclude_keys={"lr"})
 
         assert averaged["loss"] == pytest.approx(5.0)
         assert averaged["lr"] == 0.001  # Unchanged
@@ -336,13 +322,9 @@ class TestBase3Encoding:
         """Each ternary 9-tuple should map to unique index."""
         from src.training.trainer import TernaryVAETrainer
 
-        with patch.object(
-            TernaryVAETrainer, "__init__", lambda self, *args, **kwargs: None
-        ):
+        with patch.object(TernaryVAETrainer, "__init__", lambda self, *args, **kwargs: None):
             trainer = TernaryVAETrainer.__new__(TernaryVAETrainer)
-            trainer._base3_weights = torch.tensor(
-                [3**i for i in range(9)], dtype=torch.long
-            )
+            trainer._base3_weights = torch.tensor([3**i for i in range(9)], dtype=torch.long)
 
             # Generate all 3^3 = 27 combinations for first 3 digits
             indices_seen = set()
@@ -367,13 +349,9 @@ class TestBase3Encoding:
         """Maximum index should be 3^9 - 1 = 19682."""
         from src.training.trainer import TernaryVAETrainer
 
-        with patch.object(
-            TernaryVAETrainer, "__init__", lambda self, *args, **kwargs: None
-        ):
+        with patch.object(TernaryVAETrainer, "__init__", lambda self, *args, **kwargs: None):
             trainer = TernaryVAETrainer.__new__(TernaryVAETrainer)
-            trainer._base3_weights = torch.tensor(
-                [3**i for i in range(9)], dtype=torch.long
-            )
+            trainer._base3_weights = torch.tensor([3**i for i in range(9)], dtype=torch.long)
 
             max_input = torch.full((1, 9), 1.0)
             max_idx = trainer._compute_batch_indices(max_input)

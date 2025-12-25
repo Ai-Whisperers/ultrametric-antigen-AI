@@ -26,19 +26,12 @@ Date: 2025-12-24
 import json
 import sys
 from collections import defaultdict
-from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict, List, Tuple
-
-import numpy as np
-import torch
+from typing import Dict
 
 # Add local path for imports
 script_dir = Path(__file__).parent
 sys.path.insert(0, str(script_dir))
-
-from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot, load_codon_encoder,
-                              poincare_distance)
 
 
 # Load hiding landscape data
@@ -182,9 +175,7 @@ def validate_conjecture_4(landscape: Dict) -> Dict:
     print("=" * 60)
 
     # Load integrase validation results
-    integrase_file = (
-        script_dir.parent / "results" / "integrase_vulnerability_validation.json"
-    )
+    integrase_file = script_dir.parent / "results" / "integrase_vulnerability_validation.json"
 
     if not integrase_file.exists():
         print("  Warning: integrase validation not found")
@@ -219,9 +210,7 @@ def validate_conjecture_4(landscape: Dict) -> Dict:
         if score > 30:
             goldilocks_candidates.append(mut)
 
-    print(
-        f"\n  Goldilocks candidates (reveal_score > 30): {len(goldilocks_candidates)}"
-    )
+    print(f"\n  Goldilocks candidates (reveal_score > 30): {len(goldilocks_candidates)}")
 
     # Compare to glycan Goldilocks
     print("\n  Analogy to glycan shield:")
@@ -257,9 +246,7 @@ def validate_conjecture_5(landscape: Dict) -> Dict:
     by_level = landscape["hiding_geometry"]["by_level"]
 
     # Sort levels by centroid norm (peripheral = constrained)
-    sorted_levels = sorted(
-        by_level.items(), key=lambda x: x[1]["centroid_norm"], reverse=True
-    )
+    sorted_levels = sorted(by_level.items(), key=lambda x: x[1]["centroid_norm"], reverse=True)
 
     print("\n  Hierarchy levels ranked by constraint (most → least):")
     for level, data in sorted_levels:
@@ -287,9 +274,7 @@ def validate_conjecture_5(landscape: Dict) -> Dict:
     norms = [data["centroid_norm"] for _, data in sorted_levels]
     decoupling_range = max(norms) - min(norms)
     print(f"    Range of centroid norms: {decoupling_range:.3f}")
-    print(
-        f"    Interpretation: {'Significant' if decoupling_range > 0.1 else 'Minimal'} decoupling"
-    )
+    print(f"    Interpretation: {'Significant' if decoupling_range > 0.1 else 'Minimal'} decoupling")
 
     validated = most_constrained == "peptide"
 
@@ -381,7 +366,7 @@ def validate_conjecture_7(landscape: Dict) -> Dict:
     moderate = [v for v in vulnerabilities if 2.5 < v["distance"] <= 3.5]
     mild = [v for v in vulnerabilities if v["distance"] <= 2.5]
 
-    print(f"\n  Gap severity distribution:")
+    print("\n  Gap severity distribution:")
     print(f"    Severe (d > 3.5): {len(severe)}")
     print(f"    Moderate (2.5 < d <= 3.5): {len(moderate)}")
     print(f"    Mild (d <= 2.5): {len(mild)}")
@@ -392,9 +377,7 @@ def validate_conjecture_7(landscape: Dict) -> Dict:
         for p in v["proteins"].split("-"):
             protein_gap_counts[p] += 1
 
-    sorted_proteins = sorted(
-        protein_gap_counts.items(), key=lambda x: x[1], reverse=True
-    )
+    sorted_proteins = sorted(protein_gap_counts.items(), key=lambda x: x[1], reverse=True)
 
     print("\n  Proteins with most vulnerability gaps:")
     for protein, count in sorted_proteins[:5]:
@@ -443,10 +426,7 @@ def run_all_validations() -> Dict:
     # Load data
     print("\nLoading hiding landscape data...")
     landscape = load_hiding_landscape()
-    print(
-        f"  Loaded: {landscape['metadata']['total_proteins']} proteins, "
-        f"{landscape['metadata']['total_mechanisms']} mechanisms"
-    )
+    print(f"  Loaded: {landscape['metadata']['total_proteins']} proteins, " f"{landscape['metadata']['total_mechanisms']} mechanisms")
 
     # Run validations
     results = {}

@@ -93,7 +93,10 @@ def main():
         help="Output directory",
     )
     parser.add_argument(
-        "--n-samples", type=int, default=2000, help="Number of operations to sample"
+        "--n-samples",
+        type=int,
+        default=2000,
+        help="Number of operations to sample",
     )
     parser.add_argument("--sigma", type=float, default=1.0, help="Kernel bandwidth")
     args = parser.parse_args()
@@ -102,7 +105,7 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Load embeddings
-    print(f"Loading embeddings...")
+    print("Loading embeddings...")
     data = torch.load(PROJECT_ROOT / args.embeddings)
     z_hyp = data["z_hyperbolic"]
     n_total = z_hyp.shape[0]
@@ -121,9 +124,7 @@ def main():
     print("Computing pairwise Poincaré distances...")
     distances = poincare_distance_batch(z_sample)
 
-    print(
-        f"Distance stats: min={distances.min():.4f}, max={distances.max():.4f}, mean={distances.mean():.4f}"
-    )
+    print(f"Distance stats: min={distances.min():.4f}, max={distances.max():.4f}, mean={distances.mean():.4f}")
 
     # Build graph Laplacian
     print(f"Building graph Laplacian (sigma={args.sigma})...")
@@ -165,9 +166,7 @@ def main():
     print(f"Spacings analyzed: {len(spacings_norm)}")
     print(f"\nKS test vs GUE: D={ks_gue:.4f}, p={p_gue:.4f}")
     print(f"KS test vs Poisson: D={ks_poisson:.4f}, p={p_poisson:.4f}")
-    print(
-        f"\nCloser to: {'GUE (zeta-like!)' if ks_gue < ks_poisson else 'Poisson (uncorrelated)'}"
-    )
+    print(f"\nCloser to: {'GUE (zeta-like!)' if ks_gue < ks_poisson else 'Poisson (uncorrelated)'}")
 
     # Visualization
     fig, axes = plt.subplots(1, 2, figsize=(14, 5))
@@ -186,14 +185,19 @@ def main():
         edgecolor="black",
     )
     ax1.plot(
-        s_range, gue_distribution(s_range), "r-", lw=2, label="GUE (Riemann zeros)"
+        s_range,
+        gue_distribution(s_range),
+        "r-",
+        lw=2,
+        label="GUE (Riemann zeros)",
     )
     ax1.plot(s_range, goe_distribution(s_range), "g--", lw=2, label="GOE")
     ax1.plot(s_range, poisson_distribution(s_range), "b:", lw=2, label="Poisson")
     ax1.set_xlabel("Normalized spacing", fontsize=12)
     ax1.set_ylabel("P(s)", fontsize=12)
     ax1.set_title(
-        f"Eigenvalue Spacing Distribution\n(KS vs GUE: {ks_gue:.3f})", fontsize=12
+        f"Eigenvalue Spacing Distribution\n(KS vs GUE: {ks_gue:.3f})",
+        fontsize=12,
     )
     ax1.legend()
     ax1.set_xlim(0, 4)

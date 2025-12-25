@@ -114,7 +114,10 @@ class CheckpointManager:
     """
 
     def __init__(
-        self, checkpoint_dir: Path, checkpoint_freq: int = 10, async_save: bool = True
+        self,
+        checkpoint_dir: Path,
+        checkpoint_freq: int = 10,
+        async_save: bool = True,
     ):
         """Initialize checkpoint manager.
 
@@ -216,9 +219,7 @@ class CheckpointManager:
 
         # Load checkpoint (weights_only=False needed for optimizer state, metrics)
         # Security note: Only load checkpoints from trusted sources
-        checkpoint = torch.load(
-            checkpoint_path, map_location=device, weights_only=False
-        )
+        checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
 
         # Restore model state
         model.load_state_dict(checkpoint["model"])

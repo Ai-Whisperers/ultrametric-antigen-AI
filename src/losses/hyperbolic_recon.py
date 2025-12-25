@@ -143,9 +143,7 @@ class HyperbolicReconLoss(nn.Module):
 
         return loss
 
-    def weighted_cross_entropy(
-        self, logits: torch.Tensor, targets: torch.Tensor, z_hyp: torch.Tensor
-    ) -> torch.Tensor:
+    def weighted_cross_entropy(self, logits: torch.Tensor, targets: torch.Tensor, z_hyp: torch.Tensor) -> torch.Tensor:
         """Compute radius-weighted cross-entropy loss.
 
         Args:
@@ -162,13 +160,7 @@ class HyperbolicReconLoss(nn.Module):
         target_classes = (targets + 1).long()  # {-1,0,1} -> {0,1,2}
 
         # Compute per-sample cross-entropy
-        ce_per_sample = (
-            F.cross_entropy(
-                logits.view(-1, 3), target_classes.view(-1), reduction="none"
-            )
-            .view(batch_size, -1)
-            .sum(dim=1)
-        )
+        ce_per_sample = F.cross_entropy(logits.view(-1, 3), target_classes.view(-1), reduction="none").view(batch_size, -1).sum(dim=1)
 
         # Apply radius weighting if enabled
         if self.radius_weighting:
@@ -269,7 +261,12 @@ class HomeostaticReconLoss(HyperbolicReconLoss):
             adaptation_rate: Rate of homeostatic adaptation
         """
         super().__init__(
-            mode, curvature, max_norm, geodesic_weight, radius_weighting, radius_power
+            mode,
+            curvature,
+            max_norm,
+            geodesic_weight,
+            radius_weighting,
+            radius_power,
         )
 
         self.geodesic_weight_min = geodesic_weight_min
@@ -286,9 +283,7 @@ class HomeostaticReconLoss(HyperbolicReconLoss):
         self.register_buffer("loss_ema", torch.tensor(1.0))
         self.register_buffer("coverage_ema", torch.tensor(50.0))
 
-    def update_homeostatic_state(
-        self, loss: torch.Tensor, coverage: float, correlation: float = 0.0
-    ):
+    def update_homeostatic_state(self, loss: torch.Tensor, coverage: float, correlation: float = 0.0):
         """Update homeostatic parameters based on training state.
 
         Args:
@@ -309,9 +304,7 @@ class HomeostaticReconLoss(HyperbolicReconLoss):
         geodesic_delta = self.adaptation_rate * coverage_error * 0.01
 
         new_geodesic = self.adaptive_geodesic_weight + geodesic_delta
-        self.adaptive_geodesic_weight = torch.clamp(
-            new_geodesic, self.geodesic_weight_min, self.geodesic_weight_max
-        )
+        self.adaptive_geodesic_weight = torch.clamp(new_geodesic, self.geodesic_weight_min, self.geodesic_weight_max)
         self.geodesic_weight = self.adaptive_geodesic_weight.item()
 
         # Adapt radius power based on correlation
@@ -322,9 +315,7 @@ class HomeostaticReconLoss(HyperbolicReconLoss):
         power_delta = self.adaptation_rate * correlation_error * 0.1
 
         new_power = self.adaptive_radius_power + power_delta
-        self.adaptive_radius_power = torch.clamp(
-            new_power, self.radius_power_min, self.radius_power_max
-        )
+        self.adaptive_radius_power = torch.clamp(new_power, self.radius_power_min, self.radius_power_max)
         self.radius_power = self.adaptive_radius_power.item()
 
     def get_homeostatic_state(self) -> dict:
@@ -337,7 +328,9 @@ class HomeostaticReconLoss(HyperbolicReconLoss):
         }
 
     def set_from_statenet(
-        self, delta_geodesic_weight: float = 0.0, delta_radius_power: float = 0.0
+        self,
+        delta_geodesic_weight: float = 0.0,
+        delta_radius_power: float = 0.0,
     ):
         """Apply StateNet corrections.
 
@@ -346,15 +339,11 @@ class HomeostaticReconLoss(HyperbolicReconLoss):
             delta_radius_power: Correction for radius power
         """
         new_geodesic = self.adaptive_geodesic_weight + delta_geodesic_weight * 0.1
-        self.adaptive_geodesic_weight = torch.clamp(
-            new_geodesic, self.geodesic_weight_min, self.geodesic_weight_max
-        )
+        self.adaptive_geodesic_weight = torch.clamp(new_geodesic, self.geodesic_weight_min, self.geodesic_weight_max)
         self.geodesic_weight = self.adaptive_geodesic_weight.item()
 
         new_power = self.adaptive_radius_power + delta_radius_power * 0.1
-        self.adaptive_radius_power = torch.clamp(
-            new_power, self.radius_power_min, self.radius_power_max
-        )
+        self.adaptive_radius_power = torch.clamp(new_power, self.radius_power_min, self.radius_power_max)
         self.radius_power = self.adaptive_radius_power.item()
 
 
@@ -443,9 +432,7 @@ class HyperbolicCentroidLoss(nn.Module):
 
         # Initialize with weighted Euclidean mean
         mean = (points * weights.unsqueeze(1)).sum(dim=0)
-        mean = project_to_poincare(
-            mean.unsqueeze(0), max_norm=self.max_norm, c=self.curvature
-        ).squeeze(0)
+        mean = project_to_poincare(mean.unsqueeze(0), max_norm=self.max_norm, c=self.curvature).squeeze(0)
 
         # Iterative refinement with convergence check
         for _ in range(n_iter):
@@ -455,18 +442,14 @@ class HyperbolicCentroidLoss(nn.Module):
             direction = direction.sum(dim=0)
             mean = mean + 0.1 * direction
             # Re-project to ball
-            mean = project_to_poincare(
-                mean.unsqueeze(0), max_norm=self.max_norm, c=self.curvature
-            ).squeeze(0)
+            mean = project_to_poincare(mean.unsqueeze(0), max_norm=self.max_norm, c=self.curvature).squeeze(0)
             # Check convergence
             if torch.norm(mean - prev_mean) < tol:
                 break
 
         return mean
 
-    def forward(
-        self, z: torch.Tensor, batch_indices: torch.Tensor
-    ) -> Tuple[torch.Tensor, Dict[str, float]]:
+    def forward(self, z: torch.Tensor, batch_indices: torch.Tensor) -> Tuple[torch.Tensor, Dict[str, float]]:
         """Compute hyperbolic centroid loss.
 
         Args:

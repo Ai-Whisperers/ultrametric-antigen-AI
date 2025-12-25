@@ -19,7 +19,7 @@ import json
 import sys
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 import numpy as np
 
@@ -205,9 +205,7 @@ def encode_tau_interface(encoder, window: int = 7) -> Dict[int, Dict]:
                                 break
 
                     # Check if near KXGS motif
-                    near_kxgs = any(
-                        abs(pos - motif["S"]) <= 3 for motif in KXGS_MOTIFS.values()
-                    )
+                    near_kxgs = any(abs(pos - motif["S"]) <= 3 for motif in KXGS_MOTIFS.values())
 
                     results[pos] = {
                         "aa": TAU_2N4R_SEQUENCE[seq_pos],
@@ -223,9 +221,7 @@ def encode_tau_interface(encoder, window: int = 7) -> Dict[int, Dict]:
     return results
 
 
-def encode_tubulin_interface(
-    tubulin_type: str, encoder, window: int = 7
-) -> Dict[int, Dict]:
+def encode_tubulin_interface(tubulin_type: str, encoder, window: int = 7) -> Dict[int, Dict]:
     """Encode tubulin binding surface residues."""
     results = {}
 
@@ -259,9 +255,7 @@ def encode_tubulin_interface(
     return results
 
 
-def compute_handshake_distances(
-    tau_interfaces: Dict, tubulin_interfaces: Dict, tubulin_type: str
-) -> List[Dict]:
+def compute_handshake_distances(tau_interfaces: Dict, tubulin_interfaces: Dict, tubulin_type: str) -> List[Dict]:
     """Compute geometric distances between tau and tubulin contact pairs."""
     distances = []
 
@@ -297,9 +291,7 @@ def compute_handshake_distances(
     return sorted(distances, key=lambda x: x["distance"])
 
 
-def analyze_phospho_disruption(
-    tau_data: Dict, tubulin_data: Dict, encoder, phospho_sites: List[int]
-) -> Dict:
+def analyze_phospho_disruption(tau_data: Dict, tubulin_data: Dict, encoder, phospho_sites: List[int]) -> Dict:
     """
     Analyze how phosphorylation near a tau-tubulin contact disrupts geometry.
 
@@ -360,11 +352,7 @@ def analyze_phospho_disruption(
                         "original_distance": original_distance,
                         "new_distance": new_distance,
                         "distance_change": distance_change,
-                        "distance_change_pct": (
-                            distance_change / original_distance * 100
-                            if original_distance > 0
-                            else 0
-                        ),
+                        "distance_change_pct": (distance_change / original_distance * 100 if original_distance > 0 else 0),
                         "is_kxgs": phospho_pos in [262, 293, 324, 356],
                     }
                 )
@@ -409,9 +397,7 @@ def main():
     print(f"\nTau contact residues encoded: {len(tau_interfaces)}")
     for pos, data in sorted(tau_interfaces.items()):
         kxgs = "[KXGS]" if data["near_kxgs"] else ""
-        print(
-            f"  {data['aa']}{pos} ({data['domain'] or 'MTBR'}): → {data['tubulin_partner']}-tubulin {kxgs}"
-        )
+        print(f"  {data['aa']}{pos} ({data['domain'] or 'MTBR'}): → {data['tubulin_partner']}-tubulin {kxgs}")
 
     print(f"\nAlpha-tubulin contacts encoded: {len(alpha_interfaces)}")
     print(f"Beta-tubulin contacts encoded: {len(beta_interfaces)}")
@@ -423,12 +409,8 @@ def main():
     print("2. Computing Handshake Distances")
     print("-" * 70)
 
-    alpha_handshakes = compute_handshake_distances(
-        tau_interfaces, alpha_interfaces, "alpha"
-    )
-    beta_handshakes = compute_handshake_distances(
-        tau_interfaces, beta_interfaces, "beta"
-    )
+    alpha_handshakes = compute_handshake_distances(tau_interfaces, alpha_interfaces, "alpha")
+    beta_handshakes = compute_handshake_distances(tau_interfaces, beta_interfaces, "beta")
 
     all_handshakes = alpha_handshakes + beta_handshakes
     all_handshakes.sort(key=lambda x: x["distance"])
@@ -472,16 +454,11 @@ def main():
         print(f"\n{motif_name} KXGS Motif (S{serine_pos}):")
 
         # Find handshakes near this motif
-        nearby_handshakes = [
-            h for h in all_handshakes if abs(h["tau_pos"] - serine_pos) <= 5
-        ]
+        nearby_handshakes = [h for h in all_handshakes if abs(h["tau_pos"] - serine_pos) <= 5]
 
         if nearby_handshakes:
             closest = nearby_handshakes[0]
-            print(
-                f"  Closest handshake: Tau-{closest['tau_pos']} ↔ "
-                f"{closest['tubulin_type']}-Tub-{closest['tubulin_pos']}"
-            )
+            print(f"  Closest handshake: Tau-{closest['tau_pos']} ↔ " f"{closest['tubulin_type']}-Tub-{closest['tubulin_pos']}")
             print(f"  Distance: {closest['distance']:.4f}")
 
             # Simulate phosphorylation effect
@@ -495,17 +472,13 @@ def main():
                     tub_data = beta_interfaces.get(closest["tubulin_pos"])
 
                 if tub_data:
-                    disruption = analyze_phospho_disruption(
-                        tau_data, tub_data, encoder, [serine_pos]
-                    )
+                    disruption = analyze_phospho_disruption(tau_data, tub_data, encoder, [serine_pos])
 
                     if disruption and disruption["phospho_effects"]:
                         effect = disruption["phospho_effects"][0]
                         print(f"  Phosphorylation effect at S{serine_pos}:")
                         print(f"    Tau centroid shift: {effect['tau_shift']*100:.1f}%")
-                        print(
-                            f"    Interface distance change: {effect['distance_change_pct']:+.1f}%"
-                        )
+                        print(f"    Interface distance change: {effect['distance_change_pct']:+.1f}%")
 
                         kxgs_results.append(
                             {
@@ -526,11 +499,7 @@ def main():
     print("-" * 70)
 
     # Get all MTBR phospho-sites
-    mtbr_phospho_sites = [
-        pos
-        for pos, data in TAU_PHOSPHO_SITES.items()
-        if data["domain"] in ["R1", "R2", "R3", "R4"]
-    ]
+    mtbr_phospho_sites = [pos for pos, data in TAU_PHOSPHO_SITES.items() if data["domain"] in ["R1", "R2", "R3", "R4"]]
 
     print(f"\nMTBR phosphorylation sites: {sorted(mtbr_phospho_sites)}")
 
@@ -557,9 +526,7 @@ def main():
         tub_data = tub_interfaces[tub_pos]
 
         # Analyze phosphorylation effects
-        disruption = analyze_phospho_disruption(
-            tau_data, tub_data, encoder, mtbr_phospho_sites
-        )
+        disruption = analyze_phospho_disruption(tau_data, tub_data, encoder, mtbr_phospho_sites)
 
         if disruption and disruption["phospho_effects"]:
             disruption_results.append(
@@ -663,10 +630,7 @@ def main():
 
     results["therapeutic_targets"] = {
         "phosphatase_targets": unique_targets[:15],
-        "kinase_priority": [
-            {"kinase": k, "cumulative_score": score, "target_count": count}
-            for k, score, count in kinase_priority
-        ],
+        "kinase_priority": [{"kinase": k, "cumulative_score": score, "target_count": count} for k, score, count in kinase_priority],
     }
 
     # ========================================================================
@@ -687,7 +651,7 @@ def main():
         "known_pairs_found": len(known_pairs),
         "tight_handshakes": len(tight_handshakes),
         "tightest_handshake": all_handshakes[0] if all_handshakes else None,
-        "most_disruptive_phospho": unique_targets[0] if unique_targets else None,
+        "most_disruptive_phospho": (unique_targets[0] if unique_targets else None),
         "top_kinase_target": kinase_priority[0] if kinase_priority else None,
     }
 

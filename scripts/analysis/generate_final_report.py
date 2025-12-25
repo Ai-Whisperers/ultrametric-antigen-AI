@@ -41,22 +41,14 @@ def generate_report():
             results = bandit_data.get("results", [])
 
             f.write(f"- **Total Issues:** {len(results)}\n")
-            f.write(
-                f"- **High Severity:** {sum(1 for r in results if r['issue_severity'] == 'HIGH')}\n"
-            )
-            f.write(
-                f"- **Medium Severity:** {sum(1 for r in results if r['issue_severity'] == 'MEDIUM')}\n\n"
-            )
+            f.write(f"- **High Severity:** {sum(1 for r in results if r['issue_severity'] == 'HIGH')}\n")
+            f.write(f"- **Medium Severity:** {sum(1 for r in results if r['issue_severity'] == 'MEDIUM')}\n\n")
 
             if results:
                 f.write("| Severity | Confidence | Issue | File |\n")
                 f.write("| :--- | :--- | :--- | :--- |\n")
                 for r in results:
-                    icon = (
-                        "🔴"
-                        if r["issue_severity"] == "HIGH"
-                        else "🟠" if r["issue_severity"] == "MEDIUM" else "🟡"
-                    )
+                    icon = "🔴" if r["issue_severity"] == "HIGH" else "🟠" if r["issue_severity"] == "MEDIUM" else "🟡"
                     f.write(
                         f"| {icon} {r['issue_severity']} | {r['issue_confidence']} | {r['issue_text']} | `{r['filename']}:{r['line_number']}` |\n"
                     )
@@ -86,18 +78,14 @@ def generate_report():
 
             complex_blocks.sort(key=lambda x: x["cc"], reverse=True)
 
-            f.write(
-                f"**Cyclomatic Complexity (CC) Violations:** {len(complex_blocks)} functions/methods with CC > 10.\n\n"
-            )
+            f.write(f"**Cyclomatic Complexity (CC) Violations:** {len(complex_blocks)} functions/methods with CC > 10.\n\n")
 
             if complex_blocks:
                 f.write("| Complexity | Rank | Location | Function |\n")
                 f.write("| :---: | :---: | :--- | :--- |\n")
                 for b in complex_blocks[:25]:  # Top 25
                     rank_icon = "☢️" if b["rank"] in ["D", "E", "F"] else "⚠️"
-                    f.write(
-                        f"| {b['cc']} | {rank_icon} **{b['rank']}** | `{b['file']}` | `{b['name']}` |\n"
-                    )
+                    f.write(f"| {b['cc']} | {rank_icon} **{b['rank']}** | `{b['file']}` | `{b['name']}` |\n")
 
                 if len(complex_blocks) > 25:
                     f.write(f"\n*...and {len(complex_blocks) - 25} more.*\n")

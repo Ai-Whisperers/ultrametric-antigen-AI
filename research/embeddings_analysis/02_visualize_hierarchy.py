@@ -22,7 +22,10 @@ def plot_valuation_radius_comparison():
 
     variants = ["v5_11", "v5_11_overnight"]
     colors = {"v5_11": "#2ecc71", "v5_11_overnight": "#e74c3c"}
-    labels = {"v5_11": "v5.11 (Production)", "v5_11_overnight": "v5.11 Overnight"}
+    labels = {
+        "v5_11": "v5.11 (Production)",
+        "v5_11_overnight": "v5.11 Overnight",
+    }
 
     # Plot 1: Line comparison
     ax1 = axes[0]
@@ -63,24 +66,20 @@ def plot_valuation_radius_comparison():
     # Highlight the inversion region
     ax1.axvspan(3.5, 8.5, alpha=0.1, color="red")
     ax1.annotate(
-        "Hierarchy\nInversion", xy=(6, 0.85), fontsize=10, color="red", ha="center"
+        "Hierarchy\nInversion",
+        xy=(6, 0.85),
+        fontsize=10,
+        color="red",
+        ha="center",
     )
 
     # Plot 2: Bar chart showing the difference
     ax2 = axes[1]
     valuations = list(range(9))
 
-    v5_11_radii = [
-        results["v5_11"]["embedding_analysis"]["per_valuation_stats"]
-        .get(str(v), {})
-        .get("mean_radius", 0)
-        for v in valuations
-    ]
+    v5_11_radii = [results["v5_11"]["embedding_analysis"]["per_valuation_stats"].get(str(v), {}).get("mean_radius", 0) for v in valuations]
     overnight_radii = [
-        results["v5_11_overnight"]["embedding_analysis"]["per_valuation_stats"]
-        .get(str(v), {})
-        .get("mean_radius", 0)
-        for v in valuations
+        results["v5_11_overnight"]["embedding_analysis"]["per_valuation_stats"].get(str(v), {}).get("mean_radius", 0) for v in valuations
     ]
 
     x = np.arange(len(valuations))
@@ -88,7 +87,11 @@ def plot_valuation_radius_comparison():
 
     bars1 = ax2.bar(x - width / 2, v5_11_radii, width, label="v5.11", color="#2ecc71")
     bars2 = ax2.bar(
-        x + width / 2, overnight_radii, width, label="v5.11 Overnight", color="#e74c3c"
+        x + width / 2,
+        overnight_radii,
+        width,
+        label="v5.11 Overnight",
+        color="#e74c3c",
     )
 
     ax2.set_xlabel("3-adic Valuation", fontsize=12)
@@ -120,17 +123,9 @@ def plot_hierarchy_delta():
     fig, ax = plt.subplots(figsize=(10, 5))
 
     valuations = list(range(9))
-    v5_11_radii = [
-        results["v5_11"]["embedding_analysis"]["per_valuation_stats"]
-        .get(str(v), {})
-        .get("mean_radius", 0)
-        for v in valuations
-    ]
+    v5_11_radii = [results["v5_11"]["embedding_analysis"]["per_valuation_stats"].get(str(v), {}).get("mean_radius", 0) for v in valuations]
     overnight_radii = [
-        results["v5_11_overnight"]["embedding_analysis"]["per_valuation_stats"]
-        .get(str(v), {})
-        .get("mean_radius", 0)
-        for v in valuations
+        results["v5_11_overnight"]["embedding_analysis"]["per_valuation_stats"].get(str(v), {}).get("mean_radius", 0) for v in valuations
     ]
 
     # Delta: positive means overnight has larger radius
@@ -142,9 +137,7 @@ def plot_hierarchy_delta():
     ax.axhline(y=0, color="black", linewidth=1)
     ax.set_xlabel("3-adic Valuation", fontsize=12)
     ax.set_ylabel("Radius Difference (Overnight - Production)", fontsize=12)
-    ax.set_title(
-        "Hierarchy Deviation: Where Overnight Training Went Wrong", fontsize=14
-    )
+    ax.set_title("Hierarchy Deviation: Where Overnight Training Went Wrong", fontsize=14)
     ax.set_xticks(valuations)
     ax.grid(True, alpha=0.3, axis="y")
 
@@ -177,22 +170,12 @@ def print_summary_table():
     print("=" * 70)
 
     print("\n### Per-Valuation Mean Radius ###\n")
-    print(
-        f"{'Valuation':<10} {'v5_11':<12} {'overnight':<12} {'Delta':<12} {'Status':<15}"
-    )
+    print(f"{'Valuation':<10} {'v5_11':<12} {'overnight':<12} {'Delta':<12} {'Status':<15}")
     print("-" * 60)
 
     for v in range(9):
-        v5_11_r = (
-            results["v5_11"]["embedding_analysis"]["per_valuation_stats"]
-            .get(str(v), {})
-            .get("mean_radius", 0)
-        )
-        overnight_r = (
-            results["v5_11_overnight"]["embedding_analysis"]["per_valuation_stats"]
-            .get(str(v), {})
-            .get("mean_radius", 0)
-        )
+        v5_11_r = results["v5_11"]["embedding_analysis"]["per_valuation_stats"].get(str(v), {}).get("mean_radius", 0)
+        overnight_r = results["v5_11_overnight"]["embedding_analysis"]["per_valuation_stats"].get(str(v), {}).get("mean_radius", 0)
         delta = overnight_r - v5_11_r
 
         if v >= 4 and delta > 0.05:
@@ -202,14 +185,10 @@ def print_summary_table():
         else:
             status = "OK"
 
-        print(
-            f"v={v:<8} {v5_11_r:<12.4f} {overnight_r:<12.4f} {delta:+.4f}      {status}"
-        )
+        print(f"v={v:<8} {v5_11_r:<12.4f} {overnight_r:<12.4f} {delta:+.4f}      {status}")
 
     print("\n" + "=" * 70)
-    print(
-        "CONCLUSION: v5_11 maintains correct hierarchy; v5_11_overnight inverts at v>=4"
-    )
+    print("CONCLUSION: v5_11 maintains correct hierarchy; v5_11_overnight inverts at v>=4")
     print("=" * 70)
 
 
@@ -221,6 +200,4 @@ if __name__ == "__main__":
         plot_hierarchy_delta()
     except Exception as e:
         print(f"Visualization skipped (no display): {e}")
-        print(
-            "Plots would be saved to: valuation_radius_comparison.png, hierarchy_delta.png"
-        )
+        print("Plots would be saved to: valuation_radius_comparison.png, hierarchy_delta.png")

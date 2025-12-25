@@ -31,8 +31,7 @@ def loss_test_outputs(device) -> Dict[str, torch.Tensor]:
         "logits_B": torch.randn(batch_size, 9, 3, device=device),
         "mu_A": torch.randn(batch_size, latent_dim, device=device),
         "mu_B": torch.randn(batch_size, latent_dim, device=device),
-        "logvar_A": torch.randn(batch_size, latent_dim, device=device)
-        - 1,  # Reasonable logvar
+        "logvar_A": torch.randn(batch_size, latent_dim, device=device) - 1,  # Reasonable logvar
         "logvar_B": torch.randn(batch_size, latent_dim, device=device) - 1,
         "z_A": torch.randn(batch_size, latent_dim, device=device) * 0.5,
         "z_B": torch.randn(batch_size, latent_dim, device=device) * 0.5,
@@ -109,8 +108,7 @@ def high_kl_outputs(device) -> Dict[str, torch.Tensor]:
         "logits_B": torch.randn(batch_size, 9, 3, device=device),
         "mu_A": torch.ones(batch_size, latent_dim, device=device) * 5,  # Far from prior
         "mu_B": torch.ones(batch_size, latent_dim, device=device) * 5,
-        "logvar_A": torch.ones(batch_size, latent_dim, device=device)
-        * 2,  # High variance
+        "logvar_A": torch.ones(batch_size, latent_dim, device=device) * 2,  # High variance
         "logvar_B": torch.ones(batch_size, latent_dim, device=device) * 2,
         "z_A": torch.randn(batch_size, latent_dim, device=device) * 2,
         "z_B": torch.randn(batch_size, latent_dim, device=device) * 2,

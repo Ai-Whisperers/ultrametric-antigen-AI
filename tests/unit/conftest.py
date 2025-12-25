@@ -9,7 +9,7 @@ Fixtures specific to unit tests. These are lighter weight and focus on
 testing individual components in isolation.
 """
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 import torch

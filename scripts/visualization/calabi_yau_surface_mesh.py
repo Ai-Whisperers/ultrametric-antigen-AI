@@ -96,9 +96,7 @@ def calabi_yau_quintic_32d(z, phase=0.0):
     y = np.sum(r[:, :8] * np.sin(5 * theta[:, :8]), axis=1)
     y += 0.3 * np.sum(r[:, 8:] * np.sin(3 * theta[:, 8:]), axis=1)
 
-    z_out = np.sum(
-        r[:, :8] * np.cos(3 * theta[:, :8]) * np.sin(2 * theta[:, :8]), axis=1
-    )
+    z_out = np.sum(r[:, :8] * np.cos(3 * theta[:, :8]) * np.sin(2 * theta[:, :8]), axis=1)
     z_out += 0.5 * np.sum(r[:, 8:] * np.sin(7 * theta[:, 8:]), axis=1)
 
     result = np.stack([x, y, z_out], axis=1)
@@ -130,7 +128,8 @@ def calabi_yau_k3_surface(z, phase=0.0):
 
     # Add higher harmonics for texture
     z_out = np.sum(
-        r[:, 4:8] * np.cos(2 * theta[:, 4:8]) * np.sin(2 * theta[:, 4:8]), axis=1
+        r[:, 4:8] * np.cos(2 * theta[:, 4:8]) * np.sin(2 * theta[:, 4:8]),
+        axis=1,
     )
 
     if n_complex > 8:
@@ -193,9 +192,7 @@ def extract_isosurface(density, level=None, bounds=None):
         level = np.percentile(density, 70)
 
     try:
-        verts, faces, normals, values = measure.marching_cubes(
-            density, level=level, spacing=(1.0, 1.0, 1.0)
-        )
+        verts, faces, normals, values = measure.marching_cubes(density, level=level, spacing=(1.0, 1.0, 1.0))
 
         # Scale vertices to original bounds
         if bounds:
@@ -266,15 +263,9 @@ def create_soft_surface_mesh(points, values, resolution=30):
         n_sample = min(2000, len(points))
         idx = np.random.choice(len(points), n_sample, replace=False)
 
-        rbf_x = RBFInterpolator(
-            uv[idx], points[idx, 0], kernel="thin_plate_spline", smoothing=0.1
-        )
-        rbf_y = RBFInterpolator(
-            uv[idx], points[idx, 1], kernel="thin_plate_spline", smoothing=0.1
-        )
-        rbf_z = RBFInterpolator(
-            uv[idx], points[idx, 2], kernel="thin_plate_spline", smoothing=0.1
-        )
+        rbf_x = RBFInterpolator(uv[idx], points[idx, 0], kernel="thin_plate_spline", smoothing=0.1)
+        rbf_y = RBFInterpolator(uv[idx], points[idx, 1], kernel="thin_plate_spline", smoothing=0.1)
+        rbf_z = RBFInterpolator(uv[idx], points[idx, 2], kernel="thin_plate_spline", smoothing=0.1)
 
         grid_points = np.stack([U.ravel(), V.ravel()], axis=1)
 
@@ -337,12 +328,8 @@ def plot_surface_comparison(points_16d, points_32d, output_path):
 
     # Row 2: Density-based surfaces (isosurface)
     print("Computing density for 16D...")
-    density_16d, bounds_16d = gaussian_kernel_density_3d(
-        points_16d, grid_size=40, bandwidth=0.15
-    )
-    verts_16d, faces_16d, normals_16d = extract_isosurface(
-        density_16d, bounds=bounds_16d
-    )
+    density_16d, bounds_16d = gaussian_kernel_density_3d(points_16d, grid_size=40, bandwidth=0.15)
+    verts_16d, faces_16d, normals_16d = extract_isosurface(density_16d, bounds=bounds_16d)
 
     ax = fig.add_subplot(3, 4, 5, projection="3d")
     if verts_16d is not None:
@@ -361,12 +348,8 @@ def plot_surface_comparison(points_16d, points_32d, output_path):
     ax.view_init(elev=20, azim=45)
 
     print("Computing density for 32D...")
-    density_32d, bounds_32d = gaussian_kernel_density_3d(
-        points_32d, grid_size=40, bandwidth=0.15
-    )
-    verts_32d, faces_32d, normals_32d = extract_isosurface(
-        density_32d, bounds=bounds_32d
-    )
+    density_32d, bounds_32d = gaussian_kernel_density_3d(points_32d, grid_size=40, bandwidth=0.15)
+    verts_32d, faces_32d, normals_32d = extract_isosurface(density_32d, bounds=bounds_32d)
 
     ax = fig.add_subplot(3, 4, 6, projection="3d")
     if verts_32d is not None:
@@ -424,9 +407,7 @@ def plot_surface_comparison(points_16d, points_32d, output_path):
     for i, level_pct in enumerate(levels):
         ax = fig.add_subplot(3, 4, 9 + i, projection="3d")
         level = np.percentile(density_16d, level_pct)
-        verts, faces, _ = extract_isosurface(
-            density_16d, level=level, bounds=bounds_16d
-        )
+        verts, faces, _ = extract_isosurface(density_16d, level=level, bounds=bounds_16d)
         if verts is not None and len(faces) > 0:
             mesh = Poly3DCollection(
                 verts[faces],
@@ -453,19 +434,11 @@ def export_mesh_data(points_16d, points_32d, output_path):
     # Compute isosurfaces
     print("Generating mesh data for export...")
 
-    density_16d, bounds_16d = gaussian_kernel_density_3d(
-        points_16d, grid_size=50, bandwidth=0.12
-    )
-    verts_16d, faces_16d, normals_16d = extract_isosurface(
-        density_16d, bounds=bounds_16d
-    )
+    density_16d, bounds_16d = gaussian_kernel_density_3d(points_16d, grid_size=50, bandwidth=0.12)
+    verts_16d, faces_16d, normals_16d = extract_isosurface(density_16d, bounds=bounds_16d)
 
-    density_32d, bounds_32d = gaussian_kernel_density_3d(
-        points_32d, grid_size=50, bandwidth=0.12
-    )
-    verts_32d, faces_32d, normals_32d = extract_isosurface(
-        density_32d, bounds=bounds_32d
-    )
+    density_32d, bounds_32d = gaussian_kernel_density_3d(points_32d, grid_size=50, bandwidth=0.12)
+    verts_32d, faces_32d, normals_32d = extract_isosurface(density_32d, bounds=bounds_32d)
 
     # Export as JSON for Three.js
     mesh_data = {

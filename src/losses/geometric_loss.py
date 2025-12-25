@@ -58,22 +58,28 @@ class GeometricAlignmentLoss(nn.Module):
         self.regularization_weight = regularization_weight
 
         # Precompute target vertices
-        self.register_buffer(
-            "target_vertices", self._generate_target_vertices(symmetry_group)
-        )
+        self.register_buffer("target_vertices", self._generate_target_vertices(symmetry_group))
 
     def _generate_target_vertices(self, group: str) -> torch.Tensor:
         """Generate normalized vertices for standard polyhedra."""
         if group == "tetrahedral":
             # 4 vertices
             vertices = torch.tensor(
-                [[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]], dtype=torch.float32
+                [[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]],
+                dtype=torch.float32,
             )
 
         elif group == "octahedral":
             # 6 vertices
             vertices = torch.tensor(
-                [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]],
+                [
+                    [1, 0, 0],
+                    [-1, 0, 0],
+                    [0, 1, 0],
+                    [0, -1, 0],
+                    [0, 0, 1],
+                    [0, 0, -1],
+                ],
                 dtype=torch.float32,
             )
 
@@ -122,15 +128,11 @@ class GeometricAlignmentLoss(nn.Module):
         theta = phi * idx
 
         # Generate points on sphere using Fibonacci lattice
-        points = torch.stack(
-            [torch.cos(theta) * radius, y, torch.sin(theta) * radius], dim=1
-        )
+        points = torch.stack([torch.cos(theta) * radius, y, torch.sin(theta) * radius], dim=1)
 
         return points
 
-    def forward(
-        self, z: torch.Tensor, target_indices: Optional[torch.Tensor] = None
-    ) -> Tuple[torch.Tensor, Dict]:
+    def forward(self, z: torch.Tensor, target_indices: Optional[torch.Tensor] = None) -> Tuple[torch.Tensor, Dict]:
         """Compute alignment loss.
 
         Args:
@@ -144,9 +146,7 @@ class GeometricAlignmentLoss(nn.Module):
             loss, metrics
         """
         z_3d = z[:, :3]  # Take first 3 dimensions
-        z_3d = (
-            F.normalize(z_3d, dim=1) * self.scale
-        )  # Project to sphere of radius `scale`
+        z_3d = F.normalize(z_3d, dim=1) * self.scale  # Project to sphere of radius `scale`
 
         # If we don't have explicit targets, we solve the assignment problem (Soft Assign or Chamfer)
         # For 'scaffolding', we usually want the BATCH to cover the SCAFFOLD.
@@ -169,10 +169,7 @@ class GeometricAlignmentLoss(nn.Module):
         # Only needed if we want to fill the space.
         # Inverse pairwise distance?
 
-        total_loss = (
-            self.alignment_weight * alignment_loss
-            + self.alignment_weight * coverage_loss  # Weight both equally for now
-        )
+        total_loss = self.alignment_weight * alignment_loss + self.alignment_weight * coverage_loss  # Weight both equally for now
 
         metrics = {
             "geo_coverage_loss": coverage_loss.item(),

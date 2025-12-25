@@ -21,9 +21,9 @@ import torch
 CODON_RESEARCH_DIR = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(CODON_RESEARCH_DIR / "rheumatoid_arthritis" / "scripts"))
 
-from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot,
-                              encode_codon_hyperbolic, hyperbolic_centroid,
-                              load_hyperbolic_encoder, poincare_distance)
+from hyperbolic_utils import (AA_TO_CODON, encode_codon_hyperbolic,
+                              hyperbolic_centroid, load_hyperbolic_encoder,
+                              poincare_distance)
 
 # SARS-CoV-2 Spike protein sequence (Wuhan-Hu-1, UniProt P0DTC2)
 # Full length: 1273 amino acids
@@ -273,9 +273,7 @@ def calculate_js_divergence(wt_emb: np.ndarray, mut_emb: np.ndarray) -> float:
     mut_var = np.var(mut_emb)
 
     # Symmetric KL-like measure
-    js = 0.5 * (
-        np.log(wt_var / mut_var + 1e-10) ** 2 + np.log(mut_var / wt_var + 1e-10) ** 2
-    )
+    js = 0.5 * (np.log(wt_var / mut_var + 1e-10) ** 2 + np.log(mut_var / wt_var + 1e-10) ** 2)
     return float(min(js, 1.0))
 
 
@@ -296,9 +294,7 @@ def classify_goldilocks(shift: float) -> str:
         return "above"
 
 
-def calculate_goldilocks_score(
-    shift: float, js_div: float, entropy_change: float
-) -> float:
+def calculate_goldilocks_score(shift: float, js_div: float, entropy_change: float) -> float:
     """
     Calculate Goldilocks score combining multiple metrics.
     Higher score = better sentinel candidate.
@@ -366,7 +362,7 @@ def main():
     # Load encoder
     print("\nLoading 3-adic codon encoder...")
     encoder, mapping = load_hyperbolic_encoder(device="cpu", version="3adic")
-    print(f"Encoder loaded successfully")
+    print("Encoder loaded successfully")
 
     # Verify spike sequence
     print(f"\nSpike sequence length: {len(SPIKE_SEQUENCE)} amino acids")
@@ -405,11 +401,7 @@ def main():
 
     print("\n--- Top 10 Sentinel Candidates (by Goldilocks Score) ---")
     for i, r in enumerate(results_sorted[:10], 1):
-        zone_marker = (
-            "[GOLDILOCKS]"
-            if r["goldilocks_zone"] == "goldilocks"
-            else f"[{r['goldilocks_zone'].upper()}]"
-        )
+        zone_marker = "[GOLDILOCKS]" if r["goldilocks_zone"] == "goldilocks" else f"[{r['goldilocks_zone'].upper()}]"
         print(
             f"{i:2}. {r['name']:8} | {r['domain']:4} | "
             f"shift={r['centroid_shift']*100:5.1f}% | "
@@ -419,9 +411,7 @@ def main():
 
     print("\n--- Goldilocks Zone Sites (Sentinel Candidates) ---")
     if goldilocks_sites:
-        for r in sorted(
-            goldilocks_sites, key=lambda x: x["goldilocks_score"], reverse=True
-        ):
+        for r in sorted(goldilocks_sites, key=lambda x: x["goldilocks_score"], reverse=True):
             print(
                 f"  {r['name']:8} ({r['domain']:4}): {r['centroid_shift']*100:.1f}% shift, "
                 f"score={r['goldilocks_score']:.3f}, {r['bnab_relevance']}"
@@ -442,10 +432,7 @@ def main():
         domains[domain]["sites"].append(r["name"])
 
     for domain, info in domains.items():
-        print(
-            f"  {domain}: {info['goldilocks']}/{info['total']} in Goldilocks Zone "
-            f"({', '.join(info['sites'])})"
-        )
+        print(f"  {domain}: {info['goldilocks']}/{info['total']} in Goldilocks Zone " f"({', '.join(info['sites'])})")
 
     # Save results
     output_file = Path(__file__).parent / "spike_analysis_results.json"

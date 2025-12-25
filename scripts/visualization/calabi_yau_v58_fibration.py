@@ -301,9 +301,7 @@ def mirror_symmetric_fibration(z):
     z_mirror = z[:, half:]
 
     # Normalize each half
-    z_orig_norm = z_original / (
-        np.linalg.norm(z_original, axis=1, keepdims=True) + 1e-8
-    )
+    z_orig_norm = z_original / (np.linalg.norm(z_original, axis=1, keepdims=True) + 1e-8)
     z_mirr_norm = z_mirror / (np.linalg.norm(z_mirror, axis=1, keepdims=True) + 1e-8)
 
     # Original fibration (complex structure)
@@ -590,7 +588,12 @@ def render_fibration_structure(points, fibers, projection_name, output_path):
     # 2D projections showing linking
     ax3 = fig.add_subplot(2, 2, 3)
     ax3.scatter(
-        points[:, 0], points[:, 1], c=points[:, 2], cmap="viridis", s=1, alpha=0.3
+        points[:, 0],
+        points[:, 1],
+        c=points[:, 2],
+        cmap="viridis",
+        s=1,
+        alpha=0.3,
     )
     for i, fiber in enumerate(fibers[:20]):
         smooth_path = smooth_fiber_spline(points, fiber)
@@ -741,23 +744,17 @@ def main():
             print(f"Points range: [{points_3d.min():.3f}, {points_3d.max():.3f}]")
 
             # Trace fibration paths
-            fibers = trace_fibration_paths(
-                points_3d, neighbors, n_fibers=100, fiber_length=40
-            )
+            fibers = trace_fibration_paths(points_3d, neighbors, n_fibers=100, fiber_length=40)
             print(f"Traced {len(fibers)} fibers")
 
             # Render visualization
             safe_name = proj_name.replace(" ", "_").lower()
             output_png = os.path.join(OUTPUT_DIR, f"{dim_name}_{safe_name}.png")
-            render_fibration_structure(
-                points_3d, fibers, f"{proj_name} ({dim_name})", output_png
-            )
+            render_fibration_structure(points_3d, fibers, f"{proj_name} ({dim_name})", output_png)
 
             # Export data for Three.js
             output_json = os.path.join(OUTPUT_DIR, f"{dim_name}_{safe_name}.json")
-            export_fibration_data(
-                points_3d, fibers, f"{proj_name} ({dim_name})", output_json
-            )
+            export_fibration_data(points_3d, fibers, f"{proj_name} ({dim_name})", output_json)
 
             all_results[f"{dim_name}_{safe_name}"] = {
                 "points": points_3d,
@@ -808,11 +805,14 @@ def main():
             break
 
     plt.suptitle(
-        "Calabi-Yau Fibration Projections from v5.8 Multi-Layer Embeddings", fontsize=14
+        "Calabi-Yau Fibration Projections from v5.8 Multi-Layer Embeddings",
+        fontsize=14,
     )
     plt.tight_layout()
     plt.savefig(
-        os.path.join(OUTPUT_DIR, "summary_comparison.png"), dpi=150, bbox_inches="tight"
+        os.path.join(OUTPUT_DIR, "summary_comparison.png"),
+        dpi=150,
+        bbox_inches="tight",
     )
     plt.close()
     print(f"Saved: {os.path.join(OUTPUT_DIR, 'summary_comparison.png')}")

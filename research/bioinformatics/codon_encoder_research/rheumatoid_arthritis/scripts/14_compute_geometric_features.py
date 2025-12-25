@@ -14,7 +14,6 @@ Version: 1.0
 
 import json
 import time
-from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -81,11 +80,7 @@ def encode_window(window: str, encoder, device: str = "cpu") -> tuple:
         if codon is None:
             continue
 
-        onehot = (
-            torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-            .unsqueeze(0)
-            .to(device)
-        )
+        onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
 
         with torch.no_grad():
             probs, emb = encoder.get_cluster_probs(onehot)
@@ -128,7 +123,8 @@ def compute_site_features(site: Dict, encoder, device: str = "cpu") -> Optional[
     neighbor_dists = []
     for i in range(len(embeddings) - 1):
         d = poincare_distance(
-            torch.tensor(embeddings[i]).float(), torch.tensor(embeddings[i + 1]).float()
+            torch.tensor(embeddings[i]).float(),
+            torch.tensor(embeddings[i + 1]).float(),
         ).item()
         neighbor_dists.append(d)
     mean_neighbor_dist = np.mean(neighbor_dists) if neighbor_dists else 0.0
@@ -140,12 +136,7 @@ def compute_site_features(site: Dict, encoder, device: str = "cpu") -> Optional[
         other_mask = cluster_ids != my_cluster
         if np.any(other_mask):
             other_embs = embeddings[other_mask]
-            dists = [
-                poincare_distance(
-                    torch.tensor(emb).float(), torch.tensor(other).float()
-                ).item()
-                for other in other_embs
-            ]
+            dists = [poincare_distance(torch.tensor(emb).float(), torch.tensor(other).float()).item() for other in other_embs]
             if dists:
                 boundary_potentials.append(min(dists))
     mean_boundary = np.mean(boundary_potentials) if boundary_potentials else 0.0
@@ -198,9 +189,7 @@ def compute_site_features(site: Dict, encoder, device: str = "cpu") -> Optional[
             m = 0.5 * (original_probs + cit_probs_mean)
             js_div = 0.5 * (
                 np.sum(original_probs * np.log((original_probs + 1e-10) / (m + 1e-10)))
-                + np.sum(
-                    cit_probs_mean * np.log((cit_probs_mean + 1e-10) / (m + 1e-10))
-                )
+                + np.sum(cit_probs_mean * np.log((cit_probs_mean + 1e-10) / (m + 1e-10)))
             )
 
             # Entropy change
@@ -230,9 +219,7 @@ def compute_site_features(site: Dict, encoder, device: str = "cpu") -> Optional[
     return features
 
 
-def process_all_sites(
-    sites: List[Dict], encoder, device: str = "cpu", output_dir: Path = None
-) -> List[Dict]:
+def process_all_sites(sites: List[Dict], encoder, device: str = "cpu", output_dir: Path = None) -> List[Dict]:
     """
     Process all arginine sites and compute features.
 
@@ -249,7 +236,7 @@ def process_all_sites(
     start_idx = 0
 
     if checkpoint_path and checkpoint_path.exists():
-        print(f"  Found checkpoint, resuming...")
+        print("  Found checkpoint, resuming...")
         with open(checkpoint_path, "r") as f:
             checkpoint = json.load(f)
         results = checkpoint.get("results", [])
@@ -286,9 +273,7 @@ def process_all_sites(
             rate = processed / elapsed
             eta = (len(sites) - processed) / rate if rate > 0 else 0
             print(
-                f"  Processed {processed:,} / {len(sites):,} "
-                f"({100*processed/len(sites):.1f}%) - "
-                f"{rate:.0f} sites/sec - ETA: {eta/60:.1f} min"
+                f"  Processed {processed:,} / {len(sites):,} " f"({100*processed/len(sites):.1f}%) - " f"{rate:.0f} sites/sec - ETA: {eta/60:.1f} min"
             )
 
         # Checkpointing

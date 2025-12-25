@@ -64,7 +64,10 @@ def analyze_checkpoint(checkpoint_path: str, device: str = "cuda"):
 
     # Load model
     model = TernaryVAE_OptionC(
-        latent_dim=16, hidden_dim=64, use_dual_projection=True, use_controller=True
+        latent_dim=16,
+        hidden_dim=64,
+        use_dual_projection=True,
+        use_controller=True,
     )
 
     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
@@ -116,9 +119,7 @@ def analyze_checkpoint(checkpoint_path: str, device: str = "cuda"):
         deviation = (freq - 1 / 3) * 100
         print(f"   {i}     |   {freq:.4f}  |  {deviation:+.2f}%")
 
-    print(
-        f"\nUniformity test: {'UNIFORM' if np.std(zero_by_position) < 0.01 else 'NON-UNIFORM'}"
-    )
+    print(f"\nUniformity test: {'UNIFORM' if np.std(zero_by_position) < 0.01 else 'NON-UNIFORM'}")
     print(f"  Std of position frequencies: {np.std(zero_by_position):.6f}")
 
     # Zero count distribution
@@ -135,9 +136,7 @@ def analyze_checkpoint(checkpoint_path: str, device: str = "cuda"):
         mean_r_A = radius_A[mask].mean()
         mean_r_B = radius_B[mask].mean()
         n = mask.sum()
-        print(
-            f"    {count}      |    {mean_r_A:.4f}    |    {mean_r_B:.4f}    | {n:5d}"
-        )
+        print(f"    {count}      |    {mean_r_A:.4f}    |    {mean_r_B:.4f}    | {n:5d}")
 
     # Correlation
     corr_A, p_A = stats.pearsonr(zero_counts, radius_A)
@@ -147,13 +146,9 @@ def analyze_checkpoint(checkpoint_path: str, device: str = "cuda"):
 
     if abs(corr_A) > 0.1 or abs(corr_B) > 0.1:
         print("\n>>> FINDING: Model shows radius-zero correlation!")
-        print(
-            "    Zero-heavy operations cluster at different radii than non-zero operations."
-        )
+        print("    Zero-heavy operations cluster at different radii than non-zero operations.")
     else:
-        print(
-            "\n>>> FINDING: Model treats zeros uniformly (no radius-zero correlation)"
-        )
+        print("\n>>> FINDING: Model treats zeros uniformly (no radius-zero correlation)")
 
     # P-adic valuation analysis
     print("\n" + "=" * 60)
@@ -180,9 +175,7 @@ def analyze_checkpoint(checkpoint_path: str, device: str = "cuda"):
     if corr_val_A < -0.1 or corr_val_B < -0.1:
         print("\n>>> FINDING: Model shows p-adic hierarchy structure!")
         print("    Higher valuation (more trailing zeros) = smaller radius")
-        print(
-            "    This is the expected p-adic distance relationship: d(a,0) = 3^{-v(a)}"
-        )
+        print("    This is the expected p-adic distance relationship: d(a,0) = 3^{-v(a)}")
     elif corr_val_A > 0.1 or corr_val_B > 0.1:
         print("\n>>> FINDING: Model shows INVERTED p-adic structure")
         print("    Higher valuation = LARGER radius (opposite of expected)")
@@ -204,9 +197,7 @@ def analyze_checkpoint(checkpoint_path: str, device: str = "cuda"):
             x_recon_discrete[np.abs(x_recon) < 0.33] = 0
 
             # Compute accuracy by zero count
-            print(
-                "\nZero Count | Accuracy | Zero-Position Accuracy | Non-Zero Accuracy"
-            )
+            print("\nZero Count | Accuracy | Zero-Position Accuracy | Non-Zero Accuracy")
             print("-" * 70)
             for count in unique_counts:
                 mask = zero_counts == count
@@ -226,15 +217,11 @@ def analyze_checkpoint(checkpoint_path: str, device: str = "cuda"):
                 # Non-zero accuracy
                 nonzero_mask = ops_subset != 0
                 if nonzero_mask.sum() > 0:
-                    nonzero_acc = np.mean(
-                        recon_subset[nonzero_mask] == ops_subset[nonzero_mask]
-                    )
+                    nonzero_acc = np.mean(recon_subset[nonzero_mask] == ops_subset[nonzero_mask])
                 else:
                     nonzero_acc = float("nan")
 
-                print(
-                    f"    {count}      |  {acc:.4f}  |        {zero_acc:.4f}        |      {nonzero_acc:.4f}"
-                )
+                print(f"    {count}      |  {acc:.4f}  |        {zero_acc:.4f}        |      {nonzero_acc:.4f}")
         else:
             print("No reconstruction output available in model")
 
@@ -277,9 +264,7 @@ def analyze_checkpoint(checkpoint_path: str, device: str = "cuda"):
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Analyze zero-trit structure in Ternary VAE"
-    )
+    parser = argparse.ArgumentParser(description="Analyze zero-trit structure in Ternary VAE")
     parser.add_argument(
         "--checkpoint",
         type=str,

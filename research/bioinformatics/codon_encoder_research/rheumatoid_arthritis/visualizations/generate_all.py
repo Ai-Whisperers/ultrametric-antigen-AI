@@ -56,8 +56,14 @@ def main():
             BASE_DIR / "pitch/03_intervention_pathways/generate.py",
             "Intervention Pathways",
         ),
-        (BASE_DIR / "pitch/04_safety_comparisons/generate.py", "Safety Comparisons"),
-        (BASE_DIR / "pitch/05_goldilocks_radar/generate.py", "Goldilocks Zone"),
+        (
+            BASE_DIR / "pitch/04_safety_comparisons/generate.py",
+            "Safety Comparisons",
+        ),
+        (
+            BASE_DIR / "pitch/05_goldilocks_radar/generate.py",
+            "Goldilocks Zone",
+        ),
         # Scientific visualizations
         (
             BASE_DIR / "scientific/01_hla_pca_projections/generate.py",
@@ -71,7 +77,10 @@ def main():
             BASE_DIR / "scientific/04_calabi_yau_manifolds/generate.py",
             "Calabi-Yau Manifolds",
         ),
-        (BASE_DIR / "scientific/05_distance_heatmaps/generate.py", "Distance Heatmaps"),
+        (
+            BASE_DIR / "scientific/05_distance_heatmaps/generate.py",
+            "Distance Heatmaps",
+        ),
     ]
 
     results = []
@@ -108,7 +117,11 @@ def main():
         if dir_path.exists():
             print(f"\n{subdir.upper()}/")
             for child in sorted(dir_path.rglob("*")):
-                if child.is_file() and child.suffix in [".png", ".svg", ".html"]:
+                if child.is_file() and child.suffix in [
+                    ".png",
+                    ".svg",
+                    ".html",
+                ]:
                     rel_path = child.relative_to(BASE_DIR)
                     size_kb = child.stat().st_size / 1024
                     print(f"  {rel_path} ({size_kb:.1f} KB)")

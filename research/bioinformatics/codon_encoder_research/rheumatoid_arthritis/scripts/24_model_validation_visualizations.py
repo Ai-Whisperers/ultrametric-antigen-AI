@@ -19,7 +19,7 @@ Version: 1.0
 
 import json
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict
 
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
@@ -27,8 +27,7 @@ import numpy as np
 import pandas as pd
 from matplotlib.gridspec import GridSpec
 from scipy import stats
-from sklearn.metrics import (auc, average_precision_score,
-                             precision_recall_curve, roc_curve)
+from sklearn.metrics import auc, roc_curve
 
 # ============================================================================
 # CONFIGURATION
@@ -88,51 +87,29 @@ def load_all_data() -> Dict:
             data["epitopes"] = json.load(f)
 
     # 2. Load citrullination shift analysis (model predictions)
-    shift_file = (
-        data_dir / "results" / "hyperbolic" / "citrullination_shift_analysis.json"
-    )
+    shift_file = data_dir / "results" / "hyperbolic" / "citrullination_shift_analysis.json"
     if shift_file.exists():
         with open(shift_file) as f:
             data["shifts"] = json.load(f)
 
     # 3. Load AlphaFold3 analysis
-    af3_binding = (
-        data_dir / "results" / "alphafold3" / "22_analysis" / "binding_analysis.json"
-    )
+    af3_binding = data_dir / "results" / "alphafold3" / "22_analysis" / "binding_analysis.json"
     if af3_binding.exists():
         with open(af3_binding) as f:
             data["af3_binding"] = json.load(f)
 
-    af3_comparisons = (
-        data_dir
-        / "results"
-        / "alphafold3"
-        / "22_analysis"
-        / "native_vs_citrullinated.csv"
-    )
+    af3_comparisons = data_dir / "results" / "alphafold3" / "22_analysis" / "native_vs_citrullinated.csv"
     if af3_comparisons.exists():
         data["af3_comparisons"] = pd.read_csv(af3_comparisons)
 
     # 4. Load proteome-wide predictions
-    pred_stats = (
-        data_dir
-        / "results"
-        / "proteome_wide"
-        / "15_predictions"
-        / "prediction_statistics.json"
-    )
+    pred_stats = data_dir / "results" / "proteome_wide" / "15_predictions" / "prediction_statistics.json"
     if pred_stats.exists():
         with open(pred_stats) as f:
             data["proteome_stats"] = json.load(f)
 
     # 5. Load high risk candidates
-    high_risk = (
-        data_dir
-        / "results"
-        / "proteome_wide"
-        / "15_predictions"
-        / "high_risk_candidates.csv"
-    )
+    high_risk = data_dir / "results" / "proteome_wide" / "15_predictions" / "high_risk_candidates.csv"
     if high_risk.exists():
         data["high_risk"] = pd.read_csv(high_risk, nrows=1000)  # Top 1000
 
@@ -254,10 +231,7 @@ def plot_model_prediction_accuracy(data: Dict, output_dir: Path):
     # Panel B: ACPA vs Entropy correlation
     ax2 = axes[0, 1]
 
-    colors = [
-        COLORS["immunodominant"] if imm else COLORS["silent"]
-        for imm in df["immunodominant"]
-    ]
+    colors = [COLORS["immunodominant"] if imm else COLORS["silent"] for imm in df["immunodominant"]]
 
     ax2.scatter(
         df["entropy_change"],
@@ -281,9 +255,7 @@ def plot_model_prediction_accuracy(data: Dict, output_dir: Path):
             )
 
     # Trend line
-    slope, intercept, r_val, p_val, _ = stats.linregress(
-        df["entropy_change"], df["acpa_reactivity"]
-    )
+    slope, intercept, r_val, p_val, _ = stats.linregress(df["entropy_change"], df["acpa_reactivity"])
     x_line = np.linspace(df["entropy_change"].min(), df["entropy_change"].max(), 100)
     ax2.plot(
         x_line,
@@ -295,7 +267,10 @@ def plot_model_prediction_accuracy(data: Dict, output_dir: Path):
     )
 
     ax2.axvspan(
-        GOLDILOCKS_ALPHA, GOLDILOCKS_BETA, alpha=0.15, color=COLORS["goldilocks"]
+        GOLDILOCKS_ALPHA,
+        GOLDILOCKS_BETA,
+        alpha=0.15,
+        color=COLORS["goldilocks"],
     )
 
     ax2.set_xlabel("Entropy Change (Model Prediction)", fontsize=12)
@@ -343,7 +318,9 @@ def plot_model_prediction_accuracy(data: Dict, output_dir: Path):
     ax3.set_xlabel("False Positive Rate", fontsize=12)
     ax3.set_ylabel("True Positive Rate", fontsize=12)
     ax3.set_title(
-        "C. ROC Curve: Predicting Immunodominance", fontsize=14, fontweight="bold"
+        "C. ROC Curve: Predicting Immunodominance",
+        fontsize=14,
+        fontweight="bold",
     )
     ax3.legend(loc="lower right", fontsize=10)
     ax3.grid(True, alpha=0.3)
@@ -353,7 +330,12 @@ def plot_model_prediction_accuracy(data: Dict, output_dir: Path):
 
     comparisons = data.get("shifts", {}).get("comparisons", {})
 
-    metrics = ["entropy_change", "js_divergence", "centroid_shift", "relative_shift"]
+    metrics = [
+        "entropy_change",
+        "js_divergence",
+        "centroid_shift",
+        "relative_shift",
+    ]
     metric_labels = [
         "Entropy\nChange",
         "JS\nDivergence",
@@ -388,10 +370,18 @@ def plot_model_prediction_accuracy(data: Dict, output_dir: Path):
         )
 
     ax4.axhline(
-        y=0.8, color="red", linestyle="--", alpha=0.5, label="Large effect (d=0.8)"
+        y=0.8,
+        color="red",
+        linestyle="--",
+        alpha=0.5,
+        label="Large effect (d=0.8)",
     )
     ax4.axhline(
-        y=0.5, color="orange", linestyle="--", alpha=0.5, label="Medium effect (d=0.5)"
+        y=0.5,
+        color="orange",
+        linestyle="--",
+        alpha=0.5,
+        label="Medium effect (d=0.5)",
     )
 
     ax4.set_ylabel("Cohen's d (Effect Size)", fontsize=12)
@@ -436,9 +426,7 @@ def plot_model_vs_alphafold(data: Dict, output_dir: Path):
     matched_data = []
     for epitope_id, af3_data in epitope_summary.items():
         # Find matching model prediction
-        model_row = df_epitopes[
-            df_epitopes["epitope_id"].str.upper() == epitope_id.upper()
-        ]
+        model_row = df_epitopes[df_epitopes["epitope_id"].str.upper() == epitope_id.upper()]
         if not model_row.empty:
             matched_data.append(
                 {
@@ -476,9 +464,7 @@ def plot_model_vs_alphafold(data: Dict, output_dir: Path):
 
         # Correlation
         if len(matched_df) > 2:
-            r, p = stats.pearsonr(
-                matched_df["model_entropy"], matched_df["af3_delta_iptm"]
-            )
+            r, p = stats.pearsonr(matched_df["model_entropy"], matched_df["af3_delta_iptm"])
             ax1.text(
                 0.05,
                 0.95,
@@ -634,10 +620,7 @@ def plot_proteome_landscape(data: Dict, output_dir: Path):
             label="Goldilocks Zone",
         )
 
-        in_zone = (
-            (high_risk["entropy_change"] >= GOLDILOCKS_ALPHA)
-            & (high_risk["entropy_change"] <= GOLDILOCKS_BETA)
-        ).sum()
+        in_zone = ((high_risk["entropy_change"] >= GOLDILOCKS_ALPHA) & (high_risk["entropy_change"] <= GOLDILOCKS_BETA)).sum()
         pct_in_zone = 100 * in_zone / len(high_risk)
 
         ax2.axvline(
@@ -685,13 +668,20 @@ def plot_proteome_landscape(data: Dict, output_dir: Path):
     ax4 = axes[1, 1]
 
     # Known autoantigens from epitope database
-    known_antigens = ["VIM", "FGA", "FGB", "ENO1", "COL2A1", "FLG", "TNC", "FN1"]
+    known_antigens = [
+        "VIM",
+        "FGA",
+        "FGB",
+        "ENO1",
+        "COL2A1",
+        "FLG",
+        "TNC",
+        "FN1",
+    ]
 
     if high_risk is not None:
         total_proteins = high_risk["gene_name"].nunique()
-        known_in_high_risk = sum(
-            1 for ag in known_antigens if ag in high_risk["gene_name"].values
-        )
+        known_in_high_risk = sum(1 for ag in known_antigens if ag in high_risk["gene_name"].values)
 
         # Create Venn-like bar chart
         categories = [
@@ -704,7 +694,11 @@ def plot_proteome_landscape(data: Dict, output_dir: Path):
             known_in_high_risk,
             total_proteins - known_in_high_risk,
         ]
-        colors = [COLORS["immunodominant"], COLORS["goldilocks"], COLORS["proteome"]]
+        colors = [
+            COLORS["immunodominant"],
+            COLORS["goldilocks"],
+            COLORS["proteome"],
+        ]
 
         bars = ax4.bar(categories, values, color=colors, edgecolor="black")
 
@@ -799,7 +793,9 @@ def plot_comprehensive_dashboard(data: Dict, output_dir: Path):
         bbox=dict(boxstyle="round", facecolor="lightyellow", alpha=0.8),
     )
     ax_pipeline.set_title(
-        "A. 3-Adic Codon Encoder Model Pipeline", fontsize=14, fontweight="bold"
+        "A. 3-Adic Codon Encoder Model Pipeline",
+        fontsize=14,
+        fontweight="bold",
     )
 
     # Panel B: Key numbers
@@ -838,10 +834,7 @@ def plot_comprehensive_dashboard(data: Dict, output_dir: Path):
     ax_scatter = fig.add_subplot(gs[1, :2])
 
     if not df_epitopes.empty:
-        colors = [
-            COLORS["immunodominant"] if imm else COLORS["silent"]
-            for imm in df_epitopes["immunodominant"]
-        ]
+        colors = [COLORS["immunodominant"] if imm else COLORS["silent"] for imm in df_epitopes["immunodominant"]]
         sizes = df_epitopes["acpa_reactivity"] * 300 + 50
 
         ax_scatter.scatter(
@@ -855,7 +848,10 @@ def plot_comprehensive_dashboard(data: Dict, output_dir: Path):
         )
 
         ax_scatter.axvspan(
-            GOLDILOCKS_ALPHA, GOLDILOCKS_BETA, alpha=0.2, color=COLORS["goldilocks"]
+            GOLDILOCKS_ALPHA,
+            GOLDILOCKS_BETA,
+            alpha=0.2,
+            color=COLORS["goldilocks"],
         )
 
         # Add decision boundary
@@ -934,12 +930,37 @@ def plot_comprehensive_dashboard(data: Dict, output_dir: Path):
     ax_table.axis("off")
 
     table_data = [
-        ["Validation Test", "Model Prediction", "Experimental Result", "Status"],
-        ["Goldilocks Zone", "ΔH ∈ [-0.12, +0.05]", "87% immunodominant in zone", "✓"],
-        ["Entropy Discrimination", "p = 0.005", "t = 3.09, Cohen's d = 1.58", "✓"],
+        [
+            "Validation Test",
+            "Model Prediction",
+            "Experimental Result",
+            "Status",
+        ],
+        [
+            "Goldilocks Zone",
+            "ΔH ∈ [-0.12, +0.05]",
+            "87% immunodominant in zone",
+            "✓",
+        ],
+        [
+            "Entropy Discrimination",
+            "p = 0.005",
+            "t = 3.09, Cohen's d = 1.58",
+            "✓",
+        ],
         ["HLA Binding", "Positive entropy → binding", "+14.1% mean iPTM", "✓"],
-        ["Proteome Screening", "327K high-risk sites", "Known antigens recovered", "✓"],
-        ["Clinical Correlation", "Entropy → ACPA", "r = 0.12 (epitope level)", "✓"],
+        [
+            "Proteome Screening",
+            "327K high-risk sites",
+            "Known antigens recovered",
+            "✓",
+        ],
+        [
+            "Clinical Correlation",
+            "Entropy → ACPA",
+            "r = 0.12 (epitope level)",
+            "✓",
+        ],
     ]
 
     table = ax_table.table(
@@ -959,7 +980,10 @@ def plot_comprehensive_dashboard(data: Dict, output_dir: Path):
     table.scale(1.2, 1.8)
 
     ax_table.set_title(
-        "E. Cross-Validation Summary Table", fontsize=14, fontweight="bold", pad=20
+        "E. Cross-Validation Summary Table",
+        fontsize=14,
+        fontweight="bold",
+        pad=20,
     )
 
     # Panel F: Conclusion
@@ -1003,8 +1027,7 @@ CONCLUSIONS
 
     # Main title
     fig.suptitle(
-        "3-Adic Codon Encoder: Model Validation Dashboard\n"
-        "From Sequence to Structure to Clinical Prediction",
+        "3-Adic Codon Encoder: Model Validation Dashboard\n" "From Sequence to Structure to Clinical Prediction",
         fontsize=18,
         fontweight="bold",
         y=0.98,
@@ -1033,7 +1056,12 @@ def plot_feature_importance(data: Dict, output_dir: Path):
     # Panel A: Feature correlation with immunodominance
     ax1 = axes[0]
 
-    features = ["entropy_change", "js_divergence", "centroid_shift", "acpa_reactivity"]
+    features = [
+        "entropy_change",
+        "js_divergence",
+        "centroid_shift",
+        "acpa_reactivity",
+    ]
     feature_labels = [
         "Entropy\nChange",
         "JS\nDivergence",
@@ -1049,10 +1077,7 @@ def plot_feature_importance(data: Dict, output_dir: Path):
         else:
             correlations.append(0)
 
-    colors = [
-        COLORS["goldilocks"] if c > 0 else COLORS["immunodominant"]
-        for c in correlations
-    ]
+    colors = [COLORS["goldilocks"] if c > 0 else COLORS["immunodominant"] for c in correlations]
     bars = ax1.barh(feature_labels, correlations, color=colors, edgecolor="black")
 
     ax1.axvline(x=0, color="black", linewidth=1)
@@ -1071,9 +1096,7 @@ def plot_feature_importance(data: Dict, output_dir: Path):
     # Create combined score
     if not df.empty and "entropy_change" in df.columns:
         # Normalize and combine features
-        df["combined_score"] = (df["entropy_change"] - df["entropy_change"].min()) / (
-            df["entropy_change"].max() - df["entropy_change"].min() + 1e-10
-        )
+        df["combined_score"] = (df["entropy_change"] - df["entropy_change"].min()) / (df["entropy_change"].max() - df["entropy_change"].min() + 1e-10)
 
         # Plot combined score vs immunodominance
         imm_scores = df[df["immunodominant"] == True]["combined_score"]

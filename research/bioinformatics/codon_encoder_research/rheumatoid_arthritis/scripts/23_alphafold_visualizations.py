@@ -16,7 +16,7 @@ Version: 1.0
 
 import json
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict
 
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
@@ -162,10 +162,7 @@ def plot_binding_changes(data: Dict, output_dir: Path):
     width = 0.35
 
     # Create labels
-    labels = [
-        f"{row['epitope'].upper()}\n+{row['hla'].upper().replace('_', '*')}"
-        for _, row in complete.iterrows()
-    ]
+    labels = [f"{row['epitope'].upper()}\n+{row['hla'].upper().replace('_', '*')}" for _, row in complete.iterrows()]
 
     bars1 = ax1.bar(
         x - width / 2,
@@ -209,7 +206,11 @@ def plot_binding_changes(data: Dict, output_dir: Path):
     ax1.legend(loc="upper left", fontsize=10)
     ax1.set_ylim(0, 0.8)
     ax1.axhline(
-        y=0.5, color="gray", linestyle="--", alpha=0.5, label="Good binding threshold"
+        y=0.5,
+        color="gray",
+        linestyle="--",
+        alpha=0.5,
+        label="Good binding threshold",
     )
     ax1.grid(axis="y", alpha=0.3)
 
@@ -224,14 +225,7 @@ def plot_binding_changes(data: Dict, output_dir: Path):
     entropy = [epitope_summary[e]["entropy_change"] for e in epitopes]
 
     # Color by entropy (Goldilocks zone)
-    colors = [
-        (
-            COLORS["goldilocks"]
-            if GOLDILOCKS_ALPHA <= e <= GOLDILOCKS_BETA
-            else COLORS["neutral"]
-        )
-        for e in entropy
-    ]
+    colors = [(COLORS["goldilocks"] if GOLDILOCKS_ALPHA <= e <= GOLDILOCKS_BETA else COLORS["neutral"]) for e in entropy]
 
     bars = ax2.barh(epitopes, delta_iptm, color=colors, edgecolor="black")
 
@@ -325,7 +319,7 @@ def plot_entropy_binding_correlation(data: Dict, output_dir: Path):
             color="gray",
             alpha=0.7,
             linewidth=2,
-            label=f"Trend (r = -0.625)",
+            label="Trend (r = -0.625)",
         )
 
     # Add Goldilocks zone shading
@@ -378,7 +372,7 @@ def plot_entropy_binding_correlation(data: Dict, output_dir: Path):
     ax.text(
         0.05,
         0.95,
-        f"Correlation: r = -0.625\nInterpretation: Higher entropy change\n→ Smaller binding improvement",
+        "Correlation: r = -0.625\nInterpretation: Higher entropy change\n→ Smaller binding improvement",
         transform=ax.transAxes,
         fontsize=11,
         verticalalignment="top",
@@ -416,10 +410,7 @@ def plot_structural_changes(data: Dict, output_dir: Path):
     x = np.arange(len(structural))
     width = 0.35
 
-    labels = [
-        f"{row['epitope'].upper()}\n{row['hla'].upper().replace('_', '*')}"
-        for _, row in structural.iterrows()
-    ]
+    labels = [f"{row['epitope'].upper()}\n{row['hla'].upper().replace('_', '*')}" for _, row in structural.iterrows()]
 
     bars1 = ax1.bar(
         x - width / 2,
@@ -594,8 +585,7 @@ def plot_goldilocks_validation(data: Dict, output_dir: Path):
     ax.set_xlabel("Hyperbolic Entropy Change (ΔH)", fontsize=14)
     ax.set_ylabel("Epitope", fontsize=14)
     ax.set_title(
-        "Goldilocks Zone: Immunodominant vs Silent Citrullination Sites\n"
-        "Only moderate perturbations trigger autoimmunity",
+        "Goldilocks Zone: Immunodominant vs Silent Citrullination Sites\n" "Only moderate perturbations trigger autoimmunity",
         fontsize=16,
         fontweight="bold",
     )
@@ -719,11 +709,14 @@ def plot_validation_dashboard(data: Dict, output_dir: Path):
     x = r * np.cos(theta)
     y = r * np.sin(theta)
     ax2.plot(x, y, "k-", linewidth=2)
+    ax2.fill_between(x[50:], y[50:], 0, alpha=0.3, color=COLORS["native"], label="Positive")
     ax2.fill_between(
-        x[50:], y[50:], 0, alpha=0.3, color=COLORS["native"], label="Positive"
-    )
-    ax2.fill_between(
-        x[:50], y[:50], 0, alpha=0.3, color=COLORS["citrullinated"], label="Negative"
+        x[:50],
+        y[:50],
+        0,
+        alpha=0.3,
+        color=COLORS["citrullinated"],
+        label="Negative",
     )
 
     # Correlation arrow
@@ -794,14 +787,24 @@ def plot_validation_dashboard(data: Dict, output_dir: Path):
             "Negative correlation",
             "✓ VALIDATED",
         ],
-        ["Two Pathways", "Disordered + Cryptic", "Both identified", "✓ VALIDATED"],
+        [
+            "Two Pathways",
+            "Disordered + Cryptic",
+            "Both identified",
+            "✓ VALIDATED",
+        ],
         [
             "Proteome Risk Sites",
             "327,510 high-risk",
             "Goldilocks filter",
             "✓ QUANTIFIED",
         ],
-        ["Theory Predictions", "6/6 validated", "p < 0.05 each", "✓ CONFIRMED"],
+        [
+            "Theory Predictions",
+            "6/6 validated",
+            "p < 0.05 each",
+            "✓ CONFIRMED",
+        ],
     ]
 
     table = ax4.table(
@@ -931,8 +934,7 @@ the trace-based autoimmunity model
 
     # Main title
     fig.suptitle(
-        "AlphaFold 3 Analysis: Cross-Validation of RA Autoimmunity Model\n"
-        "Theory-Driven Computational Validation",
+        "AlphaFold 3 Analysis: Cross-Validation of RA Autoimmunity Model\n" "Theory-Driven Computational Validation",
         fontsize=16,
         fontweight="bold",
         y=0.98,
@@ -1097,7 +1099,10 @@ def plot_ptm_pathways(output_dir: Path):
     )
 
     ax2.annotate(
-        "", xy=(0.8, 0.775), xytext=(0.7, 0.775), arrowprops=dict(arrowstyle="->", lw=2)
+        "",
+        xy=(0.8, 0.775),
+        xytext=(0.7, 0.775),
+        arrowprops=dict(arrowstyle="->", lw=2),
     )
     ax2.text(0.75, 0.82, "Direct\npresentation", ha="center", fontsize=9)
 
@@ -1171,7 +1176,10 @@ def plot_ptm_pathways(output_dir: Path):
     )
 
     ax2.annotate(
-        "", xy=(0.8, 0.425), xytext=(0.7, 0.425), arrowprops=dict(arrowstyle="->", lw=2)
+        "",
+        xy=(0.8, 0.425),
+        xytext=(0.7, 0.425),
+        arrowprops=dict(arrowstyle="->", lw=2),
     )
     ax2.text(0.75, 0.35, "Neo-epitope\ngenerated", ha="center", fontsize=9)
 
@@ -1204,7 +1212,14 @@ def plot_ptm_pathways(output_dir: Path):
         fontsize=9,
         style="italic",
     )
-    ax2.text(0.225, 0.27, "Example: FGB_R406", ha="center", fontsize=9, style="italic")
+    ax2.text(
+        0.225,
+        0.27,
+        "Example: FGB_R406",
+        ha="center",
+        fontsize=9,
+        style="italic",
+    )
 
     ax2.set_title(
         "B. Mechanism: Both Pathways Lead to Enhanced HLA Binding",

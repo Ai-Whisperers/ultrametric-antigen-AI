@@ -108,9 +108,7 @@ def create_pmhc_job(name: str, peptide: str, description: str = "") -> dict:
     }
 
 
-def generate_ra_validation_jobs(
-    proteins_data: dict, high_priority_targets: list
-) -> list:
+def generate_ra_validation_jobs(proteins_data: dict, high_priority_targets: list) -> list:
     """Generate AlphaFold jobs for RA validation."""
 
     jobs = []
@@ -157,11 +155,7 @@ def generate_ra_validation_jobs(
         )
 
     # Add 1-2 predicted high-priority sites (not known ACPA)
-    predicted = [
-        t
-        for t in high_priority_targets
-        if not t["is_known_acpa"] and t["ptm_type"] == "R->Q"
-    ]
+    predicted = [t for t in high_priority_targets if not t["is_known_acpa"] and t["ptm_type"] == "R->Q"]
 
     for target in predicted[:2]:
         protein = target["protein"]
@@ -224,7 +218,7 @@ def main():
     print("JOB GENERATION SUMMARY")
     print("=" * 70)
     print(f"\n  Total jobs generated: {len(jobs)}")
-    print(f"\n  Jobs:")
+    print("\n  Jobs:")
     for i, job in enumerate(jobs, 1):
         meta = job.get("_metadata", {})
         desc = meta.get("description", job["name"])

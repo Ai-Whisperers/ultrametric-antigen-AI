@@ -14,9 +14,7 @@ import numpy as np
 import torch
 
 
-def evaluate_coverage(
-    samples: torch.Tensor, total_operations: int = 19683
-) -> Tuple[int, float]:
+def evaluate_coverage(samples: torch.Tensor, total_operations: int = 19683) -> Tuple[int, float]:
     """Evaluate operation coverage from generated samples.
 
     Args:
@@ -38,7 +36,10 @@ def evaluate_coverage(
 
 
 def compute_latent_entropy(
-    z: torch.Tensor, num_bins: int = 50, range_min: float = -3.0, range_max: float = 3.0
+    z: torch.Tensor,
+    num_bins: int = 50,
+    range_min: float = -3.0,
+    range_max: float = 3.0,
 ) -> torch.Tensor:
     """Estimate latent entropy using histogram method.
 
@@ -114,9 +115,7 @@ def compute_diversity_score(samples_A: torch.Tensor, samples_B: torch.Tensor) ->
     return diversity
 
 
-def compute_reconstruction_accuracy(
-    inputs: torch.Tensor, outputs: torch.Tensor, threshold: float = 0.5
-) -> float:
+def compute_reconstruction_accuracy(inputs: torch.Tensor, outputs: torch.Tensor, threshold: float = 0.5) -> float:
     """Compute reconstruction accuracy.
 
     Args:
@@ -148,9 +147,7 @@ def compute_reconstruction_accuracy(
     return accuracy.item()
 
 
-def analyze_coverage_distribution(
-    samples: torch.Tensor, dimension: int = 9
-) -> Dict[str, Union[float, Dict[int, float]]]:
+def analyze_coverage_distribution(samples: torch.Tensor, dimension: int = 9) -> Dict[str, Union[float, Dict[int, float]]]:
     """Analyze the distribution of covered operations.
 
     Args:

@@ -8,9 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
-import numpy as np
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
 from utils.data_loader import PATHOPHYSIOLOGY_STAGES

@@ -8,7 +8,7 @@
 Tests projection onto the Poincare ball manifold.
 """
 
-import pytest
+import pytest  # noqa: F401 - used for fixtures
 import torch
 
 from src.geometry.poincare import project_to_poincare

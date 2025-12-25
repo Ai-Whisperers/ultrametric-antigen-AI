@@ -8,7 +8,6 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-import json
 
 import numpy as np
 
@@ -23,7 +22,6 @@ try:
 except ImportError:
     HAS_PLOTLY = False
     import matplotlib.pyplot as plt
-    from mpl_toolkits.mplot3d import Axes3D
 
 
 def generate_cluster_centers(n_clusters=21):
@@ -46,14 +44,22 @@ def generate_cluster_centers(n_clusters=21):
     for i, aa in enumerate(aa_groups["hydrophobic"]):
         angle = (i / len(aa_groups["hydrophobic"])) * np.pi
         centers[aa] = np.array(
-            [2 * np.cos(angle), 2 * np.sin(angle), -1 + np.random.randn() * 0.2]
+            [
+                2 * np.cos(angle),
+                2 * np.sin(angle),
+                -1 + np.random.randn() * 0.2,
+            ]
         )
 
     # Polar cluster region
     for i, aa in enumerate(aa_groups["polar"]):
         angle = (i / len(aa_groups["polar"])) * np.pi + np.pi / 4
         centers[aa] = np.array(
-            [1.5 * np.cos(angle), 1.5 * np.sin(angle), 0.5 + np.random.randn() * 0.2]
+            [
+                1.5 * np.cos(angle),
+                1.5 * np.sin(angle),
+                0.5 + np.random.randn() * 0.2,
+            ]
         )
 
     # Charged positive (including R - arginine)
@@ -249,7 +255,7 @@ def create_plotly_visualization():
 
 def create_matplotlib_fallback():
     """Create 3D visualization with matplotlib as fallback."""
-    from utils.plotting import PALETTE, save_figure, setup_scientific_style
+    from utils.plotting import setup_scientific_style
 
     setup_scientific_style()
     centers = generate_cluster_centers()
@@ -316,7 +322,8 @@ def create_matplotlib_fallback():
     ax.set_ylabel("Dimension 2")
     ax.set_zlabel("Dimension 3")
     ax.set_title(
-        "P-adic Cluster Structure\nCitrullination Boundary Crossing", fontweight="bold"
+        "P-adic Cluster Structure\nCitrullination Boundary Crossing",
+        fontweight="bold",
     )
 
     return fig

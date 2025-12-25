@@ -1,4 +1,3 @@
-import pytest
 import torch
 
 from src.encoders.codon_encoder import CodonEncoder

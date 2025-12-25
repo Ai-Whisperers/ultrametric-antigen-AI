@@ -23,7 +23,6 @@ from pathlib import Path
 
 import numpy as np
 import torch
-import torch.nn as nn
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).resolve().parents[5]
@@ -34,13 +33,7 @@ def load_decoder():
     """Load the v5.5 decoder for intervention testing."""
     from src.models.ternary_vae import FrozenDecoder
 
-    checkpoint_path = (
-        Path(__file__).parent.parent
-        / "sandbox-training"
-        / "checkpoints"
-        / "v5_5"
-        / "best.pt"
-    )
+    checkpoint_path = Path(__file__).parent.parent / "sandbox-training" / "checkpoints" / "v5_5" / "best.pt"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
@@ -183,9 +176,7 @@ def hierarchical_sampling(embeddings, valuations, n_per_level=20):
         if n_sample > 0:
             idx = np.random.choice(n_available, n_sample, replace=False)
             samples.extend(level_embeddings[idx])
-            sample_info.extend(
-                [{"valuation": v, "index": int(level_indices[i])} for i in idx]
-            )
+            sample_info.extend([{"valuation": v, "index": int(level_indices[i])} for i in idx])
 
     return np.array(samples), sample_info
 
@@ -224,9 +215,7 @@ def run_test():
     # Hierarchical sampling (O(log n) instead of O(n))
     print("\nHierarchical sampling (O(log n))...")
     samples, sample_info = hierarchical_sampling(embeddings, valuations, n_per_level=15)
-    print(
-        f"Sampled {len(samples)} points across {len(set(valuations))-1} hierarchy levels"
-    )
+    print(f"Sampled {len(samples)} points across {len(set(valuations))-1} hierarchy levels")
 
     # Compute control matrices for all samples
     print("\nComputing intervention independence (control matrices)...")
@@ -236,7 +225,13 @@ def run_test():
 
     # Stratify by radius bins
     sample_radii = np.linalg.norm(samples, axis=1)
-    radius_bins = [(0.4, 0.55), (0.55, 0.65), (0.65, 0.75), (0.75, 0.85), (0.85, 0.95)]
+    radius_bins = [
+        (0.4, 0.55),
+        (0.55, 0.65),
+        (0.65, 0.75),
+        (0.75, 0.85),
+        (0.85, 0.95),
+    ]
 
     for i, (z, info) in enumerate(zip(samples, sample_info)):
         if i % 20 == 0:
@@ -278,9 +273,7 @@ def run_test():
     print("\n" + "=" * 70)
     print("RESULTS: Effective Dimensions by Radius")
     print("=" * 70)
-    print(
-        f"\n{'Radius Bin':<15} {'N':<5} {'Eff Dims':<10} {'Overlap':<10} {'Active Dims':<12}"
-    )
+    print(f"\n{'Radius Bin':<15} {'N':<5} {'Eff Dims':<10} {'Overlap':<10} {'Active Dims':<12}")
     print("-" * 60)
 
     bin_summary = {}
@@ -292,9 +285,7 @@ def run_test():
         avg_overlap = np.mean([r["overlap"] for r in bin_results])
         avg_active = np.mean([r["active_dims"] for r in bin_results])
 
-        print(
-            f"{bin_key:<15} {n:<5} {avg_eff_dims:<10.2f} {avg_overlap:<10.3f} {avg_active:<12.2f}"
-        )
+        print(f"{bin_key:<15} {n:<5} {avg_eff_dims:<10.2f} {avg_overlap:<10.3f} {avg_active:<12.2f}")
 
         bin_summary[bin_key] = {
             "n_samples": n,
@@ -329,7 +320,7 @@ def run_test():
         print(f"  Effective dimensions: {outer_dims:.2f}")
         print(f"  Control overlap: {outer_overlap:.3f}")
 
-        print(f"\nChange from inner to outer:")
+        print("\nChange from inner to outer:")
         print(f"  Effective dims: {dims_increase:+.2f}")
         print(f"  Overlap: {-overlap_decrease:+.3f}")
 
@@ -339,16 +330,12 @@ def run_test():
         print("-" * 70)
 
         if dims_increase > 0.5 or overlap_decrease > 0.05:
-            print(
-                "SUPPORTED: Curvature appears to create additional degrees of freedom."
-            )
+            print("SUPPORTED: Curvature appears to create additional degrees of freedom.")
             print(f"  - Effective dims increase by {dims_increase:.1f} toward boundary")
             print(f"  - Control overlap decreases by {overlap_decrease:.3f}")
             verdict = "supported"
         elif dims_increase < -0.5 or overlap_decrease < -0.05:
-            print(
-                "CONTRARY: Curvature appears to REDUCE degrees of freedom near boundary."
-            )
+            print("CONTRARY: Curvature appears to REDUCE degrees of freedom near boundary.")
             verdict = "contrary"
         else:
             print("INCONCLUSIVE: No clear trend in effective dimensions with radius.")
@@ -374,11 +361,7 @@ def run_test():
 
     for v in sorted(val_results.keys()):
         vr = val_results[v]
-        print(
-            f"v_3 = {v:<5} {len(vr):<5} "
-            f"{np.mean([r['effective_dims'] for r in vr]):<10.2f} "
-            f"{np.mean([r['overlap'] for r in vr]):<10.3f}"
-        )
+        print(f"v_3 = {v:<5} {len(vr):<5} " f"{np.mean([r['effective_dims'] for r in vr]):<10.2f} " f"{np.mean([r['overlap'] for r in vr]):<10.3f}")
 
     # Save results
     results_dir = Path(__file__).parent / "results"
@@ -402,10 +385,7 @@ def run_test():
         if isinstance(obj, np.ndarray):
             return obj.tolist()
         if isinstance(obj, dict):
-            return {
-                str(k) if isinstance(k, np.integer) else k: convert_numpy(v)
-                for k, v in obj.items()
-            }
+            return {str(k) if isinstance(k, np.integer) else k: convert_numpy(v) for k, v in obj.items()}
         if isinstance(obj, list):
             return [convert_numpy(i) for i in obj]
         return obj

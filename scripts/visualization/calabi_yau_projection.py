@@ -422,7 +422,9 @@ def create_static_visualizations(data, output_path):
 
     plt.tight_layout()
     plt.savefig(
-        output_path / "calabi_yau_projections.png", dpi=150, bbox_inches="tight"
+        output_path / "calabi_yau_projections.png",
+        dpi=150,
+        bbox_inches="tight",
     )
     plt.close()
     print(f'Saved: {output_path / "calabi_yau_projections.png"}')
@@ -453,7 +455,13 @@ def create_high_res_visualization(data, output_path):
     for idx, (elev, azim) in enumerate(angles):
         ax = fig.add_subplot(2, 4, idx + 1, projection="3d")
         ax.scatter(
-            proj[:, 0], proj[:, 1], proj[:, 2], c=acc_A, cmap="viridis", s=2, alpha=0.7
+            proj[:, 0],
+            proj[:, 1],
+            proj[:, 2],
+            c=acc_A,
+            cmap="viridis",
+            s=2,
+            alpha=0.7,
         )
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
@@ -467,7 +475,9 @@ def create_high_res_visualization(data, output_path):
     )
     plt.tight_layout()
     plt.savefig(
-        output_path / "calabi_yau_quintic_highres.png", dpi=200, bbox_inches="tight"
+        output_path / "calabi_yau_quintic_highres.png",
+        dpi=200,
+        bbox_inches="tight",
     )
     plt.close()
     print(f'Saved: {output_path / "calabi_yau_quintic_highres.png"}')

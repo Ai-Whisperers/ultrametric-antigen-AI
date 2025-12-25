@@ -55,9 +55,7 @@ def get_manifold(c: float = 1.0) -> GeooptPoincareBall:
     return _manifold_cache[c]
 
 
-def poincare_distance(
-    x: torch.Tensor, y: torch.Tensor, c: float = 1.0, keepdim: bool = False
-) -> torch.Tensor:
+def poincare_distance(x: torch.Tensor, y: torch.Tensor, c: float = 1.0, keepdim: bool = False) -> torch.Tensor:
     """Compute Poincare distance between points.
 
     Uses geoopt for numerical stability.
@@ -75,9 +73,7 @@ def poincare_distance(
     return manifold.dist(x, y, keepdim=keepdim)
 
 
-def project_to_poincare(
-    z: torch.Tensor, max_norm: float = 0.95, c: float = 1.0
-) -> torch.Tensor:
+def project_to_poincare(z: torch.Tensor, max_norm: float = 0.95, c: float = 1.0) -> torch.Tensor:
     """Project points onto the Poincare ball.
 
     Uses geoopt.projx for stability at boundary.
@@ -96,9 +92,7 @@ def project_to_poincare(
 
     # Apply additional max_norm constraint if needed
     norm = torch.norm(z_proj, dim=-1, keepdim=True)
-    scale = torch.where(
-        norm > max_norm, max_norm / (norm + 1e-10), torch.ones_like(norm)
-    )
+    scale = torch.where(norm > max_norm, max_norm / (norm + 1e-10), torch.ones_like(norm))
     return z_proj * scale
 
 
@@ -119,9 +113,7 @@ def exp_map_zero(v: torch.Tensor, c: float = 1.0) -> torch.Tensor:
     return manifold.expmap(origin, v)
 
 
-def log_map_zero(
-    z: torch.Tensor, c: float = 1.0, max_norm: float = 0.95
-) -> torch.Tensor:
+def log_map_zero(z: torch.Tensor, c: float = 1.0, max_norm: float = 0.95) -> torch.Tensor:
     """Logarithmic map from Poincare ball to tangent space at origin.
 
     log_0(z) = arctanh(sqrt(c) * ||z||) * z / (sqrt(c) * ||z||)
@@ -174,9 +166,7 @@ def lambda_x(x: torch.Tensor, c: float = 1.0, keepdim: bool = True) -> torch.Ten
     return manifold.lambda_x(x, keepdim=keepdim)
 
 
-def parallel_transport(
-    x: torch.Tensor, y: torch.Tensor, v: torch.Tensor, c: float = 1.0
-) -> torch.Tensor:
+def parallel_transport(x: torch.Tensor, y: torch.Tensor, v: torch.Tensor, c: float = 1.0) -> torch.Tensor:
     """Parallel transport tangent vector v from x to y.
 
     Args:
@@ -242,16 +232,12 @@ class PoincareModule(nn.Module):
         """Conformal factor at x."""
         return lambda_x(x, self.c)
 
-    def transport(
-        self, x: torch.Tensor, y: torch.Tensor, v: torch.Tensor
-    ) -> torch.Tensor:
+    def transport(self, x: torch.Tensor, y: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
         """Parallel transport v from x to y."""
         return parallel_transport(x, y, v, self.c)
 
 
-def create_manifold_parameter(
-    data: torch.Tensor, c: float = 1.0, requires_grad: bool = True
-) -> ManifoldParameter:
+def create_manifold_parameter(data: torch.Tensor, c: float = 1.0, requires_grad: bool = True) -> ManifoldParameter:
     """Create a learnable parameter that lives on the Poincare ball.
 
     This wraps a tensor as a ManifoldParameter, which:
@@ -291,9 +277,7 @@ def create_manifold_tensor(data: torch.Tensor, c: float = 1.0) -> ManifoldTensor
     return ManifoldTensor(data_proj, manifold=manifold)
 
 
-def get_riemannian_optimizer(
-    params, lr: float = 1e-3, optimizer_type: str = "adam", **kwargs
-):
+def get_riemannian_optimizer(params, lr: float = 1e-3, optimizer_type: str = "adam", **kwargs):
     """Get a Riemannian optimizer for hyperbolic parameters.
 
     Args:

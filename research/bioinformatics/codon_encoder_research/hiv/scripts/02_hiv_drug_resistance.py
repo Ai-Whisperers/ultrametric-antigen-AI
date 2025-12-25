@@ -260,9 +260,7 @@ def analyze_resistance(encoder, mutation_name, mutation_data):
     mut_codon = AA_TO_CODON.get(mut_aa, get_codons_for_aa(mut_aa)[0])
     wt_emb = get_embedding(encoder, wt_codon)
     mut_emb = get_embedding(encoder, mut_codon)
-    dist = poincare_distance(
-        torch.tensor(wt_emb).unsqueeze(0), torch.tensor(mut_emb).unsqueeze(0)
-    ).item()
+    dist = poincare_distance(torch.tensor(wt_emb).unsqueeze(0), torch.tensor(mut_emb).unsqueeze(0)).item()
     return {
         "mutation": mutation_name,
         "hyperbolic_distance": dist,
@@ -291,9 +289,7 @@ def main():
         by_class[drug_class].append(r["hyperbolic_distance"])
 
         drugs_str = ", ".join(r["drugs"])
-        print(
-            f"{r['mutation']:8s} [{r['class']:5s}]: d={r['hyperbolic_distance']:.3f}, drugs=[{drugs_str}]"
-        )
+        print(f"{r['mutation']:8s} [{r['class']:5s}]: d={r['hyperbolic_distance']:.3f}, drugs=[{drugs_str}]")
 
     # Summary by class
     print("\n" + "=" * 60)

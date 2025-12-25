@@ -25,9 +25,7 @@ from scipy.sparse.linalg import eigsh
 from tqdm import tqdm
 
 
-def poincare_distance(
-    u: torch.Tensor, v: torch.Tensor, eps: float = 1e-8
-) -> torch.Tensor:
+def poincare_distance(u: torch.Tensor, v: torch.Tensor, eps: float = 1e-8) -> torch.Tensor:
     """Compute Poincaré ball distance between points u and v.
 
     d(u, v) = arcosh(1 + 2 * ||u - v||^2 / ((1 - ||u||^2)(1 - ||v||^2)))
@@ -74,9 +72,7 @@ def compute_pairwise_distances(z: torch.Tensor, batch_size: int = 1000) -> torch
     return distances
 
 
-def build_graph_laplacian(
-    distances: torch.Tensor, sigma: float = 1.0, k_neighbors: int = None
-) -> torch.Tensor:
+def build_graph_laplacian(distances: torch.Tensor, sigma: float = 1.0, k_neighbors: int = None) -> torch.Tensor:
     """Build graph Laplacian from distance matrix.
 
     L = D - W where W_ij = exp(-d_ij^2 / (2*sigma^2))
@@ -300,7 +296,10 @@ def main():
         help="Output directory",
     )
     parser.add_argument(
-        "--sigma", type=float, default=1.0, help="Kernel bandwidth for Laplacian"
+        "--sigma",
+        type=float,
+        default=1.0,
+        help="Kernel bandwidth for Laplacian",
     )
     parser.add_argument(
         "--k-neighbors",
@@ -332,16 +331,14 @@ def main():
     # Compute pairwise distances
     distances = compute_pairwise_distances(z_hyp)
 
-    print(f"\nDistance statistics:")
+    print("\nDistance statistics:")
     print(f"  Min: {distances.min():.4f}")
     print(f"  Max: {distances.max():.4f}")
     print(f"  Mean: {distances.mean():.4f}")
 
     # Build Laplacian
     print(f"\nBuilding graph Laplacian (sigma={args.sigma})...")
-    L, W, D = build_graph_laplacian(
-        distances, sigma=args.sigma, k_neighbors=args.k_neighbors
-    )
+    L, W, D = build_graph_laplacian(distances, sigma=args.sigma, k_neighbors=args.k_neighbors)
 
     print(f"Laplacian shape: {L.shape}")
     print(f"Laplacian sparsity: {(L == 0).sum().item() / L.numel():.2%}")
@@ -363,7 +360,7 @@ def main():
     print("\nAnalyzing spacing distribution...")
     stats_results = analyze_spacing_distribution(spacings, output_dir)
 
-    print(f"\n=== Spacing Analysis Results ===")
+    print("\n=== Spacing Analysis Results ===")
     print(f"KS statistic (vs GUE): {stats_results['ks_stat_gue']:.4f}")
     print(f"KS p-value (vs GUE): {stats_results['ks_pval_gue']:.4f}")
     print(f"KS statistic (vs Poisson): {stats_results['ks_stat_poisson']:.4f}")

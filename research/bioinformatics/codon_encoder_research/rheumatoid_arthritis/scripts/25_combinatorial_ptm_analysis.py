@@ -23,11 +23,10 @@ Version: 1.0
 
 import json
 import sys
-from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -41,9 +40,7 @@ matplotlib.use("Agg")
 SCRIPT_DIR = Path(__file__).parent
 sys.path.insert(0, str(SCRIPT_DIR))
 
-from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot,
-                              encode_codon_hyperbolic, hyperbolic_centroid,
-                              load_codon_encoder, load_hyperbolic_encoder,
+from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot, load_codon_encoder,
                               poincare_distance)
 
 
@@ -180,11 +177,7 @@ def compute_ptm_effect(
             codon = AA_TO_CODON.get(aa)
             if codon is None or codon == "NNN":
                 continue
-            onehot = (
-                torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-                .unsqueeze(0)
-                .to(device)
-            )
+            onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
             with torch.no_grad():
                 probs, emb = encoder.get_cluster_probs(onehot)
                 embeddings.append(emb.cpu().numpy().squeeze())
@@ -202,9 +195,7 @@ def compute_ptm_effect(
     mod_centroid = np.mean(mod_emb, axis=0)
 
     # Centroid shift (Poincaré distance)
-    centroid_shift = poincare_distance(
-        torch.tensor(orig_centroid).float(), torch.tensor(mod_centroid).float()
-    ).item()
+    centroid_shift = poincare_distance(torch.tensor(orig_centroid).float(), torch.tensor(mod_centroid).float()).item()
 
     # Entropy
     orig_mean_probs = np.mean(orig_probs, axis=0)
@@ -235,9 +226,7 @@ def compute_ptm_effect(
     }
 
 
-def analyze_rn_pair(
-    pair: RNPair, sequence: str, encoder, device: str = "cpu"
-) -> Optional[Dict]:
+def analyze_rn_pair(pair: RNPair, sequence: str, encoder, device: str = "cpu") -> Optional[Dict]:
     """
     Analyze combinatorial effects for an R-N pair.
 
@@ -269,7 +258,12 @@ def analyze_rn_pair(
 
     # Combined R→Q + N→Q
     combined_effect = compute_ptm_effect(
-        sequence, [pair.r_position, pair.n_position], ["R", "N"], "Q", encoder, device
+        sequence,
+        [pair.r_position, pair.n_position],
+        ["R", "N"],
+        "Q",
+        encoder,
+        device,
     )
 
     if r_effect is None or n_effect is None or combined_effect is None:
@@ -279,15 +273,9 @@ def analyze_rn_pair(
     # Synergy = Combined - (R_alone + N_alone)
     # Positive synergy = combinatorial effect is larger than sum of parts
 
-    shift_synergy = combined_effect["centroid_shift"] - (
-        r_effect["centroid_shift"] + n_effect["centroid_shift"]
-    )
-    entropy_synergy = combined_effect["entropy_change"] - (
-        r_effect["entropy_change"] + n_effect["entropy_change"]
-    )
-    js_synergy = combined_effect["js_divergence"] - (
-        r_effect["js_divergence"] + n_effect["js_divergence"]
-    )
+    shift_synergy = combined_effect["centroid_shift"] - (r_effect["centroid_shift"] + n_effect["centroid_shift"])
+    entropy_synergy = combined_effect["entropy_change"] - (r_effect["entropy_change"] + n_effect["entropy_change"])
+    js_synergy = combined_effect["js_divergence"] - (r_effect["js_divergence"] + n_effect["js_divergence"])
 
     # Multiplicative synergy ratio
     expected_shift = r_effect["centroid_shift"] + n_effect["centroid_shift"]
@@ -299,14 +287,10 @@ def analyze_rn_pair(
 
     r_in_goldilocks = goldilocks_lower <= r_effect["relative_shift"] <= goldilocks_upper
     n_in_goldilocks = goldilocks_lower <= n_effect["relative_shift"] <= goldilocks_upper
-    combined_in_goldilocks = (
-        goldilocks_lower <= combined_effect["relative_shift"] <= goldilocks_upper
-    )
+    combined_in_goldilocks = goldilocks_lower <= combined_effect["relative_shift"] <= goldilocks_upper
 
     # Key insight: Does combination push into Goldilocks when individual didn't?
-    potentiation = (
-        combined_in_goldilocks and not r_in_goldilocks and not n_in_goldilocks
-    )
+    potentiation = combined_in_goldilocks and not r_in_goldilocks and not n_in_goldilocks
 
     return {
         "pair": {
@@ -372,7 +356,9 @@ def plot_synergy_analysis(results: List[Dict], output_dir: Path):
     ax.set_xlabel("Expected Shift (R + N) [%]", fontsize=12)
     ax.set_ylabel("Combined Shift [%]", fontsize=12)
     ax.set_title(
-        "Synergy Analysis: Combined vs Expected", fontsize=12, fontweight="bold"
+        "Synergy Analysis: Combined vs Expected",
+        fontsize=12,
+        fontweight="bold",
     )
     ax.legend(loc="upper left")
     cbar = plt.colorbar(ax.collections[0], ax=ax)
@@ -381,11 +367,21 @@ def plot_synergy_analysis(results: List[Dict], output_dir: Path):
 
     # 2. Synergy ratio distribution
     ax = axes[0, 1]
-    ax.hist(synergy_ratios, bins=20, alpha=0.7, color="steelblue", edgecolor="white")
+    ax.hist(
+        synergy_ratios,
+        bins=20,
+        alpha=0.7,
+        color="steelblue",
+        edgecolor="white",
+    )
     ax.axvline(1.0, color="red", linestyle="--", lw=2, label="No synergy (ratio=1)")
     ax.axvline(1.1, color="green", linestyle="--", lw=1, label="Synergistic threshold")
     ax.axvline(
-        0.9, color="orange", linestyle="--", lw=1, label="Antagonistic threshold"
+        0.9,
+        color="orange",
+        linestyle="--",
+        lw=1,
+        label="Antagonistic threshold",
     )
 
     synergistic = sum(1 for r in synergy_ratios if r > 1.1)
@@ -404,7 +400,12 @@ def plot_synergy_analysis(results: List[Dict], output_dir: Path):
     # 3. Effect of R-N distance on synergy
     ax = axes[1, 0]
     ax.scatter(
-        distances, synergy_ratios, alpha=0.6, s=50, c="steelblue", edgecolors="white"
+        distances,
+        synergy_ratios,
+        alpha=0.6,
+        s=50,
+        c="steelblue",
+        edgecolors="white",
     )
 
     # Trend line
@@ -439,7 +440,12 @@ def plot_synergy_analysis(results: List[Dict], output_dir: Path):
     colors = ["#e53935", "#1e88e5", "#9c27b0", "#ff9800"]
 
     bars = ax.bar(
-        categories, values, color=colors, alpha=0.7, edgecolor="white", linewidth=2
+        categories,
+        values,
+        color=colors,
+        alpha=0.7,
+        edgecolor="white",
+        linewidth=2,
     )
 
     for bar, val in zip(bars, values):
@@ -469,27 +475,24 @@ def plot_synergy_analysis(results: List[Dict], output_dir: Path):
     )
     plt.tight_layout()
     plt.savefig(
-        output_dir / "combinatorial_synergy_analysis.png", dpi=300, bbox_inches="tight"
+        output_dir / "combinatorial_synergy_analysis.png",
+        dpi=300,
+        bbox_inches="tight",
     )
     plt.close()
-    print(f"  Saved: combinatorial_synergy_analysis.png")
+    print("  Saved: combinatorial_synergy_analysis.png")
 
 
 def plot_top_synergistic_pairs(results: List[Dict], output_dir: Path, top_n: int = 15):
     """Plot the top synergistic pairs."""
 
     # Sort by synergy ratio
-    sorted_results = sorted(
-        results, key=lambda x: x["synergy"]["synergy_ratio"], reverse=True
-    )
+    sorted_results = sorted(results, key=lambda x: x["synergy"]["synergy_ratio"], reverse=True)
     top_pairs = sorted_results[:top_n]
 
     fig, ax = plt.subplots(figsize=(12, 8))
 
-    labels = [
-        f"{r['pair']['protein'][:12]}\nR{r['pair']['r_position']}-N{r['pair']['n_position']}"
-        for r in top_pairs
-    ]
+    labels = [f"{r['pair']['protein'][:12]}\nR{r['pair']['r_position']}-N{r['pair']['n_position']}" for r in top_pairs]
 
     r_shifts = [r["r_alone"]["relative_shift"] * 100 for r in top_pairs]
     n_shifts = [r["n_alone"]["relative_shift"] * 100 for r in top_pairs]
@@ -499,11 +502,21 @@ def plot_top_synergistic_pairs(results: List[Dict], output_dir: Path, top_n: int
     width = 0.25
 
     bars1 = ax.bar(
-        x - width, r_shifts, width, label="R→Q alone", color="#e53935", alpha=0.7
+        x - width,
+        r_shifts,
+        width,
+        label="R→Q alone",
+        color="#e53935",
+        alpha=0.7,
     )
     bars2 = ax.bar(x, n_shifts, width, label="N→Q alone", color="#1e88e5", alpha=0.7)
     bars3 = ax.bar(
-        x + width, combined_shifts, width, label="Combined", color="#9c27b0", alpha=0.7
+        x + width,
+        combined_shifts,
+        width,
+        label="Combined",
+        color="#9c27b0",
+        alpha=0.7,
     )
 
     # Goldilocks zone
@@ -520,7 +533,7 @@ def plot_top_synergistic_pairs(results: List[Dict], output_dir: Path, top_n: int
     plt.tight_layout()
     plt.savefig(output_dir / "top_synergistic_pairs.png", dpi=300, bbox_inches="tight")
     plt.close()
-    print(f"  Saved: top_synergistic_pairs.png")
+    print("  Saved: top_synergistic_pairs.png")
 
 
 def main():
@@ -573,22 +586,12 @@ def main():
 
     synergistic = [r for r in results if r["synergy"]["is_synergistic"]]
     antagonistic = [r for r in results if r["synergy"]["is_antagonistic"]]
-    additive = [
-        r
-        for r in results
-        if not r["synergy"]["is_synergistic"] and not r["synergy"]["is_antagonistic"]
-    ]
+    additive = [r for r in results if not r["synergy"]["is_synergistic"] and not r["synergy"]["is_antagonistic"]]
 
     print(f"\n  Total pairs analyzed: {len(results)}")
-    print(
-        f"  Synergistic (ratio > 1.1): {len(synergistic)} ({100*len(synergistic)/len(results):.1f}%)"
-    )
-    print(
-        f"  Antagonistic (ratio < 0.9): {len(antagonistic)} ({100*len(antagonistic)/len(results):.1f}%)"
-    )
-    print(
-        f"  Additive (0.9-1.1): {len(additive)} ({100*len(additive)/len(results):.1f}%)"
-    )
+    print(f"  Synergistic (ratio > 1.1): {len(synergistic)} ({100*len(synergistic)/len(results):.1f}%)")
+    print(f"  Antagonistic (ratio < 0.9): {len(antagonistic)} ({100*len(antagonistic)/len(results):.1f}%)")
+    print(f"  Additive (0.9-1.1): {len(additive)} ({100*len(additive)/len(results):.1f}%)")
 
     # Goldilocks potentiation
     potentiation = [r for r in results if r["goldilocks"]["potentiation"]]
@@ -618,9 +621,7 @@ def main():
                 print("  → Synergy DECREASES with distance (glycan proximity matters)")
 
     # Top synergistic pairs
-    sorted_by_synergy = sorted(
-        results, key=lambda x: x["synergy"]["synergy_ratio"], reverse=True
-    )
+    sorted_by_synergy = sorted(results, key=lambda x: x["synergy"]["synergy_ratio"], reverse=True)
     print("\n  Top 5 Synergistic Pairs:")
     for res in sorted_by_synergy[:5]:
         print(
@@ -663,18 +664,10 @@ def main():
         "additive_count": len(additive),
         "potentiation_count": len(potentiation),
         "summary": {
-            "synergistic_rate": (
-                float(len(synergistic) / len(results)) if results else 0
-            ),
-            "potentiation_rate": (
-                float(len(potentiation) / len(results)) if results else 0
-            ),
-            "mean_synergy_ratio": (
-                float(np.mean(synergy_ratios)) if synergy_ratios else 0
-            ),
-            "distance_synergy_correlation": (
-                float(corr_r) if corr_r is not None else None
-            ),
+            "synergistic_rate": (float(len(synergistic) / len(results)) if results else 0),
+            "potentiation_rate": (float(len(potentiation) / len(results)) if results else 0),
+            "mean_synergy_ratio": (float(np.mean(synergy_ratios)) if synergy_ratios else 0),
+            "distance_synergy_correlation": (float(corr_r) if corr_r is not None else None),
         },
         "top_synergistic": [convert_numpy(r) for r in sorted_by_synergy[:20]],
         "potentiation_cases": [convert_numpy(r) for r in potentiation],
@@ -706,26 +699,24 @@ Interpretation:
     )
 
     if len(potentiation) > 0:
-        print(f"  ✓ POTENTIATION DETECTED")
-        print(
-            f"    {len(potentiation)} R-N pairs enter Goldilocks Zone ONLY when combined"
-        )
-        print(f"    This suggests glycan removal can expose citrullination sites")
-        print(f"    to immune recognition")
+        print("  ✓ POTENTIATION DETECTED")
+        print(f"    {len(potentiation)} R-N pairs enter Goldilocks Zone ONLY when combined")
+        print("    This suggests glycan removal can expose citrullination sites")
+        print("    to immune recognition")
     else:
-        print(f"  ✗ No potentiation detected")
-        print(f"    Glycan removal does not push citrullination into Goldilocks Zone")
+        print("  ✗ No potentiation detected")
+        print("    Glycan removal does not push citrullination into Goldilocks Zone")
 
     if len(synergistic) > len(antagonistic):
-        print(f"\n  Overall trend: SYNERGISTIC")
-        print(f"    Combined effects tend to be larger than sum of parts")
+        print("\n  Overall trend: SYNERGISTIC")
+        print("    Combined effects tend to be larger than sum of parts")
     elif len(antagonistic) > len(synergistic):
-        print(f"\n  Overall trend: ANTAGONISTIC")
-        print(f"    Combined effects tend to be smaller than sum of parts")
-        print(f"    Glycans may stabilize protein geometry")
+        print("\n  Overall trend: ANTAGONISTIC")
+        print("    Combined effects tend to be smaller than sum of parts")
+        print("    Glycans may stabilize protein geometry")
     else:
-        print(f"\n  Overall trend: ADDITIVE")
-        print(f"    Combined effects approximately equal sum of parts")
+        print("\n  Overall trend: ADDITIVE")
+        print("    Combined effects approximately equal sum of parts")
 
     print(f"\nOutput: {output_dir}")
     print("=" * 80)

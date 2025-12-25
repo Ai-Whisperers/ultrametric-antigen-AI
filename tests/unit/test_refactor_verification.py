@@ -3,7 +3,6 @@
 # Licensed under the PolyForm Noncommercial License 1.0.0
 # See LICENSE file in the repository root for full license text.
 
-import pytest
 import torch
 import torch.nn as nn
 
@@ -54,7 +53,7 @@ def test_model_harness_verification():
     # Output keys: z_A_hyp, z_B_hyp, logits_A
     input_shape = (4, 9)
     expected_keys = ["z_A_hyp", "z_B_hyp", "logits_A"]
-    output = harness.verify_forward_pass_shapes(input_shape, expected_keys)
+    harness.verify_forward_pass_shapes(input_shape, expected_keys)
 
     # 3. Gradient flow
     # Gradients should flow to projection (trainable)

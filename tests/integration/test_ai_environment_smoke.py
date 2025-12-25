@@ -1,5 +1,4 @@
 import pytest
-import torch
 
 from src.models.ternary_vae import TernaryVAEV5_11
 

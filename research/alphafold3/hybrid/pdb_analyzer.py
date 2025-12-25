@@ -13,9 +13,7 @@ requiring AlphaFold3's C++ extensions.
 
 import gzip
 from pathlib import Path
-from typing import Dict, List, NamedTuple, Optional, Tuple
-
-import numpy as np
+from typing import Dict, List, NamedTuple, Optional
 
 try:
     from Bio.PDB import MMCIFParser, PDBParser
@@ -89,10 +87,7 @@ class PDBAnalyzer:
             pdb_dir: Directory containing PDB/mmCIF files
         """
         if not HAS_BIOPYTHON:
-            raise ImportError(
-                "BioPython is required for PDB analysis. "
-                "Install with: pip install biopython"
-            )
+            raise ImportError("BioPython is required for PDB analysis. " "Install with: pip install biopython")
 
         self.pdb_dir = pdb_dir or Path(__file__).parent.parent / "data" / "pdb"
         self.mmcif_parser = MMCIFParser(QUIET=True)
@@ -133,13 +128,14 @@ class PDBAnalyzer:
             self._structure_cache[pdb_id] = structure
             return structure
 
-        raise FileNotFoundError(
-            f"Structure {pdb_id} not found in {self.pdb_dir}. "
-            f"Run download_integrase_structures.py first."
-        )
+        raise FileNotFoundError(f"Structure {pdb_id} not found in {self.pdb_dir}. " f"Run download_integrase_structures.py first.")
 
     def get_residue_contacts(
-        self, structure: "Structure", chain_id: str, res_id: int, radius: float = 8.0
+        self,
+        structure: "Structure",
+        chain_id: str,
+        res_id: int,
+        radius: float = 8.0,
     ) -> List[ResidueContact]:
         """Find residues in contact with a given position.
 
@@ -203,9 +199,7 @@ class PDBAnalyzer:
 
         return sorted(contacts, key=lambda c: c.distance)
 
-    def get_structural_context(
-        self, pdb_id: str, position: int, chain_id: str = "A"
-    ) -> StructuralContext:
+    def get_structural_context(self, pdb_id: str, position: int, chain_id: str = "A") -> StructuralContext:
         """Get structural context for a residue position.
 
         Args:
@@ -242,9 +236,7 @@ class PDBAnalyzer:
         interface_residue = any(c.contact_type == "interface" for c in contacts)
 
         # Check if near catalytic site
-        catalytic_site = position in self.CATALYTIC_RESIDUES or any(
-            c.res_id in self.CATALYTIC_RESIDUES and c.distance < 8.0 for c in contacts
-        )
+        catalytic_site = position in self.CATALYTIC_RESIDUES or any(c.res_id in self.CATALYTIC_RESIDUES and c.distance < 8.0 for c in contacts)
 
         # Estimate solvent accessibility from contact count
         # Fewer contacts = more exposed
@@ -278,7 +270,12 @@ class PDBAnalyzer:
         return position in self.LEDGF_INTERFACE
 
     def analyze_mutation_site(
-        self, pdb_id: str, position: int, wt_aa: str, mut_aa: str, chain_id: str = "A"
+        self,
+        pdb_id: str,
+        position: int,
+        wt_aa: str,
+        mut_aa: str,
+        chain_id: str = "A",
     ) -> Dict:
         """Analyze the structural impact of a mutation.
 

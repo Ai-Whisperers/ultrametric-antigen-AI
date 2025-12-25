@@ -14,7 +14,7 @@ Version: 1.0
 import json
 from collections import Counter
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 import pandas as pd
 
@@ -103,14 +103,8 @@ def extract_arginine_sites(proteins: Dict) -> List[Dict]:
 
                 site = {
                     "protein_id": acc,
-                    "gene_name": (
-                        prot.get("gene_names", "").split()[0]
-                        if prot.get("gene_names")
-                        else acc
-                    ),
-                    "protein_name": prot.get("protein_name", "")[
-                        :100
-                    ],  # Truncate long names
+                    "gene_name": (prot.get("gene_names", "").split()[0] if prot.get("gene_names") else acc),
+                    "protein_name": prot.get("protein_name", "")[:100],  # Truncate long names
                     "protein_length": len(seq),
                     "r_position": pos,  # 0-indexed position in protein
                     "r_position_normalized": pos / len(seq),  # Relative position
@@ -118,9 +112,7 @@ def extract_arginine_sites(proteins: Dict) -> List[Dict]:
                     "r_pos_in_window": r_pos_in_window,
                     "n_terminal_distance": pos,
                     "c_terminal_distance": len(seq) - pos - 1,
-                    "total_arginines_in_protein": prot.get(
-                        "n_arginines", seq.count("R")
-                    ),
+                    "total_arginines_in_protein": prot.get("n_arginines", seq.count("R")),
                     "is_n_terminal": pos < 20,
                     "is_c_terminal": pos > len(seq) - 20,
                     # Metadata for enrichment
@@ -136,9 +128,7 @@ def extract_arginine_sites(proteins: Dict) -> List[Dict]:
                 site["n_arginines_in_window"] = window.count("R")
                 site["n_lysines_in_window"] = window.count("K")
                 site["n_charged_in_window"] = sum(window.count(aa) for aa in "RKDEH")
-                site["n_hydrophobic_in_window"] = sum(
-                    window.count(aa) for aa in "AVILMFYW"
-                )
+                site["n_hydrophobic_in_window"] = sum(window.count(aa) for aa in "AVILMFYW")
 
                 sites.append(site)
                 protein_arginines.append(pos)
@@ -148,9 +138,7 @@ def extract_arginine_sites(proteins: Dict) -> List[Dict]:
 
         # Progress
         if proteins_processed % 5000 == 0:
-            print(
-                f"  Processed {proteins_processed:,} proteins, found {len(sites):,} R sites..."
-            )
+            print(f"  Processed {proteins_processed:,} proteins, found {len(sites):,} R sites...")
 
     print(f"\n  Total proteins: {proteins_processed:,}")
     print(f"  Proteins with R: {proteins_with_r:,}")
@@ -182,12 +170,8 @@ def compute_site_statistics(sites: List[Dict], output_dir: Path) -> Dict:
     stats["c_terminal_sites"] = sum(1 for s in sites if s["is_c_terminal"])
 
     # Window composition
-    stats["mean_arginines_in_window"] = sum(
-        s["n_arginines_in_window"] for s in sites
-    ) / len(sites)
-    stats["mean_charged_in_window"] = sum(
-        s["n_charged_in_window"] for s in sites
-    ) / len(sites)
+    stats["mean_arginines_in_window"] = sum(s["n_arginines_in_window"] for s in sites) / len(sites)
+    stats["mean_charged_in_window"] = sum(s["n_charged_in_window"] for s in sites) / len(sites)
 
     # Annotations
     stats["sites_with_go"] = sum(1 for s in sites if s["go_bp"])

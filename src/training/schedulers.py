@@ -46,9 +46,7 @@ def linear_schedule(
     return start_val + (end_val - start_val) * progress
 
 
-def cyclic_schedule(
-    epoch: int, base_val: float, amplitude: float, period: int
-) -> float:
+def cyclic_schedule(epoch: int, base_val: float, amplitude: float, period: int) -> float:
     """Cyclic scheduling: base ± amplitude with given period.
 
     P3 FIX: Uses math.cos instead of numpy.cos to avoid potential
@@ -112,10 +110,7 @@ class TemperatureScheduler:
                 amplitude = 0.1 * base_temp
 
                 # Phase 4: Enhanced exploration with temp_boost_amplitude
-                if (
-                    epoch >= self.phase_4_start
-                    and "temp_boost_amplitude" in self.config["vae_a"]
-                ):
+                if epoch >= self.phase_4_start and "temp_boost_amplitude" in self.config["vae_a"]:
                     amplitude = self.config["vae_a"]["temp_boost_amplitude"]
 
                 period = 30

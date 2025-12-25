@@ -81,9 +81,7 @@ def verify_proofs(
             pass
     else:
         print("No checkpoint found/provided. Using random initialization.")
-        print(
-            "(Note: Random models are unlikely to satisfy proofs unless architecture enforces them)"
-        )
+        print("(Note: Random models are unlikely to satisfy proofs unless architecture enforces them)")
 
     model.to(device)
     model.eval()
@@ -151,9 +149,7 @@ def verify_proofs(
     corr, p_val = stats.pearsonr(vals, radii)
 
     print(f"  Correlation (Valuation vs Radius): r={corr:.4f}")
-    print(
-        "  Expected: Negative correlation (higher valuation = closer to origin = smaller radius)"
-    )
+    print("  Expected: Negative correlation (higher valuation = closer to origin = smaller radius)")
 
     if corr < -0.5:
         print("  Status: PASS [OK] (Strong p-adic structure)")
@@ -163,7 +159,11 @@ def verify_proofs(
         print("  Status: FAIL [X] (No/Inverted p-adic structure)")
 
     # Return summary
-    return {"delta": delta, "ultrametricity": ultra_score, "padic_correlation": corr}
+    return {
+        "delta": delta,
+        "ultrametricity": ultra_score,
+        "padic_correlation": corr,
+    }
 
 
 def run_grid_stress_test(device: str = "cuda"):
@@ -209,16 +209,16 @@ def run_grid_stress_test(device: str = "cuda"):
         print(f"\n>> SCENARIO {s['id']}: Dim={s['dim']}, c={s['c']}")
 
         # Initialize model with specific config
-        config = {"latent_dim": s["dim"], "hidden_dim": 64, "curvature": s["c"]}
+        config = {
+            "latent_dim": s["dim"],
+            "hidden_dim": 64,
+            "curvature": s["c"],
+        }
 
         # Run verification
         try:
             res = verify_proofs(model_config=config, device=device)
-            status = (
-                "PASS"
-                if (res["delta"] < 0.5 and res["ultrametricity"] > 0.9)
-                else "FAIL"
-            )
+            status = "PASS" if (res["delta"] < 0.5 and res["ultrametricity"] > 0.9) else "FAIL"
             res["status"] = status
             res["id"] = s["id"]
             results.append(res)
@@ -235,9 +235,7 @@ def run_grid_stress_test(device: str = "cuda"):
         if r["status"] == "CRASH":
             print(f"{r['id']:<6} {'ERROR':<20} {r['status']}")
         else:
-            print(
-                f"{r['id']:<6} {r['delta']:<10.4f} {r['ultrametricity']:<10.4f} {r['status']}"
-            )
+            print(f"{r['id']:<6} {r['delta']:<10.4f} {r['ultrametricity']:<10.4f} {r['status']}")
 
 
 if __name__ == "__main__":
@@ -257,5 +255,6 @@ if __name__ == "__main__":
         run_grid_stress_test()
     else:
         verify_proofs(
-            checkpoint_path=args.checkpoint, model_config={"latent_dim": args.dim}
+            checkpoint_path=args.checkpoint,
+            model_config={"latent_dim": args.dim},
         )

@@ -14,7 +14,6 @@ Key metrics analyzed:
 
 import json
 import warnings
-from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
@@ -28,13 +27,10 @@ warnings.filterwarnings("ignore")
 import importlib.util
 
 # Import from local modules
-from hyperbolic_utils import (AA_TO_CODON, ARGININE_CODONS, codon_to_onehot,
-                              get_results_dir, load_codon_encoder,
-                              poincare_distance, poincare_distance_matrix)
+from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot, get_results_dir,
+                              load_codon_encoder, poincare_distance)
 
-spec = importlib.util.spec_from_file_location(
-    "augmented_db", Path(__file__).parent / "08_augmented_epitope_database.py"
-)
+spec = importlib.util.spec_from_file_location("augmented_db", Path(__file__).parent / "08_augmented_epitope_database.py")
 augmented_db = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(augmented_db)
 RA_AUTOANTIGENS_AUGMENTED = augmented_db.RA_AUTOANTIGENS_AUGMENTED
@@ -57,11 +53,7 @@ def encode_sequence(sequence: str, encoder, device="cpu") -> tuple:
             continue
         codons.append(codon)
 
-        onehot = (
-            torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-            .unsqueeze(0)
-            .to(device)
-        )
+        onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
         with torch.no_grad():
             emb = encoder.encode(onehot).cpu().numpy().squeeze()
             cluster_id, _ = encoder.get_cluster(onehot)
@@ -101,9 +93,7 @@ def compute_mean_neighbor_distance(embeddings: np.ndarray) -> float:
     return float(np.mean(distances))
 
 
-def compute_boundary_potential(
-    embeddings: np.ndarray, cluster_centers: np.ndarray, clusters: list
-) -> float:
+def compute_boundary_potential(embeddings: np.ndarray, cluster_centers: np.ndarray, clusters: list) -> float:
     """Mean distance to nearest different-cluster center."""
     if len(embeddings) == 0:
         return 0.0
@@ -122,9 +112,7 @@ def compute_boundary_potential(
     return float(np.mean(boundary_distances)) if boundary_distances else 0.0
 
 
-def compute_citrullination_shift(
-    sequence: str, arg_positions: list, encoder, device="cpu"
-) -> dict:
+def compute_citrullination_shift(sequence: str, arg_positions: list, encoder, device="cpu") -> dict:
     """Compute embedding shift when arginine is replaced (simulating citrullination)."""
     if not arg_positions:
         return None
@@ -215,14 +203,10 @@ def analyze_epitope(
     embedding_norm = compute_embedding_norm(embeddings)
     cluster_homogeneity = compute_cluster_homogeneity(clusters)
     mean_neighbor_dist = compute_mean_neighbor_distance(embeddings)
-    boundary_potential = compute_boundary_potential(
-        embeddings, cluster_centers, clusters
-    )
+    boundary_potential = compute_boundary_potential(embeddings, cluster_centers, clusters)
 
     # Citrullination shift (only for epitopes with arginine)
-    cit_shift = compute_citrullination_shift(
-        sequence, epitope.get("arg_positions", []), encoder, device
-    )
+    cit_shift = compute_citrullination_shift(sequence, epitope.get("arg_positions", []), encoder, device)
 
     return {
         "epitope_id": epitope["id"],
@@ -242,9 +226,7 @@ def analyze_epitope(
     }
 
 
-def statistical_comparison(
-    immunodominant: list, silent: list, metric_name: str
-) -> dict:
+def statistical_comparison(immunodominant: list, silent: list, metric_name: str) -> dict:
     """Compare metric between immunodominant and silent epitopes."""
     if len(immunodominant) < 2 or len(silent) < 2:
         return None
@@ -257,18 +239,13 @@ def statistical_comparison(
 
     # Effect size (Cohen's d)
     pooled_std = np.sqrt(
-        (
-            (len(imm_values) - 1) * np.var(imm_values, ddof=1)
-            + (len(sil_values) - 1) * np.var(sil_values, ddof=1)
-        )
+        ((len(imm_values) - 1) * np.var(imm_values, ddof=1) + (len(sil_values) - 1) * np.var(sil_values, ddof=1))
         / (len(imm_values) + len(sil_values) - 2)
     )
     cohens_d = (np.mean(imm_values) - np.mean(sil_values)) / (pooled_std + 1e-10)
 
     # Mann-Whitney U (non-parametric)
-    u_stat, u_pvalue = stats.mannwhitneyu(
-        imm_values, sil_values, alternative="two-sided"
-    )
+    u_stat, u_pvalue = stats.mannwhitneyu(imm_values, sil_values, alternative="two-sided")
 
     return {
         "metric": metric_name,
@@ -321,16 +298,12 @@ def main():
     for protein_id, protein in RA_AUTOANTIGENS_AUGMENTED.items():
         print(f"\n{protein_id}: {protein['name']}")
         for epitope in protein["epitopes"]:
-            analysis = analyze_epitope(
-                epitope, protein, encoder, cluster_centers, device
-            )
+            analysis = analyze_epitope(epitope, protein, encoder, cluster_centers, device)
             if analysis:
                 all_analyses.append(analysis)
                 status = "IMM" if analysis["immunodominant"] else "SIL"
                 has_r = "R+" if analysis["has_arginine"] else "R-"
-                print(
-                    f"  [{status}] {epitope['id']}: {epitope['sequence'][:15]}... {has_r}"
-                )
+                print(f"  [{status}] {epitope['id']}: {epitope['sequence'][:15]}... {has_r}")
 
     print(f"\n  Total epitopes analyzed: {len(all_analyses)}")
 
@@ -368,21 +341,13 @@ def main():
         comparison = statistical_comparison(imm_values, sil_values, metric)
         if comparison:
             comparisons[metric] = comparison
-            sig = (
-                "**"
-                if comparison["significant_001"]
-                else ("*" if comparison["significant_005"] else "")
-            )
+            sig = "**" if comparison["significant_001"] else ("*" if comparison["significant_005"] else "")
             print(f"\n{metric.upper()}:")
             print(
                 f"  Immunodominant: {comparison['immunodominant_mean']:.4f} +/- {comparison['immunodominant_std']:.4f} (n={comparison['immunodominant_n']})"
             )
-            print(
-                f"  Silent:         {comparison['silent_mean']:.4f} +/- {comparison['silent_std']:.4f} (n={comparison['silent_n']})"
-            )
-            print(
-                f"  t = {comparison['t_statistic']:.3f}, p = {comparison['p_value']:.4f} {sig}"
-            )
+            print(f"  Silent:         {comparison['silent_mean']:.4f} +/- {comparison['silent_std']:.4f} (n={comparison['silent_n']})")
+            print(f"  t = {comparison['t_statistic']:.3f}, p = {comparison['p_value']:.4f} {sig}")
             print(f"  Cohen's d = {comparison['cohens_d']:.3f}")
             print(f"  Mann-Whitney p = {comparison['mann_whitney_p']:.4f}")
 
@@ -397,7 +362,11 @@ def main():
     print(f"\n  Immunodominant with R: {len(imm_with_r)}")
     print(f"  Silent with R: {len(sil_with_r)}")
 
-    cit_metrics = ["mean_centroid_shift", "mean_js_divergence", "mean_entropy_change"]
+    cit_metrics = [
+        "mean_centroid_shift",
+        "mean_js_divergence",
+        "mean_entropy_change",
+    ]
 
     for metric in cit_metrics:
         imm_values = [a["citrullination"][metric] for a in imm_with_r]
@@ -406,21 +375,13 @@ def main():
         comparison = statistical_comparison(imm_values, sil_values, metric)
         if comparison:
             comparisons[f"cit_{metric}"] = comparison
-            sig = (
-                "**"
-                if comparison["significant_001"]
-                else ("*" if comparison["significant_005"] else "")
-            )
+            sig = "**" if comparison["significant_001"] else ("*" if comparison["significant_005"] else "")
             print(f"\n{metric.upper()}:")
             print(
                 f"  Immunodominant: {comparison['immunodominant_mean']:.4f} +/- {comparison['immunodominant_std']:.4f} (n={comparison['immunodominant_n']})"
             )
-            print(
-                f"  Silent:         {comparison['silent_mean']:.4f} +/- {comparison['silent_std']:.4f} (n={comparison['silent_n']})"
-            )
-            print(
-                f"  t = {comparison['t_statistic']:.3f}, p = {comparison['p_value']:.4f} {sig}"
-            )
+            print(f"  Silent:         {comparison['silent_mean']:.4f} +/- {comparison['silent_std']:.4f} (n={comparison['silent_n']})")
+            print(f"  t = {comparison['t_statistic']:.3f}, p = {comparison['p_value']:.4f} {sig}")
             print(f"  Cohen's d = {comparison['cohens_d']:.3f}")
 
     # =========================================================================
@@ -455,22 +416,14 @@ def main():
                     "metric": metric,
                     "p_value": comp["p_value"],
                     "cohens_d": comp["cohens_d"],
-                    "direction": (
-                        "higher in IMM"
-                        if comp["immunodominant_mean"] > comp["silent_mean"]
-                        else "lower in IMM"
-                    ),
+                    "direction": ("higher in IMM" if comp["immunodominant_mean"] > comp["silent_mean"] else "lower in IMM"),
                 }
             )
 
     if significant_findings:
-        print(
-            f"\n  Found {len(significant_findings)} significant differences (p < 0.05):\n"
-        )
+        print(f"\n  Found {len(significant_findings)} significant differences (p < 0.05):\n")
         for finding in sorted(significant_findings, key=lambda x: x["p_value"]):
-            print(
-                f"  - {finding['metric']}: p={finding['p_value']:.4f}, d={finding['cohens_d']:.2f} ({finding['direction']})"
-            )
+            print(f"  - {finding['metric']}: p={finding['p_value']:.4f}, d={finding['cohens_d']:.2f} ({finding['direction']})")
     else:
         print("\n  No significant differences found at p < 0.05")
 

@@ -250,17 +250,9 @@ def generate_diagrams():
 
         # 1. Real Dependency Diagram
         imports = parse_imports(file_path)
-        dep_content = (
-            get_graph_header(f"{mod_name} Dependencies")
-            + f"    Center[{mod_name}]:::trainable\n"
-        )
+        dep_content = get_graph_header(f"{mod_name} Dependencies") + f"    Center[{mod_name}]:::trainable\n"
         for imp in imports:
-            if (
-                imp.startswith("src")
-                or imp.startswith("torch")
-                or imp.startswith("numpy")
-                or imp.startswith("geoopt")
-            ):
+            if imp.startswith("src") or imp.startswith("torch") or imp.startswith("numpy") or imp.startswith("geoopt"):
                 safe_imp = imp.replace(".", "_")
                 dep_content += f"    Center --> {safe_imp}[{imp}]\n"
 
@@ -282,8 +274,7 @@ def generate_diagrams():
         else:
             write_diagram(
                 f"01_ARCHITECTURE/components/logic_flow_{safe_mod}.mmd",
-                get_graph_header(f"{mod_name} Flow")
-                + f"    Node[{mod_name} (Module)]:::frozen",
+                get_graph_header(f"{mod_name} Flow") + f"    Node[{mod_name} (Module)]:::frozen",
             )
 
     # Specific Detailed Diagrams

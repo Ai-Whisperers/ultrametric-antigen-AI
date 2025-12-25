@@ -25,8 +25,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 import numpy as np
 import torch
-from scipy.spatial.distance import pdist, squareform
-from sklearn.cluster import AgglomerativeClustering, KMeans
+from sklearn.cluster import AgglomerativeClustering
 
 # Genetic code degeneracy pattern: 21 clusters with these sizes (sorted)
 # Total = 64 codons
@@ -187,7 +186,7 @@ def find_natural_positions(embeddings, target_pattern=DEGENERACY_PATTERN):
     features = np.hstack([z_normalized, radii[:, np.newaxis] * 0.5])
 
     # Hierarchical clustering to get 21 initial clusters
-    print(f"  Performing hierarchical clustering...")
+    print("  Performing hierarchical clustering...")
     clustering = AgglomerativeClustering(n_clusters=n_clusters, linkage="ward")
     initial_labels = clustering.fit_predict(features)
 
@@ -203,9 +202,7 @@ def find_natural_positions(embeddings, target_pattern=DEGENERACY_PATTERN):
     sorted_clusters = sorted(cluster_sizes.items(), key=lambda x: -x[1])
 
     for cluster_idx, (cluster_id, cluster_size) in enumerate(sorted_clusters):
-        target_size = (
-            target_pattern[cluster_idx] if cluster_idx < len(target_pattern) else 1
-        )
+        target_size = target_pattern[cluster_idx] if cluster_idx < len(target_pattern) else 1
 
         # Get indices in this cluster
         cluster_mask = initial_labels == cluster_id
@@ -215,9 +212,7 @@ def find_natural_positions(embeddings, target_pattern=DEGENERACY_PATTERN):
         cluster_center = embeddings[cluster_indices].mean(axis=0)
 
         # Distance to center
-        dists_to_center = [
-            poincare_distance(embeddings[i], cluster_center) for i in cluster_indices
-        ]
+        dists_to_center = [poincare_distance(embeddings[i], cluster_center) for i in cluster_indices]
 
         # Select closest to center
         sorted_by_dist = [cluster_indices[i] for i in np.argsort(dists_to_center)]
@@ -231,9 +226,7 @@ def find_natural_positions(embeddings, target_pattern=DEGENERACY_PATTERN):
 
     # Validate
     selected_embeddings = embeddings[selected_indices]
-    n_valid, n_total, sep_ratio = validate_clusters(
-        selected_embeddings, selected_labels
-    )
+    n_valid, n_total, sep_ratio = validate_clusters(selected_embeddings, selected_labels)
 
     print(f"  Valid p-adic balls: {n_valid}/{n_total}")
     print(f"  Separation ratio: {sep_ratio:.2f}x")
@@ -260,31 +253,21 @@ def refine_positions(embeddings, indices, labels, iterations=5):
 
             # Find same-cluster points not selected
             cluster_mask = np.array(best_labels) == cluster
-            cluster_indices = [
-                best_indices[j]
-                for j in range(len(best_indices))
-                if best_labels[j] == cluster
-            ]
+            cluster_indices = [best_indices[j] for j in range(len(best_indices)) if best_labels[j] == cluster]
 
             # Try swapping with nearby unselected points
             radii = np.linalg.norm(embeddings, axis=1)
             idx_radius = radii[idx]
 
             # Candidates: within 10% radius
-            candidates = [
-                j
-                for j in all_indices - selected_set
-                if abs(radii[j] - idx_radius) < 0.1 * idx_radius
-            ]
+            candidates = [j for j in all_indices - selected_set if abs(radii[j] - idx_radius) < 0.1 * idx_radius]
 
             for candidate in candidates[:10]:  # Limit candidates
                 # Try swap
                 test_indices = best_indices.copy()
                 test_indices[i] = candidate
 
-                _, _, new_ratio = validate_clusters(
-                    embeddings[test_indices], best_labels
-                )
+                _, _, new_ratio = validate_clusters(embeddings[test_indices], best_labels)
 
                 if new_ratio > best_ratio:
                     best_indices = test_indices

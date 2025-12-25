@@ -48,9 +48,7 @@ def method_arithmetic(indices: np.ndarray, min_valuation: int) -> np.ndarray:
     return np.array([i for i in indices if i % divisor == 0])
 
 
-def method_geometric(
-    radii: np.ndarray, indices: np.ndarray, threshold: float
-) -> np.ndarray:
+def method_geometric(radii: np.ndarray, indices: np.ndarray, threshold: float) -> np.ndarray:
     """
     Method B: Geometric query.
     Select points with radius below threshold.
@@ -82,9 +80,7 @@ def build_shell_index(indices: np.ndarray) -> dict:
     return shell_index
 
 
-def find_optimal_threshold(
-    radii: np.ndarray, valuations: np.ndarray, target_valuation: int
-) -> tuple:
+def find_optimal_threshold(radii: np.ndarray, valuations: np.ndarray, target_valuation: int) -> tuple:
     """Find radius threshold that best separates valuations >= target."""
     ground_truth = valuations >= target_valuation
 
@@ -104,11 +100,7 @@ def find_optimal_threshold(
 
         precision = tp / (tp + fp) if (tp + fp) > 0 else 0
         recall = tp / (tp + fn) if (tp + fn) > 0 else 0
-        f1 = (
-            2 * precision * recall / (precision + recall)
-            if (precision + recall) > 0
-            else 0
-        )
+        f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0
 
         if f1 > best_f1:
             best_f1 = f1
@@ -151,7 +143,10 @@ def build_radial_shell_boundaries(radii: np.ndarray, valuations: np.ndarray) -> 
 
 
 def method_radial_shells(
-    radii: np.ndarray, indices: np.ndarray, boundaries: dict, target_valuation: int
+    radii: np.ndarray,
+    indices: np.ndarray,
+    boundaries: dict,
+    target_valuation: int,
 ) -> tuple:
     """
     Method B+: Radial shell query using learned boundaries.
@@ -222,10 +217,7 @@ def run_benchmark():
     print("\nRadial shell structure (radius encodes hierarchy):")
     for v in sorted(boundaries.keys()):
         b = boundaries[v]
-        print(
-            f"  v_3 = {v}: r ∈ [{b['r_min']:.4f}, {b['r_max']:.4f}], "
-            f"mean={b['r_mean']:.4f}, std={b['r_std']:.4f}"
-        )
+        print(f"  v_3 = {v}: r ∈ [{b['r_min']:.4f}, {b['r_max']:.4f}], " f"mean={b['r_mean']:.4f}, std={b['r_std']:.4f}")
 
     # Benchmark results
     results = {
@@ -291,24 +283,14 @@ def run_benchmark():
         time_preindexed = (time.perf_counter() - t0) / n_iterations * 1000
 
         # Results
-        print(
-            f"\nMethod A (Arithmetic): {time_arithmetic:.4f} ms, found {len(result_a)}"
-        )
+        print(f"\nMethod A (Arithmetic): {time_arithmetic:.4f} ms, found {len(result_a)}")
         print(f"Method B (Geometric):  {time_geometric:.4f} ms, found {len(result_b)}")
         print(f"  -> Threshold: r < {threshold:.4f}")
-        print(
-            f"  -> Precision: {metrics['precision']:.3f}, Recall: {metrics['recall']:.3f}, F1: {metrics['f1']:.3f}"
-        )
-        print(
-            f"Method C (Pre-indexed): {time_preindexed:.4f} ms, found {len(result_c)}"
-        )
+        print(f"  -> Precision: {metrics['precision']:.3f}, Recall: {metrics['recall']:.3f}, F1: {metrics['f1']:.3f}")
+        print(f"Method C (Pre-indexed): {time_preindexed:.4f} ms, found {len(result_c)}")
 
-        speedup_b = (
-            time_arithmetic / time_geometric if time_geometric > 0 else float("inf")
-        )
-        speedup_c = (
-            time_arithmetic / time_preindexed if time_preindexed > 0 else float("inf")
-        )
+        speedup_b = time_arithmetic / time_geometric if time_geometric > 0 else float("inf")
+        speedup_c = time_arithmetic / time_preindexed if time_preindexed > 0 else float("inf")
 
         print(f"\nSpeedup (Geometric vs Arithmetic): {speedup_b:.1f}x")
         print(f"Speedup (Pre-indexed vs Arithmetic): {speedup_c:.1f}x")
@@ -362,12 +344,7 @@ def run_benchmark():
 
     # Vectorized classification
     t0 = time.perf_counter()
-    predicted_vals = np.array(
-        [
-            classify_by_radius(r, boundaries, decision_boundaries, sorted_vals)
-            for r in radii
-        ]
-    )
+    predicted_vals = np.array([classify_by_radius(r, boundaries, decision_boundaries, sorted_vals) for r in radii])
     time_radius_classify = (time.perf_counter() - t0) * 1000
 
     # Filter out special zero case
@@ -380,7 +357,7 @@ def run_benchmark():
     within_one = np.sum(np.abs(valid_pred - valid_true) <= 1)
     total = len(valid_true)
 
-    print(f"\nRadius-based valuation classification:")
+    print("\nRadius-based valuation classification:")
     print(f"  Exact match: {exact_match}/{total} ({100*exact_match/total:.1f}%)")
     print(f"  Within ±1 level: {within_one}/{total} ({100*within_one/total:.1f}%)")
     print(f"  Classification time: {time_radius_classify:.2f} ms")
@@ -415,9 +392,7 @@ def run_benchmark():
     test_radius = radii[indices == test_idx][0] if test_idx in indices else None
 
     if test_radius is not None:
-        print(
-            f"\nTest point: index={test_idx}, v_3={test_val}, radius={test_radius:.4f}"
-        )
+        print(f"\nTest point: index={test_idx}, v_3={test_val}, radius={test_radius:.4f}")
 
         # Arithmetic: Find all with higher valuation
         t0 = time.perf_counter()
@@ -440,20 +415,12 @@ def run_benchmark():
         # Compute overlap
         set_arith = set(ancestors_arith)
         set_geom = set(ancestors_geom)
-        overlap = (
-            len(set_arith & set_geom) / len(set_arith) if len(set_arith) > 0 else 0
-        )
+        overlap = len(set_arith & set_geom) / len(set_arith) if len(set_arith) > 0 else 0
 
-        print(f"\nAncestor Query Results:")
-        print(
-            f"  Arithmetic: {len(ancestors_arith)} ancestors, {time_ancestor_arith:.4f} ms"
-        )
-        print(
-            f"  Geometric:  {len(ancestors_geom)} candidates, {time_ancestor_geom:.4f} ms"
-        )
-        print(
-            f"  Pre-indexed: {len(ancestors_preindex)} ancestors, {time_ancestor_preindex:.4f} ms"
-        )
+        print("\nAncestor Query Results:")
+        print(f"  Arithmetic: {len(ancestors_arith)} ancestors, {time_ancestor_arith:.4f} ms")
+        print(f"  Geometric:  {len(ancestors_geom)} candidates, {time_ancestor_geom:.4f} ms")
+        print(f"  Pre-indexed: {len(ancestors_preindex)} ancestors, {time_ancestor_preindex:.4f} ms")
         print(f"  Geometric overlap with ground truth: {overlap:.1%}")
 
         results["ancestry_query"] = {
@@ -472,20 +439,14 @@ def run_benchmark():
     print("SUMMARY: SEMANTIC AMPLIFICATION VALIDATION")
     print("=" * 70)
 
-    avg_speedup_geom = np.mean(
-        [b["speedup_geometric"] for b in results["benchmarks"].values()]
-    )
-    avg_speedup_preindex = np.mean(
-        [b["speedup_preindexed"] for b in results["benchmarks"].values()]
-    )
+    avg_speedup_geom = np.mean([b["speedup_geometric"] for b in results["benchmarks"].values()])
+    avg_speedup_preindex = np.mean([b["speedup_preindexed"] for b in results["benchmarks"].values()])
     avg_f1 = np.mean([b["geometric_f1"] for b in results["benchmarks"].values()])
 
     print(f"\nAverage Speedup (Geometric): {avg_speedup_geom:.1f}x")
     print(f"Average Speedup (Pre-indexed): {avg_speedup_preindex:.1f}x")
     print(f"Average Geometric F1 Score: {avg_f1:.3f}")
-    print(
-        f"Maximum Semantic Amplification: {len(indices)}x (N operations -> O(1) lookup)"
-    )
+    print(f"Maximum Semantic Amplification: {len(indices)}x (N operations -> O(1) lookup)")
 
     # The key insight
     print("\n" + "-" * 70)

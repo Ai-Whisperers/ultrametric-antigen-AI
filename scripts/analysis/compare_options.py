@@ -95,9 +95,7 @@ def compute_detailed_metrics(model, x, indices, device, name="Model"):
 
     # 2. Per-valuation statistics
     print("\n2. RADIUS BY VALUATION LEVEL")
-    print(
-        f"   {'Val':>3} | {'Count':>6} | {'Mean_A':>7} | {'Std_A':>6} | {'Mean_B':>7} | {'Std_B':>6} | {'Target':>7}"
-    )
+    print(f"   {'Val':>3} | {'Count':>6} | {'Mean_A':>7} | {'Std_A':>6} | {'Mean_B':>7} | {'Std_B':>6} | {'Target':>7}")
     print(f"   {'-'*3}-+-{'-'*6}-+-{'-'*7}-+-{'-'*6}-+-{'-'*7}-+-{'-'*6}-+-{'-'*7}")
 
     val_stats = {}
@@ -120,9 +118,7 @@ def compute_detailed_metrics(model, x, indices, device, name="Model"):
                 "target": target,
             }
 
-            print(
-                f"   {v:>3} | {count:>6} | {mean_A:>7.4f} | {std_A:>6.4f} | {mean_B:>7.4f} | {std_B:>6.4f} | {target:>7.4f}"
-            )
+            print(f"   {v:>3} | {count:>6} | {mean_A:>7.4f} | {std_A:>6.4f} | {mean_B:>7.4f} | {std_B:>6.4f} | {target:>7.4f}")
 
     # 3. Poincare distance analysis
     print("\n3. POINCARE DISTANCE BY VALUATION DIFFERENCE")
@@ -144,9 +140,7 @@ def compute_detailed_metrics(model, x, indices, device, name="Model"):
     # Target distance
     3.0 * np.exp(-pair_vals / 3.0)
 
-    dist_corr_A = spearmanr(pair_vals, -d_A)[
-        0
-    ]  # Negative because high val = small dist
+    dist_corr_A = spearmanr(pair_vals, -d_A)[0]  # Negative because high val = small dist
     dist_corr_B = spearmanr(pair_vals, -d_B)[0]
 
     print("   Distance-Valuation Correlation:")
@@ -166,12 +160,8 @@ def compute_detailed_metrics(model, x, indices, device, name="Model"):
 
     # 4. Latent space spread
     print("\n4. LATENT SPACE STATISTICS")
-    print(
-        f"   VAE-A radius: min={radii_A.min():.4f}, max={radii_A.max():.4f}, range={radii_A.max()-radii_A.min():.4f}"
-    )
-    print(
-        f"   VAE-B radius: min={radii_B.min():.4f}, max={radii_B.max():.4f}, range={radii_B.max()-radii_B.min():.4f}"
-    )
+    print(f"   VAE-A radius: min={radii_A.min():.4f}, max={radii_A.max():.4f}, range={radii_A.max()-radii_A.min():.4f}")
+    print(f"   VAE-B radius: min={radii_B.min():.4f}, max={radii_B.max():.4f}, range={radii_B.max()-radii_B.min():.4f}")
 
     # Euclidean spread
     mu_A_np = mu_A.cpu().numpy()
@@ -292,10 +282,20 @@ def plot_comparison(metrics_a, metrics_c, output_path):
     x_pos = np.arange(len(metrics_names))
     width = 0.35
     ax.bar(
-        x_pos - width / 2, opt_a_vals, width, label="Option A", color="blue", alpha=0.7
+        x_pos - width / 2,
+        opt_a_vals,
+        width,
+        label="Option A",
+        color="blue",
+        alpha=0.7,
     )
     ax.bar(
-        x_pos + width / 2, opt_c_vals, width, label="Option C", color="red", alpha=0.7
+        x_pos + width / 2,
+        opt_c_vals,
+        width,
+        label="Option C",
+        color="red",
+        alpha=0.7,
     )
     ax.set_xticks(x_pos)
     ax.set_xticklabels(metrics_names)
@@ -319,9 +319,7 @@ def main():
     # Option A: smaller checkpoints (441KB) - only projection trainable
     # Option C: larger checkpoints (815KB) - encoder_B also trainable
     option_a_path = Path("sandbox-training/checkpoints/v5_11/epoch_180.pt")  # Option A
-    option_c_path = Path(
-        "sandbox-training/checkpoints/v5_11/best.pt"
-    )  # Option C (latest)
+    option_c_path = Path("sandbox-training/checkpoints/v5_11/best.pt")  # Option C (latest)
 
     # Load dataset
     print("\nLoading dataset...")
@@ -335,18 +333,14 @@ def main():
     print("LOADING OPTION A MODEL")
     print("=" * 60)
     model_a = load_model_a(option_a_path, v5_5_path, device)
-    metrics_a = compute_detailed_metrics(
-        model_a, x, indices, device, "Option A (Both Frozen)"
-    )
+    metrics_a = compute_detailed_metrics(model_a, x, indices, device, "Option A (Both Frozen)")
 
     # Load and analyze Option C
     print("\n" + "=" * 60)
     print("LOADING OPTION C MODEL")
     print("=" * 60)
     model_c = load_model_c(option_c_path, v5_5_path, device)
-    metrics_c = compute_detailed_metrics(
-        model_c, x, indices, device, "Option C (Encoder-B Trainable)"
-    )
+    metrics_c = compute_detailed_metrics(model_c, x, indices, device, "Option C (Encoder-B Trainable)")
 
     # Summary comparison
     print("\n" + "=" * 60)
@@ -368,8 +362,18 @@ def main():
             metrics_c["radial_corr_B"],
             "min",
         ),
-        ("Distance Corr A", metrics_a["dist_corr_A"], metrics_c["dist_corr_A"], "max"),
-        ("Distance Corr B", metrics_a["dist_corr_B"], metrics_c["dist_corr_B"], "max"),
+        (
+            "Distance Corr A",
+            metrics_a["dist_corr_A"],
+            metrics_c["dist_corr_A"],
+            "max",
+        ),
+        (
+            "Distance Corr B",
+            metrics_a["dist_corr_B"],
+            metrics_c["dist_corr_B"],
+            "max",
+        ),
         ("Coverage", metrics_a["coverage"], metrics_c["coverage"], "max"),
     ]
 

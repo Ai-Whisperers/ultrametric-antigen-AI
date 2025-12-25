@@ -17,7 +17,10 @@ class SpectralGraphEncoder(nn.Module):
     """
 
     def __init__(
-        self, hidden_dim: int = 16, curvature: float = 1.0, max_norm: float = 0.95
+        self,
+        hidden_dim: int = 16,
+        curvature: float = 1.0,
+        max_norm: float = 0.95,
     ):
         super().__init__()
         self.hidden_dim = hidden_dim
@@ -97,17 +100,13 @@ class SpectralGraphEncoder(nn.Module):
 
         # Pad if num_features < hidden_dim
         if num_features < self.hidden_dim:
-            padding = torch.zeros(
-                B, self.hidden_dim - num_features, device=adjacency.device
-            )
+            padding = torch.zeros(B, self.hidden_dim - num_features, device=adjacency.device)
             graph_embedding = torch.cat([graph_embedding, padding], dim=1)
 
         # 4. Project and Hyperbolic Mapping
         linear_proj = self.projection(graph_embedding)
 
         # Map to Poincare Ball
-        z_hyp = project_to_poincare(
-            linear_proj, c=self.curvature, max_norm=self.max_norm
-        )
+        z_hyp = project_to_poincare(linear_proj, c=self.curvature, max_norm=self.max_norm)
 
         return z_hyp

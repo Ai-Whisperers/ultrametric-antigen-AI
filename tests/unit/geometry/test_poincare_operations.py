@@ -8,7 +8,7 @@
 Tests Mobius addition, conformal factor, and parallel transport.
 """
 
-import pytest
+import pytest  # noqa: F401 - used for fixtures
 import torch
 
 from src.geometry.poincare import (lambda_x, mobius_add, parallel_transport,

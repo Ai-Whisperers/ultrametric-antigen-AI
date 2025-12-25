@@ -92,11 +92,7 @@ class TrainingMonitor:
         self.batches_per_epoch = 0
 
         # Setup file logging
-        self.logger = (
-            self._setup_file_logging(log_dir, experiment_name)
-            if log_to_file and log_dir
-            else None
-        )
+        self.logger = self._setup_file_logging(log_dir, experiment_name) if log_to_file and log_dir else None
 
         # TensorBoard setup
         self.writer: Optional[SummaryWriter] = None
@@ -105,10 +101,7 @@ class TrainingMonitor:
             self.writer = SummaryWriter(str(log_path))
             self._log(f"TensorBoard logging to: {log_path}")
         elif tensorboard_dir is not None and not TENSORBOARD_AVAILABLE:
-            self._log(
-                "Warning: TensorBoard requested but not installed "
-                "(pip install tensorboard)"
-            )
+            self._log("Warning: TensorBoard requested but not installed " "(pip install tensorboard)")
 
     def _setup_file_logging(self, log_dir: str, experiment_name: str) -> logging.Logger:
         """Setup persistent file logging."""
@@ -124,9 +117,7 @@ class TrainingMonitor:
         # File handler with timestamps
         file_handler = logging.FileHandler(log_file, encoding="utf-8")
         file_handler.setLevel(logging.INFO)
-        file_formatter = logging.Formatter(
-            "%(asctime)s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
-        )
+        file_formatter = logging.Formatter("%(asctime)s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
         file_handler.setFormatter(file_formatter)
 
         # Console handler without timestamps (cleaner output)
@@ -148,9 +139,7 @@ class TrainingMonitor:
         else:
             print(message)
 
-    def update_histories(
-        self, H_A: float, H_B: float, coverage_A: int, coverage_B: int
-    ) -> None:
+    def update_histories(self, H_A: float, H_B: float, coverage_A: int, coverage_B: int) -> None:
         """Update all tracked histories.
 
         Args:
@@ -202,10 +191,7 @@ class TrainingMonitor:
         # Log to console/file at intervals
         if batch_idx % log_interval == 0 or batch_idx == total_batches - 1:
             progress = (batch_idx + 1) / total_batches * 100
-            self._log(
-                f"  [Epoch {epoch}] Batch {batch_idx+1}/{total_batches} "
-                f"({progress:.0f}%) | Loss: {loss:.4f}"
-            )
+            self._log(f"  [Epoch {epoch}] Batch {batch_idx+1}/{total_batches} " f"({progress:.0f}%) | Loss: {loss:.4f}")
 
     def log_hyperbolic_batch(
         self,
@@ -225,15 +211,11 @@ class TrainingMonitor:
             centroid_loss: Frechet centroid loss
         """
         if self.writer is not None:
-            self.writer.add_scalar(
-                "Batch/HypRankingLoss", ranking_loss, self.global_step
-            )
+            self.writer.add_scalar("Batch/HypRankingLoss", ranking_loss, self.global_step)
             self.writer.add_scalar("Batch/RadialLoss", radial_loss, self.global_step)
             self.writer.add_scalar("Batch/HypKL_A", hyp_kl_A, self.global_step)
             self.writer.add_scalar("Batch/HypKL_B", hyp_kl_B, self.global_step)
-            self.writer.add_scalar(
-                "Batch/CentroidLoss", centroid_loss, self.global_step
-            )
+            self.writer.add_scalar("Batch/CentroidLoss", centroid_loss, self.global_step)
             # P0 FIX: Removed per-call flush() - will flush once at epoch end
 
     def log_hyperbolic_epoch(
@@ -400,21 +382,11 @@ class TrainingMonitor:
 
         self._log(f"\nEpoch {epoch}/{total_epochs}")
         self._log(f"  Loss: {loss:.4f} | Ranking Weight: {ranking_weight:.3f}")
-        self._log(
-            f"  Coverage [{cov_status}]: A={cov_A:.1f}% B={cov_B:.1f}% "
-            f"(best={self.best_coverage:.1f}%)"
-        )
-        self._log(
-            f"  3-Adic Correlation [{corr_status}] (Hyp): "
-            f"A={corr_A_hyp:.3f} B={corr_B_hyp:.3f} "
-            f"(best={self.best_corr_hyp:.3f})"
-        )
+        self._log(f"  Coverage [{cov_status}]: A={cov_A:.1f}% B={cov_B:.1f}% " f"(best={self.best_coverage:.1f}%)")
+        self._log(f"  3-Adic Correlation [{corr_status}] (Hyp): " f"A={corr_A_hyp:.3f} B={corr_B_hyp:.3f} " f"(best={self.best_corr_hyp:.3f})")
 
         if correlation_evaluated:
-            self._log(
-                f"  3-Adic Correlation (Euclidean): "
-                f"A={corr_A_euc:.3f} B={corr_B_euc:.3f}"
-            )
+            self._log(f"  3-Adic Correlation (Euclidean): " f"A={corr_A_euc:.3f} B={corr_B_euc:.3f}")
 
         self._log(f"  Mean Radius: A={mean_radius_A:.3f} B={mean_radius_B:.3f}")
 
@@ -429,11 +401,7 @@ class TrainingMonitor:
 
         if homeostatic_metrics:
             if "prior_sigma_A" in homeostatic_metrics:
-                self._log(
-                    f"  Homeostatic Sigma: "
-                    f"A={homeostatic_metrics['prior_sigma_A']:.3f} "
-                    f"B={homeostatic_metrics['prior_sigma_B']:.3f}"
-                )
+                self._log(f"  Homeostatic Sigma: " f"A={homeostatic_metrics['prior_sigma_A']:.3f} " f"B={homeostatic_metrics['prior_sigma_B']:.3f}")
             if "prior_curvature_A" in homeostatic_metrics:
                 self._log(
                     f"  Homeostatic Curvature: "
@@ -469,9 +437,7 @@ class TrainingMonitor:
         """
         return self.patience_counter >= patience
 
-    def has_coverage_plateaued(
-        self, patience: int = 50, min_delta: float = 0.001
-    ) -> bool:
+    def has_coverage_plateaued(self, patience: int = 50, min_delta: float = 0.001) -> bool:
         """Check if coverage improvement has plateaued.
 
         Useful for manifold approach where 100% coverage is the goal.
@@ -570,32 +536,12 @@ class TrainingMonitor:
             grad_balance_achieved: Whether gradient balance is achieved
         """
         self._log(f"\nEpoch {epoch}/{total_epochs}")
-        self._log(
-            f"  Loss: Train={train_losses['loss']:.4f} " f"Val={val_losses['loss']:.4f}"
-        )
-        self._log(
-            f"  VAE-A: CE={train_losses['ce_A']:.4f} "
-            f"KL={train_losses['kl_A']:.4f} "
-            f"H={train_losses['H_A']:.3f}"
-        )
-        self._log(
-            f"  VAE-B: CE={train_losses['ce_B']:.4f} "
-            f"KL={train_losses['kl_B']:.4f} "
-            f"H={train_losses['H_B']:.3f}"
-        )
-        self._log(
-            f"  Weights: l1={train_losses['lambda1']:.3f} "
-            f"l2={train_losses['lambda2']:.3f} "
-            f"l3={train_losses['lambda3']:.3f}"
-        )
-        self._log(
-            f"  Phase {train_losses['phase']}: "
-            f"rho={train_losses['rho']:.3f} "
-            f"(balance: {'Y' if grad_balance_achieved else 'N'})"
-        )
-        self._log(
-            f"  Grad: ratio={train_losses['grad_ratio']:.3f} EMA_a={train_losses['ema_momentum']:.2f}"
-        )
+        self._log(f"  Loss: Train={train_losses['loss']:.4f} " f"Val={val_losses['loss']:.4f}")
+        self._log(f"  VAE-A: CE={train_losses['ce_A']:.4f} " f"KL={train_losses['kl_A']:.4f} " f"H={train_losses['H_A']:.3f}")
+        self._log(f"  VAE-B: CE={train_losses['ce_B']:.4f} " f"KL={train_losses['kl_B']:.4f} " f"H={train_losses['H_B']:.3f}")
+        self._log(f"  Weights: l1={train_losses['lambda1']:.3f} " f"l2={train_losses['lambda2']:.3f} " f"l3={train_losses['lambda3']:.3f}")
+        self._log(f"  Phase {train_losses['phase']}: " f"rho={train_losses['rho']:.3f} " f"(balance: {'Y' if grad_balance_achieved else 'N'})")
+        self._log(f"  Grad: ratio={train_losses['grad_ratio']:.3f} EMA_a={train_losses['ema_momentum']:.2f}")
         self._log(
             f"  Temp: A={train_losses['temp_A']:.3f} "
             f"B={train_losses['temp_B']:.3f} | "
@@ -605,9 +551,7 @@ class TrainingMonitor:
 
         if use_statenet and "lr_corrected" in train_losses:
             self._log(
-                f"  LR: {train_losses['lr_scheduled']:.6f} -> "
-                f"{train_losses['lr_corrected']:.6f} "
-                f"(d={train_losses.get('delta_lr', 0):+.3f})"
+                f"  LR: {train_losses['lr_scheduled']:.6f} -> " f"{train_losses['lr_corrected']:.6f} " f"(d={train_losses.get('delta_lr', 0):+.3f})"
             )
             self._log(
                 f"  StateNet: dl1={train_losses.get('delta_lambda1', 0):+.3f} "
@@ -617,36 +561,18 @@ class TrainingMonitor:
         else:
             self._log(f"  LR: {train_losses['lr_scheduled']:.6f}")
 
-        self._log(
-            f"  Coverage: A={unique_A} ({cov_A:.2f}%) | " f"B={unique_B} ({cov_B:.2f}%)"
-        )
+        self._log(f"  Coverage: A={unique_A} ({cov_A:.2f}%) | " f"B={unique_B} ({cov_B:.2f}%)")
 
         # p-Adic losses (Phase 1A/1B)
-        has_padic = (
-            train_losses.get("padic_metric_A", 0) > 0
-            or train_losses.get("padic_ranking_A", 0) > 0
-            or train_losses.get("padic_norm_A", 0) > 0
-        )
+        has_padic = train_losses.get("padic_metric_A", 0) > 0 or train_losses.get("padic_ranking_A", 0) > 0 or train_losses.get("padic_norm_A", 0) > 0
         if has_padic:
             parts = []
             if train_losses.get("padic_metric_A", 0) > 0:
-                parts.append(
-                    f"metric="
-                    f"{train_losses.get('padic_metric_A', 0):.4f}/"
-                    f"{train_losses.get('padic_metric_B', 0):.4f}"
-                )
+                parts.append(f"metric=" f"{train_losses.get('padic_metric_A', 0):.4f}/" f"{train_losses.get('padic_metric_B', 0):.4f}")
             if train_losses.get("padic_ranking_A", 0) > 0:
-                parts.append(
-                    f"rank="
-                    f"{train_losses.get('padic_ranking_A', 0):.4f}/"
-                    f"{train_losses.get('padic_ranking_B', 0):.4f}"
-                )
+                parts.append(f"rank=" f"{train_losses.get('padic_ranking_A', 0):.4f}/" f"{train_losses.get('padic_ranking_B', 0):.4f}")
             if train_losses.get("padic_norm_A", 0) > 0:
-                parts.append(
-                    f"norm="
-                    f"{train_losses.get('padic_norm_A', 0):.4f}/"
-                    f"{train_losses.get('padic_norm_B', 0):.4f}"
-                )
+                parts.append(f"norm=" f"{train_losses.get('padic_norm_A', 0):.4f}/" f"{train_losses.get('padic_norm_B', 0):.4f}")
             self._log(f"  p-Adic: {' '.join(parts)}")
 
         if is_best:
@@ -703,17 +629,13 @@ class TrainingMonitor:
             {"VAE_A": train_losses["H_A"], "VAE_B": train_losses["H_B"]},
             epoch,
         )
-        self.writer.add_scalars(
-            "Compare/Coverage", {"VAE_A": cov_A, "VAE_B": cov_B}, epoch
-        )
+        self.writer.add_scalars("Compare/Coverage", {"VAE_A": cov_A, "VAE_B": cov_B}, epoch)
 
         # Training dynamics
         self.writer.add_scalar("Dynamics/Phase", train_losses["phase"], epoch)
         self.writer.add_scalar("Dynamics/Rho", train_losses["rho"], epoch)
         self.writer.add_scalar("Dynamics/GradRatio", train_losses["grad_ratio"], epoch)
-        self.writer.add_scalar(
-            "Dynamics/EMA_Momentum", train_losses["ema_momentum"], epoch
-        )
+        self.writer.add_scalar("Dynamics/EMA_Momentum", train_losses["ema_momentum"], epoch)
 
         # Lambda weights
         self.writer.add_scalars(
@@ -760,11 +682,7 @@ class TrainingMonitor:
             )
 
         # p-Adic losses (Phase 1A/1B from implement.md)
-        has_padic = (
-            train_losses.get("padic_metric_A", 0) > 0
-            or train_losses.get("padic_ranking_A", 0) > 0
-            or train_losses.get("padic_norm_A", 0) > 0
-        )
+        has_padic = train_losses.get("padic_metric_A", 0) > 0 or train_losses.get("padic_ranking_A", 0) > 0 or train_losses.get("padic_norm_A", 0) > 0
         if has_padic:
             if train_losses.get("padic_metric_A", 0) > 0:
                 self.writer.add_scalars(
@@ -1003,11 +921,7 @@ class TrainingMonitor:
         if self.coverage_A_history:
             final_cov_A = self.coverage_A_history[-1]
             final_cov_B = self.coverage_B_history[-1]
-            self._log(
-                f"Final Coverage: A={final_cov_A} " f"({final_cov_A/19683*100:.2f}%)"
-            )
-            self._log(
-                f"                B={final_cov_B} " f"({final_cov_B/19683*100:.2f}%)"
-            )
+            self._log(f"Final Coverage: A={final_cov_A} " f"({final_cov_A/19683*100:.2f}%)")
+            self._log(f"                B={final_cov_B} " f"({final_cov_B/19683*100:.2f}%)")
 
         self._log("Target: r > 0.99, coverage > 99.7%")

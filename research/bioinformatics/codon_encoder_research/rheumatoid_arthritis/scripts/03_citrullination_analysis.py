@@ -25,11 +25,9 @@ from pathlib import Path
 
 import numpy as np
 import torch
-import torch.nn as nn
 # Import hyperbolic utilities
-from hyperbolic_utils import (AA_TO_CODON, ARGININE_CODONS, CodonEncoder,
-                              codon_to_onehot, get_results_dir,
-                              load_codon_encoder)
+from hyperbolic_utils import (AA_TO_CODON, ARGININE_CODONS, codon_to_onehot,
+                              get_results_dir, load_codon_encoder)
 from hyperbolic_utils import poincare_distance as hyp_poincare_distance
 from hyperbolic_utils import project_to_poincare
 from scipy import stats
@@ -208,11 +206,7 @@ def encode_epitope(aa_sequence, encoder, device="cpu", use_hyperbolic=True):
 
     for codon in codons:
         if codon != "NNN":
-            onehot = (
-                torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-                .unsqueeze(0)
-                .to(device)
-            )
+            onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
             with torch.no_grad():
                 emb = encoder.encode(onehot).cpu().numpy().squeeze()
                 if use_hyperbolic:
@@ -269,9 +263,7 @@ def compute_embedding_shift(original, modified):
     poincare_shift = poincare_distance(orig_mean, mod_mean)
 
     # Angular shift
-    cos_sim = np.dot(orig_mean, mod_mean) / (
-        np.linalg.norm(orig_mean) * np.linalg.norm(mod_mean) + 1e-8
-    )
+    cos_sim = np.dot(orig_mean, mod_mean) / (np.linalg.norm(orig_mean) * np.linalg.norm(mod_mean) + 1e-8)
     angular_shift = np.arccos(np.clip(cos_sim, -1, 1))
 
     # Radial shift (change in distance from origin - important in hyperbolic space)
@@ -296,9 +288,7 @@ def analyze_cluster_boundary_crossing(original_emb, modified_emb, cluster_center
     mod_mean = np.mean(modified_emb, axis=0)
 
     # Project cluster centers to Poincaré ball if not already
-    cluster_centers_hyp = np.array(
-        [project_to_poincare(c, max_radius=0.95).squeeze() for c in cluster_centers]
-    )
+    cluster_centers_hyp = np.array([project_to_poincare(c, max_radius=0.95).squeeze() for c in cluster_centers])
 
     # Find nearest cluster for each (using Poincaré distance)
     orig_dists = [poincare_distance(orig_mean, c) for c in cluster_centers_hyp]
@@ -333,11 +323,7 @@ def analyze_all_arginine_codons(encoder, device="cpu", use_hyperbolic=True):
     embeddings = []
 
     for codon in ARGININE_CODONS:
-        onehot = (
-            torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-            .unsqueeze(0)
-            .to(device)
-        )
+        onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
         with torch.no_grad():
             emb = encoder.encode(onehot).cpu().numpy().squeeze()
             if use_hyperbolic:
@@ -352,13 +338,7 @@ def analyze_all_arginine_codons(encoder, device="cpu", use_hyperbolic=True):
 
     # Variance using Poincaré distances
     variance = np.mean([poincare_distance(e, centroid) ** 2 for e in emb_array])
-    max_spread = np.max(
-        [
-            poincare_distance(emb_array[i], emb_array[j])
-            for i in range(len(emb_array))
-            for j in range(i + 1, len(emb_array))
-        ]
-    )
+    max_spread = np.max([poincare_distance(emb_array[i], emb_array[j]) for i in range(len(emb_array)) for j in range(i + 1, len(emb_array))])
 
     return {
         "codons": results,
@@ -397,19 +377,13 @@ def create_visualization(results, arginine_analysis, output_path):
     ax1.set_yticks(range(len(proteins)))
     ax1.set_yticklabels(proteins, fontsize=8)
     ax1.set_xlabel("Embedding Shift (Euclidean)")
-    ax1.set_title(
-        "Citrullination-Induced Embedding Shift\n(Red=Immunodominant, Blue=Non-immunodominant)"
-    )
+    ax1.set_title("Citrullination-Induced Embedding Shift\n(Red=Immunodominant, Blue=Non-immunodominant)")
     ax1.invert_yaxis()
 
     # 2. Boundary crossing analysis
     ax2 = axes[0, 1]
     crossed = sum(1 for d in results.values() if d.get("boundary_crossed", False))
-    not_crossed = sum(
-        1
-        for d in results.values()
-        if d["has_cit_site"] and not d.get("boundary_crossed", False)
-    )
+    not_crossed = sum(1 for d in results.values() if d["has_cit_site"] and not d.get("boundary_crossed", False))
     no_site = sum(1 for d in results.values() if not d["has_cit_site"])
 
     ax2.pie(
@@ -426,16 +400,8 @@ def create_visualization(results, arginine_analysis, output_path):
 
     # 3. Immunodominant vs non-immunodominant shifts
     ax3 = axes[0, 2]
-    immuno_shifts = [
-        d["shift_zero"]["euclidean"]
-        for d in results.values()
-        if d["has_cit_site"] and d["immunodominant"]
-    ]
-    non_immuno_shifts = [
-        d["shift_zero"]["euclidean"]
-        for d in results.values()
-        if d["has_cit_site"] and not d["immunodominant"]
-    ]
+    immuno_shifts = [d["shift_zero"]["euclidean"] for d in results.values() if d["has_cit_site"] and d["immunodominant"]]
+    non_immuno_shifts = [d["shift_zero"]["euclidean"] for d in results.values() if d["has_cit_site"] and not d["immunodominant"]]
 
     ax3.boxplot(
         [immuno_shifts, non_immuno_shifts],
@@ -446,9 +412,7 @@ def create_visualization(results, arginine_analysis, output_path):
 
     # Statistical test
     if len(immuno_shifts) > 1 and len(non_immuno_shifts) > 1:
-        stat, pval = stats.mannwhitneyu(
-            immuno_shifts, non_immuno_shifts, alternative="greater"
-        )
+        stat, pval = stats.mannwhitneyu(immuno_shifts, non_immuno_shifts, alternative="greater")
         ax3.text(
             0.5,
             0.95,
@@ -476,14 +440,17 @@ def create_visualization(results, arginine_analysis, output_path):
     # Add centroid
     centroid_2d = np.mean(arg_2d, axis=0)
     ax4.scatter(
-        [centroid_2d[0]], [centroid_2d[1]], s=200, c="black", marker="x", linewidths=3
+        [centroid_2d[0]],
+        [centroid_2d[1]],
+        s=200,
+        c="black",
+        marker="x",
+        linewidths=3,
     )
 
     ax4.set_xlabel("PC1")
     ax4.set_ylabel("PC2")
-    ax4.set_title(
-        f'Arginine (R) Codon Space\nMax spread: {arginine_analysis["max_spread"]:.3f}'
-    )
+    ax4.set_title(f'Arginine (R) Codon Space\nMax spread: {arginine_analysis["max_spread"]:.3f}')
 
     # 5. Shift vs margin to boundary
     ax5 = axes[1, 1]
@@ -599,25 +566,19 @@ def main():
 
         if has_cit_site:
             # Simulate citrullination
-            mod_zero, mod_avg = simulate_citrullination(
-                embeddings, antigen["cit_position"], encoder
-            )
+            mod_zero, mod_avg = simulate_citrullination(embeddings, antigen["cit_position"], encoder)
 
             # Compute shifts
             shift_zero = compute_embedding_shift(embeddings, mod_zero)
             shift_avg = compute_embedding_shift(embeddings, mod_avg)
 
             # Check boundary crossing
-            boundary_result = analyze_cluster_boundary_crossing(
-                embeddings, mod_zero, cluster_centers
-            )
+            boundary_result = analyze_cluster_boundary_crossing(embeddings, mod_zero, cluster_centers)
 
             print(f"    Embedding shift (zero): {shift_zero['euclidean']:.4f}")
             print(f"    Embedding shift (avg):  {shift_avg['euclidean']:.4f}")
             print(f"    Boundary crossed: {boundary_result['boundary_crossed']}")
-            print(
-                f"    Cluster: {boundary_result['original_cluster']} → {boundary_result['modified_cluster']}"
-            )
+            print(f"    Cluster: {boundary_result['original_cluster']} → {boundary_result['modified_cluster']}")
 
             results[name] = {
                 "protein": antigen["protein"],
@@ -634,7 +595,7 @@ def main():
                 "margin_to_boundary": boundary_result["margin_to_boundary"],
             }
         else:
-            print(f"    No citrullination site (control)")
+            print("    No citrullination site (control)")
             results[name] = {
                 "protein": antigen["protein"],
                 "gene": antigen["gene"],
@@ -660,27 +621,19 @@ def main():
 
     # Boundary crossing statistics
     boundary_crossed = sum(1 for r in cit_sites if r["boundary_crossed"])
-    print(
-        f"\n  Boundary crossings: {boundary_crossed}/{len(cit_sites)} ({100*boundary_crossed/len(cit_sites):.1f}%)"
-    )
+    print(f"\n  Boundary crossings: {boundary_crossed}/{len(cit_sites)} ({100*boundary_crossed/len(cit_sites):.1f}%)")
 
     # Compare immunodominant vs non-immunodominant
     if immuno_sites and non_immuno_sites:
         immuno_shifts = [r["shift_zero"]["euclidean"] for r in immuno_sites]
         non_immuno_shifts = [r["shift_zero"]["euclidean"] for r in non_immuno_sites]
 
-        print(
-            f"\n  Mean shift (immunodominant): {np.mean(immuno_shifts):.4f} ± {np.std(immuno_shifts):.4f}"
-        )
-        print(
-            f"  Mean shift (non-immunodominant): {np.mean(non_immuno_shifts):.4f} ± {np.std(non_immuno_shifts):.4f}"
-        )
+        print(f"\n  Mean shift (immunodominant): {np.mean(immuno_shifts):.4f} ± {np.std(immuno_shifts):.4f}")
+        print(f"  Mean shift (non-immunodominant): {np.mean(non_immuno_shifts):.4f} ± {np.std(non_immuno_shifts):.4f}")
 
         # Statistical test
         if len(immuno_shifts) > 1 and len(non_immuno_shifts) > 1:
-            stat, pval = stats.mannwhitneyu(
-                immuno_shifts, non_immuno_shifts, alternative="greater"
-            )
+            stat, pval = stats.mannwhitneyu(immuno_shifts, non_immuno_shifts, alternative="greater")
             print(f"  Mann-Whitney U test (immuno > non-immuno): p = {pval:.4f}")
 
     # Create visualization
@@ -715,9 +668,7 @@ def main():
 
     if immuno_sites and non_immuno_sites:
         immuno_mean = np.mean([r["shift_zero"]["euclidean"] for r in immuno_sites])
-        non_immuno_mean = np.mean(
-            [r["shift_zero"]["euclidean"] for r in non_immuno_sites]
-        )
+        non_immuno_mean = np.mean([r["shift_zero"]["euclidean"] for r in non_immuno_sites])
 
         if immuno_mean > non_immuno_mean:
             print(
@@ -768,14 +719,8 @@ def main():
             name: {
                 "protein": r["protein"],
                 "immunodominant": bool(r["immunodominant"]),
-                "shift": (
-                    float(r["shift_zero"]["euclidean"]) if r["has_cit_site"] else None
-                ),
-                "boundary_crossed": (
-                    bool(r["boundary_crossed"])
-                    if r.get("boundary_crossed") is not None
-                    else None
-                ),
+                "shift": (float(r["shift_zero"]["euclidean"]) if r["has_cit_site"] else None),
+                "boundary_crossed": (bool(r["boundary_crossed"]) if r.get("boundary_crossed") is not None else None),
             }
             for name, r in results.items()
         },

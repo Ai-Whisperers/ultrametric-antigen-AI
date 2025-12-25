@@ -11,7 +11,7 @@ Version: 1.0
 """
 
 import json
-from collections import Counter, defaultdict
+from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List, Set
 
@@ -120,7 +120,10 @@ def parse_subcellular_location(loc_string: str) -> List[str]:
 
 
 def fisher_exact_test(
-    n_hit_in_query: int, n_query: int, n_hit_in_background: int, n_background: int
+    n_hit_in_query: int,
+    n_query: int,
+    n_hit_in_background: int,
+    n_background: int,
 ) -> tuple:
     """
     Perform Fisher's exact test for enrichment.
@@ -205,11 +208,7 @@ def run_enrichment(
             term_to_proteins[term].add(protein)
 
     # Filter by size
-    valid_terms = {
-        term: proteins
-        for term, proteins in term_to_proteins.items()
-        if MIN_TERM_SIZE <= len(proteins) <= MAX_TERM_SIZE
-    }
+    valid_terms = {term: proteins for term, proteins in term_to_proteins.items() if MIN_TERM_SIZE <= len(proteins) <= MAX_TERM_SIZE}
 
     results = []
     n_query = len(high_risk_proteins)
@@ -222,9 +221,7 @@ def run_enrichment(
         if n_hit_in_query < 2:  # Require at least 2 hits
             continue
 
-        odds_ratio, p_value = fisher_exact_test(
-            n_hit_in_query, n_query, n_hit_in_background, n_background
-        )
+        odds_ratio, p_value = fisher_exact_test(n_hit_in_query, n_query, n_hit_in_background, n_background)
 
         results.append(
             {
@@ -234,11 +231,7 @@ def run_enrichment(
                 "n_query": n_query,
                 "n_term": n_hit_in_background,
                 "n_background": n_background,
-                "fold_enrichment": (
-                    (n_hit_in_query / n_query) / (n_hit_in_background / n_background)
-                    if n_hit_in_background > 0
-                    else 0
-                ),
+                "fold_enrichment": ((n_hit_in_query / n_query) / (n_hit_in_background / n_background) if n_hit_in_background > 0 else 0),
                 "odds_ratio": odds_ratio,
                 "p_value": p_value,
             }
@@ -304,9 +297,7 @@ def analyze_enrichments(predictions: List[Dict], output_dir: Path) -> Dict:
             protein_data[pid]["locations"].add(loc)
 
     all_proteins = set(protein_data.keys())
-    high_risk_proteins = {
-        pid for pid, data in protein_data.items() if data["has_high_risk"]
-    }
+    high_risk_proteins = {pid for pid, data in protein_data.items() if data["has_high_risk"]}
 
     print(f"  Total proteins: {len(all_proteins):,}")
     print(f"  High-risk proteins: {len(high_risk_proteins):,}")
@@ -317,9 +308,7 @@ def analyze_enrichments(predictions: List[Dict], output_dir: Path) -> Dict:
     # GO Biological Process
     print("\n[2] GO Biological Process enrichment...")
     protein_to_bp = {pid: list(data["go_bp"]) for pid, data in protein_data.items()}
-    bp_results = run_enrichment(
-        high_risk_proteins, all_proteins, protein_to_bp, "GO_BP"
-    )
+    bp_results = run_enrichment(high_risk_proteins, all_proteins, protein_to_bp, "GO_BP")
     all_results["go_biological_process"] = bp_results
     sig_bp = sum(1 for r in bp_results if r.get("significant"))
     print(f"  Tested: {len(bp_results)}, Significant (FDR<0.05): {sig_bp}")
@@ -327,21 +316,15 @@ def analyze_enrichments(predictions: List[Dict], output_dir: Path) -> Dict:
     # GO Cellular Component
     print("\n[3] GO Cellular Component enrichment...")
     protein_to_cc = {pid: list(data["go_cc"]) for pid, data in protein_data.items()}
-    cc_results = run_enrichment(
-        high_risk_proteins, all_proteins, protein_to_cc, "GO_CC"
-    )
+    cc_results = run_enrichment(high_risk_proteins, all_proteins, protein_to_cc, "GO_CC")
     all_results["go_cellular_component"] = cc_results
     sig_cc = sum(1 for r in cc_results if r.get("significant"))
     print(f"  Tested: {len(cc_results)}, Significant (FDR<0.05): {sig_cc}")
 
     # Subcellular Location
     print("\n[4] Subcellular location enrichment...")
-    protein_to_loc = {
-        pid: list(data["locations"]) for pid, data in protein_data.items()
-    }
-    loc_results = run_enrichment(
-        high_risk_proteins, all_proteins, protein_to_loc, "Location"
-    )
+    protein_to_loc = {pid: list(data["locations"]) for pid, data in protein_data.items()}
+    loc_results = run_enrichment(high_risk_proteins, all_proteins, protein_to_loc, "Location")
     all_results["subcellular_location"] = loc_results
     sig_loc = sum(1 for r in loc_results if r.get("significant"))
     print(f"  Tested: {len(loc_results)}, Significant (FDR<0.05): {sig_loc}")
@@ -389,10 +372,7 @@ def generate_summary(results: Dict, output_dir: Path):
 
     summary = {
         "total_terms_tested": sum(len(r) for r in results.values()),
-        "significant_terms": sum(
-            sum(1 for t in cat_results if t.get("significant"))
-            for cat_results in results.values()
-        ),
+        "significant_terms": sum(sum(1 for t in cat_results if t.get("significant")) for cat_results in results.values()),
         "by_category": {},
     }
 
@@ -416,9 +396,7 @@ def generate_summary(results: Dict, output_dir: Path):
 
     for category, cat_summary in summary["by_category"].items():
         print(f"\n    {category}:")
-        print(
-            f"      Tested: {cat_summary['tested']}, Significant: {cat_summary['significant']}"
-        )
+        print(f"      Tested: {cat_summary['tested']}, Significant: {cat_summary['significant']}")
         if cat_summary["top_terms"]:
             print(f"      Top terms: {', '.join(cat_summary['top_terms'][:3])}")
 

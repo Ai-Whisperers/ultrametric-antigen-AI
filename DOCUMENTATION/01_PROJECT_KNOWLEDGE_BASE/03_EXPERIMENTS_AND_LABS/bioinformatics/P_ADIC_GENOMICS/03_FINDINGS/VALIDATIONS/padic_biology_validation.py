@@ -33,7 +33,8 @@ import numpy as np
 SCRIPT_DIR = Path(__file__).parent
 RESEARCH_DIR = SCRIPT_DIR.parent.parent
 sys.path.insert(
-    0, str(RESEARCH_DIR / "bioinformatics" / "rheumatoid_arthritis" / "scripts")
+    0,
+    str(RESEARCH_DIR / "bioinformatics" / "rheumatoid_arthritis" / "scripts"),
 )
 sys.path.insert(0, str(RESEARCH_DIR.parent / "src"))
 
@@ -255,9 +256,7 @@ ENCODING_SCHEMES = {
 # ============================================================================
 
 
-def test_ultrametric_property(
-    encoding: TernaryEncoding, test_sequences: List[List[str]]
-) -> Dict:
+def test_ultrametric_property(encoding: TernaryEncoding, test_sequences: List[List[str]]) -> Dict:
     """
     Test if the encoding preserves ultrametric structure.
 
@@ -292,11 +291,7 @@ def test_ultrametric_property(
                 results["n_triplets"] += 1
 
                 # Check all three orientations of ultrametric inequality
-                valid = (
-                    ultrametric_check(d_ij, d_jk, d_ik)
-                    and ultrametric_check(d_ij, d_ik, d_jk)
-                    and ultrametric_check(d_jk, d_ik, d_ij)
-                )
+                valid = ultrametric_check(d_ij, d_jk, d_ik) and ultrametric_check(d_ij, d_ik, d_jk) and ultrametric_check(d_jk, d_ik, d_ij)
 
                 if valid:
                     results["n_valid"] += 1
@@ -305,7 +300,11 @@ def test_ultrametric_property(
                     if len(results["violations"]) < 5:  # Keep first 5 violations
                         results["violations"].append(
                             {
-                                "indices": [indices[i], indices[j], indices[k]],
+                                "indices": [
+                                    indices[i],
+                                    indices[j],
+                                    indices[k],
+                                ],
                                 "distances": [d_ij, d_jk, d_ik],
                             }
                         )
@@ -316,9 +315,7 @@ def test_ultrametric_property(
     return results
 
 
-def test_hierarchical_clustering(
-    encoding: TernaryEncoding, entities: List[str]
-) -> Dict:
+def test_hierarchical_clustering(encoding: TernaryEncoding, entities: List[str]) -> Dict:
     """
     Test if 3-adic distance creates meaningful hierarchical clusters.
 
@@ -424,17 +421,18 @@ def test_biological_motif_distances(encoding: TernaryEncoding) -> Dict:
     # Add interpretations
     if "hydrophobic_core" in motif_indices and "charged_interface" in motif_indices:
         d = padic_distance_3(
-            motif_indices["hydrophobic_core"], motif_indices["charged_interface"]
+            motif_indices["hydrophobic_core"],
+            motif_indices["charged_interface"],
         )
-        results["interpretations"].append(
-            f"Hydrophobic vs Charged distance: {d:.4f} (expect high, different chemistry)"
-        )
+        results["interpretations"].append(f"Hydrophobic vs Charged distance: {d:.4f} (expect high, different chemistry)")
 
     return results
 
 
 def test_perturbation_sensitivity(
-    encoding: TernaryEncoding, base_sequence: List[str], perturbation_sites: List[int]
+    encoding: TernaryEncoding,
+    base_sequence: List[str],
+    perturbation_sites: List[int],
 ) -> Dict:
     """
     Test how 3-adic distance responds to local perturbations.
@@ -461,7 +459,11 @@ def test_perturbation_sensitivity(
             continue
 
         original = base_sequence[site]
-        site_results = {"site": site, "original": original, "substitutions": []}
+        site_results = {
+            "site": site,
+            "original": original,
+            "substitutions": [],
+        }
 
         for new_entity in all_entities:
             if new_entity != original:
@@ -482,8 +484,7 @@ def test_perturbation_sensitivity(
                             "new": new_entity,
                             "distance": round(d, 6),
                             "valuation": v,
-                            "category_change": encoding.encode(original)
-                            != encoding.encode(new_entity),
+                            "category_change": encoding.encode(original) != encoding.encode(new_entity),
                         }
                     )
 
@@ -572,7 +573,11 @@ def run_validation_suite():
     print("TEST 3: Biological Motif Distance Analysis")
     print("-" * 70)
 
-    for scheme_name in ["amino_acid_chemistry", "secondary_structure", "phospho_state"]:
+    for scheme_name in [
+        "amino_acid_chemistry",
+        "secondary_structure",
+        "phospho_state",
+    ]:
         encoding = ENCODING_SCHEMES[scheme_name]
         result = test_biological_motif_distances(encoding)
         all_results["tests"][f"motifs_{scheme_name}"] = result
@@ -599,16 +604,10 @@ def run_validation_suite():
     print(f"\n  Testing KXGS motif perturbations at S position:")
     if "perturbations" in result:
         for site_result in result["perturbations"]:
-            print(
-                f"    Site {site_result['site']} (original: {site_result['original']}):"
-            )
+            print(f"    Site {site_result['site']} (original: {site_result['original']}):")
             for sub in site_result["substitutions"][:5]:  # Top 5
-                cat_change = (
-                    "category change" if sub["category_change"] else "same category"
-                )
-                print(
-                    f"      → {sub['new']}: d={sub['distance']:.4f}, v={sub['valuation']} ({cat_change})"
-                )
+                cat_change = "category change" if sub["category_change"] else "same category"
+                print(f"      → {sub['new']}: d={sub['distance']:.4f}, v={sub['valuation']} ({cat_change})")
 
     # ========================================================================
     # Test 5: Cross-Encoding Consistency
@@ -632,10 +631,7 @@ def run_validation_suite():
         consistency_results["pairs"][pair_key] = {}
 
         for scheme_name, encoding in ENCODING_SCHEMES.items():
-            if (
-                scheme_name.startswith("amino_acid")
-                or scheme_name == "secondary_structure"
-            ):
+            if scheme_name.startswith("amino_acid") or scheme_name == "secondary_structure":
                 cat1 = encoding.encode(aa1)
                 cat2 = encoding.encode(aa2)
                 same_cat = cat1 == cat2

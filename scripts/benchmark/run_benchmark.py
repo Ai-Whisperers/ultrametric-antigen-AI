@@ -77,15 +77,9 @@ class TernaryVAEBenchmark:
                 statenet_lr_scale=model_config.get("statenet_lr_scale", 0.1),
                 statenet_lambda_scale=model_config.get("statenet_lambda_scale", 0.02),
                 statenet_ranking_scale=model_config.get("statenet_ranking_scale", 0.3),
-                statenet_hyp_sigma_scale=model_config.get(
-                    "statenet_hyp_sigma_scale", 0.05
-                ),
-                statenet_hyp_curvature_scale=model_config.get(
-                    "statenet_hyp_curvature_scale", 0.02
-                ),
-                statenet_curriculum_scale=model_config.get(
-                    "statenet_curriculum_scale", 0.1
-                ),
+                statenet_hyp_sigma_scale=model_config.get("statenet_hyp_sigma_scale", 0.05),
+                statenet_hyp_curvature_scale=model_config.get("statenet_hyp_curvature_scale", 0.02),
+                statenet_curriculum_scale=model_config.get("statenet_curriculum_scale", 0.1),
             ).to(self.device)
         else:  # v5.6
             self.model = DualNeuralVAEV5(
@@ -126,9 +120,7 @@ class TernaryVAEBenchmark:
         else:
             print(f"  Best val loss: {checkpoint.get('best_val_loss', 'unknown')}")
 
-    def benchmark_inference_speed(
-        self, num_samples: int = 10000, num_trials: int = 10
-    ) -> Dict:
+    def benchmark_inference_speed(self, num_samples: int = 10000, num_trials: int = 10) -> Dict:
         """Benchmark inference speed."""
         print(f"\n{'='*80}")
         print("Benchmarking Inference Speed")
@@ -170,20 +162,14 @@ class TernaryVAEBenchmark:
             "vae_b_samples_per_sec": num_samples / np.mean(times_B),
         }
 
-        print(
-            f"\nVAE-A: {results['vae_a_mean_time']:.4f}s +/- {results['vae_a_std_time']:.4f}s"
-        )
+        print(f"\nVAE-A: {results['vae_a_mean_time']:.4f}s +/- {results['vae_a_std_time']:.4f}s")
         print(f"       {results['vae_a_samples_per_sec']:.0f} samples/sec")
-        print(
-            f"\nVAE-B: {results['vae_b_mean_time']:.4f}s +/- {results['vae_b_std_time']:.4f}s"
-        )
+        print(f"\nVAE-B: {results['vae_b_mean_time']:.4f}s +/- {results['vae_b_std_time']:.4f}s")
         print(f"       {results['vae_b_samples_per_sec']:.0f} samples/sec")
 
         return results
 
-    def benchmark_coverage(
-        self, num_samples: int = 195000, num_trials: int = 5
-    ) -> Dict:
+    def benchmark_coverage(self, num_samples: int = 195000, num_trials: int = 5) -> Dict:
         """Benchmark operation coverage."""
         print(f"\n{'='*80}")
         print("Benchmarking Coverage")
@@ -232,20 +218,12 @@ class TernaryVAEBenchmark:
         print(f"\n{'='*40}")
         print("Coverage Summary")
         print(f"{'='*40}")
-        print(
-            f"VAE-A: {results['vae_a_mean_coverage']:.2f}% +/- {results['vae_a_std_coverage']:.2f}%"
-        )
+        print(f"VAE-A: {results['vae_a_mean_coverage']:.2f}% +/- {results['vae_a_std_coverage']:.2f}%")
         print(f"       Max: {results['vae_a_max_coverage']:.2f}%")
-        print(
-            f"       ({results['vae_a_mean_unique']:.0f} +/- {results['vae_a_std_unique']:.0f} ops)"
-        )
-        print(
-            f"\nVAE-B: {results['vae_b_mean_coverage']:.2f}% +/- {results['vae_b_std_coverage']:.2f}%"
-        )
+        print(f"       ({results['vae_a_mean_unique']:.0f} +/- {results['vae_a_std_unique']:.0f} ops)")
+        print(f"\nVAE-B: {results['vae_b_mean_coverage']:.2f}% +/- {results['vae_b_std_coverage']:.2f}%")
         print(f"       Max: {results['vae_b_max_coverage']:.2f}%")
-        print(
-            f"       ({results['vae_b_mean_unique']:.0f} +/- {results['vae_b_std_unique']:.0f} ops)"
-        )
+        print(f"       ({results['vae_b_mean_unique']:.0f} +/- {results['vae_b_std_unique']:.0f} ops)")
 
         return results
 
@@ -286,9 +264,7 @@ class TernaryVAEBenchmark:
 
         return results
 
-    def benchmark_hyperbolic_correlation(
-        self, num_samples: int = 5000, num_trials: int = 3
-    ) -> Dict:
+    def benchmark_hyperbolic_correlation(self, num_samples: int = 5000, num_trials: int = 3) -> Dict:
         """Benchmark hyperbolic 3-adic correlation (v5.10 specific)."""
         print(f"\n{'='*80}")
         print("Benchmarking Hyperbolic 3-adic Correlation")
@@ -299,10 +275,8 @@ class TernaryVAEBenchmark:
         for trial in range(num_trials):
             print(f"\nTrial {trial+1}/{num_trials}...")
 
-            corr_hyp, corr_euc, d_hyp, d_euc, cov_unique, cov_pct = (
-                compute_ranking_correlation_hyperbolic(
-                    self.model, self.device, n_samples=num_samples
-                )
+            corr_hyp, corr_euc, d_hyp, d_euc, cov_unique, cov_pct = compute_ranking_correlation_hyperbolic(
+                self.model, self.device, n_samples=num_samples
             )
 
             results_list.append(
@@ -337,16 +311,10 @@ class TernaryVAEBenchmark:
         print(f"\n{'='*40}")
         print("Hyperbolic Correlation Summary")
         print(f"{'='*40}")
-        print(
-            f"Hyperbolic: {results['corr_hyp_mean']:.4f} +/- {results['corr_hyp_std']:.4f}"
-        )
+        print(f"Hyperbolic: {results['corr_hyp_mean']:.4f} +/- {results['corr_hyp_std']:.4f}")
         print(f"            Max: {results['corr_hyp_max']:.4f}")
-        print(
-            f"Euclidean:  {results['corr_euc_mean']:.4f} +/- {results['corr_euc_std']:.4f}"
-        )
-        print(
-            f"Hyp/Euc Ratio: {results['corr_hyp_mean']/results['corr_euc_mean']:.2f}x"
-        )
+        print(f"Euclidean:  {results['corr_euc_mean']:.4f} +/- {results['corr_euc_std']:.4f}")
+        print(f"Hyp/Euc Ratio: {results['corr_hyp_mean']/results['corr_euc_mean']:.2f}x")
 
         return results
 
@@ -396,9 +364,7 @@ class TernaryVAEBenchmark:
         results = {"model_version": self.model_version}
 
         # Inference speed
-        results["inference"] = self.benchmark_inference_speed(
-            num_samples=10000, num_trials=10
-        )
+        results["inference"] = self.benchmark_inference_speed(num_samples=10000, num_trials=10)
 
         # Coverage
         results["coverage"] = self.benchmark_coverage(num_samples=195000, num_trials=5)
@@ -408,9 +374,7 @@ class TernaryVAEBenchmark:
 
         # Hyperbolic correlation (v5.10 primary metric)
         if self.model_version == "v5.10":
-            results["hyperbolic"] = self.benchmark_hyperbolic_correlation(
-                num_samples=5000, num_trials=3
-            )
+            results["hyperbolic"] = self.benchmark_hyperbolic_correlation(num_samples=5000, num_trials=3)
 
         # Memory usage
         results["memory"] = self.benchmark_memory_usage()
@@ -461,10 +425,16 @@ class TernaryVAEBenchmark:
         # Entropy
         if "entropy" in results:
             table_data.append(
-                ["Latent Entropy (VAE-A)", f"{results['entropy']['entropy_A']:.3f}"]
+                [
+                    "Latent Entropy (VAE-A)",
+                    f"{results['entropy']['entropy_A']:.3f}",
+                ]
             )
             table_data.append(
-                ["Latent Entropy (VAE-B)", f"{results['entropy']['entropy_B']:.3f}"]
+                [
+                    "Latent Entropy (VAE-B)",
+                    f"{results['entropy']['entropy_B']:.3f}",
+                ]
             )
 
         # Hyperbolic (v5.10)
@@ -490,20 +460,14 @@ class TernaryVAEBenchmark:
 
         # Memory
         if "memory" in results and results["memory"]:
-            table_data.append(
-                ["Peak Memory Usage", f"{results['memory']['peak_gb']:.3f} GB"]
-            )
+            table_data.append(["Peak Memory Usage", f"{results['memory']['peak_gb']:.3f} GB"])
 
         print(tabulate(table_data, headers=["Metric", "Value"], tablefmt="grid"))
 
     def save_results(self, results: Dict, output_path: str = None):
         """Save benchmark results to JSON file with metadata."""
         if output_path is None:
-            output_path = (
-                Path(__file__).parent.parent.parent
-                / "benchmarks"
-                / f"benchmark_{self.model_version}.json"
-            )
+            output_path = Path(__file__).parent.parent.parent / "benchmarks" / f"benchmark_{self.model_version}.json"
         else:
             output_path = Path(output_path)
 
@@ -544,12 +508,13 @@ class TernaryVAEBenchmark:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Benchmark Ternary VAE (v5.6 or v5.10)"
-    )
+    parser = argparse.ArgumentParser(description="Benchmark Ternary VAE (v5.6 or v5.10)")
     parser.add_argument("--config", type=str, required=True, help="Path to config file")
     parser.add_argument(
-        "--checkpoint", type=str, required=True, help="Path to checkpoint (required)"
+        "--checkpoint",
+        type=str,
+        required=True,
+        help="Path to checkpoint (required)",
     )
     parser.add_argument(
         "--model-version",
@@ -558,20 +523,17 @@ def main():
         choices=["v5.6", "v5.10"],
         help="Model version to benchmark (default: v5.10)",
     )
+    parser.add_argument("--device", type=str, default="cuda", help="Device: cuda or cpu")
     parser.add_argument(
-        "--device", type=str, default="cuda", help="Device: cuda or cpu"
+        "--trials",
+        type=int,
+        default=5,
+        help="Number of trials for coverage benchmark",
     )
-    parser.add_argument(
-        "--trials", type=int, default=5, help="Number of trials for coverage benchmark"
-    )
-    parser.add_argument(
-        "--output", type=str, default=None, help="Output path for JSON results"
-    )
+    parser.add_argument("--output", type=str, default=None, help="Output path for JSON results")
     args = parser.parse_args()
 
-    benchmark = TernaryVAEBenchmark(
-        args.config, args.checkpoint, args.device, args.model_version
-    )
+    benchmark = TernaryVAEBenchmark(args.config, args.checkpoint, args.device, args.model_version)
     results = benchmark.run_full_benchmark()
     benchmark.save_results(results, args.output)
 

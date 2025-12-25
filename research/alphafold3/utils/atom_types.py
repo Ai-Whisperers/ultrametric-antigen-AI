@@ -110,7 +110,22 @@ RESIDUE_ATOMS: Mapping[str, tuple[str, ...]] = {
     residue_names.PRO: (C, CA, CB, CG, CD, N, O),
     residue_names.SER: (C, CA, CB, N, O, OG),
     residue_names.THR: (C, CA, CB, CG2, N, O, OG1),
-    residue_names.TRP: (C, CA, CB, CG, CD1, CD2, CE2, CE3, CZ2, CZ3, CH2, N, NE1, O),
+    residue_names.TRP: (
+        C,
+        CA,
+        CB,
+        CG,
+        CD1,
+        CD2,
+        CE2,
+        CE3,
+        CZ2,
+        CZ3,
+        CH2,
+        N,
+        NE1,
+        O,
+    ),
     residue_names.TYR: (C, CA, CB, CG, CD1, CD2, CE1, CE2, CZ, N, O, OH),
     residue_names.VAL: (C, CA, CB, CG1, CG2, N, O),
 }  # pyformat: disable
@@ -196,7 +211,22 @@ ATOM14: Mapping[str, tuple[str, ...]] = {
     residue_names.PRO: (N, CA, C, O, CB, CG, CD),
     residue_names.SER: (N, CA, C, O, CB, OG),
     residue_names.THR: (N, CA, C, O, CB, OG1, CG2),
-    residue_names.TRP: (N, CA, C, O, CB, CG, CD1, CD2, NE1, CE2, CE3, CZ2, CZ3, CH2),
+    residue_names.TRP: (
+        N,
+        CA,
+        C,
+        O,
+        CB,
+        CG,
+        CD1,
+        CD2,
+        NE1,
+        CE2,
+        CE3,
+        CZ2,
+        CZ3,
+        CH2,
+    ),
     residue_names.TYR: (N, CA, C, O, CB, CG, CD1, CD2, CE1, CE2, CZ, OH),
     residue_names.VAL: (N, CA, C, O, CB, CG1, CG2),
     residue_names.UNK: (),
@@ -204,13 +234,10 @@ ATOM14: Mapping[str, tuple[str, ...]] = {
 
 # A compact atom encoding with 14 columns, padded with '' in empty slots.
 ATOM14_PADDED: Mapping[str, Sequence[str]] = {
-    k: [v for _, v in itertools.zip_longest(range(14), values, fillvalue="")]
-    for k, values in ATOM14.items()
+    k: [v for _, v in itertools.zip_longest(range(14), values, fillvalue="")] for k, values in ATOM14.items()
 }
 
-ATOM14_ORDER: Mapping[str, Mapping[str, int]] = {
-    k: {name: i for i, name in enumerate(v)} for k, v in ATOM14.items()
-}
+ATOM14_ORDER: Mapping[str, Mapping[str, int]] = {k: {name: i for i, name in enumerate(v)} for k, v in ATOM14.items()}
 ATOM14_NUM: Final[int] = max(len(v) for v in ATOM14.values())
 
 # Used when we need to store protein and nucleic atom library.
@@ -233,7 +260,22 @@ DENSE_ATOM: Mapping[str, tuple[str, ...]] = {
     residue_names.PRO: (N, CA, C, O, CB, CG, CD),
     residue_names.SER: (N, CA, C, O, CB, OG),
     residue_names.THR: (N, CA, C, O, CB, OG1, CG2),
-    residue_names.TRP: (N, CA, C, O, CB, CG, CD1, CD2, NE1, CE2, CE3, CZ2, CZ3, CH2),
+    residue_names.TRP: (
+        N,
+        CA,
+        C,
+        O,
+        CB,
+        CG,
+        CD1,
+        CD2,
+        NE1,
+        CE2,
+        CE3,
+        CZ2,
+        CZ3,
+        CH2,
+    ),
     residue_names.TYR: (N, CA, C, O, CB, CG, CD1, CD2, CE1, CE2, CZ, OH),
     residue_names.VAL: (N, CA, C, O, CB, CG1, CG2),
     residue_names.UNK: (),
@@ -435,9 +477,7 @@ DENSE_ATOM: Mapping[str, tuple[str, ...]] = {
     residue_names.UNK_DNA: (),
 }  # pyformat: disable
 
-DENSE_ATOM_ORDER: Mapping[str, Mapping[str, int]] = {
-    k: {name: i for i, name in enumerate(v)} for k, v in DENSE_ATOM.items()
-}
+DENSE_ATOM_ORDER: Mapping[str, Mapping[str, int]] = {k: {name: i for i, name in enumerate(v)} for k, v in DENSE_ATOM.items()}
 DENSE_ATOM_NUM: Final[int] = max(len(v) for v in DENSE_ATOM.values())
 
 # Used when we need to store atom data in a format that requires fixed atom data

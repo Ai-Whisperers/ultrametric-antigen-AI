@@ -196,11 +196,13 @@ def run_ptm_sweep(proteins_data: dict, encoder) -> dict:
         sequence = protein["sequence"]
         known_cit_sites = set(protein.get("known_cit_sites", []))
 
-        print(
-            f"\nProcessing {protein_name} ({protein['length']} aa, {protein['total_modifiable_sites']} sites)..."
-        )
+        print(f"\nProcessing {protein_name} ({protein['length']} aa, {protein['total_modifiable_sites']} sites)...")
 
-        protein_stats = {"total": 0, "goldilocks": 0, "by_ptm": defaultdict(int)}
+        protein_stats = {
+            "total": 0,
+            "goldilocks": 0,
+            "by_ptm": defaultdict(int),
+        }
 
         for residue_type, sites in protein["modifiable_sites"].items():
             # Determine applicable PTM type for this residue
@@ -260,9 +262,7 @@ def run_ptm_sweep(proteins_data: dict, encoder) -> dict:
                 if is_known_acpa:
                     results["statistics"]["known_acpa_analysis"]["total"] += 1
                     if zone == "goldilocks":
-                        results["statistics"]["known_acpa_analysis"][
-                            "in_goldilocks"
-                        ] += 1
+                        results["statistics"]["known_acpa_analysis"]["in_goldilocks"] += 1
 
                 protein_stats["total"] += 1
                 protein_stats["by_ptm"][ptm_type] += 1
@@ -274,11 +274,7 @@ def run_ptm_sweep(proteins_data: dict, encoder) -> dict:
         results["statistics"]["by_protein"][protein_name] = {
             "total": protein_stats["total"],
             "goldilocks": protein_stats["goldilocks"],
-            "goldilocks_rate": (
-                protein_stats["goldilocks"] / protein_stats["total"]
-                if protein_stats["total"] > 0
-                else 0
-            ),
+            "goldilocks_rate": (protein_stats["goldilocks"] / protein_stats["total"] if protein_stats["total"] > 0 else 0),
         }
 
     # Convert defaultdicts to regular dicts
@@ -298,7 +294,7 @@ def main():
     proteins_path = data_dir / "acpa_proteins.json"
 
     if not proteins_path.exists():
-        print(f"ERROR: ACPA proteins not found. Run 18_extract_acpa_proteins.py first.")
+        print("ERROR: ACPA proteins not found. Run 18_extract_acpa_proteins.py first.")
         return 1
 
     print(f"\nLoading ACPA proteins from: {proteins_path}")
@@ -306,9 +302,7 @@ def main():
         proteins_data = json.load(f)
 
     print(f"  Proteins: {len(proteins_data['proteins'])}")
-    print(
-        f"  Total modifiable sites: {proteins_data['summary']['total_modifiable_sites']}"
-    )
+    print(f"  Total modifiable sites: {proteins_data['summary']['total_modifiable_sites']}")
 
     # Load encoder
     print("\nLoading 3-adic hyperbolic encoder...")
@@ -331,28 +325,24 @@ def main():
     stats = results["statistics"]
     print(f"\n  Total PTM samples: {stats['total_samples']}")
 
-    print(f"\n  By Goldilocks zone:")
+    print("\n  By Goldilocks zone:")
     for zone, count in stats["by_zone"].items():
         pct = count / stats["total_samples"] * 100 if stats["total_samples"] > 0 else 0
         print(f"    {zone}: {count} ({pct:.1f}%)")
 
-    print(f"\n  By PTM type:")
+    print("\n  By PTM type:")
     for ptm, data in stats["by_ptm_type"].items():
-        goldilocks_rate = (
-            data["goldilocks"] / data["total"] * 100 if data["total"] > 0 else 0
-        )
-        print(
-            f"    {ptm}: {data['total']} total, {data['goldilocks']} goldilocks ({goldilocks_rate:.1f}%)"
-        )
+        goldilocks_rate = data["goldilocks"] / data["total"] * 100 if data["total"] > 0 else 0
+        print(f"    {ptm}: {data['total']} total, {data['goldilocks']} goldilocks ({goldilocks_rate:.1f}%)")
 
-    print(f"\n  Known ACPA sites analysis:")
+    print("\n  Known ACPA sites analysis:")
     acpa = stats["known_acpa_analysis"]
     if acpa["total"] > 0:
         acpa_rate = acpa["in_goldilocks"] / acpa["total"] * 100
         print(f"    Total known sites: {acpa['total']}")
         print(f"    In Goldilocks zone: {acpa['in_goldilocks']} ({acpa_rate:.1f}%)")
     else:
-        print(f"    No known ACPA sites found in sweep")
+        print("    No known ACPA sites found in sweep")
 
     # Save results
     output_path = data_dir / "ra_ptm_sweep_results.json"
@@ -365,20 +355,11 @@ def main():
         "analysis_date": results["metadata"]["analysis_date"],
         "total_samples": stats["total_samples"],
         "goldilocks_count": stats["by_zone"]["goldilocks"],
-        "goldilocks_rate": (
-            stats["by_zone"]["goldilocks"] / stats["total_samples"]
-            if stats["total_samples"] > 0
-            else 0
-        ),
+        "goldilocks_rate": (stats["by_zone"]["goldilocks"] / stats["total_samples"] if stats["total_samples"] > 0 else 0),
         "known_acpa_in_goldilocks": acpa["in_goldilocks"],
         "known_acpa_total": acpa["total"],
-        "known_acpa_goldilocks_rate": (
-            acpa["in_goldilocks"] / acpa["total"] if acpa["total"] > 0 else 0
-        ),
-        "by_ptm_type": {
-            k: v["goldilocks"] / v["total"] if v["total"] > 0 else 0
-            for k, v in stats["by_ptm_type"].items()
-        },
+        "known_acpa_goldilocks_rate": (acpa["in_goldilocks"] / acpa["total"] if acpa["total"] > 0 else 0),
+        "by_ptm_type": {k: v["goldilocks"] / v["total"] if v["total"] > 0 else 0 for k, v in stats["by_ptm_type"].items()},
     }
 
     summary_path = data_dir / "ra_ptm_sweep_summary.json"

@@ -172,18 +172,10 @@ def analyze_3adic_clustering(data: dict, output_path: Path):
     corr_B_val, p_B_val = spearmanr(adic_vals, latent_dists_B)
 
     print(f"\nSpearman correlations (n={len(pairs)} pairs):")
-    print(
-        f"  VAE-A: 3-adic digit distance vs latent: r={corr_A_dist:.4f} (p={p_A_dist:.2e})"
-    )
-    print(
-        f"  VAE-B: 3-adic digit distance vs latent: r={corr_B_dist:.4f} (p={p_B_dist:.2e})"
-    )
-    print(
-        f"  VAE-A: 3-adic valuation vs latent:      r={corr_A_val:.4f} (p={p_A_val:.2e})"
-    )
-    print(
-        f"  VAE-B: 3-adic valuation vs latent:      r={corr_B_val:.4f} (p={p_B_val:.2e})"
-    )
+    print(f"  VAE-A: 3-adic digit distance vs latent: r={corr_A_dist:.4f} (p={p_A_dist:.2e})")
+    print(f"  VAE-B: 3-adic digit distance vs latent: r={corr_B_dist:.4f} (p={p_B_dist:.2e})")
+    print(f"  VAE-A: 3-adic valuation vs latent:      r={corr_A_val:.4f} (p={p_A_val:.2e})")
+    print(f"  VAE-B: 3-adic valuation vs latent:      r={corr_B_val:.4f} (p={p_B_val:.2e})")
 
     # Visualization
     fig, axes = plt.subplots(2, 3, figsize=(18, 12))
@@ -274,7 +266,9 @@ def analyze_3adic_clustering(data: dict, output_path: Path):
 
     plt.tight_layout()
     plt.savefig(
-        output_path / "3adic_distance_analysis.png", dpi=150, bbox_inches="tight"
+        output_path / "3adic_distance_analysis.png",
+        dpi=150,
+        bbox_inches="tight",
     )
     plt.close()
     print(f"Saved: {output_path / '3adic_distance_analysis.png'}")
@@ -315,12 +309,8 @@ def analyze_single_digit_neighbors(data: dict, output_path: Path):
                     op[pos] = new_val
                     neighbor_idx = op_to_index(op)
                     if neighbor_idx < n_ops:
-                        neighbor_dists_A[pos].append(
-                            np.linalg.norm(z_A[idx] - z_A[neighbor_idx])
-                        )
-                        neighbor_dists_B[pos].append(
-                            np.linalg.norm(z_B[idx] - z_B[neighbor_idx])
-                        )
+                        neighbor_dists_A[pos].append(np.linalg.norm(z_A[idx] - z_A[neighbor_idx]))
+                        neighbor_dists_B[pos].append(np.linalg.norm(z_B[idx] - z_B[neighbor_idx]))
             op[pos] = original_val
 
     # Analyze by position
@@ -338,9 +328,7 @@ def analyze_single_digit_neighbors(data: dict, output_path: Path):
             std_B = np.std(neighbor_dists_B[pos])
             means_A.append(mean_A)
             means_B.append(mean_B)
-            print(
-                f"   {pos}     | {mean_A:.4f} ({std_A:.4f}) | {mean_B:.4f} ({std_B:.4f})"
-            )
+            print(f"   {pos}     | {mean_A:.4f} ({std_A:.4f}) | {mean_B:.4f} ({std_B:.4f})")
 
     # In 3-adic topology, lower positions should have larger "jumps"
     # because changing digit 0 is a larger change than digit 8
@@ -361,9 +349,7 @@ def analyze_single_digit_neighbors(data: dict, output_path: Path):
     ax.bar(x + width / 2, means_B, width, label="VAE-B", color="orange", alpha=0.7)
     ax.set_xlabel("Digit Position (0=LSB, 8=MSB)")
     ax.set_ylabel("Mean Latent Distance")
-    ax.set_title(
-        "Single-Digit Change: Latent Distance by Position\n(3-adic: lower pos = larger jump)"
-    )
+    ax.set_title("Single-Digit Change: Latent Distance by Position\n(3-adic: lower pos = larger jump)")
     ax.legend()
     ax.set_xticks(x)
 
@@ -393,9 +379,7 @@ def analyze_single_digit_neighbors(data: dict, output_path: Path):
     ax.scatter(z_A_2d[:, 0], z_A_2d[:, 1], c="gray", s=1, alpha=0.3)
     ax.set_xlabel("PC1")
     ax.set_ylabel("PC2")
-    ax.set_title(
-        "VAE-A: Digit-0 Neighbor Connections\n(Blue lines = single LSB change)"
-    )
+    ax.set_title("VAE-A: Digit-0 Neighbor Connections\n(Blue lines = single LSB change)")
 
     # Same for digit-8 (MSB)
     ax = axes[2]
@@ -422,7 +406,9 @@ def analyze_single_digit_neighbors(data: dict, output_path: Path):
 
     plt.tight_layout()
     plt.savefig(
-        output_path / "3adic_single_digit_analysis.png", dpi=150, bbox_inches="tight"
+        output_path / "3adic_single_digit_analysis.png",
+        dpi=150,
+        bbox_inches="tight",
     )
     plt.close()
     print(f"Saved: {output_path / '3adic_single_digit_analysis.png'}")
@@ -654,7 +640,9 @@ def analyze_algebraic_structure(data: dict, output_path: Path):
 
     plt.tight_layout()
     plt.savefig(
-        output_path / "3adic_algebraic_structure.png", dpi=150, bbox_inches="tight"
+        output_path / "3adic_algebraic_structure.png",
+        dpi=150,
+        bbox_inches="tight",
     )
     plt.close()
     print(f"Saved: {output_path / '3adic_algebraic_structure.png'}")
@@ -684,9 +672,7 @@ def analyze_cayley_structure(data: dict, output_path: Path):
     zero_idx = op_to_index(np.zeros(9))
 
     # Color by Hamming distance from zero op
-    hamming_from_zero = np.array(
-        [compute_3adic_distance(zero_idx, i) for i in range(n_ops)]
-    )
+    hamming_from_zero = np.array([compute_3adic_distance(zero_idx, i) for i in range(n_ops)])
     scatter = ax.scatter(
         z_3d[:, 0],
         z_3d[:, 1],
@@ -716,7 +702,13 @@ def analyze_cayley_structure(data: dict, output_path: Path):
     ax = fig.add_subplot(132, projection="3d")
     coarse_idx = np.array([i % 27 for i in range(n_ops)])  # First 3 digits = mod 27
     scatter = ax.scatter(
-        z_3d[:, 0], z_3d[:, 1], z_3d[:, 2], c=coarse_idx, cmap="tab20", s=2, alpha=0.5
+        z_3d[:, 0],
+        z_3d[:, 1],
+        z_3d[:, 2],
+        c=coarse_idx,
+        cmap="tab20",
+        s=2,
+        alpha=0.5,
     )
     ax.set_xlabel("PC1")
     ax.set_ylabel("PC2")
@@ -728,7 +720,13 @@ def analyze_cayley_structure(data: dict, output_path: Path):
     ax = fig.add_subplot(133, projection="3d")
     fine_idx = np.array([i // (3**6) for i in range(n_ops)])  # Last 3 digits
     scatter = ax.scatter(
-        z_3d[:, 0], z_3d[:, 1], z_3d[:, 2], c=fine_idx, cmap="tab20", s=2, alpha=0.5
+        z_3d[:, 0],
+        z_3d[:, 1],
+        z_3d[:, 2],
+        c=fine_idx,
+        cmap="tab20",
+        s=2,
+        alpha=0.5,
     )
     ax.set_xlabel("PC1")
     ax.set_ylabel("PC2")
@@ -738,20 +736,22 @@ def analyze_cayley_structure(data: dict, output_path: Path):
 
     plt.tight_layout()
     plt.savefig(
-        output_path / "3adic_cayley_structure.png", dpi=150, bbox_inches="tight"
+        output_path / "3adic_cayley_structure.png",
+        dpi=150,
+        bbox_inches="tight",
     )
     plt.close()
     print(f"Saved: {output_path / '3adic_cayley_structure.png'}")
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Analyze 3-adic structure of Ternary VAE"
-    )
+    parser = argparse.ArgumentParser(description="Analyze 3-adic structure of Ternary VAE")
     parser.add_argument("--checkpoint", type=str, default="latest.pt")
     parser.add_argument("--output", type=str, default="outputs/manifold_viz")
     parser.add_argument(
-        "--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu"
+        "--device",
+        type=str,
+        default="cuda" if torch.cuda.is_available() else "cpu",
     )
 
     args = parser.parse_args()

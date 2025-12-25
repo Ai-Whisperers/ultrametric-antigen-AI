@@ -19,12 +19,11 @@ import json
 import sys
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List
 
 import numpy as np
 import torch
 import torch.nn as nn
-from scipy.spatial.distance import cdist
 from scipy.stats import pearsonr, spearmanr
 
 # Add paths
@@ -160,9 +159,7 @@ def exp_map(x: np.ndarray, v: np.ndarray, c: float = 1.0) -> np.ndarray:
         return x
 
     lambda_x = float(conformal_factor(x, c))
-    second_term = (
-        np.tanh(np.sqrt(c) * lambda_x * v_norm / 2) * v / (np.sqrt(c) * v_norm)
-    )
+    second_term = np.tanh(np.sqrt(c) * lambda_x * v_norm / 2) * v / (np.sqrt(c) * v_norm)
 
     return np.squeeze(mobius_addition(x, second_term, c))
 
@@ -179,22 +176,12 @@ def log_map(x: np.ndarray, y: np.ndarray, c: float = 1.0) -> np.ndarray:
         return np.zeros_like(x)
 
     lambda_x = float(conformal_factor(x, c))
-    return (
-        2
-        / (np.sqrt(c) * lambda_x)
-        * np.arctanh(np.minimum(np.sqrt(c) * xy_norm, 0.999))
-        * xy
-        / xy_norm
-    )
+    return 2 / (np.sqrt(c) * lambda_x) * np.arctanh(np.minimum(np.sqrt(c) * xy_norm, 0.999)) * xy / xy_norm
 
 
 def hyperbolic_midpoint(x: np.ndarray, y: np.ndarray, c: float = 1.0) -> np.ndarray:
-    """Compute midpoint on geodesic between x and y using exp/log maps."""
-    x = np.squeeze(x)
-    y = np.squeeze(y)
-    # Logarithmic map from x to y
+    """Compute hyperbolic midpoint between x and y."""
     v = log_map(x, y, c)
-    # Exponential map at x with half the tangent vector
     return exp_map(x, v * 0.5, c)
 
 
@@ -204,9 +191,7 @@ def conformal_factor(x: np.ndarray, c: float = 1.0) -> np.ndarray:
     return 2.0 / (1 - c * norm_sq + 1e-10)
 
 
-def hyperbolic_frechet_mean(
-    points: np.ndarray, c: float = 1.0, max_iter: int = 100, tol: float = 1e-6
-) -> np.ndarray:
+def hyperbolic_frechet_mean(points: np.ndarray, c: float = 1.0, max_iter: int = 100, tol: float = 1e-6) -> np.ndarray:
     """
     Compute Fréchet mean (hyperbolic centroid) using Riemannian gradient descent.
 
@@ -252,10 +237,10 @@ def hyperbolic_frechet_mean(
     return mean
 
 
-def padic_valuation_3(n: int) -> int:
+def padic_valuation_3(n: int) -> float:
     """Compute 3-adic valuation v₃(n) = max k such that 3^k divides n."""
     if n == 0:
-        return float("inf")
+        return float("inf")  # type: ignore
     v = 0
     while n % 3 == 0:
         n //= 3
@@ -358,9 +343,7 @@ def get_all_embeddings(model: CodonEncoder3Adic) -> Dict[str, np.ndarray]:
 # ============================================================================
 
 
-def test_knn_neighborhood_accuracy(
-    embeddings: Dict[str, np.ndarray], k: int = 5
-) -> Dict:
+def test_knn_neighborhood_accuracy(embeddings: Dict[str, np.ndarray], k: int = 5) -> Dict:
     """
     Test 1: k-NN Neighborhood Accuracy
 
@@ -407,7 +390,7 @@ def test_knn_neighborhood_accuracy(
 
         correct = sum(1 for j in k_neighbors[:k_actual] if j in synonymous_indices)
 
-        results["per_codon"][codon] = {
+        results["per_codon"][codon] = {  # type: ignore
             "neighbors": [codon_list[j] for j in k_neighbors],
             "correct": correct,
             "max_possible": k_actual,
@@ -455,9 +438,7 @@ def test_geodesic_interpolation(embeddings: Dict[str, np.ndarray]) -> Dict:
 
         aa_embeddings = [embeddings[c] for c in codons]
         centroid = hyperbolic_frechet_mean(np.array(aa_embeddings))
-        max_dist_to_centroid = max(
-            poincare_distance(e, centroid) for e in aa_embeddings
-        )
+        max_dist_to_centroid = max(poincare_distance(e, centroid) for e in aa_embeddings)
 
         midpoint_tests = []
         for i in range(len(codons)):
@@ -558,7 +539,8 @@ def test_padic_correlation(embeddings: Dict[str, np.ndarray]) -> Dict:
             for j in range(i + 1, len(indices)):
                 idx_i, idx_j = indices[i], indices[j]
                 pd = poincare_distance(
-                    embeddings[codon_list[idx_i]], embeddings[codon_list[idx_j]]
+                    embeddings[codon_list[idx_i]],
+                    embeddings[codon_list[idx_j]],
                 )
                 pad = padic_distance_3(positions[idx_i], positions[idx_j])
                 within_syn_poincare.append(pd)
@@ -571,9 +553,7 @@ def test_padic_correlation(embeddings: Dict[str, np.ndarray]) -> Dict:
     print(f"  Overall Spearman correlation: {spearman_r:.4f} (p={spearman_p:.2e})")
     print(f"  Overall Pearson correlation: {pearson_r:.4f}")
     if "within_synonymous_correlation" in results:
-        print(
-            f"  Within-synonymous correlation: {results['within_synonymous_correlation']:.4f}"
-        )
+        print(f"  Within-synonymous correlation: " f"{results['within_synonymous_correlation']:.4f}")
 
     return results
 
@@ -596,7 +576,7 @@ def test_cluster_purity(embeddings: Dict[str, np.ndarray]) -> Dict:
 
     silhouette_scores = []
 
-    codon_list = list(embeddings.keys())
+    codon_list: List[str] = list(embeddings.keys())
     emb_matrix = np.array([embeddings[c] for c in codon_list])
 
     # Compute all pairwise distances
@@ -611,14 +591,14 @@ def test_cluster_purity(embeddings: Dict[str, np.ndarray]) -> Dict:
     # Compute silhouette-like score for each codon
     for i, codon in enumerate(codon_list):
         aa = CODON_TABLE[codon]
-        same_aa_indices = [
-            j for j, c in enumerate(codon_list) if CODON_TABLE[c] == aa and j != i
-        ]
+        same_aa_indices = [j for j, c in enumerate(codon_list) if CODON_TABLE[c] == aa and j != i]
         diff_aa_indices = [j for j, c in enumerate(codon_list) if CODON_TABLE[c] != aa]
 
         if same_aa_indices and diff_aa_indices:
-            a = np.mean([dist_matrix[i, j] for j in same_aa_indices])  # Intra-cluster
-            b = np.mean([dist_matrix[i, j] for j in diff_aa_indices])  # Inter-cluster
+            a = np.mean([dist_matrix[i, j] for j in same_aa_indices])
+            # Intra-cluster
+            b = np.mean([dist_matrix[i, j] for j in diff_aa_indices])
+            # Inter-cluster
 
             s = (b - a) / max(a, b, 1e-10)
             silhouette_scores.append(s)
@@ -636,7 +616,7 @@ def test_cluster_purity(embeddings: Dict[str, np.ndarray]) -> Dict:
         # Intra-cluster variance
         intra_dists = [poincare_distance(e, centroid) for e in aa_embeddings]
 
-        results["per_aa"][aa] = {
+        results["per_aa"][aa] = {  # type: ignore
             "n_codons": len(codons),
             "mean_dist_to_centroid": float(np.mean(intra_dists)),
             "max_dist_to_centroid": float(np.max(intra_dists)),
@@ -649,7 +629,7 @@ def test_cluster_purity(embeddings: Dict[str, np.ndarray]) -> Dict:
     }
 
     print(f"  Mean silhouette score: {mean_silhouette:.4f}")
-    print(f"  Silhouette valid (>0.3): {results['summary']['silhouette_valid']}")
+    print(f"  Silhouette valid (>0.3): {results['summary']['silhouette_valid']}")  # type: ignore
 
     return results
 
@@ -697,7 +677,7 @@ def test_radial_distribution(embeddings: Dict[str, np.ndarray]) -> Dict:
 
     # Check if higher degeneracy → smaller radius (deeper in hierarchy)
     for deg, radii in sorted(degeneracy_to_radii.items()):
-        results["degeneracy_analysis"][deg] = {
+        results["degeneracy_analysis"][deg] = {  # type: ignore
             "n_amino_acids": len(radii),
             "mean_radius": float(np.mean(radii)),
             "std_radius": float(np.std(radii)),
@@ -713,10 +693,10 @@ def test_radial_distribution(embeddings: Dict[str, np.ndarray]) -> Dict:
 
     if len(degs) > 2:
         corr, p = spearmanr(degs, radii)
-        results["summary"]["degeneracy_radius_correlation"] = float(corr)
-        results["summary"]["correlation_p_value"] = float(p)
+        results["summary"]["degeneracy_radius_correlation"] = float(corr)  # type: ignore
+        results["summary"]["correlation_p_value"] = float(p)  # type: ignore
         print(f"\n  Degeneracy-radius correlation: {corr:.4f} (p={p:.2e})")
-        print(f"  (Negative = higher degeneracy closer to center)")
+        print("  (Negative = higher degeneracy closer to center)")
 
     return results
 
@@ -749,7 +729,7 @@ def test_angular_separation(embeddings: Dict[str, np.ndarray]) -> Dict:
         centroid = np.mean(aa_embeddings, axis=0)
         centroids[aa] = centroid
 
-        results["cluster_centroids"][aa] = {
+        results["cluster_centroids"][aa] = {  # type: ignore
             "centroid": centroid.tolist(),
             "radius": float(np.linalg.norm(centroid)),
         }
@@ -769,7 +749,7 @@ def test_angular_separation(embeddings: Dict[str, np.ndarray]) -> Dict:
                 angle = np.arccos(np.clip(cos_angle, -1, 1))
                 angular_dists.append(angle)
 
-                results["angular_distances"].append(
+                results["angular_distances"].append(  # type: ignore
                     {
                         "aa1": aa1,
                         "aa2": aa2,
@@ -791,7 +771,9 @@ def test_angular_separation(embeddings: Dict[str, np.ndarray]) -> Dict:
     return results
 
 
-def test_conformal_factor_consistency(embeddings: Dict[str, np.ndarray]) -> Dict:
+def test_conformal_factor_consistency(
+    embeddings: Dict[str, np.ndarray],
+) -> Dict:
     """
     Test 7: Conformal Factor Consistency
 
@@ -855,12 +837,8 @@ def run_deep_validation():
     print("\nLoading encoder...")
     model, checkpoint = load_encoder()
 
-    print(
-        f"  Encoder version: {checkpoint.get('metadata', {}).get('version', 'unknown')}"
-    )
-    print(
-        f"  Source embeddings: {checkpoint.get('metadata', {}).get('source_embeddings', 'unknown')}"
-    )
+    print(f"  Encoder version: {checkpoint.get('metadata', {}).get('version', 'unknown')}")
+    print(f"  Source embeddings: {checkpoint.get('metadata', {}).get('source_embeddings', 'unknown')}")
 
     # Get all embeddings
     print("\nComputing embeddings for all 64 codons...")
@@ -873,19 +851,13 @@ def run_deep_validation():
     }
 
     # Run all tests
-    all_results["tests"]["knn_accuracy"] = test_knn_neighborhood_accuracy(
-        embeddings, k=5
-    )
-    all_results["tests"]["geodesic_interpolation"] = test_geodesic_interpolation(
-        embeddings
-    )
+    all_results["tests"]["knn_accuracy"] = test_knn_neighborhood_accuracy(embeddings, k=5)
+    all_results["tests"]["geodesic_interpolation"] = test_geodesic_interpolation(embeddings)
     all_results["tests"]["padic_correlation"] = test_padic_correlation(embeddings)
     all_results["tests"]["cluster_purity"] = test_cluster_purity(embeddings)
     all_results["tests"]["radial_distribution"] = test_radial_distribution(embeddings)
     all_results["tests"]["angular_separation"] = test_angular_separation(embeddings)
-    all_results["tests"]["conformal_factor"] = test_conformal_factor_consistency(
-        embeddings
-    )
+    all_results["tests"]["conformal_factor"] = test_conformal_factor_consistency(embeddings)
 
     # ========================================================================
     # Summary
@@ -895,18 +867,10 @@ def run_deep_validation():
     print("=" * 70)
 
     validations = {
-        "knn_accuracy": all_results["tests"]["knn_accuracy"]["summary"]["accuracy"]
-        > 0.5,
-        "geodesic_interpolation": all_results["tests"]["geodesic_interpolation"][
-            "summary"
-        ]["validity_rate"]
-        > 0.8,
-        "cluster_purity": all_results["tests"]["cluster_purity"]["summary"][
-            "silhouette_valid"
-        ],
-        "conformal_consistency": all_results["tests"]["conformal_factor"]["summary"][
-            "geometry_consistent"
-        ],
+        "knn_accuracy": all_results["tests"]["knn_accuracy"]["summary"]["accuracy"] > 0.5,
+        "geodesic_interpolation": all_results["tests"]["geodesic_interpolation"]["summary"]["validity_rate"] > 0.8,
+        "cluster_purity": all_results["tests"]["cluster_purity"]["summary"]["silhouette_valid"],
+        "conformal_consistency": all_results["tests"]["conformal_factor"]["summary"]["geometry_consistent"],
     }
 
     n_valid = sum(validations.values())

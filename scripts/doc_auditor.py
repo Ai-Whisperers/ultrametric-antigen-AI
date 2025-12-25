@@ -1,4 +1,3 @@
-import json
 import os
 
 
@@ -31,10 +30,7 @@ def audit_docs():
                 file_path = os.path.join(root, file)
 
                 # Basic categorization logic
-                if any(
-                    kw in file_path.lower()
-                    for kw in ["pitch", "executive", "vision", "strategy"]
-                ):
+                if any(kw in file_path.lower() for kw in ["pitch", "executive", "vision", "strategy"]):
                     inventory["Executive"].append(file_path)
                 elif any(
                     kw in file_path.lower()
@@ -85,7 +81,7 @@ def audit_docs():
                     f.write(f"- {path}\n")
             f.write("\n")
 
-    print(f"Inventory created at DOCUMENTATION/reports/inventory.md")
+    print("Inventory created at DOCUMENTATION/reports/inventory.md")
 
 
 if __name__ == "__main__":

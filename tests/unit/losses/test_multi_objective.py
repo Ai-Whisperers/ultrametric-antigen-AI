@@ -1,4 +1,3 @@
-import pytest
 import torch
 
 from src.optimizers.multi_objective import ParetoFrontOptimizer
@@ -15,15 +14,15 @@ def test_pareto_dominance():
 
     # Test candidate dominated by A
     cand_bad = torch.tensor([1.5, 1.5])
-    assert optimizer.is_dominated(cand_bad, population) == True
+    assert optimizer.is_dominated(cand_bad, population) is True
 
     # Test candidate dominating A (should NOT be dominated by pop)
     cand_good = torch.tensor([0.9, 0.9])
-    assert optimizer.is_dominated(cand_good, population) == False
+    assert optimizer.is_dominated(cand_good, population) is False
 
     # Test candidate on frontier (not dominated)
     cand_mix = torch.tensor([0.4, 4.0])
-    assert optimizer.is_dominated(cand_mix, population) == False
+    assert optimizer.is_dominated(cand_mix, population) is False
 
 
 def test_identify_front():

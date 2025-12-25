@@ -1,17 +1,8 @@
-import sys
-
 import pytest
 import torch
 
-# Import with aliases to prevent pytest collection
 from scripts.eval.downstream_validation import \
     compute_production_readiness_score
-from scripts.eval.downstream_validation import \
-    test_arithmetic_structure as run_ari_test
-from scripts.eval.downstream_validation import \
-    test_hierarchy_preservation as run_hie_test
-from scripts.eval.downstream_validation import \
-    test_nearest_neighbor_retrieval as run_nn_test
 from tests.factories.embeddings import PoincareEmbeddingFactory
 
 

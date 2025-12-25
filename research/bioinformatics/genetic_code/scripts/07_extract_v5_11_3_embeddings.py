@@ -18,7 +18,6 @@ Output: research/genetic_code/data/v5_11_3_embeddings.pt
 import sys
 from pathlib import Path
 
-import numpy as np
 import torch
 from scipy.stats import spearmanr
 
@@ -64,13 +63,7 @@ def load_v5_11_3_model(device="cpu"):
     model.load_v5_5_checkpoint(v5_5_path, device=device)
 
     # Load V5.11.3 trained weights (projection layer + encoder_B)
-    v5_11_3_path = (
-        PROJECT_ROOT
-        / "sandbox-training"
-        / "checkpoints"
-        / "v5_11_structural"
-        / "best.pt"
-    )
+    v5_11_3_path = PROJECT_ROOT / "sandbox-training" / "checkpoints" / "v5_11_structural" / "best.pt"
     if not v5_11_3_path.exists():
         raise FileNotFoundError(f"V5.11.3 checkpoint not found: {v5_11_3_path}")
 
@@ -84,11 +77,7 @@ def load_v5_11_3_model(device="cpu"):
         state = checkpoint
 
     # Load only trainable components
-    trainable_keys = [
-        k
-        for k in state.keys()
-        if "projection" in k or "encoder_B" in k or "controller" in k
-    ]
+    trainable_keys = [k for k in state.keys() if "projection" in k or "encoder_B" in k or "controller" in k]
     trainable_state = {k: v for k, v in state.items() if k in trainable_keys}
 
     missing, unexpected = model.load_state_dict(trainable_state, strict=False)
@@ -97,7 +86,7 @@ def load_v5_11_3_model(device="cpu"):
     # Print checkpoint metadata if available
     if "metrics" in checkpoint:
         metrics = checkpoint["metrics"]
-        print(f"  Checkpoint metrics:")
+        print("  Checkpoint metrics:")
         for k, v in metrics.items():
             if isinstance(v, float):
                 print(f"    {k}: {v:.4f}")
@@ -187,12 +176,12 @@ def validate_embeddings(embeddings):
     corr_A, p_A = spearmanr(valuations, radii_A)
     corr_B, p_B = spearmanr(valuations, radii_B)
 
-    print(f"\n  Hierarchy correlation (valuation vs radius):")
+    print("\n  Hierarchy correlation (valuation vs radius):")
     print(f"    VAE-A: r = {corr_A:.4f} (p = {p_A:.2e})")
     print(f"    VAE-B: r = {corr_B:.4f} (p = {p_B:.2e})")
 
     # Check radii by valuation
-    print(f"\n  Radii by valuation (VAE-B):")
+    print("\n  Radii by valuation (VAE-B):")
     for v in range(10):
         mask = valuations == v
         if mask.sum() > 0:
@@ -204,9 +193,7 @@ def validate_embeddings(embeddings):
     passed = True
 
     if corr_B > -0.60:
-        print(
-            f"\n  WARNING: Hierarchy correlation ({corr_B:.4f}) is weaker than expected (< -0.60)"
-        )
+        print(f"\n  WARNING: Hierarchy correlation ({corr_B:.4f}) is weaker than expected (< -0.60)")
         passed = False
     else:
         print(f"\n  PASS: Hierarchy correlation is strong ({corr_B:.4f})")
@@ -216,9 +203,7 @@ def validate_embeddings(embeddings):
     if v9_mask.sum() > 0:
         v9_radius = radii_B[v9_mask].mean()
         if v9_radius > 0.20:
-            print(
-                f"  WARNING: v9 radius ({v9_radius:.4f}) is too large (expected ~0.10)"
-            )
+            print(f"  WARNING: v9 radius ({v9_radius:.4f}) is too large (expected ~0.10)")
             passed = False
         else:
             print(f"  PASS: v9 radius ({v9_radius:.4f}) is near center")

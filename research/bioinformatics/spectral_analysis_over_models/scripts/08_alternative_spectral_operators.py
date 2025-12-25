@@ -29,7 +29,6 @@ import torch
 from scipy import stats
 from scipy.linalg import eigvalsh
 from scipy.spatial.distance import pdist, squareform
-from scipy.special import gamma as gamma_func
 
 
 def v3_exact(n: int) -> int:
@@ -123,9 +122,7 @@ def operator_1_weighted_laplacian(embeddings, n_samples=500):
         print(f"  Eigenvalues: {results['n_eigenvalues']}")
         print(f"  KS vs GUE: {results['ks_gue']:.4f}")
         print(f"  KS vs Poisson: {results['ks_poisson']:.4f}")
-        verdict = (
-            "GUE-like" if results["ks_gue"] < results["ks_poisson"] else "Poisson-like"
-        )
+        verdict = "GUE-like" if results["ks_gue"] < results["ks_poisson"] else "Poisson-like"
         print(f"  Verdict: {verdict}")
 
     return results
@@ -177,9 +174,7 @@ def operator_2_hyperbolic_laplacian(embeddings, n_samples=500):
         print(f"  Eigenvalues: {results['n_eigenvalues']}")
         print(f"  KS vs GUE: {results['ks_gue']:.4f}")
         print(f"  KS vs Poisson: {results['ks_poisson']:.4f}")
-        verdict = (
-            "GUE-like" if results["ks_gue"] < results["ks_poisson"] else "Poisson-like"
-        )
+        verdict = "GUE-like" if results["ks_gue"] < results["ks_poisson"] else "Poisson-like"
         print(f"  Verdict: {verdict}")
 
     return results
@@ -219,9 +214,7 @@ def operator_3_radial_operator(embeddings, n_samples=500):
         print(f"  Eigenvalues: {results['n_eigenvalues']}")
         print(f"  KS vs GUE: {results['ks_gue']:.4f}")
         print(f"  KS vs Poisson: {results['ks_poisson']:.4f}")
-        verdict = (
-            "GUE-like" if results["ks_gue"] < results["ks_poisson"] else "Poisson-like"
-        )
+        verdict = "GUE-like" if results["ks_gue"] < results["ks_poisson"] else "Poisson-like"
         print(f"  Verdict: {verdict}")
 
     return results
@@ -271,9 +264,7 @@ def operator_4_multiplication_table(embeddings, n_samples=500):
         print(f"  Eigenvalues: {results['n_eigenvalues']}")
         print(f"  KS vs GUE: {results['ks_gue']:.4f}")
         print(f"  KS vs Poisson: {results['ks_poisson']:.4f}")
-        verdict = (
-            "GUE-like" if results["ks_gue"] < results["ks_poisson"] else "Poisson-like"
-        )
+        verdict = "GUE-like" if results["ks_gue"] < results["ks_poisson"] else "Poisson-like"
         print(f"  Verdict: {verdict}")
 
     return results
@@ -372,9 +363,7 @@ def operator_6_normalized_laplacian(embeddings, n_samples=500):
         print(f"  Eigenvalue range: [{eigenvalues.min():.4f}, {eigenvalues.max():.4f}]")
         print(f"  KS vs GUE: {results['ks_gue']:.4f}")
         print(f"  KS vs Poisson: {results['ks_poisson']:.4f}")
-        verdict = (
-            "GUE-like" if results["ks_gue"] < results["ks_poisson"] else "Poisson-like"
-        )
+        verdict = "GUE-like" if results["ks_gue"] < results["ks_poisson"] else "Poisson-like"
         print(f"  Verdict: {verdict}")
 
     return results
@@ -403,9 +392,7 @@ def visualize_spacing_comparison(all_results, output_dir):
 
         ax.set_xlabel("Normalized spacing s")
         ax.set_ylabel("P(s)")
-        ax.set_title(
-            f'{name}\nKS_GUE={results["ks_gue"]:.3f}, KS_Poi={results["ks_poisson"]:.3f}'
-        )
+        ax.set_title(f'{name}\nKS_GUE={results["ks_gue"]:.3f}, KS_Poi={results["ks_poisson"]:.3f}')
         ax.legend(fontsize=8)
         ax.set_xlim(0, 4)
         ax.grid(True, alpha=0.3)

@@ -14,18 +14,16 @@ Version: 2.0 - Updated to use Poincaré ball geometry
 """
 
 import json
-from collections import defaultdict
-from itertools import combinations, permutations
+from itertools import combinations
 from pathlib import Path
 
 import numpy as np
 import torch
-import torch.nn as nn
 # Import hyperbolic utilities
-from hyperbolic_utils import (CodonEncoder, codon_to_onehot, get_results_dir,
+from hyperbolic_utils import (codon_to_onehot, get_results_dir,
                               load_codon_encoder)
 from hyperbolic_utils import poincare_distance as hyp_poincare_distance
-from hyperbolic_utils import poincare_distance_matrix, project_to_poincare
+from hyperbolic_utils import project_to_poincare
 from scipy import stats
 
 # ============================================================================
@@ -337,11 +335,7 @@ def encode_full_sequence(sequence, encoder, device="cpu", use_hyperbolic=True):
 
     for codon in codons:
         if len(codon) == 3:
-            onehot = (
-                torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-                .unsqueeze(0)
-                .to(device)
-            )
+            onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
             with torch.no_grad():
                 emb = encoder.encode(onehot).cpu().numpy().squeeze()
                 if use_hyperbolic:
@@ -400,9 +394,7 @@ def compute_pairwise_distances(allele_embeddings, distance_fn="poincare"):
     return dist_matrix, allele_names
 
 
-def analyze_position_importance(
-    alleles_data, encoder, positions_of_interest=None, use_hyperbolic=True
-):
+def analyze_position_importance(alleles_data, encoder, positions_of_interest=None, use_hyperbolic=True):
     """
     Analyze which positions contribute most to RA vs control separation.
 
@@ -420,9 +412,7 @@ def analyze_position_importance(
     min_len = float("inf")
 
     for name, data in alleles_data.items():
-        embeddings, codons = encode_full_sequence(
-            data["exon2_sequence"], encoder, use_hyperbolic=use_hyperbolic
-        )
+        embeddings, codons = encode_full_sequence(data["exon2_sequence"], encoder, use_hyperbolic=use_hyperbolic)
         allele_position_embeddings[name] = embeddings
         min_len = min(min_len, len(embeddings))
 
@@ -436,14 +426,10 @@ def analyze_position_importance(
     for pos in range(min_len):
         # Get embeddings at this position
         risk_embs = [
-            allele_position_embeddings[name][pos]
-            for name, data in alleles_data.items()
-            if data["ra_status"] in ["high_risk", "moderate_risk"]
+            allele_position_embeddings[name][pos] for name, data in alleles_data.items() if data["ra_status"] in ["high_risk", "moderate_risk"]
         ]
         control_embs = [
-            allele_position_embeddings[name][pos]
-            for name, data in alleles_data.items()
-            if data["ra_status"] in ["neutral", "protective"]
+            allele_position_embeddings[name][pos] for name, data in alleles_data.items() if data["ra_status"] in ["neutral", "protective"]
         ]
 
         if len(risk_embs) > 0 and len(control_embs) > 0:
@@ -454,12 +440,8 @@ def analyze_position_importance(
             between_dist = poincare_distance(risk_centroid, control_centroid)
 
             # Within-group variance (using Poincaré distances)
-            risk_var = np.mean(
-                [poincare_distance(e, risk_centroid) ** 2 for e in risk_embs]
-            )
-            control_var = np.mean(
-                [poincare_distance(e, control_centroid) ** 2 for e in control_embs]
-            )
+            risk_var = np.mean([poincare_distance(e, risk_centroid) ** 2 for e in risk_embs])
+            control_var = np.mean([poincare_distance(e, control_centroid) ** 2 for e in control_embs])
             within_var = (risk_var + control_var) / 2
 
             # Fisher's discriminant ratio
@@ -482,31 +464,15 @@ def permutation_test(dist_matrix, allele_names, alleles_data, n_permutations=100
     Permutation test for significance of RA vs control separation.
     """
     # Get indices
-    risk_indices = [
-        i
-        for i, name in enumerate(allele_names)
-        if alleles_data[name]["ra_status"] in ["high_risk", "moderate_risk"]
-    ]
-    control_indices = [
-        i
-        for i, name in enumerate(allele_names)
-        if alleles_data[name]["ra_status"] in ["neutral", "protective"]
-    ]
+    risk_indices = [i for i, name in enumerate(allele_names) if alleles_data[name]["ra_status"] in ["high_risk", "moderate_risk"]]
+    control_indices = [i for i, name in enumerate(allele_names) if alleles_data[name]["ra_status"] in ["neutral", "protective"]]
 
     # Observed statistic: ratio of between to within distance
     def compute_separation_ratio(risk_idx, control_idx):
         # Within risk
-        risk_within = (
-            [dist_matrix[i, j] for i, j in combinations(risk_idx, 2)]
-            if len(risk_idx) > 1
-            else [0]
-        )
+        risk_within = [dist_matrix[i, j] for i, j in combinations(risk_idx, 2)] if len(risk_idx) > 1 else [0]
         # Within control
-        control_within = (
-            [dist_matrix[i, j] for i, j in combinations(control_idx, 2)]
-            if len(control_idx) > 1
-            else [0]
-        )
+        control_within = [dist_matrix[i, j] for i, j in combinations(control_idx, 2)] if len(control_idx) > 1 else [0]
         # Between
         between = [dist_matrix[i, j] for i in risk_idx for j in control_idx]
 
@@ -538,8 +504,7 @@ def permutation_test(dist_matrix, allele_names, alleles_data, n_permutations=100
         "null_mean": np.mean(null_ratios),
         "null_std": np.std(null_ratios),
         "p_value": p_value,
-        "z_score": (observed_ratio - np.mean(null_ratios))
-        / (np.std(null_ratios) + 1e-8),
+        "z_score": (observed_ratio - np.mean(null_ratios)) / (np.std(null_ratios) + 1e-8),
     }
 
 
@@ -574,13 +539,10 @@ def odds_ratio_correlation(dist_matrix, allele_names, alleles_data):
 # ============================================================================
 
 
-def create_expanded_visualization(
-    allele_embeddings, alleles_data, results, position_scores, output_path
-):
+def create_expanded_visualization(allele_embeddings, alleles_data, results, position_scores, output_path):
     """Create comprehensive visualization."""
     import matplotlib.pyplot as plt
     from sklearn.decomposition import PCA
-    from sklearn.manifold import TSNE
 
     fig, axes = plt.subplots(2, 3, figsize=(18, 12))
 
@@ -604,18 +566,14 @@ def create_expanded_visualization(
         else:
             colors.append("gray")
 
-    scatter = ax1.scatter(
-        embeddings_2d[:, 0], embeddings_2d[:, 1], c=colors, s=100, alpha=0.7
-    )
+    scatter = ax1.scatter(embeddings_2d[:, 0], embeddings_2d[:, 1], c=colors, s=100, alpha=0.7)
     for i, name in enumerate(allele_names):
         short_name = name.split("*")[1]
         ax1.annotate(short_name, (embeddings_2d[i, 0], embeddings_2d[i, 1]), fontsize=7)
 
     ax1.set_xlabel(f"PC1 ({pca.explained_variance_ratio_[0]:.1%})")
     ax1.set_ylabel(f"PC2 ({pca.explained_variance_ratio_[1]:.1%})")
-    ax1.set_title(
-        "HLA-DRB1 Alleles in Embedding Space\n(Dark red=High risk, Red=Moderate, Blue=Protective, Gray=Neutral)"
-    )
+    ax1.set_title("HLA-DRB1 Alleles in Embedding Space\n(Dark red=High risk, Red=Moderate, Blue=Protective, Gray=Neutral)")
 
     # 2. Distance matrix heatmap
     ax2 = axes[0, 1]
@@ -649,26 +607,10 @@ def create_expanded_visualization(
     ]
 
     # Compute within-group distances by category
-    high_risk_idx = [
-        i
-        for i, n in enumerate(allele_names)
-        if alleles_data[n]["ra_status"] == "high_risk"
-    ]
-    moderate_idx = [
-        i
-        for i, n in enumerate(allele_names)
-        if alleles_data[n]["ra_status"] == "moderate_risk"
-    ]
-    protective_idx = [
-        i
-        for i, n in enumerate(allele_names)
-        if alleles_data[n]["ra_status"] == "protective"
-    ]
-    neutral_idx = [
-        i
-        for i, n in enumerate(allele_names)
-        if alleles_data[n]["ra_status"] == "neutral"
-    ]
+    high_risk_idx = [i for i, n in enumerate(allele_names) if alleles_data[n]["ra_status"] == "high_risk"]
+    moderate_idx = [i for i, n in enumerate(allele_names) if alleles_data[n]["ra_status"] == "moderate_risk"]
+    protective_idx = [i for i, n in enumerate(allele_names) if alleles_data[n]["ra_status"] == "protective"]
+    neutral_idx = [i for i, n in enumerate(allele_names) if alleles_data[n]["ra_status"] == "neutral"]
 
     def mean_within(indices):
         if len(indices) < 2:
@@ -677,11 +619,7 @@ def create_expanded_visualization(
 
     risk_all = high_risk_idx + moderate_idx
     protect_all = protective_idx
-    between = (
-        np.mean([dist_matrix[i, j] for i in risk_all for j in protect_all])
-        if risk_all and protect_all
-        else 0
-    )
+    between = np.mean([dist_matrix[i, j] for i in risk_all for j in protect_all]) if risk_all and protect_all else 0
 
     values = [
         mean_within(high_risk_idx),
@@ -700,9 +638,7 @@ def create_expanded_visualization(
 
     # 4. Position importance (top 20)
     ax4 = axes[1, 0]
-    top_positions = sorted(
-        position_scores, key=lambda x: x["fisher_ratio"], reverse=True
-    )[:20]
+    top_positions = sorted(position_scores, key=lambda x: x["fisher_ratio"], reverse=True)[:20]
     positions = [p["position"] for p in top_positions]
     fisher_ratios = [p["fisher_ratio"] for p in top_positions]
 
@@ -710,9 +646,7 @@ def create_expanded_visualization(
     ax4.set_yticks(range(len(positions)))
     ax4.set_yticklabels([f"Pos {p}" for p in positions], fontsize=8)
     ax4.set_xlabel("Fisher Discriminant Ratio")
-    ax4.set_title(
-        "Top 20 Discriminative Positions\n(Higher = Better RA/Control Separation)"
-    )
+    ax4.set_title("Top 20 Discriminative Positions\n(Higher = Better RA/Control Separation)")
     ax4.invert_yaxis()
 
     # Highlight shared epitope positions (70-74)
@@ -728,12 +662,8 @@ def create_expanded_visualization(
     ref_name = or_data["reference"]
     ref_idx = allele_names.index(ref_name)
 
-    distances = [
-        dist_matrix[ref_idx, i] for i in range(len(allele_names)) if i != ref_idx
-    ]
-    log_ors = [
-        np.log(alleles_data[n]["odds_ratio"]) for n in allele_names if n != ref_name
-    ]
+    distances = [dist_matrix[ref_idx, i] for i in range(len(allele_names)) if i != ref_idx]
+    log_ors = [np.log(alleles_data[n]["odds_ratio"]) for n in allele_names if n != ref_name]
     colors_scatter = [colors[i] for i in range(len(allele_names)) if i != ref_idx]
 
     ax5.scatter(distances, log_ors, c=colors_scatter, s=80, alpha=0.7)
@@ -746,9 +676,7 @@ def create_expanded_visualization(
 
     ax5.set_xlabel(f'Distance from {ref_name.split("*")[1]}')
     ax5.set_ylabel("Log Odds Ratio")
-    ax5.set_title(
-        f'Distance vs RA Risk\nr={or_data["correlation"]:.3f}, p={or_data["p_value"]:.4f}'
-    )
+    ax5.set_title(f'Distance vs RA Risk\nr={or_data["correlation"]:.3f}, p={or_data["p_value"]:.4f}')
     ax5.axhline(y=0, color="gray", linestyle=":", alpha=0.5)
 
     # 6. Permutation test results
@@ -757,7 +685,13 @@ def create_expanded_visualization(
 
     # Create histogram of null distribution (simulated for visualization)
     null_samples = np.random.normal(perm["null_mean"], perm["null_std"], 1000)
-    ax6.hist(null_samples, bins=30, color="gray", alpha=0.5, label="Null Distribution")
+    ax6.hist(
+        null_samples,
+        bins=30,
+        color="gray",
+        alpha=0.5,
+        label="Null Distribution",
+    )
     ax6.axvline(
         x=perm["observed_ratio"],
         color="red",
@@ -802,24 +736,18 @@ def main():
     # Using '3adic' version (native hyperbolic from V5.11.3)
     print("\nLoading codon encoder (3-adic, V5.11.3)...")
     encoder, codon_mapping, _ = load_codon_encoder(device="cpu", version="3adic")
-    print(
-        f"  Loaded encoder with {sum(p.numel() for p in encoder.parameters())} parameters"
-    )
+    print(f"  Loaded encoder with {sum(p.numel() for p in encoder.parameters())} parameters")
 
     # Analyze position importance
     print("\nAnalyzing position importance across full binding groove...")
-    position_scores, allele_position_embeddings = analyze_position_importance(
-        HLA_DRB1_EXPANDED, encoder
-    )
+    position_scores, allele_position_embeddings = analyze_position_importance(HLA_DRB1_EXPANDED, encoder)
 
     # Find most discriminative positions
     top_5 = sorted(position_scores, key=lambda x: x["fisher_ratio"], reverse=True)[:5]
     print("  Top 5 discriminative positions:")
     for p in top_5:
         se_marker = " <-- SHARED EPITOPE" if 70 <= p["position"] <= 74 else ""
-        print(
-            f"    Position {p['position']}: Fisher ratio = {p['fisher_ratio']:.3f}{se_marker}"
-        )
+        print(f"    Position {p['position']}: Fisher ratio = {p['fisher_ratio']:.3f}{se_marker}")
 
     # Compute sequence-level embeddings
     print("\nComputing sequence-level embeddings...")
@@ -832,22 +760,16 @@ def main():
 
     # Compute distance matrix using Poincaré geodesic distance
     print("\nComputing pairwise Poincaré distances...")
-    dist_matrix, allele_names = compute_pairwise_distances(
-        allele_embeddings, distance_fn="poincare"
-    )
+    dist_matrix, allele_names = compute_pairwise_distances(allele_embeddings, distance_fn="poincare")
 
     # Statistical tests
     print("\nRunning statistical tests...")
 
     # Permutation test
     print("  Running permutation test (1000 iterations)...")
-    perm_results = permutation_test(
-        dist_matrix, allele_names, HLA_DRB1_EXPANDED, n_permutations=1000
-    )
+    perm_results = permutation_test(dist_matrix, allele_names, HLA_DRB1_EXPANDED, n_permutations=1000)
     print(f"    Observed separation ratio: {perm_results['observed_ratio']:.3f}")
-    print(
-        f"    Null distribution: {perm_results['null_mean']:.3f} ± {perm_results['null_std']:.3f}"
-    )
+    print(f"    Null distribution: {perm_results['null_mean']:.3f} ± {perm_results['null_std']:.3f}")
     print(f"    Z-score: {perm_results['z_score']:.2f}")
     print(f"    P-value: {perm_results['p_value']:.4f}")
 
@@ -870,7 +792,11 @@ def main():
     print("\nGenerating visualization...")
     vis_path = results_dir / "hla_expanded_analysis.png"
     create_expanded_visualization(
-        allele_embeddings, HLA_DRB1_EXPANDED, results, position_scores, vis_path
+        allele_embeddings,
+        HLA_DRB1_EXPANDED,
+        results,
+        position_scores,
+        vis_path,
     )
 
     # Summary
@@ -949,7 +875,10 @@ def main():
         "n_alleles": len(HLA_DRB1_EXPANDED),
         "n_positions": len(position_scores),
         "top_discriminative_positions": [
-            {"position": int(p["position"]), "fisher_ratio": float(p["fisher_ratio"])}
+            {
+                "position": int(p["position"]),
+                "fisher_ratio": float(p["fisher_ratio"]),
+            }
             for p in top_5
         ],
         "permutation_test": {

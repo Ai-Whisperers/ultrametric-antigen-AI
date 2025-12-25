@@ -3,7 +3,7 @@
 # Licensed under the PolyForm Noncommercial License 1.0.0
 # See LICENSE file in the repository root for full license text.
 
-from typing import List, Optional, Tuple
+from typing import Tuple
 
 import torch
 
@@ -18,9 +18,7 @@ class ParetoFrontOptimizer:
     def __init__(self):
         pass
 
-    def is_dominated(
-        self, candidate_scores: torch.Tensor, population_scores: torch.Tensor
-    ) -> bool:
+    def is_dominated(self, candidate_scores: torch.Tensor, population_scores: torch.Tensor) -> bool:
         """Check if a candidate solution is dominated by any in the population.
 
         Args:
@@ -51,9 +49,7 @@ class ParetoFrontOptimizer:
 
         return bool(is_dominated.item())
 
-    def identify_pareto_front(
-        self, candidates: torch.Tensor, scores: torch.Tensor
-    ) -> Tuple[torch.Tensor, torch.Tensor]:
+    def identify_pareto_front(self, candidates: torch.Tensor, scores: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
         """Identify the non-dominated set (Pareto Front) from a batch of candidates.
 
         Args:
@@ -64,9 +60,7 @@ class ParetoFrontOptimizer:
             (front_candidates, front_scores) containing only the non-dominated solutions.
         """
         batch_size = candidates.shape[0]
-        is_dominated_mask = torch.zeros(
-            batch_size, dtype=torch.bool, device=candidates.device
-        )
+        is_dominated_mask = torch.zeros(batch_size, dtype=torch.bool, device=candidates.device)
 
         # Naive O(N^2) pairwise comparison
         # For large batches, NSGA-II fast non-dominated sorting is better, but this suffices for

@@ -13,9 +13,9 @@ import numpy as np
 from scipy import stats
 from sklearn.decomposition import PCA
 
-from utils.data_loader import HLA_RISK_CATEGORIES, get_loader
-from utils.plotting import (HLA_RISK_COLORS, PALETTE, get_risk_cmap,
-                            save_figure, setup_scientific_style)
+from utils.data_loader import HLA_RISK_CATEGORIES
+from utils.plotting import (HLA_RISK_COLORS, get_risk_cmap, save_figure,
+                            setup_scientific_style)
 
 OUTPUT_DIR = Path(__file__).parent
 
@@ -129,9 +129,7 @@ def create_pca_projection():
     )
 
     # Fit regression line
-    slope, intercept, r_value, p_value, std_err = stats.linregress(
-        distances, odds_ratios
-    )
+    slope, intercept, r_value, p_value, std_err = stats.linregress(distances, odds_ratios)
     x_line = np.linspace(0, max(distances) * 1.1, 100)
     y_line = slope * x_line + intercept
     ax2.plot(
@@ -207,7 +205,12 @@ def create_contour_projection():
 
     # Risk contours
     contour = ax.contourf(
-        xx, yy, zz, levels=np.linspace(0.3, 4.5, 15), cmap=get_risk_cmap(), alpha=0.6
+        xx,
+        yy,
+        zz,
+        levels=np.linspace(0.3, 4.5, 15),
+        cmap=get_risk_cmap(),
+        alpha=0.6,
     )
     cbar = plt.colorbar(contour, ax=ax, label="Predicted Odds Ratio")
 

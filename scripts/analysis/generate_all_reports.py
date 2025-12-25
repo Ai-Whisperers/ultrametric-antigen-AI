@@ -14,7 +14,11 @@ from datetime import datetime
 # Define paths
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 TARGET_DIR = os.path.join(
-    PROJECT_ROOT, "DOCUMENTATION", "04_PROJECT_MANAGEMENT", "02_REPORTS", "audit_data"
+    PROJECT_ROOT,
+    "DOCUMENTATION",
+    "04_PROJECT_MANAGEMENT",
+    "02_REPORTS",
+    "audit_data",
 )
 SCRIPTS_DIR = os.path.join(PROJECT_ROOT, "scripts", "analysis")
 
@@ -70,7 +74,10 @@ def main():
     tool_report_path = os.path.join(TARGET_DIR, "EXTERNAL_TOOLS_REPORT.md")
     with open(tool_report_path, "w", encoding="utf-8") as f:
         subprocess.run(
-            [sys.executable, os.path.join(SCRIPTS_DIR, "analyze_external_tools.py")],
+            [
+                sys.executable,
+                os.path.join(SCRIPTS_DIR, "analyze_external_tools.py"),
+            ],
             stdout=f,
             text=True,
             encoding="utf-8",
@@ -83,15 +90,9 @@ def main():
     with open(index_path, "w", encoding="utf-8") as f:
         f.write("# Audit Data\n")
         f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n\n")
-        f.write(
-            "- [Code Health Dashboard](CODE_HEALTH_DASHBOARD.md): Ruff & Mypy Issues\n"
-        )
-        f.write(
-            "- [Comprehensive Health Report](COMPREHENSIVE_CODE_HEALTH.md): Security & Complexity\n"
-        )
-        f.write(
-            "- [External Tools Analysis](EXTERNAL_TOOLS_REPORT.md): Tool Availability\n"
-        )
+        f.write("- [Code Health Dashboard](CODE_HEALTH_DASHBOARD.md): Ruff & Mypy Issues\n")
+        f.write("- [Comprehensive Health Report](COMPREHENSIVE_CODE_HEALTH.md): Security & Complexity\n")
+        f.write("- [External Tools Analysis](EXTERNAL_TOOLS_REPORT.md): Tool Availability\n")
         f.write("- [Radon Raw Data](radon_results.json)\n")
         f.write("- [Bandit Raw Data](bandit_results.json)\n")
 

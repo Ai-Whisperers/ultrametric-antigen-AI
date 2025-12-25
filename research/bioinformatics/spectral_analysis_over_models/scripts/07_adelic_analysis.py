@@ -30,7 +30,6 @@ import numpy as np
 import torch
 from scipy import stats
 from scipy.linalg import eigvalsh
-from scipy.spatial.distance import pdist, squareform
 
 
 def v_p(n: int, p: int) -> int:
@@ -74,15 +73,11 @@ def analyze_prime_correlations(embeddings, valuations):
         results[f"corr_v{p}"] = float(corr)
         results[f"pval_v{p}"] = float(pval)
 
-        sig = (
-            "***"
-            if pval < 0.001
-            else "**" if pval < 0.01 else "*" if pval < 0.05 else ""
-        )
+        sig = "***" if pval < 0.001 else "**" if pval < 0.01 else "*" if pval < 0.05 else ""
         print(f"    v_{p} (p={p}): r = {corr:.4f} {sig}")
 
     # The model was trained on 3-adic, so v_3 should dominate
-    print(f"\n  Expected: v_3 dominates (model trained on 3-adic structure)")
+    print("\n  Expected: v_3 dominates (model trained on 3-adic structure)")
 
     return results
 
@@ -154,7 +149,7 @@ def analyze_adelic_structure(embeddings, n_samples=2000):
     corr_p3, p_p3 = stats.spearmanr(emb_dists, p3_dists)
     corr_adelic, p_adelic = stats.spearmanr(emb_dists, adelic_dists)
 
-    print(f"\n  Embedding distance correlations:")
+    print("\n  Embedding distance correlations:")
     print(f"    vs 3-adic distance:  r = {corr_p3:.4f} (p = {p_p3:.2e})")
     print(f"    vs adelic distance:  r = {corr_adelic:.4f} (p = {p_adelic:.2e})")
 
@@ -236,16 +231,16 @@ def compute_adelic_laplacian(embeddings, primes=[2, 3, 5], n_samples=500):
     ks_gue, p_gue = kstest(normalized_spacings, gue_cdf)
     ks_poisson, p_poisson = kstest(normalized_spacings, "expon")
 
-    print(f"\n  Adelic Laplacian eigenvalue spacing statistics:")
+    print("\n  Adelic Laplacian eigenvalue spacing statistics:")
     print(f"    Number of eigenvalues: {len(eigenvalues)}")
     print(f"    Mean spacing: {mean_spacing:.6f}")
     print(f"\n  KS test vs GUE: D = {ks_gue:.4f}")
     print(f"  KS test vs Poisson: D = {ks_poisson:.4f}")
 
     if ks_gue < ks_poisson:
-        print(f"\n  FINDING: Adelic Laplacian is MORE GUE-like than Poisson!")
+        print("\n  FINDING: Adelic Laplacian is MORE GUE-like than Poisson!")
     else:
-        print(f"\n  FINDING: Adelic Laplacian remains Poisson-like")
+        print("\n  FINDING: Adelic Laplacian remains Poisson-like")
 
     return {
         "n_eigenvalues": len(eigenvalues),

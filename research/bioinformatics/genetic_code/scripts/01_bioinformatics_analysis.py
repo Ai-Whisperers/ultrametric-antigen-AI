@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from scipy import stats
-from scipy.cluster.hierarchy import dendrogram, fcluster, linkage
+from scipy.cluster.hierarchy import dendrogram, linkage
 from scipy.spatial.distance import pdist, squareform
 
 # Standard genetic code
@@ -448,7 +448,7 @@ def analyze_codon_structure(embeddings):
     # Map codons to ternary indices
     ternary_indices = [codon_to_ternary_v2(c) for c in codons]
 
-    print(f"\nCodon mapping to ternary space:")
+    print("\nCodon mapping to ternary space:")
     print(f"  64 codons → indices in [0, {max(ternary_indices)}]")
     print(f"  Unique indices: {len(set(ternary_indices))}")
 
@@ -483,13 +483,13 @@ def analyze_codon_structure(embeddings):
     corr_blosum, p_blosum = stats.spearmanr(emb_flat, blosum_flat)
     corr_hamming, p_hamming = stats.spearmanr(emb_flat, hamming_flat)
 
-    print(f"\n  Embedding distance vs BLOSUM similarity:")
+    print("\n  Embedding distance vs BLOSUM similarity:")
     print(f"    Spearman r = {corr_blosum:.4f} (p = {p_blosum:.2e})")
-    print(f"    (negative = similar AAs cluster in embedding space)")
+    print("    (negative = similar AAs cluster in embedding space)")
 
-    print(f"\n  Embedding distance vs Hamming distance:")
+    print("\n  Embedding distance vs Hamming distance:")
     print(f"    Spearman r = {corr_hamming:.4f} (p = {p_hamming:.2e})")
-    print(f"    (positive = sequence-similar codons cluster)")
+    print("    (positive = sequence-similar codons cluster)")
 
     return {
         "n_codons": n_codons,
@@ -552,7 +552,7 @@ def analyze_synonymous_codons(embeddings, codon_results):
             "n_codons": len(indices),
             "within_mean": within_mean,
             "between_mean": between_mean,
-            "ratio": within_mean / between_mean if between_mean > 0 else np.nan,
+            "ratio": (within_mean / between_mean if between_mean > 0 else np.nan),
         }
 
         within_distances.extend(within)
@@ -563,9 +563,7 @@ def analyze_synonymous_codons(embeddings, codon_results):
     between_mean = np.mean(between_distances)
 
     # Statistical test: within should be smaller than between
-    stat, p_value = stats.mannwhitneyu(
-        within_distances, between_distances, alternative="less"
-    )
+    stat, p_value = stats.mannwhitneyu(within_distances, between_distances, alternative="less")
 
     print(f"\n  Within-AA distance (synonymous codons): {within_mean:.4f}")
     print(f"  Between-AA distance (different AAs): {between_mean:.4f}")
@@ -573,21 +571,17 @@ def analyze_synonymous_codons(embeddings, codon_results):
     print(f"  Mann-Whitney U test (within < between): p = {p_value:.2e}")
 
     if p_value < 0.05:
-        print(
-            f"\n  SIGNIFICANT: Synonymous codons cluster together in embedding space!"
-        )
+        print("\n  SIGNIFICANT: Synonymous codons cluster together in embedding space!")
     else:
-        print(f"\n  Not significant: Synonymous codons don't cluster specially.")
+        print("\n  Not significant: Synonymous codons don't cluster specially.")
 
     # Per-AA breakdown
-    print(f"\n  Per-amino-acid clustering (ratio < 1 = good clustering):")
+    print("\n  Per-amino-acid clustering (ratio < 1 = good clustering):")
     for aa in sorted(results_by_aa.keys()):
         r = results_by_aa[aa]
         if not np.isnan(r["ratio"]):
             marker = "*" if r["ratio"] < 1 else " "
-            print(
-                f"    {aa} ({r['n_codons']} codons): ratio = {r['ratio']:.3f} {marker}"
-            )
+            print(f"    {aa} ({r['n_codons']} codons): ratio = {r['ratio']:.3f} {marker}")
 
     return {
         "within_mean": float(within_mean),
@@ -623,7 +617,7 @@ def analyze_chemical_properties(embeddings, codon_results):
     # Correlation: radius vs hydrophobicity
     corr_hydro, p_hydro = stats.spearmanr(radii, hydrophobicity)
 
-    print(f"\n  Radius vs Hydrophobicity:")
+    print("\n  Radius vs Hydrophobicity:")
     print(f"    Spearman r = {corr_hydro:.4f} (p = {p_hydro:.2e})")
 
     # ANOVA: radius by chemical class
@@ -633,11 +627,9 @@ def analyze_chemical_properties(embeddings, codon_results):
         mask = np.array([AA_CLASS[aa] == cls for aa in amino_acids])
         class_radii[cls] = radii[mask]
 
-    f_stat, p_anova = stats.f_oneway(
-        class_radii["nonpolar"], class_radii["polar"], class_radii["charged"]
-    )
+    f_stat, p_anova = stats.f_oneway(class_radii["nonpolar"], class_radii["polar"], class_radii["charged"])
 
-    print(f"\n  Radius by chemical class (ANOVA):")
+    print("\n  Radius by chemical class (ANOVA):")
     print(f"    F-statistic = {f_stat:.4f}, p = {p_anova:.2e}")
     for cls in classes:
         r = class_radii[cls]
@@ -648,10 +640,7 @@ def analyze_chemical_properties(embeddings, codon_results):
         "p_hydrophobicity": float(p_hydro),
         "f_stat_class": float(f_stat),
         "p_anova_class": float(p_anova),
-        "class_radii": {
-            k: {"mean": float(v.mean()), "std": float(v.std())}
-            for k, v in class_radii.items()
-        },
+        "class_radii": {k: {"mean": float(v.mean()), "std": float(v.std())} for k, v in class_radii.items()},
     }
 
 
@@ -709,8 +698,8 @@ def visualize_codon_embedding(embeddings, codon_results, output_dir):
             )
 
     ax2.set_title("Codons by Chemical Class")
-    ax2.set_xlabel(f"PC1")
-    ax2.set_ylabel(f"PC2")
+    ax2.set_xlabel("PC1")
+    ax2.set_ylabel("PC2")
     ax2.legend()
 
     # 3. Dendrogram based on embedding distances
@@ -802,11 +791,7 @@ def main():
         if chem_results["p_anova_class"] < 0.05
         else "NEGATIVE: No chemical class structure in radius"
     )
-    overall = (
-        "DOES"
-        if syn_results["significant"] or chem_results["p_anova_class"] < 0.05
-        else "does NOT"
-    )
+    overall = "DOES" if syn_results["significant"] or chem_results["p_anova_class"] < 0.05 else "does NOT"
 
     print(
         f"""

@@ -166,9 +166,7 @@ class PAdicLossesConfig:
     enable_ranking_loss_hyperbolic: bool = True
     enable_norm_loss: bool = False
     norm_loss_weight: float = 0.0
-    ranking_hyperbolic: RankingHyperbolicConfig = field(
-        default_factory=RankingHyperbolicConfig
-    )
+    ranking_hyperbolic: RankingHyperbolicConfig = field(default_factory=RankingHyperbolicConfig)
     hyperbolic_v10: HyperbolicV10Config = field(default_factory=HyperbolicV10Config)
 
 
@@ -251,14 +249,10 @@ class TrainingConfig:
     embedding_n_samples: int = 5000  # Number of samples for embedding visualization
 
     # Optional sections
-    continuous_feedback: ContinuousFeedbackConfig = field(
-        default_factory=ContinuousFeedbackConfig
-    )
+    continuous_feedback: ContinuousFeedbackConfig = field(default_factory=ContinuousFeedbackConfig)
     padic_losses: PAdicLossesConfig = field(default_factory=PAdicLossesConfig)
     controller: ControllerConfig = field(default_factory=ControllerConfig)
-    phase_transitions: PhaseTransitionsConfig = field(
-        default_factory=PhaseTransitionsConfig
-    )
+    phase_transitions: PhaseTransitionsConfig = field(default_factory=PhaseTransitionsConfig)
     torch_compile: TorchCompileConfig = field(default_factory=TorchCompileConfig)
 
     # Targets (informational)
@@ -266,9 +260,7 @@ class TrainingConfig:
     target_ranking_correlation: float = 0.99
 
 
-def _build_nested_config(
-    raw: Dict[str, Any], cls, defaults: Optional[Dict[str, Any]] = None
-) -> Any:
+def _build_nested_config(raw: Dict[str, Any], cls, defaults: Optional[Dict[str, Any]] = None) -> Any:
     """Build a dataclass from raw dict, using defaults for missing keys."""
     if raw is None:
         raw = {}
@@ -319,39 +311,23 @@ def validate_config(raw_config: Dict[str, Any]) -> TrainingConfig:
     # Build nested configs
     try:
         model = _build_nested_config(raw_config.get("model", {}), ModelConfig)
-        optimizer = _build_nested_config(
-            raw_config.get("optimizer", {}), OptimizerConfig
-        )
+        optimizer = _build_nested_config(raw_config.get("optimizer", {}), OptimizerConfig)
         vae_a = _build_nested_config(raw_config.get("vae_a", {}), VAEConfig)
         vae_b = _build_nested_config(raw_config.get("vae_b", {}), VAEConfig)
 
         # Optional sections
-        continuous_feedback = _build_nested_config(
-            raw_config.get("continuous_feedback", {}), ContinuousFeedbackConfig
-        )
-        controller = _build_nested_config(
-            raw_config.get("controller", {}), ControllerConfig
-        )
-        phase_transitions = _build_nested_config(
-            raw_config.get("phase_transitions", {}), PhaseTransitionsConfig
-        )
-        torch_compile = _build_nested_config(
-            raw_config.get("torch_compile", {}), TorchCompileConfig
-        )
+        continuous_feedback = _build_nested_config(raw_config.get("continuous_feedback", {}), ContinuousFeedbackConfig)
+        controller = _build_nested_config(raw_config.get("controller", {}), ControllerConfig)
+        phase_transitions = _build_nested_config(raw_config.get("phase_transitions", {}), PhaseTransitionsConfig)
+        torch_compile = _build_nested_config(raw_config.get("torch_compile", {}), TorchCompileConfig)
 
         # p-Adic losses (deeply nested)
         padic_raw = raw_config.get("padic_losses", {})
-        ranking_hyp = _build_nested_config(
-            padic_raw.get("ranking_hyperbolic", {}), RankingHyperbolicConfig
-        )
+        ranking_hyp = _build_nested_config(padic_raw.get("ranking_hyperbolic", {}), RankingHyperbolicConfig)
 
         hyp_v10_raw = padic_raw.get("hyperbolic_v10", {})
-        hyp_prior = _build_nested_config(
-            hyp_v10_raw.get("prior", {}), HyperbolicPriorConfig
-        )
-        hyp_recon = _build_nested_config(
-            hyp_v10_raw.get("recon", {}), HyperbolicReconConfig
-        )
+        hyp_prior = _build_nested_config(hyp_v10_raw.get("prior", {}), HyperbolicPriorConfig)
+        hyp_recon = _build_nested_config(hyp_v10_raw.get("recon", {}), HyperbolicReconConfig)
         centroid = _build_nested_config(hyp_v10_raw.get("centroid", {}), CentroidConfig)
 
         hyperbolic_v10 = HyperbolicV10Config(
@@ -366,9 +342,7 @@ def validate_config(raw_config: Dict[str, Any]) -> TrainingConfig:
         padic_losses = PAdicLossesConfig(
             enable_metric_loss=padic_raw.get("enable_metric_loss", False),
             metric_loss_weight=padic_raw.get("metric_loss_weight", 0.0),
-            enable_ranking_loss_hyperbolic=padic_raw.get(
-                "enable_ranking_loss_hyperbolic", True
-            ),
+            enable_ranking_loss_hyperbolic=padic_raw.get("enable_ranking_loss_hyperbolic", True),
             enable_norm_loss=padic_raw.get("enable_norm_loss", False),
             norm_loss_weight=padic_raw.get("norm_loss_weight", 0.0),
             ranking_hyperbolic=ranking_hyp,
@@ -386,11 +360,7 @@ def validate_config(raw_config: Dict[str, Any]) -> TrainingConfig:
     if not (0 < raw_config.get("train_split", 0.8) <= 1):
         errors.append("train_split must be in (0, 1]")
 
-    splits_sum = (
-        raw_config.get("train_split", 0.8)
-        + raw_config.get("val_split", 0.1)
-        + raw_config.get("test_split", 0.1)
-    )
+    splits_sum = raw_config.get("train_split", 0.8) + raw_config.get("val_split", 0.1) + raw_config.get("test_split", 0.1)
     if abs(splits_sum - 1.0) > 0.001:
         errors.append(f"Data splits must sum to 1.0, got {splits_sum}")
 
@@ -425,9 +395,7 @@ def validate_config(raw_config: Dict[str, Any]) -> TrainingConfig:
         log_interval=raw_config.get("log_interval", 1),
         log_dir=raw_config.get("log_dir", "logs"),
         checkpoint_freq=raw_config.get("checkpoint_freq", 10),
-        checkpoint_dir=raw_config.get(
-            "checkpoint_dir", "sandbox-training/checkpoints/v5_10"
-        ),
+        checkpoint_dir=raw_config.get("checkpoint_dir", "sandbox-training/checkpoints/v5_10"),
         tensorboard_dir=raw_config.get("tensorboard_dir", "runs"),
         experiment_name=raw_config.get("experiment_name"),
         histogram_interval=raw_config.get("histogram_interval", 10),

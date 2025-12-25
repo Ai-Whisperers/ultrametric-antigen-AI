@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Generate individual markdown files for all HIV research papers."""
 
-import os
 from pathlib import Path
 
 # Base directory
@@ -891,9 +890,7 @@ def main():
 
         for paper in papers:
             paper_id, title, source, year, link, abstract = paper
-            generate_paper_file(
-                paper_id, title, source, year, link, abstract, category_dir
-            )
+            generate_paper_file(paper_id, title, source, year, link, abstract, category_dir)
 
     # Create additional topic directories and papers
     for category, papers in ADDITIONAL_PAPERS.items():
@@ -922,19 +919,11 @@ def main():
 
         for paper in papers:
             paper_id, title, source, year, link, abstract = paper
-            generate_paper_file(
-                paper_id, title, source, year, link, abstract, category_dir
-            )
+            generate_paper_file(paper_id, title, source, year, link, abstract, category_dir)
 
-    print(
-        f"\nTotal papers created in main categories: {sum(len(p) for p in PAPERS.values())}"
-    )
-    print(
-        f"Total papers created in additional topics: {sum(len(p) for p in ADDITIONAL_PAPERS.values())}"
-    )
-    print(
-        f"Grand total: {sum(len(p) for p in PAPERS.values()) + sum(len(p) for p in ADDITIONAL_PAPERS.values())}"
-    )
+    print(f"\nTotal papers created in main categories: {sum(len(p) for p in PAPERS.values())}")
+    print(f"Total papers created in additional topics: {sum(len(p) for p in ADDITIONAL_PAPERS.values())}")
+    print(f"Grand total: {sum(len(p) for p in PAPERS.values()) + sum(len(p) for p in ADDITIONAL_PAPERS.values())}")
 
 
 if __name__ == "__main__":

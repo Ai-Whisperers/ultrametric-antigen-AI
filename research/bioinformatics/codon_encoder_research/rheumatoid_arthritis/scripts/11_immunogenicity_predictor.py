@@ -44,17 +44,14 @@ warnings.filterwarnings("ignore")
 import matplotlib
 # Plotting
 import matplotlib.pyplot as plt
-from scipy import stats
 from sklearn.calibration import calibration_curve
 from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 # ML imports
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import (accuracy_score, auc, average_precision_score,
-                             brier_score_loss, classification_report,
-                             confusion_matrix, f1_score, matthews_corrcoef,
-                             precision_recall_curve, precision_score,
-                             recall_score, roc_auc_score, roc_curve)
-from sklearn.model_selection import LeaveOneOut, StratifiedKFold
+from sklearn.metrics import (accuracy_score, auc, brier_score_loss, f1_score,
+                             matthews_corrcoef, precision_score, recall_score,
+                             roc_auc_score, roc_curve)
+from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 
 matplotlib.use("Agg")
@@ -66,9 +63,7 @@ import importlib.util
 from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot, get_results_dir,
                               load_codon_encoder, poincare_distance)
 
-spec = importlib.util.spec_from_file_location(
-    "augmented_db", Path(__file__).parent / "08_augmented_epitope_database.py"
-)
+spec = importlib.util.spec_from_file_location("augmented_db", Path(__file__).parent / "08_augmented_epitope_database.py")
 augmented_db = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(augmented_db)
 RA_AUTOANTIGENS_AUGMENTED = augmented_db.RA_AUTOANTIGENS_AUGMENTED
@@ -95,11 +90,7 @@ def extract_features(epitope: dict, encoder, device: str = "cpu") -> Optional[Di
         codon = AA_TO_CODON.get(aa, "NNN")
         if codon == "NNN":
             continue
-        onehot = (
-            torch.tensor(codon_to_onehot(codon), dtype=torch.float32)
-            .unsqueeze(0)
-            .to(device)
-        )
+        onehot = torch.tensor(codon_to_onehot(codon), dtype=torch.float32).unsqueeze(0).to(device)
         with torch.no_grad():
             probs, emb = encoder.get_cluster_probs(onehot)
             embeddings.append(emb.cpu().numpy().squeeze())
@@ -122,7 +113,8 @@ def extract_features(epitope: dict, encoder, device: str = "cpu") -> Optional[Di
     neighbor_dists = []
     for i in range(len(embeddings) - 1):
         d = poincare_distance(
-            torch.tensor(embeddings[i]).float(), torch.tensor(embeddings[i + 1]).float()
+            torch.tensor(embeddings[i]).float(),
+            torch.tensor(embeddings[i + 1]).float(),
         ).item()
         neighbor_dists.append(d)
     mean_neighbor_dist = np.mean(neighbor_dists) if neighbor_dists else 0.0
@@ -135,12 +127,7 @@ def extract_features(epitope: dict, encoder, device: str = "cpu") -> Optional[Di
         other_mask = cluster_ids != my_cluster
         if np.any(other_mask):
             other_embeddings = embeddings[other_mask]
-            dists = [
-                poincare_distance(
-                    torch.tensor(emb).float(), torch.tensor(other).float()
-                ).item()
-                for other in other_embeddings
-            ]
+            dists = [poincare_distance(torch.tensor(emb).float(), torch.tensor(other).float()).item() for other in other_embeddings]
             boundary_potentials.append(np.min(dists))
     mean_boundary = np.mean(boundary_potentials) if boundary_potentials else 0.0
 
@@ -190,7 +177,8 @@ def extract_features(epitope: dict, encoder, device: str = "cpu") -> Optional[Di
 
         # Centroid shift (Poincaré distance)
         shift = poincare_distance(
-            torch.tensor(original_centroid).float(), torch.tensor(cit_centroid).float()
+            torch.tensor(original_centroid).float(),
+            torch.tensor(cit_centroid).float(),
         ).item()
         centroid_shifts.append(shift)
 
@@ -211,16 +199,12 @@ def extract_features(epitope: dict, encoder, device: str = "cpu") -> Optional[Di
 
     # Additional derived features
     features["r_density"] = features["n_arginines"] / features["sequence_length"]
-    features["entropy_per_r"] = features["entropy_change"] / max(
-        features["n_arginines"], 1
-    )
+    features["entropy_per_r"] = features["entropy_change"] / max(features["n_arginines"], 1)
 
     return features
 
 
-def build_feature_matrix(
-    encoder, device: str = "cpu"
-) -> Tuple[np.ndarray, np.ndarray, List[str], List[str]]:
+def build_feature_matrix(encoder, device: str = "cpu") -> Tuple[np.ndarray, np.ndarray, List[str], List[str]]:
     """
     Build feature matrix X and label vector y from all epitopes.
 
@@ -263,7 +247,13 @@ def build_feature_matrix(
             epitope_ids.append(epitope["id"])
             protein_ids.append(protein_id)
 
-    return np.array(X_list), np.array(y_list), epitope_ids, protein_ids, feature_names
+    return (
+        np.array(X_list),
+        np.array(y_list),
+        epitope_ids,
+        protein_ids,
+        feature_names,
+    )
 
 
 # ============================================================================
@@ -272,7 +262,10 @@ def build_feature_matrix(
 
 
 def train_evaluate_models(
-    X: np.ndarray, y: np.ndarray, protein_ids: List[str], feature_names: List[str]
+    X: np.ndarray,
+    y: np.ndarray,
+    protein_ids: List[str],
+    feature_names: List[str],
 ) -> Dict:
     """
     Train and evaluate multiple models with different CV strategies.
@@ -289,15 +282,9 @@ def train_evaluate_models(
 
     # Define models
     models = {
-        "logistic_regression": LogisticRegression(
-            penalty="l2", C=1.0, max_iter=1000, random_state=42
-        ),
-        "random_forest": RandomForestClassifier(
-            n_estimators=100, max_depth=5, min_samples_leaf=3, random_state=42
-        ),
-        "gradient_boosting": GradientBoostingClassifier(
-            n_estimators=50, max_depth=3, min_samples_leaf=3, random_state=42
-        ),
+        "logistic_regression": LogisticRegression(penalty="l2", C=1.0, max_iter=1000, random_state=42),
+        "random_forest": RandomForestClassifier(n_estimators=100, max_depth=5, min_samples_leaf=3, random_state=42),
+        "gradient_boosting": GradientBoostingClassifier(n_estimators=50, max_depth=3, min_samples_leaf=3, random_state=42),
     }
 
     # Leave-One-Protein-Out CV
@@ -422,10 +409,7 @@ def train_evaluate_models(
 
         # Sort by importance
         sorted_idx = np.argsort(importance)[::-1]
-        results["feature_importance"][name] = [
-            {"feature": feature_names[i], "importance": float(importance[i])}
-            for i in sorted_idx
-        ]
+        results["feature_importance"][name] = [{"feature": feature_names[i], "importance": float(importance[i])} for i in sorted_idx]
 
         print(f"  {name} - Top 5 features:")
         for i in sorted_idx[:5]:
@@ -469,9 +453,7 @@ def plot_roc_curves(results: Dict, output_dir: Path):
     ax.plot([0, 1], [0, 1], "k--", lw=1, label="Random (AUC=0.500)")
     ax.set_xlabel("False Positive Rate", fontsize=12)
     ax.set_ylabel("True Positive Rate", fontsize=12)
-    ax.set_title(
-        "ROC Curves - Leave-One-Protein-Out CV", fontsize=14, fontweight="bold"
-    )
+    ax.set_title("ROC Curves - Leave-One-Protein-Out CV", fontsize=14, fontweight="bold")
     ax.legend(loc="lower right", fontsize=10)
     ax.grid(True, alpha=0.3)
     ax.set_xlim([0, 1])
@@ -518,9 +500,7 @@ def plot_feature_importance(results: Dict, output_dir: Path):
         "gradient_boosting": "#FF9800",
     }
 
-    for idx, (name, importance_list) in enumerate(
-        results["feature_importance"].items()
-    ):
+    for idx, (name, importance_list) in enumerate(results["feature_importance"].items()):
         ax = axes[idx]
 
         features = [item["feature"] for item in importance_list]
@@ -536,9 +516,7 @@ def plot_feature_importance(results: Dict, output_dir: Path):
         ax.set_yticklabels([f.replace("_", " ").title() for f in features], fontsize=10)
         ax.invert_yaxis()
         ax.set_xlabel("Importance", fontsize=12)
-        ax.set_title(
-            f'{name.replace("_", " ").title()}', fontsize=14, fontweight="bold"
-        )
+        ax.set_title(f'{name.replace("_", " ").title()}', fontsize=14, fontweight="bold")
         ax.grid(True, alpha=0.3, axis="x")
 
     plt.suptitle("Feature Importance by Model", fontsize=16, fontweight="bold", y=1.02)
@@ -570,9 +548,7 @@ def plot_calibration(results: Dict, output_dir: Path):
             y_prob = np.array(res["y_prob"])
 
             # Calibration curve
-            prob_true, prob_pred = calibration_curve(
-                y_true, y_prob, n_bins=5, strategy="uniform"
-            )
+            prob_true, prob_pred = calibration_curve(y_true, y_prob, n_bins=5, strategy="uniform")
 
             brier = res["brier"]
             label = f"{model_name.replace('_', ' ').title()} (Brier={brier:.3f})"
@@ -588,9 +564,7 @@ def plot_calibration(results: Dict, output_dir: Path):
 
         ax.set_xlabel("Mean Predicted Probability", fontsize=12)
         ax.set_ylabel("Fraction of Positives", fontsize=12)
-        title = (
-            "Leave-One-Protein-Out CV" if cv_type == "lopo" else "Stratified 5-Fold CV"
-        )
+        title = "Leave-One-Protein-Out CV" if cv_type == "lopo" else "Stratified 5-Fold CV"
         ax.set_title(f"Calibration Plot - {title}", fontsize=14, fontweight="bold")
         ax.legend(loc="upper left", fontsize=10)
         ax.grid(True, alpha=0.3)
@@ -694,9 +668,7 @@ def main():
 
     # Extract features
     print("\nExtracting features from epitope database...")
-    X, y, epitope_ids, protein_ids, feature_names = build_feature_matrix(
-        encoder, device
-    )
+    X, y, epitope_ids, protein_ids, feature_names = build_feature_matrix(encoder, device)
     print(f"  Total samples: {len(y)}")
     print(f"  Immunodominant: {sum(y)} ({100*sum(y)/len(y):.1f}%)")
     print(f"  Silent: {len(y)-sum(y)} ({100*(len(y)-sum(y))/len(y):.1f}%)")
@@ -740,9 +712,7 @@ def main():
 
     # Convert cv_results (remove numpy arrays)
     for key, res in results["cv_results"].items():
-        json_results["cv_results"][key] = {
-            k: v for k, v in res.items() if k not in ["y_true", "y_prob"]
-        }
+        json_results["cv_results"][key] = {k: v for k, v in res.items() if k not in ["y_true", "y_prob"]}
 
     with open(output_dir / "prediction_results.json", "w") as f:
         json.dump(json_results, f, indent=2)

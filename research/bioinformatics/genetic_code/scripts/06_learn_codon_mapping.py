@@ -22,7 +22,6 @@ import json
 import sys
 from collections import defaultdict
 from datetime import datetime
-from itertools import combinations
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[5]
@@ -390,10 +389,7 @@ def train_model(model, data, vae_embeddings, n_epochs=500, lr=0.01):
         history["contrastive"].append(loss_contrastive.item())
 
         if epoch % 50 == 0 or epoch == n_epochs - 1:
-            print(
-                f"  Epoch {epoch:3d}: loss={loss.item():.4f}, "
-                f"cluster_acc={acc*100:.1f}%, contrastive={loss_contrastive.item():.4f}"
-            )
+            print(f"  Epoch {epoch:3d}: loss={loss.item():.4f}, " f"cluster_acc={acc*100:.1f}%, contrastive={loss_contrastive.item():.4f}")
 
     return history
 
@@ -426,9 +422,7 @@ def evaluate_mapping(model, data, vae_embeddings):
             synonymous_correct += 1
         synonymous_total += 1
 
-    synonymous_acc = (
-        synonymous_correct / synonymous_total if synonymous_total > 0 else 0
-    )
+    synonymous_acc = synonymous_correct / synonymous_total if synonymous_total > 0 else 0
 
     # Compute embedding distances
     within_dists = []
@@ -436,9 +430,7 @@ def evaluate_mapping(model, data, vae_embeddings):
 
     for i in range(64):
         for j in range(i + 1, 64):
-            dist = F.pairwise_distance(
-                embeddings[i : i + 1], embeddings[j : j + 1]
-            ).item()
+            dist = F.pairwise_distance(embeddings[i : i + 1], embeddings[j : j + 1]).item()
             if clusters[i] == clusters[j]:
                 within_dists.append(dist)
             else:
@@ -448,7 +440,7 @@ def evaluate_mapping(model, data, vae_embeddings):
     mean_between = np.mean(between_dists) if between_dists else 0
     separation = mean_between / mean_within if mean_within > 0 else 0
 
-    print(f"\n  Evaluation Results:")
+    print("\n  Evaluation Results:")
     print(f"    Cluster accuracy: {cluster_acc*100:.1f}%")
     print(f"    Synonymous pair accuracy: {synonymous_acc*100:.1f}%")
     print(f"    Mean within-cluster distance: {mean_within:.4f}")
@@ -493,9 +485,7 @@ def assign_codons_to_positions(model, data, vae_embeddings):
 
         for pos in cluster_positions:
             pos_emb = vae_embeddings[pos]
-            dist = F.pairwise_distance(
-                codon_emb.unsqueeze(0), pos_emb.unsqueeze(0)
-            ).item()
+            dist = F.pairwise_distance(codon_emb.unsqueeze(0), pos_emb.unsqueeze(0)).item()
             if dist < min_dist:
                 min_dist = dist
                 best_pos = pos
@@ -505,11 +495,11 @@ def assign_codons_to_positions(model, data, vae_embeddings):
 
     # Check coverage
     covered_positions = len(set(codon_to_position.values()))
-    print(f"\n  Position Assignment:")
+    print("\n  Position Assignment:")
     print(f"    Unique positions covered: {covered_positions}/64")
 
     # Show sample mappings
-    print(f"\n  Sample codon→position mappings:")
+    print("\n  Sample codon→position mappings:")
     for codon in list(codons)[:10]:
         aa = GENETIC_CODE[codon]
         pos = codon_to_position[codon]
@@ -575,7 +565,12 @@ def visualize_results(model, data, vae_embeddings, eval_results, output_dir):
         label="VAE natural",
     )
     ax2.scatter(
-        coords_2d[:, 0], coords_2d[:, 1], c="red", s=30, alpha=0.7, label="Learned"
+        coords_2d[:, 0],
+        coords_2d[:, 1],
+        c="red",
+        s=30,
+        alpha=0.7,
+        label="Learned",
     )
     ax2.set_title("Learned vs VAE Natural Positions")
     ax2.legend()
@@ -586,9 +581,7 @@ def visualize_results(model, data, vae_embeddings, eval_results, output_dir):
     ax3.text(
         0.5,
         0.5,
-        "Training complete\nCluster acc: {:.1f}%".format(
-            eval_results["cluster_acc"] * 100
-        ),
+        "Training complete\nCluster acc: {:.1f}%".format(eval_results["cluster_acc"] * 100),
         ha="center",
         va="center",
         fontsize=14,
@@ -610,7 +603,13 @@ def visualize_results(model, data, vae_embeddings, eval_results, output_dir):
                 between_dists.append(dist)
 
     ax4.hist(within_dists, bins=20, alpha=0.7, label="Within cluster", density=True)
-    ax4.hist(between_dists, bins=20, alpha=0.7, label="Between clusters", density=True)
+    ax4.hist(
+        between_dists,
+        bins=20,
+        alpha=0.7,
+        label="Between clusters",
+        density=True,
+    )
     ax4.axvline(np.mean(within_dists), color="blue", linestyle="--")
     ax4.axvline(np.mean(between_dists), color="orange", linestyle="--")
     ax4.set_xlabel("Embedding Distance")
@@ -639,9 +638,7 @@ def main():
 
     # Load VAE embeddings
     print("\nLoading VAE embeddings...")
-    data_path = (
-        PROJECT_ROOT / "riemann_hypothesis_sandbox" / "embeddings" / "embeddings.pt"
-    )
+    data_path = PROJECT_ROOT / "riemann_hypothesis_sandbox" / "embeddings" / "embeddings.pt"
     vae_data = torch.load(data_path, weights_only=False)
 
     z_B = vae_data.get("z_B_hyp", vae_data.get("z_hyperbolic"))
@@ -671,9 +668,7 @@ def main():
 
     # Assign codons to positions
     print("\nAssigning codons to positions...")
-    codon_to_position, position_assignments = assign_codons_to_positions(
-        model, data, vae_embeddings
-    )
+    codon_to_position, position_assignments = assign_codons_to_positions(model, data, vae_embeddings)
 
     # Visualize
     print("\nGenerating visualization...")

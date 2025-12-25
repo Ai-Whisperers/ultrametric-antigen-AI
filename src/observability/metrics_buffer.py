@@ -67,7 +67,11 @@ class MetricsBuffer:
         self._epoch_accumulators: Dict[str, List[float]] = defaultdict(list)
 
     def record(
-        self, name: str, value: float, step: int, tags: Optional[Dict[str, str]] = None
+        self,
+        name: str,
+        value: float,
+        step: int,
+        tags: Optional[Dict[str, str]] = None,
     ) -> None:
         """Record a metric value.
 
@@ -85,9 +89,7 @@ class MetricsBuffer:
             self._records.append(record)
 
             if len(self._records) > self._max_size and not self._overflow_warned:
-                print(
-                    f"Warning: MetricsBuffer has {len(self._records)} records. Consider draining more frequently."
-                )
+                print(f"Warning: MetricsBuffer has {len(self._records)} records. Consider draining more frequently.")
                 self._overflow_warned = True
 
     def record_batch(
@@ -181,7 +183,10 @@ class ScopedMetrics:
     """
 
     def __init__(
-        self, buffer: MetricsBuffer, step: int, tags: Optional[Dict[str, str]] = None
+        self,
+        buffer: MetricsBuffer,
+        step: int,
+        tags: Optional[Dict[str, str]] = None,
     ):
         self._buffer = buffer
         self._step = step

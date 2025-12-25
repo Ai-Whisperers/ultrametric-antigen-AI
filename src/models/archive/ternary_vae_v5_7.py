@@ -178,17 +178,13 @@ class StateNetV3(nn.Module):
         self.decoder = nn.Sequential(
             nn.Linear(latent_dim, hidden_dim),
             nn.ReLU(),
-            nn.Linear(
-                hidden_dim, 5
-            ),  # [delta_lr, delta_lambda1-3, delta_ranking_weight]
+            nn.Linear(hidden_dim, 5),  # [delta_lr, delta_lambda1-3, delta_ranking_weight]
             nn.Tanh(),  # Output in [-1, 1] for bounded corrections
         )
 
         # Metric-specific attention head
         # Learns which state dimensions most affect r vs coverage
-        self.metric_attention = nn.Sequential(
-            nn.Linear(state_dim, 8), nn.Softmax(dim=-1)
-        )
+        self.metric_attention = nn.Sequential(nn.Linear(state_dim, 8), nn.Softmax(dim=-1))
 
     def forward(self, state: torch.Tensor) -> tuple:
         """
@@ -333,9 +329,7 @@ class DualNeuralVAEV5_7(nn.Module):
             "delta_ranking_weight": [],  # NEW
         }
 
-    def compute_phase_scheduled_rho(
-        self, epoch: int, phase_4_start: int = 250
-    ) -> float:
+    def compute_phase_scheduled_rho(self, epoch: int, phase_4_start: int = 250) -> float:
         """Compute phase-scheduled latent permeability."""
         if epoch < 40:
             self.current_phase = 1
@@ -372,9 +366,7 @@ class DualNeuralVAEV5_7(nn.Module):
         else:
             self.grad_ema_momentum = 0.9
 
-    def update_adaptive_lambdas(
-        self, grad_ratio: float, coverage_A: int, coverage_B: int
-    ):
+    def update_adaptive_lambdas(self, grad_ratio: float, coverage_A: int, coverage_B: int):
         """Update lambda1 and lambda2 adaptively."""
         if not self.adaptive_scheduling:
             return
@@ -401,12 +393,8 @@ class DualNeuralVAEV5_7(nn.Module):
 
     def update_ranking_ema(self, r_A: float, r_B: float):
         """Update EMA of ranking correlations for trend tracking."""
-        self.r_A_ema = (
-            self.r_ema_momentum * self.r_A_ema + (1 - self.r_ema_momentum) * r_A
-        )
-        self.r_B_ema = (
-            self.r_ema_momentum * self.r_B_ema + (1 - self.r_ema_momentum) * r_B
-        )
+        self.r_A_ema = self.r_ema_momentum * self.r_A_ema + (1 - self.r_ema_momentum) * r_A
+        self.r_B_ema = self.r_ema_momentum * self.r_B_ema + (1 - self.r_ema_momentum) * r_B
 
     def apply_statenet_corrections(
         self,
@@ -507,9 +495,7 @@ class DualNeuralVAEV5_7(nn.Module):
         # Apply ranking weight correction (NEW)
         # Base weight is modulated by StateNet output
         # With scale=0.5 and delta in [-1,1], range is [0.25, 0.75] from base 0.5
-        effective_ranking_weight = self.base_ranking_weight * (
-            1 + self.statenet_ranking_scale * delta_ranking_weight.item()
-        )
+        effective_ranking_weight = self.base_ranking_weight * (1 + self.statenet_ranking_scale * delta_ranking_weight.item())
         # Clamp to reasonable range [0.1, 1.5] to allow significant modulation
         effective_ranking_weight = max(0.1, min(1.5, effective_ranking_weight))
         self.ranking_weight = effective_ranking_weight
@@ -519,9 +505,7 @@ class DualNeuralVAEV5_7(nn.Module):
         self.statenet_corrections["delta_lambda1"].append(delta_lambda1.item())
         self.statenet_corrections["delta_lambda2"].append(delta_lambda2.item())
         self.statenet_corrections["delta_lambda3"].append(delta_lambda3.item())
-        self.statenet_corrections["delta_ranking_weight"].append(
-            delta_ranking_weight.item()
-        )
+        self.statenet_corrections["delta_ranking_weight"].append(delta_ranking_weight.item())
 
         return (
             corrected_lr,
@@ -533,9 +517,7 @@ class DualNeuralVAEV5_7(nn.Module):
             effective_ranking_weight,
         )
 
-    def reparameterize(
-        self, mu: torch.Tensor, logvar: torch.Tensor, temperature: float = 1.0
-    ) -> torch.Tensor:
+    def reparameterize(self, mu: torch.Tensor, logvar: torch.Tensor, temperature: float = 1.0) -> torch.Tensor:
         """Reparameterization trick with temperature."""
         if self.training:
             std = torch.exp(0.5 * logvar)
@@ -544,9 +526,7 @@ class DualNeuralVAEV5_7(nn.Module):
         else:
             return mu
 
-    def compute_latent_entropy(
-        self, z: torch.Tensor, num_bins: int = 50
-    ) -> torch.Tensor:
+    def compute_latent_entropy(self, z: torch.Tensor, num_bins: int = 50) -> torch.Tensor:
         """Estimate latent entropy using histogram method."""
         batch_size, latent_dim = z.shape
 
@@ -618,35 +598,23 @@ class DualNeuralVAEV5_7(nn.Module):
             return
 
         grad_norm_A = 0.0
-        for param in list(self.encoder_A.parameters()) + list(
-            self.decoder_A.parameters()
-        ):
+        for param in list(self.encoder_A.parameters()) + list(self.decoder_A.parameters()):
             if param.grad is not None:
                 grad_norm_A += param.grad.norm().item() ** 2
         grad_norm_A = math.sqrt(grad_norm_A)
 
         grad_norm_B = 0.0
-        for param in list(self.encoder_B.parameters()) + list(
-            self.decoder_B.parameters()
-        ):
+        for param in list(self.encoder_B.parameters()) + list(self.decoder_B.parameters()):
             if param.grad is not None:
                 grad_norm_B += param.grad.norm().item() ** 2
         grad_norm_B = math.sqrt(grad_norm_B)
 
         if grad_norm_A > 0:
-            self.grad_norm_A_ema = (
-                self.grad_ema_momentum * self.grad_norm_A_ema
-                + (1 - self.grad_ema_momentum) * grad_norm_A
-            )
+            self.grad_norm_A_ema = self.grad_ema_momentum * self.grad_norm_A_ema + (1 - self.grad_ema_momentum) * grad_norm_A
         if grad_norm_B > 0:
-            self.grad_norm_B_ema = (
-                self.grad_ema_momentum * self.grad_norm_B_ema
-                + (1 - self.grad_ema_momentum) * grad_norm_B
-            )
+            self.grad_norm_B_ema = self.grad_ema_momentum * self.grad_norm_B_ema + (1 - self.grad_ema_momentum) * grad_norm_B
 
-    def sample(
-        self, num_samples: int, device: str = "cpu", use_vae: str = "A"
-    ) -> torch.Tensor:
+    def sample(self, num_samples: int, device: str = "cpu", use_vae: str = "A") -> torch.Tensor:
         """Sample from the learned manifold."""
         self.eval()
         with torch.no_grad():

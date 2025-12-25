@@ -112,9 +112,7 @@ class LossComponent(ABC, nn.Module):
         return self._name
 
     @abstractmethod
-    def forward(
-        self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs
-    ) -> LossResult:
+    def forward(self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs) -> LossResult:
         """Compute the loss.
 
         Args:
@@ -144,7 +142,10 @@ class DualVAELossComponent(LossComponent):
     """
 
     def __init__(
-        self, weight: float = 1.0, name: Optional[str] = None, combine: str = "sum"
+        self,
+        weight: float = 1.0,
+        name: Optional[str] = None,
+        combine: str = "sum",
     ):
         """Initialize dual VAE loss component.
 
@@ -179,9 +180,7 @@ class DualVAELossComponent(LossComponent):
         """
         pass
 
-    def forward(
-        self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs
-    ) -> LossResult:
+    def forward(self, outputs: Dict[str, torch.Tensor], targets: torch.Tensor, **kwargs) -> LossResult:
         """Compute loss for both VAEs and combine.
 
         Args:
@@ -193,14 +192,10 @@ class DualVAELossComponent(LossComponent):
             Combined LossResult
         """
         # Compute for VAE-A
-        result_A = self.compute_single(
-            outputs["z_A"], outputs, targets, vae="A", **kwargs
-        )
+        result_A = self.compute_single(outputs["z_A"], outputs, targets, vae="A", **kwargs)
 
         # Compute for VAE-B
-        result_B = self.compute_single(
-            outputs["z_B"], outputs, targets, vae="B", **kwargs
-        )
+        result_B = self.compute_single(outputs["z_B"], outputs, targets, vae="B", **kwargs)
 
         # Combine losses
         if self.combine == "sum":

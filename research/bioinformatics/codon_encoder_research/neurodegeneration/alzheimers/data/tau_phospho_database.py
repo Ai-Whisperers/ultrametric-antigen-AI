@@ -578,16 +578,12 @@ def get_all_phospho_positions():
 
 def get_sites_by_domain(domain):
     """Return phospho-sites in a specific domain."""
-    return {
-        pos: data for pos, data in TAU_PHOSPHO_SITES.items() if data["domain"] == domain
-    }
+    return {pos: data for pos, data in TAU_PHOSPHO_SITES.items() if data["domain"] == domain}
 
 
 def get_sites_by_stage(stage):
     """Return phospho-sites associated with a pathological stage."""
-    return {
-        pos: data for pos, data in TAU_PHOSPHO_SITES.items() if data["stage"] == stage
-    }
+    return {pos: data for pos, data in TAU_PHOSPHO_SITES.items() if data["stage"] == stage}
 
 
 def get_epitope_sites(epitope_name):

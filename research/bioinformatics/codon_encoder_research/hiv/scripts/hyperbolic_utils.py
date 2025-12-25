@@ -253,9 +253,7 @@ class HyperbolicCodonEncoder:
 # ============================================================================
 
 
-def load_codon_encoder(
-    device: str = "cpu", version: str = "3adic"
-) -> Tuple[CodonEncoder, dict, bool]:
+def load_codon_encoder(device: str = "cpu", version: str = "3adic") -> Tuple[CodonEncoder, dict, bool]:
     """
     Load the trained codon encoder and mapping.
 
@@ -283,12 +281,7 @@ def load_codon_encoder(
             research_dir / "genetic_code" / "data" / "codon_encoder_3adic.pt",
             script_dir.parent / "data" / "codon_encoder_3adic.pt",
             # Project-level paths
-            project_root
-            / "research"
-            / "bioinformatics"
-            / "genetic_code"
-            / "data"
-            / "codon_encoder_3adic.pt",
+            project_root / "research" / "bioinformatics" / "genetic_code" / "data" / "codon_encoder_3adic.pt",
             project_root
             / "DOCUMENTATION"
             / "01_PROJECT_KNOWLEDGE_BASE"
@@ -303,11 +296,7 @@ def load_codon_encoder(
     else:
         # Legacy encoder (trained on v5.5 Euclidean, needs projection)
         encoder_paths = [
-            research_dir
-            / "genetic_code"
-            / "data"
-            / "legacy"
-            / "codon_encoder_legacy.pt",
+            research_dir / "genetic_code" / "data" / "legacy" / "codon_encoder_legacy.pt",
             script_dir.parent / "data" / "legacy" / "codon_encoder_legacy.pt",
         ]
         native_hyperbolic = False
@@ -333,9 +322,7 @@ def load_codon_encoder(
     return encoder, mapping, native_hyperbolic
 
 
-def load_hyperbolic_encoder(
-    device: str = "cpu", max_radius: float = 0.95, version: str = "3adic"
-) -> Tuple[HyperbolicCodonEncoder, dict]:
+def load_hyperbolic_encoder(device: str = "cpu", max_radius: float = 0.95, version: str = "3adic") -> Tuple[HyperbolicCodonEncoder, dict]:
     """
     Load encoder with hyperbolic projection wrapper.
 
@@ -348,9 +335,7 @@ def load_hyperbolic_encoder(
         Tuple of (hyperbolic_encoder, codon_to_position_mapping)
     """
     encoder, mapping, native_hyperbolic = load_codon_encoder(device, version=version)
-    hyp_encoder = HyperbolicCodonEncoder(
-        encoder, max_radius=max_radius, native_hyperbolic=native_hyperbolic
-    )
+    hyp_encoder = HyperbolicCodonEncoder(encoder, max_radius=max_radius, native_hyperbolic=native_hyperbolic)
     return hyp_encoder, mapping
 
 
@@ -384,9 +369,7 @@ def encode_codon_hyperbolic(codon: str, encoder: HyperbolicCodonEncoder) -> np.n
     return encoder.encode_numpy(onehot).squeeze()
 
 
-def encode_sequence_hyperbolic(
-    aa_sequence: str, encoder: HyperbolicCodonEncoder, aa_to_codon: dict
-) -> np.ndarray:
+def encode_sequence_hyperbolic(aa_sequence: str, encoder: HyperbolicCodonEncoder, aa_to_codon: dict) -> np.ndarray:
     """
     Encode amino acid sequence to hyperbolic embeddings.
 
@@ -438,15 +421,11 @@ def hyperbolic_centroid(
         points = torch.from_numpy(points).float()
 
     # Initialize with Euclidean mean (projected to ball)
-    centroid = project_to_poincare(
-        points.mean(dim=0, keepdim=True), max_radius=0.9
-    ).squeeze()
+    centroid = project_to_poincare(points.mean(dim=0, keepdim=True), max_radius=0.9).squeeze()
 
     for _ in range(max_iter):
         # Compute distances to current centroid
-        dists = poincare_distance(
-            points, centroid.unsqueeze(0).expand(points.shape[0], -1), c=c
-        )
+        dists = poincare_distance(points, centroid.unsqueeze(0).expand(points.shape[0], -1), c=c)
 
         # Weighted update (simplified gradient descent in tangent space)
         weights = 1 / (dists + 1e-10)
@@ -454,9 +433,7 @@ def hyperbolic_centroid(
 
         # Move toward weighted mean in tangent space
         new_centroid = (points * weights.unsqueeze(-1)).sum(dim=0)
-        new_centroid = project_to_poincare(
-            new_centroid.unsqueeze(0), max_radius=0.9
-        ).squeeze()
+        new_centroid = project_to_poincare(new_centroid.unsqueeze(0), max_radius=0.9).squeeze()
 
         # Check convergence
         shift = torch.norm(new_centroid - centroid)
@@ -496,9 +473,7 @@ def hyperbolic_variance(
     if centroid is None:
         centroid = hyperbolic_centroid(points, c=c)
 
-    dists = poincare_distance(
-        points, centroid.unsqueeze(0).expand(points.shape[0], -1), c=c
-    )
+    dists = poincare_distance(points, centroid.unsqueeze(0).expand(points.shape[0], -1), c=c)
     variance = (dists**2).mean().item()
 
     return variance

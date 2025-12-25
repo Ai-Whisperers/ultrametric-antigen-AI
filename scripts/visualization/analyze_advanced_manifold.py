@@ -152,9 +152,7 @@ def compute_jacobian_surface(model, latent_codes, device="cuda", grid_size=50):
             # Use the two principal components, rest at mean
             z_point = mean_z.copy()
             z_point = z_point + X[i, j] * Vt[0] + Y[i, j] * Vt[1]
-            z_tensor = torch.tensor(
-                z_point, dtype=torch.float32, device=device
-            ).unsqueeze(0)
+            z_tensor = torch.tensor(z_point, dtype=torch.float32, device=device).unsqueeze(0)
             z_tensor.requires_grad_(True)
 
             # Forward through decoder
@@ -240,7 +238,10 @@ def detect_latent_holes(latent_codes, grid_size=100, threshold_percentile=10):
 
     # Compute density via histogram
     density, x_edges, y_edges = np.histogram2d(
-        z_2d[:, 0], z_2d[:, 1], bins=grid_size, range=[[x_min, x_max], [y_min, y_max]]
+        z_2d[:, 0],
+        z_2d[:, 1],
+        bins=grid_size,
+        range=[[x_min, x_max], [y_min, y_max]],
     )
 
     # Smooth density
@@ -325,9 +326,7 @@ def plot_all_analyses(model, operations, latent_codes, device="cuda"):
 
     # 1. Jacobian Norm Surface
     print("\n=== 1. Jacobian Norm Surface ===")
-    X_j, Y_j, jacobian_norms, z_2d_j, Vt_j = compute_jacobian_surface(
-        model, latent_codes, device=device, grid_size=40
-    )
+    X_j, Y_j, jacobian_norms, z_2d_j, Vt_j = compute_jacobian_surface(model, latent_codes, device=device, grid_size=40)
 
     fig = plt.figure(figsize=(14, 5))
 
@@ -353,9 +352,7 @@ def plot_all_analyses(model, operations, latent_codes, device="cuda"):
     plt.savefig(output_dir / "jacobian_surface.png", dpi=150, bbox_inches="tight")
     plt.close()
 
-    print(
-        f"  Jacobian norm range: [{jacobian_norms.min():.3f}, {jacobian_norms.max():.3f}]"
-    )
+    print(f"  Jacobian norm range: [{jacobian_norms.min():.3f}, {jacobian_norms.max():.3f}]")
     print(f"  Mean sensitivity: {jacobian_norms.mean():.3f}")
     print("  Saved: jacobian_surface.png")
 
@@ -417,13 +414,7 @@ def plot_all_analyses(model, operations, latent_codes, device="cuda"):
             polygon = vor.vertices[region]
             # Shoelace formula for area
             n = len(polygon)
-            area = 0.5 * abs(
-                sum(
-                    polygon[i, 0] * polygon[(i + 1) % n, 1]
-                    - polygon[(i + 1) % n, 0] * polygon[i, 1]
-                    for i in range(n)
-                )
-            )
+            area = 0.5 * abs(sum(polygon[i, 0] * polygon[(i + 1) % n, 1] - polygon[(i + 1) % n, 0] * polygon[i, 1] for i in range(n)))
             cell_areas.append(area)
 
     print(f"  Voronoi cells computed: {len(points)}")
@@ -533,9 +524,7 @@ def plot_all_analyses(model, operations, latent_codes, device="cuda"):
         # Symmetric if output same when inputs swapped
         # Input (0,0),(0,1),(0,2),(1,0),(1,1),(1,2),(2,0),(2,1),(2,2)
         # Indices:  0,    1,    2,    3,    4,    5,    6,    7,    8
-        return (
-            digits[1] == digits[3] and digits[2] == digits[6] and digits[5] == digits[7]
-        )
+        return digits[1] == digits[3] and digits[2] == digits[6] and digits[5] == digits[7]
 
     def is_zero_preserving(idx):
         """Check if op(0,0) = 0"""
@@ -579,9 +568,7 @@ def plot_all_analyses(model, operations, latent_codes, device="cuda"):
     U, S, Vt = np.linalg.svd(z_centered, full_matrices=False)
     z_2d = z_centered @ Vt[:2].T
 
-    scatter = ax4.scatter(
-        z_2d[:, 0], z_2d[:, 1], c=difficulties, cmap="hot", s=2, alpha=0.6
-    )
+    scatter = ax4.scatter(z_2d[:, 0], z_2d[:, 1], c=difficulties, cmap="hot", s=2, alpha=0.6)
     ax4.set_xlabel("PC1")
     ax4.set_ylabel("PC2")
     ax4.set_title("Difficulty in Latent Space\n(Yellow = Hard)")
@@ -594,9 +581,7 @@ def plot_all_analyses(model, operations, latent_codes, device="cuda"):
     print(f"  Difficulty range: [{difficulties.min():.6f}, {difficulties.max():.6f}]")
     print(f"  Mean difficulty: {difficulties.mean():.6f}")
     print(f"  Std difficulty: {difficulties.std():.6f}")
-    print(
-        f"  Hardest operation: {get_operation_string(hardest_indices[0])} (loss={hardest_vals[0]:.6f})"
-    )
+    print(f"  Hardest operation: {get_operation_string(hardest_indices[0])} (loss={hardest_vals[0]:.6f})")
     print(f"  Symmetric ops mean: {means[0]:.6f}, Non-symmetric: {means[1]:.6f}")
     print("  Saved: operation_difficulty.png")
 
@@ -617,7 +602,10 @@ def plot_all_analyses(model, operations, latent_codes, device="cuda"):
             "mean": float(difficulties.mean()),
             "std": float(difficulties.std()),
             "top_5_hardest": [
-                {"op": get_operation_string(idx), "loss": float(difficulties[idx])}
+                {
+                    "op": get_operation_string(idx),
+                    "loss": float(difficulties[idx]),
+                }
                 for idx in hardest_indices[:5]
             ],
             "symmetric_mean": float(means[0]),

@@ -68,14 +68,6 @@ from .zero_structure import (CombinedZeroStructureLoss, ZeroSparsityLoss,
 # See src/losses/archive/appetitive_losses.py for legacy code
 
 
-
-
-
-
-
-
-
-
 __all__ = [
     # Legacy classes (backwards compatibility)
     "ReconstructionLoss",

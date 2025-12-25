@@ -18,7 +18,6 @@ from typing import Dict, List
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 
 matplotlib.use("Agg")
 
@@ -80,11 +79,7 @@ def plot_risk_distribution(predictions: List[Dict], output_dir: Path):
     """Plot distribution of immunogenic probabilities."""
     print("\n[1] Risk distribution histogram...")
 
-    probs = [
-        p["immunogenic_probability"]
-        for p in predictions
-        if p.get("immunogenic_probability") is not None
-    ]
+    probs = [p["immunogenic_probability"] for p in predictions if p.get("immunogenic_probability") is not None]
 
     fig, axes = plt.subplots(1, 2, figsize=FIGSIZE_DOUBLE)
 
@@ -97,34 +92,29 @@ def plot_risk_distribution(predictions: List[Dict], output_dir: Path):
     ax.set_xlabel("Immunogenic Probability", fontsize=12)
     ax.set_ylabel("Number of Arginine Sites", fontsize=12)
     ax.set_title(
-        "Distribution of Predicted Immunogenicity", fontsize=14, fontweight="bold"
+        "Distribution of Predicted Immunogenicity",
+        fontsize=14,
+        fontweight="bold",
     )
     ax.legend(fontsize=10)
     ax.grid(True, alpha=0.3)
 
     # Risk category pie chart
     ax = axes[1]
-    risk_counts = Counter(
-        p["risk_category"] for p in predictions if p.get("risk_category") != "unknown"
-    )
+    risk_counts = Counter(p["risk_category"] for p in predictions if p.get("risk_category") != "unknown")
 
     categories = ["very_high", "high", "moderate", "low", "very_low"]
     counts = [risk_counts.get(c, 0) for c in categories]
     colors = [COLORS[c] for c in categories]
-    labels = [
-        f"{c.replace('_', ' ').title()}\n({cnt:,})"
-        for c, cnt in zip(categories, counts)
-    ]
+    labels = [f"{c.replace('_', ' ').title()}\n({cnt:,})" for c, cnt in zip(categories, counts)]
 
-    wedges, texts, autotexts = ax.pie(
-        counts, labels=labels, colors=colors, autopct="%1.1f%%", startangle=90
-    )
+    wedges, texts, autotexts = ax.pie(counts, labels=labels, colors=colors, autopct="%1.1f%%", startangle=90)
     ax.set_title("Risk Category Distribution", fontsize=14, fontweight="bold")
 
     plt.tight_layout()
     plt.savefig(output_dir / "risk_distribution.png", dpi=DPI, bbox_inches="tight")
     plt.close()
-    print(f"  Saved: risk_distribution.png")
+    print("  Saved: risk_distribution.png")
 
 
 def plot_top_proteins(predictions: List[Dict], output_dir: Path):
@@ -155,9 +145,7 @@ def plot_top_proteins(predictions: List[Dict], output_dir: Path):
         data["n_sites"] = len(data["probs"])
 
     # Sort by max probability
-    sorted_proteins = sorted(
-        protein_data.items(), key=lambda x: x[1]["max_prob"], reverse=True
-    )[:30]
+    sorted_proteins = sorted(protein_data.items(), key=lambda x: x[1]["max_prob"], reverse=True)[:30]
 
     fig, ax = plt.subplots(figsize=(12, 10))
 
@@ -169,9 +157,7 @@ def plot_top_proteins(predictions: List[Dict], output_dir: Path):
     y_pos = np.arange(len(genes))
 
     # Horizontal bar chart
-    bars = ax.barh(
-        y_pos, max_probs, color="#d32f2f", alpha=0.8, label="Max probability"
-    )
+    bars = ax.barh(y_pos, max_probs, color="#d32f2f", alpha=0.8, label="Max probability")
     ax.barh(y_pos, mean_probs, color="#1976d2", alpha=0.6, label="Mean probability")
 
     ax.set_yticks(y_pos)
@@ -195,7 +181,7 @@ def plot_top_proteins(predictions: List[Dict], output_dir: Path):
     plt.tight_layout()
     plt.savefig(output_dir / "top_proteins.png", dpi=DPI, bbox_inches="tight")
     plt.close()
-    print(f"  Saved: top_proteins.png")
+    print("  Saved: top_proteins.png")
 
 
 def plot_feature_vs_probability(predictions: List[Dict], output_dir: Path):
@@ -209,16 +195,8 @@ def plot_feature_vs_probability(predictions: List[Dict], output_dir: Path):
     fig, axes = plt.subplots(1, 3, figsize=FIGSIZE_TRIPLE)
 
     for ax, feat in zip(axes, features):
-        x = [
-            p.get(feat, 0)
-            for p in sample
-            if p.get("immunogenic_probability") is not None
-        ]
-        y = [
-            p["immunogenic_probability"]
-            for p in sample
-            if p.get("immunogenic_probability") is not None
-        ]
+        x = [p.get(feat, 0) for p in sample if p.get("immunogenic_probability") is not None]
+        y = [p["immunogenic_probability"] for p in sample if p.get("immunogenic_probability") is not None]
 
         # Color by risk
         colors = []
@@ -242,7 +220,7 @@ def plot_feature_vs_probability(predictions: List[Dict], output_dir: Path):
     plt.tight_layout()
     plt.savefig(output_dir / "feature_correlations.png", dpi=DPI, bbox_inches="tight")
     plt.close()
-    print(f"  Saved: feature_correlations.png")
+    print("  Saved: feature_correlations.png")
 
 
 def plot_enrichment_dotplot(enrichment_results: Dict, output_dir: Path):
@@ -295,7 +273,9 @@ def plot_enrichment_dotplot(enrichment_results: Dict, output_dir: Path):
     ax.set_yticklabels(terms, fontsize=9)
     ax.set_xlabel("Fold Enrichment", fontsize=12)
     ax.set_title(
-        "GO Term Enrichment in High-Risk Proteins", fontsize=14, fontweight="bold"
+        "GO Term Enrichment in High-Risk Proteins",
+        fontsize=14,
+        fontweight="bold",
     )
     ax.axvline(1, color="gray", linestyle="--", lw=1, alpha=0.5)
     ax.grid(True, alpha=0.3, axis="x")
@@ -320,7 +300,7 @@ def plot_enrichment_dotplot(enrichment_results: Dict, output_dir: Path):
     plt.tight_layout()
     plt.savefig(output_dir / "enrichment_dotplot.png", dpi=DPI, bbox_inches="tight")
     plt.close()
-    print(f"  Saved: enrichment_dotplot.png")
+    print("  Saved: enrichment_dotplot.png")
 
 
 def plot_position_analysis(predictions: List[Dict], output_dir: Path):
@@ -328,9 +308,7 @@ def plot_position_analysis(predictions: List[Dict], output_dir: Path):
     print("\n[5] Position analysis...")
 
     # Get high vs low risk sites
-    high_risk = [
-        p for p in predictions if p.get("risk_category") in ["very_high", "high"]
-    ]
+    high_risk = [p for p in predictions if p.get("risk_category") in ["very_high", "high"]]
     low_risk = [p for p in predictions if p.get("risk_category") in ["very_low", "low"]]
 
     fig, axes = plt.subplots(1, 2, figsize=FIGSIZE_DOUBLE)
@@ -351,7 +329,12 @@ def plot_position_analysis(predictions: List[Dict], output_dir: Path):
 
         if positions:
             ax.hist(
-                positions, bins=20, alpha=0.5, label=label, color=color, density=True
+                positions,
+                bins=20,
+                alpha=0.5,
+                label=label,
+                color=color,
+                density=True,
             )
 
     ax.set_xlabel("Normalized Position in Protein (0=N-term, 1=C-term)", fontsize=12)
@@ -362,16 +345,8 @@ def plot_position_analysis(predictions: List[Dict], output_dir: Path):
 
     # Probability vs protein length
     ax = axes[1]
-    lengths = [
-        p.get("protein_length", 0)
-        for p in predictions
-        if p.get("immunogenic_probability") is not None
-    ]
-    probs = [
-        p["immunogenic_probability"]
-        for p in predictions
-        if p.get("immunogenic_probability") is not None
-    ]
+    lengths = [p.get("protein_length", 0) for p in predictions if p.get("immunogenic_probability") is not None]
+    probs = [p["immunogenic_probability"] for p in predictions if p.get("immunogenic_probability") is not None]
 
     # Bin by length
     bins = [0, 200, 400, 600, 800, 1000, 2000, 5000]
@@ -401,7 +376,7 @@ def plot_position_analysis(predictions: List[Dict], output_dir: Path):
     plt.tight_layout()
     plt.savefig(output_dir / "position_analysis.png", dpi=DPI, bbox_inches="tight")
     plt.close()
-    print(f"  Saved: position_analysis.png")
+    print("  Saved: position_analysis.png")
 
 
 def plot_summary_dashboard(predictions: List[Dict], output_dir: Path):
@@ -411,19 +386,11 @@ def plot_summary_dashboard(predictions: List[Dict], output_dir: Path):
     fig = plt.figure(figsize=(16, 12))
 
     # Statistics text
-    valid_preds = [
-        p for p in predictions if p.get("immunogenic_probability") is not None
-    ]
+    valid_preds = [p for p in predictions if p.get("immunogenic_probability") is not None]
     probs = [p["immunogenic_probability"] for p in valid_preds]
     risk_counts = Counter(p["risk_category"] for p in valid_preds)
     n_proteins = len(set(p["protein_id"] for p in valid_preds))
-    high_risk_proteins = len(
-        set(
-            p["protein_id"]
-            for p in valid_preds
-            if p.get("risk_category") in ["very_high", "high"]
-        )
-    )
+    high_risk_proteins = len(set(p["protein_id"] for p in valid_preds if p.get("risk_category") in ["very_high", "high"]))
 
     # Top left: Key metrics
     ax1 = fig.add_subplot(2, 3, 1)
@@ -507,7 +474,7 @@ def plot_summary_dashboard(predictions: List[Dict], output_dir: Path):
     plt.tight_layout()
     plt.savefig(output_dir / "summary_dashboard.png", dpi=DPI, bbox_inches="tight")
     plt.close()
-    print(f"  Saved: summary_dashboard.png")
+    print("  Saved: summary_dashboard.png")
 
 
 # ============================================================================
@@ -546,7 +513,7 @@ def main():
     if enrich_path.exists():
         with open(enrich_path, "r") as f:
             enrichment_results = json.load(f)
-        print(f"  Loaded enrichment results")
+        print("  Loaded enrichment results")
 
     # Generate visualizations
     print("\nGenerating visualizations...")

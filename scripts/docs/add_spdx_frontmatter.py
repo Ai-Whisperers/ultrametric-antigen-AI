@@ -17,7 +17,6 @@ import os
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 # Configuration
 SPDX_HEADER = "<!-- SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0 -->"
@@ -104,27 +103,13 @@ def process_file(filepath: Path, dry_run: bool = False, verbose: bool = False) -
             # Insert front-matter after SPDX header
             if result["spdx_added"]:
                 # SPDX was just added, insert after it
-                content = (
-                    SPDX_HEADER
-                    + "\n\n"
-                    + frontmatter
-                    + "\n"
-                    + content.replace(SPDX_HEADER + "\n\n", "")
-                )
+                content = SPDX_HEADER + "\n\n" + frontmatter + "\n" + content.replace(SPDX_HEADER + "\n\n", "")
             else:
                 # SPDX was already present, find it and insert after
-                spdx_match = re.search(
-                    r"(<!--\s*SPDX-License-Identifier:[^>]+-->)\s*\n*", content
-                )
+                spdx_match = re.search(r"(<!--\s*SPDX-License-Identifier:[^>]+-->)\s*\n*", content)
                 if spdx_match:
                     end_pos = spdx_match.end()
-                    content = (
-                        content[:end_pos]
-                        + "\n"
-                        + frontmatter
-                        + "\n"
-                        + content[end_pos:].lstrip()
-                    )
+                    content = content[:end_pos] + "\n" + frontmatter + "\n" + content[end_pos:].lstrip()
                 else:
                     # No SPDX found (shouldn't happen), prepend frontmatter
                     content = frontmatter + "\n" + content
@@ -151,9 +136,7 @@ def find_markdown_files(base_dir: Path) -> list:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Add SPDX headers and YAML front-matter to documentation"
-    )
+    parser = argparse.ArgumentParser(description="Add SPDX headers and YAML front-matter to documentation")
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -161,7 +144,9 @@ def main():
     )
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
     parser.add_argument(
-        "--dir", type=str, help="Specific directory to process (relative to repo root)"
+        "--dir",
+        type=str,
+        help="Specific directory to process (relative to repo root)",
     )
     args = parser.parse_args()
 
@@ -179,9 +164,7 @@ def main():
         print(f"Error: Directory not found: {target_dir}")
         return 1
 
-    print(
-        f"{'[DRY RUN] ' if args.dry_run else ''}Processing markdown files in: {target_dir}"
-    )
+    print(f"{'[DRY RUN] ' if args.dry_run else ''}Processing markdown files in: {target_dir}")
     print("-" * 60)
 
     # Find all markdown files
@@ -229,9 +212,7 @@ def main():
             print(f"  - {error}")
 
     if args.dry_run:
-        print(
-            "\n[DRY RUN] No files were modified. Run without --dry-run to apply changes."
-        )
+        print("\n[DRY RUN] No files were modified. Run without --dry-run to apply changes.")
 
     return 0
 

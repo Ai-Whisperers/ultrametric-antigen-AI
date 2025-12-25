@@ -11,10 +11,9 @@ Version: 1.0
 """
 
 import json
-import re
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -210,8 +209,7 @@ def compare_native_vs_citrullinated(results: List[Dict]) -> pd.DataFrame:
                 "cit_peptide_hla_iptm": cit["peptide_hla_iptm"],
                 "delta_iptm": cit["iptm"] - native["iptm"],
                 "delta_ranking": cit["ranking_score"] - native["ranking_score"],
-                "delta_peptide_hla_iptm": cit["peptide_hla_iptm"]
-                - native["peptide_hla_iptm"],
+                "delta_peptide_hla_iptm": cit["peptide_hla_iptm"] - native["peptide_hla_iptm"],
                 "entropy_change": EPITOPE_ENTROPY.get(epitope, None),
             }
         )
@@ -238,16 +236,11 @@ def analyze_binding_changes(comparisons: pd.DataFrame) -> Dict:
     }
 
     # Correlation with entropy change
-    if (
-        "entropy_change" in complete.columns
-        and complete["entropy_change"].notna().any()
-    ):
+    if "entropy_change" in complete.columns and complete["entropy_change"].notna().any():
         valid = complete.dropna(subset=["entropy_change"])
         if len(valid) > 1:
             corr = valid["delta_iptm"].corr(valid["entropy_change"])
-            analysis["entropy_iptm_correlation"] = (
-                float(corr) if not np.isnan(corr) else None
-            )
+            analysis["entropy_iptm_correlation"] = float(corr) if not np.isnan(corr) else None
 
     # Per-epitope summary
     epitope_summary = {}
@@ -300,9 +293,7 @@ def parse_cif_coordinates(cif_path: Path) -> Dict:
                         data = dict(zip(headers, parts))
                         chain = data.get("auth_asym_id", data.get("label_asym_id", "A"))
                         res_id = data.get("auth_seq_id", data.get("label_seq_id", "1"))
-                        atom_name = data.get(
-                            "label_atom_id", data.get("auth_atom_id", "CA")
-                        )
+                        atom_name = data.get("label_atom_id", data.get("auth_atom_id", "CA"))
                         x = float(data.get("Cartn_x", 0))
                         y = float(data.get("Cartn_y", 0))
                         z = float(data.get("Cartn_z", 0))
@@ -413,7 +404,7 @@ def main():
     predictions_dirs = get_predictions_dirs()
     output_dir = get_output_dir()
 
-    print(f"\nPredictions directories:")
+    print("\nPredictions directories:")
     for pred_dir in predictions_dirs:
         print(f"  {pred_dir}")
     print(f"Output directory: {output_dir}")
@@ -426,13 +417,13 @@ def main():
     # Create results dataframe
     df_results = pd.DataFrame(results)
     df_results.to_csv(output_dir / "all_predictions.csv", index=False)
-    print(f"  Saved: all_predictions.csv")
+    print("  Saved: all_predictions.csv")
 
     # Compare native vs citrullinated
     print("\n[2] Comparing native vs citrullinated...")
     comparisons = compare_native_vs_citrullinated(results)
     comparisons.to_csv(output_dir / "native_vs_citrullinated.csv", index=False)
-    print(f"  Saved: native_vs_citrullinated.csv")
+    print("  Saved: native_vs_citrullinated.csv")
 
     # Print comparison table
     print("\n  Comparison Results:")
@@ -445,9 +436,7 @@ def main():
             delta = row["delta_iptm"]
             direction = "↑" if delta > 0 else "↓"
             print(f"  {epitope} + {hla}:")
-            print(
-                f"    Native iPTM: {row['native_iptm']:.3f} -> Cit iPTM: {row['cit_iptm']:.3f} ({direction}{abs(delta):.3f})"
-            )
+            print(f"    Native iPTM: {row['native_iptm']:.3f} -> Cit iPTM: {row['cit_iptm']:.3f} ({direction}{abs(delta):.3f})")
             print(f"    Entropy change: {row['entropy_change']:.4f}")
         else:
             print(f"  {epitope} + {hla}: Native only (iPTM: {row['native_iptm']:.3f})")
@@ -458,16 +447,12 @@ def main():
 
     with open(output_dir / "binding_analysis.json", "w") as f:
         json.dump(binding_analysis, f, indent=2)
-    print(f"  Saved: binding_analysis.json")
+    print("  Saved: binding_analysis.json")
 
     print("\n  Binding Analysis Summary:")
-    print(
-        f"    Comparisons with both states: {binding_analysis.get('n_comparisons', 0)}"
-    )
+    print(f"    Comparisons with both states: {binding_analysis.get('n_comparisons', 0)}")
     print(f"    Mean Δ iPTM: {binding_analysis.get('mean_delta_iptm', 0):.4f}")
-    print(
-        f"    Increased binding: {binding_analysis.get('increased_binding', 0)} ({binding_analysis.get('percent_increased', 0):.1f}%)"
-    )
+    print(f"    Increased binding: {binding_analysis.get('increased_binding', 0)} ({binding_analysis.get('percent_increased', 0):.1f}%)")
     print(f"    Decreased binding: {binding_analysis.get('decreased_binding', 0)}")
 
     # Structural analysis
@@ -476,16 +461,12 @@ def main():
     if structural:
         df_structural = pd.DataFrame(structural)
         df_structural.to_csv(output_dir / "structural_analysis.csv", index=False)
-        print(f"  Saved: structural_analysis.csv")
+        print("  Saved: structural_analysis.csv")
 
         print("\n  Structural Differences (RMSD in Å):")
         for s in structural:
             print(f"    {s['epitope'].upper()} + {s['hla'].upper()}:")
-            print(
-                f"      Peptide RMSD: {s['peptide_rmsd']:.2f} Å"
-                if s["peptide_rmsd"]
-                else "      Peptide RMSD: N/A"
-            )
+            print(f"      Peptide RMSD: {s['peptide_rmsd']:.2f} Å" if s["peptide_rmsd"] else "      Peptide RMSD: N/A")
             print(f"      Δ iPTM: {s['delta_iptm']:.3f}")
 
     # Summary report
@@ -505,9 +486,7 @@ def main():
         print("\n  Per-epitope findings:")
         for epitope, data in binding_analysis.get("epitope_summary", {}).items():
             direction = "increases" if data["mean_delta_iptm"] > 0 else "decreases"
-            print(
-                f"    {epitope.upper()}: Citrullination {direction} binding by {abs(data['mean_delta_iptm']):.3f} iPTM"
-            )
+            print(f"    {epitope.upper()}: Citrullination {direction} binding by {abs(data['mean_delta_iptm']):.3f} iPTM")
             print(f"      Entropy change: {data['entropy_change']:.4f}")
 
     print("\n" + "=" * 80)

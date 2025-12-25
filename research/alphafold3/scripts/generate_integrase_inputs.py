@@ -122,7 +122,12 @@ REVEAL_MUTATIONS = {
 # Drug resistance mutations (for comparison)
 RESISTANCE_MUTATIONS = {
     "Y143R": {"position": 143, "wt_aa": "Y", "mut_aa": "R", "drugs": ["RAL"]},
-    "N155H": {"position": 155, "wt_aa": "N", "mut_aa": "H", "drugs": ["RAL", "EVG"]},
+    "N155H": {
+        "position": 155,
+        "wt_aa": "N",
+        "mut_aa": "H",
+        "drugs": ["RAL", "EVG"],
+    },
     "Q148H": {
         "position": 148,
         "wt_aa": "Q",
@@ -201,11 +206,7 @@ def generate_all_inputs(output_dir: Path, use_server_format: bool = False):
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    generator = (
-        generate_alphafold_server_json
-        if use_server_format
-        else generate_alphafold3_json
-    )
+    generator = generate_alphafold_server_json if use_server_format else generate_alphafold3_json
     format_name = "AlphaFold Server" if use_server_format else "AlphaFold3 Local"
 
     print(f"Generating {format_name} inputs...")
@@ -229,18 +230,16 @@ def generate_all_inputs(output_dir: Path, use_server_format: bool = False):
     # 2. Top reveal mutations
     print("\n[2] Reveal Mutations (ranked by score)")
     sorted_mutations = sorted(
-        REVEAL_MUTATIONS.items(), key=lambda x: x[1]["reveal_score"], reverse=True
+        REVEAL_MUTATIONS.items(),
+        key=lambda x: x[1]["reveal_score"],
+        reverse=True,
     )
 
     for i, (mut_name, mut_data) in enumerate(sorted_mutations, start=2):
-        mut_seq = mutate_sequence(
-            INTEGRASE_WT, mut_data["position"], mut_data["mut_aa"]
-        )
+        mut_seq = mutate_sequence(INTEGRASE_WT, mut_data["position"], mut_data["mut_aa"])
 
         description = (
-            f"HIV-1 Integrase {mut_name} reveal mutation. "
-            f"Mechanism: {mut_data['mechanism']}. "
-            f"Reveal score: {mut_data['reveal_score']}"
+            f"HIV-1 Integrase {mut_name} reveal mutation. " f"Mechanism: {mut_data['mechanism']}. " f"Reveal score: {mut_data['reveal_score']}"
         )
 
         mut_json = generator(
@@ -260,22 +259,15 @@ def generate_all_inputs(output_dir: Path, use_server_format: bool = False):
             json.dump(mut_json, f, indent=2)
         generated_files.append(mut_path)
 
-        print(
-            f"  {mut_name}: score={mut_data['reveal_score']:.1f}, {mut_data['mechanism'][:40]}..."
-        )
+        print(f"  {mut_name}: score={mut_data['reveal_score']:.1f}, {mut_data['mechanism'][:40]}...")
         print(f"    Saved: {mut_path.name}")
 
     # 3. Drug resistance mutations (for comparison)
     print("\n[3] Drug Resistance Mutations (comparison)")
     for mut_name, mut_data in RESISTANCE_MUTATIONS.items():
-        mut_seq = mutate_sequence(
-            INTEGRASE_WT, mut_data["position"], mut_data["mut_aa"]
-        )
+        mut_seq = mutate_sequence(INTEGRASE_WT, mut_data["position"], mut_data["mut_aa"])
 
-        description = (
-            f"HIV-1 Integrase {mut_name} drug resistance mutation. "
-            f"Confers resistance to: {', '.join(mut_data['drugs'])}"
-        )
+        description = f"HIV-1 Integrase {mut_name} drug resistance mutation. " f"Confers resistance to: {', '.join(mut_data['drugs'])}"
 
         mut_json = generator(
             name=f"HIV1_IN_{mut_name}_resistance",
@@ -306,11 +298,7 @@ def generate_all_inputs(output_dir: Path, use_server_format: bool = False):
         "jobs": [
             {
                 "file": f.name,
-                "type": (
-                    "wildtype"
-                    if "wildtype" in f.name
-                    else ("reveal" if "resistance" not in f.name else "resistance")
-                ),
+                "type": ("wildtype" if "wildtype" in f.name else ("reveal" if "resistance" not in f.name else "resistance")),
                 "priority": i + 1,
             }
             for i, f in enumerate(generated_files)

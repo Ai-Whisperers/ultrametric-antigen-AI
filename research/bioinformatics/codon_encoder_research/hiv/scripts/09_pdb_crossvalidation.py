@@ -13,7 +13,7 @@ Key validation targets:
 import json
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict
 
 import numpy as np
 
@@ -86,11 +86,36 @@ LEDGF_INTERFACE_RESIDUES = {
 
 # Reveal mutation candidates to validate
 REVEAL_CANDIDATES = {
-    "W131A": {"position": 131, "wt": "W", "mut": "A", "predicted_score": 33.03},
-    "I161G": {"position": 161, "wt": "I", "mut": "G", "predicted_score": 26.20},
-    "E166K": {"position": 166, "wt": "E", "mut": "K", "predicted_score": 34.93},
-    "K175E": {"position": 175, "wt": "K", "mut": "E", "predicted_score": 34.93},
-    "Q168E": {"position": 168, "wt": "Q", "mut": "E", "predicted_score": 28.50},
+    "W131A": {
+        "position": 131,
+        "wt": "W",
+        "mut": "A",
+        "predicted_score": 33.03,
+    },
+    "I161G": {
+        "position": 161,
+        "wt": "I",
+        "mut": "G",
+        "predicted_score": 26.20,
+    },
+    "E166K": {
+        "position": 166,
+        "wt": "E",
+        "mut": "K",
+        "predicted_score": 34.93,
+    },
+    "K175E": {
+        "position": 175,
+        "wt": "K",
+        "mut": "E",
+        "predicted_score": 34.93,
+    },
+    "Q168E": {
+        "position": 168,
+        "wt": "Q",
+        "mut": "E",
+        "predicted_score": 28.50,
+    },
 }
 
 # Resistance mutations for comparison
@@ -142,7 +167,7 @@ def analyze_ledgf_interface(analyzer: PDBAnalyzer) -> Dict:
                     ledgf_chain = chain.get_id()
 
             if not in_chain or not ledgf_chain:
-                print(f"  Could not identify IN/LEDGF chains, skipping")
+                print("  Could not identify IN/LEDGF chains, skipping")
                 continue
 
             print(f"  IN chain: {in_chain}, LEDGF chain: {ledgf_chain}")
@@ -151,9 +176,7 @@ def analyze_ledgf_interface(analyzer: PDBAnalyzer) -> Dict:
             interface_data = {}
             for pos in LEDGF_INTERFACE_RESIDUES:
                 try:
-                    contacts = analyzer.get_residue_contacts(
-                        structure, in_chain, pos, radius=12.0
-                    )
+                    contacts = analyzer.get_residue_contacts(structure, in_chain, pos, radius=12.0)
 
                     # Filter for LEDGF contacts
                     ledgf_contacts = [c for c in contacts if c.chain_id == ledgf_chain]
@@ -165,7 +188,7 @@ def analyze_ledgf_interface(analyzer: PDBAnalyzer) -> Dict:
                             "n_contacts": len(ledgf_contacts),
                             "is_interface": min_dist < 8.0,
                         }
-                except Exception as e:
+                except Exception:
                     continue
 
             results["interface_distances"][pdb_id] = interface_data
@@ -184,9 +207,7 @@ def analyze_ledgf_interface(analyzer: PDBAnalyzer) -> Dict:
                             "n_contacts": interface_data[pos]["n_contacts"],
                         }
                     )
-                    print(
-                        f"  {mut_name} (pos {pos}): {interface_data[pos]['min_distance']:.2f}Å to LEDGF"
-                    )
+                    print(f"  {mut_name} (pos {pos}): {interface_data[pos]['min_distance']:.2f}Å to LEDGF")
 
         except Exception as e:
             print(f"  Error: {e}")
@@ -222,9 +243,7 @@ def analyze_resistance_structures(analyzer: PDBAnalyzer) -> Dict:
             for mut_name, mut_data in RESISTANCE_MUTATIONS.items():
                 pos = mut_data["position"]
                 try:
-                    contacts = analyzer.get_residue_contacts(
-                        structure, in_chain, pos, radius=8.0
-                    )
+                    contacts = analyzer.get_residue_contacts(structure, in_chain, pos, radius=8.0)
 
                     # Get residue info
                     residue = model[in_chain][(" ", pos, " ")]
@@ -239,19 +258,13 @@ def analyze_resistance_structures(analyzer: PDBAnalyzer) -> Dict:
                             "position": pos,
                             "observed_aa": actual_aa,
                             "n_contacts": len(contacts),
-                            "avg_contact_dist": (
-                                float(np.mean([c.distance for c in contacts]))
-                                if contacts
-                                else 0
-                            ),
+                            "avg_contact_dist": (float(np.mean([c.distance for c in contacts])) if contacts else 0),
                         }
                     )
 
-                    print(
-                        f"  {mut_name}: {actual_aa} at pos {pos}, {len(contacts)} contacts"
-                    )
+                    print(f"  {mut_name}: {actual_aa} at pos {pos}, {len(contacts)} contacts")
 
-                except Exception as e:
+                except Exception:
                     continue
 
             results["structures_analyzed"].append(pdb_id)
@@ -289,9 +302,7 @@ def analyze_w131_mutation(analyzer: PDBAnalyzer) -> Dict:
             in_chain = chains[0].get_id() if chains else "A"
 
             # Get position 131 context
-            contacts = analyzer.get_residue_contacts(
-                structure, in_chain, 131, radius=10.0
-            )
+            contacts = analyzer.get_residue_contacts(structure, in_chain, 131, radius=10.0)
 
             try:
                 residue = model[in_chain][(" ", 131, " ")]
@@ -304,16 +315,12 @@ def analyze_w131_mutation(analyzer: PDBAnalyzer) -> Dict:
                 "residue_131": actual_aa,
                 "n_contacts": len(contacts),
                 "contact_distances": [float(c.distance) for c in contacts[:10]],
-                "avg_contact_dist": (
-                    float(np.mean([c.distance for c in contacts])) if contacts else 0
-                ),
+                "avg_contact_dist": (float(np.mean([c.distance for c in contacts])) if contacts else 0),
             }
 
             print(f"  Residue 131: {actual_aa}")
             print(f"  N contacts: {len(contacts)}")
-            print(
-                f"  Avg distance: {results['w131_comparison'][pdb_id]['avg_contact_dist']:.2f}Å"
-            )
+            print(f"  Avg distance: {results['w131_comparison'][pdb_id]['avg_contact_dist']:.2f}Å")
 
         except Exception as e:
             print(f"  Error: {e}")
@@ -323,21 +330,13 @@ def analyze_w131_mutation(analyzer: PDBAnalyzer) -> Dict:
         wt_data = results["w131_comparison"][wt_pdb]
         mut_data = results["w131_comparison"][mut_pdb]
 
-        print(f"\nComparison:")
-        print(
-            f"  WT (W131): {wt_data['n_contacts']} contacts, avg {wt_data['avg_contact_dist']:.2f}Å"
-        )
-        print(
-            f"  Mutant (E131): {mut_data['n_contacts']} contacts, avg {mut_data['avg_contact_dist']:.2f}Å"
-        )
+        print("\nComparison:")
+        print(f"  WT (W131): {wt_data['n_contacts']} contacts, avg {wt_data['avg_contact_dist']:.2f}Å")
+        print(f"  Mutant (E131): {mut_data['n_contacts']} contacts, avg {mut_data['avg_contact_dist']:.2f}Å")
 
         # More contacts = more exposed = supports reveal hypothesis
         if mut_data["n_contacts"] != wt_data["n_contacts"]:
-            change = (
-                "INCREASED"
-                if mut_data["n_contacts"] > wt_data["n_contacts"]
-                else "DECREASED"
-            )
+            change = "INCREASED" if mut_data["n_contacts"] > wt_data["n_contacts"] else "DECREASED"
             print(f"  -> Contact count {change} by mutation")
             results["structural_evidence"] = {
                 "mutation": "W131E",
@@ -348,9 +347,7 @@ def analyze_w131_mutation(analyzer: PDBAnalyzer) -> Dict:
     return results
 
 
-def compare_with_predictions(
-    ledgf_results: Dict, predictor: HybridStructurePredictor
-) -> Dict:
+def compare_with_predictions(ledgf_results: Dict, predictor: HybridStructurePredictor) -> Dict:
     """Compare structural distances with predicted reveal scores."""
     results = {
         "comparison": [],
@@ -392,7 +389,7 @@ def compare_with_predictions(
                 "avg_contacts": float(avg_contacts),
                 "predicted_score_conjectures": predicted_score,
                 "computed_score_model": float(computed_score),
-                "structural_evidence": "INTERFACE" if avg_dist < 8.0 else "PERIPHERAL",
+                "structural_evidence": ("INTERFACE" if avg_dist < 8.0 else "PERIPHERAL"),
             }
             results["comparison"].append(comparison)
 
@@ -416,11 +413,7 @@ def compare_with_predictions(
             results["correlation"] = {
                 "metric": "inverse_distance_vs_reveal_score",
                 "r": float(corr),
-                "interpretation": (
-                    "Closer to LEDGF correlates with higher reveal score"
-                    if corr > 0
-                    else "Unexpected"
-                ),
+                "interpretation": ("Closer to LEDGF correlates with higher reveal score" if corr > 0 else "Unexpected"),
             }
             print(f"\nCorrelation (1/distance vs reveal score): r = {corr:.3f}")
 
@@ -453,8 +446,7 @@ def main():
     results = {
         "metadata": {
             "experiment": "PDB Cross-Validation",
-            "structures_analyzed": len(ledgf_results.get("structures_analyzed", []))
-            + len(resistance_results.get("structures_analyzed", [])),
+            "structures_analyzed": len(ledgf_results.get("structures_analyzed", [])) + len(resistance_results.get("structures_analyzed", [])),
             "pdb_dir": str(pdb_dir),
         },
         "ledgf_interface_analysis": ledgf_results,
@@ -471,17 +463,13 @@ def main():
     # W131 evidence
     if "structural_evidence" in w131_results:
         ev = w131_results["structural_evidence"]
-        print(f"\n1. W131E Crystal Structure (1BIU):")
+        print("\n1. W131E Crystal Structure (1BIU):")
         print(f"   Contact change: {ev['contact_change']:+d}")
         print(f"   Supports reveal hypothesis: {ev['supports_reveal']}")
 
     # Interface positions
     if comparison_results.get("comparison"):
-        interface_muts = [
-            c
-            for c in comparison_results["comparison"]
-            if c["structural_evidence"] == "INTERFACE"
-        ]
+        interface_muts = [c for c in comparison_results["comparison"] if c["structural_evidence"] == "INTERFACE"]
         print(f"\n2. LEDGF Interface Mutations: {len(interface_muts)}/5")
         for c in interface_muts:
             print(f"   {c['mutation']}: {c['avg_ledgf_distance']:.2f}Å from LEDGF")
@@ -504,25 +492,11 @@ def main():
         validations += 1
         print("✓ W131 mutation has direct crystal structure evidence")
 
-    if (
-        comparison_results
-        and len(
-            [
-                c
-                for c in comparison_results.get("comparison", [])
-                if c["structural_evidence"] == "INTERFACE"
-            ]
-        )
-        >= 3
-    ):
+    if comparison_results and len([c for c in comparison_results.get("comparison", []) if c["structural_evidence"] == "INTERFACE"]) >= 3:
         validations += 1
         print("✓ Multiple reveal candidates at LEDGF interface")
 
-    if (
-        comparison_results
-        and comparison_results.get("correlation", {})
-        and comparison_results.get("correlation", {}).get("r", 0) > 0.3
-    ):
+    if comparison_results and comparison_results.get("correlation", {}) and comparison_results.get("correlation", {}).get("r", 0) > 0.3:
         validations += 1
         print("✓ Positive correlation between structure and prediction")
 

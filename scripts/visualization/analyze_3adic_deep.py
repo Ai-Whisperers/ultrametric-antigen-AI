@@ -154,22 +154,12 @@ def analyze_interpolation_paths(model, data, output_path, device="cpu"):
             # Check path properties
             # 1. All decoded ops are valid (always true for our decoder)
             # 2. Monotonic 3-adic distance from start
-            distances_from_start = [
-                compute_3adic_distance(start_idx, idx) for idx in path_indices
-            ]
-            distances_from_end = [
-                compute_3adic_distance(end_idx, idx) for idx in path_indices
-            ]
+            distances_from_start = [compute_3adic_distance(start_idx, idx) for idx in path_indices]
+            distances_from_end = [compute_3adic_distance(end_idx, idx) for idx in path_indices]
 
             # Check if path is "reasonable" - distance from start increases, from end decreases
-            start_monotonic = all(
-                distances_from_start[i] <= distances_from_start[i + 1]
-                for i in range(len(distances_from_start) - 1)
-            )
-            end_monotonic = all(
-                distances_from_end[i] >= distances_from_end[i + 1]
-                for i in range(len(distances_from_end) - 1)
-            )
+            start_monotonic = all(distances_from_start[i] <= distances_from_start[i + 1] for i in range(len(distances_from_start) - 1))
+            end_monotonic = all(distances_from_end[i] >= distances_from_end[i + 1] for i in range(len(distances_from_end) - 1))
 
             if start_monotonic or end_monotonic:
                 monotonic_paths += 1
@@ -196,12 +186,8 @@ def analyze_interpolation_paths(model, data, output_path, device="cpu"):
         }
 
         print(f"\nVAE-{vae_name} Interpolation Analysis ({n_tests} paths):")
-        print(
-            f"  Geodesic-valid paths: {valid_paths}/{n_tests} ({100*valid_paths/n_tests:.1f}%)"
-        )
-        print(
-            f"  Monotonic paths: {monotonic_paths}/{n_tests} ({100*monotonic_paths/n_tests:.1f}%)"
-        )
+        print(f"  Geodesic-valid paths: {valid_paths}/{n_tests} ({100*valid_paths/n_tests:.1f}%)")
+        print(f"  Monotonic paths: {monotonic_paths}/{n_tests} ({100*monotonic_paths/n_tests:.1f}%)")
         print(f"  Avg intermediate validity: {np.mean(avg_intermediate_validity):.3f}")
 
     # Visualization: Show example interpolations
@@ -249,9 +235,7 @@ def analyze_interpolation_paths(model, data, output_path, device="cpu"):
 
         # Color intermediate points by 3-adic distance from start
         start_idx = op_to_index(operations[i])
-        colors = [
-            compute_3adic_distance(start_idx, op_to_index(d)) for d in path_decoded
-        ]
+        colors = [compute_3adic_distance(start_idx, op_to_index(d)) for d in path_decoded]
         ax.scatter(
             path_z[1:-1, 0],
             path_z[1:-1, 1],
@@ -260,9 +244,7 @@ def analyze_interpolation_paths(model, data, output_path, device="cpu"):
             s=30,
             zorder=4,
         )
-        ax.set_title(
-            f"Path {plot_idx+1}: idx {i}→{j}\n3-adic dist: {compute_3adic_distance(i, j)}"
-        )
+        ax.set_title(f"Path {plot_idx+1}: idx {i}→{j}\n3-adic dist: {compute_3adic_distance(i, j)}")
         if plot_idx == 0:
             ax.legend(loc="upper right")
 
@@ -323,9 +305,7 @@ def analyze_digit_dimensions(data, output_path):
     for dim in range(16):
         sorted_idx = np.argsort(np.abs(corr_A[dim]))[::-1]
         best, second = sorted_idx[0], sorted_idx[1]
-        print(
-            f" {dim:2d} |     {best}      |   {corr_A[dim, best]:+.3f}    |    {second}     | {corr_A[dim, second]:+.3f}"
-        )
+        print(f" {dim:2d} |     {best}      |   {corr_A[dim, best]:+.3f}    |    {second}     | {corr_A[dim, second]:+.3f}")
 
     print("\nVAE-B: Latent Dimension → Best Correlated Digit")
     print("Dim | Best Digit | Correlation | 2nd Best | Corr")
@@ -333,9 +313,7 @@ def analyze_digit_dimensions(data, output_path):
     for dim in range(16):
         sorted_idx = np.argsort(np.abs(corr_B[dim]))[::-1]
         best, second = sorted_idx[0], sorted_idx[1]
-        print(
-            f" {dim:2d} |     {best}      |   {corr_B[dim, best]:+.3f}    |    {second}     | {corr_B[dim, second]:+.3f}"
-        )
+        print(f" {dim:2d} |     {best}      |   {corr_B[dim, best]:+.3f}    |    {second}     | {corr_B[dim, second]:+.3f}")
 
     # Visualization
     fig, axes = plt.subplots(2, 2, figsize=(16, 12))
@@ -365,8 +343,22 @@ def analyze_digit_dimensions(data, output_path):
     max_corr_B = np.max(np.abs(corr_B), axis=1)
     x = np.arange(16)
     width = 0.35
-    ax.bar(x - width / 2, max_corr_A, width, label="VAE-A", color="blue", alpha=0.7)
-    ax.bar(x + width / 2, max_corr_B, width, label="VAE-B", color="orange", alpha=0.7)
+    ax.bar(
+        x - width / 2,
+        max_corr_A,
+        width,
+        label="VAE-A",
+        color="blue",
+        alpha=0.7,
+    )
+    ax.bar(
+        x + width / 2,
+        max_corr_B,
+        width,
+        label="VAE-B",
+        color="orange",
+        alpha=0.7,
+    )
     ax.axhline(0.3, color="red", linestyle="--", label="Threshold (0.3)")
     ax.set_xlabel("Latent Dimension")
     ax.set_ylabel("Max |Correlation| with any Digit")
@@ -385,7 +377,14 @@ def analyze_digit_dimensions(data, output_path):
 
     x = np.arange(9)
     ax.bar(x - width / 2, counts_A, width, label="VAE-A", color="blue", alpha=0.7)
-    ax.bar(x + width / 2, counts_B, width, label="VAE-B", color="orange", alpha=0.7)
+    ax.bar(
+        x + width / 2,
+        counts_B,
+        width,
+        label="VAE-B",
+        color="orange",
+        alpha=0.7,
+    )
     ax.set_xlabel("3-adic Digit Position")
     ax.set_ylabel("# Latent Dims Best Correlated")
     ax.set_title("Digit Coverage by Latent Dimensions")
@@ -394,7 +393,9 @@ def analyze_digit_dimensions(data, output_path):
 
     plt.tight_layout()
     plt.savefig(
-        output_path / "digit_dimension_mapping.png", dpi=150, bbox_inches="tight"
+        output_path / "digit_dimension_mapping.png",
+        dpi=150,
+        bbox_inches="tight",
     )
     plt.close()
     print(f"\nSaved: {output_path / 'digit_dimension_mapping.png'}")
@@ -402,9 +403,7 @@ def analyze_digit_dimensions(data, output_path):
     # Summary statistics
     active_dims_A = np.sum(max_corr_A > 0.3)
     active_dims_B = np.sum(max_corr_B > 0.3)
-    print(
-        f"\nActive dimensions (|r| > 0.3): VAE-A={active_dims_A}, VAE-B={active_dims_B}"
-    )
+    print(f"\nActive dimensions (|r| > 0.3): VAE-A={active_dims_A}, VAE-B={active_dims_B}")
 
     return {"corr_A": corr_A, "corr_B": corr_B}
 
@@ -463,12 +462,8 @@ def analyze_training_trajectory(output_path, device="cpu"):
             z_B = mu_B.cpu().numpy()
 
             # Compute latent distances for sampled pairs
-            latent_dists_A = np.array(
-                [np.linalg.norm(z_A[i] - z_A[j]) for i, j in pairs]
-            )
-            latent_dists_B = np.array(
-                [np.linalg.norm(z_B[i] - z_B[j]) for i, j in pairs]
-            )
+            latent_dists_A = np.array([np.linalg.norm(z_A[i] - z_A[j]) for i, j in pairs])
+            latent_dists_B = np.array([np.linalg.norm(z_B[i] - z_B[j]) for i, j in pairs])
 
             # Correlations
             corr_A, _ = spearmanr(adic_dists, latent_dists_A)
@@ -494,7 +489,8 @@ def analyze_training_trajectory(output_path, device="cpu"):
 
     # Sort by epoch
     results = sorted(
-        results, key=lambda x: x["epoch"] if isinstance(x["epoch"], int) else 999
+        results,
+        key=lambda x: x["epoch"] if isinstance(x["epoch"], int) else 999,
     )
 
     # Visualization
@@ -509,7 +505,11 @@ def analyze_training_trajectory(output_path, device="cpu"):
     ax.plot(epochs, corrs_B, "rs-", label="VAE-B", linewidth=2, markersize=8)
     ax.axhline(0.6, color="green", linestyle="--", alpha=0.5, label="Strong threshold")
     ax.axhline(
-        0.3, color="orange", linestyle="--", alpha=0.5, label="Moderate threshold"
+        0.3,
+        color="orange",
+        linestyle="--",
+        alpha=0.5,
+        label="Moderate threshold",
     )
     ax.set_xlabel("Epoch")
     ax.set_ylabel("Spearman Correlation (3-adic vs Latent Distance)")
@@ -603,7 +603,10 @@ def analyze_latent_arithmetic(model, data, output_path, device="cpu"):
         sum_op = ternary_add(operations[i], operations[j])
         sum_idx = op_to_index(sum_op)
 
-        for vae_name, z, z_zero in [("A", z_A, z_zero_A), ("B", z_B, z_zero_B)]:
+        for vae_name, z, z_zero in [
+            ("A", z_A, z_zero_A),
+            ("B", z_B, z_zero_B),
+        ]:
             # Latent arithmetic: z_i + z_j - z_0
             z_predicted = z[i] + z[j] - z_zero
 
@@ -629,12 +632,8 @@ def analyze_latent_arithmetic(model, data, output_path, device="cpu"):
     for vae_name in ["A", "B"]:
         r = results[vae_name]
         print(f"VAE-{vae_name}:")
-        print(
-            f"  Exact matches (NN = true sum): {r['exact']}/{n_tests} ({100*r['exact']/n_tests:.1f}%)"
-        )
-        print(
-            f"  Close matches (in top 10 NN):  {r['close']}/{n_tests} ({100*r['close']/n_tests:.1f}%)"
-        )
+        print(f"  Exact matches (NN = true sum): {r['exact']}/{n_tests} ({100*r['exact']/n_tests:.1f}%)")
+        print(f"  Close matches (in top 10 NN):  {r['close']}/{n_tests} ({100*r['close']/n_tests:.1f}%)")
         print(f"  Mean distance to true sum:     {np.mean(r['dist']):.4f}")
 
     # Test other operations: subtraction, negation
@@ -698,10 +697,16 @@ def analyze_latent_arithmetic(model, data, output_path, device="cpu"):
         ax.scatter(z_A_2d[sum_idx, 0], z_A_2d[sum_idx, 1], c="red", s=50, marker="*")
         ax.scatter(z_pred_2d[0], z_pred_2d[1], c="purple", s=50, marker="x")
         ax.plot(
-            [z_A_2d[i, 0], z_pred_2d[0]], [z_A_2d[i, 1], z_pred_2d[1]], "k--", alpha=0.3
+            [z_A_2d[i, 0], z_pred_2d[0]],
+            [z_A_2d[i, 1], z_pred_2d[1]],
+            "k--",
+            alpha=0.3,
         )
         ax.plot(
-            [z_A_2d[j, 0], z_pred_2d[0]], [z_A_2d[j, 1], z_pred_2d[1]], "k--", alpha=0.3
+            [z_A_2d[j, 0], z_pred_2d[0]],
+            [z_A_2d[j, 1], z_pred_2d[1]],
+            "k--",
+            alpha=0.3,
         )
 
     ax.scatter(
@@ -716,9 +721,7 @@ def analyze_latent_arithmetic(model, data, output_path, device="cpu"):
     ax.scatter([], [], c="green", s=50, marker="o", label="Op B")
     ax.scatter([], [], c="red", s=50, marker="*", label="True A+B")
     ax.scatter([], [], c="purple", s=50, marker="x", label="Predicted")
-    ax.set_title(
-        "VAE-A: Latent Arithmetic Examples\nBlue + Green → Red (true) vs Purple (pred)"
-    )
+    ax.set_title("VAE-A: Latent Arithmetic Examples\nBlue + Green → Red (true) vs Purple (pred)")
     ax.legend(loc="upper right")
 
     # Accuracy vs 3-adic distance
@@ -792,9 +795,7 @@ def main():
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Device: {device}")
 
-    checkpoint_path = (
-        PROJECT_ROOT / "sandbox-training" / "checkpoints" / "v5_5" / "latest.pt"
-    )
+    checkpoint_path = PROJECT_ROOT / "sandbox-training" / "checkpoints" / "v5_5" / "latest.pt"
     output_path = PROJECT_ROOT / "outputs" / "manifold_viz"
     output_path.mkdir(parents=True, exist_ok=True)
 
@@ -816,20 +817,14 @@ def main():
     print("\n" + "=" * 60)
     print("COMPLETE ANALYSIS SUMMARY")
     print("=" * 60)
-    print(
-        f"\n1. INTERPOLATION: {interp_results['A']['avg_validity']*100:.1f}% path validity (VAE-A)"
-    )
+    print(f"\n1. INTERPOLATION: {interp_results['A']['avg_validity']*100:.1f}% path validity (VAE-A)")
     print("2. DIGIT MAPPING: Latent dims correlate with specific 3-adic digits")
     print("3. TRAJECTORY: 3-adic structure emerges during training")
-    print(
-        f"4. ARITHMETIC: {arithmetic_results['A']['exact']/10:.1f}% exact addition matches (VAE-A)"
-    )
+    print(f"4. ARITHMETIC: {arithmetic_results['A']['exact']/10:.1f}% exact addition matches (VAE-A)")
 
     print("\nGenerated files:")
     for f in sorted(output_path.glob("*.png")):
-        if any(
-            x in f.name for x in ["interpolation", "digit", "trajectory", "arithmetic"]
-        ):
+        if any(x in f.name for x in ["interpolation", "digit", "trajectory", "arithmetic"]):
             print(f"  - {f.name}")
 
 

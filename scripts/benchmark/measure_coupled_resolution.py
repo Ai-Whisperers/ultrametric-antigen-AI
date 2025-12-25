@@ -58,9 +58,7 @@ class CoupledSystemBenchmark(BenchmarkBase):
 
             # Strategy 1: Voting
             # For each bit, take majority vote (if tie, use VAE-B)
-            recon_vote = torch.where(
-                recon_a == recon_b, recon_a, recon_b
-            )  # Tie-breaker: VAE-B
+            recon_vote = torch.where(recon_a == recon_b, recon_a, recon_b)  # Tie-breaker: VAE-B
             voting_correct += (recon_vote == batch).all(dim=1).sum().item()
 
             # Strategy 2: Confidence-weighted
@@ -104,9 +102,7 @@ class CoupledSystemBenchmark(BenchmarkBase):
         }
 
     @torch.no_grad()
-    def measure_cross_injected_sampling(
-        self, n_samples=50000, batch_size=1000, rho=0.5
-    ) -> Dict:
+    def measure_cross_injected_sampling(self, n_samples=50000, batch_size=1000, rho=0.5) -> Dict:
         """Measure sampling coverage with cross-injection active"""
         sampled_ops = set()
 
@@ -204,10 +200,7 @@ class CoupledSystemBenchmark(BenchmarkBase):
             "vae_a_specialization_rate": vae_a_best_count / self.n_ops,
             "vae_b_specialization_rate": vae_b_best_count / self.n_ops,
             "complementarity_score": (
-                min(vae_a_best_count, vae_b_best_count)
-                / max(vae_a_best_count, vae_b_best_count)
-                if vae_b_best_count > 0
-                else 0
+                min(vae_a_best_count, vae_b_best_count) / max(vae_a_best_count, vae_b_best_count) if vae_b_best_count > 0 else 0
             ),
         }
 
@@ -245,8 +238,7 @@ class CoupledSystemBenchmark(BenchmarkBase):
             "std_distance": distances.std().item(),
             "min_distance": distances.min().item(),
             "max_distance": distances.max().item(),
-            "alignment_score": 1.0
-            / (1.0 + distances.mean().item()),  # Higher is better
+            "alignment_score": 1.0 / (1.0 + distances.mean().item()),  # Higher is better
         }
 
     @torch.no_grad()
@@ -300,14 +292,10 @@ class CoupledSystemBenchmark(BenchmarkBase):
         results["ensemble_reconstruction"] = self.measure_ensemble_reconstruction()
 
         print("2. Cross-Injected Sampling (rho=0.5)...")
-        results["cross_injected_sampling_rho_05"] = (
-            self.measure_cross_injected_sampling(n_samples=50000, rho=0.5)
-        )
+        results["cross_injected_sampling_rho_05"] = self.measure_cross_injected_sampling(n_samples=50000, rho=0.5)
 
         print("3. Cross-Injected Sampling (rho=0.7)...")
-        results["cross_injected_sampling_rho_07"] = (
-            self.measure_cross_injected_sampling(n_samples=50000, rho=0.7)
-        )
+        results["cross_injected_sampling_rho_07"] = self.measure_cross_injected_sampling(n_samples=50000, rho=0.7)
 
         print("4. Complementary Coverage Analysis...")
         results["complementary_coverage"] = self.measure_complementary_coverage()
@@ -330,9 +318,7 @@ def main():
     # Initialize model
     print("Initializing model...")
     model = create_v5_6_model(config)
-    checkpoint = load_checkpoint_safe(
-        model, "sandbox-training/checkpoints/v5_6", device
-    )
+    checkpoint = load_checkpoint_safe(model, "sandbox-training/checkpoints/v5_6", device)
 
     # Run benchmark
     print("\nRunning coupled system benchmark...")
@@ -356,12 +342,13 @@ def main():
             print(f"  {strategy:20s}: {data['exact_match_rate']:.4f}")
 
     print("\nCross-Injected Sampling:")
-    for key in ["cross_injected_sampling_rho_05", "cross_injected_sampling_rho_07"]:
+    for key in [
+        "cross_injected_sampling_rho_05",
+        "cross_injected_sampling_rho_07",
+    ]:
         if key in results:
             data = results[key]
-            print(
-                f"  rho={data['rho']:.1f}: {data['coverage_rate']:.4f} coverage, {data['unique_sampled']} unique ops"
-            )
+            print(f"  rho={data['rho']:.1f}: {data['coverage_rate']:.4f} coverage, {data['unique_sampled']} unique ops")
 
     print("\nComplementary Coverage:")
     comp = results["complementary_coverage"]
