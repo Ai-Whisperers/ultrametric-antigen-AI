@@ -22,7 +22,7 @@ Inherits from BaseTrainer for:
 
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 import torch
 import torch.optim as optim
@@ -33,8 +33,7 @@ from ..losses import DualVAELoss, RadialStratificationLoss
 from ..models.curriculum import ContinuousCurriculumModule
 from .base import BaseTrainer
 from .monitor import TrainingMonitor
-from .schedulers import (BetaScheduler, LearningRateScheduler,
-                         TemperatureScheduler)
+from .schedulers import BetaScheduler, LearningRateScheduler, TemperatureScheduler
 
 
 class TernaryVAETrainer(BaseTrainer):
@@ -67,11 +66,15 @@ class TernaryVAETrainer(BaseTrainer):
                 mode = compile_config.get("mode", "default")
                 fullgraph = compile_config.get("fullgraph", False)
 
-                self.model = torch.compile(self.model, backend=backend, mode=mode, fullgraph=fullgraph)
+                self.model = torch.compile(
+                    self.model, backend=backend, mode=mode, fullgraph=fullgraph
+                )
                 self.compiled = True
                 print(f"torch.compile enabled: backend={backend}, mode={mode}")
             except Exception as e:
-                print(f"Warning: torch.compile failed ({e}), falling back to eager mode")
+                print(
+                    f"Warning: torch.compile failed ({e}), falling back to eager mode"
+                )
         elif compile_config.get("enabled", False):
             print("Warning: torch.compile requested but not available (PyTorch < 2.0)")
 
@@ -89,7 +92,9 @@ class TernaryVAETrainer(BaseTrainer):
             config["controller"]["temp_lag"],
         )
 
-        self.beta_scheduler = BetaScheduler(config, config["controller"]["beta_phase_lag"])
+        self.beta_scheduler = BetaScheduler(
+            config, config["controller"]["beta_phase_lag"]
+        )
 
         self.lr_scheduler = LearningRateScheduler(config["optimizer"]["lr_schedule"])
 
@@ -99,7 +104,9 @@ class TernaryVAETrainer(BaseTrainer):
             experiment_name=config.get("experiment_name"),
         )
 
-        self.checkpoint_manager = CheckpointManager(Path(config["checkpoint_dir"]), config["checkpoint_freq"])
+        self.checkpoint_manager = CheckpointManager(
+            Path(config["checkpoint_dir"]), config["checkpoint_freq"]
+        )
 
         # Initialize loss function (with p-adic losses if configured)
         self.loss_fn = DualVAELoss(
@@ -162,14 +169,21 @@ class TernaryVAETrainer(BaseTrainer):
         print(f"{'='*80}")
         print(f"Total parameters: {sum(p.numel() for p in self.model.parameters()):,}")
 
-        if self.config["model"].get("use_statenet", True) and self.model.state_net is not None:
+        if (
+            self.config["model"].get("use_statenet", True)
+            and self.model.state_net is not None
+        ):
             statenet_params = sum(p.numel() for p in self.model.state_net.parameters())
             total_params = sum(p.numel() for p in self.model.parameters())
-            print(f"StateNet parameters: {statenet_params:,} ({statenet_params/total_params*100:.2f}%)")
+            print(
+                f"StateNet parameters: {statenet_params:,} ({statenet_params/total_params*100:.2f}%)"
+            )
 
         print(f"Device: {self.device}")
         print(f"Gradient balance: {self.config['model'].get('gradient_balance', True)}")
-        print(f"Adaptive scheduling: {self.config['model'].get('adaptive_scheduling', True)}")
+        print(
+            f"Adaptive scheduling: {self.config['model'].get('adaptive_scheduling', True)}"
+        )
         print(f"StateNet enabled: {self.config['model'].get('use_statenet', True)}")
         print(f"torch.compile: {'enabled' if self.compiled else 'disabled'}")
 
@@ -179,7 +193,9 @@ class TernaryVAETrainer(BaseTrainer):
             print("\nCurriculum Learning (StateNet v5):")
             print(f"  Initial tau: {curriculum_config.get('initial_tau', 0.0)}")
             print(f"  tau_scale: {curriculum_config.get('tau_scale', 0.1)}")
-            print(f"  tau bounds: [{curriculum_config.get('tau_min', 0.0)}, {curriculum_config.get('tau_max', 1.0)}]")
+            print(
+                f"  tau bounds: [{curriculum_config.get('tau_min', 0.0)}, {curriculum_config.get('tau_max', 1.0)}]"
+            )
 
         if self.radial_loss_fn is not None:
             radial_config = self.config.get("radial_stratification", {})
@@ -198,18 +214,26 @@ class TernaryVAETrainer(BaseTrainer):
         if has_padic:
             print("\np-Adic Losses (implement.md Phase 1):")
             if padic_config.get("enable_metric_loss", False):
-                print(f"  Metric Loss: weight={padic_config.get('metric_loss_weight', 0.1)}, scale={padic_config.get('metric_loss_scale', 1.0)}")
+                print(
+                    f"  Metric Loss: weight={padic_config.get('metric_loss_weight', 0.1)}, scale={padic_config.get('metric_loss_scale', 1.0)}"
+                )
             if padic_config.get("enable_ranking_loss", False):
-                print(f"  Ranking Loss: weight={padic_config.get('ranking_loss_weight', 0.5)}, margin={padic_config.get('ranking_margin', 0.1)}")
+                print(
+                    f"  Ranking Loss: weight={padic_config.get('ranking_loss_weight', 0.5)}, margin={padic_config.get('ranking_margin', 0.1)}"
+                )
             if padic_config.get("enable_norm_loss", False):
-                print(f"  Norm Loss: weight={padic_config.get('norm_loss_weight', 0.05)}")
+                print(
+                    f"  Norm Loss: weight={padic_config.get('norm_loss_weight', 0.05)}"
+                )
 
         # P1 FIX: Correlation loss (actually wired into total loss)
         if self.correlation_loss_enabled:
             print("\nCorrelation Loss (P1 Fix - WIRED INTO LOSS):")
             print(f"  weight: {self.correlation_loss_weight}")
             print(f"  warmup_epochs: {self.correlation_loss_warmup}")
-            print("  Effect: -weight * correlation added to loss (rewards high correlation)")
+            print(
+                "  Effect: -weight * correlation added to loss (rewards high correlation)"
+            )
 
     def _check_best(self, losses: Dict[str, Any]) -> bool:
         """Check if current losses represent best model.
@@ -248,7 +272,9 @@ class TernaryVAETrainer(BaseTrainer):
             epoch: Current epoch
         """
         self.model.epoch = epoch
-        self.model.rho = self.model.compute_phase_scheduled_rho(epoch, self.phase_4_start)
+        self.model.rho = self.model.compute_phase_scheduled_rho(
+            epoch, self.phase_4_start
+        )
 
         # THREE-BODY FIX: Curriculum modulates rho (cross-injection)
         # When tau is high (ranking/angular focus), reduce cross-injection to preserve structure
@@ -261,7 +287,9 @@ class TernaryVAETrainer(BaseTrainer):
 
         self.model.lambda3 = self.model.compute_cyclic_lambda3(epoch, period=30)
 
-        grad_ratio = (self.model.grad_norm_B_ema / (self.model.grad_norm_A_ema + 1e-8)).item()
+        grad_ratio = (
+            self.model.grad_norm_B_ema / (self.model.grad_norm_A_ema + 1e-8)
+        ).item()
         self.model.update_adaptive_ema_momentum(grad_ratio)
 
         if len(self.monitor.coverage_A_history) > 0:
@@ -269,7 +297,9 @@ class TernaryVAETrainer(BaseTrainer):
             coverage_B = self.monitor.coverage_B_history[-1]
             self.model.update_adaptive_lambdas(grad_ratio, coverage_A, coverage_B)
 
-    def train_epoch(self, train_loader: DataLoader, log_interval: int = 10) -> Dict[str, Any]:
+    def train_epoch(
+        self, train_loader: DataLoader, log_interval: int = 10
+    ) -> Dict[str, Any]:
         """Train for one epoch with batch-level TensorBoard logging.
 
         Args:
@@ -363,31 +393,53 @@ class TernaryVAETrainer(BaseTrainer):
 
                 # Get ranking loss from p-adic losses (if available)
                 ranking_loss = torch.tensor(0.0, device=self.device)
-                if "padic_ranking_A" in losses and torch.is_tensor(losses["padic_ranking_A"]):
-                    ranking_loss = losses["padic_ranking_A"] + losses.get("padic_ranking_B", 0.0)
+                if "padic_ranking_A" in losses and torch.is_tensor(
+                    losses["padic_ranking_A"]
+                ):
+                    ranking_loss = losses["padic_ranking_A"] + losses.get(
+                        "padic_ranking_B", 0.0
+                    )
 
                 # Use curriculum to blend radial and ranking losses
                 if self.curriculum is not None:
                     curriculum_tau = self.curriculum.get_tau().item()
-                    structure_loss = self.curriculum.modulate_losses(radial_loss, ranking_loss)
+                    structure_loss = self.curriculum.modulate_losses(
+                        radial_loss, ranking_loss
+                    )
                     # Add curriculum-modulated structure loss to total
-                    losses["loss"] = losses["loss"] + self.radial_loss_weight * structure_loss
+                    losses["loss"] = (
+                        losses["loss"] + self.radial_loss_weight * structure_loss
+                    )
                 else:
                     # No curriculum: just add weighted radial loss
-                    losses["loss"] = losses["loss"] + self.radial_loss_weight * radial_loss
+                    losses["loss"] = (
+                        losses["loss"] + self.radial_loss_weight * radial_loss
+                    )
 
                 # Log radial stratification metrics (named distinctly from hyperbolic radial_loss)
                 losses["radial_stratification_loss"] = radial_loss.item()
                 losses["curriculum_tau"] = curriculum_tau
-                radial_wt, ranking_wt = (1 - curriculum_tau, curriculum_tau) if self.curriculum else (1.0, 0.0)
+                radial_wt, ranking_wt = (
+                    (1 - curriculum_tau, curriculum_tau)
+                    if self.curriculum
+                    else (1.0, 0.0)
+                )
                 losses["curriculum_radial_weight"] = radial_wt
                 losses["curriculum_ranking_weight"] = ranking_wt
 
             # Apply StateNet corrections once per epoch (with coverage feedback)
             if self.model.use_statenet and batch_idx == 0:
                 # Get latest coverage from monitor history
-                coverage_A = self.monitor.coverage_A_history[-1] if self.monitor.coverage_A_history else 0
-                coverage_B = self.monitor.coverage_B_history[-1] if self.monitor.coverage_B_history else 0
+                coverage_A = (
+                    self.monitor.coverage_A_history[-1]
+                    if self.monitor.coverage_A_history
+                    else 0
+                )
+                coverage_B = (
+                    self.monitor.coverage_B_history[-1]
+                    if self.monitor.coverage_B_history
+                    else 0
+                )
 
                 # GAP 6 FIX: Compute cross-VAE correlation r_AB
                 # Measures similarity between VAE-A and VAE-B representations
@@ -408,18 +460,35 @@ class TernaryVAETrainer(BaseTrainer):
                 r_AB = ((r_AB_raw + 1.0) / 2.0).item()
 
                 # Use StateNet v5 if curriculum is enabled and model supports it
-                if self.curriculum is not None and hasattr(self.model, "apply_statenet_v5_corrections"):
+                if self.curriculum is not None and hasattr(
+                    self.model, "apply_statenet_v5_corrections"
+                ):
                     corrections = self.model.apply_statenet_v5_corrections(
                         lr_scheduled,
-                        (losses["H_A"].item() if torch.is_tensor(losses["H_A"]) else losses["H_A"]),
-                        (losses["H_B"].item() if torch.is_tensor(losses["H_B"]) else losses["H_B"]),
+                        (
+                            losses["H_A"].item()
+                            if torch.is_tensor(losses["H_A"])
+                            else losses["H_A"]
+                        ),
+                        (
+                            losses["H_B"].item()
+                            if torch.is_tensor(losses["H_B"])
+                            else losses["H_B"]
+                        ),
                         losses["kl_A"].item(),
                         losses["kl_B"].item(),
-                        (self.model.grad_norm_B_ema / (self.model.grad_norm_A_ema + 1e-8)).item(),
+                        (
+                            self.model.grad_norm_B_ema
+                            / (self.model.grad_norm_A_ema + 1e-8)
+                        ).item(),
                         coverage_A=coverage_A,
                         coverage_B=coverage_B,
                         r_AB=r_AB,  # GAP 6 FIX: Cross-VAE embedding correlation
-                        radial_loss=(radial_loss.item() if torch.is_tensor(radial_loss) else radial_loss),
+                        radial_loss=(
+                            radial_loss.item()
+                            if torch.is_tensor(radial_loss)
+                            else radial_loss
+                        ),
                         curriculum_tau=curriculum_tau,
                     )
 
@@ -444,11 +513,22 @@ class TernaryVAETrainer(BaseTrainer):
                     # Fall back to v4 corrections
                     corrected_lr, *deltas = self.model.apply_statenet_corrections(
                         lr_scheduled,
-                        (losses["H_A"].item() if torch.is_tensor(losses["H_A"]) else losses["H_A"]),
-                        (losses["H_B"].item() if torch.is_tensor(losses["H_B"]) else losses["H_B"]),
+                        (
+                            losses["H_A"].item()
+                            if torch.is_tensor(losses["H_A"])
+                            else losses["H_A"]
+                        ),
+                        (
+                            losses["H_B"].item()
+                            if torch.is_tensor(losses["H_B"])
+                            else losses["H_B"]
+                        ),
                         losses["kl_A"].item(),
                         losses["kl_B"].item(),
-                        (self.model.grad_norm_B_ema / (self.model.grad_norm_A_ema + 1e-8)).item(),
+                        (
+                            self.model.grad_norm_B_ema
+                            / (self.model.grad_norm_A_ema + 1e-8)
+                        ).item(),
                         coverage_A=coverage_A,
                         coverage_B=coverage_B,
                     )
@@ -468,7 +548,10 @@ class TernaryVAETrainer(BaseTrainer):
 
             # P1 FIX: Add correlation loss to total loss (rewards high correlation)
             # This is the actual wiring - not just logging but affecting gradients
-            if self.correlation_loss_enabled and self.epoch >= self.correlation_loss_warmup:
+            if (
+                self.correlation_loss_enabled
+                and self.epoch >= self.correlation_loss_warmup
+            ):
                 if self.monitor.correlation_hyp_history:
                     cached_corr = self.monitor.correlation_hyp_history[-1]
                     # Negative weight because we REWARD high correlation (minimize -corr)
@@ -480,21 +563,43 @@ class TernaryVAETrainer(BaseTrainer):
             # Backward and optimize
             self.optimizer.zero_grad()
             losses["loss"].backward()
-            torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.config["grad_clip"])
+            torch.nn.utils.clip_grad_norm_(
+                self.model.parameters(), self.config["grad_clip"]
+            )
             self.model.update_gradient_norms()
             self.optimizer.step()
 
             # Batch-level TensorBoard logging (real-time observability)
-            batch_loss = losses["loss"].item() if torch.is_tensor(losses["loss"]) else losses["loss"]
+            batch_loss = (
+                losses["loss"].item()
+                if torch.is_tensor(losses["loss"])
+                else losses["loss"]
+            )
             self.monitor.log_batch(
                 epoch=self.epoch,
                 batch_idx=batch_idx,
                 total_batches=num_batches,
                 loss=batch_loss,
-                ce_A=(losses["ce_A"].item() if torch.is_tensor(losses["ce_A"]) else losses["ce_A"]),
-                ce_B=(losses["ce_B"].item() if torch.is_tensor(losses["ce_B"]) else losses["ce_B"]),
-                kl_A=(losses["kl_A"].item() if torch.is_tensor(losses["kl_A"]) else losses["kl_A"]),
-                kl_B=(losses["kl_B"].item() if torch.is_tensor(losses["kl_B"]) else losses["kl_B"]),
+                ce_A=(
+                    losses["ce_A"].item()
+                    if torch.is_tensor(losses["ce_A"])
+                    else losses["ce_A"]
+                ),
+                ce_B=(
+                    losses["ce_B"].item()
+                    if torch.is_tensor(losses["ce_B"])
+                    else losses["ce_B"]
+                ),
+                kl_A=(
+                    losses["kl_A"].item()
+                    if torch.is_tensor(losses["kl_A"])
+                    else losses["kl_A"]
+                ),
+                kl_B=(
+                    losses["kl_B"].item()
+                    if torch.is_tensor(losses["kl_B"])
+                    else losses["kl_B"]
+                ),
                 log_interval=log_interval,
             )
 
@@ -523,7 +628,9 @@ class TernaryVAETrainer(BaseTrainer):
         epoch_losses["beta_A"] = beta_A
         epoch_losses["beta_B"] = beta_B
         epoch_losses["lr_scheduled"] = lr_scheduled
-        epoch_losses["grad_ratio"] = (self.model.grad_norm_B_ema / (self.model.grad_norm_A_ema + 1e-8)).item()
+        epoch_losses["grad_ratio"] = (
+            self.model.grad_norm_B_ema / (self.model.grad_norm_A_ema + 1e-8)
+        ).item()
         epoch_losses["ema_momentum"] = self.model.grad_ema_momentum
 
         # GAP 4 FIX: Update loss plateau detection for adaptive StateNet LR
@@ -603,12 +710,14 @@ class TernaryVAETrainer(BaseTrainer):
 
         return epoch_losses
 
-    def train(self, train_loader: DataLoader, val_loader: DataLoader) -> None:
+    def train(
+        self, train_loader: DataLoader, val_loader: Optional[DataLoader] = None
+    ) -> None:
         """Main training loop.
 
         Args:
             train_loader: Training data loader
-            val_loader: Validation data loader
+            val_loader: Validation data loader (optional)
         """
         print(f"\n{'='*80}")
         print("Starting Dual Neural VAE Training")
@@ -632,11 +741,17 @@ class TernaryVAETrainer(BaseTrainer):
                 is_best = self.monitor.check_best(train_losses["loss"])
 
             # Evaluate coverage
-            unique_A, cov_A = self.monitor.evaluate_coverage(self.model, self.config["eval_num_samples"], self.device, "A")
-            unique_B, cov_B = self.monitor.evaluate_coverage(self.model, self.config["eval_num_samples"], self.device, "B")
+            unique_A, cov_A = self.monitor.evaluate_coverage(
+                self.model, self.config["eval_num_samples"], self.device, "A"
+            )
+            unique_B, cov_B = self.monitor.evaluate_coverage(
+                self.model, self.config["eval_num_samples"], self.device, "B"
+            )
 
             # Update histories
-            self.monitor.update_histories(train_losses["H_A"], train_losses["H_B"], unique_A, unique_B)
+            self.monitor.update_histories(
+                train_losses["H_A"], train_losses["H_B"], unique_A, unique_B
+            )
 
             # Log epoch (console)
             self.monitor.log_epoch(
@@ -696,22 +811,42 @@ class TernaryVAETrainer(BaseTrainer):
             if self.model.use_statenet:
                 metadata["statenet_corrections"] = self.model.statenet_corrections
 
-            self.checkpoint_manager.save_checkpoint(epoch, self.model, self.optimizer, metadata, is_best)
+            self.checkpoint_manager.save_checkpoint(
+                epoch, self.model, self.optimizer, metadata, is_best
+            )
 
             # Early stopping (loss-based)
             if self.monitor.should_stop(self.config["patience"]):
-                print(f"\n⚠️  Early stopping triggered (patience={self.config['patience']})")
+                print(
+                    f"\n⚠️  Early stopping triggered (patience={self.config['patience']})"
+                )
                 break
 
             # Coverage plateau detection (for manifold approach)
-            coverage_plateau_patience = self.config.get("coverage_plateau_patience", 100)
-            coverage_plateau_delta = self.config.get("coverage_plateau_min_delta", 0.0005)
-            if self.monitor.has_coverage_plateaued(coverage_plateau_patience, coverage_plateau_delta):
+            coverage_plateau_patience = self.config.get(
+                "coverage_plateau_patience", 100
+            )
+            coverage_plateau_delta = self.config.get(
+                "coverage_plateau_min_delta", 0.0005
+            )
+            if self.monitor.has_coverage_plateaued(
+                coverage_plateau_patience, coverage_plateau_delta
+            ):
                 current_cov = max(
-                    (self.monitor.coverage_A_history[-1] if self.monitor.coverage_A_history else 0),
-                    (self.monitor.coverage_B_history[-1] if self.monitor.coverage_B_history else 0),
+                    (
+                        self.monitor.coverage_A_history[-1]
+                        if self.monitor.coverage_A_history
+                        else 0
+                    ),
+                    (
+                        self.monitor.coverage_B_history[-1]
+                        if self.monitor.coverage_B_history
+                        else 0
+                    ),
                 )
-                print(f"\n📊 Coverage plateaued at {current_cov/19683*100:.2f}% (no improvement for {coverage_plateau_patience} epochs)")
+                print(
+                    f"\n📊 Coverage plateaued at {current_cov/19683*100:.2f}% (no improvement for {coverage_plateau_patience} epochs)"
+                )
                 break
 
         # Print summary and cleanup

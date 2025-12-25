@@ -221,7 +221,7 @@ This document consolidates **50+ research projects, proposals, and tasks** into 
 
 ### Phase 1: Foundation (Week 1-2)
 
-```
+```text
 Day 1-2:   E1, E2, E3, E4, E5 (Critical bug fixes)
 Day 3-4:   E6, E7 (Testing foundation)
 Day 5-7:   E8, E9, E10 (CI + basic visualization)
@@ -230,7 +230,7 @@ Week 2:    M1, M2 (Complete RA & HIV analyses)
 
 ### Phase 2: Core Deliverables (Week 3-4)
 
-```
+```text
 Week 3:    M3, M4 (Figures + AlphaFold validation)
            M5 (SARS-CoV-2 completion)
 Week 4:    H1 (PTM-Goldilocks Encoder training)
@@ -239,7 +239,7 @@ Week 4:    H1 (PTM-Goldilocks Encoder training)
 
 ### Phase 3: Publication Prep (Month 2)
 
-```
+```text
 Week 5-6:  H3 (Test coverage), H2 (geoopt enforcement)
 Week 7-8:  H4, H5 (AlphaFold hybrid + validation)
            X1, X6 (Begin vaccine & autoimmunity papers)
@@ -247,7 +247,7 @@ Week 7-8:  H4, H5 (AlphaFold hybrid + validation)
 
 ### Phase 4: Expansion (Month 3+)
 
-```
+```text
 Month 3:   D4, D5 (Alzheimer's, Cancer applications)
            H7 (Dashboard), X3 (Codon-space paper)
 Month 4+:  D6-D10 (Additional diseases)
@@ -258,7 +258,7 @@ Month 4+:  D6-D10 (Additional diseases)
 
 ## Dependencies Graph
 
-```
+```text
                     ┌─────────────────┐
                     │ E1-E5: Bug Fixes │
                     └────────┬────────┘
@@ -342,14 +342,14 @@ Month 4+:  D6-D10 (Additional diseases)
 
 ## Summary Statistics
 
-| Category           |  Count | Trivial |   Easy | Medium |  Hard | Expert |
-| :----------------- | -----: | ------: | -----: | -----: | ----: | -----: |
-| Infrastructure     |     18 |       5 |      9 |      4 |     0 |      0 |
-| Bioinformatics     |     22 |       0 |      0 |      5 |     2 |     15 |
-| Model/Training     |     12 |       0 |      5 |      4 |     3 |      0 |
-| Visualization      |      6 |       2 |      3 |      1 |     0 |      0 |
-| Research Proposals |     12 |       0 |      0 |      0 |     0 |     12 |
-| **Total**          | **70** |   **7** | **17** | **14** | **5** | **27** |
+| Category           | Count  | Trivial | Easy   | Medium | Hard  | Expert |
+| :----------------- | :----- | :------ | :----- | :----- | :---- | :----- |
+| Infrastructure     | 18     | 5       | 9      | 4      | 0     | 0      |
+| Bioinformatics     | 22     | 0       | 0      | 5      | 2     | 15     |
+| Model/Training     | 12     | 0       | 5      | 4      | 3     | 0      |
+| Visualization      | 6      | 2       | 3      | 1      | 0     | 0      |
+| Research Proposals | 12     | 0       | 0      | 0      | 0     | 12     |
+| **Total**          | **70** | **7**   | **17** | **14** | **5** | **27** |
 
 **Quick Win Potential**: 24 tasks (Trivial + Easy) can be completed in < 1 week
 **Core Value**: 14 Medium tasks deliver 80% of research value

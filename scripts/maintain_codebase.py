@@ -37,9 +37,6 @@ def run_formatter():
 
 def run_linter_fixes():
     # Use Ruff for fast linting and auto-fixing
-    # We use --select ALL or specific rules? For now, standard check --fix
-    # We use --unsafe-fixes to handle more aggressive fixes if needed, but start safe.
-    # Actually, let's just use check --fix.
     print("\nrunning Ruff (Linter & Auto-Fixer)...")
     try:
         # We ignore errors (check=False) because ruff returns non-zero on found violations even if fixed
@@ -76,166 +73,6 @@ def add_words_to_dictionary(words):
         print(f"✅ Added {new_words_count} words to .vscode/settings.json")
     else:
         print("No new words to add.")
-
-
-BIO_TERMS = [
-    # General Tech/Math
-    "hyperbolic",
-    "poincare",
-    "embedding",
-    "bioinformatics",
-    "ternary",
-    "vaes",
-    "vae",
-    "gcn",
-    "cnn",
-    "autoencoder",
-    "decoder",
-    "encoder",
-    "latent",
-    "manifold",
-    "phylogeny",
-    "phylogenetic",
-    "genomic",
-    "codon",
-    "adjoint",
-    "laplacian",
-    "eigenvectors",
-    "eigendecomposition",
-    "tqdm",
-    "argparse",
-    "numpy",
-    "matplotlib",
-    "pyplot",
-    "scikit",
-    "sklearn",
-    "pandas",
-    "pytorch",
-    "torch",
-    "cuda",
-    "cpu",
-    "gpu",
-    # New additions
-    "adic",
-    "Adic",
-    "ADIC",
-    "Möbius",
-    "Fréchet",
-    "frechet",
-    "cdist",
-    "pearsonr",
-    "spearmanr",
-    "atleast",
-    "arccosh",
-    "mobius",
-    "keepdims",
-    "linalg",
-    "arctanh",
-    "Riemannian",
-    "padic",
-    "randn",
-    "embs",
-    "degs",
-    "arccos",
-    "Nanoparticle",
-    "nanoparticle",
-    "penalises",
-    "epitope",
-    "RMSD",
-    "epitopes",
-    "Brizuela",
-    "venv",
-    "roadmaps",
-    "pytest",
-    "bibtex",
-    "zenodo",
-    "conftest",
-    "pythonpath",
-    "testpaths",
-    "filterwarnings",
-    "addopts",
-    "autouse",
-    "addinivalue",
-    "keepdim",
-    "logvar",
-    "rtol",
-    "rcfile",
-    "pylintrc",
-    # --- Comprehensive Additions ---
-    "alphafold",
-    "wildtype",
-    "glycan",
-    "deglyc",
-    "integrase",
-    "crossvalidation",
-    "neurodegeneration",
-    "alzheimers",
-    "phospho",
-    "mtbr",
-    "functionomic",
-    "citrullination",
-    "citrullinated",
-    "autoantigen",
-    "immunogenicity",
-    "proteome",
-    "acpa",
-    "wandb",
-    "plotly",
-    "umap",
-    "tsne",
-    "lorentz",
-    "fibration",
-    "calabi",
-    "yau",
-    "ricci",
-    "curvature",
-    "geodesic",
-    "isometry",
-    "automorphism",
-    "homeomorphism",
-    "diffeomorphism",
-    "holomorphic",
-    "meromorphic",
-    "cohomology",
-    "homology",
-    "homotopy",
-    "betti",
-    "hodge",
-    "kaehler",
-    "kahler",
-    "symal",
-    "symb",
-    "bg505",
-    "gp120",
-    "n103",
-    "n332",
-    "v1v2",
-    "cd4",
-    "bnab",
-    "bnabs",
-    "epitope",
-    "paratope",
-    "antibody",
-    "antigen",
-    "receptor",
-    "ligand",
-    "docking",
-    "molecular",
-    "dynamics",
-    "residue",
-    "residues",
-    "amino",
-    "nucleotide",
-    "genomic",
-    "proteomic",
-    "transcriptomic",
-    "omics",
-    "multiomics",
-    "interactome",
-    "connectome",
-    "embeddings",
-    "latents",
-]
 
 
 def run_syntax_check():
@@ -279,12 +116,7 @@ def run_integrity_audit():
     file_pattern = re.compile(r'["\']([^"\']+\.(pt|json|csv|pdb|fasta))["\']')
 
     for root, dirs, files in os.walk(PROJECT_ROOT):
-        if ".venv" in dirs:
-            dirs.remove(".venv")
-        if ".git" in dirs:
-            dirs.remove(".git")
-        if "node_modules" in dirs:
-            dirs.remove("node_modules")
+        _prune_ignored_dirs(dirs)
 
         for file in files:
             if file.endswith(".py"):
@@ -375,7 +207,7 @@ def main():
 
     # 2. Add Common Terms to Dictionary
     print("\nUpdating Dictionary...")
-
+    BIO_TERMS = []
     # Check for auto-generated vocabulary list
     auto_vocab_file = PROJECT_ROOT / "detected_unknowns.txt"
     if auto_vocab_file.exists():

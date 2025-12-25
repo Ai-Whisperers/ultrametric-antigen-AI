@@ -20,7 +20,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.figure import Figure
 
-from ..config import DPI_PRESENTATION, DPI_PUBLICATION, ExportFormat, get_config
+from ..config import (DPI_PRESENTATION, DPI_PUBLICATION, ExportFormat,
+                      get_config)
 
 # =============================================================================
 # Export Functions
