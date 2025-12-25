@@ -69,7 +69,6 @@ class HyperbolicVAETrainer:
         self.model = model
         self.device = device
         self.config = config
-        self.config = config
         self.monitor = monitor or base_trainer.monitor
         self.total_epochs = config.get("total_epochs", 100)
 

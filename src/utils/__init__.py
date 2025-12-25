@@ -41,6 +41,14 @@ from .padic_shift import (
     sequence_padic_encoding,
 )
 
+# Checkpoint utilities
+from .checkpoint import (
+    NumpyBackwardsCompatUnpickler,
+    extract_model_state,
+    load_checkpoint_compat,
+    save_checkpoint,
+)
+
 __all__ = [
     # Coverage metrics
     "evaluate_coverage",
@@ -72,4 +80,9 @@ __all__ = [
     "PAdicShiftResult",
     "PAdicSequenceEncoder",
     "PAdicCodonAnalyzer",
+    # Checkpoint utilities
+    "NumpyBackwardsCompatUnpickler",
+    "load_checkpoint_compat",
+    "save_checkpoint",
+    "extract_model_state",
 ]
