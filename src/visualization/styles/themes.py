@@ -24,13 +24,7 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 
-from ..config import (
-    FONT_FAMILY_SANS,
-    FONT_SIZES,
-    Context,
-    Theme,
-    get_config,
-)
+from ..config import FONT_FAMILY_SANS, FONT_SIZES, Context, Theme, get_config
 from .palettes import NEUTRALS, SEMANTIC
 
 # =============================================================================

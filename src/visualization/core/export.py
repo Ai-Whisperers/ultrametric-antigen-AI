@@ -19,15 +19,9 @@ from typing import TYPE_CHECKING, Sequence
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
-if TYPE_CHECKING:
-    import numpy as np
+import numpy as np
 
-from ..config import (
-    DPI_PRESENTATION,
-    DPI_PUBLICATION,
-    ExportFormat,
-    get_config,
-)
+from ..config import DPI_PRESENTATION, DPI_PUBLICATION, ExportFormat, get_config
 
 # =============================================================================
 # Export Functions

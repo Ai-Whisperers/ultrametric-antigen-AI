@@ -13,54 +13,20 @@ This package provides:
 - Annotation helpers for scientific figures
 """
 
-from .base import (
-    # Figure creation
-    create_figure,
-    create_scientific_figure,
-    create_pitch_figure,
-    create_3d_figure,
-    create_panel_figure,
-    # Axes utilities
-    despine,
-    set_axis_style,
-    add_panel_label,
-    add_inset_axes,
-    # Colorbar and legend
-    add_colorbar,
-    add_legend,
-)
-from .export import (
-    # Export functions
-    save_figure,
-    save_publication_figure,
-    save_presentation_figure,
-    save_web_figure,
-    save_figure_batch,
-    save_plotly_figure,
-    # Utilities
-    get_figure_size_inches,
-    set_figure_size_inches,
-    figure_to_array,
-    figure_to_base64,
-)
-from .annotations import (
-    # Statistical annotations
-    add_significance_bracket,
-    add_pvalue_annotation,
-    add_correlation_annotation,
-    # Zone annotations
-    add_goldilocks_zones,
-    add_threshold_line,
-    add_reference_region,
-    # Legend helpers
-    create_legend_handles,
-    add_category_legend,
-    # Arrow annotations
-    add_annotation_arrow,
-    # Scale indicators
-    add_scale_bar,
-    add_colorbar_annotation,
-)
+from .annotations import (  # Statistical annotations; Zone annotations; Legend helpers; Arrow annotations; Scale indicators
+    add_annotation_arrow, add_category_legend, add_colorbar_annotation,
+    add_correlation_annotation, add_goldilocks_zones, add_pvalue_annotation,
+    add_reference_region, add_scale_bar, add_significance_bracket,
+    add_threshold_line, create_legend_handles)
+from .base import (  # Figure creation; Axes utilities; Colorbar and legend
+    add_colorbar, add_inset_axes, add_legend, add_panel_label,
+    create_3d_figure, create_figure, create_panel_figure, create_pitch_figure,
+    create_scientific_figure, despine, set_axis_style)
+from .export import (figure_to_array,  # Export functions; Utilities
+                     figure_to_base64, get_figure_size_inches, save_figure,
+                     save_figure_batch, save_plotly_figure,
+                     save_presentation_figure, save_publication_figure,
+                     save_web_figure, set_figure_size_inches)
 
 __all__ = [
     # Figure creation

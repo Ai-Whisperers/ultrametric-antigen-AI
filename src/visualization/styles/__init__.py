@@ -13,46 +13,15 @@ This package provides:
 - Style presets for common use cases
 """
 
-from .palettes import (
-    # Color palette objects
-    PALETTE,
-    SEMANTIC,
-    NEUTRALS,
-    # Categorical palettes
-    TOLVIBRANT,
-    TOLMUTED,
-    TABLEAU10,
-    VAE_COLORS,
-    STRUCTURE_COLORS,
-    # Colormap functions
-    get_risk_cmap,
-    get_safety_cmap,
-    get_goldilocks_cmap,
-    get_diverging_cmap,
-    get_sequential_cmap,
-    get_categorical_cmap,
-    # Color utilities
-    lighten,
-    darken,
-    with_alpha,
-    color_gradient,
-    register_colormaps,
-)
-from .themes import (
-    # Theme application
-    apply_theme,
-    reset_theme,
-    theme_context,
-    # Quick style functions
-    use_scientific_style,
-    use_pitch_style,
-    use_dark_style,
-    use_notebook_style,
-    # Preset functions
-    setup_publication_style,
-    setup_poster_style,
-    setup_slide_style,
-)
+from .palettes import (  # Color palette objects; Categorical palettes; Colormap functions; Color utilities
+    NEUTRALS, PALETTE, SEMANTIC, STRUCTURE_COLORS, TABLEAU10, TOLMUTED,
+    TOLVIBRANT, VAE_COLORS, color_gradient, darken, get_categorical_cmap,
+    get_diverging_cmap, get_goldilocks_cmap, get_risk_cmap, get_safety_cmap,
+    get_sequential_cmap, lighten, register_colormaps, with_alpha)
+from .themes import (  # Theme application; Quick style functions; Preset functions
+    apply_theme, reset_theme, setup_poster_style, setup_publication_style,
+    setup_slide_style, theme_context, use_dark_style, use_notebook_style,
+    use_pitch_style, use_scientific_style)
 
 __all__ = [
     # Palettes
