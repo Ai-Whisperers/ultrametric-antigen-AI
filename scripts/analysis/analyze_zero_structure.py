@@ -27,7 +27,7 @@ import torch
 from scipy import stats
 
 from src.data.generation import generate_all_ternary_operations
-from src.models import TernaryVAE_OptionC
+from src.models import TernaryVAE_PartialFreeze
 
 
 def compute_padic_valuation(op: np.ndarray) -> int:
@@ -63,7 +63,7 @@ def analyze_checkpoint(checkpoint_path: str, device: str = "cuda"):
     print(f"{'='*60}\n")
 
     # Load model
-    model = TernaryVAE_OptionC(
+    model = TernaryVAE_PartialFreeze(
         latent_dim=16,
         hidden_dim=64,
         use_dual_projection=True,

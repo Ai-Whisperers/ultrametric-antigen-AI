@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from src.models.ternary_vae import TernaryVAEV5_11, TernaryVAEV5_11_OptionC
+from src.models.ternary_vae import TernaryVAEV5_11, TernaryVAEV5_11_PartialFreeze
 from tests.core.helpers import MockFrozenModule
 from tests.factories.models import ModelConfigFactory
 
@@ -44,7 +44,7 @@ class VAEBuilder:
             return self._build_mocked()
 
         if self._option_c:
-            return TernaryVAEV5_11_OptionC(**self._config)
+            return TernaryVAEV5_11_PartialFreeze(**self._config)
         return TernaryVAEV5_11(**self._config)
 
     def _build_mocked(self):
@@ -69,7 +69,7 @@ class VAEBuilder:
             mock_dec_cls.side_effect = create_dec
 
             if self._option_c:
-                model = TernaryVAEV5_11_OptionC(**self._config)
+                model = TernaryVAEV5_11_PartialFreeze(**self._config)
             else:
                 model = TernaryVAEV5_11(**self._config)
 

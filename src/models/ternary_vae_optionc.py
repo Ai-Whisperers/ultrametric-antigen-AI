@@ -3,9 +3,9 @@
 # Licensed under the PolyForm Noncommercial License 1.0.0
 # See LICENSE file in the repository root for full license text.
 
-"""Ternary VAE v5.11 Option C - Partial freeze with homeostatic control.
+"""Ternary VAE v5.11 Partial Freeze - Dynamic component freeze with homeostatic control.
 
-This module implements the Option C variant that allows dynamic freeze/unfreeze
+This module implements the PartialFreeze variant that allows dynamic freeze/unfreeze
 of components based on training metrics (coverage, hierarchy, gradient norms).
 
 V5.11.7: Hierarchical homeostasis where:
@@ -18,7 +18,10 @@ This implements complementary learning systems theory:
 - Slow components (encoders) consolidate when objectives met
 - Fast components (projections) continuously adapt
 
-Single responsibility: Option C variant with homeostatic control.
+Single responsibility: Partial freeze variant with homeostatic control.
+
+Note: This class was previously named "OptionC". The old names are preserved
+as aliases for backward compatibility.
 """
 
 import logging
@@ -33,8 +36,8 @@ from .ternary_vae import TernaryVAEV5_11
 logger = logging.getLogger(__name__)
 
 
-class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
-    """V5.11 Option C: Partial freeze variant with homeostatic control.
+class TernaryVAEV5_11_PartialFreeze(TernaryVAEV5_11):
+    """V5.11 PartialFreeze: Dynamic component freeze with homeostatic control.
 
     Inherits from V5.11 but allows dynamic freeze/unfreeze of components
     based on training metrics (coverage, hierarchy, gradient norms).
@@ -56,7 +59,7 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
         controller_lr_scale: float = 1.0,
         **kwargs,
     ):
-        """Initialize Option C variant.
+        """Initialize PartialFreeze variant.
 
         Args:
             freeze_encoder_b: Whether to freeze encoder_B
@@ -363,4 +366,10 @@ class TernaryVAEV5_11_OptionC(TernaryVAEV5_11):
         return counts
 
 
-__all__ = ["TernaryVAEV5_11_OptionC"]
+# Backward-compatible alias (deprecated name)
+TernaryVAEV5_11_OptionC = TernaryVAEV5_11_PartialFreeze
+
+__all__ = [
+    "TernaryVAEV5_11_PartialFreeze",
+    "TernaryVAEV5_11_OptionC",  # Deprecated alias for backward compatibility
+]

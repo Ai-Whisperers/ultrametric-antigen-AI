@@ -14,18 +14,21 @@ from .hyperbolic_projection import (DualHyperbolicProjection,
                                     HyperbolicProjection)
 from .swarm_vae import AgentConfig, AgentRole, PheromoneField, SwarmAgent, SwarmVAE
 from .ternary_vae import (FrozenDecoder, FrozenEncoder, TernaryVAEV5_11,
-                          TernaryVAEV5_11_OptionC)
+                          TernaryVAEV5_11_OptionC, TernaryVAEV5_11_PartialFreeze)
 
 # Canonical exports (V5.11 architecture)
 TernaryVAE = TernaryVAEV5_11
-TernaryVAE_OptionC = TernaryVAEV5_11_OptionC
+TernaryVAE_PartialFreeze = TernaryVAEV5_11_PartialFreeze
+TernaryVAE_OptionC = TernaryVAEV5_11_OptionC  # Deprecated alias
 
 __all__ = [
     # Canonical (V5.11)
     "TernaryVAE",
-    "TernaryVAE_OptionC",
+    "TernaryVAE_PartialFreeze",
+    "TernaryVAE_OptionC",  # Deprecated alias
     "TernaryVAEV5_11",
-    "TernaryVAEV5_11_OptionC",
+    "TernaryVAEV5_11_PartialFreeze",
+    "TernaryVAEV5_11_OptionC",  # Deprecated alias
     "FrozenEncoder",
     "FrozenDecoder",
     # Projections

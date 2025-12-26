@@ -28,7 +28,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from src.core import TERNARY
 from src.data.generation import generate_all_ternary_operations
 from src.losses import poincare_distance
-from src.models import TernaryVAEV5_11, TernaryVAEV5_11_OptionC
+from src.models import TernaryVAEV5_11, TernaryVAEV5_11_PartialFreeze
 
 
 def load_model_a(checkpoint_path, v5_5_path, device):
@@ -49,8 +49,8 @@ def load_model_a(checkpoint_path, v5_5_path, device):
 
 
 def load_model_c(checkpoint_path, v5_5_path, device):
-    """Load Option C model."""
-    model = TernaryVAEV5_11_OptionC(
+    """Load PartialFreeze model (formerly Option C)."""
+    model = TernaryVAEV5_11_PartialFreeze(
         latent_dim=16,
         hidden_dim=64,
         max_radius=0.95,

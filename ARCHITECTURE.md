@@ -54,8 +54,7 @@ ternary-vaes-bioinformatics/
 │   ├── artifacts/                # Checkpoint management
 │   └── utils/                    # Metrics and utilities
 ├── scripts/                      # Entry points
-│   ├── train/                    # Training scripts
-│   │   └── train.py             # Main training entry point
+│   ├── train.py                 # Main training entry point
 │   ├── train_codon_vae_hiv.py   # HIV-specific codon VAE training
 │   ├── analyze_all_datasets.py  # Comprehensive dataset analysis
 │   ├── clinical_applications.py # Clinical decision support
@@ -130,6 +129,109 @@ total_loss = (
    d. Logging to TensorBoard
    e. Checkpoint if best
 4. Final evaluation and reporting
+```
+
+---
+
+## Naming Conventions
+
+This project follows PEP 8 naming conventions with additional domain-specific guidelines.
+
+### Files and Modules
+
+```python
+# Files: lowercase_snake_case
+ternary_vae.py           # Good
+ternary_vae_partial_freeze.py  # Good (descriptive variant name)
+
+# Avoid cryptic abbreviations in filenames
+ternary_vae_optionc.py   # Deprecated (cryptic)
+```
+
+### Classes
+
+```python
+# PascalCase with clear version suffix pattern: V{major}_{minor}
+TernaryVAEV5_11           # Good
+TernaryVAEV5_11_PartialFreeze  # Good (descriptive variant)
+
+# Avoid cryptic option names
+TernaryVAEV5_11_OptionC   # Deprecated (use PartialFreeze)
+
+# Domain abbreviations should be clear
+PAdicRankingLoss          # Good (P-Adic is domain term)
+```
+
+### Functions
+
+```python
+# Use action verb prefixes consistently:
+#   compute_* - Expensive O(n) operations
+#   get_*     - O(1) lookups/retrievals
+#   create_*  - Factory functions
+#   load_*    - File/resource loading
+#   validate_* - Validation checks
+
+compute_padic_distance()       # Expensive calculation
+get_amino_acid_property()      # Dictionary lookup
+create_model_from_config()     # Factory
+load_checkpoint()              # File loading
+validate_training_config()     # Validation
+```
+
+### Codon/Biology Functions
+
+The canonical source of truth is `src/biology/codons.py`:
+
+```python
+from src.biology.codons import (
+    codon_to_index,        # Convert codon string to index (0-63)
+    index_to_codon,        # Convert index (0-63) to codon string
+    triplet_to_codon_index,  # Alias for codon_to_index
+    codon_index_to_triplet,  # Alias for index_to_codon
+)
+```
+
+Do NOT define duplicate codon conversion functions in other modules.
+
+### Variables
+
+```python
+# Descriptive names for configuration values
+curvature = 2.0           # Good (not 'c')
+prime_base = 3            # Good (not 'p')
+learning_rate = 1e-3      # Good (not 'lr')
+
+# Short names acceptable in mathematical contexts
+z_poincare, z_euclidean   # Good (tensor variables)
+mu_A, logvar_A            # Good (VAE standard notation)
+
+# Tensor suffixes indicate space
+z_hyp → z_poincare        # Preferred (more specific)
+z_euc → z_euclidean       # Preferred (clearer)
+```
+
+### Constants
+
+```python
+# UPPER_SNAKE_CASE with clear prefixes
+N_TERNARY_OPERATIONS = 19683
+DEFAULT_LEARNING_RATE = 1e-3
+EPSILON_LOG = 1e-10
+POINCARE_MAX_NORM = 0.95
+```
+
+### Deprecation Pattern
+
+When renaming, preserve old names as aliases:
+
+```python
+# New name (preferred)
+class TernaryVAEV5_11_PartialFreeze(TernaryVAEV5_11):
+    ...
+
+# Deprecated alias for backward compatibility
+TernaryVAEV5_11_OptionC = TernaryVAEV5_11_PartialFreeze
 ```
 
 ---
@@ -239,7 +341,19 @@ Located in `research/alphafold3/`:
 
 ## Configuration
 
-Example config structure (`configs/ternary_v5_6.yaml`):
+### Directory Organization
+
+The project separates configuration into two locations:
+
+| Location | Purpose | Format |
+|----------|---------|--------|
+| `configs/` | Runtime parameters (learning rate, epochs, etc.) | YAML/JSON |
+| `src/config/` | Configuration classes, schemas, and validation | Python |
+
+- **`configs/`**: User-editable YAML files for training runs and experiments
+- **`src/config/`**: Python dataclasses defining the structure and defaults
+
+### Example Config (`configs/ternary.yaml`)
 
 ```yaml
 model:

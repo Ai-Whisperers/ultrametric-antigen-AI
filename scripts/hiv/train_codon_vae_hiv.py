@@ -29,7 +29,6 @@ from src.biology.codons import (
 )
 
 CODONS = list(GENETIC_CODE.keys())
-CODON_TO_IDX = CODON_TO_INDEX  # Alias for backwards compatibility
 
 
 def parse_fasta(filepath: Path) -> list[tuple[str, str]]:
@@ -60,8 +59,8 @@ def sequence_to_codons(seq: str) -> list[int]:
     codons = []
     for i in range(0, len(seq) - 2, 3):
         codon = seq[i:i+3]
-        if codon in CODON_TO_IDX:
-            codons.append(CODON_TO_IDX[codon])
+        if codon in CODON_TO_INDEX:
+            codons.append(CODON_TO_INDEX[codon])
     return codons
 
 

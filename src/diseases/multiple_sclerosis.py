@@ -82,8 +82,6 @@ MOLECULAR_MIMICRY_PAIRS: dict[str, dict[str, Any]] = {
 # Note: HLA risk alleles and amino acid properties are now imported from shared modules:
 # - MS_HLA_RISK_ALLELES from src.analysis.immunology.genetic_risk
 # - AMINO_ACID_PROPERTIES from src.biology.amino_acids
-# Legacy alias for backward compatibility
-MS_RISK_HLA_ALLELES = MS_HLA_RISK_ALLELES
 
 
 @dataclass
@@ -448,8 +446,8 @@ class MultipleSclerosisAnalyzer:
         protective_factors = []
 
         for allele in hla_alleles:
-            if allele in MS_RISK_HLA_ALLELES:
-                odds_ratio = MS_RISK_HLA_ALLELES[allele]
+            if allele in MS_HLA_RISK_ALLELES:
+                odds_ratio = MS_HLA_RISK_ALLELES[allele]
                 risk_score *= odds_ratio
 
                 if odds_ratio > 1.0:

@@ -3,7 +3,10 @@
 # Licensed under the PolyForm Noncommercial License 1.0.0
 # See LICENSE file in the repository root for full license text.
 
-"""Research module bridge.
+"""Research path utilities bridge.
+
+NOTE: This is NOT a research module - it provides PATH UTILITIES for accessing
+the research/ directory from src/ code. The actual research code is in research/.
 
 This module provides a bridge between the core library (src/) and research
 experiments (research/). It enables:

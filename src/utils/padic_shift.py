@@ -28,48 +28,19 @@ from typing import Sequence
 
 import torch
 
-
-# Nucleotide to integer mapping
-NUCLEOTIDE_MAP = {"U": 0, "C": 1, "A": 2, "G": 3, "T": 0}  # T maps to U
-
-# Codon index computation
-def codon_to_index(codon: str) -> int:
-    """Convert a 3-letter codon to its ternary index (0-63).
-
-    The index is computed as: n1*16 + n2*4 + n3
-    where n1, n2, n3 are nucleotide indices (0-3).
-
-    Args:
-        codon: 3-letter codon string (e.g., "AUG")
-
-    Returns:
-        Index from 0 to 63
-    """
-    codon = codon.upper().replace("T", "U")
-    if len(codon) != 3:
-        raise ValueError(f"Codon must be 3 letters, got: {codon}")
-
-    n1 = NUCLEOTIDE_MAP[codon[0]]
-    n2 = NUCLEOTIDE_MAP[codon[1]]
-    n3 = NUCLEOTIDE_MAP[codon[2]]
-
-    return n1 * 16 + n2 * 4 + n3
+from src.biology.codons import codon_to_index, index_to_codon
 
 
-def index_to_codon(index: int) -> str:
-    """Convert a codon index (0-63) back to a 3-letter codon.
+def index_to_rna_codon(index: int) -> str:
+    """Convert a codon index (0-63) to RNA codon (using U instead of T).
 
     Args:
         index: Codon index from 0 to 63
 
     Returns:
-        3-letter codon string (using U for uracil)
+        3-letter RNA codon string (using U for uracil)
     """
-    nucleotides = "UCAG"
-    n1 = (index // 16) % 4
-    n2 = (index // 4) % 4
-    n3 = index % 4
-    return nucleotides[n1] + nucleotides[n2] + nucleotides[n3]
+    return index_to_codon(index).replace("T", "U")
 
 
 @dataclass

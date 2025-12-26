@@ -3,11 +3,19 @@
 # Licensed under the PolyForm Noncommercial License 1.0.0
 # See LICENSE file in the repository root for full license text.
 
-"""Optimizers for hyperbolic and multi-objective training.
+"""Low-level optimizer algorithms for hyperbolic and multi-objective training.
 
-This module provides specialized optimization algorithms designed for:
+This module provides specialized optimization ALGORITHMS designed for:
 1. Training on hyperbolic (Riemannian) manifolds
 2. Multi-objective optimization with Pareto fronts
+
+Note:
+    This module contains optimizer IMPLEMENTATIONS (algorithms).
+    For high-level optimization workflows (sequence design, etc.),
+    see src/optimization/ instead.
+
+    - src/optimizers/ (this) = How to optimize (optimizer algorithms)
+    - src/optimization/ = What to optimize (sequence design workflows)
 
 Optimizer Categories:
     **Multi-Objective Optimization**:

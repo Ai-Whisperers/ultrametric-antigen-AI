@@ -27,7 +27,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.core import TERNARY
 from src.data.generation import generate_all_ternary_operations
-from src.models.ternary_vae import TernaryVAEV5_11_OptionC
+from src.models.ternary_vae import TernaryVAEV5_11_PartialFreeze
 
 
 def load_v5_11_3_model(device="cpu"):
@@ -35,14 +35,14 @@ def load_v5_11_3_model(device="cpu"):
 
     The model uses:
     - Frozen encoder_A from v5.5
-    - Trainable encoder_B (Option C)
+    - Trainable encoder_B (PartialFreeze variant)
     - Dual hyperbolic projection
     - 2 projection layers with dropout
     """
     print("Loading V5.11.3 model...")
 
     # V5.11.3 architecture parameters (from training config)
-    model = TernaryVAEV5_11_OptionC(
+    model = TernaryVAEV5_11_PartialFreeze(
         latent_dim=16,
         hidden_dim=128,
         max_radius=0.95,

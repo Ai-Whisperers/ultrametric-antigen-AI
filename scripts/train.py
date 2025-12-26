@@ -53,7 +53,7 @@ from src.geometry import get_riemannian_optimizer
 from src.losses import (CombinedZeroStructureLoss, GlobalRankLoss,
                         PAdicGeodesicLoss, RadialHierarchyLoss)
 from src.models import (HomeostasisController, TernaryVAEV5_11,
-                        TernaryVAEV5_11_OptionC)
+                        TernaryVAEV5_11_PartialFreeze)
 
 
 def parse_args():
@@ -845,8 +845,8 @@ def main():
     capacity_str = f" (hidden={proj_hidden_dim}, layers={proj_layers}, dropout={proj_dropout})"
     curvature_str = " + LEARNABLE_C" if learnable_curvature else ""
     if use_option_c:
-        print(f"\n=== Creating V5.11 Model (OPTION C: encoder_B trainable{dual_str}{capacity_str}{curvature_str}) ===")
-        model = TernaryVAEV5_11_OptionC(
+        print(f"\n=== Creating V5.11 Model (PartialFreeze: encoder_B trainable{dual_str}{capacity_str}{curvature_str}) ===")
+        model = TernaryVAEV5_11_PartialFreeze(
             latent_dim=16,
             hidden_dim=proj_hidden_dim,
             max_radius=config.get("max_radius", 0.95),

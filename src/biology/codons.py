@@ -139,13 +139,18 @@ def triplet_to_codon_index(triplet: str) -> int:
     """Convert nucleotide triplet to codon index (0-63).
 
     Args:
-        triplet: Three-letter nucleotide string
+        triplet: Three-letter nucleotide string (DNA or RNA)
 
     Returns:
         Codon index (0-63), or -1 if invalid
     """
     triplet = triplet.upper().replace("U", "T")
     return CODON_TO_INDEX.get(triplet, -1)
+
+
+# Alias for more intuitive naming
+codon_to_index = triplet_to_codon_index
+"""Alias for triplet_to_codon_index - converts codon string to index (0-63)."""
 
 
 def codon_index_to_triplet(idx: int) -> str:
@@ -168,6 +173,11 @@ def codon_index_to_triplet(idx: int) -> str:
     b3 = idx % 4
 
     return IDX_TO_BASE[b1] + IDX_TO_BASE[b2] + IDX_TO_BASE[b3]
+
+
+# Alias for more intuitive naming
+index_to_codon = codon_index_to_triplet
+"""Alias for codon_index_to_triplet - converts index (0-63) to codon string."""
 
 
 def get_synonymous_codons(aa: str) -> list[str]:
@@ -217,6 +227,7 @@ def get_single_nucleotide_neighbors(codon: str) -> list[tuple[str, int, str, str
 
 
 __all__ = [
+    # Constants
     "NUCLEOTIDES",
     "BASE_TO_IDX",
     "IDX_TO_BASE",
@@ -226,9 +237,13 @@ __all__ = [
     "INDEX_TO_CODON",
     "START_CODON_INDEX",
     "STOP_CODON_INDICES",
+    # Codon conversion functions
     "codon_to_amino_acid",
     "triplet_to_codon_index",
     "codon_index_to_triplet",
+    "codon_to_index",  # Alias for triplet_to_codon_index
+    "index_to_codon",  # Alias for codon_index_to_triplet
+    # Synonymous codon utilities
     "get_synonymous_codons",
     "is_synonymous_mutation",
     "get_single_nucleotide_neighbors",

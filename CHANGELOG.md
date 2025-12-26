@@ -6,6 +6,32 @@ All notable changes to the Ternary VAE Bioinformatics project.
 
 ## [Unreleased]
 
+### Reorganized (2025-12-26)
+- **HIV Documentation** - Moved from `research/.../hiv/documentation/` to `DOCUMENTATION/.../HIV_PADIC_ANALYSIS/`
+  - 27 documents organized into 6 sections (Overview, Findings, Methodology, Reference, Implementation, Supplementary)
+  - Added README files for each section
+- **Scripts Organization** - Created subdirectories for loose scripts
+  - `scripts/hiv/` - HIV analysis pipelines
+  - `scripts/clinical/` - Clinical decision support tools
+  - `scripts/literature/` - Literature implementation scripts
+  - `scripts/maintenance/` - Codebase maintenance utilities
+- **Results Organization** - Reorganized into categories
+  - `results/clinical/` - Clinical outputs
+  - `results/research/` - Research outputs
+  - `results/training/` - Training outputs
+  - `results/validation/` - Validation outputs
+  - `results/literature/` - Literature implementations
+- **Data Consolidation**
+  - Consolidated `src/training/data.py` into `src/data/stratified.py` (canonical location)
+  - Moved `research/datasets/` to `data/research/`
+  - Added `data/README.md` documentation
+- **Module Clarification**
+  - Added documentation distinguishing `src/optimizers/` (algorithms) from `src/optimization/` (workflows)
+  - Clarified `src/research/` as path utilities bridge
+- **Documentation Consolidation**
+  - Moved `LITERATURE_REVIEW_1000_PAPERS.md` to `DOCUMENTATION/.../03_REFERENCE/`
+  - Moved `IMPLEMENTATION_SUMMARY.md` to `DOCUMENTATION/02_PROJECT_MANAGEMENT/`
+
 ### Added (2025-12-26)
 - **Clinical Decision Support System** (`scripts/clinical_applications.py`)
   - Top vaccine candidate identification (TPQDLNTML, priority: 0.970)

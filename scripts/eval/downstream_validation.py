@@ -35,14 +35,14 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.core import TERNARY
 from src.data.generation import generate_all_ternary_operations
-from src.models import TernaryVAEV5_11_OptionC
+from src.models import TernaryVAEV5_11_PartialFreeze
 
 
 def load_model(checkpoint_path: Path, device: str = "cuda"):
     """Load trained model from checkpoint."""
     # Create model with same architecture as training
     # Note: Must match training architecture including dropout (even if disabled via eval mode)
-    model = TernaryVAEV5_11_OptionC(
+    model = TernaryVAEV5_11_PartialFreeze(
         latent_dim=16,
         hidden_dim=128,
         max_radius=0.95,

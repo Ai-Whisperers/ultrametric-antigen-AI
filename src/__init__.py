@@ -41,7 +41,11 @@ from .losses import (
 from .metrics import compute_ranking_correlation_hyperbolic
 
 # Canonical model (V5.11)
-from .models.ternary_vae import TernaryVAEV5_11, TernaryVAEV5_11_OptionC
+from .models.ternary_vae import (
+    TernaryVAEV5_11,
+    TernaryVAEV5_11_OptionC,
+    TernaryVAEV5_11_PartialFreeze,
+)
 
 # Training
 from .training import HyperbolicVAETrainer, TernaryVAETrainer, TrainingMonitor
@@ -52,7 +56,8 @@ from .observability import setup_logging, get_logger, MetricsBuffer
 
 # Canonical aliases (after imports)
 TernaryVAE = TernaryVAEV5_11
-TernaryVAE_OptionC = TernaryVAEV5_11_OptionC
+TernaryVAE_PartialFreeze = TernaryVAEV5_11_PartialFreeze
+TernaryVAE_OptionC = TernaryVAEV5_11_OptionC  # Deprecated alias
 
 __all__ = [
     # Configuration
@@ -61,9 +66,11 @@ __all__ = [
     "save_config",
     # Canonical (V5.11)
     "TernaryVAE",
-    "TernaryVAE_OptionC",
+    "TernaryVAE_PartialFreeze",
+    "TernaryVAE_OptionC",  # Deprecated alias
     "TernaryVAEV5_11",
-    "TernaryVAEV5_11_OptionC",
+    "TernaryVAEV5_11_PartialFreeze",
+    "TernaryVAEV5_11_OptionC",  # Deprecated alias
     # Data
     "generate_all_ternary_operations",
     "TernaryOperationDataset",

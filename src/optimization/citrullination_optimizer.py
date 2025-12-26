@@ -33,6 +33,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from src.biology.codons import codon_to_index
+
 
 @dataclass
 class OptimizationResult:
@@ -101,27 +103,7 @@ HUMAN_CODON_USAGE = {
     "UGU": 0.45, "UGC": 0.55,
 }
 
-# Nucleotide to index mapping
-NUCLEOTIDE_MAP = {"U": 0, "C": 1, "A": 2, "G": 3, "T": 0}
-
-
-def codon_to_index(codon: str) -> int:
-    """Convert codon to ternary-inspired index.
-
-    Args:
-        codon: 3-letter RNA codon
-
-    Returns:
-        Index from 0 to 63
-    """
-    codon = codon.upper().replace("T", "U")
-    n1 = NUCLEOTIDE_MAP[codon[0]]
-    n2 = NUCLEOTIDE_MAP[codon[1]]
-    n3 = NUCLEOTIDE_MAP[codon[2]]
-    return n1 * 16 + n2 * 4 + n3
-
-
-def padic_distance(idx1: int, idx2: int, p: int = 3) -> float:
+def compute_padic_distance(idx1: int, idx2: int, p: int = 3) -> float:
     """Compute p-adic distance between two codon indices.
 
     Args:
@@ -188,7 +170,7 @@ class PAdicBoundaryAnalyzer:
             distances = []
             for other_codon, other_idx in self.codon_indices.items():
                 if other_codon != codon:
-                    d = padic_distance(idx, other_idx, self.p)
+                    d = compute_padic_distance(idx, other_idx, self.p)
                     distances.append(d)
 
             # Boundary distance = minimum distance to zone boundaries
@@ -239,7 +221,7 @@ class PAdicBoundaryAnalyzer:
         """
         # Check distance to reference (first arginine codon)
         ref_idx = self.codon_indices["CGU"]
-        d = padic_distance(codon_idx, ref_idx, self.p)
+        d = compute_padic_distance(codon_idx, ref_idx, self.p)
         return self.zone_min <= d <= self.zone_max
 
 

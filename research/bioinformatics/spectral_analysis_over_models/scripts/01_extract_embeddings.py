@@ -105,10 +105,10 @@ def extract_embeddings_v5_11(checkpoint_path: Path, operations: torch.Tensor, de
     has_encoder_b = any("encoder_B" in k for k in model_state.keys())
 
     if has_encoder_b and config.get("option_c", False):
-        from src.models import TernaryVAEV5_11_OptionC
+        from src.models import TernaryVAEV5_11_PartialFreeze
 
-        print("Using TernaryVAEV5_11_OptionC")
-        model = TernaryVAEV5_11_OptionC(
+        print("Using TernaryVAEV5_11_PartialFreeze")
+        model = TernaryVAEV5_11_PartialFreeze(
             latent_dim=16,
             hidden_dim=proj_hidden_dim,
             max_radius=config.get("max_radius", 0.95),

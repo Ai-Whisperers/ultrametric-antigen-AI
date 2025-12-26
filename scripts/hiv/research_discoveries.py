@@ -55,7 +55,6 @@ import torch.nn as nn
 from src.biology.codons import GENETIC_CODE, CODON_TO_INDEX
 
 CODONS = list(GENETIC_CODE.keys())
-CODON_TO_IDX = CODON_TO_INDEX  # Alias for backwards compatibility
 AA_TO_IDX = {aa: i for i, aa in enumerate("ACDEFGHIKLMNPQRSTVWY*")}
 
 # Known druggable protein families (simplified list)
@@ -106,7 +105,7 @@ def sequence_to_codons(seq: str) -> list[str]:
     seq = seq.upper().replace("U", "T")
     for i in range(0, len(seq) - 2, 3):
         codon = seq[i:i+3]
-        if codon in CODON_TO_IDX:
+        if codon in CODON_TO_INDEX:
             codons.append(codon)
     return codons
 

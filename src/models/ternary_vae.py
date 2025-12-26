@@ -331,12 +331,13 @@ class TernaryVAEV5_11(nn.Module):
         }
 
 
-# Re-export for backward compatibility
-from .ternary_vae_optionc import TernaryVAEV5_11_OptionC
+# Re-export PartialFreeze variant (and deprecated OptionC alias)
+from .ternary_vae_optionc import TernaryVAEV5_11_OptionC, TernaryVAEV5_11_PartialFreeze
 
 __all__ = [
     "FrozenEncoder",
     "FrozenDecoder",
     "TernaryVAEV5_11",
-    "TernaryVAEV5_11_OptionC",
+    "TernaryVAEV5_11_PartialFreeze",
+    "TernaryVAEV5_11_OptionC",  # Deprecated alias
 ]

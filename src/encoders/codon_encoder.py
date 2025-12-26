@@ -41,9 +41,7 @@ import torch.nn as nn
 
 from src.biology.codons import (
     GENETIC_CODE,
-    BASE_TO_IDX,
-    IDX_TO_BASE,
-    codon_index_to_triplet as _codon_index_to_triplet,
+    codon_index_to_triplet,
 )
 
 # Amino acid properties (normalized to [-1, 1])
@@ -76,26 +74,6 @@ AA_PROPERTIES = {
 # =============================================================================
 # P-adic Distance Functions
 # =============================================================================
-
-
-def codon_index_to_triplet(idx: int) -> str:
-    """Convert codon index (0-63) to nucleotide triplet.
-
-    Encoding: idx = B1 * 16 + B2 * 4 + B3
-    where B1, B2, B3 are base indices (T=0, C=1, A=2, G=3)
-    """
-    b1 = (idx // 16) % 4
-    b2 = (idx // 4) % 4
-    b3 = idx % 4
-    return IDX_TO_BASE[b1] + IDX_TO_BASE[b2] + IDX_TO_BASE[b3]
-
-
-def triplet_to_codon_index(triplet: str) -> int:
-    """Convert nucleotide triplet to codon index (0-63)."""
-    b1 = BASE_TO_IDX[triplet[0]]
-    b2 = BASE_TO_IDX[triplet[1]]
-    b3 = BASE_TO_IDX[triplet[2]]
-    return b1 * 16 + b2 * 4 + b3
 
 
 def compute_padic_valuation(n: int, p: int = 3) -> int:

@@ -8,6 +8,7 @@
 import pytest
 import torch
 
+from src.analysis.immunology.genetic_risk import MS_HLA_RISK_ALLELES
 from src.diseases.multiple_sclerosis import (
     HLABindingPredictor,
     MolecularMimicryDetector,
@@ -16,7 +17,6 @@ from src.diseases.multiple_sclerosis import (
     MultipleSclerosisAnalyzer,
     MyelinTarget,
     MOLECULAR_MIMICRY_PAIRS,
-    MS_RISK_HLA_ALLELES,
 )
 
 
@@ -66,12 +66,12 @@ class TestHLARiskData:
 
     def test_drb1_15_01_high_risk(self):
         """Test DRB1*15:01 is high risk."""
-        assert MS_RISK_HLA_ALLELES["DRB1*15:01"] > 2.0
+        assert MS_HLA_RISK_ALLELES["DRB1*15:01"] > 2.0
 
     def test_protective_alleles(self):
         """Test protective alleles have OR < 1."""
-        assert MS_RISK_HLA_ALLELES["DRB1*14:01"] < 1.0
-        assert MS_RISK_HLA_ALLELES["A*02:01"] < 1.0
+        assert MS_HLA_RISK_ALLELES["DRB1*14:01"] < 1.0
+        assert MS_HLA_RISK_ALLELES["A*02:01"] < 1.0
 
 
 class TestMolecularMimicryDetector:

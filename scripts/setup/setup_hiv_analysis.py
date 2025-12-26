@@ -63,7 +63,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.core import TERNARY
 from src.data.generation import generate_all_ternary_operations
-from src.models.ternary_vae import TernaryVAEV5_11_OptionC
+from src.models.ternary_vae import TernaryVAEV5_11_PartialFreeze
 
 
 # =============================================================================
@@ -187,7 +187,7 @@ def extract_embeddings(checkpoints, device="cpu", force=False):
 
     # Load model - use default hidden_dim=64 to match checkpoint
     print("  Loading model...")
-    model = TernaryVAEV5_11_OptionC(
+    model = TernaryVAEV5_11_PartialFreeze(
         latent_dim=16,
         hidden_dim=64,  # Must match checkpoint
         max_radius=0.95,
