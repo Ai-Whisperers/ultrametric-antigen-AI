@@ -22,7 +22,6 @@ Date: December 2025
 
 from dataclasses import dataclass, field
 from itertools import combinations
-from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -682,7 +681,7 @@ if __name__ == "__main__":
     print("\nFinding optimal 3-antibody combinations...")
     optimal = find_optimal_combinations(profiles, n_antibodies=3, min_breadth=0.8, top_k=5)
 
-    print(f"\nTop 5 combinations with breadth >= 80%:")
+    print("\nTop 5 combinations with breadth >= 80%:")
     for i, combo in enumerate(optimal, 1):
         print(f"{i}. {', '.join(combo.antibodies):40} | Breadth: {combo.combined_breadth:.1%} | "
               f"Barrier: {combo.resistance_barrier:.1f}")

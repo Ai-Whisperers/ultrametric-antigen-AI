@@ -34,12 +34,11 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from scipy import stats
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score, roc_curve
+from sklearn.metrics import accuracy_score, roc_auc_score, roc_curve
 from sklearn.model_selection import cross_val_score, train_test_split
 from sklearn.preprocessing import StandardScaler
 
@@ -47,10 +46,8 @@ from sklearn.preprocessing import StandardScaler
 sys.path.insert(0, str(Path(__file__).parent))
 
 from codon_extraction import encode_amino_acid_sequence, find_glycan_sites
-from hyperbolic_utils import load_hyperbolic_encoder, poincare_distance
+from hyperbolic_utils import load_hyperbolic_encoder
 from unified_data_loader import (
-    get_ccr5_sequences,
-    get_cxcr4_sequences,
     load_gp120_alignments,
     load_gp120_tropism_labels,
     load_v3_coreceptor,

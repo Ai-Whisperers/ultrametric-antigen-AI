@@ -7,6 +7,7 @@
 
 import json
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -19,33 +20,33 @@ JSON_OUTPUT = "code_health_metrics.json"
 # Tools to run if available
 TOOLS_CONFIG = {
     "ruff": {
-        "cmd": "ruff check . --output-format json",
+        "cmd": ["ruff", "check", ".", "--output-format", "json"],
         "type": "linter",
         "json": True,
     },
     "mypy": {
-        "cmd": "mypy . --ignore-missing-imports --no-error-summary --no-pretty",
+        "cmd": ["mypy", ".", "--ignore-missing-imports", "--no-error-summary", "--no-pretty"],
         "type": "type_checker",
         "json": False,
     },
     "radon_cc": {
-        "cmd": "radon cc . --json",
+        "cmd": ["radon", "cc", ".", "--json"],
         "type": "complexity",
         "json": True,
     },
     "radon_mi": {
-        "cmd": "radon mi . --json",
+        "cmd": ["radon", "mi", ".", "--json"],
         "type": "maintainability",
         "json": True,
     },
-    "bandit": {"cmd": "bandit -r . -f json", "type": "security", "json": True},
+    "bandit": {"cmd": ["bandit", "-r", ".", "-f", "json"], "type": "security", "json": True},
     "vulture": {
-        "cmd": "vulture . --min-confidence 80",
+        "cmd": ["vulture", ".", "--min-confidence", "80"],
         "type": "dead_code",
         "json": False,
     },
     "pygount": {
-        "cmd": "pygount --format=json .",
+        "cmd": ["pygount", "--format=json", "."],
         "type": "metrics",
         "json": True,
     },
@@ -53,18 +54,26 @@ TOOLS_CONFIG = {
 
 
 def run_command(command):
-    """Run a shell command and return stdout, stderr, code."""
+    """Run a command and return stdout, stderr, code.
+
+    Uses subprocess with shell=False for security.
+    Command should be a list of arguments.
+    """
     try:
-        # Split command for subprocess unless it's a shell string
-        if isinstance(command, str) and not command.startswith("ruff"):
-            # Simple split, rarely works for complex args but fine here
-            pass
+        # Convert string to list if needed
+        if isinstance(command, str):
+            if sys.platform == "win32":
+                cmd_list = command.split()
+            else:
+                cmd_list = shlex.split(command)
+        else:
+            cmd_list = command
 
         result = subprocess.run(
-            command,
+            cmd_list,
             capture_output=True,
             text=True,
-            shell=True,
+            shell=False,  # Security: avoid shell injection
             encoding="utf-8",
             errors="replace",
         )
@@ -75,7 +84,10 @@ def run_command(command):
 
 def check_tool_availability(tool_cmd):
     """Check if the executable exists."""
-    bin_name = tool_cmd.split()[0]
+    if isinstance(tool_cmd, list):
+        bin_name = tool_cmd[0]
+    else:
+        bin_name = tool_cmd.split()[0]
     return shutil.which(bin_name) is not None
 
 

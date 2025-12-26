@@ -19,12 +19,10 @@ Integrates with:
 
 from __future__ import annotations
 
-from pathlib import Path
 from typing import Optional
 
 import numpy as np
 import pandas as pd
-import torch
 
 from hyperbolic_utils import (
     AA_TO_CODON,
@@ -33,7 +31,7 @@ from hyperbolic_utils import (
     load_hyperbolic_encoder,
     poincare_distance,
 )
-from position_mapper import codons_to_amino_acids, parse_mutation, sequence_to_codons
+from position_mapper import parse_mutation, sequence_to_codons
 
 # ============================================================================
 # CODON TABLES
@@ -643,7 +641,7 @@ if __name__ == "__main__":
     # Test mutation codon extraction
     print("\n2. Mutation Codon Extraction:")
     result = mutation_to_codons("D30N")
-    print(f"   D30N:")
+    print("   D30N:")
     print(f"     Wild-type (D) codons: {result['wild_type_codons']}")
     print(f"     Mutant (N) codons: {result['mutant_codons']}")
 

@@ -37,10 +37,10 @@ from scipy import stats
 # Add script directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-from codon_extraction import encode_mutation_pair, process_mutation_list
-from hyperbolic_utils import AA_TO_CODON, load_hyperbolic_encoder, poincare_distance
-from position_mapper import parse_mutation, parse_mutation_list
-from unified_data_loader import get_stanford_drug_columns, load_stanford_hivdb
+from codon_extraction import encode_mutation_pair
+from hyperbolic_utils import load_hyperbolic_encoder
+from position_mapper import parse_mutation_list
+from unified_data_loader import load_stanford_hivdb
 
 warnings.filterwarnings("ignore")
 

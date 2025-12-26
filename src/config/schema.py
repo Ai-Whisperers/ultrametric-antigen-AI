@@ -28,7 +28,7 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Dict, Literal, Optional
 
 from .constants import (
     DEFAULT_BATCH_SIZE,
@@ -48,7 +48,6 @@ from .constants import (
     DEFAULT_N_TRIPLETS,
     DEFAULT_PATIENCE,
     DEFAULT_RANKING_MARGIN,
-    DEFAULT_REPULSION_SIGMA,
     DEFAULT_TENSORBOARD_DIR,
     DEFAULT_WEIGHT_DECAY,
 )

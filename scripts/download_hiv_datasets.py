@@ -21,11 +21,8 @@ Usage:
 
 import argparse
 import json
-import os
 import subprocess
-import sys
 import urllib.request
-import zipfile
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -157,7 +154,7 @@ def download_github_repos(output_dir: Path) -> int:
                 check=True,
                 capture_output=True,
             )
-            print(f"    -> Success")
+            print("    -> Success")
             success_count += 1
         except subprocess.CalledProcessError as e:
             print(f"    [ERROR] {e}")
@@ -274,7 +271,7 @@ def download_huggingface_datasets(output_dir: Path) -> int:
                 local_dir=str(dataset_dir),
                 local_dir_use_symlinks=False,
             )
-            print(f"    -> Success")
+            print("    -> Success")
             success_count += 1
         except Exception as e:
             print(f"    [ERROR] {e}")
@@ -302,7 +299,7 @@ def download_huggingface_alternative(output_dir: Path) -> int:
                 check=True,
                 capture_output=True,
             )
-            print(f"    -> Success")
+            print("    -> Success")
             success_count += 1
         except Exception as e:
             print(f"    [ERROR] {e}")
@@ -352,7 +349,7 @@ def download_kaggle_datasets(output_dir: Path) -> int:
                 check=True,
                 capture_output=True,
             )
-            print(f"    -> Success")
+            print("    -> Success")
             success_count += 1
         except subprocess.CalledProcessError as e:
             print(f"    [ERROR] {e}")

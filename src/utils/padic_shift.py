@@ -27,7 +27,6 @@ from dataclasses import dataclass
 from typing import Sequence
 
 import torch
-import torch.nn.functional as F
 
 
 # Nucleotide to integer mapping

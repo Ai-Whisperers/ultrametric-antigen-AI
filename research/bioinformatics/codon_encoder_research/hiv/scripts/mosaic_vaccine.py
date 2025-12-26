@@ -20,12 +20,10 @@ Date: December 2025
 """
 
 from collections import defaultdict
-from dataclasses import dataclass, field
-from itertools import combinations, product
+from dataclasses import dataclass
 from typing import Optional
 
 import numpy as np
-import pandas as pd
 
 
 @dataclass

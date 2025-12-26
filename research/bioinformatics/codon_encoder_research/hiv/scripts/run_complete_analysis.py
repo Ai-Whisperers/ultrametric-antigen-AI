@@ -24,11 +24,8 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-import os
 import subprocess
 import sys
-import time
-import traceback
 from datetime import datetime
 from pathlib import Path
 
@@ -163,7 +160,7 @@ def run_analysis_module(module: dict, skip_existing: bool = False) -> dict:
     except subprocess.TimeoutExpired:
         result["status"] = "timeout"
         result["error"] = "Analysis timed out after 30 minutes"
-        logger.error(f"  Timeout!")
+        logger.error("  Timeout!")
 
     except Exception as e:
         result["status"] = "error"

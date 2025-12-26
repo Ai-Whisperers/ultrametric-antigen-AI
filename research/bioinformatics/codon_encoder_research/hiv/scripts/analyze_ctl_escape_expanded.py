@@ -32,22 +32,16 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from scipy import stats
 
 # Add script directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-from codon_extraction import encode_amino_acid_sequence, encode_mutation_pair
+from codon_extraction import encode_amino_acid_sequence
 from hyperbolic_utils import (
-    AA_TO_CODON,
-    hyperbolic_centroid,
-    hyperbolic_variance,
     load_hyperbolic_encoder,
-    poincare_distance,
 )
-from position_mapper import HXB2_REGIONS, get_region
-from unified_data_loader import get_epitopes_by_hla, get_epitopes_by_protein, load_lanl_ctl, parse_hla_restrictions
+from unified_data_loader import load_lanl_ctl, parse_hla_restrictions
 
 warnings.filterwarnings("ignore")
 
@@ -127,7 +121,7 @@ def analyze_hla_distribution(df: pd.DataFrame) -> pd.DataFrame:
         [{"hla_type": hla, "epitope_count": count} for hla, count in hla_counts.most_common()]
     )
 
-    print(f"  Top 10 HLA types:")
+    print("  Top 10 HLA types:")
     for _, row in hla_df.head(10).iterrows():
         print(f"    {row['hla_type']}: {row['epitope_count']} epitopes")
 

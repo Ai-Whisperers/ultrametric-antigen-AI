@@ -41,8 +41,6 @@ sys.path.insert(0, str(Path(__file__).parent))
 from unified_data_loader import (
     calculate_antibody_breadth,
     get_catnap_by_antibody,
-    get_catnap_resistant_viruses,
-    get_catnap_sensitive_viruses,
     load_catnap,
 )
 

@@ -62,7 +62,7 @@ def find_duplications(file_stats, window_size=6):
             # Simple heuristic to skip very common short lines like '}', 'return', etc if the window is small
             # but with 6 lines it implies some logic.
 
-            h = hashlib.md5(str(window).encode("utf-8")).hexdigest()
+            h = hashlib.sha256(str(window).encode("utf-8")).hexdigest()
             window_hashes[h].append((f_idx, i))
 
     print("Analyzing collisions...")

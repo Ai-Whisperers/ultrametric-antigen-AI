@@ -27,7 +27,7 @@ Date: December 2025
 import warnings
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional
 
 import numpy as np
 
@@ -735,7 +735,7 @@ if __name__ == "__main__":
     # Test mutation effect
     mutant = hiv_pr[:29] + "N" + hiv_pr[30:]  # D30N mutation
     effect = mock_embedder.predict_mutation_effect(hiv_pr, mutant, position=29)
-    print(f"\nMutation D30N effect:")
+    print("\nMutation D30N effect:")
     print(f"  Embedding distance: {effect['embedding_distance']:.4f}")
     print(f"  Predicted effect: {effect['predicted_effect']}")
 

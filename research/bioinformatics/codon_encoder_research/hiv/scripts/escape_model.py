@@ -28,7 +28,6 @@ from typing import Optional
 
 import numpy as np
 import pandas as pd
-from scipy import stats
 from scipy.integrate import odeint
 
 # Add script directory to path

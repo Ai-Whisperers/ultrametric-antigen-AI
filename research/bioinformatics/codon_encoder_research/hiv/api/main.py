@@ -24,7 +24,7 @@ Date: December 2025
 
 import sys
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 # Add parent directory for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))

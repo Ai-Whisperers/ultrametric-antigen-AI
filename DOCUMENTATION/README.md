@@ -6,27 +6,28 @@
 
 ## Quick Start
 
-| Resource | Description |
-|:---------|:------------|
-| [QUICK_START.md](QUICK_START.md) | 5-minute project overview |
-| [00_MASTER_INDEX.md](00_MASTER_INDEX.md) | Complete documentation map |
-| [NAVIGATION_GUIDE.md](NAVIGATION_GUIDE.md) | Find docs by role |
+| Resource                                   | Description                |
+| :----------------------------------------- | :------------------------- |
+| [QUICK_START.md](QUICK_START.md)           | 5-minute project overview  |
+| [00_MASTER_INDEX.md](00_MASTER_INDEX.md)   | Complete documentation map |
+| [NAVIGATION_GUIDE.md](NAVIGATION_GUIDE.md) | Find docs by role          |
 
 ---
 
 ## Documentation Structure
 
 ### 01 Project Knowledge Base
-*The "Static" Truth. Immutable concepts, standards, and assets.*
 
-- **00_STRATEGY_AND_VISION/** - Pitch decks, long-term goals
+_The "Static" Truth. Immutable concepts, standards, and assets._
+
 - **02_THEORY_AND_FOUNDATIONS/** - Mathematical and biological foundations
 - **03_EXPERIMENTS_AND_LABS/** - Research notebooks and findings
 - **04_SCIENTIFIC_HISTORY/** - Archive of discoveries
 - **05_LEGAL_AND_IP/** - Licenses, IP protection
 
 ### 02 Project Management
-*The "Active" Execution. Mutable plans, tasks, and health checks.*
+
+_The "Active" Execution. Mutable plans, tasks, and health checks._
 
 - **00_TASKS/** - Actionable P0/P1/P2/P3 items
 - **01_ROADMAPS_AND_PLANS/** - Quarterly strategies
@@ -34,17 +35,20 @@
 - **03_ARCHIVE/** - Deprecated plans
 
 ### 03 Presentation Tiers
-*Tailored packages for specific stakeholders.*
+
+_Tailored packages for specific stakeholders._
 
 - **[01_TIER_1_PUBLIC/](03_PRESENTATION_TIERS/01_TIER_1_PUBLIC/)** - Scientists, clinicians, media
 - **[02_TIER_2_INVESTOR/](03_PRESENTATION_TIERS/02_TIER_2_INVESTOR/)** - VCs, grants, partners
 - **[03_TIER_3_TECHNICAL/](03_PRESENTATION_TIERS/03_TIER_3_TECHNICAL/)** - Due diligence, deep technical
 
 ### 05 Validation
-*Test strategies and verification frameworks.*
+
+_Test strategies and verification frameworks._
 
 ### 06 Diagrams
-*100+ Mermaid diagrams for architecture and workflows.*
+
+_100+ Mermaid diagrams for architecture and workflows._
 
 ---
 
@@ -99,4 +103,4 @@ See [EXTERNAL_DOCS_INDEX.md](EXTERNAL_DOCS_INDEX.md) for docs outside this folde
 
 ---
 
-*Last updated: 2025-12-24*
+_Last updated: 2025-12-24_

@@ -7,7 +7,9 @@
 
 import json
 import os
+import shlex
 import subprocess
+import sys
 from collections import defaultdict
 from datetime import datetime
 
@@ -16,13 +18,27 @@ SRC_DIRS = ["src", "scripts"]
 
 
 def run_command(command):
-    """Run a shell command and return output."""
+    """Run a command and return output.
+
+    Uses subprocess with shell=False for security.
+    Command should be a string that will be parsed via shlex.
+    """
     try:
+        # Parse command string into list for secure execution
+        if isinstance(command, str):
+            # On Windows, shlex.split may not work perfectly, use simple split for known commands
+            if sys.platform == "win32":
+                cmd_list = command.split()
+            else:
+                cmd_list = shlex.split(command)
+        else:
+            cmd_list = command
+
         result = subprocess.run(
-            command,
+            cmd_list,
             capture_output=True,
             text=True,
-            shell=True,
+            shell=False,  # Security: avoid shell injection
             encoding="utf-8",
             errors="replace",
         )

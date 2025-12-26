@@ -24,14 +24,13 @@
 
 **Purpose**: Immutable concepts, standards, and foundational assets.
 
-| Section                       | Description                                | Key Documents                                         |
-| :---------------------------- | :----------------------------------------- | :---------------------------------------------------- |
-| **00_STRATEGY_AND_VISION**    | Project pitch, goals, stakeholder analysis | `PITCH.md`, `STAKEHOLDER_ANALYSIS.md`                 |
-| **02_THEORY_AND_FOUNDATIONS** | Mathematical and biological foundations    | Hyperbolic geometry, 3-adic theory, validation suites |
-| **03_EXPERIMENTS_AND_LABS**   | Active research notebooks and findings     | HIV, SARS-CoV-2, RA, neurodegeneration research       |
-| **04_SCIENTIFIC_HISTORY**     | Archive of discoveries and reports         | Discovery records, academic outputs                   |
-| **05_LEGAL_AND_IP**           | IP protection, licensing, timestamps       | IP manifests, legal documentation                     |
-| **insights/**                 | External research and connection ideas     | Video analysis, research papers, datasets             |
+| Section                       | Description                             | Key Documents                                         |
+| :---------------------------- | :-------------------------------------- | :---------------------------------------------------- |
+| **02_THEORY_AND_FOUNDATIONS** | Mathematical and biological foundations | Hyperbolic geometry, 3-adic theory, validation suites |
+| **03_EXPERIMENTS_AND_LABS**   | Active research notebooks and findings  | HIV, SARS-CoV-2, RA, neurodegeneration research       |
+| **04_SCIENTIFIC_HISTORY**     | Archive of discoveries and reports      | Discovery records, academic outputs                   |
+| **05_LEGAL_AND_IP**           | IP protection, licensing, timestamps    | IP manifests, legal documentation                     |
+| **insights/**                 | External research and connection ideas  | Video analysis, research papers, datasets             |
 
 ### 02 PROJECT MANAGEMENT
 

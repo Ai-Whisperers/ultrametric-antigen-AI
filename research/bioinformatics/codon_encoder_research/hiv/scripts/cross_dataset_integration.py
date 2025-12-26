@@ -32,22 +32,17 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
-from scipy import stats
 
 # Add script directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
 from position_mapper import (
-    HXB2_REGIONS,
     find_overlapping_epitopes,
     get_region,
-    hxb2_to_protein_pos,
     parse_mutation_list,
     protein_pos_to_hxb2,
 )
 from unified_data_loader import (
-    calculate_antibody_breadth,
     load_catnap,
     load_lanl_ctl,
     load_stanford_hivdb,

@@ -19,15 +19,13 @@ Research Reference:
     RESEARCH_PROPOSALS/Spectral_BioML_Holographic_Embeddings/proposal.md
 """
 
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional, Tuple
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 from src.geometry.poincare import (
-    exp_map_zero,
-    poincare_distance,
     project_to_poincare,
 )
 

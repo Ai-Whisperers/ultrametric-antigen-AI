@@ -12,7 +12,6 @@ import socket
 import struct
 import ssl
 import subprocess
-import sys
 import urllib.request
 from pathlib import Path
 
@@ -238,7 +237,7 @@ def download_zenodo_datasets():
                     with open(file_path, "wb") as f:
                         for chunk in r.iter_content(chunk_size=8192):
                             f.write(chunk)
-                    print(f"      -> Success")
+                    print("      -> Success")
 
             finally:
                 socket.getaddrinfo = original_getaddrinfo
@@ -294,12 +293,12 @@ def download_github_repos():
             )
 
             if result.returncode == 0:
-                print(f"    -> Success")
+                print("    -> Success")
             else:
                 print(f"    [ERROR] {result.stderr[:200]}")
 
         except subprocess.TimeoutExpired:
-            print(f"    [ERROR] Clone timed out")
+            print("    [ERROR] Clone timed out")
         except Exception as e:
             print(f"    [ERROR] {e}")
 
@@ -367,7 +366,7 @@ def download_huggingface():
                         local_dir=str(local_dir),
                         local_dir_use_symlinks=False,
                     )
-                    print(f"    -> Success")
+                    print("    -> Success")
                 except Exception as e:
                     print(f"    [ERROR] {e}")
 
@@ -438,7 +437,7 @@ def main():
     print("HIV DATASET DOWNLOADER (Custom DNS)")
     print("=" * 60)
     print(f"Output directory: {DATA_DIR}")
-    print(f"Using Google DNS: 8.8.8.8")
+    print("Using Google DNS: 8.8.8.8")
 
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 

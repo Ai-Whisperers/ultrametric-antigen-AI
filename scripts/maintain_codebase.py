@@ -2,7 +2,9 @@ import json
 import os
 import py_compile
 import re
+import shlex
 import subprocess
+import sys
 from pathlib import Path
 
 # Project root
@@ -21,10 +23,20 @@ def _prune_ignored_dirs(dirs):
         dirs.remove(d)
 
 
+def _parse_command(command):
+    """Parse command string to list for secure subprocess execution."""
+    if isinstance(command, list):
+        return command
+    if sys.platform == "win32":
+        return command.split()
+    return shlex.split(command)
+
+
 def run_command(command, description):
     print(f"\nrunning {description}...")
     try:
-        subprocess.run(command, check=True, shell=True, cwd=PROJECT_ROOT)
+        cmd_list = _parse_command(command)
+        subprocess.run(cmd_list, check=True, shell=False, cwd=PROJECT_ROOT)
         print(f"✅ {description} complete.")
     except subprocess.CalledProcessError:
         print(f"❌ {description} failed or found issues.")
@@ -40,7 +52,8 @@ def run_linter_fixes():
     print("\nrunning Ruff (Linter & Auto-Fixer)...")
     try:
         # We ignore errors (check=False) because ruff returns non-zero on found violations even if fixed
-        subprocess.run("ruff check --fix .", check=False, shell=True, cwd=PROJECT_ROOT)
+        cmd_list = _parse_command("ruff check --fix .")
+        subprocess.run(cmd_list, check=False, shell=False, cwd=PROJECT_ROOT)
         print("✅ Ruff verification complete.")
     except Exception as e:
         print(f"⚠️ Ruff failed to run: {e}")
@@ -79,10 +92,11 @@ def run_mypy_check():
     print("\nrunning Mypy (Type Checker)...")
     try:
         # Run mypy on src directory
+        cmd_list = _parse_command("mypy src")
         subprocess.run(
-            "mypy src",
+            cmd_list,
             check=False,  # Don't fail the whole script, just report
-            shell=True,
+            shell=False,
             cwd=PROJECT_ROOT,
         )
         print("✅ Mypy check complete (see output above).")
@@ -190,10 +204,11 @@ def run_tests():
     print("\nrunning Unit Tests...")
     try:
         # Run fast tests only, quiet mode
+        cmd_list = _parse_command("pytest tests/unit --maxfail=5 -q")
         subprocess.run(
-            "pytest tests/unit --maxfail=5 -q",
+            cmd_list,
             check=True,
-            shell=True,
+            shell=False,
             cwd=PROJECT_ROOT,
         )
         print("✅ Unit Tests Passed.")

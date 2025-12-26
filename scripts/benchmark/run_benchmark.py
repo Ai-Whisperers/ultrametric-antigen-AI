@@ -100,7 +100,7 @@ class TernaryVAEBenchmark:
 
     def load_checkpoint(self, checkpoint_path: str):
         """Load model from checkpoint."""
-        checkpoint = torch.load(checkpoint_path, map_location=self.device)
+        checkpoint = torch.load(checkpoint_path, map_location=self.device, weights_only=False)
 
         # Handle different checkpoint formats
         if "model_state_dict" in checkpoint:

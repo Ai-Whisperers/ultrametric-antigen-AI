@@ -332,7 +332,6 @@ class TernaryVAEV5_11(nn.Module):
 
 
 # Re-export for backward compatibility
-from .frozen_components import FrozenDecoder, FrozenEncoder
 from .ternary_vae_optionc import TernaryVAEV5_11_OptionC
 
 __all__ = [

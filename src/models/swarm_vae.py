@@ -19,11 +19,10 @@ Research Reference:
     RESEARCH_PROPOSALS/06_SWARM_VAE_ARCHITECTURE.md
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
 
-import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

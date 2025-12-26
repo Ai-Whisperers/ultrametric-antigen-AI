@@ -227,7 +227,7 @@ class HIV_CD4_Handshake:
         """Load the 3-adic codon encoder."""
         try:
             if path.suffix == ".pt":
-                self.encoder_data = torch.load(path, map_location="cpu")
+                self.encoder_data = torch.load(path, map_location="cpu", weights_only=False)
                 print(f"Loaded encoder from {path}")
             elif path.suffix == ".json":
                 with open(path) as f:

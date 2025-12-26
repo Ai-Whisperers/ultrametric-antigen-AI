@@ -20,7 +20,7 @@ Research Reference:
 """
 
 import math
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional, Tuple
 
 import torch
 import torch.nn as nn
@@ -28,11 +28,6 @@ import torch.nn.functional as F
 
 from .poincare import (
     PoincareModule,
-    exp_map_zero,
-    get_manifold,
-    log_map_zero,
-    poincare_distance,
-    project_to_poincare,
 )
 
 

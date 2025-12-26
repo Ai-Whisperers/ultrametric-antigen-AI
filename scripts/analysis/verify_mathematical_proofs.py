@@ -72,7 +72,7 @@ def verify_proofs(
     if checkpoint_path and Path(checkpoint_path).exists():
         print(f"Loading checkpoint: {checkpoint_path}")
         # Use simple load for now, assuming standard save format
-        checkpoint = torch.load(checkpoint_path, map_location=device)
+        checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
         state_dict = checkpoint.get("model", checkpoint)
         try:
             model.load_state_dict(state_dict, strict=False)

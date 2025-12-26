@@ -4,7 +4,7 @@
 
 **Version:** 1.1
 **Last Updated:** December 26, 2025
-**Total Documents:** 22
+**Total Documents:** 24
 
 ---
 
@@ -68,6 +68,8 @@
 |----------|-------------|
 | [LIMITATIONS_AND_CAVEATS.md](limitations/LIMITATIONS_AND_CAVEATS.md) | Known limitations |
 | [FUTURE_DIRECTIONS.md](future_work/FUTURE_DIRECTIONS.md) | 3-year research roadmap |
+| [FUTURE_IMPLEMENTATION_ROADMAP.md](FUTURE_IMPLEMENTATION_ROADMAP.md) | 45 improvements and new features |
+| [MASTER_IMPLEMENTATION_PLAN.md](MASTER_IMPLEMENTATION_PLAN.md) | Complete technical specification (75+ features) |
 | [REPRODUCIBILITY_GUIDE.md](reproducibility/REPRODUCIBILITY_GUIDE.md) | Step-by-step reproduction |
 | [FAQ.md](faq/FAQ.md) | Common questions |
 

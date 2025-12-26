@@ -322,7 +322,7 @@ def main():
 
     # Load embeddings
     print(f"Loading embeddings from: {embeddings_path}")
-    data = torch.load(embeddings_path)
+    data = torch.load(embeddings_path, weights_only=False)
     z_hyp = data["z_hyperbolic"]
     n_ops = data["n_operations"]
 

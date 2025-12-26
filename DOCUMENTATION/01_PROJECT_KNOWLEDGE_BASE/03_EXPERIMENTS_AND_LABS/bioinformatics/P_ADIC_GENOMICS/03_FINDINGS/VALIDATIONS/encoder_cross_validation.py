@@ -159,7 +159,7 @@ def try_load_encoder():
 
     if encoder_path.exists():
         try:
-            checkpoint = torch.load(encoder_path, map_location="cpu")
+            checkpoint = torch.load(encoder_path, map_location="cpu", weights_only=False)
             print(f"Loaded encoder from: {encoder_path}")
             return checkpoint
         except Exception as e:

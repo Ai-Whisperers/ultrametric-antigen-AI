@@ -106,7 +106,7 @@ def main():
 
     # Load embeddings
     print("Loading embeddings...")
-    data = torch.load(PROJECT_ROOT / args.embeddings)
+    data = torch.load(PROJECT_ROOT / args.embeddings, weights_only=False)
     z_hyp = data["z_hyperbolic"]
     n_total = z_hyp.shape[0]
 
