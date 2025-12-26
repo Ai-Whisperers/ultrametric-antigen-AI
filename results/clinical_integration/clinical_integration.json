@@ -1,0 +1,900 @@
+{
+  "pipeline": "clinical_integration",
+  "timestamp": "2025-12-26T04:21:11.740597",
+  "tools_run": [
+    "escape_velocity_predictor",
+    "therapeutic_window",
+    "clinical_dashboard",
+    "transmission_fitness",
+    "patient_stratification",
+    "geographic_spread"
+  ],
+  "escape_velocity": {
+    "status": "success",
+    "tool": "escape_velocity_predictor",
+    "n_epitopes_analyzed": 3503,
+    "top_escape_prone": [
+      {
+        "epitope": "HNRKTDKPH",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8735,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": -3.111111111111111,
+          "net_charge": 3.0,
+          "charge_variance": 0.3888888888888889,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "CTRPNNHKR",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.861,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": -2.5444444444444443,
+          "net_charge": 3.5,
+          "charge_variance": 0.2098765432098766,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "HNNTRKSMR",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8605,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": -2.5222222222222226,
+          "net_charge": 3.5,
+          "charge_variance": 0.2098765432098766,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "GNKTRKSMR",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8545,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": -2.2555555555555555,
+          "net_charge": 4,
+          "charge_variance": 0.2469135802469136,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "CTRPGNNKR",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.854,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": -2.2333333333333334,
+          "net_charge": 3,
+          "charge_variance": 0.2222222222222222,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "GSNKQRIRN",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.854,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": -2.2333333333333334,
+          "net_charge": 3,
+          "charge_variance": 0.2222222222222222,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "GNNTRKSMR",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8535,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": -2.211111111111111,
+          "net_charge": 3,
+          "charge_variance": 0.2222222222222222,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "GNNTRKSMR",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8535,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": -2.211111111111111,
+          "net_charge": 3,
+          "charge_variance": 0.2222222222222222,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "GNNTRKSMR",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8535,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": -2.211111111111111,
+          "net_charge": 3,
+          "charge_variance": 0.2222222222222222,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "GNNTRKSMR",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8535,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": -2.211111111111111,
+          "net_charge": 3,
+          "charge_variance": 0.2222222222222222,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "CTRPNXNKR",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8531,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": -2.1888888888888887,
+          "net_charge": 3,
+          "charge_variance": 0.2222222222222222,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "CTRPNNKAR",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8486,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": -1.9888888888888887,
+          "net_charge": 3,
+          "charge_variance": 0.2222222222222222,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "GNKKIRSXR",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8464,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": -1.8888888888888888,
+          "net_charge": 4,
+          "charge_variance": 0.2469135802469136,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "XNXTRKSMR",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8439,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": -1.7777777777777777,
+          "net_charge": 3,
+          "charge_variance": 0.2222222222222222,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "NNHTRKRMT",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8435,
+        "features": {
+          "entropy": 2.5032583339100287,
+          "mean_hydropathy": -2.511111111111111,
+          "net_charge": 3.5,
+          "charge_variance": 0.2098765432098766,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "CTRPKISKG",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8428,
+        "features": {
+          "entropy": 2.947702778065934,
+          "mean_hydropathy": -0.9777777777777776,
+          "net_charge": 3,
+          "charge_variance": 0.2222222222222222,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "NTNIRKSMR",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8414,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": -1.6666666666666667,
+          "net_charge": 3,
+          "charge_variance": 0.2222222222222222,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "CTRPNNNKR",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8387,
+        "features": {
+          "entropy": 2.419381944780754,
+          "mean_hydropathy": -2.5777777777777775,
+          "net_charge": 3,
+          "charge_variance": 0.2222222222222222,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "NNNTRKSMR",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8382,
+        "features": {
+          "entropy": 2.419381944780754,
+          "mean_hydropathy": -2.5555555555555554,
+          "net_charge": 3,
+          "charge_variance": 0.2222222222222222,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      },
+      {
+        "epitope": "NNNTRKSMR",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.8382,
+        "features": {
+          "entropy": 2.419381944780754,
+          "mean_hydropathy": -2.5555555555555554,
+          "net_charge": 3,
+          "charge_variance": 0.2222222222222222,
+          "anchor_strength": 0.0,
+          "aromatic_content": 0.0
+        }
+      }
+    ],
+    "most_stable": [
+      {
+        "epitope": "NIGPGRAFF",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.5174,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": 0.16666666666666657,
+          "net_charge": 1,
+          "charge_variance": 0.09876543209876543,
+          "anchor_strength": 0.75,
+          "aromatic_content": 0.2222222222222222
+        }
+      },
+      {
+        "epitope": "RIGPGQAFF",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.5174,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": 0.16666666666666663,
+          "net_charge": 1,
+          "charge_variance": 0.09876543209876543,
+          "anchor_strength": 0.75,
+          "aromatic_content": 0.2222222222222222
+        }
+      },
+      {
+        "epitope": "RIGPGQAFF",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.5174,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": 0.16666666666666663,
+          "net_charge": 1,
+          "charge_variance": 0.09876543209876543,
+          "anchor_strength": 0.75,
+          "aromatic_content": 0.2222222222222222
+        }
+      },
+      {
+        "epitope": "RIGPGQAFF",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.5174,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": 0.16666666666666663,
+          "net_charge": 1,
+          "charge_variance": 0.09876543209876543,
+          "anchor_strength": 0.75,
+          "aromatic_content": 0.2222222222222222
+        }
+      },
+      {
+        "epitope": "GIGPGQTFY",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.5173,
+        "features": {
+          "entropy": 2.641604166858707,
+          "mean_hydropathy": -0.11111111111111119,
+          "net_charge": 0,
+          "charge_variance": 0.0,
+          "anchor_strength": 0.5,
+          "aromatic_content": 0.2222222222222222
+        }
+      },
+      {
+        "epitope": "TFYAMGRII",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.5165,
+        "features": {
+          "entropy": 2.947702778065934,
+          "mean_hydropathy": 0.9555555555555555,
+          "net_charge": 1,
+          "charge_variance": 0.09876543209876543,
+          "anchor_strength": 0.75,
+          "aromatic_content": 0.2222222222222222
+        }
+      },
+      {
+        "epitope": "PLGPGSAFY",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.5154,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": 0.2555555555555554,
+          "net_charge": 0,
+          "charge_variance": 0.0,
+          "anchor_strength": 0.5,
+          "aromatic_content": 0.2222222222222222
+        }
+      },
+      {
+        "epitope": "TIGPGRAFF",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.5105,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": 0.47777777777777763,
+          "net_charge": 1,
+          "charge_variance": 0.09876543209876543,
+          "anchor_strength": 0.75,
+          "aromatic_content": 0.2222222222222222
+        }
+      },
+      {
+        "epitope": "FAMGAIGGG",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.5101,
+        "features": {
+          "entropy": 2.0588138896098536,
+          "mean_hydropathy": 1.2444444444444445,
+          "net_charge": 0,
+          "charge_variance": 0.0,
+          "anchor_strength": 0.25,
+          "aromatic_content": 0.1111111111111111
+        }
+      },
+      {
+        "epitope": "HLGPGQALF",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.5051,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": 0.34444444444444433,
+          "net_charge": 0.5,
+          "charge_variance": 0.024691358024691357,
+          "anchor_strength": 0.75,
+          "aromatic_content": 0.1111111111111111
+        }
+      },
+      {
+        "epitope": "TFYATGKII",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.5048,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": 0.7333333333333333,
+          "net_charge": 1,
+          "charge_variance": 0.09876543209876543,
+          "anchor_strength": 0.75,
+          "aromatic_content": 0.2222222222222222
+        }
+      },
+      {
+        "epitope": "AIYAKKAII",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.501,
+        "features": {
+          "entropy": 1.8910611114955744,
+          "mean_hydropathy": 1.088888888888889,
+          "net_charge": 2,
+          "charge_variance": 0.1728395061728395,
+          "anchor_strength": 0.75,
+          "aromatic_content": 0.1111111111111111
+        }
+      },
+      {
+        "epitope": "TFYANGQVI",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.4948,
+        "features": {
+          "entropy": 3.169925000143887,
+          "mean_hydropathy": 0.43333333333333335,
+          "net_charge": 0,
+          "charge_variance": 0.0,
+          "anchor_strength": 0.75,
+          "aromatic_content": 0.2222222222222222
+        }
+      },
+      {
+        "epitope": "FYTTGQIIG",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.4926,
+        "features": {
+          "entropy": 2.5032583339100283,
+          "mean_hydropathy": 0.5333333333333332,
+          "net_charge": 0,
+          "charge_variance": 0.0,
+          "anchor_strength": 0.5,
+          "aromatic_content": 0.2222222222222222
+        }
+      },
+      {
+        "epitope": "HVGPGGALF",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.4902,
+        "features": {
+          "entropy": 2.641604166858707,
+          "mean_hydropathy": 0.7333333333333333,
+          "net_charge": 0.5,
+          "charge_variance": 0.024691358024691357,
+          "anchor_strength": 0.75,
+          "aromatic_content": 0.1111111111111111
+        }
+      },
+      {
+        "epitope": "PIGPGGAFY",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.4897,
+        "features": {
+          "entropy": 2.419381944780754,
+          "mean_hydropathy": 0.3777777777777777,
+          "net_charge": 0,
+          "charge_variance": 0.0,
+          "anchor_strength": 0.5,
+          "aromatic_content": 0.2222222222222222
+        }
+      },
+      {
+        "epitope": "HLGPGGTFF",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.4665,
+        "features": {
+          "entropy": 2.419381944780754,
+          "mean_hydropathy": 0.29999999999999993,
+          "net_charge": 0.5,
+          "charge_variance": 0.024691358024691357,
+          "anchor_strength": 0.75,
+          "aromatic_content": 0.2222222222222222
+        }
+      },
+      {
+        "epitope": "HLGPGGTFF",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.4665,
+        "features": {
+          "entropy": 2.419381944780754,
+          "mean_hydropathy": 0.29999999999999993,
+          "net_charge": 0.5,
+          "charge_variance": 0.024691358024691357,
+          "anchor_strength": 0.75,
+          "aromatic_content": 0.2222222222222222
+        }
+      },
+      {
+        "epitope": "LLGPGSAFY",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.4521,
+        "features": {
+          "entropy": 2.725480555987981,
+          "mean_hydropathy": 0.8555555555555556,
+          "net_charge": 0,
+          "charge_variance": 0.0,
+          "anchor_strength": 0.75,
+          "aromatic_content": 0.2222222222222222
+        }
+      },
+      {
+        "epitope": "GIGPGQTFF",
+        "protein": "Env",
+        "hla": "A*02",
+        "escape_velocity": 0.4405,
+        "features": {
+          "entropy": 2.419381944780754,
+          "mean_hydropathy": 0.34444444444444433,
+          "net_charge": 0,
+          "charge_variance": 0.0,
+          "anchor_strength": 0.75,
+          "aromatic_content": 0.2222222222222222
+        }
+      }
+    ],
+    "protein_statistics": [
+      {
+        "protein": "Env",
+        "mean_velocity": 0.6947522409363402,
+        "std_velocity": 0.07677109329058981,
+        "n_epitopes": 3503
+      }
+    ],
+    "recommendation": "Target epitopes from Env for most stable vaccines"
+  },
+  "therapeutic_window": {
+    "status": "success",
+    "tool": "therapeutic_window",
+    "therapeutic_windows": {
+      "PI": {
+        "n_mutations": 6,
+        "mean_fitness_cost": 0.0933,
+        "estimated_window_days": 214,
+        "resistance_distribution": {
+          "low": 3,
+          "moderate": 3
+        }
+      },
+      "NRTI": {
+        "n_mutations": 7,
+        "mean_fitness_cost": 0.0857,
+        "estimated_window_days": 211,
+        "resistance_distribution": {
+          "low": 3,
+          "moderate": 3,
+          "high": 1
+        }
+      },
+      "NNRTI": {
+        "n_mutations": 4,
+        "mean_fitness_cost": 0.045,
+        "estimated_window_days": 196,
+        "resistance_distribution": {
+          "high": 2,
+          "moderate": 2
+        }
+      },
+      "INSTI": {
+        "n_mutations": 3,
+        "mean_fitness_cost": 0.0767,
+        "estimated_window_days": 207,
+        "resistance_distribution": {
+          "moderate": 2,
+          "low": 1
+        }
+      }
+    },
+    "treatment_sequence": [
+      "1. PI (window: 214 days)",
+      "2. NRTI (window: 211 days)",
+      "3. INSTI (window: 207 days)",
+      "4. NNRTI (window: 196 days)"
+    ],
+    "recommendation": "Start with highest fitness-cost barriers (INSTIs), rotate based on viral load"
+  },
+  "clinical_dashboard": {
+    "status": "success",
+    "tool": "clinical_dashboard",
+    "dashboard": {
+      "timestamp": "2025-12-26T04:21:12.101783",
+      "version": "2.0",
+      "modules": {
+        "vaccine": {
+          "top_candidates": [],
+          "summary": "Top candidates ranked by priority score"
+        }
+      },
+      "quick_reference": {
+        "immediate_actions": [
+          "Screen for L63P, L90M, A71V mutations",
+          "Consider TPQDLNTML vaccine",
+          "Use triple bnAb combination"
+        ],
+        "treatment_optimization": [
+          "Start with INSTI regimen",
+          "Monitor NRTI mutations at 3 months",
+          "Tat-targeting for treatment-experienced"
+        ],
+        "research_priorities": [
+          "Vpu epitopes for vaccines",
+          "ABL1 kinase inhibitors",
+          "PI resistance pathway monitoring"
+        ]
+      }
+    },
+    "modules_loaded": [
+      "vaccine"
+    ]
+  },
+  "transmission_fitness": {
+    "status": "success",
+    "tool": "transmission_fitness",
+    "mutations_analyzed": 29,
+    "high_risk_mutations": [
+      {
+        "mutation": "T215Y",
+        "drug_class": "NRTI",
+        "fitness_cost": 0.05,
+        "transmission_fitness": 1.0,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "K103N",
+        "drug_class": "NNRTI",
+        "fitness_cost": 0.02,
+        "transmission_fitness": 0.98,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "L10I",
+        "drug_class": "PI",
+        "fitness_cost": 0.02,
+        "transmission_fitness": 0.98,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "D67N",
+        "drug_class": "NRTI",
+        "fitness_cost": 0.03,
+        "transmission_fitness": 0.97,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "Y181C",
+        "drug_class": "NNRTI",
+        "fitness_cost": 0.03,
+        "transmission_fitness": 0.97,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "A71T",
+        "drug_class": "PI",
+        "fitness_cost": 0.03,
+        "transmission_fitness": 0.97,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "V179D",
+        "drug_class": "NNRTI",
+        "fitness_cost": 0.03,
+        "transmission_fitness": 0.97,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "E138K",
+        "drug_class": "NNRTI",
+        "fitness_cost": 0.04,
+        "transmission_fitness": 0.96,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "G190A",
+        "drug_class": "NNRTI",
+        "fitness_cost": 0.05,
+        "transmission_fitness": 0.95,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "V82A",
+        "drug_class": "PI",
+        "fitness_cost": 0.05,
+        "transmission_fitness": 0.95,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "Y143R",
+        "drug_class": "INSTI",
+        "fitness_cost": 0.05,
+        "transmission_fitness": 0.95,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "L33F",
+        "drug_class": "PI",
+        "fitness_cost": 0.05,
+        "transmission_fitness": 0.95,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "M46I",
+        "drug_class": "PI",
+        "fitness_cost": 0.06,
+        "transmission_fitness": 0.94,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "K219Q",
+        "drug_class": "NRTI",
+        "fitness_cost": 0.06,
+        "transmission_fitness": 0.94,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "E92Q",
+        "drug_class": "INSTI",
+        "fitness_cost": 0.06,
+        "transmission_fitness": 0.94,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "L74V",
+        "drug_class": "NRTI",
+        "fitness_cost": 0.07,
+        "transmission_fitness": 0.93,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "G140S",
+        "drug_class": "INSTI",
+        "fitness_cost": 0.07,
+        "transmission_fitness": 0.93,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "M41L",
+        "drug_class": "NRTI",
+        "fitness_cost": 0.08,
+        "transmission_fitness": 0.92,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "Y188L",
+        "drug_class": "NNRTI",
+        "fitness_cost": 0.08,
+        "transmission_fitness": 0.92,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "I54V",
+        "drug_class": "PI",
+        "fitness_cost": 0.08,
+        "transmission_fitness": 0.92,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "Q148H",
+        "drug_class": "INSTI",
+        "fitness_cost": 0.08,
+        "transmission_fitness": 0.92,
+        "transmission_risk": "HIGH"
+      },
+      {
+        "mutation": "T69N",
+        "drug_class": "NRTI",
+        "fitness_cost": 0.08,
+        "transmission_fitness": 0.92,
+        "transmission_risk": "HIGH"
+      }
+    ],
+    "class_summary": [
+      {
+        "drug_class": "NRTI",
+        "mean_fitness": 0.928888888888889,
+        "n_mutations": 9
+      },
+      {
+        "drug_class": "NNRTI",
+        "mean_fitness": 0.9583333333333334,
+        "n_mutations": 6
+      },
+      {
+        "drug_class": "PI",
+        "mean_fitness": 0.9266666666666666,
+        "n_mutations": 9
+      },
+      {
+        "drug_class": "INSTI",
+        "mean_fitness": 0.9279999999999999,
+        "n_mutations": 5
+      }
+    ],
+    "recommendation": "Prioritize preventing transmission of high-fitness mutations like K103N, L90M"
+  },
+  "patient_stratification": {
+    "status": "success",
+    "tool": "patient_stratification",
+    "n_patients": 2932,
+    "n_strata": 4,
+    "strata": [
+      {
+        "stratum": 1,
+        "n_patients": 1332,
+        "cxcr4_rate": 0.08033033033033032,
+        "mean_charge": 4.407657657657658,
+        "mean_risk_score": 0.09578888801052872
+      },
+      {
+        "stratum": 2,
+        "n_patients": 277,
+        "cxcr4_rate": 0.7436823104693141,
+        "mean_charge": 6.332129963898917,
+        "mean_risk_score": 0.7025894075209422
+      },
+      {
+        "stratum": 3,
+        "n_patients": 808,
+        "cxcr4_rate": 0.3650990099009901,
+        "mean_charge": 6.176980198019802,
+        "mean_risk_score": 0.3555608530273772
+      },
+      {
+        "stratum": 4,
+        "n_patients": 515,
+        "cxcr4_rate": 0.1825242718446602,
+        "mean_charge": 4.366990291262136,
+        "mean_risk_score": 0.17968679769350637
+      }
+    ],
+    "model_auc": 0.8375218785532688,
+    "recommendation": "Use risk strata to guide treatment intensity and monitoring frequency"
+  },
+  "geographic_spread": {
+    "status": "partial",
+    "tool": "geographic_spread"
+  }
+}
