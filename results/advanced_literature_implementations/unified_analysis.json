@@ -1,0 +1,167 @@
+{
+  "Gag": {
+    "sequence": "MGARASVLSGGELDRWEKIRLRPGGKKKYKLKHIVWASRELERFAVNPGLLETSEGCRQILGQLQPSLQTGSEELRSLYNT",
+    "protein": "Gag",
+    "length": 81,
+    "timestamp": "2025-12-26T04:53:15.759347",
+    "conformational_diversity": 5.799800155610716,
+    "n_conformations": 5,
+    "n_epitopes": 10,
+    "top_epitopes": [
+      {
+        "peptide": "SLQTGSEEL",
+        "position": 66,
+        "coverage": 0.5110315200000001,
+        "n_alleles": 4
+      },
+      {
+        "peptide": "ILGQLQPSL",
+        "position": 59,
+        "coverage": 0.444354,
+        "n_alleles": 3
+      },
+      {
+        "peptide": "RFAVNPGLL",
+        "position": 42,
+        "coverage": 0.4314319999999999,
+        "n_alleles": 3
+      },
+      {
+        "peptide": "HIVWASREL",
+        "position": 32,
+        "coverage": 0.29000000000000004,
+        "n_alleles": 1
+      },
+      {
+        "peptide": "GSEELRSLY",
+        "position": 70,
+        "coverage": 0.16000000000000003,
+        "n_alleles": 1
+      }
+    ]
+  },
+  "Protease": {
+    "sequence": "PQITLWQRPLVTIKIGGQLKEALLDTGADDTVLEEMNLPGRWKPKMI",
+    "protein": "Protease",
+    "length": 47,
+    "timestamp": "2025-12-26T04:53:15.765487",
+    "conformational_diversity": 5.519088132141438,
+    "n_conformations": 5,
+    "n_epitopes": 4,
+    "top_epitopes": [
+      {
+        "peptide": "QITLWQRPL",
+        "position": 1,
+        "coverage": 0.3752,
+        "n_alleles": 2
+      },
+      {
+        "peptide": "LWQRPLVTI",
+        "position": 4,
+        "coverage": 0.29000000000000004,
+        "n_alleles": 1
+      },
+      {
+        "peptide": "EMNLPGRWK",
+        "position": 34,
+        "coverage": 0.14,
+        "n_alleles": 1
+      },
+      {
+        "peptide": "NLPGRWKPK",
+        "position": 36,
+        "coverage": 0.14,
+        "n_alleles": 1
+      }
+    ],
+    "mutation_impacts": [
+      {
+        "mutation": "D30N",
+        "known": true,
+        "distance_change": 0.3,
+        "charge_change": 1,
+        "binding_impact": "moderate",
+        "mechanism": "electrostatic_disruption"
+      },
+      {
+        "mutation": "V82A",
+        "known": true,
+        "distance_change": -0.5,
+        "charge_change": 0,
+        "binding_impact": "moderate",
+        "mechanism": "steric_clash_reduction"
+      },
+      {
+        "mutation": "M184V",
+        "known": false,
+        "estimated_distance_change": 0.0,
+        "estimated_charge_change": 0,
+        "binding_impact": "unknown"
+      },
+      {
+        "mutation": "K103N",
+        "known": false,
+        "estimated_distance_change": 0.0,
+        "estimated_charge_change": 0,
+        "binding_impact": "unknown"
+      }
+    ]
+  },
+  "RT_partial": {
+    "sequence": "CQGVPVLVQIGQLKEALLDTGADDTVLEDIDLPGRWKPKMIGGIGGFI",
+    "protein": "RT_partial",
+    "length": 48,
+    "timestamp": "2025-12-26T04:53:15.768596",
+    "conformational_diversity": 6.581814064875471,
+    "n_conformations": 5,
+    "n_epitopes": 6,
+    "top_epitopes": [
+      {
+        "peptide": "PVLVQIGQL",
+        "position": 4,
+        "coverage": 0.5110315200000001,
+        "n_alleles": 4
+      },
+      {
+        "peptide": "QIGQLKEAL",
+        "position": 8,
+        "coverage": 0.3752,
+        "n_alleles": 2
+      },
+      {
+        "peptide": "KMIGGIGGF",
+        "position": 38,
+        "coverage": 0.3752,
+        "n_alleles": 2
+      },
+      {
+        "peptide": "MIGGIGGFI",
+        "position": 39,
+        "coverage": 0.29000000000000004,
+        "n_alleles": 1
+      },
+      {
+        "peptide": "VLVQIGQLK",
+        "position": 5,
+        "coverage": 0.14,
+        "n_alleles": 1
+      }
+    ]
+  },
+  "vaccine_design": {
+    "n_epitopes": 2,
+    "coverage": 0.5892664768,
+    "epitopes": [
+      {
+        "peptide": "SLQTGSEEL",
+        "protein": "Gag",
+        "coverage": 0.5110315200000001
+      },
+      {
+        "peptide": "GSEELRSLY",
+        "protein": "Gag",
+        "coverage": 0.16000000000000003
+      }
+    ]
+  }
+}

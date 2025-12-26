@@ -1,0 +1,37 @@
+{
+  "padic_encoder": {
+    "status": "success",
+    "n_codons": 64,
+    "synonymous_distance": 0.0625
+  },
+  "hyperbolic_vae": {
+    "status": "success",
+    "max_latent_norm": 0.9999899864196777,
+    "in_poincare_ball": true
+  },
+  "potts_model": {
+    "status": "success",
+    "master_energy": 7.41620379699801,
+    "master_fitness": 0.0006014279599836083
+  },
+  "persistent_homology": {
+    "status": "success",
+    "n_statistics": 5,
+    "topological_distance": 0.0
+  },
+  "zero_shot_predictor": {
+    "status": "success",
+    "n_test_mutations": 4
+  },
+  "epistasis_detection": {
+    "status": "success",
+    "n_pairs": 8,
+    "network_nodes": 9,
+    "network_edges": 8
+  },
+  "quasispecies": {
+    "status": "success",
+    "final_diversity": 9173,
+    "error_threshold": 0.01
+  }
+}
