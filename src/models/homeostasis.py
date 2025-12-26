@@ -25,6 +25,22 @@ enabling exploration of higher Q values while maintaining coverage floors.
 from collections import deque
 from typing import Any, Dict, Optional
 
+from src.config.constants import (
+    HOMEOSTATIC_ANNEALING_STEP,
+    HOMEOSTATIC_CONTROLLER_GRAD_PATIENCE,
+    HOMEOSTATIC_CONTROLLER_GRAD_THRESHOLD,
+    HOMEOSTATIC_CONTROLLER_PATIENCE_CEILING,
+    HOMEOSTATIC_COVERAGE_FLOOR,
+    HOMEOSTATIC_COVERAGE_FREEZE_THRESHOLD,
+    HOMEOSTATIC_COVERAGE_UNFREEZE_THRESHOLD,
+    HOMEOSTATIC_HIERARCHY_PATIENCE_CEILING,
+    HOMEOSTATIC_HIERARCHY_PLATEAU_PATIENCE,
+    HOMEOSTATIC_HIERARCHY_PLATEAU_THRESHOLD,
+    HOMEOSTATIC_HYSTERESIS_EPOCHS,
+    HOMEOSTATIC_WARMUP_EPOCHS,
+    HOMEOSTATIC_WINDOW_SIZE,
+)
+
 
 def compute_Q(dist_corr: float, hierarchy: float) -> float:
     """Compute conserved structure capacity Q.
@@ -48,25 +64,25 @@ class HomeostasisController:
 
     def __init__(
         self,
-        # Coverage thresholds for encoder_A
-        coverage_freeze_threshold: float = 0.995,  # Freeze when drops below
-        coverage_unfreeze_threshold: float = 1.0,  # Unfreeze when reaches
-        # Hierarchy thresholds for encoder_B
-        hierarchy_plateau_threshold: float = 0.001,  # Freeze when change < this
-        hierarchy_plateau_patience: int = 5,  # Epochs of plateau before freeze
-        # Controller gradient thresholds
-        controller_grad_threshold: float = 0.01,  # Freeze when grad norm < this
-        controller_grad_patience: int = 3,  # Epochs of low grad before freeze
-        # General settings
-        window_size: int = 5,  # Moving average window
-        hysteresis_epochs: int = 3,  # Minimum epochs between state changes
-        warmup_epochs: int = 5,  # Epochs before homeostasis activates
-        # Q-gated annealing settings (V5.11.8)
-        enable_annealing: bool = True,  # Enable Q-gated threshold annealing
-        annealing_step: float = 0.005,  # How much to relax thresholds per cycle
-        coverage_floor: float = 0.95,  # Never relax coverage below this
-        hierarchy_patience_ceiling: int = 15,  # Max patience for hierarchy
-        controller_patience_ceiling: int = 10,  # Max patience for controller
+        # Coverage thresholds for encoder_A (from constants.py)
+        coverage_freeze_threshold: float = HOMEOSTATIC_COVERAGE_FREEZE_THRESHOLD,
+        coverage_unfreeze_threshold: float = HOMEOSTATIC_COVERAGE_UNFREEZE_THRESHOLD,
+        # Hierarchy thresholds for encoder_B (from constants.py)
+        hierarchy_plateau_threshold: float = HOMEOSTATIC_HIERARCHY_PLATEAU_THRESHOLD,
+        hierarchy_plateau_patience: int = HOMEOSTATIC_HIERARCHY_PLATEAU_PATIENCE,
+        # Controller gradient thresholds (from constants.py)
+        controller_grad_threshold: float = HOMEOSTATIC_CONTROLLER_GRAD_THRESHOLD,
+        controller_grad_patience: int = HOMEOSTATIC_CONTROLLER_GRAD_PATIENCE,
+        # General settings (from constants.py)
+        window_size: int = HOMEOSTATIC_WINDOW_SIZE,
+        hysteresis_epochs: int = HOMEOSTATIC_HYSTERESIS_EPOCHS,
+        warmup_epochs: int = HOMEOSTATIC_WARMUP_EPOCHS,
+        # Q-gated annealing settings (V5.11.8, from constants.py)
+        enable_annealing: bool = True,
+        annealing_step: float = HOMEOSTATIC_ANNEALING_STEP,
+        coverage_floor: float = HOMEOSTATIC_COVERAGE_FLOOR,
+        hierarchy_patience_ceiling: int = HOMEOSTATIC_HIERARCHY_PATIENCE_CEILING,
+        controller_patience_ceiling: int = HOMEOSTATIC_CONTROLLER_PATIENCE_CEILING,
     ):
         # Initial thresholds (can be annealed)
         self.coverage_freeze_threshold = coverage_freeze_threshold

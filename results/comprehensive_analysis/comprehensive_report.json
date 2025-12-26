@@ -1,0 +1,1003 @@
+{
+  "timestamp": "2025-12-26T03:45:18.439426",
+  "datasets": {
+    "sequences": {
+      "fasta": [
+        {
+          "file": "github\\HIV-1_Paper\\Individual_Representative_Sequences_Used_for_Subtyping\\Integrase_Sequences.fasta",
+          "n_sequences": 33,
+          "mean_codons": 122.0,
+          "total_codons": 4026
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Individual_Representative_Sequences_Used_for_Subtyping\\Near_Full_Length_Genomes.fasta",
+          "n_sequences": 8,
+          "mean_codons": 2913.375,
+          "total_codons": 23307
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Individual_Representative_Sequences_Used_for_Subtyping\\Protease_Sequences.fasta",
+          "n_sequences": 33,
+          "mean_codons": 99.0,
+          "total_codons": 3267
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Individual_Representative_Sequences_Used_for_Subtyping\\Reverse_Transcriptase_Sequences.fasta",
+          "n_sequences": 17,
+          "mean_codons": 174.0,
+          "total_codons": 2958
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Individual_Representative_Sequences_Used_for_Subtyping\\V1V3_Sequences.fasta",
+          "n_sequences": 24,
+          "mean_codons": 173.0,
+          "total_codons": 4152
+        },
+        {
+          "file": "zenodo\\cview_gp120\\USE_CASE_DATA\\MUSCLE_ALIGNED_HIV_1_SUBTYPE_B_GP120_US_CCR5_636_AND_CXCR4_76.fasta",
+          "n_sequences": 710,
+          "mean_codons": 467.9169014084507,
+          "total_codons": 332221
+        },
+        {
+          "file": "zenodo\\cview_gp120\\__MACOSX\\USE_CASE_DATA\\._MUSCLE_ALIGNED_HIV_1_SUBTYPE_B_GP120_US_CCR5_636_AND_CXCR4_76.fasta",
+          "n_sequences": 0,
+          "mean_codons": 0,
+          "total_codons": 0
+        }
+      ],
+      "fna": [
+        {
+          "file": "kaggle\\hiv-1-and-hiv-2-rna-sequences\\hiv1.fna",
+          "n_sequences": 1,
+          "mean_codons": 3060.0,
+          "total_codons": 3060
+        },
+        {
+          "file": "kaggle\\hiv-1-and-hiv-2-rna-sequences\\hiv2.fna",
+          "n_sequences": 1,
+          "mean_codons": 3453.0,
+          "total_codons": 3453
+        }
+      ],
+      "total_sequences": 827,
+      "total_codons": 376444
+    },
+    "csv": {
+      "files": [
+        {
+          "file": "csv\\corgis_aids.csv",
+          "n_rows": 2759,
+          "n_columns": 23,
+          "columns": [
+            "Country",
+            "Year",
+            "Data.AIDS-Related Deaths.AIDS Orphans",
+            "Data.AIDS-Related Deaths.Adults",
+            "Data.AIDS-Related Deaths.All Ages",
+            "Data.AIDS-Related Deaths.Children",
+            "Data.AIDS-Related Deaths.Female Adults",
+            "Data.AIDS-Related Deaths.Male Adults",
+            "Data.HIV Prevalence.Adults",
+            "Data.HIV Prevalence.Young Men"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV10_aa.csv",
+          "n_rows": 99,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV12_aa.csv",
+          "n_rows": 122,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV13_aa.csv",
+          "n_rows": 122,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV14_aa.csv",
+          "n_rows": 221,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV15_aa.csv",
+          "n_rows": 221,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV17_aa.csv",
+          "n_rows": 221,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV18_aa.csv",
+          "n_rows": 221,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV1_aa.csv",
+          "n_rows": 221,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV20_aa.csv",
+          "n_rows": 395,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV21_aa.csv",
+          "n_rows": 122,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV23_aa.csv",
+          "n_rows": 395,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV24_aa.csv",
+          "n_rows": 0,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV25_aa.csv",
+          "n_rows": 122,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV26_aa.csv",
+          "n_rows": 395,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV27_aa.csv",
+          "n_rows": 273,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV28_aa.csv",
+          "n_rows": 0,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV29_aa.csv",
+          "n_rows": 221,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV2_aa.csv",
+          "n_rows": 221,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV30_aa.csv",
+          "n_rows": 122,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV31_aa.csv",
+          "n_rows": 0,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV32_aa.csv",
+          "n_rows": 395,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV33_aa.csv",
+          "n_rows": 221,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV34_aa.csv",
+          "n_rows": 221,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV35_aa.csv",
+          "n_rows": 221,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV36_aa.csv",
+          "n_rows": 99,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV37_aa.csv",
+          "n_rows": 296,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV39_aa.csv",
+          "n_rows": 122,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV3_aa.csv",
+          "n_rows": 395,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV40_aa.csv",
+          "n_rows": 395,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV41_aa.csv",
+          "n_rows": 122,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV42_aa.csv",
+          "n_rows": 395,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV43_aa.csv",
+          "n_rows": 122,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV44_aa.csv",
+          "n_rows": 395,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV4_aa.csv",
+          "n_rows": 0,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV5_aa.csv",
+          "n_rows": 296,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV7_aa.csv",
+          "n_rows": 395,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV8_aa.csv",
+          "n_rows": 122,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "github\\HIV-1_Paper\\Mapping_Results\\RV9_aa.csv",
+          "n_rows": 221,
+          "n_columns": 24,
+          "columns": [
+            "region",
+            "ref.aa.positions",
+            "TCS.number",
+            "A",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        },
+        {
+          "file": "kaggle\\hiv-aids-dataset\\art_coverage_by_country_clean.csv",
+          "n_rows": 170,
+          "n_columns": 11,
+          "columns": [
+            "Country",
+            "Reported number of people receiving ART",
+            "Estimated number of people living with HIV",
+            "Estimated ART coverage among people living with HIV (%)",
+            "Estimated number of people living with HIV_median",
+            "Estimated number of people living with HIV_min",
+            "Estimated number of people living with HIV_max",
+            "Estimated ART coverage among people living with HIV (%)_median",
+            "Estimated ART coverage among people living with HIV (%)_min",
+            "Estimated ART coverage among people living with HIV (%)_max"
+          ]
+        },
+        {
+          "file": "kaggle\\hiv-aids-dataset\\art_pediatric_coverage_by_country_clean.csv",
+          "n_rows": 170,
+          "n_columns": 11,
+          "columns": [
+            "Country",
+            "Reported number of children receiving ART",
+            "Estimated number of children needing ART based on WHO methods",
+            "Estimated ART coverage among children (%)",
+            "Estimated number of children needing ART based on WHO methods_median",
+            "Estimated number of children needing ART based on WHO methods_min",
+            "Estimated number of children needing ART based on WHO methods_max",
+            "Estimated ART coverage among children (%)_median",
+            "Estimated ART coverage among children (%)_min",
+            "Estimated ART coverage among children (%)_max"
+          ]
+        },
+        {
+          "file": "kaggle\\hiv-aids-dataset\\no_of_cases_adults_15_to_49_by_country_clean.csv",
+          "n_rows": 680,
+          "n_columns": 7,
+          "columns": [
+            "Country",
+            "Year",
+            "Count",
+            "Count_median",
+            "Count_min",
+            "Count_max",
+            "WHO Region"
+          ]
+        },
+        {
+          "file": "kaggle\\hiv-aids-dataset\\no_of_deaths_by_country_clean.csv",
+          "n_rows": 510,
+          "n_columns": 7,
+          "columns": [
+            "Country",
+            "Year",
+            "Count",
+            "Count_median",
+            "Count_min",
+            "Count_max",
+            "WHO Region"
+          ]
+        },
+        {
+          "file": "kaggle\\hiv-aids-dataset\\no_of_people_living_with_hiv_by_country_clean.csv",
+          "n_rows": 680,
+          "n_columns": 7,
+          "columns": [
+            "Country",
+            "Year",
+            "Count",
+            "Count_median",
+            "Count_min",
+            "Count_max",
+            "WHO Region"
+          ]
+        },
+        {
+          "file": "kaggle\\hiv-aids-dataset\\prevention_of_mother_to_child_transmission_by_country_clean.csv",
+          "n_rows": 170,
+          "n_columns": 11,
+          "columns": [
+            "Country",
+            "Received Antiretrovirals",
+            "Needing antiretrovirals",
+            "Percentage Recieved",
+            "Needing antiretrovirals_median",
+            "Needing antiretrovirals_min",
+            "Needing antiretrovirals_max",
+            "Percentage Recieved_median",
+            "Percentage Recieved_min",
+            "Percentage Recieved_max"
+          ]
+        }
+      ],
+      "total_rows": 13286
+    },
+    "parquet": {
+      "files": [
+        {
+          "file": "huggingface\\HIV_V3_coreceptor\\data\\train-00000-of-00001.parquet",
+          "n_rows": 2935,
+          "n_columns": 5,
+          "columns": [
+            "sequence",
+            "id",
+            "CXCR4",
+            "CCR5",
+            "fold"
+          ]
+        },
+        {
+          "file": "huggingface\\human_hiv_ppi\\data\\train-00000-of-00001.parquet",
+          "n_rows": 16179,
+          "n_columns": 9,
+          "columns": [
+            "hiv_protein_product",
+            "hiv_protein_name",
+            "interaction_type",
+            "human_protein_product",
+            "human_protein_name",
+            "reference_list",
+            "description",
+            "hiv_protein_sequence",
+            "human_protein_sequence"
+          ]
+        }
+      ]
+    },
+    "epidemiological": {
+      "art_coverage_by_country_clean": {
+        "n_rows": 170,
+        "n_countries": 170,
+        "years": [],
+        "latest_year_mean": 65.52941176470588
+      },
+      "art_pediatric_coverage_by_country_clean": {
+        "n_rows": 170,
+        "n_countries": 170,
+        "years": [],
+        "latest_year_mean": 57.956989247311824
+      },
+      "no_of_cases_adults_15_to_49_by_country_clean": {
+        "n_rows": 680,
+        "n_countries": 170,
+        "years": [],
+        "latest_year_mean": 2.303057553956835
+      },
+      "no_of_deaths_by_country_clean": {
+        "n_rows": 510,
+        "n_countries": 170,
+        "years": [],
+        "latest_year_mean": 9116.425
+      },
+      "no_of_people_living_with_hiv_by_country_clean": {
+        "n_rows": 680,
+        "n_countries": 170,
+        "years": [],
+        "latest_year_mean": 215200.83182640144
+      },
+      "prevention_of_mother_to_child_transmission_by_country_clean": {
+        "n_rows": 170,
+        "n_countries": 170,
+        "years": [],
+        "latest_year_mean": 74.80434782608695
+      }
+    }
+  },
+  "models": {
+    "codon_vae": {
+      "n_sequences": 827,
+      "best_val_loss": 0.8455940584341685,
+      "latent_analysis": {
+        "n_samples": 827,
+        "latent_dim": 16,
+        "mean_norm": 3.751197338104248,
+        "std_norm": 1.1690672636032104,
+        "mean_per_dim": [
+          -0.06852756440639496,
+          0.03454943001270294,
+          -0.10985919088125229,
+          -0.032828010618686676,
+          -0.23240306973457336,
+          0.045251354575157166,
+          0.06599102914333344,
+          0.00096155796200037,
+          -0.1410341113805771,
+          -0.07052788883447647,
+          0.040691640228033066,
+          -0.0628659725189209,
+          0.042796630412340164,
+          0.0004998772055841982,
+          0.39240244030952454,
+          0.06192994490265846
+        ],
+        "std_per_dim": [
+          1.1877180337905884,
+          0.7087430357933044,
+          0.5707668662071228,
+          1.1802343130111694,
+          1.168757438659668,
+          0.6881211996078491,
+          0.9259322881698608,
+          0.7992069125175476,
+          1.14247465133667,
+          0.8551636934280396,
+          0.9669161438941956,
+          1.2102478742599487,
+          0.9840513467788696,
+          0.7062456011772156,
+          1.4084012508392334,
+          0.560721218585968
+        ],
+        "mean_pairwise_dist": 5.350937366485596,
+        "std_pairwise_dist": 2.190962791442871
+      },
+      "saved_to": "C:\\Users\\Alejandro\\Documents\\Ivan\\Work\\ternary-vaes-bioinformatics\\sandbox-training\\codon_vae_all.pt"
+    },
+    "aa_vae": {
+      "n_sequences": 35126,
+      "best_val_loss": 0.7980944235216487,
+      "latent_analysis": {
+        "n_samples": 35126,
+        "latent_dim": 16,
+        "mean_norm": 2.7362940311431885,
+        "std_norm": 1.0767148733139038,
+        "mean_per_dim": [
+          0.02233000472187996,
+          -0.03258337825536728,
+          0.04565216600894928,
+          0.060271963477134705,
+          0.009305097162723541,
+          0.005997125990688801,
+          0.005123746581375599,
+          0.19575907289981842,
+          -0.016179008409380913,
+          -0.020813440904021263,
+          -0.04642833396792412,
+          -0.032041147351264954,
+          0.045232728123664856,
+          -0.003936226479709148,
+          0.04059550166130066,
+          -0.005629145074635744
+        ],
+        "std_per_dim": [
+          1.1346721649169922,
+          1.1742260456085205,
+          1.1575815677642822,
+          1.1610394716262817,
+          0.03479013592004776,
+          0.03495032712817192,
+          0.0392640084028244,
+          1.093604564666748,
+          0.03665541857481003,
+          0.03819388151168823,
+          0.03124776855111122,
+          0.029431667178869247,
+          0.8825390934944153,
+          0.03341979160904884,
+          1.1192798614501953,
+          0.03987307474017143
+        ],
+        "mean_pairwise_dist": 1.443724274635315,
+        "std_pairwise_dist": 0.590715229511261
+      },
+      "saved_to": "C:\\Users\\Alejandro\\Documents\\Ivan\\Work\\ternary-vaes-bioinformatics\\sandbox-training\\aa_vae_all.pt"
+    }
+  },
+  "summary": {
+    "codon_sequences": 827,
+    "aa_sequences": 35126,
+    "total_datasets": 56
+  }
+}

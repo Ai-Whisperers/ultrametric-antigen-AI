@@ -189,8 +189,6 @@ def plot_08_genome_map():
 
 def plot_09_elite_comparison():
     # Grouped Bar
-    groups = ["Escape Barrier", "Escape Success", "Fitness Cost"]
-    elite = [4.29, 24, 28]  # Scaled for visualization roughly? No, mixed units.
     # Normalize or just plot separate axes? Let's do simple side-by-side bars for concept
     # Actually normalized percent of baseline might be better
 
@@ -285,14 +283,14 @@ def plot_12_pyramid():
     ax.axis("off")
 
     # Pyramid
-    p1 = patches.Polygon(
+    patches.Polygon(
         [[5, 9], [3, 5], [7, 5]], closed=True, color="#C8E6C9", ec="white"
     )  # Tier 1
-    p2 = patches.Polygon(
+    patches.Polygon(
         [[3, 5], [1, 1], [9, 1], [7, 5]], closed=True, color="#FFCCBC", ec="white"
     )  # Tier 2/3 background?
     # Let's do stacked trapezoids
-    trap1 = patches.Polygon(
+    patches.Polygon(
         [[3.5, 6], [6.5, 6], [7.5, 4], [2.5, 4]], color="#FFF9C4"
     )  # Mid
 

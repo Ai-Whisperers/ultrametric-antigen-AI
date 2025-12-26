@@ -400,8 +400,8 @@ class PAdicSequenceEncoder:
         for b in range(batch_size):
             for i in range(seq_len):
                 for j in range(seq_len):
-                    idx_i = indices[b, i].long().item()
-                    idx_j = indices[b, j].long().item()
+                    idx_i = int(indices[b, i].long().item())
+                    idx_j = int(indices[b, j].long().item())
                     distances[b, i, j] = self.distance_matrix[idx_i, idx_j]
 
         return distances

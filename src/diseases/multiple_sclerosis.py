@@ -27,6 +27,10 @@ from typing import Any
 import torch
 import torch.nn as nn
 
+# Import from shared modules (single source of truth)
+from src.analysis.immunology.genetic_risk import MS_HLA_RISK_ALLELES
+from src.biology.amino_acids import AMINO_ACID_PROPERTIES
+
 
 class MSSubtype(Enum):
     """Multiple Sclerosis clinical subtypes."""
@@ -75,39 +79,11 @@ MOLECULAR_MIMICRY_PAIRS: dict[str, dict[str, Any]] = {
     },
 }
 
-# HLA-DRB1 alleles associated with MS risk
-MS_RISK_HLA_ALLELES: dict[str, float] = {
-    "DRB1*15:01": 3.1,  # Odds ratio for MS
-    "DRB1*15:03": 2.8,
-    "DRB1*03:01": 1.5,
-    "DRB1*04:05": 0.7,  # Protective
-    "DRB1*14:01": 0.6,  # Protective
-    "A*02:01": 0.8,  # Protective (Class I)
-}
-
-# Amino acid properties for epitope analysis
-AMINO_ACID_PROPERTIES: dict[str, dict[str, float]] = {
-    "A": {"hydrophobicity": 1.8, "volume": 88.6, "charge": 0, "polarity": 0},
-    "R": {"hydrophobicity": -4.5, "volume": 173.4, "charge": 1, "polarity": 1},
-    "N": {"hydrophobicity": -3.5, "volume": 114.1, "charge": 0, "polarity": 1},
-    "D": {"hydrophobicity": -3.5, "volume": 111.1, "charge": -1, "polarity": 1},
-    "C": {"hydrophobicity": 2.5, "volume": 108.5, "charge": 0, "polarity": 0},
-    "Q": {"hydrophobicity": -3.5, "volume": 143.8, "charge": 0, "polarity": 1},
-    "E": {"hydrophobicity": -3.5, "volume": 138.4, "charge": -1, "polarity": 1},
-    "G": {"hydrophobicity": -0.4, "volume": 60.1, "charge": 0, "polarity": 0},
-    "H": {"hydrophobicity": -3.2, "volume": 153.2, "charge": 0.5, "polarity": 1},
-    "I": {"hydrophobicity": 4.5, "volume": 166.7, "charge": 0, "polarity": 0},
-    "L": {"hydrophobicity": 3.8, "volume": 166.7, "charge": 0, "polarity": 0},
-    "K": {"hydrophobicity": -3.9, "volume": 168.6, "charge": 1, "polarity": 1},
-    "M": {"hydrophobicity": 1.9, "volume": 162.9, "charge": 0, "polarity": 0},
-    "F": {"hydrophobicity": 2.8, "volume": 189.9, "charge": 0, "polarity": 0},
-    "P": {"hydrophobicity": -1.6, "volume": 112.7, "charge": 0, "polarity": 0},
-    "S": {"hydrophobicity": -0.8, "volume": 89.0, "charge": 0, "polarity": 1},
-    "T": {"hydrophobicity": -0.7, "volume": 116.1, "charge": 0, "polarity": 1},
-    "W": {"hydrophobicity": -0.9, "volume": 227.8, "charge": 0, "polarity": 0},
-    "Y": {"hydrophobicity": -1.3, "volume": 193.6, "charge": 0, "polarity": 1},
-    "V": {"hydrophobicity": 4.2, "volume": 140.0, "charge": 0, "polarity": 0},
-}
+# Note: HLA risk alleles and amino acid properties are now imported from shared modules:
+# - MS_HLA_RISK_ALLELES from src.analysis.immunology.genetic_risk
+# - AMINO_ACID_PROPERTIES from src.biology.amino_acids
+# Legacy alias for backward compatibility
+MS_RISK_HLA_ALLELES = MS_HLA_RISK_ALLELES
 
 
 @dataclass

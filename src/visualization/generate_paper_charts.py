@@ -51,7 +51,7 @@ def plot_01_drug_barrier():
     df = pd.DataFrame(data)
 
     fig, ax = plt.subplots(figsize=(8, 6))
-    bars = ax.barh(
+    ax.barh(
         df["Drug Class"],
         df["Mean Distance"],
         xerr=df["Error"],
@@ -271,7 +271,7 @@ def plot_23_clade_susceptibility():
     susceptibility = [72, 68, 65, 61, 58]
 
     fig, ax = plt.subplots(figsize=(9, 6))
-    bars = ax.barh(clades, susceptibility, color=COLORS["secondary"])
+    ax.barh(clades, susceptibility, color=COLORS["secondary"])
     ax.invert_yaxis()
     ax.set_xlabel("Mean Susceptibility to bnAbs (%)")
     ax.set_title("bnAb Susceptibility by HIV Clade", fontsize=14, fontweight="bold")
@@ -374,7 +374,7 @@ def plot_33_goldilocks():
     fitness = 1 / (1 + np.exp(0.8 * (dist - 7)))
 
     # Net Benefit
-    net = efficacy * fitness
+    efficacy * fitness
 
     fig, ax = plt.subplots(figsize=(10, 6))
 

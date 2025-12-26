@@ -238,8 +238,8 @@ class BiosyntheticCoherenceLoss(nn.Module):
         same_family = torch.zeros(n, n, device=codon_embeddings.device)
         for i in range(n):
             for j in range(n):
-                idx_i = indices_flat[i].item()
-                idx_j = indices_flat[j].item()
+                idx_i = int(indices_flat[i].item())
+                idx_j = int(indices_flat[j].item())
                 if idx_i < 64 and idx_j < 64:
                     same_family[i, j] = family_matrix[idx_i, idx_j]
 
@@ -349,7 +349,7 @@ class ErrorMinimizationLoss(nn.Module):
 
         for b in range(batch_size):
             for s in range(seq_len):
-                codon_idx = codon_indices[b, s].item()
+                codon_idx = int(codon_indices[b, s].item())
                 if codon_idx >= 64:
                     continue
 
@@ -363,7 +363,7 @@ class ErrorMinimizationLoss(nn.Module):
                     continue
 
                 # Get embedding for this codon
-                emb = codon_embeddings[b, s]
+                codon_embeddings[b, s]
 
                 # Check mutation neighbors
                 for neighbor_idx in self.mutation_neighbors.get(codon_idx, []):
@@ -532,8 +532,8 @@ class PAdicStructureLoss(nn.Module):
         target_dist = torch.zeros(n, n, device=device)
         for i in range(n):
             for j in range(n):
-                idx_i = min(indices_flat[i].item(), 63)
-                idx_j = min(indices_flat[j].item(), 63)
+                idx_i = int(min(indices_flat[i].item(), 63))
+                idx_j = int(min(indices_flat[j].item(), 63))
                 target_dist[i, j] = padic_dist[idx_i, idx_j]
 
         # Normalize distances

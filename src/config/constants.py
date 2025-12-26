@@ -183,6 +183,33 @@ HOMEOSTATIC_SIGMA_RATE = 0.01
 # Curvature adaptation rate
 HOMEOSTATIC_CURVATURE_RATE = 0.001
 
+# -----------------------------------------------------------------------------
+# V5.11.8 Hierarchical Homeostasis Controller Thresholds
+# -----------------------------------------------------------------------------
+
+# Coverage thresholds for encoder_A freeze/unfreeze decisions
+HOMEOSTATIC_COVERAGE_FREEZE_THRESHOLD = 0.995  # Freeze when drops below
+HOMEOSTATIC_COVERAGE_UNFREEZE_THRESHOLD = 1.0  # Unfreeze when reaches
+HOMEOSTATIC_COVERAGE_FLOOR = 0.95  # Minimum coverage threshold (floor for annealing)
+
+# Hierarchy thresholds for encoder_B (VAE-B hierarchy-gated)
+HOMEOSTATIC_HIERARCHY_PLATEAU_THRESHOLD = 0.001  # Freeze when change < this
+HOMEOSTATIC_HIERARCHY_PLATEAU_PATIENCE = 5  # Epochs of plateau before freeze
+HOMEOSTATIC_HIERARCHY_PATIENCE_CEILING = 15  # Max patience for hierarchy (annealing ceiling)
+
+# Controller gradient thresholds (gradient-gated freeze)
+HOMEOSTATIC_CONTROLLER_GRAD_THRESHOLD = 0.01  # Freeze when grad norm < this
+HOMEOSTATIC_CONTROLLER_GRAD_PATIENCE = 3  # Epochs of low grad before freeze
+HOMEOSTATIC_CONTROLLER_PATIENCE_CEILING = 10  # Max patience for controller (annealing ceiling)
+
+# General homeostasis settings
+HOMEOSTATIC_WINDOW_SIZE = 5  # Moving average window for metric tracking
+HOMEOSTATIC_HYSTERESIS_EPOCHS = 3  # Minimum epochs between state changes
+HOMEOSTATIC_WARMUP_EPOCHS = 5  # Epochs before homeostasis activates
+
+# Q-gated annealing settings (V5.11.8)
+HOMEOSTATIC_ANNEALING_STEP = 0.005  # How much to relax thresholds per cycle
+
 
 # =============================================================================
 # COVERAGE TRACKING DEFAULTS
@@ -305,11 +332,25 @@ __all__ = [
     "DEFAULT_PRIOR_SIGMA",
     "DEFAULT_GEODESIC_WEIGHT",
     "DEFAULT_RADIUS_POWER",
-    # Homeostatic control
+    # Homeostatic control (basic)
     "HOMEOSTATIC_EMA_MOMENTUM",
     "HOMEOSTATIC_TARGET_RADIUS",
     "HOMEOSTATIC_SIGMA_RATE",
     "HOMEOSTATIC_CURVATURE_RATE",
+    # Homeostatic control (V5.11.8 hierarchical)
+    "HOMEOSTATIC_COVERAGE_FREEZE_THRESHOLD",
+    "HOMEOSTATIC_COVERAGE_UNFREEZE_THRESHOLD",
+    "HOMEOSTATIC_COVERAGE_FLOOR",
+    "HOMEOSTATIC_HIERARCHY_PLATEAU_THRESHOLD",
+    "HOMEOSTATIC_HIERARCHY_PLATEAU_PATIENCE",
+    "HOMEOSTATIC_HIERARCHY_PATIENCE_CEILING",
+    "HOMEOSTATIC_CONTROLLER_GRAD_THRESHOLD",
+    "HOMEOSTATIC_CONTROLLER_GRAD_PATIENCE",
+    "HOMEOSTATIC_CONTROLLER_PATIENCE_CEILING",
+    "HOMEOSTATIC_WINDOW_SIZE",
+    "HOMEOSTATIC_HYSTERESIS_EPOCHS",
+    "HOMEOSTATIC_WARMUP_EPOCHS",
+    "HOMEOSTATIC_ANNEALING_STEP",
     # Coverage tracking
     "DEFAULT_PLATEAU_PATIENCE",
     "DEFAULT_PLATEAU_MIN_DELTA",

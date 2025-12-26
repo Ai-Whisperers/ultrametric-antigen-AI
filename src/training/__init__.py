@@ -20,6 +20,8 @@ This module contains components for managing the training process:
 from .base import STATENET_KEYS, BaseTrainer
 from .config_schema import (ConfigValidationError, ModelConfig, TrainingConfig,
                             config_to_dict, validate_config)
+from .data import (StratifiedBatchSampler, TernaryDataset,
+                   create_stratified_batches)
 from .environment import (EnvironmentStatus, require_valid_environment,
                           validate_environment)
 from .hyperbolic_trainer import HyperbolicVAETrainer
@@ -42,6 +44,10 @@ __all__ = [
     "LearningRateScheduler",
     "linear_schedule",
     "cyclic_schedule",
+    # Data and sampling
+    "TernaryDataset",
+    "StratifiedBatchSampler",
+    "create_stratified_batches",
     # Monitoring
     "TrainingMonitor",
     # Config validation

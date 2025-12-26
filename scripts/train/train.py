@@ -652,12 +652,10 @@ def train_epoch(
         perm = torch.randperm(n_samples, device=device)
         batches = None
 
+    # Accumulator variables for epoch metrics
     total_loss = 0.0
     total_geo = 0.0
     total_rad = 0.0
-    total_rank = 0.0
-    total_rank = 0.0
-    total_zero = 0.0
     total_rank = 0.0
     total_zero = 0.0
     total_geo_align = 0.0
@@ -742,7 +740,6 @@ def train_epoch(
                 learned_tau * geo_loss
                 + learned_radial * rad_loss
                 + rank_loss_weight * rank_loss
-                + rank_loss_weight * rank_loss
                 + zero_structure_weight * zero_loss
                 + geometric_weight * geo_align_loss
             )
@@ -769,7 +766,6 @@ def train_epoch(
                 tau * geo_loss
                 + radial_weight * rad_loss
                 + rank_loss_weight * rank_loss
-                + rank_loss_weight * rank_loss
                 + zero_structure_weight * zero_loss
                 + geometric_weight * geo_align_loss
             )
@@ -782,7 +778,6 @@ def train_epoch(
         total_loss += total_batch_loss.item()
         total_geo += geo_loss.item()
         total_rad += rad_loss.item()
-        total_rank += rank_loss.item()
         total_rank += rank_loss.item()
         total_zero += zero_loss.item()
         total_geo_align += geo_align_loss.item()

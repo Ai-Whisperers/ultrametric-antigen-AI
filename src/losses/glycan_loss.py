@@ -263,7 +263,7 @@ class GlycanShieldAnalyzer(nn.Module):
             return torch.tensor(0.0)
 
         # Create coverage mask
-        positions = torch.arange(sequence_length, device=glycan_positions.device)
+        torch.arange(sequence_length, device=glycan_positions.device)
 
         # Each glycan covers positions within radius (in sequence space)
         # Approximate: 3.5 Angstroms per residue

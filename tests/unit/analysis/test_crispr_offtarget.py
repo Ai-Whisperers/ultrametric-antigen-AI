@@ -104,7 +104,7 @@ class TestPAdicSequenceDistance:
 
         # Mismatch in non-seed region (position 19)
         nonseed_mismatch = "ATCGATCGATCGATCGATCC"
-        dist_nonseed = module.compute_distance(guide, nonseed_mismatch)
+        module.compute_distance(guide, nonseed_mismatch)
 
         # Seed region mismatches are more critical
         assert dist_seed > 0  # Both should be non-zero

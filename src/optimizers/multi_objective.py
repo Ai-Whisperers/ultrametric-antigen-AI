@@ -401,7 +401,6 @@ class NSGAII:
             (new_population, new_scores)
         """
         n = self.config.population_size
-        device = population.device
 
         # Assign ranks and crowding
         ranks, crowding = self._assign_ranks_and_crowding(population, scores)
@@ -422,13 +421,13 @@ class NSGAII:
 
             offspring.extend([c1, c2])
 
-        offspring = torch.stack(offspring[:n])
+        offspring_tensor = torch.stack(offspring[:n])
 
         # Evaluate offspring
-        offspring_scores = evaluate_fn(offspring)
+        offspring_scores = evaluate_fn(offspring_tensor)
 
         # Combine parent and offspring
-        combined = torch.cat([population, offspring], dim=0)
+        combined = torch.cat([population, offspring_tensor], dim=0)
         combined_scores = torch.cat([scores, offspring_scores], dim=0)
 
         # Select next generation (elitist)

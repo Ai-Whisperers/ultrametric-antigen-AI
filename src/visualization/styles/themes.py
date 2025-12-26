@@ -47,7 +47,7 @@ class ThemeConfig:
     name: str
     font_family: list[str] = field(default_factory=lambda: FONT_FAMILY_SANS.copy())
     font_sizes: dict[str, int] = field(default_factory=dict)
-    colors: dict[str, str] = field(default_factory=dict)
+    colors: dict[str, str | bool] = field(default_factory=dict)
     rcparams: dict[str, Any] = field(default_factory=dict)
 
     def to_rcparams(self) -> dict[str, Any]:

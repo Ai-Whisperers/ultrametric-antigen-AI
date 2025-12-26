@@ -204,8 +204,8 @@ def validate_environment(
         for w in status.warnings:
             log(f"WARNING: {w}")
     if status.errors:
-        for e in status.errors:
-            log(f"ERROR: {e}")
+        for err in status.errors:
+            log(f"ERROR: {err}")
 
     if status.is_valid:
         log("Environment validation: PASSED")

@@ -103,7 +103,7 @@ class UltrametricDistanceMatrix(nn.Module):
         Returns:
             Distance matrix (n, n)
         """
-        n = len(indices)
+        len(indices)
         diff = torch.abs(indices.unsqueeze(0) - indices.unsqueeze(1))
 
         # Compute p-adic valuations
@@ -288,7 +288,7 @@ class FoldingFunnelAnalyzer(nn.Module):
             if (energies[i] <= neighbor_energies).all():
                 # Estimate basin properties
                 neighbor_mask = distances[i] < distances[i, nearest[-1]]
-                basin_points = conformations[neighbor_mask]
+                conformations[neighbor_mask]
                 basin_energies = energies[neighbor_mask]
 
                 depth = basin_energies.max() - energies[i]
@@ -502,7 +502,7 @@ class TransitionStateAnalyzer(nn.Module):
 
         # Convert positions to indices for p-adic calculation
         # Use projection onto first principal component
-        path_flat = path.reshape(batch_size, n_steps, -1)
+        path.reshape(batch_size, n_steps, -1)
         indices = torch.arange(n_steps, device=path.device)
 
         # Sum of p-adic distances between consecutive points

@@ -148,8 +148,8 @@ class GeodesicConv(nn.Module):
 
         for b in range(batch_size):
             for p in range(n_points):
-                r = ring_idx[b, p].item()
-                o = orient_idx[b, p].item()
+                r = int(ring_idx[b, p].item())
+                o = int(orient_idx[b, p].item())
                 filter_weights = self.filters[r, o]  # (in_channels, out_channels)
                 output[b, p] = features[b, p] @ filter_weights + self.bias
 
@@ -495,15 +495,15 @@ class MaSIFEncoder(nn.Module):
             embedding = self.patch_encoder(features, patch_geodesics[:, p])
             patch_embeddings.append(embedding)
 
-        patch_embeddings = torch.stack(patch_embeddings, dim=1)  # (batch, n_patches, patch_dim)
+        patch_embeddings_stacked = torch.stack(patch_embeddings, dim=1)  # (batch, n_patches, patch_dim)
 
         # Apply p-adic attention
         if self.use_padic:
-            attended, attn_weights = self.padic_attention(patch_embeddings)
+            attended, attn_weights = self.padic_attention(patch_embeddings_stacked)
             padic_dist = self.padic_attention.compute_padic_distances(n_patches, patch_features.device)
         else:
-            attended = patch_embeddings
-            attn_weights = torch.ones(batch_size, n_patches, n_patches, device=patch_features.device) / n_patches
+            attended = patch_embeddings_stacked
+            torch.ones(batch_size, n_patches, n_patches, device=patch_features.device) / n_patches
             padic_dist = None
 
         # Global pooling with attention

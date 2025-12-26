@@ -444,7 +444,7 @@ class ExtremophileCodonAnalyzer:
             if deg == 1 or not f_list:
                 continue
 
-            avg_f = np.mean(f_list)
+            avg_f = float(np.mean(f_list))
             if deg == 2:
                 enc += 9 / avg_f if avg_f > 0 else 9
             elif deg == 3:
@@ -608,7 +608,7 @@ class ExtremophileCodonAnalyzer:
             deviations[codon] = obs_val - ecoli_val
 
         # Summary statistics
-        deviations["mean_deviation"] = np.mean(list(deviations.values()))
+        deviations["mean_deviation"] = float(np.mean(list(deviations.values())))
         deviations["gc_deviation"] = result.gc_content - 0.508  # E. coli GC
 
         return deviations

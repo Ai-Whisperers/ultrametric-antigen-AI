@@ -213,9 +213,8 @@ class TernaryMotorEncoder(nn.Module):
         # Handle single subunit case
         if state_indices.dim() == 1:
             state_indices = state_indices.unsqueeze(-1)
-            single_subunit = True
         else:
-            single_subunit = False
+            pass
 
         batch_size, seq_len = state_indices.shape
 

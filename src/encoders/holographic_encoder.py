@@ -265,7 +265,7 @@ class HolographicEncoder(nn.Module):
 
         # Pool eigenvectors to graph level
         # Use eigenvalue-weighted pooling
-        B = eigenvectors.shape[0]
+        eigenvectors.shape[0]
         weights = F.softmax(-eigenvalues, dim=-1)  # Lower eigenvalues = more important
         pooled = (eigenvectors * weights.unsqueeze(1)).sum(dim=1)  # (B, k)
 
@@ -320,7 +320,7 @@ class HolographicEncoder(nn.Module):
                 - spectral_features: Spectral encoding
                 - eigenvalues: Graph Laplacian eigenvalues
         """
-        B = adjacency.shape[0]
+        adjacency.shape[0]
 
         # Spectral features
         spectral_features = self.encode_spectral(adjacency)

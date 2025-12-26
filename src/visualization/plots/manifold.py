@@ -90,12 +90,12 @@ def plot_poincare_disk(
     elif labels is not None:
         if cmap is None:
             cmap = get_categorical_cmap("tolvibrant", n_colors=len(np.unique(labels)))
-        c = [cmap(int(l)) for l in labels]
+        c = [cmap(int(label)) for label in labels]
     else:
         c = SEMANTIC.primary
 
     # Plot embeddings
-    scatter = ax.scatter(
+    ax.scatter(
         embeddings[:, 0],
         embeddings[:, 1],
         c=c,

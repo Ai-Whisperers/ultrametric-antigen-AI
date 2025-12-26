@@ -21,7 +21,7 @@ Research Reference:
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, cast
 
 import torch
 import torch.nn as nn
@@ -524,7 +524,8 @@ class SwarmVAE(nn.Module):
         for i, (agent, z, error) in enumerate(
             zip(self.agents, agent_zs, recon_errors)
         ):
-            role = agent.config.role
+            swarm_agent = cast(SwarmAgent, agent)
+            role = swarm_agent.config.role
             field = self.pheromone_fields[role]
 
             # Deposit strength inversely proportional to error
@@ -618,12 +619,13 @@ class SwarmVAE(nn.Module):
         stats: Dict[str, Any] = {}
 
         for i, agent in enumerate(self.agents):
-            role = agent.config.role.value
-            field = self.pheromone_fields[agent.config.role]
+            swarm_agent = cast(SwarmAgent, agent)
+            role = swarm_agent.config.role.value
+            field = self.pheromone_fields[swarm_agent.config.role]
 
             stats[f"agent_{i}_{role}"] = {
-                "temperature": agent.config.temperature,
-                "exploration_rate": agent.config.exploration_rate,
+                "temperature": swarm_agent.config.temperature,
+                "exploration_rate": swarm_agent.config.exploration_rate,
                 "pheromone_count": field.positions.shape[0],
                 "avg_pheromone_strength": (
                     field.strengths.mean().item() if field.strengths.numel() > 0 else 0.0

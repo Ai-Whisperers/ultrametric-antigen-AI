@@ -462,8 +462,8 @@ class ViralEvolutionPredictor(nn.Module):
             mutations.append(
                 EscapeMutation(
                     position=pos,
-                    original_aa=aa_list[original_codon % 20],  # Simplified mapping
-                    mutant_aa=aa_list[best_mut_idx],
+                    original_aa=aa_list[int(original_codon) % 20],  # Simplified mapping
+                    mutant_aa=aa_list[int(best_mut_idx)],
                     escape_score=score.item(),
                     fitness_cost=1.0 - fitness_scores[pos].item(),
                     padic_distance=0.33,  # Placeholder
@@ -512,11 +512,11 @@ class ViralEvolutionPredictor(nn.Module):
         pressures = []
 
         for pos in range(len(codon_indices)):
-            codon = codon_indices[pos].item()
+            codon = int(codon_indices[pos].item())
 
             # Compute codon accessibility
             accessibility = self.compute_mutation_accessibility(codon)
-            mean_accessibility = np.mean(list(accessibility.values()))
+            mean_accessibility = float(np.mean(list(accessibility.values())))
 
             # Immune pressure from epitope encoding
             immune = torch.norm(epitope_pressure[pos]).item()

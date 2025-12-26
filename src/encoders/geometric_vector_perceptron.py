@@ -230,7 +230,7 @@ class GVPMessage(nn.Module):
             Updated (node_s, node_v)
         """
         batch_size, n_nodes = node_s.shape[:2]
-        n_edges = edge_index.shape[-1]
+        edge_index.shape[-1]
 
         # Gather source and target node features
         src_idx = edge_index[:, 0, :]  # (batch, n_edges)
@@ -606,7 +606,7 @@ class CodonGVP(nn.Module):
                     n //= 3
 
                 # Use ternary digits to initialize
-                ternary_tensor = torch.tensor(ternary, dtype=torch.float32)
+                torch.tensor(ternary, dtype=torch.float32)
                 # Embed in higher dimension
                 embedding = torch.zeros(self.embedding_dim)
                 for i, digit in enumerate(ternary):

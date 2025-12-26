@@ -8,8 +8,7 @@
 """Model definitions for Ternary VAE (canonical V5.11 architecture)."""
 
 from .curriculum import ContinuousCurriculumModule, CurriculumScheduler
-from .differentiable_controller import (DifferentiableController,
-                                        ThreeBodyController)
+from .differentiable_controller import DifferentiableController
 from .homeostasis import HomeostasisController, compute_Q
 from .hyperbolic_projection import (DualHyperbolicProjection,
                                     HyperbolicProjection)
@@ -34,7 +33,6 @@ __all__ = [
     "DualHyperbolicProjection",
     # Controllers
     "DifferentiableController",
-    "ThreeBodyController",
     # Curriculum
     "ContinuousCurriculumModule",
     "CurriculumScheduler",

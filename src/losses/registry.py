@@ -66,12 +66,15 @@ import logging
 import pkgutil
 from collections import OrderedDict
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Type
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Type
 
 import torch
 import torch.nn as nn
 
 from .base import LossComponent, LossResult
+
+if TYPE_CHECKING:
+    from src.config.schema import TrainingConfig
 
 logger = logging.getLogger(__name__)
 

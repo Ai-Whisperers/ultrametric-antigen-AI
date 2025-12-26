@@ -30,7 +30,7 @@ Usage:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, Iterable, Optional
+from typing import Any, Callable, Dict, Iterable, Optional
 
 # geoopt is a required dependency for hyperbolic geometry
 import torch
@@ -157,7 +157,7 @@ class MixedRiemannianOptimizer:
         if self.manifold_optimizer:
             self.manifold_optimizer.zero_grad(set_to_none=set_to_none)
 
-    def step(self, closure: Optional[callable] = None) -> Optional[torch.Tensor]:
+    def step(self, closure: Optional[Callable[[], torch.Tensor]] = None) -> Optional[torch.Tensor]:
         """Perform a single optimization step.
 
         Args:
@@ -331,7 +331,7 @@ def create_optimizer(
     model: nn.Module,
     optimizer_type: str = "mixed_riemannian",
     **kwargs,
-) -> MixedRiemannianOptimizer:
+) -> torch.optim.Optimizer:
     """Factory function to create optimizer for a model.
 
     Args:

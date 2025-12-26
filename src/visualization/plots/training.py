@@ -394,7 +394,7 @@ def create_training_dashboard(
         names = list(final_values.keys())
         values = list(final_values.values())
 
-        bars = ax4.barh(names, values, color=TOLVIBRANT[: len(names)])
+        ax4.barh(names, values, color=TOLVIBRANT[: len(names)])
         ax4.set_xlabel("Final Value")
         ax4.set_title("Final Epoch Metrics")
         despine(ax4)

@@ -283,7 +283,7 @@ class QuantumBiologyAnalyzer:
         avg_distance = np.mean(distances) if distances else 0.0
 
         # Convert to clustering score (inverted)
-        return 1.0 - min(1.0, avg_distance)
+        return float(1.0 - min(1.0, avg_distance))
 
     def _compute_tunneling_propensity(self, residues: List[str]) -> float:
         """Compute tunneling propensity based on residue composition.
