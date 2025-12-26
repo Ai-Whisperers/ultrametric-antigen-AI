@@ -2,23 +2,53 @@
 
 ## p-adic Hyperbolic Codon Embedding for HIV Mutation Analysis
 
-This module applies p-adic hyperbolic geometry to analyze HIV-1 mutations, providing insights into immune escape and drug resistance mechanisms.
+This module applies p-adic hyperbolic geometry to analyze HIV-1 mutations across 200,000+ records, providing insights into drug resistance, immune escape, antibody neutralization, and coreceptor tropism.
+
+**Total Records Analyzed:** 202,085 across 10 integrated datasets
 
 ---
 
-## Quick Start
+## 📖 Documentation
+
+> **Start here:** [EXECUTIVE_SUMMARY.md](documentation/EXECUTIVE_SUMMARY.md) for a complete overview of findings.
+
+| Document | Description |
+|----------|-------------|
+| [Executive Summary](documentation/EXECUTIVE_SUMMARY.md) | Overview of all findings for researchers |
+| [Quick Start Guide](documentation/quickstart/QUICK_START.md) | Get running in 10 minutes |
+| [Methodology](documentation/methodology/METHODOLOGY.md) | Complete technical methodology |
+| [Novelty Assessment](documentation/NOVELTY_ASSESSMENT.md) | Novel vs. confirmed discoveries |
+| [Literature Review](documentation/LITERATURE_REVIEW.md) | 150 papers for further reading |
+| [API Reference](documentation/api_reference/API_REFERENCE.md) | Python module documentation |
+| [FAQ](documentation/faq/FAQ.md) | Common questions & troubleshooting |
+
+### Detailed Findings
+
+| Analysis | Records | Key Document |
+|----------|---------|--------------|
+| Drug Resistance | 7,154 | [Drug Resistance Findings](documentation/findings/DRUG_RESISTANCE_FINDINGS.md) |
+| CTL Escape | 2,115 | [CTL Escape Findings](documentation/findings/CTL_ESCAPE_FINDINGS.md) |
+| Antibody Neutralization | 189,879 | [Antibody Findings](documentation/findings/ANTIBODY_NEUTRALIZATION_FINDINGS.md) |
+| Coreceptor Tropism | 2,932 | [Tropism Findings](documentation/findings/TROPISM_FINDINGS.md) |
+| Cross-Dataset Integration | All | [Integration Findings](documentation/findings/INTEGRATION_FINDINGS.md) |
+
+---
+
+## 🚀 Quick Start
 
 ```bash
-# 1. One-time setup (generates codon encoder)
-python scripts/setup/setup_hiv_analysis.py
+# Navigate to scripts directory
+cd scripts
 
-# 2. Validate setup
-python scripts/validate_hiv_setup.py
+# Run complete analysis (all 5 analyses, ~25 minutes)
+python run_complete_analysis.py
 
-# 3. Run analyses
-python scripts/run_hiv_analysis.py              # All core analyses
-python scripts/run_hiv_analysis.py --escape     # CTL escape only
-python scripts/run_hiv_analysis.py --drug-resistance  # Drug resistance only
+# Or run individual analyses:
+python analyze_stanford_resistance.py       # Drug resistance (~5 min)
+python analyze_ctl_escape_expanded.py       # CTL epitopes (~3 min)
+python analyze_catnap_neutralization.py     # Antibody neutralization (~10 min)
+python analyze_tropism_switching.py         # Coreceptor tropism (~2 min)
+python cross_dataset_integration.py         # Integration (~5 min)
 ```
 
 ---
@@ -27,30 +57,45 @@ python scripts/run_hiv_analysis.py --drug-resistance  # Drug resistance only
 
 ```
 hiv/
-├── README.md                    # This file
-├── ANALYSIS_REPORT.md           # Detailed findings report
+├── README.md                           # This file
 ├── scripts/
-│   ├── 01_hiv_escape_analysis.py      # CTL escape mutation analysis
-│   ├── 02_hiv_drug_resistance.py      # Drug resistance analysis
-│   ├── 03_hiv_handshake_analysis.py   # Handshake interface analysis
-│   ├── 04_hiv_hiding_landscape.py     # Hiding landscape analysis
-│   ├── 05_visualize_hiding_landscape.py
-│   ├── 06_validate_integrase_vulnerability.py
-│   ├── 07_validate_all_conjectures.py
-│   ├── 08_hybrid_integrase_validation.py
-│   ├── 09_cluster_approaches_by_codon.py
-│   ├── 10_visualize_approach_clusters.py
-│   └── hyperbolic_utils.py            # Shared utilities
-├── glycan_shield/
-│   ├── 01_glycan_sentinel_analysis.py
-│   ├── 02_alphafold3_input_generator.py
-│   └── 03_create_batch_json.py
-├── data/
-│   ├── codon_encoder_3adic.pt         # Trained codon encoder
-│   └── metrics/                       # Analysis metrics
-└── results/
-    ├── hiv_escape_results.json        # CTL escape results
-    └── hiv_resistance_results.json    # Drug resistance results
+│   ├── run_complete_analysis.py        # Master pipeline script
+│   ├── analyze_stanford_resistance.py  # Drug resistance analysis
+│   ├── analyze_ctl_escape_expanded.py  # CTL epitope analysis
+│   ├── analyze_catnap_neutralization.py # Antibody neutralization
+│   ├── analyze_tropism_switching.py    # Coreceptor tropism
+│   ├── cross_dataset_integration.py    # Multi-dataset integration
+│   ├── unified_data_loader.py          # Data loading utilities
+│   ├── position_mapper.py              # HXB2 coordinate mapping
+│   └── codon_extraction.py             # Codon encoding functions
+├── documentation/                       # 📖 COMPREHENSIVE DOCUMENTATION
+│   ├── EXECUTIVE_SUMMARY.md            # Start here!
+│   ├── NOVELTY_ASSESSMENT.md           # Novel vs. confirmed findings
+│   ├── LITERATURE_REVIEW.md            # 150 papers to review
+│   ├── methodology/                    # Technical methods
+│   ├── findings/                       # Detailed results (5 files)
+│   ├── statistical_analysis/           # Statistics guide
+│   ├── figures_guide/                  # Visualization descriptions
+│   ├── supplementary/                  # Data dictionary, glossary
+│   ├── reproducibility/                # Reproduction instructions
+│   ├── limitations/                    # Caveats and limitations
+│   ├── future_work/                    # Research roadmap
+│   ├── quickstart/                     # 10-minute setup
+│   ├── api_reference/                  # Python API docs
+│   ├── benchmarking/                   # Method comparisons
+│   └── faq/                            # Common questions
+├── results/                            # Analysis outputs
+│   ├── stanford_resistance/            # Drug resistance results
+│   ├── ctl_escape_expanded/            # CTL epitope results
+│   ├── catnap_neutralization/          # Antibody results
+│   ├── tropism/                        # Tropism results
+│   └── integrated/                     # Cross-dataset results
+├── legacy_scripts/                     # Original analysis scripts
+│   ├── 01_hiv_escape_analysis.py
+│   ├── 02_hiv_drug_resistance.py
+│   └── glycan_shield/
+└── data/
+    └── codon_encoder_3adic.pt          # Trained codon encoder
 ```
 
 ---
@@ -75,116 +120,176 @@ The genetic code's 64 codons are embedded into a **Poincaré ball** (hyperbolic 
 
 ---
 
+## Key Findings Summary
+
+### Novel Discoveries
+
+| Finding | Status | Details |
+|---------|--------|---------|
+| Position 22 as top tropism determinant | **NOVEL** | Separation score 0.591, exceeds classic 11/25 rule |
+| Distance-resistance correlation | **NOVEL** | r = 0.41 for NRTIs, first geometric quantification |
+| Breadth-centrality correlation for bnAbs | **NOVEL** | Broader antibodies target central epitopes |
+| 328 safe vaccine targets | **NOVEL** | Multi-constraint optimization, resistance-free |
+
+### Confirmed Findings
+
+| Finding | Status | Validates |
+|---------|--------|-----------|
+| B57/B27 HLA protection | Confirmation | Fellay et al. 2007, Pereyra et al. 2010 |
+| 11/25 tropism rule | Confirmation | Fouchier et al. 1992 |
+| bnAb potency profiles | Confirmation | CATNAP literature |
+
+---
+
 ## Analyses Available
 
-### 1. CTL Escape Analysis (`01_hiv_escape_analysis.py`)
+### 1. Drug Resistance Analysis
 
-Analyzes how HIV-1 escapes cytotoxic T lymphocyte (CTL) recognition through mutations in epitopes.
+**Script:** `analyze_stanford_resistance.py`
+**Records:** 7,154 patient sequences, 90,269 mutations
+**Output:** `results/stanford_resistance/`
 
-**Key Findings:**
-- 77.8% of escape mutations cross cluster boundaries
-- High-efficacy/low-cost escapes cluster at distances 5.8-6.9
-- Boundary crossing correlates with escape success
+| Drug Class | Mutations | Correlation (r) |
+|------------|-----------|-----------------|
+| NRTIs | 21,456 | 0.41 |
+| NNRTIs | 28,103 | 0.38 |
+| PIs | 23,847 | 0.34 |
+| INIs | 16,863 | 0.29 |
 
-### 2. Drug Resistance Analysis (`02_hiv_drug_resistance.py`)
+### 2. CTL Escape Analysis
 
-Maps drug resistance mutations across four antiretroviral drug classes.
+**Script:** `analyze_ctl_escape_expanded.py`
+**Records:** 2,115 epitopes, 240 HLA types
+**Output:** `results/ctl_escape_expanded/`
 
-**Key Findings by Drug Class:**
+| HLA Supertype | Epitopes | Escape Velocity |
+|---------------|----------|-----------------|
+| A*02 | 193 | 0.342 |
+| B*57 | 87 | 0.218 (protective) |
+| B*27 | 52 | 0.256 (protective) |
 
-| Class | Mean Distance | Interpretation |
-|-------|---------------|----------------|
-| NRTI | 6.08 | Requires substantial codon changes |
-| NNRTI | 5.04 | K103N has lowest distance (3.80) |
-| PI | 4.63 | High variance; M46I very low (0.65) |
-| INSTI | 4.92 | DTG has high genetic barrier |
+### 3. Antibody Neutralization Analysis
 
-### 3. Glycan Shield Analysis (`glycan_shield/`)
+**Script:** `analyze_catnap_neutralization.py`
+**Records:** 189,879 virus-antibody pairs
+**Output:** `results/catnap_neutralization/`
 
-Analyzes glycosylation sites that shield HIV envelope from antibody recognition.
+| bnAb | Breadth (%) | IC50 (μg/mL) |
+|------|-------------|--------------|
+| 3BNC117 | 78.8 | 0.242 |
+| 10E8 | 76.7 | 0.221 |
+| VRC01 | 68.9 | 0.580 |
 
-### 4. Integrase Vulnerability (`06_validate_integrase_vulnerability.py`)
+### 4. Tropism Analysis
 
-Identifies structural vulnerabilities in HIV integrase for therapeutic targeting.
+**Script:** `analyze_tropism_switching.py`
+**Records:** 2,932 V3 sequences
+**Output:** `results/tropism/`
+
+- **Accuracy:** 85% (AUC = 0.86)
+- **Top determinant:** Position 22 (34% importance)
+- **Novel finding:** Position 22 outperforms classic positions 11 and 25
+
+### 5. Cross-Dataset Integration
+
+**Script:** `cross_dataset_integration.py`
+**Output:** `results/integrated/`
+
+- **16,054** resistance-epitope overlaps identified
+- **328** vaccine targets with no resistance overlap
+- **Trade-off scoring** for dual-pressure positions
 
 ---
 
 ## Usage Examples
 
-### Run Full Analysis Pipeline
+### Run Complete Analysis Pipeline
 
 ```bash
-python scripts/run_hiv_analysis.py --all
+cd scripts
+python run_complete_analysis.py
+# Takes ~25 minutes, produces all results and reports
 ```
 
-### Analyze Specific Mutation
+### Analyze Mutation Geometry
 
 ```python
-from hyperbolic_utils import load_codon_encoder, codon_to_onehot, poincare_distance
-import torch
+from codon_extraction import encode_mutation_pair
 
-# Load encoder
-encoder, mapping, _ = load_codon_encoder(device="cpu", version="3adic")
-
-# Encode codons
-def get_embedding(codon):
-    x = torch.tensor([codon_to_onehot(codon)]).float()
-    with torch.no_grad():
-        return encoder.encode(x)[0]
-
-# Compare wild-type vs mutant
-wt_codon = "ATG"  # Methionine
-mut_codon = "ATC"  # Isoleucine
-
-wt_emb = get_embedding(wt_codon)
-mut_emb = get_embedding(mut_codon)
-
-distance = poincare_distance(wt_emb.unsqueeze(0), mut_emb.unsqueeze(0))
-print(f"M→I distance: {distance.item():.4f}")
+# Analyze M184V (major NRTI resistance mutation)
+features = encode_mutation_pair('M', 'V')
+print(f"M→V hyperbolic distance: {features['hyperbolic_distance']:.3f}")
+print(f"Radial change: {features['radial_change']:.3f}")
 ```
 
-### Batch Analysis
+### Load and Explore Results
 
 ```python
-import json
+import pandas as pd
 from pathlib import Path
 
-# Load results
-results_dir = Path("results")
-with open(results_dir / "hiv_escape_results.json") as f:
-    escape_data = json.load(f)
+# Load vaccine targets
+targets = pd.read_csv(Path("results/integrated/vaccine_targets.csv"))
+print(f"Total vaccine targets: {len(targets)}")
 
-# Analyze patterns
-for epitope, data in escape_data["epitopes"].items():
-    print(f"\n{epitope}:")
-    for mut in data["escape_mutations"]:
-        status = "CROSSED" if mut["boundary_crossed"] else "within"
-        print(f"  {mut['mutation']}: d={mut['hyperbolic_distance']:.3f} [{status}]")
+# Filter resistance-free targets
+safe_targets = targets[targets['resistance_overlap'] == 'No']
+print(f"Resistance-free targets: {len(safe_targets)}")
+
+# Top 10 by score
+print(safe_targets.nlargest(10, 'score')[['epitope', 'protein', 'hla_count', 'score']])
+```
+
+### Find Epitope Overlaps
+
+```python
+from position_mapper import find_overlapping_epitopes
+from unified_data_loader import load_lanl_ctl
+
+epitopes = load_lanl_ctl()
+
+# Find epitopes overlapping RT position 103 (K103N resistance)
+overlaps = find_overlapping_epitopes(103, 'RT', epitopes)
+print(f"K103N affects {len(overlaps)} CTL epitopes")
+for _, ep in overlaps.iterrows():
+    print(f"  {ep['Epitope']} (HLA: {ep['HLA']})")
 ```
 
 ---
 
 ## Biological Interpretation
 
-### Distance Ranges
+### Radial Position in Hyperbolic Space
 
-| Distance | Interpretation | Examples |
-|----------|----------------|----------|
-| < 1 | Minimal change | M46I (0.65) - accessory mutation |
-| 1-3 | Minor shift | Q148H (2.37), K103N (3.80) |
-| 3-5 | Moderate change | Y181C (4.45), E92Q (4.32) |
-| 5-7 | Significant shift | Most resistance mutations |
-| > 7 | Major reorganization | T215Y (7.17), D314N (7.17) |
+| Radial Position | Interpretation |
+|-----------------|----------------|
+| Low (0.3-0.5) | Highly constrained, essential function |
+| Medium (0.5-0.7) | Moderately constrained |
+| High (0.7-0.9) | Variable, tolerated changes |
 
-### Boundary Crossing
+### Trade-off Scores
 
-- **Crossed:** Mutation moves to different amino acid cluster
-- **Within:** Mutation stays in same cluster (synonymous-like)
+| Score Range | Interpretation |
+|-------------|----------------|
+| < 2.0 | Low trade-off |
+| 2.0 - 4.0 | Moderate trade-off |
+| > 4.0 | High trade-off (clinically important) |
 
-Boundary crossing correlates with:
-- Higher immune escape efficacy
-- Greater drug resistance
-- Larger functional impact
+### Escape Velocity
+
+- **Low velocity:** Escape is difficult (constrained epitope) - good vaccine target
+- **High velocity:** Escape is easy (variable epitope) - poor vaccine target
+
+---
+
+## Data Sources
+
+| Dataset | Source | Records |
+|---------|--------|---------|
+| Stanford HIVDB | https://hivdb.stanford.edu | 7,154 |
+| LANL CTL | https://www.hiv.lanl.gov | 2,115 |
+| CATNAP | https://www.hiv.lanl.gov/content/sequence/CATNAP | 189,879 |
+| V3 Coreceptor | https://huggingface.co/datasets/tnhaider/HIV_V3_coreceptor | 2,932 |
 
 ---
 
@@ -192,21 +297,37 @@ Boundary crossing correlates with:
 
 ```
 torch>=2.0.0
-numpy>=2.0.0
-scipy>=1.10.0
+numpy>=1.24.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+pyarrow>=12.0.0
 ```
 
 ---
 
-## References
+## Further Reading
 
-1. **p-adic Numbers in Genetics:** The 3-adic valuation provides a natural metric for codon relationships.
+- **For methodology:** See [METHODOLOGY.md](documentation/methodology/METHODOLOGY.md)
+- **For novel findings:** See [NOVELTY_ASSESSMENT.md](documentation/NOVELTY_ASSESSMENT.md)
+- **For related papers:** See [LITERATURE_REVIEW.md](documentation/LITERATURE_REVIEW.md) (150 papers)
+- **For limitations:** See [LIMITATIONS_AND_CAVEATS.md](documentation/limitations/LIMITATIONS_AND_CAVEATS.md)
+- **For future work:** See [FUTURE_DIRECTIONS.md](documentation/future_work/FUTURE_DIRECTIONS.md)
 
-2. **Hyperbolic Geometry:** Poincaré ball models hierarchical structures better than Euclidean space.
+---
 
-3. **HIV Drug Resistance:** Stanford HIV Drug Resistance Database (https://hivdb.stanford.edu/)
+## Citation
 
-4. **CTL Epitopes:** Los Alamos HIV Immunology Database (https://www.hiv.lanl.gov/)
+```bibtex
+@software{hiv_padic_analysis,
+  author = {{Ternary VAE Bioinformatics Research Group}},
+  title = {HIV Evolution Analysis Using P-adic Hyperbolic Geometry},
+  year = {2025},
+  version = {1.0},
+  note = {202,085 records analyzed across 10 datasets}
+}
+```
 
 ---
 
@@ -215,3 +336,7 @@ scipy>=1.10.0
 PolyForm Noncommercial License 1.0.0
 
 Copyright 2024-2025 AI Whisperers
+
+---
+
+_Last updated: 2025-12-25_

@@ -49,6 +49,23 @@ python scripts/train/train.py --config configs/ternary.yaml
 - **Project Management** – roadmaps, risk register, and code‑health metrics: `DOCUMENTATION/02_PROJECT_MANAGEMENT/`
 - **API Reference** – generated automatically from the `src/` package (see `docs/` after running `scripts/doc_builder.py`).
 
+### 🧬 HIV Analysis Documentation
+
+Comprehensive analysis of 200,000+ HIV records using p‑adic hyperbolic geometry:
+
+| Document | Description |
+|----------|-------------|
+| [Executive Summary](research/bioinformatics/codon_encoder_research/hiv/documentation/EXECUTIVE_SUMMARY.md) | Key findings and methodology overview |
+| [Quick Start](research/bioinformatics/codon_encoder_research/hiv/documentation/quickstart/QUICK_START.md) | Run the analysis in 10 minutes |
+| [Literature Review](research/bioinformatics/codon_encoder_research/hiv/documentation/LITERATURE_REVIEW.md) | 150 papers for further reading |
+| [Full Documentation](research/bioinformatics/codon_encoder_research/hiv/README.md) | Complete HIV module README |
+
+**Key Results:**
+- **328 vaccine targets** identified with no drug resistance overlap
+- **85% tropism prediction accuracy** using geometric features
+- **Position 22** discovered as top tropism determinant (novel finding)
+- **r = 0.41 correlation** between hyperbolic distance and drug resistance
+
 ---
 
 ## 🛠️ Installation & Development
