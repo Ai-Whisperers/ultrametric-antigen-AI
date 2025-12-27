@@ -2,17 +2,22 @@
 #
 # Licensed under the PolyForm Noncommercial License 1.0.0
 # See LICENSE file in the repository root for full license text.
-#
-# For commercial licensing inquiries: support@aiwhisperers.com
 
-"""Artifact management components.
+"""DEPRECATED: Use src.training.checkpoint_manager instead.
 
-This module handles checkpoint and artifact lifecycle management:
-- CheckpointManager: Save/load checkpoints with metadata
-- ArtifactRepository: Artifact promotion (raw → validated → production)
-- Metadata: Checkpoint and model metadata handling
+This module has been consolidated into src/training/ for better organization.
+Imports are redirected for backward compatibility.
 """
 
-from .checkpoint_manager import CheckpointManager
+import warnings
 
-__all__ = ["CheckpointManager"]
+warnings.warn(
+    "src.artifacts is deprecated. Use src.training.checkpoint_manager instead.",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+# Backward compatibility redirect
+from src.training.checkpoint_manager import AsyncCheckpointSaver, CheckpointManager
+
+__all__ = ["CheckpointManager", "AsyncCheckpointSaver"]

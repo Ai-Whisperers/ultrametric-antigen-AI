@@ -15,9 +15,12 @@ This module contains components for managing the training process:
 - Monitor: Logging and metrics tracking (TensorBoard + file)
 - ConfigSchema: Typed configuration validation
 - Environment: Pre-training environment checks
+- CheckpointManager: Async checkpoint saving (consolidated from artifacts/)
+- Optimizers: Riemannian and multi-objective optimizers (consolidated from optimizers/)
 """
 
 from .base import STATENET_KEYS, BaseTrainer
+from .checkpoint_manager import AsyncCheckpointSaver, CheckpointManager
 from .config_schema import (ConfigValidationError, ModelConfig, TrainingConfig,
                             config_to_dict, validate_config)
 from .curriculum import AdaptiveCurriculum, CurriculumState
@@ -39,6 +42,9 @@ __all__ = [
     # Trainers
     "TernaryVAETrainer",
     "HyperbolicVAETrainer",
+    # Checkpoint management (consolidated from artifacts/)
+    "CheckpointManager",
+    "AsyncCheckpointSaver",
     # Schedulers
     "TemperatureScheduler",
     "BetaScheduler",

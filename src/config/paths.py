@@ -128,6 +128,7 @@ SRC_DIR = PROJECT_ROOT / "src"
 TESTS_DIR = PROJECT_ROOT / "tests"
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
+RESEARCH_DIR = PROJECT_ROOT / "research"
 
 # =============================================================================
 # DELIVERABLES
@@ -190,6 +191,65 @@ def get_data_path(filename: str, processed: bool = True) -> Path:
     """
     base = PROCESSED_DATA_DIR if processed else RAW_DATA_DIR
     return base / filename
+
+
+def get_research_path(subpath: str = "") -> Path:
+    """Get path to research directory or subdirectory.
+
+    Args:
+        subpath: Optional subdirectory path (e.g., "bioinformatics/hiv")
+
+    Returns:
+        Path to research directory or subdirectory
+    """
+    if subpath:
+        return RESEARCH_DIR / subpath
+    return RESEARCH_DIR
+
+
+def get_config_path(config_name: str) -> Path | None:
+    """Get path to a configuration file.
+
+    Args:
+        config_name: Name of config file (e.g., "ternary.yaml")
+
+    Returns:
+        Path to config file if exists, None otherwise
+    """
+    config_path = CONFIG_DIR / config_name
+    return config_path if config_path.exists() else None
+
+
+def list_research_experiments() -> list[str]:
+    """List available research experiments.
+
+    Returns:
+        List of experiment directory names
+    """
+    if not RESEARCH_DIR.exists():
+        return []
+
+    experiments = []
+    for item in RESEARCH_DIR.iterdir():
+        if item.is_dir() and not item.name.startswith("_"):
+            experiments.append(item.name)
+    return sorted(experiments)
+
+
+def list_datasets() -> list[str]:
+    """List available datasets in data/ directory.
+
+    Returns:
+        List of dataset directory names
+    """
+    if not DATA_DIR.exists():
+        return []
+
+    datasets = []
+    for item in DATA_DIR.iterdir():
+        if item.is_dir() and not item.name.startswith("_"):
+            datasets.append(item.name)
+    return sorted(datasets)
 
 
 def resolve_legacy_path(path: str | Path) -> Path:
@@ -285,6 +345,7 @@ __all__ = [
     "TESTS_DIR",
     "SCRIPTS_DIR",
     "NOTEBOOKS_DIR",
+    "RESEARCH_DIR",
     # Deliverables
     "DELIVERABLES_DIR",
     # Functions
@@ -292,6 +353,10 @@ __all__ = [
     "get_checkpoint_path",
     "get_results_path",
     "get_data_path",
+    "get_research_path",
+    "get_config_path",
+    "list_research_experiments",
+    "list_datasets",
     "resolve_legacy_path",
     "init_project_dirs",
 ]

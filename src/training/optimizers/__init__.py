@@ -3,21 +3,15 @@
 # Licensed under the PolyForm Noncommercial License 1.0.0
 # See LICENSE file in the repository root for full license text.
 
-"""DEPRECATED: Use src.training.optimizers instead.
+"""Training optimizers module.
 
-This module has been consolidated into src/training/optimizers/ for better organization.
-Imports are redirected for backward compatibility.
+Provides specialized optimizers for mixed Euclidean/Hyperbolic training:
+- MixedRiemannianOptimizer: Handles both standard and manifold parameters
+- MultiObjectiveOptimizer: Multi-objective optimization support
+
+Consolidated from src/optimizers/ for better organization.
 """
 
-import warnings
-
-warnings.warn(
-    "src.optimizers is deprecated. Use src.training.optimizers instead.",
-    DeprecationWarning,
-    stacklevel=2,
-)
-
-# Backward compatibility redirect
 from src.training.optimizers.multi_objective import (
     NSGAII,
     NSGAConfig,

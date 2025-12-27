@@ -17,7 +17,7 @@ Key Features:
 - Integration with ObjectiveRegistry
 
 Usage:
-    from src.optimizers.multi_objective import NSGAII, ParetoFrontOptimizer
+    from src.training.optimizers import NSGAII, ParetoFrontOptimizer
     from src.objectives import ObjectiveRegistry
 
     nsga = NSGAII(population_size=100, n_generations=50)

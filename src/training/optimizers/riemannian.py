@@ -18,7 +18,7 @@ Key Features:
 - Warm-up scheduling for hyperbolic parameters
 
 Usage:
-    from src.optimizers.riemannian import MixedRiemannianOptimizer
+    from src.training.optimizers import MixedRiemannianOptimizer
 
     optimizer = MixedRiemannianOptimizer(
         model.parameters(),

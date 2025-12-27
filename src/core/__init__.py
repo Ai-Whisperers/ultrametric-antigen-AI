@@ -12,6 +12,8 @@ modules depend on. Changes here affect the entire codebase.
 
 Modules:
     ternary: Ternary algebra (valuation, distance, operations)
+    padic_math: P-adic mathematics (distance, norm, goldilocks)
+    metrics: Hyperbolic geometry metrics (consolidated from metrics/)
 
 Usage:
     from src.core import TERNARY
@@ -24,6 +26,12 @@ Usage:
 
 from .ternary import (TERNARY, TernarySpace, distance, from_ternary,
                       to_ternary, valuation)
+from .metrics import (
+    compute_3adic_valuation,
+    compute_ranking_correlation_hyperbolic,
+    poincare_distance,
+    project_to_poincare,
+)
 from .padic_math import (
     DEFAULT_P,
     PADIC_INFINITY,
@@ -55,6 +63,11 @@ __all__ = [
     "N_OPERATIONS",
     "N_DIGITS",
     "MAX_VALUATION",
+    # Hyperbolic metrics (consolidated from metrics/)
+    "project_to_poincare",
+    "poincare_distance",
+    "compute_3adic_valuation",
+    "compute_ranking_correlation_hyperbolic",
     # P-adic math
     "DEFAULT_P",
     "PADIC_INFINITY",

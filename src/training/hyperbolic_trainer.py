@@ -32,7 +32,7 @@ from ..losses.hyperbolic_prior import HomeostaticHyperbolicPrior
 from ..losses.hyperbolic_recon import HomeostaticReconLoss, HyperbolicCentroidLoss
 from ..losses.padic import PAdicRankingLossHyperbolic
 from ..losses.radial_stratification import RadialStratificationLoss
-from ..metrics.hyperbolic import compute_ranking_correlation_hyperbolic
+from ..core.metrics import compute_ranking_correlation_hyperbolic
 from ..models.curriculum import ContinuousCurriculumModule
 from .feedback import (
     ContinuousFeedbackController,
