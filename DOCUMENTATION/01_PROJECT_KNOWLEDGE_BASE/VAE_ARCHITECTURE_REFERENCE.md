@@ -71,14 +71,22 @@ Despite appearing to have good metrics (100% coverage, -0.83 hierarchy), this ch
 
 ---
 
-### Validated Checkpoints
+### Full Checkpoint Reference
 
-| Version | Checkpoint | Coverage | Hier_B | Richness | Status |
-|---------|------------|----------|--------|----------|--------|
-| **v5.11.3** | v5_11_structural | 100% | -0.40 | 0.00304 | Moderate hierarchy, good richness |
-| **v5.11.8** | v5_11_homeostasis | 99.9% | -0.82 | 0.00136 | Good hierarchy, moderate richness |
-| **homeostatic_rich** | homeostatic_rich | 100% | -0.8321 | 0.00787 | **BEST BALANCE** - ceiling hier + high richness |
-| **v5_11_progressive** | v5_11_progressive | 99.9% | +0.78 (B) | 0.00145 | VAE-B inverted, not usable |
+| Checkpoint | Cov | Hier_A | Hier_B | Richness | r_v0 | r_v9 | Status |
+|------------|-----|--------|--------|----------|------|------|--------|
+| **v5.11.3** (v5_11_structural) | 100% | -0.69 | -0.74 | 0.00124 | 0.55 | 0.42 | Stable for bioinformatics |
+| **v5.11.8** (v5_11_homeostasis) | 99.9% | -0.51 | **-0.83** | 0.00126 | 0.56 | 0.48 | Good hierarchy |
+| v5_11_progressive | 99.9% | -0.04 | +0.78 | 0.00145 | 0.50 | 0.58 | VAE-B INVERTED |
+| v5_11_annealing | 100% | +0.58 | +0.80 | 0.00140 | 0.42 | 0.46 | VAE-B INVERTED |
+| v5_11_overnight | 100% | -0.73 | -0.83 | 0.00800 | 0.88 | 0.22 | **INVALID-COLLAPSED** |
+| v5_11_11_production | 100% | +0.28 | +0.06 | 0.00135 | 0.50 | 0.55 | Weak hierarchy |
+| **homeostatic_rich** | 100% | -0.69 | **-0.8321** | **0.00787** | 0.89 | 0.19 | **BEST BALANCE** |
+| max_hierarchy | 100% | -0.83 | -0.8321 | 0.00028 | 0.95 | 0.16 | Ceiling, low richness |
+| hierarchy_focused | 100% | -0.83 | +0.68 | 0.00015 | 0.67 | 0.29 | VAE-B INVERTED |
+| radial_target | 100% | -0.83 | +0.68 | 0.00005 | 0.95 | 0.17 | VAE-B INVERTED |
+
+**Legend**: Cov=Coverage, Hier=Hierarchy (Spearman), r_v0/r_v9=mean radius at valuation 0/9
 
 ---
 
