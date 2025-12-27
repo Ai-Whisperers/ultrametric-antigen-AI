@@ -9,20 +9,52 @@ Provides categorical abstractions for compositional neural network
 design and formal verification.
 
 Key Components:
-- CategoricalLayer: Layers as morphisms
-- Functor: Structure-preserving maps
+- CategoricalLayer: Layers as morphisms with type safety
+- Functor: Structure-preserving maps between architectures
 - NaturalTransformation: Layer-to-layer mappings
+- ParametricLens: Categorical formulation of backprop
+- Optic: Bidirectional data flow (residuals, attention)
 
 Example:
-    from src.categorical import CategoricalLayer, Functor
+    from src.categorical import CategoricalLayer, TensorType
 
-    layer1 = CategoricalLayer(input_type, hidden_type, transform1)
-    layer2 = CategoricalLayer(hidden_type, output_type, transform2)
-    composed = layer1.compose(layer2)
+    input_type = TensorType((128,))
+    hidden_type = TensorType((64,))
+    layer1 = CategoricalLayer(input_type, hidden_type, name="encoder")
+    layer2 = CategoricalLayer(hidden_type, input_type, name="decoder")
+    autoencoder = layer1 >> layer2
 """
 
+from src.categorical.category_theory import (
+    TensorType,
+    Morphism,
+    CategoricalLayer,
+    Functor,
+    NaturalTransformation,
+    ParametricLens,
+    LinearLens,
+    ProductCategory,
+    MonoidalCategory,
+    StringDiagram,
+    Optic,
+    ResidualOptic,
+    AttentionOptic,
+    CategoricalNetwork,
+)
+
 __all__ = [
+    "TensorType",
+    "Morphism",
     "CategoricalLayer",
     "Functor",
     "NaturalTransformation",
+    "ParametricLens",
+    "LinearLens",
+    "ProductCategory",
+    "MonoidalCategory",
+    "StringDiagram",
+    "Optic",
+    "ResidualOptic",
+    "AttentionOptic",
+    "CategoricalNetwork",
 ]

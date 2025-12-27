@@ -11,6 +11,7 @@ differential geometry on statistical manifolds.
 Key Components:
 - FisherInformationEstimator: Estimate Fisher information matrix
 - NaturalGradientOptimizer: Optimize using natural gradients
+- KFACOptimizer: K-FAC second-order optimizer
 - InformationGeometricAnalyzer: Analyze training dynamics
 
 Example:
@@ -19,9 +20,18 @@ Example:
     optimizer = NaturalGradientOptimizer(model.parameters(), lr=0.01)
 """
 
+from src.information.fisher_geometry import (
+    FisherInfo,
+    FisherInformationEstimator,
+    NaturalGradientOptimizer,
+    KFACOptimizer,
+    InformationGeometricAnalyzer,
+)
+
 __all__ = [
     "FisherInfo",
     "FisherInformationEstimator",
     "NaturalGradientOptimizer",
+    "KFACOptimizer",
     "InformationGeometricAnalyzer",
 ]

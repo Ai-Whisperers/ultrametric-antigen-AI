@@ -30,6 +30,7 @@ import torch.nn as nn
 # Import from shared modules (single source of truth)
 from src.analysis.immunology.genetic_risk import MS_HLA_RISK_ALLELES
 from src.biology.amino_acids import AMINO_ACID_PROPERTIES
+from src.core.padic_math import PADIC_INFINITY, padic_valuation
 
 
 class MSSubtype(Enum):
@@ -401,14 +402,13 @@ class MultipleSclerosisAnalyzer:
         self.hla_to_idx: dict[str, int] = {}
 
     def compute_padic_valuation(self, n: int) -> int:
-        """Compute p-adic valuation of n."""
-        if n == 0:
-            return float("inf")
-        v = 0
-        while n % self.p == 0:
-            v += 1
-            n //= self.p
-        return v
+        """Compute p-adic valuation of n.
+
+        Uses centralized padic_valuation from src.core.padic_math.
+        """
+        val = padic_valuation(n, self.p)
+        # Return infinity for n=0 (core returns PADIC_INFINITY_INT=100)
+        return PADIC_INFINITY if n == 0 else val
 
     def analyze_known_mimicry(self) -> list[EpitopePair]:
         """Analyze known molecular mimicry pairs."""

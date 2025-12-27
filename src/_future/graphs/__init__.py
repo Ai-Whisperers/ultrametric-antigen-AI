@@ -12,6 +12,8 @@ Key Components:
 - HyperbolicGraphConv: Message passing in Poincare ball
 - LorentzMLP: Lorentz model operations
 - HyboWaveNet: Multi-scale wavelet + hyperbolic GNN
+- PoincareOperations: Mathematical operations in Poincare ball
+- LorentzOperations: Mathematical operations in Lorentz model
 
 Example:
     from src.graphs import HyperbolicGraphConv
@@ -20,8 +22,22 @@ Example:
     out = conv(x, edge_index, edge_attr)
 """
 
+from src.graphs.hyperbolic_gnn import (
+    HyperbolicGraphConv,
+    HyperbolicLinear,
+    LorentzMLP,
+    HyboWaveNet,
+    PoincareOperations,
+    LorentzOperations,
+    SpectralWavelet,
+)
+
 __all__ = [
     "HyperbolicGraphConv",
+    "HyperbolicLinear",
     "LorentzMLP",
     "HyboWaveNet",
+    "PoincareOperations",
+    "LorentzOperations",
+    "SpectralWavelet",
 ]

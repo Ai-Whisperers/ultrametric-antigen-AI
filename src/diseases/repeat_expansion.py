@@ -41,6 +41,8 @@ from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
+from src.core.padic_math import padic_distance, padic_valuation
+
 
 class TrinucleotideRepeat(Enum):
     """Trinucleotide repeat types."""
@@ -185,18 +187,16 @@ class RepeatExpansionAnalyzer:
         self.goldilocks_width = 0.2  # Width of Goldilocks Zone
 
     def _compute_padic_valuation(self, n: int) -> int:
-        """Compute p-adic valuation v_p(n)."""
-        if n == 0:
-            return 100  # Represents infinity
+        """Compute p-adic valuation v_p(n).
 
-        valuation = 0
-        while n % self.p == 0:
-            valuation += 1
-            n //= self.p
-        return valuation
+        Uses centralized padic_valuation from src.core.padic_math.
+        """
+        return padic_valuation(n, self.p)
 
     def _compute_repeat_padic_distance(self, repeat_count: int, threshold: int) -> float:
         """Compute p-adic distance of repeat count from disease threshold.
+
+        Uses centralized padic_distance from src.core.padic_math.
 
         The distance measures how "far" the repeat count is from the
         pathological threshold in p-adic terms.
@@ -208,16 +208,7 @@ class RepeatExpansionAnalyzer:
         Returns:
             Normalized p-adic distance (0-1)
         """
-        diff = abs(repeat_count - threshold)
-        if diff == 0:
-            return 0.0
-
-        valuation = self._compute_padic_valuation(diff)
-
-        # Convert valuation to distance: higher valuation = smaller distance
-        distance = 1.0 / (self.p**valuation)
-
-        return distance
+        return padic_distance(repeat_count, threshold, self.p)
 
     def _compute_goldilocks_score(self, repeat_count: int, disease_info: RepeatDiseaseInfo) -> float:
         """Compute how close the repeat count is to Goldilocks Zone.

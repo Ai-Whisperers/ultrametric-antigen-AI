@@ -5,28 +5,42 @@
 
 """P-adic valuation and Goldilocks zone utilities for immunology.
 
-Consolidates duplicated p-adic functions from:
-- src/diseases/multiple_sclerosis.py (compute_padic_valuation, lines 429-437)
-- src/diseases/long_covid.py (compute_padic_valuation, lines 270-279, 603-611)
-- src/diseases/rheumatoid_arthritis.py (GoldilocksZoneDetector)
-- src/diseases/repeat_expansion.py (_compute_goldilocks_score)
+This module provides immunology-specific p-adic utilities, building on
+the core p-adic mathematics from src.core.padic_math.
 
 The Goldilocks zone represents the immune escape region where antigens are:
 - Different enough from self to be immunogenic
 - Similar enough to self to cause cross-reactive autoimmunity
+
+Note:
+    Core p-adic operations are imported from src.core.padic_math.
+    This module provides immunology-specific wrappers and defaults.
+
+References:
+    - 2006_Kozyrev_Padic_Analysis_Methods.md
+    - Goldilocks zone concept from autoimmune research
 """
 
 from typing import Union
 
-import numpy as np
 import torch
 
-# Default p-adic base (3-adic for ternary operations)
-DEFAULT_P = 3
-
-# Infinity representation for p-adic valuation when n=0
-PADIC_INFINITY = float("inf")
-PADIC_INFINITY_INT = 100  # Integer representation used in some modules
+# Import all core p-adic operations from centralized module
+from src.core.padic_math import (
+    DEFAULT_P,
+    PADIC_INFINITY,
+    PADIC_INFINITY_INT,
+    compute_hierarchical_embedding,
+    padic_distance,
+    padic_distance_vectorized,
+    padic_valuation,
+)
+from src.core.padic_math import (
+    compute_goldilocks_score as _core_goldilocks_score,
+)
+from src.core.padic_math import (
+    is_in_goldilocks_zone as _core_is_in_goldilocks,
+)
 
 
 def compute_padic_valuation(
@@ -38,10 +52,8 @@ def compute_padic_valuation(
 
     The p-adic valuation v_p(n) is the highest power of p that divides n.
 
-    This is the unified replacement for:
-    - MultipleSclerosisAnalyzer.compute_padic_valuation()
-    - LongCOVIDAnalyzer.compute_padic_valuation()
-    - SpikeVariantComparator.compute_padic_valuation()
+    This is a thin wrapper around the core padic_valuation function,
+    providing backward compatibility for immunology modules.
 
     Args:
         n: Integer to compute valuation for
@@ -52,16 +64,10 @@ def compute_padic_valuation(
     Returns:
         P-adic valuation (int) or infinity for n=0
     """
-    if n == 0:
-        return PADIC_INFINITY if return_infinity else PADIC_INFINITY_INT
-
-    valuation = 0
-    n = abs(n)
-    while n % p == 0:
-        valuation += 1
-        n //= p
-
-    return valuation
+    val = padic_valuation(n, p)
+    if val == PADIC_INFINITY_INT and return_infinity:
+        return PADIC_INFINITY
+    return val
 
 
 def compute_padic_distance(
@@ -73,6 +79,8 @@ def compute_padic_distance(
 
     d_p(a, b) = p^(-v_p(a - b))
 
+    This is a direct pass-through to core padic_distance.
+
     Args:
         a: First integer
         b: Second integer
@@ -81,14 +89,7 @@ def compute_padic_distance(
     Returns:
         P-adic distance (0 to 1, where 0 means equal)
     """
-    if a == b:
-        return 0.0
-
-    valuation = compute_padic_valuation(a - b, p)
-    if valuation == PADIC_INFINITY:
-        return 0.0
-
-    return float(p) ** (-valuation)
+    return padic_distance(a, b, p)
 
 
 def compute_goldilocks_score(
@@ -104,11 +105,6 @@ def compute_goldilocks_score(
     - Too far (distance > center + width): clearly foreign, no cross-reactivity
     - Just right (near center): immunogenic yet cross-reactive
 
-    This is the unified replacement for:
-    - GoldilocksZoneDetector.zone_risk_score()
-    - LongCOVIDAnalyzer._compute_goldilocks_score()
-    - RepeatExpansionAnalyzer._compute_goldilocks_score()
-
     Args:
         distance: P-adic or structural distance from self
         center: Center of Goldilocks zone (default: 0.5)
@@ -121,11 +117,7 @@ def compute_goldilocks_score(
     if normalize and distance > 1.0:
         distance = distance / (1.0 + distance)  # Sigmoid-like normalization
 
-    # Gaussian scoring centered on the Goldilocks zone
-    deviation = abs(distance - center)
-    score = np.exp(-(deviation**2) / (2 * width**2))
-
-    return float(score)
+    return _core_goldilocks_score(distance, center=center, width=width)
 
 
 def is_in_goldilocks_zone(
@@ -145,8 +137,9 @@ def is_in_goldilocks_zone(
     Returns:
         True if in Goldilocks zone
     """
-    score = compute_goldilocks_score(distance, center, width)
-    return score >= threshold
+    return _core_is_in_goldilocks(
+        distance, center=center, width=width, threshold=threshold
+    )
 
 
 def compute_padic_distance_tensor(
@@ -157,6 +150,7 @@ def compute_padic_distance_tensor(
     """Compute p-adic distance between tensor elements.
 
     Vectorized version for batch processing.
+    Uses centralized padic_distance_vectorized.
 
     Args:
         a: First tensor (any shape)
@@ -166,29 +160,7 @@ def compute_padic_distance_tensor(
     Returns:
         Tensor of p-adic distances
     """
-    diff = (a - b).abs().long()
-
-    # Compute valuation for each element
-    valuations = torch.zeros_like(diff, dtype=torch.float)
-
-    # Iteratively divide by p to find valuation
-    remaining = diff.clone()
-    for v in range(20):  # Max valuation depth
-        divisible = remaining % p == 0
-        valuations[divisible] = v + 1
-        remaining = remaining // p
-        if not divisible.any():
-            break
-
-    # Handle zeros (infinite valuation)
-    zero_mask = diff == 0
-    valuations[zero_mask] = float("inf")
-
-    # Convert to distance: p^(-v)
-    distances = torch.pow(float(p), -valuations)
-    distances[zero_mask] = 0.0
-
-    return distances
+    return padic_distance_vectorized(a, b, p)
 
 
 def compute_hierarchical_padic_embedding(
@@ -201,6 +173,8 @@ def compute_hierarchical_padic_embedding(
     Creates a multi-scale representation where each level corresponds
     to a p-adic digit, enabling hierarchical similarity comparisons.
 
+    Uses centralized compute_hierarchical_embedding.
+
     Args:
         indices: Tensor of integer indices
         n_digits: Number of p-adic digits (depth)
@@ -209,21 +183,15 @@ def compute_hierarchical_padic_embedding(
     Returns:
         Tensor of shape (..., n_digits) with p-adic digits
     """
-    shape = indices.shape
-    embedding = torch.zeros(*shape, n_digits, dtype=torch.float, device=indices.device)
-
-    remaining = indices.clone()
-    for d in range(n_digits):
-        embedding[..., d] = (remaining % p).float()
-        remaining = remaining // p
-
-    return embedding
+    return compute_hierarchical_embedding(indices, n_digits=n_digits, p=p)
 
 
 __all__ = [
+    # Re-exported from core
     "DEFAULT_P",
     "PADIC_INFINITY",
     "PADIC_INFINITY_INT",
+    # Immunology-specific wrappers
     "compute_padic_valuation",
     "compute_padic_distance",
     "compute_goldilocks_score",

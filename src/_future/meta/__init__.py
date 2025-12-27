@@ -10,19 +10,30 @@ to new diseases and biological domains.
 
 Key Components:
 - MAML: Model-Agnostic Meta-Learning
+- Reptile: Simpler meta-learning algorithm
 - PAdicTaskSampler: Sample tasks by p-adic similarity
 - FewShotAdapter: Quick adaptation module
 
 Example:
     from src.meta import MAML, PAdicTaskSampler
 
-    sampler = PAdicTaskSampler(n_tasks=100)
+    sampler = PAdicTaskSampler(data_x, data_y, padic_indices)
+    tasks = sampler.sample_batch(n_tasks=16)
     maml = MAML(base_model, inner_lr=0.01)
-    maml.train(sampler)
 """
 
+from src.meta.meta_learning import (
+    Task,
+    MAML,
+    PAdicTaskSampler,
+    FewShotAdapter,
+    Reptile,
+)
+
 __all__ = [
+    "Task",
     "MAML",
     "PAdicTaskSampler",
     "FewShotAdapter",
+    "Reptile",
 ]

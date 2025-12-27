@@ -12,17 +12,31 @@ Key Components:
 - SpinGlassLandscape: Model protein folding as spin glass
 - ReplicaExchange: Parallel tempering for sampling
 - UltrametricTreeExtractor: Extract ultrametric structure
+- ParisiOverlapAnalyzer: Analyze replica symmetry breaking
+- BoltzmannMachine: RBM with p-adic structure
 
 Example:
     from src.physics import SpinGlassLandscape, ReplicaExchange
 
-    landscape = SpinGlassLandscape(n_residues=100)
+    landscape = SpinGlassLandscape(n_sites=100, n_states=3)
     sampler = ReplicaExchange(n_replicas=8)
     samples = sampler.sample(landscape)
 """
 
+from src.physics.statistical_physics import (
+    EnergyState,
+    SpinGlassLandscape,
+    ReplicaExchange,
+    UltrametricTreeExtractor,
+    ParisiOverlapAnalyzer,
+    BoltzmannMachine,
+)
+
 __all__ = [
+    "EnergyState",
     "SpinGlassLandscape",
     "ReplicaExchange",
     "UltrametricTreeExtractor",
+    "ParisiOverlapAnalyzer",
+    "BoltzmannMachine",
 ]

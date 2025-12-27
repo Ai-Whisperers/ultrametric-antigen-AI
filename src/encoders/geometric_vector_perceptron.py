@@ -23,6 +23,8 @@ from typing import Any
 import torch
 import torch.nn as nn
 
+from src.core.padic_math import padic_valuation_vectorized
+
 
 @dataclass
 class GVPOutput:
@@ -347,17 +349,16 @@ class PAdicGVP(nn.Module):
         self.padic_attention = nn.MultiheadAttention(s_out, num_heads=4, dropout=dropout, batch_first=True)
 
     def compute_padic_valuation(self, x: torch.Tensor) -> torch.Tensor:
-        """Compute p-adic valuation of differences."""
+        """Compute p-adic valuation of pairwise differences.
+
+        Uses centralized padic_valuation_vectorized from src.core.padic_math.
+        """
         # x: (batch, n, d) -> pairwise differences
         diff = x.unsqueeze(-2) - x.unsqueeze(-3)  # (batch, n, n, d)
         diff_int = (diff.abs() * 1000).long()  # Scale and discretize
 
-        # Compute valuation for each dimension
-        valuation = torch.zeros_like(diff_int, dtype=torch.float32)
-        for power in range(10):
-            divisible = (diff_int % (self.p ** (power + 1))) == 0
-            nonzero = diff_int > 0
-            valuation = torch.where(divisible & nonzero, torch.tensor(float(power + 1), device=x.device), valuation)
+        # Use centralized vectorized valuation
+        valuation = padic_valuation_vectorized(diff_int, self.p)
 
         # Average across dimensions
         return valuation.float().mean(dim=-1)

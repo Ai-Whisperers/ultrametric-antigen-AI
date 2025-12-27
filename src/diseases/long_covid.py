@@ -40,6 +40,8 @@ from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
+from src.core.padic_math import compute_goldilocks_score, padic_valuation
+
 
 class PTMType(Enum):
     """Types of post-translational modifications."""
@@ -268,15 +270,11 @@ class LongCOVIDAnalyzer:
         return None
 
     def _compute_padic_valuation(self, n: int) -> int:
-        """Compute p-adic valuation v_p(n)."""
-        if n == 0:
-            return 100  # Represents infinity
+        """Compute p-adic valuation v_p(n).
 
-        valuation = 0
-        while n % self.p == 0:
-            valuation += 1
-            n //= self.p
-        return valuation
+        Uses centralized padic_valuation from src.core.padic_math.
+        """
+        return padic_valuation(n, self.p)
 
     def _compute_position_padic_distance(self, position: int, reference: int = 614) -> float:
         """Compute p-adic distance of position from reference.
@@ -348,15 +346,17 @@ class LongCOVIDAnalyzer:
     def _compute_goldilocks_score(self, padic_distance: float) -> float:
         """Compute Goldilocks Zone score.
 
+        Uses centralized compute_goldilocks_score from src.core.padic_math.
+
         Args:
             padic_distance: P-adic distance value
 
         Returns:
             Score from 0 (outside zone) to 1 (center of zone)
         """
-        distance_from_center = abs(padic_distance - self.goldilocks_center)
-        score = np.exp(-(distance_from_center**2) / (2 * self.goldilocks_width**2))
-        return float(score)
+        return compute_goldilocks_score(
+            padic_distance, center=self.goldilocks_center, width=self.goldilocks_width
+        )
 
     def _compute_chronic_risk(self, site: PTMSite, immunogenicity: float, goldilocks: float) -> float:
         """Compute risk of chronic immune activation.
@@ -601,14 +601,11 @@ class SpikeVariantComparator:
         self.analyzer = LongCOVIDAnalyzer(p=p)
 
     def _compute_padic_valuation(self, n: int) -> int:
-        """Compute p-adic valuation."""
-        if n == 0:
-            return 100
-        valuation = 0
-        while n % self.p == 0:
-            valuation += 1
-            n //= self.p
-        return valuation
+        """Compute p-adic valuation.
+
+        Uses centralized padic_valuation from src.core.padic_math.
+        """
+        return padic_valuation(n, self.p)
 
     def compute_variant_distance(self, variant1: str, variant2: str) -> float:
         """Compute p-adic distance between two variants.

@@ -5,30 +5,45 @@
 
 """P-adic shift wrapper functions for biological sequence analysis.
 
-This module implements the core p-adic shift operations for encoding
-biological sequences (DNA, codons, amino acids) into p-adic space.
+This module provides biological sequence-specific p-adic operations,
+building on the core p-adic math utilities.
 
 Key functions:
-- padic_shift: Core shift operation for sequence positions
 - codon_padic_distance: Distance between codons in 3-adic space
 - sequence_padic_encoding: Full sequence encoding
+- PAdicSequenceEncoder: Encoder class for biological sequences
 
 The 3-adic framework is particularly suited for codon analysis because:
 - Codons have 3 positions
 - Each position has 4 nucleotides (mapped to 0-3)
 - The p-adic distance captures wobble position effects
 
+Note:
+    Core p-adic operations (valuation, norm, distance, digits) are
+    imported from src.core.padic_math. Use that module directly for
+    general p-adic computations.
+
 References:
 - 2006_Kozyrev_Padic_Analysis_Methods.md
 - 1975_Wong_CoEvolution_Theory.md
 """
 
-from dataclasses import dataclass
 from typing import Sequence
 
 import torch
 
 from src.biology.codons import codon_to_index, index_to_codon
+
+# Import all core p-adic operations from centralized module
+from src.core.padic_math import (
+    PAdicShiftResult,
+    padic_digits,
+    padic_distance,
+    padic_distance_matrix,
+    padic_norm,
+    padic_shift,
+    padic_valuation,
+)
 
 
 def index_to_rna_codon(index: int) -> str:
@@ -41,134 +56,6 @@ def index_to_rna_codon(index: int) -> str:
         3-letter RNA codon string (using U for uracil)
     """
     return index_to_codon(index).replace("T", "U")
-
-
-@dataclass
-class PAdicShiftResult:
-    """Result of p-adic shift operation."""
-
-    shift_value: float  # The actual shift value
-    valuation: int  # p-adic valuation
-    digits: list[int]  # p-adic digit expansion
-    canonical_form: str  # String representation
-
-
-def padic_valuation(n: int, p: int = 3) -> int:
-    """Compute p-adic valuation v_p(n).
-
-    The p-adic valuation is the largest power of p that divides n.
-    v_p(0) is defined as infinity (we return a large number).
-
-    Args:
-        n: Integer to compute valuation for
-        p: Prime base (default 3)
-
-    Returns:
-        Valuation v_p(n)
-    """
-    if n == 0:
-        return 100  # Represent infinity
-
-    n = abs(n)
-    v = 0
-    while n % p == 0:
-        v += 1
-        n //= p
-    return v
-
-
-def padic_norm(n: int, p: int = 3) -> float:
-    """Compute p-adic norm |n|_p = p^(-v_p(n)).
-
-    Args:
-        n: Integer to compute norm for
-        p: Prime base (default 3)
-
-    Returns:
-        p-adic norm
-    """
-    if n == 0:
-        return 0.0
-    v = padic_valuation(n, p)
-    return float(p) ** (-v)
-
-
-def padic_distance(a: int, b: int, p: int = 3) -> float:
-    """Compute p-adic distance d_p(a, b) = |a - b|_p.
-
-    This is an ultrametric: d(a,c) <= max(d(a,b), d(b,c))
-
-    Args:
-        a: First integer
-        b: Second integer
-        p: Prime base (default 3)
-
-    Returns:
-        p-adic distance
-    """
-    return padic_norm(a - b, p)
-
-
-def padic_digits(n: int, p: int = 3, n_digits: int = 4) -> list[int]:
-    """Compute p-adic digit expansion of n.
-
-    Returns the first n_digits of the p-adic expansion:
-    n = a_0 + a_1*p + a_2*p^2 + ...
-
-    Args:
-        n: Integer to expand
-        p: Prime base (default 3)
-        n_digits: Number of digits to compute
-
-    Returns:
-        List of p-adic digits [a_0, a_1, a_2, ...]
-    """
-    n = abs(n)
-    digits = []
-    for _ in range(n_digits):
-        digits.append(n % p)
-        n //= p
-    return digits
-
-
-def padic_shift(
-    value: int,
-    shift_amount: int = 1,
-    p: int = 3,
-) -> PAdicShiftResult:
-    """Perform p-adic shift operation.
-
-    Shifts the p-adic representation by the specified amount.
-    This is equivalent to multiplication/division by powers of p
-    in the p-adic domain.
-
-    Args:
-        value: Input integer value
-        shift_amount: Number of positions to shift (positive = right, negative = left)
-        p: Prime base (default 3)
-
-    Returns:
-        PAdicShiftResult with shifted value and metadata
-    """
-    if shift_amount >= 0:
-        # Right shift: divide by p^shift_amount
-        shifted = value // (p ** shift_amount)
-    else:
-        # Left shift: multiply by p^|shift_amount|
-        shifted = value * (p ** abs(shift_amount))
-
-    digits = padic_digits(shifted, p)
-    valuation = padic_valuation(shifted, p)
-
-    # Create canonical form string
-    canonical = f"{shifted}_({p})"
-
-    return PAdicShiftResult(
-        shift_value=float(shifted),
-        valuation=valuation,
-        digits=digits,
-        canonical_form=canonical,
-    )
 
 
 def codon_padic_distance(codon1: str, codon2: str, p: int = 3) -> float:
@@ -234,6 +121,9 @@ def batch_padic_distance(
 ) -> torch.Tensor:
     """Compute p-adic distances for batches of index pairs.
 
+    Note: This is a convenience wrapper around padic_distance_vectorized
+    from src.core.padic_math.
+
     Args:
         indices1: First indices (batch,)
         indices2: Second indices (batch,)
@@ -242,57 +132,9 @@ def batch_padic_distance(
     Returns:
         p-adic distances (batch,)
     """
-    diff = torch.abs(indices1.long() - indices2.long())
+    from src.core.padic_math import padic_distance_vectorized
 
-    # Compute valuations
-    valuations = torch.zeros_like(diff, dtype=torch.float)
-    for k in range(1, 10):  # Up to p^9
-        divisible = (diff % (p ** k) == 0) & (diff > 0)
-        valuations[divisible] = k
-
-    # Compute norms
-    distances = torch.where(
-        diff == 0,
-        torch.zeros_like(valuations),
-        torch.pow(float(p), -valuations),
-    )
-
-    return distances
-
-
-def padic_distance_matrix(
-    indices: torch.Tensor,
-    p: int = 3,
-) -> torch.Tensor:
-    """Compute pairwise p-adic distance matrix.
-
-    Args:
-        indices: Tensor of indices (n,)
-        p: Prime base (default 3)
-
-    Returns:
-        Distance matrix (n, n)
-    """
-    n = len(indices)
-    indices_expanded = indices.unsqueeze(0).expand(n, -1)
-
-    # Compute all pairwise differences
-    diff = torch.abs(indices_expanded - indices.unsqueeze(1))
-
-    # Compute valuations
-    valuations = torch.zeros_like(diff, dtype=torch.float)
-    for k in range(1, 10):
-        divisible = (diff % (p ** k) == 0) & (diff > 0)
-        valuations[divisible] = k
-
-    # Compute distances
-    distances = torch.where(
-        diff == 0,
-        torch.zeros_like(valuations),
-        torch.pow(float(p), -valuations),
-    )
-
-    return distances
+    return padic_distance_vectorized(indices1, indices2, p)
 
 
 class PAdicSequenceEncoder:
@@ -318,7 +160,7 @@ class PAdicSequenceEncoder:
             digits = padic_digits(i, p, n_digits)
             self.codon_digits[i] = torch.tensor(digits, dtype=torch.float)
 
-        # Precompute 64x64 distance matrix
+        # Precompute 64x64 distance matrix using centralized function
         indices = torch.arange(64)
         self.distance_matrix = padic_distance_matrix(indices, p)
 
@@ -359,7 +201,7 @@ class PAdicSequenceEncoder:
     def compute_distances(self, indices: torch.Tensor) -> torch.Tensor:
         """Compute pairwise p-adic distances.
 
-        Vectorized implementation using advanced indexing (5-10x faster than loops).
+        Uses centralized tensor utilities for efficient computation.
 
         Args:
             indices: Codon indices (batch, seq_len)
@@ -367,24 +209,22 @@ class PAdicSequenceEncoder:
         Returns:
             Distance matrix (batch, seq_len, seq_len)
         """
+        from src.core.tensor_utils import batch_index_select, pairwise_broadcast
+
         batch_size, seq_len = indices.shape
         indices = indices.long()
 
-        # Use advanced indexing instead of triple loop
-        # Expand indices for broadcasting: (batch, seq, 1) and (batch, 1, seq)
-        i_idx = indices.unsqueeze(2).expand(-1, -1, seq_len)
-        j_idx = indices.unsqueeze(1).expand(-1, seq_len, -1)
-
-        # Flatten, index into precomputed matrix, reshape
-        flat_i = i_idx.reshape(-1)
-        flat_j = j_idx.reshape(-1)
+        # Use centralized utilities
+        i_idx, j_idx = pairwise_broadcast(indices)
 
         # Move distance_matrix to same device as indices if needed
         dist_matrix = self.distance_matrix
         if dist_matrix.device != indices.device:
             dist_matrix = dist_matrix.to(indices.device)
 
-        distances = dist_matrix[flat_i, flat_j].reshape(batch_size, seq_len, seq_len)
+        distances = batch_index_select(
+            dist_matrix, i_idx, j_idx, (batch_size, seq_len, seq_len)
+        )
 
         return distances
 
@@ -498,3 +338,24 @@ class PAdicCodonAnalyzer:
                     count += 1
 
         return total_distance / count if count > 0 else 0.0
+
+
+# Re-export for backward compatibility (prefer importing from src.core directly)
+__all__ = [
+    # Core functions (re-exported from src.core.padic_math)
+    "padic_valuation",
+    "padic_norm",
+    "padic_distance",
+    "padic_digits",
+    "padic_shift",
+    "PAdicShiftResult",
+    "padic_distance_matrix",
+    # Sequence-specific functions
+    "index_to_rna_codon",
+    "codon_padic_distance",
+    "sequence_padic_encoding",
+    "batch_padic_distance",
+    # Classes
+    "PAdicSequenceEncoder",
+    "PAdicCodonAnalyzer",
+]

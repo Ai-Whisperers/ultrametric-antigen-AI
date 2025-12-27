@@ -36,13 +36,13 @@ import torch
 import torch.nn as nn
 
 # =============================================================================
-# Genetic Code Tables (imported from centralized biology module)
+# Imports from centralized modules
 # =============================================================================
-
 from src.biology.codons import (
     GENETIC_CODE,
     codon_index_to_triplet,
 )
+from src.core.padic_math import padic_valuation
 
 # Amino acid properties (normalized to [-1, 1])
 AA_PROPERTIES = {
@@ -79,18 +79,12 @@ AA_PROPERTIES = {
 def compute_padic_valuation(n: int, p: int = 3) -> int:
     """Compute p-adic valuation v_p(n).
 
+    Uses centralized padic_valuation from src.core.padic_math.
+
     The p-adic valuation is the largest power of p that divides n.
     For n=0, returns infinity (represented as a large number).
     """
-    if n == 0:
-        return 100  # Represents infinity
-
-    valuation = 0
-    while n % p == 0:
-        valuation += 1
-        n //= p
-
-    return valuation
+    return padic_valuation(n, p)
 
 
 def compute_padic_distance_between_codons(idx1: int, idx2: int, p: int = 3) -> float:

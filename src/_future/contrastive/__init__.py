@@ -12,6 +12,7 @@ Key Components:
 - PAdicContrastiveLoss: Use p-adic distance for positive sampling
 - MultiScaleContrastive: Hierarchical contrastive learning
 - SimCLREncoder: Projection head for contrastive learning
+- MomentumContrastEncoder: MoCo-style momentum contrast
 
 Example:
     from src.contrastive import PAdicContrastiveLoss
@@ -20,8 +21,22 @@ Example:
     loss = loss_fn(embeddings, indices)
 """
 
+from src.contrastive.padic_contrastive import (
+    PAdicContrastiveLoss,
+    MultiScaleContrastive,
+    SimCLREncoder,
+    MomentumContrastEncoder,
+    PAdicPositiveSampler,
+    ContrastiveDataAugmentation,
+    ContrastiveConfig,
+)
+
 __all__ = [
     "PAdicContrastiveLoss",
     "MultiScaleContrastive",
     "SimCLREncoder",
+    "MomentumContrastEncoder",
+    "PAdicPositiveSampler",
+    "ContrastiveDataAugmentation",
+    "ContrastiveConfig",
 ]

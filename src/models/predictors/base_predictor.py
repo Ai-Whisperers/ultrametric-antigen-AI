@@ -13,6 +13,9 @@ from typing import Any, Union
 
 import numpy as np
 
+from src.core.padic_math import PADIC_INFINITY
+from src.core.padic_math import padic_valuation as core_padic_valuation
+
 try:
     import joblib
     HAS_JOBLIB = True
@@ -42,14 +45,13 @@ class HyperbolicFeatureExtractor:
         self.codon_to_index = codon_to_index
 
     def padic_valuation(self, n: int) -> int:
-        """Compute p-adic valuation of integer n."""
-        if n == 0:
-            return float("inf")
-        v = 0
-        while n % self.p == 0:
-            v += 1
-            n //= self.p
-        return v
+        """Compute p-adic valuation of integer n.
+
+        Uses centralized padic_valuation from src.core.padic_math.
+        """
+        val = core_padic_valuation(n, self.p)
+        # Return PADIC_INFINITY for n=0 (core returns PADIC_INFINITY_INT=100)
+        return PADIC_INFINITY if n == 0 else val
 
     def codon_to_radial(self, codon: str) -> float:
         """Map codon to radial position in Poincaré ball."""

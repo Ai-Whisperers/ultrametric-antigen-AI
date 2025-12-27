@@ -9,10 +9,13 @@ This module implements p-adic distance computation between DNA sequences,
 capturing the hierarchical importance of different sequence positions
 for CRISPR targeting specificity.
 
-Single responsibility: p-Adic distance computation.
+Uses centralized p-adic operations from src.core.padic_math.
+Single responsibility: p-Adic distance computation for CRISPR.
 """
 
 import torch
+
+from src.core.padic_math import padic_valuation
 
 # Position weights for mismatch tolerance (empirical from literature)
 # Seed region (11-20 from PAM) is more critical than non-seed (1-10)
@@ -67,21 +70,15 @@ class PAdicSequenceDistance:
         Higher valuation = position is more divisible by p = less critical.
         Lower valuation = position is less divisible = more critical.
 
+        Uses centralized padic_valuation from src.core.padic_math.
+
         Args:
             position: Sequence position (1-indexed)
 
         Returns:
             p-adic valuation
         """
-        if position == 0:
-            return 100  # Infinity for position 0
-
-        v = 0
-        n = position
-        while n % self.p == 0:
-            v += 1
-            n //= self.p
-        return v
+        return padic_valuation(position, self.p)
 
     def compute_distance(
         self,

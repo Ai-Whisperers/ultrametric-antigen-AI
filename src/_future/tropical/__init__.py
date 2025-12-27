@@ -12,6 +12,7 @@ Key Components:
 - TropicalPolynomial: Tropical polynomial representation
 - TropicalNNAnalyzer: Analyze ReLU networks as tropical computations
 - TropicalPhylogeneticDistance: Tree distances in tropical space
+- TropicalConvexHull: Tropical convex geometry
 
 Example:
     from src.tropical import TropicalNNAnalyzer
@@ -20,8 +21,24 @@ Example:
     n_regions = analyzer.compute_linear_regions()
 """
 
+from src.tropical.tropical_geometry import (
+    TropicalSemiring,
+    TropicalMonomial,
+    TropicalPolynomial,
+    TropicalNNAnalyzer,
+    LinearRegion,
+    TropicalPhylogeneticTree,
+    TropicalPhylogeneticDistance,
+    TropicalConvexHull,
+)
+
 __all__ = [
+    "TropicalSemiring",
+    "TropicalMonomial",
     "TropicalPolynomial",
     "TropicalNNAnalyzer",
+    "LinearRegion",
+    "TropicalPhylogeneticTree",
     "TropicalPhylogeneticDistance",
+    "TropicalConvexHull",
 ]
