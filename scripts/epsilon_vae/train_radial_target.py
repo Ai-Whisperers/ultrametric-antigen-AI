@@ -30,6 +30,7 @@ import numpy as np
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.config.paths import CHECKPOINTS_DIR
 from src.core import TERNARY
 from src.data.generation import generate_all_ternary_operations
 from src.models import TernaryVAEV5_11_PartialFreeze
@@ -146,16 +147,16 @@ def main():
     parser.add_argument("--radial_weight", type=float, default=10.0)
     parser.add_argument("--coverage_weight", type=float, default=0.1)
     parser.add_argument("--start_checkpoint", type=str,
-                        default="sandbox-training/checkpoints/hierarchy_extreme/best.pt")
+                        default=str(CHECKPOINTS_DIR / "hierarchy_extreme" / "best.pt"))
     parser.add_argument("--save_dir", type=str,
-                        default="sandbox-training/checkpoints/radial_target")
+                        default=str(CHECKPOINTS_DIR / "radial_target"))
     parser.add_argument("--device", type=str, default="cuda")
     args = parser.parse_args()
 
     device = torch.device(args.device if torch.cuda.is_available() else 'cpu')
     print(f"Device: {device}")
 
-    save_dir = PROJECT_ROOT / args.save_dir
+    save_dir = Path(args.save_dir)
     save_dir.mkdir(parents=True, exist_ok=True)
 
     # === Create Model ===

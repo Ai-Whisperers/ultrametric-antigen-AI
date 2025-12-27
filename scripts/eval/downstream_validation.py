@@ -33,6 +33,7 @@ from sklearn.neighbors import NearestNeighbors
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.config.paths import CHECKPOINTS_DIR
 from src.core import TERNARY
 from src.data.generation import generate_all_ternary_operations
 from src.models import TernaryVAEV5_11_PartialFreeze
@@ -56,7 +57,7 @@ def load_model(checkpoint_path: Path, device: str = "cuda"):
     )
 
     # Load v5.5 base checkpoint first
-    v5_5_path = PROJECT_ROOT / "sandbox-training" / "checkpoints" / "v5_5" / "latest.pt"
+    v5_5_path = CHECKPOINTS_DIR / "v5_5" / "latest.pt"
     model.load_v5_5_checkpoint(v5_5_path, device)
 
     # Load trained weights (projection + encoder_B)
@@ -376,7 +377,7 @@ def main():
     parser.add_argument(
         "--checkpoint",
         type=str,
-        default="sandbox-training/checkpoints/ternary_option_c_dual/best.pt",
+        default=str(CHECKPOINTS_DIR / "ternary_option_c_dual" / "best.pt"),
         help="Path to model checkpoint",
     )
     parser.add_argument("--device", type=str, default="cuda", help="Device to use")
@@ -391,8 +392,8 @@ def main():
     if not checkpoint_path.exists():
         # Try to find latest checkpoint
         alt_paths = [
-            PROJECT_ROOT / "sandbox-training" / "checkpoints" / "ternary_option_c_dual" / "best.pt",
-            PROJECT_ROOT / "sandbox-training" / "checkpoints" / "ternary_option_c_dual" / "latest.pt",
+            CHECKPOINTS_DIR / "ternary_option_c_dual" / "best.pt",
+            CHECKPOINTS_DIR / "ternary_option_c_dual" / "latest.pt",
         ]
         for alt in alt_paths:
             if alt.exists():

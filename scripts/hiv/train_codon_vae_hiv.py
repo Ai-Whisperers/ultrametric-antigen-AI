@@ -12,8 +12,10 @@ Usage:
 import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.config.paths import OUTPUT_DIR
 
 import numpy as np
 import torch
@@ -402,7 +404,7 @@ def main():
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             # Save best model
-            save_path = PROJECT_ROOT / "sandbox-training" / "codon_vae_hiv.pt"
+            save_path = OUTPUT_DIR / "models" / "codon_vae_hiv.pt"
             save_path.parent.mkdir(parents=True, exist_ok=True)
             torch.save({
                 "epoch": epoch,
@@ -423,7 +425,7 @@ def main():
 
     print("-" * 50)
     print(f"Best validation loss: {best_val_loss:.4f}")
-    print(f"Model saved to: sandbox-training/codon_vae_hiv.pt")
+    print(f"Model saved to: {OUTPUT_DIR / 'models' / 'codon_vae_hiv.pt'}")
 
     # Final analysis
     print("\n" + "=" * 60)

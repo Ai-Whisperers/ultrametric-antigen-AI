@@ -18,7 +18,10 @@ Three diagnostic questions:
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.config.paths import CHECKPOINTS_DIR
 
 import json
 
@@ -268,7 +271,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--checkpoint",
         type=str,
-        default="sandbox-training/checkpoints/v5_11/best.pt",
+        default=str(CHECKPOINTS_DIR / "v5_11" / "best.pt"),
         help="Path to checkpoint",
     )
     parser.add_argument("--device", type=str, default="cuda", help="Device to use")

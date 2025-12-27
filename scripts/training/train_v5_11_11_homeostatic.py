@@ -32,6 +32,8 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.config.paths import CHECKPOINTS_DIR
+
 
 def check_cuda():
     """Verify CUDA is available and print device info."""
@@ -300,7 +302,7 @@ def main():
         config["training"]["lr"] = args.lr
 
     # Check/create v5.5 checkpoint
-    v5_5_dir = PROJECT_ROOT / "sandbox-training" / "checkpoints" / "v5_5"
+    v5_5_dir = CHECKPOINTS_DIR / "v5_5"
     if not check_v5_5_checkpoint(config):
         if args.skip_v5_5:
             print("WARNING: v5.5 checkpoint not found and --skip_v5_5 specified.")
@@ -332,7 +334,7 @@ def main():
         f"--batch_size={config['training']['batch_size']}",
         f"--lr={config['training']['lr']}",
         f"--v5_5_checkpoint={config['frozen_checkpoint']['path']}",
-        f"--save_dir=sandbox-training/checkpoints/v5_11_11_homeostatic_ale_device",
+        f"--save_dir={CHECKPOINTS_DIR / 'v5_11_11_homeostatic_ale_device'}",
         f"--hierarchy_threshold={config['training'].get('hierarchy_threshold', -0.70)}",
         f"--patience={config['training'].get('patience', 20)}",
         f"--min_epochs={config['training'].get('min_epochs', 30)}",
@@ -382,7 +384,7 @@ def main():
         print("\n" + "="*60)
         print("TRAINING COMPLETE")
         print("="*60)
-        print(f"\nCheckpoint saved to: sandbox-training/checkpoints/v5_11_11_homeostatic_ale_device/")
+        print(f"\nCheckpoint saved to: {CHECKPOINTS_DIR / 'v5_11_11_homeostatic_ale_device'}/")
         print(f"  - best.pt: Best model (highest composite score)")
         print(f"  - latest.pt: Final model")
     else:

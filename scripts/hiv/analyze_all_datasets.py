@@ -16,8 +16,10 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.config.paths import OUTPUT_DIR
 
 import numpy as np
 
@@ -607,7 +609,7 @@ def main():
         best_loss, history = train_model(codon_model, train_loader, val_loader, device, n_epochs=30, model_name="codon")
 
         # Save model
-        save_path = PROJECT_ROOT / "sandbox-training" / "codon_vae_all.pt"
+        save_path = OUTPUT_DIR / "models" / "codon_vae_all.pt"
         save_path.parent.mkdir(parents=True, exist_ok=True)
         torch.save(codon_model.state_dict(), save_path)
 
@@ -650,7 +652,7 @@ def main():
         best_loss, history = train_model(aa_model, train_loader, val_loader, device, n_epochs=30, model_name="aa")
 
         # Save model
-        save_path = PROJECT_ROOT / "sandbox-training" / "aa_vae_all.pt"
+        save_path = OUTPUT_DIR / "models" / "aa_vae_all.pt"
         torch.save(aa_model.state_dict(), save_path)
 
         # Analyze latent space

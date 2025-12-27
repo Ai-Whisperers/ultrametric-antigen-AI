@@ -17,7 +17,10 @@ from typing import Dict
 import numpy as np
 import torch
 
-sys.path.append(str(Path(__file__).parent.parent.parent))
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.config.paths import CHECKPOINTS_DIR
 
 from src.benchmark import (BenchmarkBase, create_v5_6_model, get_device,
                            load_checkpoint_safe, load_config, save_results)
@@ -346,7 +349,7 @@ def main():
     # Initialize model
     print("Initializing model...")
     model = create_v5_6_model(config)
-    checkpoint = load_checkpoint_safe(model, "sandbox-training/checkpoints/v5_6", device)
+    checkpoint = load_checkpoint_safe(model, str(CHECKPOINTS_DIR / "v5_6"), device)
 
     # Run benchmark
     print("\nRunning manifold resolution benchmark...")
