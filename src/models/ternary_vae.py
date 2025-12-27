@@ -7,30 +7,71 @@
 
 """Ternary VAE v5.11 - Unified Hyperbolic Geometry with Frozen Coverage.
 
-V5.11 ARCHITECTURE:
+V5.11 ARCHITECTURE
+==================
 
-1. FROZEN v5.5 Encoder: 100% coverage preserved, no gradients
-2. Trainable HyperbolicProjection: Learns radial hierarchy
-3. DifferentiableController: Full gradient flow (no .item() calls)
-4. Unified PAdicGeodesicLoss: Hierarchy + correlation via geometry
+Design Philosophy:
+    - Freeze what works (100% coverage from v5.5)
+    - Train only what's needed (geometric projection)
+    - Full gradient flow (differentiable controller)
+
+Key Components:
+    1. FROZEN v5.5 Encoder: 100% coverage preserved, no gradients
+    2. Trainable HyperbolicProjection: Learns radial hierarchy
+    3. DifferentiableController: Full gradient flow (no .item() calls)
+    4. Unified PAdicGeodesicLoss: Hierarchy + correlation via geometry
 
 Key insight: v5.5 achieved 100% coverage but inverted radial hierarchy.
 V5.11 freezes the coverage and learns only the geometric projection.
 
-Architecture:
-```
-Input x ──► [FROZEN v5.5 Encoder] ──► z_euclidean (16D)
-                 (no gradients)
+DETAILED ARCHITECTURE
+=====================
 
-         ──► [HyperbolicProjection] ──► z_hyp (Poincaré ball)
-                 (trainable)
+    Input: x (batch, 9) - Ternary operation {-1, 0, 1}
+           19,683 total operations (3^9 space)
 
-         ──► [DifferentiableController] ──► control signals
-                 (trainable, full gradient flow)
+    ┌──────────────────────────────────────────────────────────────┐
+    │            FROZEN ENCODERS (from v5.5 checkpoint)            │
+    │  FrozenEncoder_A (exploration) → mu_A, logvar_A (16D)       │
+    │  FrozenEncoder_B (refinement)  → mu_B, logvar_B (16D)       │
+    │  NO GRADIENTS - Preserves 100% reconstruction coverage       │
+    └──────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+    ┌──────────────────────────────────────────────────────────────┐
+    │         TRAINABLE HYPERBOLIC PROJECTION                      │
+    │  z_euclidean (16D) → MLP(64) → exp_map → z_poincare         │
+    │  • Max radius: 0.95 (boundary constraint)                    │
+    │  • Curvature: 1.0 (optionally learnable)                     │
+    │  TRAINABLE - Learns Euclidean → Poincare mapping            │
+    └──────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+    ┌──────────────────────────────────────────────────────────────┐
+    │         TRAINABLE DIFFERENTIABLE CONTROLLER                  │
+    │  z_hyp, model_state → Control signals (rho, lambda)         │
+    │  TRAINABLE - Learns adaptive loss weighting                  │
+    └──────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+    ┌──────────────────────────────────────────────────────────────┐
+    │                    FROZEN DECODER                            │
+    │  z_A (16D) → Linear(16→64→27) → logits (batch, 9, 3)        │
+    │  NO GRADIENTS - Used for verification/reconstruction only    │
+    └──────────────────────────────────────────────────────────────┘
 
-         ──► [Unified PAdicGeodesicLoss]
-                 (single loss = hierarchy + correlation)
-```
+Output Dict Keys:
+    • logits: (batch, 9, 3) reconstruction logits
+    • mu_A, logvar_A, mu_B, logvar_B: encoder outputs
+    • z_A, z_B: sampled latent codes
+    • z_hyp_A, z_hyp_B: hyperbolic projections
+    • curvature: current curvature value
+    • controller_output: control signals
+
+Target Metrics:
+    • Coverage: 100% (maintained by frozen encoder)
+    • Radial Hierarchy: r < -0.70 (Spearman correlation)
+    • Q (Structure): > 1.5 (learned capacity)
 
 Single responsibility: V5.11 model architecture.
 """

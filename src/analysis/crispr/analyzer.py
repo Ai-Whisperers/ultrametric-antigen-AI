@@ -69,9 +69,22 @@ class CRISPROfftargetAnalyzer:
 
         Returns:
             List of (position, target_nt, offtarget_nt)
+
+        Raises:
+            ValueError: If sequences have different lengths
         """
+        target = target.upper()
+        offtarget = offtarget.upper()
+
+        # Validate sequence lengths match
+        if len(target) != len(offtarget):
+            raise ValueError(
+                f"Sequence length mismatch: target={len(target)}, "
+                f"offtarget={len(offtarget)}. Sequences must be same length."
+            )
+
         mismatches = []
-        for i, (t, o) in enumerate(zip(target.upper(), offtarget.upper())):
+        for i, (t, o) in enumerate(zip(target, offtarget)):
             if t != o:
                 mismatches.append((i, t, o))
         return mismatches

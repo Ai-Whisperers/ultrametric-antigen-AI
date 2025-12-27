@@ -24,6 +24,20 @@ Usage:
 
 from .ternary import (TERNARY, TernarySpace, distance, from_ternary,
                       to_ternary, valuation)
+from .padic_math import (
+    DEFAULT_P,
+    PADIC_INFINITY,
+    padic_valuation,
+    padic_norm,
+    padic_distance,
+    padic_digits,
+    padic_distance_vectorized,
+    padic_distance_matrix,
+    padic_distance_batch,
+    compute_goldilocks_score,
+    is_in_goldilocks_zone,
+    compute_hierarchical_embedding,
+)
 
 # Constants exposed at module level for convenience
 N_OPERATIONS = TERNARY.N_OPERATIONS
@@ -31,6 +45,7 @@ N_DIGITS = TERNARY.N_DIGITS
 MAX_VALUATION = TERNARY.MAX_VALUATION
 
 __all__ = [
+    # Ternary
     "TernarySpace",
     "TERNARY",
     "valuation",
@@ -40,4 +55,17 @@ __all__ = [
     "N_OPERATIONS",
     "N_DIGITS",
     "MAX_VALUATION",
+    # P-adic math
+    "DEFAULT_P",
+    "PADIC_INFINITY",
+    "padic_valuation",
+    "padic_norm",
+    "padic_distance",
+    "padic_digits",
+    "padic_distance_vectorized",
+    "padic_distance_matrix",
+    "padic_distance_batch",
+    "compute_goldilocks_score",
+    "is_in_goldilocks_zone",
+    "compute_hierarchical_embedding",
 ]
