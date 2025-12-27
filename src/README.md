@@ -2,11 +2,72 @@
 
 > **See also**: [Full Documentation Hub](../DOCUMENTATION/) | [Architecture Specs](../DOCUMENTATION/03_PRESENTATION_TIERS/03_TIER_3_TECHNICAL/05_SPECS_AND_GUIDES/ARCHITECTURE.md) | [Quick Start](../DOCUMENTATION/QUICK_START.md)
 
-**Doc-Type:** Architecture Reference · Version 1.0 · Updated 2025-12-12
+**Doc-Type:** Architecture Reference · Version 1.1 · Updated 2025-12-27
 
 ---
 
-## Overview
+## Module Tiers
+
+### Tier 1: CORE (Production Ready)
+Fully implemented, tested, and used in production:
+
+| Module | Files | Description |
+|--------|-------|-------------|
+| `core/` | 4 | Ternary arithmetic, p-adic math, interfaces |
+| `losses/` | 23 | Loss functions and registry system |
+| `training/` | 25 | Training loops, callbacks, monitoring |
+| `models/` | 18 | VAE architectures (TernaryVAEV5_11 canonical) |
+| `data/` | 13 | Datasets, loaders, generation |
+| `config/` | 6 | Configuration and paths management |
+| `metrics/` | 2 | Hyperbolic metrics computation |
+| `utils/` | 6 | Checkpointing, reproducibility, helpers |
+
+### Tier 2: EXTENDED (Working)
+Implemented modules for extended functionality:
+
+| Module | Files | Description |
+|--------|-------|-------------|
+| `visualization/` | 23 | Plotting, projections, paper figures |
+| `analysis/` | 19 | CRISPR analysis, geometry analysis |
+| `encoders/` | 9 | PTM encoder, diffusion encoder |
+| `observability/` | 6 | Logging, metrics buffering, coverage |
+| `objectives/` | 5 | Binding, solubility, manufacturability |
+| `biology/` | 3 | Biological sequence utilities |
+| `diseases/` | 5 | Disease-specific analysis (e.g., RA) |
+
+### Tier 3: EXPERIMENTAL (Partial)
+Modules with partial implementation:
+
+| Module | Files | Description |
+|--------|-------|-------------|
+| `geometry/` | 3 | Poincare ball (geoopt backend) |
+| `quantum/` | 3 | Quantum descriptors |
+| `stability/` | 2 | Stability analysis |
+| `evolution/` | 2 | Evolutionary analysis |
+| `classifiers/` | 2 | Classification models |
+| `cli/` | 4 | Command-line interface |
+
+### Tier 4: FUTURE (Aspirational - Moved to `_future/`)
+These modules have been moved to `src/_future/` to clarify they are **not implemented**. They contain only placeholder `__init__.py` with documentation describing *intended* future functionality.
+
+See [`_future/README.md`](./_future/README.md) for implementation priorities and contributing guidelines.
+
+| Module | Intended Purpose | Priority |
+|--------|------------------|----------|
+| `_future/topology/` | Persistent homology, TDA | Medium |
+| `_future/categorical/` | Category theory abstractions | Low |
+| `_future/tropical/` | Tropical semiring operations | Low |
+| `_future/equivariant/` | SE(3) equivariant networks | **High** |
+| `_future/information/` | Information-theoretic measures | Medium |
+| `_future/graphs/` | Protein graph neural networks | **High** |
+| `_future/meta/` | Meta-learning algorithms | Low |
+| `_future/contrastive/` | Contrastive learning losses | Medium |
+| `_future/diffusion/` | Diffusion models | Medium |
+| `_future/physics/` | Statistical physics (spin glass) | Low |
+
+---
+
+## Wiring Overview
 
 This document describes the wiring architecture of the Ternary VAE codebase, identifying **joints** (connection points that wire components together) and **non-joints** (leaf components with single responsibilities).
 
