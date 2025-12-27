@@ -46,9 +46,9 @@ from .components import (EntropyAlignmentComponent, EntropyLossComponent,
 from .consequence_predictor import (ConsequencePredictor,
                                     PurposefulRankingLoss,
                                     evaluate_addition_accuracy)
-from .dual_vae_loss import (DualVAELoss, EntropyRegularization,
-                            KLDivergenceLoss, ReconstructionLoss,
-                            RepulsionLoss)
+# NOTE: DualVAELoss archived to src/ARCHIVE/v5_10_legacy/ - replaced by LossRegistry pattern
+# Legacy imports removed: DualVAELoss, EntropyRegularization, KLDivergenceLoss,
+# ReconstructionLoss, RepulsionLoss - use LossRegistry components instead
 from .hyperbolic_prior import HomeostaticHyperbolicPrior, HyperbolicPrior
 from .hyperbolic_recon import (HomeostaticReconLoss, HyperbolicCentroidLoss,
                                HyperbolicReconLoss)
@@ -130,12 +130,12 @@ from .codon_usage import (
 
 
 __all__ = [
-    # Legacy classes (backwards compatibility)
-    "ReconstructionLoss",
-    "KLDivergenceLoss",
-    "EntropyRegularization",
-    "RepulsionLoss",
-    "DualVAELoss",
+    # Legacy classes archived - use LossRegistry components instead:
+    # ReconstructionLoss -> ReconstructionLossComponent
+    # KLDivergenceLoss -> KLDivergenceLossComponent
+    # EntropyRegularization -> EntropyLossComponent
+    # RepulsionLoss -> RepulsionLossComponent
+    # DualVAELoss -> LossRegistry
     "PAdicMetricLoss",
     "PAdicRankingLoss",
     "PAdicRankingLossV2",
