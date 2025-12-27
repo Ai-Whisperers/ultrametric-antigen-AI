@@ -29,6 +29,7 @@ import numpy as np
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.config.paths import OUTPUT_DIR
 from src.models.epsilon_vae import extract_key_weights
 
 
@@ -307,7 +308,7 @@ def main():
     parser.add_argument("--run", type=str, default="progressive_tiny_lr",
                        help="Run directory name")
     parser.add_argument("--model_path", type=str,
-                       default="sandbox-training/epsilon_vae_models/best.pt",
+                       default=str(OUTPUT_DIR / "epsilon_vae_models" / "best.pt"),
                        help="Path to trained Epsilon-VAE")
     parser.add_argument("--device", type=str, default="cuda")
     args = parser.parse_args()
@@ -316,7 +317,7 @@ def main():
     print(f"Using device: {device}")
 
     # Load model
-    model_path = PROJECT_ROOT / args.model_path
+    model_path = Path(args.model_path)
     print(f"Loading Epsilon-VAE from {model_path}")
 
     ckpt = torch.load(model_path, map_location=device, weights_only=False)

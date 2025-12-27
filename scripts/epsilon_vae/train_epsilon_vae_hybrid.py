@@ -48,6 +48,8 @@ from torch.utils.data import DataLoader, Dataset
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.config.paths import OUTPUT_DIR
+
 
 class HybridCheckpointDataset(Dataset):
     """Dataset with checkpoint weights, anchor embeddings, and metrics."""
@@ -333,9 +335,9 @@ def validate(model, dataloader, device, embed_weight, metric_weight, beta):
 
 def main():
     parser = argparse.ArgumentParser(description="Train Hybrid Epsilon-VAE")
-    parser.add_argument("--data_dir", type=str, default="sandbox-training/epsilon_vae_hybrid",
+    parser.add_argument("--data_dir", type=str, default=str(OUTPUT_DIR / "epsilon_vae_hybrid"),
                        help="Directory with extracted embeddings")
-    parser.add_argument("--save_dir", type=str, default="sandbox-training/epsilon_vae_hybrid_models",
+    parser.add_argument("--save_dir", type=str, default=str(OUTPUT_DIR / "epsilon_vae_hybrid_models"),
                        help="Directory to save models")
     parser.add_argument("--epochs", type=int, default=200)
     parser.add_argument("--batch_size", type=int, default=32)

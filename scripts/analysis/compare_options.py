@@ -25,6 +25,7 @@ from scipy.stats import spearmanr
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.config.paths import CHECKPOINTS_DIR
 from src.core import TERNARY
 from src.data.generation import generate_all_ternary_operations
 from src.losses import poincare_distance
@@ -315,11 +316,11 @@ def main():
     print(f"Using device: {device}")
 
     # Paths
-    v5_5_path = Path("sandbox-training/checkpoints/v5_5/latest.pt")
+    v5_5_path = CHECKPOINTS_DIR / "v5_5" / "latest.pt"
     # Option A: smaller checkpoints (441KB) - only projection trainable
     # Option C: larger checkpoints (815KB) - encoder_B also trainable
-    option_a_path = Path("sandbox-training/checkpoints/v5_11/epoch_180.pt")  # Option A
-    option_c_path = Path("sandbox-training/checkpoints/v5_11/best.pt")  # Option C (latest)
+    option_a_path = CHECKPOINTS_DIR / "v5_11" / "epoch_180.pt"  # Option A
+    option_c_path = CHECKPOINTS_DIR / "v5_11" / "best.pt"  # Option C (latest)
 
     # Load dataset
     print("\nLoading dataset...")

@@ -12,6 +12,8 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
+from src.config.paths import DATA_DIR, EXTERNAL_DATA_DIR, RESULTS_DIR
+
 app = typer.Typer(help="Analysis commands for HIV and bioinformatics data")
 console = Console()
 
@@ -24,7 +26,7 @@ def analyze_stanford(
         help="Drug class to analyze (PI, NRTI, NNRTI, INI, or 'all')",
     ),
     output_dir: Path = typer.Option(
-        Path("results/stanford_resistance"),
+        RESULTS_DIR / "stanford_resistance",
         "--output", "-o",
         help="Output directory for results",
     ),
@@ -38,7 +40,7 @@ def analyze_stanford(
     console.print("[bold blue]Stanford HIVDB Drug Resistance Analysis[/bold blue]")
 
     # Check data availability
-    data_dir = Path("data/research/datasets")
+    data_dir = DATA_DIR / "research" / "datasets"
     drug_classes = {
         "PI": "stanford_hivdb_pi.txt",
         "NRTI": "stanford_hivdb_nrti.txt",
@@ -101,7 +103,7 @@ def analyze_catnap(
         help="Specific antibody to analyze (e.g., VRC01)",
     ),
     output_dir: Path = typer.Option(
-        Path("results/catnap_neutralization"),
+        RESULTS_DIR / "catnap_neutralization",
         "--output", "-o",
         help="Output directory for results",
     ),
@@ -114,7 +116,7 @@ def analyze_catnap(
     """
     console.print("[bold blue]CATNAP Neutralization Analysis[/bold blue]")
 
-    data_file = Path("data/research/datasets/catnap_assay.txt")
+    data_file = DATA_DIR / "research" / "datasets" / "catnap_assay.txt"
     if not data_file.exists():
         console.print(f"[red]Data file not found: {data_file}[/red]")
         raise typer.Exit(1)
@@ -157,7 +159,7 @@ def analyze_ctl(
         help="Protein to analyze (Gag, Pol, Env, Nef, etc.)",
     ),
     output_dir: Path = typer.Option(
-        Path("results/ctl_escape"),
+        RESULTS_DIR / "ctl_escape",
         "--output", "-o",
         help="Output directory for results",
     ),
@@ -170,7 +172,7 @@ def analyze_ctl(
     """
     console.print("[bold blue]CTL Epitope Escape Analysis[/bold blue]")
 
-    data_file = Path("data/research/datasets/ctl_summary.csv")
+    data_file = DATA_DIR / "research" / "datasets" / "ctl_summary.csv"
     if not data_file.exists():
         console.print(f"[red]Data file not found: {data_file}[/red]")
         raise typer.Exit(1)
@@ -206,7 +208,7 @@ def analyze_ctl(
 @app.command("tropism")
 def analyze_tropism(
     output_dir: Path = typer.Option(
-        Path("results/tropism"),
+        RESULTS_DIR / "tropism",
         "--output", "-o",
         help="Output directory for results",
     ),
@@ -218,7 +220,7 @@ def analyze_tropism(
     """
     console.print("[bold blue]V3 Coreceptor Tropism Analysis[/bold blue]")
 
-    data_dir = Path("data/external/huggingface/HIV_V3_coreceptor")
+    data_dir = EXTERNAL_DATA_DIR / "huggingface" / "HIV_V3_coreceptor"
     if not data_dir.exists():
         console.print(f"[red]Data directory not found: {data_dir}[/red]")
         console.print("Run: ternary-vae data download --source huggingface")
@@ -254,7 +256,7 @@ def analyze_tropism(
 @app.command("all")
 def analyze_all(
     output_dir: Path = typer.Option(
-        Path("results/comprehensive_analysis"),
+        RESULTS_DIR / "comprehensive_analysis",
         "--output", "-o",
         help="Output directory for results",
     ),

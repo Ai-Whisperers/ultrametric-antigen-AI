@@ -12,6 +12,8 @@ import typer
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
+from src.config.paths import CHECKPOINTS_DIR, RESULTS_DIR
+
 app = typer.Typer(help="Training commands for Ternary VAE models")
 console = Console()
 
@@ -44,7 +46,7 @@ def train_run(
         help="Device to train on (cuda/cpu)",
     ),
     save_dir: Path = typer.Option(
-        Path("results/training"),
+        RESULTS_DIR / "training",
         "--save-dir", "-o",
         help="Directory to save checkpoints",
     ),
@@ -169,7 +171,7 @@ def train_hiv(
         help="Number of training epochs",
     ),
     save_dir: Path = typer.Option(
-        Path("results/hiv_training"),
+        RESULTS_DIR / "hiv_training",
         "--save-dir", "-o",
         help="Directory to save results",
     ),
