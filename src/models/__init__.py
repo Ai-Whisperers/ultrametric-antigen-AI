@@ -22,7 +22,7 @@ from .differentiable_controller import DifferentiableController
 from .homeostasis import HomeostasisController, compute_Q
 from .hyperbolic_projection import (DualHyperbolicProjection,
                                     HyperbolicProjection)
-from .swarm_vae import AgentConfig, AgentRole, PheromoneField, SwarmAgent, SwarmVAE
+# NOTE: SwarmVAE archived to src/ARCHIVE/v5_10_legacy/ - experimental, not in production
 from .ternary_vae import (FrozenDecoder, FrozenEncoder, TernaryVAEV5_11,
                           TernaryVAEV5_11_OptionC, TernaryVAEV5_11_PartialFreeze)
 
