@@ -364,6 +364,79 @@ def ingest_pdb_rotamers(
     print(f"Chi angles tensor shape: {chi_tensor.shape}")
 
 
+def create_demo_rotamer_data(output_path: Path) -> None:
+    """Create demo rotamer data for testing."""
+    if not HAS_TORCH:
+        print("PyTorch required for saving demo data")
+        return
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Generate synthetic rotamer data
+    np.random.seed(42)
+    n_residues = 500
+
+    # Common rotamer angles (degrees) - biased towards common conformations
+    chi_angles = np.zeros((n_residues, 4))
+    residue_names = []
+    positions = []
+
+    rotameric_residues = [
+        "LEU", "ILE", "VAL", "PHE", "TYR", "TRP", "HIS", "ASN",
+        "ASP", "GLU", "GLN", "LYS", "ARG", "MET", "SER", "THR", "CYS",
+    ]
+
+    for i in range(n_residues):
+        res_name = np.random.choice(rotameric_residues)
+        residue_names.append(res_name)
+        positions.append(i + 1)
+
+        # Chi1 - usually around -60 (gauche-), 180 (trans), or 60 (gauche+)
+        chi1_center = np.random.choice([-60, 180, 60], p=[0.4, 0.4, 0.2])
+        chi_angles[i, 0] = chi1_center + np.random.randn() * 15
+
+        # Chi2 - similar distribution
+        if res_name in ["LEU", "ILE", "PHE", "TYR", "TRP", "HIS", "ASN", "ASP", "GLU", "GLN", "LYS", "ARG", "MET"]:
+            chi2_center = np.random.choice([-60, 180, 60], p=[0.35, 0.45, 0.2])
+            chi_angles[i, 1] = chi2_center + np.random.randn() * 15
+        else:
+            chi_angles[i, 1] = np.nan
+
+        # Chi3 - fewer residues have it
+        if res_name in ["GLU", "GLN", "LYS", "ARG", "MET"]:
+            chi_angles[i, 2] = np.random.choice([-60, 180, 60]) + np.random.randn() * 20
+        else:
+            chi_angles[i, 2] = np.nan
+
+        # Chi4 - only LYS and ARG
+        if res_name in ["LYS", "ARG"]:
+            chi_angles[i, 3] = np.random.choice([-60, 180, 60]) + np.random.randn() * 20
+        else:
+            chi_angles[i, 3] = np.nan
+
+    metadata = [
+        {
+            "pdb_id": f"DEMO{i // 100:02d}",
+            "chain_id": "A",
+            "residue_id": positions[i],
+            "residue_name": residue_names[i],
+            "sequence_context": "XXX" + residue_names[i][:1] + "XXX",  # Simplified context
+        }
+        for i in range(n_residues)
+    ]
+
+    save_dict = {
+        "chi_angles": torch.tensor(chi_angles, dtype=torch.float32),
+        "metadata": metadata,
+        "pdb_ids": [f"DEMO{i:02d}" for i in range(5)],
+        "n_residues": n_residues,
+    }
+
+    torch.save(save_dict, output_path)
+    print(f"Created demo rotamer data at {output_path}")
+    print(f"  {n_residues} residues from 5 demo structures")
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -372,7 +445,7 @@ def main():
     parser.add_argument(
         "--pdb_ids",
         type=str,
-        required=True,
+        default=None,
         help='Comma-separated PDB IDs (e.g., "1CRN,1TIM,4LZT")',
     )
     parser.add_argument(
@@ -387,8 +460,21 @@ def main():
         default="data/raw/pdb_cache",
         help="Cache directory for PDB files",
     )
+    parser.add_argument(
+        "--demo",
+        action="store_true",
+        help="Create demo data instead of downloading",
+    )
 
     args = parser.parse_args()
+
+    if args.demo:
+        create_demo_rotamer_data(Path(args.output))
+        return
+
+    if not args.pdb_ids:
+        print("Error: --pdb_ids required unless using --demo mode")
+        return
 
     pdb_ids = [p.strip() for p in args.pdb_ids.split(",")]
     print(f"Processing {len(pdb_ids)} PDB structures...")

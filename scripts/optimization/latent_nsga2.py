@@ -148,7 +148,7 @@ class LatentNSGA2:
                 fronts[0].append(p)
 
         current_front = 0
-        while fronts[current_front]:
+        while current_front < len(fronts) and fronts[current_front]:
             next_front = []
             for p_idx, p in enumerate(population):
                 if p.rank == current_front:
@@ -161,7 +161,8 @@ class LatentNSGA2:
             if next_front:
                 fronts.append(next_front)
 
-        return fronts
+        # Remove empty fronts
+        return [f for f in fronts if f]
 
     def _dominates(self, p: Individual, q: Individual) -> bool:
         """Check if p dominates q (all objectives <= and at least one <)."""

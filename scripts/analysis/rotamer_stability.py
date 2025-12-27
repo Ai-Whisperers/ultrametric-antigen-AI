@@ -294,15 +294,18 @@ def export_results(
             {
                 "pdb_id": r.pdb_id,
                 "chain_id": r.chain_id,
-                "residue_id": r.residue_id,
+                "residue_id": (
+                    int(r.residue_id) if isinstance(r.residue_id, (np.integer, np.floating))
+                    else r.residue_id
+                ),
                 "residue_name": r.residue_name,
-                "chi_angles": r.chi_angles,
+                "chi_angles": [float(x) if not np.isnan(x) else None for x in r.chi_angles],
                 "nearest_rotamer": r.nearest_rotamer,
-                "euclidean_distance": r.euclidean_distance,
-                "hyperbolic_distance": r.hyperbolic_distance,
-                "padic_valuation": r.padic_valuation,
-                "stability_score": r.stability_score,
-                "is_rare": r.is_rare,
+                "euclidean_distance": float(r.euclidean_distance),
+                "hyperbolic_distance": float(r.hyperbolic_distance),
+                "padic_valuation": int(r.padic_valuation),
+                "stability_score": float(r.stability_score),
+                "is_rare": bool(r.is_rare),
             }
             for r in results
         ],
@@ -353,7 +356,7 @@ def main():
 
     # Load data
     print(f"Loading rotamer data from {input_path}...")
-    data = torch.load(input_path)
+    data = torch.load(input_path, weights_only=False)
     chi_tensor = data["chi_angles"].numpy()
     metadata = data["metadata"]
 
