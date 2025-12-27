@@ -79,6 +79,37 @@ Comprehensive analysis of 200,000+ HIV records using p‑adic hyperbolic geometr
 
 See [`results/clinical_applications/CLINICAL_REPORT.md`](results/clinical_applications/CLINICAL_REPORT.md) for full details.
 
+### P-adic VAE Drug Resistance Prediction (NEW - 2025-12-27)
+
+**Comprehensive validation across all 23 HIV drugs with 4 drug classes:**
+
+| Drug Class | Avg Correlation | Best Drug | Architecture |
+|------------|-----------------|-----------|--------------|
+| PI (8 drugs) | **+0.928** | LPV (+0.956) | All perform well |
+| NRTI (6 drugs) | **+0.887** | 3TC (+0.981) | Attention VAE |
+| NNRTI (5 drugs) | **+0.853** | NVP (+0.959) | Transformer VAE |
+| INI (4 drugs) | **+0.863** | EVG (+0.963) | Transformer VAE |
+| **Overall** | **+0.890** | 3TC (+0.981) | - |
+
+**Key Innovations:**
+- **P-adic ranking loss**: +0.6 correlation improvement over standard MSE
+- **Attention analysis**: 65-70% F1 match with known resistance mutations
+- **Cross-resistance modeling**: Captures TAM cross-resistance (AZT-D4T: +0.97) and M184V resensitization
+
+**Quick Start:**
+```bash
+# Run full validation across 23 drugs
+python scripts/experiments/run_full_validation.py
+
+# Run interpretability analysis
+python scripts/experiments/run_attention_analysis.py
+
+# Test cross-resistance patterns
+python scripts/experiments/run_cross_resistance_test.py
+```
+
+See [`UNDERSTANDING/34_FINAL_SUMMARY_AND_RECOMMENDATIONS.md`](UNDERSTANDING/34_FINAL_SUMMARY_AND_RECOMMENDATIONS.md) for full documentation.
+
 ---
 
 ## 🛠️ Installation & Development
@@ -175,4 +206,4 @@ For general questions, open an issue. For commercial licensing inquiries, email 
 
 ---
 
-_Last updated: 2025‑12‑26_
+_Last updated: 2025-12-27_
