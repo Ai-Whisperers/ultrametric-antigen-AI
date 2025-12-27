@@ -31,6 +31,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+
+from src.config.paths import VIZ_DIR
 from src.data.generation import generate_all_ternary_operations
 from src.models.ternary_vae_v5_6 import DualNeuralVAEV5
 
@@ -573,15 +575,17 @@ def export_to_csv(data, output_path):
 
 
 def main():
-    output_path = Path("outputs/viz/calabi_yau")
+    output_path = VIZ_DIR / "calabi_yau"
     output_path.mkdir(parents=True, exist_ok=True)
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Device: {device}")
 
     # Load best checkpoint (v5.5 has 99.75% coverage)
+    # Note: This script expects checkpoint at default location or passed via import
     print("\nLoading v5.5 embeddings...")
-    data = load_embeddings("sandbox-training/checkpoints/v5_5/latest.pt", device)
+    from src.config.paths import CHECKPOINTS_DIR
+    data = load_embeddings(str(CHECKPOINTS_DIR / "v5_5" / "latest.pt"), device)
     print(f'Loaded {len(data["z_A"])} embeddings, epoch {data["epoch"]}')
     print(f'VAE-A mean accuracy: {data["acc_A"].mean()*100:.2f}%')
     print(f'VAE-B mean accuracy: {data["acc_B"].mean()*100:.2f}%')

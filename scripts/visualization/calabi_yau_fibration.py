@@ -35,6 +35,8 @@ from scipy.interpolate import CubicSpline
 from scipy.spatial import KDTree
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+
+from src.config.paths import CHECKPOINTS_DIR, VIZ_DIR
 from src.data.generation import generate_all_ternary_operations
 from src.models.ternary_vae_v5_6 import DualNeuralVAEV5
 
@@ -537,7 +539,7 @@ def export_fibration_data(points, fibers, helices, ao, output_path):
 
 
 def main():
-    output_path = Path("outputs/viz/calabi_yau")
+    output_path = VIZ_DIR / "calabi_yau"
     output_path.mkdir(parents=True, exist_ok=True)
 
     device = "cuda" if torch.cuda.is_available() else "cpu"

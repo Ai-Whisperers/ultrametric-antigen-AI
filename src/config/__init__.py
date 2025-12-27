@@ -108,6 +108,35 @@ from .schema import (
 # Loader
 from .loader import load_config, save_config
 
+# Paths
+from .paths import (
+    PROJECT_ROOT,
+    CONFIG_DIR,
+    DATA_DIR,
+    RAW_DATA_DIR,
+    PROCESSED_DATA_DIR,
+    EXTERNAL_DATA_DIR,
+    CACHE_DIR,
+    OUTPUT_DIR,
+    RESULTS_DIR,
+    CHECKPOINTS_DIR,
+    RUNS_DIR,
+    REPORTS_DIR,
+    VIZ_DIR,
+    LOGS_DIR,
+    DOCS_DIR,
+    SRC_DIR,
+    TESTS_DIR,
+    SCRIPTS_DIR,
+    DELIVERABLES_DIR,
+    ensure_dirs,
+    get_checkpoint_path,
+    get_results_path,
+    get_data_path,
+    resolve_legacy_path,
+    init_project_dirs,
+)
+
 __all__ = [
     # Loader functions
     "load_config",
@@ -133,4 +162,31 @@ __all__ = [
     "N_TERNARY_OPERATIONS",
     "HYPERBOLIC_CURVATURE",
     "HYPERBOLIC_MAX_NORM",
+    # Path configuration
+    "PROJECT_ROOT",
+    "CONFIG_DIR",
+    "DATA_DIR",
+    "RAW_DATA_DIR",
+    "PROCESSED_DATA_DIR",
+    "EXTERNAL_DATA_DIR",
+    "CACHE_DIR",
+    "OUTPUT_DIR",
+    "RESULTS_DIR",
+    "CHECKPOINTS_DIR",
+    "RUNS_DIR",
+    "REPORTS_DIR",
+    "VIZ_DIR",
+    "LOGS_DIR",
+    "DOCS_DIR",
+    "SRC_DIR",
+    "TESTS_DIR",
+    "SCRIPTS_DIR",
+    "DELIVERABLES_DIR",
+    # Path helper functions
+    "ensure_dirs",
+    "get_checkpoint_path",
+    "get_results_path",
+    "get_data_path",
+    "resolve_legacy_path",
+    "init_project_dirs",
 ]

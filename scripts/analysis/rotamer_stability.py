@@ -26,10 +26,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
+
+# Add project root to path for imports
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from src.config.paths import PROCESSED_DATA_DIR, RESULTS_DIR
 
 try:
     import torch
@@ -326,13 +332,13 @@ def main():
     parser.add_argument(
         "--input",
         type=str,
-        default="data/processed/rotamers.pt",
+        default=str(PROCESSED_DATA_DIR / "rotamers.pt"),
         help="Input rotamer tensor file",
     )
     parser.add_argument(
         "--output",
         type=str,
-        default="results/rotamer_analysis.json",
+        default=str(RESULTS_DIR / "rotamer_analysis.json"),
         help="Output JSON file",
     )
     parser.add_argument(

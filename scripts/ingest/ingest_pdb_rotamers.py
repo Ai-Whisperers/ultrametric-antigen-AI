@@ -23,12 +23,18 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import sys
 import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
 import numpy as np
+
+# Add project root to path for imports
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from src.config.paths import PROCESSED_DATA_DIR, RAW_DATA_DIR
 
 try:
     import torch
@@ -37,7 +43,7 @@ except ImportError:
     HAS_TORCH = False
 
 try:
-    from Bio.PDB import PDBParser, MMCIFParser
+    from Bio.PDB import MMCIFParser, PDBParser
     from Bio.PDB.Polypeptide import is_aa
     from Bio.PDB.vectors import calc_dihedral
     HAS_BIOPYTHON = True
@@ -306,7 +312,7 @@ def rotamer_data_to_tensor(
 def ingest_pdb_rotamers(
     pdb_ids: list[str],
     output_path: Path,
-    cache_dir: Path = Path("data/raw/pdb_cache"),
+    cache_dir: Path = RAW_DATA_DIR / "pdb_cache",
 ) -> None:
     """Main ingestion function.
 
@@ -451,13 +457,13 @@ def main():
     parser.add_argument(
         "--output",
         type=str,
-        default="data/processed/rotamers.pt",
+        default=str(PROCESSED_DATA_DIR / "rotamers.pt"),
         help="Output path for tensor",
     )
     parser.add_argument(
         "--cache_dir",
         type=str,
-        default="data/raw/pdb_cache",
+        default=str(RAW_DATA_DIR / "pdb_cache"),
         help="Cache directory for PDB files",
     )
     parser.add_argument(

@@ -6,22 +6,28 @@
 # For commercial licensing inquiries: support@aiwhisperers.com
 
 """Detailed v5.9 Hyperbolic Poincare Ball Geometry Analysis."""
+import sys
+from pathlib import Path
+
 import matplotlib
 import numpy as np
 import torch
 
 matplotlib.use("Agg")
-from pathlib import Path
-
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 
-output_path = Path("outputs/viz")
+# Add project root to path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from src.config.paths import CHECKPOINTS_DIR, VIZ_DIR
+
+output_path = VIZ_DIR
 output_path.mkdir(parents=True, exist_ok=True)
 
 # Load v5.9 epoch 150
 ckpt = torch.load(
-    "sandbox-training/checkpoints/v5_9/epoch_150.pt",
+    str(CHECKPOINTS_DIR / "v5_9" / "epoch_150.pt"),
     map_location="cpu",
     weights_only=False,
 )

@@ -26,11 +26,17 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Optional
 
 import numpy as np
+
+# Add project root to path for imports
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from src.config.paths import RESULTS_DIR
 
 try:
     import torch  # noqa: F401
@@ -425,7 +431,7 @@ def main():
     parser.add_argument(
         "--output",
         type=str,
-        default="results/pareto_peptides.csv",
+        default=str(RESULTS_DIR / "pareto_peptides.csv"),
         help="Output CSV path for Pareto front",
     )
     parser.add_argument("--generations", type=int, default=100, help="Number of generations")

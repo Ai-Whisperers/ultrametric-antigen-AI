@@ -30,11 +30,17 @@ from __future__ import annotations
 import argparse
 import re
 import subprocess
+import sys
 import zipfile
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
+
+# Add project root to path for imports
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from src.config.paths import RAW_DATA_DIR
 
 try:
     from Bio import SeqIO
@@ -331,7 +337,7 @@ def main():
     parser.add_argument(
         "--output",
         type=str,
-        default="data/raw/arboviruses.fasta",
+        default=str(RAW_DATA_DIR / "arboviruses.fasta"),
         help="Output FASTA path",
     )
     parser.add_argument(
@@ -360,7 +366,7 @@ def main():
     print(f"Downloading {args.virus} (taxon {taxon_id})...")
 
     # Download
-    cache_dir = Path("data/raw/ncbi_cache")
+    cache_dir = RAW_DATA_DIR / "ncbi_cache"
     raw_fasta = download_via_ncbi_datasets(
         taxon_id=taxon_id,
         output_dir=cache_dir,

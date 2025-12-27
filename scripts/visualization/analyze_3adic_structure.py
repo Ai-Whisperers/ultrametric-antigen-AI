@@ -34,6 +34,7 @@ from sklearn.decomposition import PCA
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.config.paths import VIZ_DIR
 from src.data.generation import generate_all_ternary_operations
 from src.models.ternary_vae_v5_6 import DualNeuralVAEV5
 
@@ -747,7 +748,7 @@ def analyze_cayley_structure(data: dict, output_path: Path):
 def main():
     parser = argparse.ArgumentParser(description="Analyze 3-adic structure of Ternary VAE")
     parser.add_argument("--checkpoint", type=str, default="latest.pt")
-    parser.add_argument("--output", type=str, default="outputs/manifold_viz")
+    parser.add_argument("--output", type=str, default=str(VIZ_DIR / "manifold_viz"))
     parser.add_argument(
         "--device",
         type=str,

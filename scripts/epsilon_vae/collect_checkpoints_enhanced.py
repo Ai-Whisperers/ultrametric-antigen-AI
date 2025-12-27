@@ -30,6 +30,7 @@ import numpy as np
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.config.paths import CHECKPOINTS_DIR, OUTPUT_DIR
 from src.models.epsilon_vae import extract_key_weights
 
 
@@ -394,13 +395,13 @@ def split_by_date(dataset: list, cutoff_date: str) -> tuple:
 
 def main():
     parser = argparse.ArgumentParser(description="Enhanced checkpoint collection")
-    parser.add_argument("--checkpoint_dir", type=str, default="sandbox-training/checkpoints")
+    parser.add_argument("--checkpoint_dir", type=str, default=str(CHECKPOINTS_DIR))
     parser.add_argument("--cutoff", type=str, default="2025-12-26")
-    parser.add_argument("--output_dir", type=str, default="sandbox-training/epsilon_vae_data_enhanced")
+    parser.add_argument("--output_dir", type=str, default=str(OUTPUT_DIR / "epsilon_vae_data_enhanced"))
     args = parser.parse_args()
 
-    checkpoint_dir = PROJECT_ROOT / args.checkpoint_dir
-    output_dir = PROJECT_ROOT / args.output_dir
+    checkpoint_dir = Path(args.checkpoint_dir)
+    output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Collect data

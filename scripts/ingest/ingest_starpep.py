@@ -24,7 +24,9 @@ import torch
 
 # Add project root to path for imports
 project_root = Path(__file__).resolve().parents[2]
-sys.path.append(str(project_root))
+sys.path.insert(0, str(project_root))
+
+from src.config.paths import PROCESSED_DATA_DIR, RAW_DATA_DIR
 
 try:
     # Attempt to import from the location found in research/
@@ -124,10 +126,14 @@ def ingest_starpep(input_path: str, output_path: str):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Ingest StarPepDB data")
-    parser.add_argument("--input", default="data/raw/starpep.csv", help="Path to input CSV")
+    parser.add_argument(
+        "--input",
+        default=str(RAW_DATA_DIR / "starpep.csv"),
+        help="Path to input CSV",
+    )
     parser.add_argument(
         "--output",
-        default="data/processed/starpep_hyperbolic.pt",
+        default=str(PROCESSED_DATA_DIR / "starpep_hyperbolic.pt"),
         help="Path to output .pt file",
     )
 

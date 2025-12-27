@@ -11,11 +11,17 @@ Usage:
     python scripts/visualization/viz_v58_v59.py --ckpt-v58 path/to/v58.pt --ckpt-v59 path/to/v59.pt
 """
 import argparse
+import sys
 from pathlib import Path
 
 import matplotlib
 import numpy as np
 import torch
+
+# Add project root to path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from src.config.paths import VIZ_DIR
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -26,7 +32,7 @@ def main():
     parser = argparse.ArgumentParser(description="Compare v5.8 vs v5.9 training")
     parser.add_argument("--ckpt-v58", type=str, required=True, help="Path to v5.8 checkpoint")
     parser.add_argument("--ckpt-v59", type=str, required=True, help="Path to v5.9 checkpoint")
-    parser.add_argument("--output", type=str, default="outputs/viz", help="Output directory")
+    parser.add_argument("--output", type=str, default=str(VIZ_DIR), help="Output directory")
     args = parser.parse_args()
 
     output_path = Path(args.output)

@@ -33,6 +33,7 @@ from sklearn.decomposition import PCA
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.config.paths import VIZ_DIR
 from src.data.generation import generate_all_ternary_operations
 # V5.11 is the canonical model - imports V5.6/V5.10 aliases for backwards compatibility
 from src.models import TernaryVAE as DualNeuralVAEV5
@@ -918,7 +919,7 @@ def main():
     parser.add_argument(
         "--output",
         type=str,
-        default="outputs/manifold_viz",
+        default=str(VIZ_DIR / "manifold_viz"),
         help="Output directory",
     )
     parser.add_argument(

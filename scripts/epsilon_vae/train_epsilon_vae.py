@@ -30,6 +30,7 @@ from torch.utils.data import DataLoader, Dataset
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.config.paths import OUTPUT_DIR
 from src.models.epsilon_vae import (
     EpsilonVAE,
     epsilon_vae_loss,
@@ -251,18 +252,18 @@ class EpsilonVAEFlat(nn.Module):
 
 def main():
     parser = argparse.ArgumentParser(description="Train Epsilon-VAE")
-    parser.add_argument("--data_dir", type=str, default="sandbox-training/epsilon_vae_data")
+    parser.add_argument("--data_dir", type=str, default=str(OUTPUT_DIR / "epsilon_vae_data"))
     parser.add_argument("--epochs", type=int, default=100)
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--latent_dim", type=int, default=32)
     parser.add_argument("--hidden_dim", type=int, default=256)
     parser.add_argument("--device", type=str, default="cuda")
-    parser.add_argument("--save_dir", type=str, default="sandbox-training/epsilon_vae_models")
+    parser.add_argument("--save_dir", type=str, default=str(OUTPUT_DIR / "epsilon_vae_models"))
     args = parser.parse_args()
 
-    data_dir = PROJECT_ROOT / args.data_dir
-    save_dir = PROJECT_ROOT / args.save_dir
+    data_dir = Path(args.data_dir)
+    save_dir = Path(args.save_dir)
     save_dir.mkdir(parents=True, exist_ok=True)
 
     device = args.device if torch.cuda.is_available() else "cpu"
