@@ -114,8 +114,9 @@ class LatticeAwareHyperbolicProjection(nn.Module):
         self.level_embeddings = nn.Embedding(n_levels, self.config.hidden_dim)
 
         # Radius adjustment network
+        # Input: latent_dim (euclidean embedding) + hidden_dim (level embedding)
         self.radius_adjust = nn.Sequential(
-            nn.Linear(self.config.hidden_dim * 2, self.config.hidden_dim),
+            nn.Linear(self.config.latent_dim + self.config.hidden_dim, self.config.hidden_dim),
             nn.SiLU(),
             nn.Linear(self.config.hidden_dim, 1),
             nn.Sigmoid(),

@@ -252,8 +252,13 @@ class ConceptAwareContrastive(nn.Module):
             # Negative similarities
             neg_sim = similarity[i] * neg_mask * weights[i]
 
-            # Log-sum-exp over negatives
-            neg_logsumexp = torch.logsumexp(neg_sim[neg_mask.bool()], dim=0)
+            # Log-sum-exp over negatives (handle empty case)
+            neg_indices = neg_mask.bool()
+            if neg_indices.sum() == 0:
+                # No negatives - skip this sample
+                continue
+
+            neg_logsumexp = torch.logsumexp(neg_sim[neg_indices], dim=0)
 
             # Loss: -log(exp(pos) / (exp(pos) + sum(exp(neg))))
             for j in range(batch_size):
