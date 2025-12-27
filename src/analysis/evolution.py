@@ -26,11 +26,13 @@ Research References:
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Callable, Dict, List, Optional, Tuple
 
+import math
 import numpy as np
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 class SelectionType(Enum):
@@ -536,3 +538,355 @@ class ViralEvolutionPredictor(nn.Module):
             )
 
         return pressures
+
+
+# =============================================================================
+# Transmissibility to Radius Mapping
+# =============================================================================
+# Maps viral transmissibility metrics to hyperbolic radius in Poincare ball.
+# Higher transmissibility = closer to origin (lower radius, central position)
+# Lower transmissibility = closer to boundary (higher radius, peripheral)
+# =============================================================================
+
+
+@dataclass
+class TransmissibilityProfile:
+    """Transmissibility characteristics of a viral variant."""
+
+    variant_name: str
+    r0_estimate: float  # Basic reproduction number
+    serial_interval: float = 5.0  # Days between generations
+    infectivity_peak: float = 1.0  # Relative peak infectivity
+    immune_evasion: float = 0.0  # Fraction evading prior immunity
+    acr_score: float = 0.0  # ACE2 binding affinity (for SARS-CoV-2)
+    embedding: Optional[torch.Tensor] = None
+
+
+@dataclass
+class RadiusMapping:
+    """Result of transmissibility to radius mapping."""
+
+    radius: float  # Hyperbolic radius in Poincare ball
+    angle: torch.Tensor  # Direction on unit sphere (dim-1 sphere)
+    embedding: torch.Tensor  # Full embedding in Poincare ball
+    confidence: float  # Confidence in mapping
+    transmissibility_score: float  # Combined transmissibility metric
+
+
+class TransmissibilityRadiusMapper:
+    """Map transmissibility metrics to hyperbolic radius.
+
+    Key insight from holographic/hyperbolic geometry:
+    - The radial coordinate in the Poincare ball represents hierarchy
+    - More "dominant" variants (higher transmissibility) sit closer to origin
+    - This creates natural clustering of variant families
+
+    The mapping function is:
+        radius = f(transmissibility) = 1 - exp(-alpha * transmissibility)
+
+    where alpha controls the mapping steepness.
+
+    For very high transmissibility, radius approaches 0 (origin).
+    For very low transmissibility, radius approaches 1 (boundary).
+
+    Mathematical justification:
+    In AdS/CFT, the radial coordinate corresponds to energy scale.
+    Higher energy (more fit) variants are UV (boundary).
+    However, for hierarchical organization, we invert this:
+    Dominant variants at center, rare variants at periphery.
+    """
+
+    def __init__(
+        self,
+        max_radius: float = 0.95,
+        min_radius: float = 0.1,
+        mapping_steepness: float = 0.5,
+        reference_r0: float = 3.0,  # Reference R0 for normalization
+        curvature: float = 1.0,
+    ):
+        """Initialize transmissibility mapper.
+
+        Args:
+            max_radius: Maximum radius (for lowest transmissibility)
+            min_radius: Minimum radius (for highest transmissibility)
+            mapping_steepness: Controls how quickly radius changes with R0
+            reference_r0: Reference R0 for normalization (typical variant)
+            curvature: Poincare ball curvature
+        """
+        self.max_radius = max_radius
+        self.min_radius = min_radius
+        self.alpha = mapping_steepness
+        self.reference_r0 = reference_r0
+        self.curvature = curvature
+
+    def compute_transmissibility_score(
+        self,
+        profile: TransmissibilityProfile,
+    ) -> float:
+        """Compute combined transmissibility score from profile.
+
+        Args:
+            profile: Transmissibility profile
+
+        Returns:
+            Combined transmissibility score (0-1 normalized)
+        """
+        # Normalize R0 relative to reference
+        r0_normalized = profile.r0_estimate / self.reference_r0
+
+        # Combine factors
+        score = (
+            0.5 * r0_normalized
+            + 0.2 * profile.infectivity_peak
+            + 0.2 * profile.immune_evasion
+            + 0.1 * profile.acr_score
+        )
+
+        # Sigmoid to bound between 0 and 1
+        return float(1.0 / (1.0 + math.exp(-2 * (score - 1))))
+
+    def transmissibility_to_radius(
+        self,
+        transmissibility: float,
+    ) -> float:
+        """Map transmissibility score to hyperbolic radius.
+
+        Higher transmissibility -> lower radius (closer to origin)
+
+        Args:
+            transmissibility: Transmissibility score (0-1)
+
+        Returns:
+            Radius in Poincare ball
+        """
+        # Invert: high transmissibility = low radius
+        inverted = 1.0 - transmissibility
+
+        # Apply exponential mapping
+        # radius = min + (max - min) * (1 - exp(-alpha * inverted))
+        radius = self.min_radius + (self.max_radius - self.min_radius) * (
+            1.0 - math.exp(-self.alpha * inverted)
+        )
+
+        return radius
+
+    def radius_to_transmissibility(
+        self,
+        radius: float,
+    ) -> float:
+        """Inverse mapping: radius to transmissibility.
+
+        Args:
+            radius: Radius in Poincare ball
+
+        Returns:
+            Estimated transmissibility score
+        """
+        # Solve for inverted from radius
+        # radius = min + (max - min) * (1 - exp(-alpha * inverted))
+        # (radius - min) / (max - min) = 1 - exp(-alpha * inverted)
+        # exp(-alpha * inverted) = 1 - (radius - min) / (max - min)
+
+        ratio = (radius - self.min_radius) / (self.max_radius - self.min_radius)
+        ratio = max(1e-10, min(1 - 1e-10, ratio))  # Clamp for log
+
+        inverted = -math.log(1 - ratio) / self.alpha
+        inverted = max(0, min(1, inverted))
+
+        return 1.0 - inverted
+
+    def map_to_embedding(
+        self,
+        profile: TransmissibilityProfile,
+        direction: Optional[torch.Tensor] = None,
+        latent_dim: int = 16,
+    ) -> RadiusMapping:
+        """Map transmissibility profile to full Poincare ball embedding.
+
+        Args:
+            profile: Transmissibility profile
+            direction: Optional direction vector (defaults to random)
+            latent_dim: Dimension of embedding
+
+        Returns:
+            RadiusMapping with full embedding
+        """
+        # Compute transmissibility score
+        score = self.compute_transmissibility_score(profile)
+
+        # Map to radius
+        radius = self.transmissibility_to_radius(score)
+
+        # Get direction (either provided or from existing embedding)
+        if direction is not None:
+            angle = direction / (torch.norm(direction) + 1e-10)
+        elif profile.embedding is not None:
+            # Extract direction from existing embedding
+            angle = profile.embedding / (torch.norm(profile.embedding) + 1e-10)
+        else:
+            # Random direction
+            angle = torch.randn(latent_dim)
+            angle = angle / torch.norm(angle)
+
+        # Create embedding at specified radius
+        embedding = radius * angle
+
+        return RadiusMapping(
+            radius=radius,
+            angle=angle,
+            embedding=embedding,
+            confidence=1.0 - abs(score - 0.5),  # More confident near extremes
+            transmissibility_score=score,
+        )
+
+    def adjust_embedding_radius(
+        self,
+        embedding: torch.Tensor,
+        new_transmissibility: float,
+    ) -> torch.Tensor:
+        """Adjust an existing embedding to a new transmissibility level.
+
+        Preserves the angular direction while changing the radius.
+
+        Args:
+            embedding: Current embedding
+            new_transmissibility: Target transmissibility score
+
+        Returns:
+            Adjusted embedding
+        """
+        # Get current direction
+        current_norm = torch.norm(embedding, dim=-1, keepdim=True).clamp(min=1e-10)
+        direction = embedding / current_norm
+
+        # Compute new radius
+        new_radius = self.transmissibility_to_radius(new_transmissibility)
+
+        return new_radius * direction
+
+
+class EvolutionaryTrajectoryPredictor(nn.Module):
+    """Predict evolutionary trajectories using hyperbolic geometry.
+
+    Combines transmissibility mapping with geodesic evolution
+    to predict how variants will evolve over time.
+    """
+
+    def __init__(
+        self,
+        latent_dim: int = 16,
+        hidden_dim: int = 64,
+        curvature: float = 1.0,
+    ):
+        """Initialize trajectory predictor.
+
+        Args:
+            latent_dim: Dimension of latent embeddings
+            hidden_dim: Hidden layer dimension
+            curvature: Poincare ball curvature
+        """
+        super().__init__()
+        self.latent_dim = latent_dim
+        self.curvature = curvature
+
+        self.mapper = TransmissibilityRadiusMapper(curvature=curvature)
+
+        # Evolution velocity predictor
+        self.velocity_net = nn.Sequential(
+            nn.Linear(latent_dim + 1, hidden_dim),  # +1 for radius
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, latent_dim),
+        )
+
+        # Transmissibility change predictor
+        self.transmissibility_net = nn.Sequential(
+            nn.Linear(latent_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, 1),
+            nn.Tanh(),  # Bounded change
+        )
+
+    def predict_trajectory(
+        self,
+        embedding: torch.Tensor,
+        n_steps: int = 10,
+        dt: float = 0.1,
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        """Predict evolutionary trajectory from current state.
+
+        Args:
+            embedding: Current embedding (batch, dim)
+            n_steps: Number of prediction steps
+            dt: Time step size
+
+        Returns:
+            Tuple of (trajectory embeddings, transmissibility trajectory)
+        """
+        batch_size = embedding.size(0)
+        device = embedding.device
+
+        trajectory = [embedding]
+        transmissibility = [
+            torch.tensor([self.mapper.radius_to_transmissibility(
+                torch.norm(embedding[i]).item()
+            ) for i in range(batch_size)], device=device)
+        ]
+
+        current = embedding
+        for _ in range(n_steps - 1):
+            # Compute radius feature
+            radius = torch.norm(current, dim=-1, keepdim=True)
+
+            # Predict velocity in tangent space
+            input_features = torch.cat([current, radius], dim=-1)
+            velocity = self.velocity_net(input_features)
+
+            # Predict transmissibility change
+            trans_change = self.transmissibility_net(current).squeeze(-1)
+
+            # Update position (simple Euler integration)
+            # In practice, would use Riemannian exponential map
+            current = current + dt * velocity
+
+            # Project back to Poincare ball
+            norm = torch.norm(current, dim=-1, keepdim=True)
+            max_norm = self.mapper.max_radius
+            current = torch.where(
+                norm > max_norm,
+                current * max_norm / norm,
+                current,
+            )
+
+            # Update transmissibility
+            current_trans = transmissibility[-1] + dt * trans_change
+            current_trans = torch.clamp(current_trans, 0, 1)
+
+            trajectory.append(current)
+            transmissibility.append(current_trans)
+
+        return torch.stack(trajectory, dim=1), torch.stack(transmissibility, dim=1)
+
+    def forward(
+        self,
+        embedding: torch.Tensor,
+        n_steps: int = 10,
+    ) -> Dict[str, torch.Tensor]:
+        """Forward pass predicting trajectory.
+
+        Args:
+            embedding: Current variant embeddings
+            n_steps: Number of prediction steps
+
+        Returns:
+            Dictionary with trajectory predictions
+        """
+        traj, trans = self.predict_trajectory(embedding, n_steps)
+
+        return {
+            "trajectory": traj,
+            "transmissibility": trans,
+            "final_embedding": traj[:, -1],
+            "final_transmissibility": trans[:, -1],
+        }

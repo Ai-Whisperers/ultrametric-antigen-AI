@@ -47,8 +47,12 @@ from .evolution import (
     EscapeMutation,
     EscapePrediction,
     EvolutionaryPressure,
+    EvolutionaryTrajectoryPredictor,
     MutationHotspot,
+    RadiusMapping,
     SelectionType,
+    TransmissibilityProfile,
+    TransmissibilityRadiusMapper,
     ViralEvolutionPredictor,
 )
 
@@ -105,6 +109,16 @@ from .crispr_offtarget import (
     PAdicSequenceDistance,
 )
 
+# Ancestral sequence reconstruction
+from .ancestry import (
+    AncestralNode,
+    AncestralState,
+    GeodesicInterpolator,
+    PhylogeneticReconstructor,
+    ReconstructionConfig,
+    TreeNode,
+)
+
 __all__ = [
     # Geometry
     "compute_pairwise_distances",
@@ -129,8 +143,12 @@ __all__ = [
     "EscapeMutation",
     "EscapePrediction",
     "EvolutionaryPressure",
+    "EvolutionaryTrajectoryPredictor",
     "MutationHotspot",
+    "RadiusMapping",
     "SelectionType",
+    "TransmissibilityProfile",
+    "TransmissibilityRadiusMapper",
     "ViralEvolutionPredictor",
     # Codon optimization (consolidated from optimization/)
     "CitrullinationBoundaryOptimizer",
@@ -170,4 +188,11 @@ __all__ = [
     "OffTargetSite",
     "OfftargetActivityPredictor",
     "PAdicSequenceDistance",
+    # Ancestral sequence reconstruction
+    "AncestralNode",
+    "AncestralState",
+    "GeodesicInterpolator",
+    "PhylogeneticReconstructor",
+    "ReconstructionConfig",
+    "TreeNode",
 ]

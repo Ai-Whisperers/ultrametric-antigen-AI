@@ -24,6 +24,16 @@ from .checkpoint_manager import AsyncCheckpointSaver, CheckpointManager
 from .config_schema import (ConfigValidationError, ModelConfig, TrainingConfig,
                             config_to_dict, validate_config)
 from .curriculum import AdaptiveCurriculum, CurriculumState
+from .grokking_detector import (
+    EpochMetrics,
+    GrokAnalysis,
+    GrokDetector,
+    GrokDetectorConfig,
+    LocalComplexityEstimator,
+    TrainingPhase,
+    WeightNormTracker,
+    analyze_training_log,
+)
 from .data import (StratifiedBatchSampler, TernaryDataset,
                    create_stratified_batches)
 from .environment import (EnvironmentStatus, require_valid_environment,
@@ -70,4 +80,13 @@ __all__ = [
     # Curriculum learning
     "AdaptiveCurriculum",
     "CurriculumState",
+    # Grokking detection
+    "GrokDetector",
+    "GrokDetectorConfig",
+    "GrokAnalysis",
+    "EpochMetrics",
+    "TrainingPhase",
+    "LocalComplexityEstimator",
+    "WeightNormTracker",
+    "analyze_training_log",
 ]

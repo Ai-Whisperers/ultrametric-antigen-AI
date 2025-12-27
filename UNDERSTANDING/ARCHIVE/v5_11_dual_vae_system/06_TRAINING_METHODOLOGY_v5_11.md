@@ -1,5 +1,13 @@
 # Training Methodology: Phases, Curriculum, and Homeostasis
 
+> [!CAUTION] > **HISTORICAL DOCUMENT (Superseded)**
+> This document describes the "Homeostatic Control" and "Aggressive Beta Warmup" methodology (v5.10) which was later found to cause **posterior collapse** ("Anti-Grokking").
+>
+> For the **Correct Working Methodology** (Cyclical Beta, High LR) established in v5.12, please refer to:
+>
+> - [12_MASTER_TRAINING_SYNTHESIS.md](12_MASTER_TRAINING_SYNTHESIS.md) (The Pivot)
+> - [16_EXPERIMENTAL_METHODOLOGY.md](16_EXPERIMENTAL_METHODOLOGY.md) (Current Best Practices)
+
 **How to train a hyperbolic VAE without it collapsing**
 
 ---
@@ -7,6 +15,7 @@
 ## 1. The Challenge
 
 Training VAEs on discrete spaces with geometric constraints is notoriously difficult:
+
 - **Posterior collapse**: All latent codes become identical
 - **Mode collapse**: Only a few outputs are generated
 - **Geometric instability**: Points fly to the boundary
@@ -43,6 +52,7 @@ temperature: 1.0                 # High temperature = exploration
 ```
 
 **What happens**:
+
 - VAE-A learns to reconstruct all 19,683 operations
 - Latent space expands to cover the data
 - No geometric constraints yet
@@ -59,6 +69,7 @@ temperature: 0.9 (slightly cooler)
 ```
 
 **What happens**:
+
 - VAE-A stabilizes
 - VAE-B starts to activate
 - System finds equilibrium
@@ -74,6 +85,7 @@ temperature: 0.8
 ```
 
 **What happens**:
+
 - Sudden change shakes the system
 - Allows escape from suboptimal configurations
 - Brief (1 epoch only)
@@ -91,6 +103,7 @@ geometric losses: activated
 ```
 
 **What happens**:
+
 - Both VAEs contribute
 - Geometric losses shape the latent space
 - System converges to final configuration
@@ -174,6 +187,7 @@ Epoch 30+:   All operations (full difficulty)
 ### What is Homeostasis?
 
 Biological systems maintain stability through feedback loops:
+
 - Too hot → sweat → cool down
 - Too cold → shiver → warm up
 
@@ -213,6 +227,7 @@ class HomeostaticController:
 ### Adaptive Parameters
 
 These parameters can be adjusted during training:
+
 - `adaptive_sigma`: Prior spread
 - `adaptive_curvature`: Hyperbolic curvature
 - `adaptive_lr`: Learning rate
@@ -224,6 +239,7 @@ These parameters can be adjusted during training:
 ### The Problem
 
 Different losses have different gradient magnitudes:
+
 - Reconstruction: Large gradients
 - Geometric losses: Smaller gradients
 
@@ -403,39 +419,43 @@ torch.save(checkpoint, path)
 
 ## 11. Key Training Parameters
 
-| Parameter | Typical Value | Purpose |
-|-----------|---------------|---------|
-| `batch_size` | 256-512 | Larger = more stable |
-| `learning_rate` | 1e-3 | Initial learning rate |
-| `epochs` | 100-300 | Total training epochs |
-| `beta_A_start` | 0.3 | Initial β for VAE-A |
-| `beta_A_end` | 0.8 | Final β for VAE-A |
-| `beta_B_start` | 0.0 | Initial β for VAE-B |
-| `beta_B_end` | 1.0 | Final β for VAE-B |
-| `free_bits` | 0.1 | KL free bits |
-| `max_radius` | 0.95 | Poincare ball boundary |
-| `curvature` | 1.0-2.0 | Hyperbolic curvature |
+| Parameter       | Typical Value | Purpose                |
+| --------------- | ------------- | ---------------------- |
+| `batch_size`    | 256-512       | Larger = more stable   |
+| `learning_rate` | 1e-3          | Initial learning rate  |
+| `epochs`        | 100-300       | Total training epochs  |
+| `beta_A_start`  | 0.3           | Initial β for VAE-A    |
+| `beta_A_end`    | 0.8           | Final β for VAE-A      |
+| `beta_B_start`  | 0.0           | Initial β for VAE-B    |
+| `beta_B_end`    | 1.0           | Final β for VAE-B      |
+| `free_bits`     | 0.1           | KL free bits           |
+| `max_radius`    | 0.95          | Poincare ball boundary |
+| `curvature`     | 1.0-2.0       | Hyperbolic curvature   |
 
 ---
 
 ## 12. Common Failure Modes
 
 ### Posterior Collapse
+
 **Symptom**: All z codes identical
 **Cause**: β too high too early
 **Fix**: Slower β warmup, free bits
 
 ### Boundary Explosion
+
 **Symptom**: All points at ||z|| → 1
 **Cause**: Insufficient radial loss
 **Fix**: Increase radial_weight, stricter max_radius
 
 ### Mode Collapse
+
 **Symptom**: Only a few outputs
 **Cause**: Entropy too low, repulsion too weak
 **Fix**: Increase entropy_weight, repulsion_weight
 
 ### Geometric Loss Ignored
+
 **Symptom**: Good reconstruction, random geometry
 **Cause**: Reconstruction gradient dominates
 **Fix**: Gradient balancing, increase geometric weights
@@ -445,6 +465,7 @@ torch.save(checkpoint, path)
 ## Summary
 
 The training methodology combines:
+
 1. **Phase scheduling**: Gradual introduction of objectives
 2. **β-annealing**: Prevent premature collapse
 3. **Curriculum learning**: Easy to hard examples
@@ -457,4 +478,4 @@ All working together to train a stable, well-structured hyperbolic VAE.
 
 ---
 
-*Next, we'll see what this training regime discovered in real HIV data.*
+_Next, we'll see what this training regime discovered in real HIV data._

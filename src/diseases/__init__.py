@@ -2,78 +2,59 @@
 #
 # Licensed under the PolyForm Noncommercial License 1.0.0
 # See LICENSE file in the repository root for full license text.
-#
-# For commercial licensing inquiries: support@aiwhisperers.com
 
-"""Disease-specific analysis modules.
+"""Multi-disease framework for unified pathogen/disease modeling.
 
-This package provides specialized analyzers for understanding diseases
-through the p-adic and geometric lens of the Ternary VAE framework.
+This module provides a disease-agnostic framework for training models
+across multiple disease domains including:
+- HIV (drug resistance, immune escape, glycan shielding)
+- Rheumatoid Arthritis (citrullination, HLA interactions)
+- Neurodegeneration (tau phosphorylation, amyloid aggregation)
+- Cancer (neoantigen prediction, immune checkpoint)
+- Infectious diseases (emerging pathogens, variant tracking)
 
-Modules:
-    - repeat_expansion: Trinucleotide repeat expansion diseases (HD, SCA, etc.)
-    - long_covid: SARS-CoV-2 spike protein and Long COVID analysis
-    - multiple_sclerosis: MS molecular mimicry and demyelination analysis
-    - rheumatoid_arthritis: RA citrullination and Goldilocks Zone analysis
+Example:
+    from src.diseases import DiseaseRegistry, get_disease_config
 
-Usage:
-    from src.diseases import RepeatExpansionAnalyzer, LongCOVIDAnalyzer
+    # Get all registered diseases
+    diseases = DiseaseRegistry.list_diseases()
 
-    # Huntington's disease analysis
-    analyzer = RepeatExpansionAnalyzer()
-    risk = analyzer.analyze_repeat_padic_distance("huntington", repeat_count=42)
+    # Get specific disease config
+    hiv_config = get_disease_config("hiv")
+
+    # Train multi-disease model
+    from src.diseases.training import MultiDiseaseTrainer
+    trainer = MultiDiseaseTrainer(diseases=["hiv", "ra", "neuro"])
+    trainer.train()
 """
 
-from .long_covid import LongCOVIDAnalyzer, SpikeVariantComparator
-from .multiple_sclerosis import (
-    DemyelinationPrediction,
-    EpitopePair,
-    HLABindingPredictor,
-    MolecularMimicryDetector,
-    MSRiskProfile,
-    MSSubtype,
-    MultipleSclerosisAnalyzer,
-    MyelinTarget,
-)
-from .repeat_expansion import (RepeatDiseaseInfo, RepeatExpansionAnalyzer,
-                               TrinucleotideRepeat)
-
-# Rheumatoid Arthritis analysis
-from .rheumatoid_arthritis import (
-    CitrullinationPredictor,
-    CitrullinationSite,
-    EpitopeAnalysis,
-    GoldilocksZoneDetector,
-    PADEnzyme,
-    PAdicCitrullinationShift,
-    RARiskProfile,
-    RASubtype,
-    RheumatoidArthritisAnalyzer,
+from src.diseases.registry import DiseaseRegistry, get_disease_config
+from src.diseases.base import DiseaseConfig, DiseaseDataset
+from src.diseases.losses import MultiDiseaseLoss
+from src.diseases.variant_escape import (
+    DiseaseType,
+    DrugResistancePredictor,
+    EscapePrediction,
+    FitnessPredictor,
+    ImmuneEscapePredictor,
+    MetaLearningEscapeHead,
+    ReceptorBindingPredictor,
+    VariantEscapeHead,
 )
 
 __all__ = [
-    "RepeatExpansionAnalyzer",
-    "RepeatDiseaseInfo",
-    "TrinucleotideRepeat",
-    "LongCOVIDAnalyzer",
-    "SpikeVariantComparator",
-    # Multiple Sclerosis
-    "MultipleSclerosisAnalyzer",
-    "MolecularMimicryDetector",
-    "HLABindingPredictor",
-    "MSSubtype",
-    "MyelinTarget",
-    "EpitopePair",
-    "MSRiskProfile",
-    "DemyelinationPrediction",
-    # Rheumatoid Arthritis
-    "RheumatoidArthritisAnalyzer",
-    "CitrullinationPredictor",
-    "PAdicCitrullinationShift",
-    "GoldilocksZoneDetector",
-    "CitrullinationSite",
-    "RARiskProfile",
-    "EpitopeAnalysis",
-    "PADEnzyme",
-    "RASubtype",
+    "DiseaseRegistry",
+    "get_disease_config",
+    "DiseaseConfig",
+    "DiseaseDataset",
+    "MultiDiseaseLoss",
+    # Variant escape prediction
+    "VariantEscapeHead",
+    "MetaLearningEscapeHead",
+    "EscapePrediction",
+    "DiseaseType",
+    "FitnessPredictor",
+    "ImmuneEscapePredictor",
+    "DrugResistancePredictor",
+    "ReceptorBindingPredictor",
 ]

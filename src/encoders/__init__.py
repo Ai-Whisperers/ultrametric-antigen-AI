@@ -53,6 +53,25 @@ Example:
 from .circadian_encoder import (CircadianCycleEncoder, KaiCClockEncoder,
                                 ToroidalEmbedding)
 from .codon_encoder import CodonEncoder
+from .hybrid_encoder import (
+    CrossAttentionFusion,
+    GatedFusion,
+    HybridCodonEncoder,
+    HybridEncoderConfig,
+    HybridEncoderFactory,
+    PLMBackend,
+)
+from .multiscale_nucleotide_encoder import (
+    CodonJunctionEncoder,
+    DinucleotideEncoder,
+    LocalStructureEncoder,
+    MultiScaleConfig,
+    MultiScaleEncoderFactory,
+    MultiScaleNucleotideEncoder,
+    NucleotideEmbedding,
+    RibosomeSiteEncoder,
+    WobblePositionEncoder,
+)
 from .diffusion_encoder import (
     DiffusionMapEncoder,
     DiffusionMapResult,
@@ -94,6 +113,23 @@ from .surface_encoder import (
 __all__ = [
     # Codon encoding
     "CodonEncoder",
+    # Hybrid encoder (ESM-2 + Codon)
+    "HybridCodonEncoder",
+    "HybridEncoderConfig",
+    "HybridEncoderFactory",
+    "PLMBackend",
+    "CrossAttentionFusion",
+    "GatedFusion",
+    # Multi-scale nucleotide encoder
+    "MultiScaleNucleotideEncoder",
+    "MultiScaleConfig",
+    "MultiScaleEncoderFactory",
+    "NucleotideEmbedding",
+    "DinucleotideEncoder",
+    "WobblePositionEncoder",
+    "CodonJunctionEncoder",
+    "LocalStructureEncoder",
+    "RibosomeSiteEncoder",
     # PTM encoding
     "PTMType",
     "GoldilocksZone",

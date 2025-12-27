@@ -108,6 +108,23 @@ from .glycan_loss import (
     SentinelGlycanLoss,
 )
 
+# Fisher-Rao information geometry
+from .fisher_rao import (
+    FisherRaoConfig,
+    FisherRaoDistance,
+    FisherRaoKL,
+    FisherRaoLoss,
+    NaturalGradientRegularizer,
+)
+
+# Codon usage constraints
+from .codon_usage import (
+    CodonOptimalityScore,
+    CodonUsageConfig,
+    CodonUsageLoss,
+    Organism,
+)
+
 # Appetitive losses archived (unused in active training)
 # See src/losses/archive/appetitive_losses.py for legacy code
 
@@ -190,4 +207,15 @@ __all__ = [
     "GlycanSite",
     "GlycanSequonDetector",
     "GlycanRemovalSimulator",
+    # Fisher-Rao information geometry
+    "FisherRaoConfig",
+    "FisherRaoDistance",
+    "FisherRaoLoss",
+    "FisherRaoKL",
+    "NaturalGradientRegularizer",
+    # Codon usage constraints
+    "CodonUsageLoss",
+    "CodonUsageConfig",
+    "CodonOptimalityScore",
+    "Organism",
 ]

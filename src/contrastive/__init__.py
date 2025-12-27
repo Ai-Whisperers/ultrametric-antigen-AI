@@ -21,6 +21,13 @@ Example:
     loss = loss_fn(embeddings, indices)
 """
 
+from src.contrastive.codon_sampler import (
+    CodonContrastiveDataset,
+    CodonPositiveSampler,
+    CodonSamplerConfig,
+    build_synonymous_codon_groups,
+    build_wobble_variants,
+)
 from src.contrastive.padic_contrastive import (
     ContrastiveConfig,
     ContrastiveDataAugmentation,
@@ -32,6 +39,7 @@ from src.contrastive.padic_contrastive import (
 )
 
 __all__ = [
+    # P-adic contrastive learning
     "PAdicContrastiveLoss",
     "MultiScaleContrastive",
     "SimCLREncoder",
@@ -39,4 +47,10 @@ __all__ = [
     "PAdicPositiveSampler",
     "ContrastiveDataAugmentation",
     "ContrastiveConfig",
+    # Codon-aware sampling
+    "CodonPositiveSampler",
+    "CodonSamplerConfig",
+    "CodonContrastiveDataset",
+    "build_synonymous_codon_groups",
+    "build_wobble_variants",
 ]

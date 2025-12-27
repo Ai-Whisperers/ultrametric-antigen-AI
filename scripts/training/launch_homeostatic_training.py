@@ -368,18 +368,59 @@ def train_homeostatic_model(args, device, dirs, project_root):
         encoder_a_lr_scale=0.05,
     )
 
-    # Load v5.5 checkpoint
+    # Load v5.5 checkpoint with proper key mapping
     v5_5_path = dirs["v5_5_checkpoints"] / "latest.pt"
     if v5_5_path.exists():
         print(f"Loading v5.5 checkpoint: {v5_5_path}")
         ckpt = torch.load(v5_5_path, map_location=device, weights_only=False)
+        pretrained = ckpt.get("model", {})
+
+        # Map v5.5 keys to V5.11 structure:
+        # v5.5: encoder_A.0.weight -> V5.11: encoder_A.encoder.0.weight
+        # v5.5: fc_mu_A.weight -> V5.11: encoder_A.fc_mu.weight
+        # v5.5: decoder_A.0.weight -> V5.11: decoder_A.decoder.0.weight
+        key_mapping = {}
+        for k in pretrained.keys():
+            if k.startswith("encoder_A."):
+                # encoder_A.0.weight -> encoder_A.encoder.0.weight
+                suffix = k[len("encoder_A."):]
+                key_mapping[k] = f"encoder_A.encoder.{suffix}"
+            elif k.startswith("encoder_B."):
+                suffix = k[len("encoder_B."):]
+                key_mapping[k] = f"encoder_B.encoder.{suffix}"
+            elif k.startswith("fc_mu_A."):
+                suffix = k[len("fc_mu_A."):]
+                key_mapping[k] = f"encoder_A.fc_mu.{suffix}"
+            elif k.startswith("fc_logvar_A."):
+                suffix = k[len("fc_logvar_A."):]
+                key_mapping[k] = f"encoder_A.fc_logvar.{suffix}"
+            elif k.startswith("fc_mu_B."):
+                suffix = k[len("fc_mu_B."):]
+                key_mapping[k] = f"encoder_B.fc_mu.{suffix}"
+            elif k.startswith("fc_logvar_B."):
+                suffix = k[len("fc_logvar_B."):]
+                key_mapping[k] = f"encoder_B.fc_logvar.{suffix}"
+            elif k.startswith("decoder_A."):
+                suffix = k[len("decoder_A."):]
+                key_mapping[k] = f"decoder_A.decoder.{suffix}"
+
+        # Apply mapping
+        mapped_state = {}
+        for old_key, new_key in key_mapping.items():
+            if old_key in pretrained:
+                mapped_state[new_key] = pretrained[old_key]
+
         # Load compatible weights
         model_dict = model.state_dict()
-        pretrained = ckpt.get("model", {})
-        compatible = {k: v for k, v in pretrained.items() if k in model_dict and v.shape == model_dict[k].shape}
+        compatible = {k: v for k, v in mapped_state.items() if k in model_dict and v.shape == model_dict[k].shape}
         model_dict.update(compatible)
         model.load_state_dict(model_dict, strict=False)
-        print(f"  Loaded {len(compatible)}/{len(model_dict)} weights")
+        print(f"  Loaded {len(compatible)}/{len(model_dict)} weights from v5.5 checkpoint")
+
+        if len(compatible) == 0:
+            print("  [WARN] No compatible weights found! Training from scratch.")
+    else:
+        print("  [INFO] No v5.5 checkpoint found. Training from scratch.")
 
     model = model.to(device)
     model.set_encoder_a_frozen(True)  # Start with encoder_A frozen
