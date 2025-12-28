@@ -41,6 +41,13 @@ from src.diseases.variant_escape import (
     ReceptorBindingPredictor,
     VariantEscapeHead,
 )
+from src.diseases.sars_cov2_analyzer import (
+    SARSCoV2Analyzer,
+    SARSCoV2Config,
+    SARSCoV2Gene,
+    SARSCoV2Variant,
+    create_sars_cov2_dataset,
+)
 
 __all__ = [
     "DiseaseRegistry",
@@ -57,4 +64,10 @@ __all__ = [
     "ImmuneEscapePredictor",
     "DrugResistancePredictor",
     "ReceptorBindingPredictor",
+    # SARS-CoV-2 specific
+    "SARSCoV2Analyzer",
+    "SARSCoV2Config",
+    "SARSCoV2Gene",
+    "SARSCoV2Variant",
+    "create_sars_cov2_dataset",
 ]
