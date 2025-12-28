@@ -56,6 +56,14 @@ from src.diseases.tuberculosis_analyzer import (
     ResistanceLevel,
     create_tb_synthetic_dataset,
 )
+from src.diseases.influenza_analyzer import (
+    InfluenzaAnalyzer,
+    InfluenzaConfig,
+    InfluenzaSubtype,
+    InfluenzaGene,
+    InfluenzaDrug,
+    create_influenza_synthetic_dataset,
+)
 
 __all__ = [
     "DiseaseRegistry",
@@ -85,4 +93,11 @@ __all__ = [
     "TBGene",
     "ResistanceLevel",
     "create_tb_synthetic_dataset",
+    # Influenza specific
+    "InfluenzaAnalyzer",
+    "InfluenzaConfig",
+    "InfluenzaSubtype",
+    "InfluenzaGene",
+    "InfluenzaDrug",
+    "create_influenza_synthetic_dataset",
 ]
