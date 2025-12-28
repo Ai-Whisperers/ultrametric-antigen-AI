@@ -12,11 +12,18 @@ RESEARCH_DIR = CODON_ENCODER_DIR.parent
 PROJECT_ROOT = RESEARCH_DIR.parent
 
 # P-adic codon embeddings (from trained VAE)
-GENETIC_CODE_DIR = RESEARCH_DIR / "bioinformatics" / "genetic_code" / "data"
+# Data now stored locally within codon-encoder directory
+DATA_DIR = CODON_ENCODER_DIR / "data"
+
+# Alias for backwards compatibility (scripts may reference GENETIC_CODE_DIR)
+GENETIC_CODE_DIR = DATA_DIR
+
+# Legacy path (for reference, can be removed after full migration)
+_LEGACY_GENETIC_CODE_DIR = RESEARCH_DIR / "bioinformatics" / "genetic_code" / "data"
 
 # Embedding files
-CODON_MAPPING_FILE = GENETIC_CODE_DIR / "codon_mapping_3adic.json"
-EMBEDDINGS_FILE = GENETIC_CODE_DIR / "v5_11_3_embeddings.pt"
+CODON_MAPPING_FILE = DATA_DIR / "codon_mapping_3adic.json"
+EMBEDDINGS_FILE = DATA_DIR / "v5_11_3_embeddings.pt"
 
 # Results directories (organized by category)
 RESULTS_DIR = CODON_ENCODER_DIR / "results"
@@ -89,7 +96,7 @@ def load_padic_embeddings():
     import numpy as np
 
     if not CODON_MAPPING_FILE.exists() or not EMBEDDINGS_FILE.exists():
-        raise FileNotFoundError(f"Embedding files not found at {GENETIC_CODE_DIR}")
+        raise FileNotFoundError(f"Embedding files not found at {DATA_DIR}")
 
     with open(CODON_MAPPING_FILE) as f:
         mapping = json.load(f)
