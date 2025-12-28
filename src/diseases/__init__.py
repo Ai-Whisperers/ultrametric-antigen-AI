@@ -64,6 +64,61 @@ from src.diseases.influenza_analyzer import (
     InfluenzaDrug,
     create_influenza_synthetic_dataset,
 )
+from src.diseases.hcv_analyzer import (
+    HCVAnalyzer,
+    HCVConfig,
+    HCVGenotype,
+    HCVGene,
+    HCVDrug,
+    create_hcv_synthetic_dataset,
+)
+from src.diseases.hbv_analyzer import (
+    HBVAnalyzer,
+    HBVConfig,
+    HBVGenotype,
+    HBVGene,
+    HBVDrug,
+    create_hbv_synthetic_dataset,
+)
+from src.diseases.malaria_analyzer import (
+    MalariaAnalyzer,
+    MalariaConfig,
+    PlasmodiumSpecies,
+    MalariaGene,
+    MalariaDrug,
+    create_malaria_synthetic_dataset,
+)
+from src.diseases.mrsa_analyzer import (
+    MRSAAnalyzer,
+    MRSAConfig,
+    StaphGene,
+    Antibiotic,
+    create_mrsa_synthetic_dataset,
+)
+from src.diseases.candida_analyzer import (
+    CandidaAnalyzer,
+    CandidaConfig,
+    CandidaClade,
+    CandidaGene,
+    Antifungal,
+    create_candida_synthetic_dataset,
+)
+from src.diseases.rsv_analyzer import (
+    RSVAnalyzer,
+    RSVConfig,
+    RSVSubtype,
+    RSVGene,
+    RSVDrug,
+    create_rsv_synthetic_dataset,
+)
+from src.diseases.cancer_analyzer import (
+    CancerAnalyzer,
+    CancerConfig,
+    CancerType,
+    CancerGene,
+    TargetedTherapy,
+    create_cancer_synthetic_dataset,
+)
 
 __all__ = [
     "DiseaseRegistry",
@@ -100,4 +155,52 @@ __all__ = [
     "InfluenzaGene",
     "InfluenzaDrug",
     "create_influenza_synthetic_dataset",
+    # HCV specific
+    "HCVAnalyzer",
+    "HCVConfig",
+    "HCVGenotype",
+    "HCVGene",
+    "HCVDrug",
+    "create_hcv_synthetic_dataset",
+    # HBV specific
+    "HBVAnalyzer",
+    "HBVConfig",
+    "HBVGenotype",
+    "HBVGene",
+    "HBVDrug",
+    "create_hbv_synthetic_dataset",
+    # Malaria specific
+    "MalariaAnalyzer",
+    "MalariaConfig",
+    "PlasmodiumSpecies",
+    "MalariaGene",
+    "MalariaDrug",
+    "create_malaria_synthetic_dataset",
+    # MRSA specific
+    "MRSAAnalyzer",
+    "MRSAConfig",
+    "StaphGene",
+    "Antibiotic",
+    "create_mrsa_synthetic_dataset",
+    # Candida auris specific
+    "CandidaAnalyzer",
+    "CandidaConfig",
+    "CandidaClade",
+    "CandidaGene",
+    "Antifungal",
+    "create_candida_synthetic_dataset",
+    # RSV specific
+    "RSVAnalyzer",
+    "RSVConfig",
+    "RSVSubtype",
+    "RSVGene",
+    "RSVDrug",
+    "create_rsv_synthetic_dataset",
+    # Cancer targeted therapy
+    "CancerAnalyzer",
+    "CancerConfig",
+    "CancerType",
+    "CancerGene",
+    "TargetedTherapy",
+    "create_cancer_synthetic_dataset",
 ]
