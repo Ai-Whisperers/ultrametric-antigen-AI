@@ -43,6 +43,7 @@ import numpy as np
 import torch
 
 from .base import DiseaseAnalyzer, DiseaseConfig, DiseaseType, TaskType
+from .utils.synthetic_data import ensure_minimum_samples
 
 
 class HCVGenotype(Enum):
@@ -415,8 +416,18 @@ class HCVAnalyzer(DiseaseAnalyzer):
 def create_hcv_synthetic_dataset(
     genotype: HCVGenotype = HCVGenotype.GT1A,
     gene: HCVGene = HCVGene.NS5A,
+    min_samples: int = 50,
 ) -> tuple[np.ndarray, np.ndarray, list[str]]:
-    """Create synthetic HCV dataset for testing."""
+    """Create synthetic HCV dataset for testing.
+
+    Args:
+        genotype: HCV genotype (GT1A, GT1B, GT3, etc.)
+        gene: Target gene (NS5A, NS3, NS5B)
+        min_samples: Minimum number of samples to generate
+
+    Returns:
+        (X, y, ids) tuple with at least min_samples samples
+    """
     reference = "M" + "A" * 99  # Simplified reference
 
     if gene == HCVGene.NS5A:
@@ -433,7 +444,7 @@ def create_hcv_synthetic_dataset(
     for pos, info in mutation_db.items():
         if pos <= len(reference):
             ref_aa = list(info.keys())[0]
-            for mut_aa in info[ref_aa]["mutations"][:2]:  # Limit mutations
+            for mut_aa in info[ref_aa]["mutations"]:  # All mutations, no limit
                 mutant = list(reference)
                 mutant[pos - 1] = mut_aa
                 sequences.append("".join(mutant))
@@ -445,6 +456,9 @@ def create_hcv_synthetic_dataset(
     analyzer = HCVAnalyzer()
     X = np.array([analyzer.encode_sequence(s) for s in sequences])
     y = np.array(resistances, dtype=np.float32)
+
+    # Ensure minimum samples via augmentation
+    X, y, ids = ensure_minimum_samples(X, y, ids, min_samples=min_samples)
 
     return X, y, ids
 

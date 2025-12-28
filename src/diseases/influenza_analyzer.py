@@ -570,16 +570,35 @@ def create_influenza_synthetic_dataset(
         ensure_minimum_samples,
     )
 
-    # Example NA sequence (partial)
+    # Select mutation database based on subtype
     if "H3N2" in subtype.value:
-        reference = "MNPNQKIITIGSICMVVGIISLILQIGNII" + "A" * 100  # Simplified
         mutation_db = NA_H3N2_MUTATIONS
-    else:
-        reference = "MNPNQKIITIGSICMVVGIISLILQIGNII" + "A" * 100
+    elif "H1N1" in subtype.value:
         mutation_db = NA_H1N1_MUTATIONS
+    elif "B_" in subtype.value:
+        mutation_db = NA_B_MUTATIONS
+    else:
+        mutation_db = NA_H3N2_MUTATIONS  # Default
+
+    # Build reference sequence with correct wild-type amino acids at mutation positions
+    # NA protein is ~470 AA, use 500 to cover all positions
+    max_pos = max(mutation_db.keys()) if mutation_db else 300
+    ref_length = max(500, max_pos + 10)
+
+    # Start with placeholder sequence
+    reference = list("M" + "A" * (ref_length - 1))
+
+    # Set correct wild-type amino acids at each mutation position
+    # This ensures WT encodes differently from mutants
+    for pos, info in mutation_db.items():
+        if pos <= len(reference):
+            ref_aa = list(info.keys())[0]  # Get expected WT amino acid (e.g., 'E' for position 119)
+            reference[pos - 1] = ref_aa
+
+    reference = "".join(reference)
 
     analyzer = InfluenzaAnalyzer()
-    max_len = max(130, len(reference))
+    max_len = ref_length
 
     # Use utility to create dataset with proper mutation combinations
     X, y, ids = create_mutation_based_dataset(

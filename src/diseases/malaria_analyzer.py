@@ -42,6 +42,7 @@ import numpy as np
 import torch
 
 from .base import DiseaseAnalyzer, DiseaseConfig, DiseaseType, TaskType
+from .utils.synthetic_data import ensure_minimum_samples
 
 
 class PlasmodiumSpecies(Enum):
@@ -489,16 +490,36 @@ class MalariaAnalyzer(DiseaseAnalyzer):
 
 def create_malaria_synthetic_dataset(
     gene: MalariaGene = MalariaGene.KELCH13,
+    min_samples: int = 50,
 ) -> tuple[np.ndarray, np.ndarray, list[str]]:
-    """Create synthetic malaria dataset for testing."""
-    reference = "M" + "A" * 725  # Simplified K13 reference
+    """Create synthetic malaria dataset for testing.
 
+    Args:
+        gene: Target gene (KELCH13, CRT, MDR1, etc.)
+        min_samples: Minimum number of samples to generate
+
+    Returns:
+        (X, y, ids) tuple with at least min_samples samples
+    """
     if gene == MalariaGene.KELCH13:
         mutation_db = KELCH13_MUTATIONS
     elif gene == MalariaGene.CRT:
         mutation_db = CRT_MUTATIONS
     else:
         mutation_db = KELCH13_MUTATIONS
+
+    # Build reference with correct WT amino acids at mutation positions
+    max_pos = max(mutation_db.keys()) if mutation_db else 700
+    ref_length = max(726, max_pos + 10)
+    reference = list("M" + "A" * (ref_length - 1))
+
+    # Set correct wild-type amino acids at each mutation position
+    for pos, info in mutation_db.items():
+        if pos <= ref_length:
+            ref_aa = list(info.keys())[0]
+            reference[pos - 1] = ref_aa
+
+    reference = "".join(reference)
 
     sequences = [reference]
     resistances = [0.0]
@@ -507,7 +528,7 @@ def create_malaria_synthetic_dataset(
     for pos, info in mutation_db.items():
         if pos <= len(reference):
             ref_aa = list(info.keys())[0]
-            for mut_aa in info[ref_aa]["mutations"][:2]:
+            for mut_aa in info[ref_aa]["mutations"]:  # All mutations, no limit
                 mutant = list(reference)
                 mutant[pos - 1] = mut_aa
                 sequences.append("".join(mutant))
@@ -519,5 +540,8 @@ def create_malaria_synthetic_dataset(
     analyzer = MalariaAnalyzer()
     X = np.array([analyzer.encode_sequence(s) for s in sequences])
     y = np.array(resistances, dtype=np.float32)
+
+    # Ensure minimum samples via augmentation
+    X, y, ids = ensure_minimum_samples(X, y, ids, min_samples=min_samples)
 
     return X, y, ids

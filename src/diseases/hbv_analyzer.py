@@ -107,36 +107,37 @@ class HBVConfig(DiseaseConfig):
 # HBV RT Domain Resistance Mutations
 # Numbering based on RT domain (starts at aa 1 of RT)
 # Note: RT overlaps with S gene
+# Consolidated to avoid duplicate keys (Python dict limitation)
 
 RT_MUTATIONS = {
+    # Other positions (early positions)
+    80: {"L": {"mutations": ["V", "I"], "effect": "low", "drugs": ["lamivudine"]}},
+
     # YMDD motif mutations (LAM, ETV, LdT resistance)
     169: {"I": {"mutations": ["T"], "effect": "moderate", "drugs": ["entecavir"]}},
-    173: {"V": {"mutations": ["L"], "effect": "moderate", "drugs": ["lamivudine", "entecavir"]}},
+    # Position 173: Combined V->L and L->M (entecavir and lamivudine)
+    173: {"V": {"mutations": ["L", "M"], "effect": "moderate", "drugs": ["lamivudine", "entecavir"]}},
     180: {"L": {"mutations": ["M"], "effect": "high", "drugs": ["lamivudine", "telbivudine", "entecavir"]}},
     181: {"A": {"mutations": ["T", "V", "S"], "effect": "high", "drugs": ["lamivudine", "adefovir"]}},
-    184: {"T": {"mutations": ["G", "S", "I", "A", "L"], "effect": "moderate", "drugs": ["entecavir"]}},
+    # Position 184: Combined T/S mutations (entecavir)
+    184: {"T": {"mutations": ["G", "S", "I", "A", "L"], "effect": "high", "drugs": ["entecavir"]}},
+    194: {"A": {"mutations": ["T"], "effect": "moderate", "drugs": ["tenofovir_df", "tenofovir_af"]}},
+
+    # Additional ETV resistance positions
+    202: {"S": {"mutations": ["G", "I", "C"], "effect": "high", "drugs": ["entecavir"]}},
 
     # YMDD core mutations
     204: {"M": {"mutations": ["V", "I", "S"], "effect": "high", "drugs": ["lamivudine", "telbivudine", "entecavir"]}},
+    207: {"V": {"mutations": ["I"], "effect": "low", "drugs": ["lamivudine"]}},
+    213: {"L": {"mutations": ["M"], "effect": "low", "drugs": ["lamivudine"]}},
 
     # Adefovir resistance
     233: {"I": {"mutations": ["V"], "effect": "moderate", "drugs": ["adefovir"]}},
+    # Position 236: Combined adefovir and tenofovir resistance
     236: {"N": {"mutations": ["T"], "effect": "high", "drugs": ["adefovir", "tenofovir_df", "tenofovir_af"]}},
 
-    # Additional ETV resistance (requires LAM resistance background)
-    184: {"S/T": {"mutations": ["G", "I", "L"], "effect": "high", "drugs": ["entecavir"]}},
-    202: {"S": {"mutations": ["G", "I", "C"], "effect": "high", "drugs": ["entecavir"]}},
+    # Additional ETV resistance
     250: {"M": {"mutations": ["V", "I", "L"], "effect": "high", "drugs": ["entecavir"]}},
-
-    # Tenofovir resistance (rare)
-    194: {"A": {"mutations": ["T"], "effect": "moderate", "drugs": ["tenofovir_df", "tenofovir_af"]}},
-    236: {"N": {"mutations": ["T"], "effect": "high", "drugs": ["tenofovir_df", "tenofovir_af", "adefovir"]}},
-
-    # Other positions
-    80: {"L": {"mutations": ["V", "I"], "effect": "low", "drugs": ["lamivudine"]}},
-    173: {"L": {"mutations": ["M"], "effect": "moderate", "drugs": ["lamivudine"]}},
-    207: {"V": {"mutations": ["I"], "effect": "low", "drugs": ["lamivudine"]}},
-    213: {"L": {"mutations": ["M"], "effect": "low", "drugs": ["lamivudine"]}},
 }
 
 # Cross-resistance patterns
@@ -394,7 +395,21 @@ def create_hbv_synthetic_dataset(
         ensure_minimum_samples,
     )
 
-    reference = "M" + "A" * 299  # Simplified RT reference
+    # Build reference sequence with correct wild-type amino acids at mutation positions
+    # RT domain is ~350 AA, mutations go up to position 250
+    ref_length = 350
+    reference = list("M" + "A" * (ref_length - 1))
+
+    # Set correct wild-type amino acids at each mutation position
+    for pos, info in RT_MUTATIONS.items():
+        if pos <= ref_length:
+            ref_aa = list(info.keys())[0]
+            # Handle alternative references like "S/T" - use first
+            if "/" in ref_aa:
+                ref_aa = ref_aa.split("/")[0]
+            reference[pos - 1] = ref_aa
+
+    reference = "".join(reference)
 
     # Filter mutation_db for this drug
     drug_mutation_db = {}
