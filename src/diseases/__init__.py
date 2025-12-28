@@ -48,6 +48,14 @@ from src.diseases.sars_cov2_analyzer import (
     SARSCoV2Variant,
     create_sars_cov2_dataset,
 )
+from src.diseases.tuberculosis_analyzer import (
+    TuberculosisAnalyzer,
+    TuberculosisConfig,
+    TBDrug,
+    TBGene,
+    ResistanceLevel,
+    create_tb_synthetic_dataset,
+)
 
 __all__ = [
     "DiseaseRegistry",
@@ -70,4 +78,11 @@ __all__ = [
     "SARSCoV2Gene",
     "SARSCoV2Variant",
     "create_sars_cov2_dataset",
+    # Tuberculosis specific
+    "TuberculosisAnalyzer",
+    "TuberculosisConfig",
+    "TBDrug",
+    "TBGene",
+    "ResistanceLevel",
+    "create_tb_synthetic_dataset",
 ]
