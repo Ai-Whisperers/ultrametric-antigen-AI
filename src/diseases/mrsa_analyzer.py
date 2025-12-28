@@ -451,8 +451,22 @@ class MRSAAnalyzer(DiseaseAnalyzer):
 
 def create_mrsa_synthetic_dataset(
     gene: StaphGene = StaphGene.GYRA,
+    min_samples: int = 50,
 ) -> tuple[np.ndarray, np.ndarray, list[str]]:
-    """Create synthetic MRSA dataset."""
+    """Create synthetic MRSA dataset.
+
+    Args:
+        gene: Target gene for resistance analysis
+        min_samples: Minimum number of samples to generate
+
+    Returns:
+        (X, y, ids)
+    """
+    from src.diseases.utils.synthetic_data import (
+        create_mutation_based_dataset,
+        ensure_minimum_samples,
+    )
+
     reference = "M" + "A" * 199
 
     if gene == StaphGene.GYRA:
@@ -462,24 +476,19 @@ def create_mrsa_synthetic_dataset(
     else:
         mutation_db = MPRF_MUTATIONS
 
-    sequences = [reference]
-    resistances = [0.0]
-    ids = ["WT"]
-
-    for pos, info in mutation_db.items():
-        if pos <= len(reference):
-            ref_aa = list(info.keys())[0]
-            for mut_aa in info[ref_aa]["mutations"]:
-                mutant = list(reference)
-                mutant[pos - 1] = mut_aa
-                sequences.append("".join(mutant))
-
-                effect_scores = {"high": 0.9, "moderate": 0.5, "low": 0.2}
-                resistances.append(effect_scores.get(info[ref_aa]["effect"], 0.3))
-                ids.append(f"{gene.value}_{ref_aa}{pos}{mut_aa}")
-
     analyzer = MRSAAnalyzer()
-    X = np.array([analyzer.encode_sequence(s) for s in sequences])
-    y = np.array(resistances, dtype=np.float32)
+
+    # Use utility to create dataset with mutation combinations
+    X, y, ids = create_mutation_based_dataset(
+        reference_sequence=reference,
+        mutation_db=mutation_db,
+        encode_fn=analyzer.encode_sequence,
+        max_length=300,
+        n_random_mutants=30,
+        seed=42,
+    )
+
+    # Ensure minimum samples
+    X, y, ids = ensure_minimum_samples(X, y, ids, min_samples=min_samples, seed=42)
 
     return X, y, ids

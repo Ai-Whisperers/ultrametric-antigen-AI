@@ -551,14 +551,25 @@ class InfluenzaAnalyzer(DiseaseAnalyzer):
 def create_influenza_synthetic_dataset(
     subtype: InfluenzaSubtype = InfluenzaSubtype.H3N2,
     drug: InfluenzaDrug = InfluenzaDrug.OSELTAMIVIR,
+    min_samples: int = 50,
 ) -> tuple[np.ndarray, np.ndarray, list[str]]:
     """Create synthetic influenza dataset for testing.
 
     In production, use GISAID or FluDB data.
 
+    Args:
+        subtype: Influenza subtype
+        drug: Target drug for resistance
+        min_samples: Minimum number of samples to generate
+
     Returns:
         (X, y, sequence_ids)
     """
+    from src.diseases.utils.synthetic_data import (
+        create_mutation_based_dataset,
+        ensure_minimum_samples,
+    )
+
     # Example NA sequence (partial)
     if "H3N2" in subtype.value:
         reference = "MNPNQKIITIGSICMVVGIISLILQIGNII" + "A" * 100  # Simplified
@@ -567,27 +578,20 @@ def create_influenza_synthetic_dataset(
         reference = "MNPNQKIITIGSICMVVGIISLILQIGNII" + "A" * 100
         mutation_db = NA_H1N1_MUTATIONS
 
-    sequences = [reference]
-    resistances = [0.0]
-    ids = ["WT"]
-
-    # Generate mutants
-    for pos, info in mutation_db.items():
-        if pos <= len(reference):
-            ref_aa = list(info.keys())[0]
-            for mut_aa in info[ref_aa]["mutations"]:
-                mutant = list(reference)
-                mutant[pos - 1] = mut_aa
-                sequences.append("".join(mutant))
-
-                effect_scores = {"high": 0.9, "moderate": 0.5, "low": 0.2}
-                resistances.append(effect_scores.get(info[ref_aa]["effect"], 0.3))
-                ids.append(f"NA_{ref_aa}{pos}{mut_aa}")
-
-    # Encode
     analyzer = InfluenzaAnalyzer()
-    max_len = max(len(s) for s in sequences)
-    X = np.array([analyzer.encode_sequence(s, max_length=max_len) for s in sequences])
-    y = np.array(resistances, dtype=np.float32)
+    max_len = max(130, len(reference))
+
+    # Use utility to create dataset with proper mutation combinations
+    X, y, ids = create_mutation_based_dataset(
+        reference_sequence=reference,
+        mutation_db=mutation_db,
+        encode_fn=analyzer.encode_sequence,
+        max_length=max_len,
+        n_random_mutants=30,
+        seed=42,
+    )
+
+    # Ensure minimum samples
+    X, y, ids = ensure_minimum_samples(X, y, ids, min_samples=min_samples, seed=42)
 
     return X, y, ids

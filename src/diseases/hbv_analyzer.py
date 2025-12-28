@@ -378,33 +378,44 @@ class HBVAnalyzer(DiseaseAnalyzer):
 
 def create_hbv_synthetic_dataset(
     drug: HBVDrug = HBVDrug.ENTECAVIR,
+    min_samples: int = 50,
 ) -> tuple[np.ndarray, np.ndarray, list[str]]:
-    """Create synthetic HBV dataset for testing."""
+    """Create synthetic HBV dataset for testing.
+
+    Args:
+        drug: Target drug for resistance
+        min_samples: Minimum number of samples to generate
+
+    Returns:
+        (X, y, ids)
+    """
+    from src.diseases.utils.synthetic_data import (
+        create_mutation_based_dataset,
+        ensure_minimum_samples,
+    )
+
     reference = "M" + "A" * 299  # Simplified RT reference
 
-    sequences = [reference]
-    resistances = [0.0]
-    ids = ["WT"]
-
+    # Filter mutation_db for this drug
+    drug_mutation_db = {}
     for pos, info in RT_MUTATIONS.items():
-        if pos <= len(reference):
-            ref_aa = list(info.keys())[0]
-            if "/" in ref_aa:
-                ref_aa = ref_aa.split("/")[0]
-
-            if drug.value in info[list(info.keys())[0]]["drugs"]:
-                for mut_aa in info[list(info.keys())[0]]["mutations"][:2]:
-                    mutant = list(reference)
-                    mutant[pos - 1] = mut_aa
-                    sequences.append("".join(mutant))
-
-                    effect_scores = {"high": 0.9, "moderate": 0.5, "low": 0.2}
-                    effect = info[list(info.keys())[0]]["effect"]
-                    resistances.append(effect_scores.get(effect, 0.3))
-                    ids.append(f"rt{ref_aa}{pos}{mut_aa}")
+        key = list(info.keys())[0]
+        if drug.value in info[key].get("drugs", []):
+            drug_mutation_db[pos] = info
 
     analyzer = HBVAnalyzer()
-    X = np.array([analyzer.encode_sequence(s) for s in sequences])
-    y = np.array(resistances, dtype=np.float32)
+
+    # Use utility to create dataset
+    X, y, ids = create_mutation_based_dataset(
+        reference_sequence=reference,
+        mutation_db=drug_mutation_db if drug_mutation_db else RT_MUTATIONS,
+        encode_fn=analyzer.encode_sequence,
+        max_length=350,
+        n_random_mutants=30,
+        seed=42,
+    )
+
+    # Ensure minimum samples
+    X, y, ids = ensure_minimum_samples(X, y, ids, min_samples=min_samples, seed=42)
 
     return X, y, ids
