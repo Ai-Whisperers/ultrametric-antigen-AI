@@ -1,0 +1,16 @@
+{
+  "name": "H3_R2_native",
+  "sequences": [
+    {
+      "protein": {
+        "id": "A",
+        "sequence": "ARTKQTARKS"
+      }
+    }
+  ],
+  "modelSeeds": [
+    1
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}

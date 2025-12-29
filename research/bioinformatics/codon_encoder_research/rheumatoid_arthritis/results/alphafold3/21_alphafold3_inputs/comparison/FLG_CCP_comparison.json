@@ -1,0 +1,32 @@
+{
+  "name": "FLG_CCP_comparison",
+  "sequences": [
+    {
+      "protein": {
+        "id": "A",
+        "sequence": "SHQESTRGRS"
+      }
+    },
+    {
+      "protein": {
+        "id": "B",
+        "sequence": "SHQESTRGRS",
+        "modifications": [
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 7
+          },
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 9
+          }
+        ]
+      }
+    }
+  ],
+  "modelSeeds": [
+    1
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}

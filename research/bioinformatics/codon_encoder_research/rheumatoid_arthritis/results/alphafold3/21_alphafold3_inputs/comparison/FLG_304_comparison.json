@@ -1,0 +1,32 @@
+{
+  "name": "FLG_304_comparison",
+  "sequences": [
+    {
+      "protein": {
+        "id": "A",
+        "sequence": "SHQESTRGRSG"
+      }
+    },
+    {
+      "protein": {
+        "id": "B",
+        "sequence": "SHQESTRGRSG",
+        "modifications": [
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 7
+          },
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 9
+          }
+        ]
+      }
+    }
+  ],
+  "modelSeeds": [
+    1
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}

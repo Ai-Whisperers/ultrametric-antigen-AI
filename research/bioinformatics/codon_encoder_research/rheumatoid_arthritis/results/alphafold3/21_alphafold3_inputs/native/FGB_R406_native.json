@@ -1,0 +1,16 @@
+{
+  "name": "FGB_R406_native",
+  "sequences": [
+    {
+      "protein": {
+        "id": "A",
+        "sequence": "SARGHRPLDKK"
+      }
+    }
+  ],
+  "modelSeeds": [
+    1
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}

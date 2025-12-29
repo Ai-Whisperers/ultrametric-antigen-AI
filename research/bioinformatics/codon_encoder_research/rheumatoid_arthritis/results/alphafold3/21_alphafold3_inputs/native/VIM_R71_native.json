@@ -1,0 +1,16 @@
+{
+  "name": "VIM_R71_native",
+  "sequences": [
+    {
+      "protein": {
+        "id": "A",
+        "sequence": "RLRSSVPGVR"
+      }
+    }
+  ],
+  "modelSeeds": [
+    1
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}

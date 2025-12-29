@@ -1,0 +1,25 @@
+[{
+ "name": "FGB_R406_native_DRB1_0401",
+ "modelSeeds": [
+  "120170329"
+ ],
+ "sequences": [
+  {
+   "proteinChain": {
+    "sequence": "SARGHRPLDKK",
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  },
+  {
+   "proteinChain": {
+    "sequence": "GDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQRRAAVDTYCRHNYGVGESFTVQRR",
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  }
+ ],
+ "dialect": "alphafoldserver",
+ "version": 1
+}
+]

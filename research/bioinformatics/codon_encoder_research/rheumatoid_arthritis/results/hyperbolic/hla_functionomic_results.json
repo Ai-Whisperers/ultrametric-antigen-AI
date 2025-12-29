@@ -1,0 +1,49 @@
+{
+  "best_distance_function": "poincare",
+  "separation_ratio": 1.2642311090123175,
+  "ultrametric_score": 0.6666666666666667,
+  "or_correlation": -0.21428571428571433,
+  "or_pvalue": 0.6445115810207203,
+  "alleles": {
+    "DRB1*04:01": {
+      "ra_status": "risk",
+      "odds_ratio": 4.0,
+      "amino_acids": "QKRAA"
+    },
+    "DRB1*04:04": {
+      "ra_status": "risk",
+      "odds_ratio": 3.5,
+      "amino_acids": "QRRAA"
+    },
+    "DRB1*04:05": {
+      "ra_status": "risk",
+      "odds_ratio": 3.2,
+      "amino_acids": "QRRAA"
+    },
+    "DRB1*01:01": {
+      "ra_status": "risk",
+      "odds_ratio": 2.0,
+      "amino_acids": "QRRAA"
+    },
+    "DRB1*07:01": {
+      "ra_status": "protective",
+      "odds_ratio": 0.5,
+      "amino_acids": "DRRGQ"
+    },
+    "DRB1*15:01": {
+      "ra_status": "neutral",
+      "odds_ratio": 1.0,
+      "amino_acids": "QARAA"
+    },
+    "DRB1*03:01": {
+      "ra_status": "neutral",
+      "odds_ratio": 0.9,
+      "amino_acids": "DRRAA"
+    },
+    "DRB1*13:01": {
+      "ra_status": "protective",
+      "odds_ratio": 0.4,
+      "amino_acids": "DERAA"
+    }
+  }
+}

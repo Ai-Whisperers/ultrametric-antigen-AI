@@ -1,0 +1,184 @@
+C:\Users\Gestalt\Desktop\ternary\repos\ternary-vaes\research\bioinformatics\rheumatoid_arthritis\scripts\03_citrullination_analysis.py:403: MatplotlibDeprecationWarning: The 'labels' parameter of boxplot() has been renamed 'tick_labels' since Matplotlib 3.9; support for the old name will be dropped in 3.11.
+  ax3.boxplot([immuno_shifts, non_immuno_shifts],
+======================================================================
+CITRULLINATION BOUNDARY ANALYSIS
+Testing P-Adic Geometry for RA Autoantigen Recognition
+======================================================================
+
+Loading codon encoder...
+  Loaded encoder with 21 cluster centers
+
+Analyzing arginine (R) codon space...
+  Arginine codons: ['CGT', 'CGC', 'CGA', 'CGG', 'AGA', 'AGG']
+  Within-R variance: 0.0001
+  Max spread between R codons: 0.0205
+
+Analyzing RA autoantigens...
+
+  FGA_R38: Fibrinogen α
+    Epitope: GPRVVERHQS
+    Cit position: 4
+    Codons: ['GGC', 'CCG', 'CGG', 'GTG', 'GTG', 'GAG', 'CGG', 'CAC', 'CAG', 'TCG']
+    Embedding shift (zero): 0.3332
+    Embedding shift (avg):  0.2117
+    Boundary crossed: True
+    Cluster: 4 → 1
+
+  FGA_R42: Fibrinogen α
+    Epitope: ERHQSACKET
+    Cit position: 1
+    Codons: ['GAG', 'CGG', 'CAC', 'CAG', 'TCG', 'GCT', 'TGC', 'AAG', 'GAG', 'ACC']
+    Embedding shift (zero): 0.2935
+    Embedding shift (avg):  0.3820
+    Boundary crossed: True
+    Cluster: 1 → 14
+
+  FGB_R72: Fibrinogen β
+    Epitope: APPPISGGGY
+    Cit position: -1
+    Codons: ['GCT', 'CCG', 'CCG', 'CCG', 'ATC', 'TCG', 'GGC', 'GGC', 'GGC', 'TAC']
+    No citrullination site (control)
+
+  FGB_R74: Fibrinogen β
+    Epitope: HARPAKAATN
+    Cit position: 2
+    Codons: ['CAC', 'GCT', 'CGG', 'CCG', 'GCT', 'AAG', 'GCT', 'GCT', 'ACC', 'AAC']
+    Embedding shift (zero): 0.2935
+    Embedding shift (avg):  0.3250
+    Boundary crossed: False
+    Cluster: 3 → 3
+
+  VIM_R71: Vimentin
+    Epitope: RLRSSVPGVR
+    Cit position: 0
+    Codons: ['CGG', 'CTG', 'CGG', 'TCG', 'TCG', 'GTG', 'CCG', 'GGC', 'GTG', 'CGG']
+    Embedding shift (zero): 0.2935
+    Embedding shift (avg):  0.4584
+    Boundary crossed: False
+    Cluster: 2 → 2
+
+  VIM_R257: Vimentin
+    Epitope: SSLNLRETNL
+    Cit position: 5
+    Codons: ['TCG', 'TCG', 'CTG', 'AAC', 'CTG', 'CGG', 'GAG', 'ACC', 'AAC', 'CTG']
+    Embedding shift (zero): 0.2935
+    Embedding shift (avg):  0.3989
+    Boundary crossed: False
+    Cluster: 6 → 6
+
+  VIM_R450: Vimentin
+    Epitope: EEIAFLKKLH
+    Cit position: -1
+    Codons: ['GAG', 'GAG', 'ATC', 'GCT', 'TTC', 'CTG', 'AAG', 'AAG', 'CTG', 'CAC']
+    No citrullination site (control)
+
+  ENO1_R9: Alpha-enolase
+    Epitope: KIREEIFDSRGNP
+    Cit position: 3
+    Codons: ['AAG', 'ATC', 'CGG', 'GAG', 'GAG', 'ATC', 'TTC', 'GAC', 'TCG', 'CGG', 'GGC', 'AAC', 'CCG']
+    Embedding shift (zero): 0.2628
+    Embedding shift (avg):  0.1744
+    Boundary crossed: False
+    Cluster: 2 → 2
+
+  ENO1_R15: Alpha-enolase
+    Epitope: SRGNPTVEVDLFT
+    Cit position: 1
+    Codons: ['TCG', 'CGG', 'GGC', 'AAC', 'CCG', 'ACC', 'GTG', 'GAG', 'GTG', 'GAC', 'CTG', 'TTC', 'ACC']
+    Embedding shift (zero): 0.2257
+    Embedding shift (avg):  0.2318
+    Boundary crossed: False
+    Cluster: 6 → 6
+
+  COL2_R124: Collagen II
+    Epitope: GARGLTGRPG
+    Cit position: 1
+    Codons: ['GGC', 'GCT', 'CGG', 'GGC', 'CTG', 'ACC', 'GGC', 'CGG', 'CCG', 'GGC']
+    Embedding shift (zero): 0.2999
+    Embedding shift (avg):  0.3590
+    Boundary crossed: False
+    Cluster: 4 → 4
+
+  COL2_R260: Collagen II
+    Epitope: GPRGDKGETG
+    Cit position: 2
+    Codons: ['GGC', 'CCG', 'CGG', 'GGC', 'GAC', 'AAG', 'GGC', 'GAG', 'ACC', 'GGC']
+    Embedding shift (zero): 0.2935
+    Embedding shift (avg):  0.2852
+    Boundary crossed: False
+    Cluster: 4 → 4
+
+  FLG_R30: Filaggrin
+    Epitope: SHQESTRGRS
+    Cit position: 6
+    Codons: ['TCG', 'CAC', 'CAG', 'GAG', 'TCG', 'ACC', 'CGG', 'GGC', 'CGG', 'TCG']
+    Embedding shift (zero): 0.2935
+    Embedding shift (avg):  0.3493
+    Boundary crossed: False
+    Cluster: 2 → 2
+
+  HYAL_R205: Hyaluronan synthase 2
+    Epitope: LLVKRWQNHL
+    Cit position: 3
+    Codons: ['CTG', 'CTG', 'GTG', 'AAG', 'CGG', 'TGG', 'CAG', 'AAC', 'CAC', 'CTG']
+    Embedding shift (zero): 0.3046
+    Embedding shift (avg):  0.4004
+    Boundary crossed: False
+    Cluster: 0 → 0
+
+  PRG4_R100: Lubricin (PRG4)
+    Epitope: EPAPTTPKRE
+    Cit position: 8
+    Codons: ['GAG', 'CCG', 'GCT', 'CCG', 'ACC', 'ACC', 'CCG', 'AAG', 'CGG', 'GAG']
+    Embedding shift (zero): 0.2935
+    Embedding shift (avg):  0.3687
+    Boundary crossed: False
+    Cluster: 5 → 5
+
+======================================================================
+SUMMARY STATISTICS
+======================================================================
+
+  Total epitopes analyzed: 14
+  With citrullination sites: 12
+  Immunodominant: 9
+  Non-immunodominant: 3
+
+  Boundary crossings: 2/12 (16.7%)
+
+  Mean shift (immunodominant): 0.2877 ± 0.0276
+  Mean shift (non-immunodominant): 0.2972 ± 0.0053
+  Mann-Whitney U test (immuno > non-immuno): p = 0.8754
+
+Generating visualization...
+  Saved visualization to C:\Users\Gestalt\Desktop\ternary\repos\ternary-vaes\research\bioinformatics\rheumatoid_arthritis\results\citrullination_analysis.png
+
+----------------------------------------------------------------------
+INTERPRETATION
+----------------------------------------------------------------------
+
+    Citrullination does not consistently cross cluster boundaries.
+    The immunogenicity may depend on other factors (HLA binding, T cell repertoire).
+    However, the SHIFT magnitude may still predict immunodominance.
+        
+
+----------------------------------------------------------------------
+IMPLICATIONS FOR SYNOVIAL REGENERATION
+----------------------------------------------------------------------
+
+    For regenerating healthy synovium without triggering autoimmunity:
+
+    1. CODON OPTIMIZATION: Select synonymous codons that place epitopes
+       deep inside p-adic clusters (far from boundaries)
+
+    2. ARGININE CODON CHOICE: Different R codons create spread of 0.0205 in
+       embedding space. Choosing "central" R codons may reduce immunogenicity.
+
+    3. AVOID HIGH-SHIFT SEQUENCES: Screen synthetic synoviocyte genes for
+       epitopes that would shift significantly upon citrullination.
+
+    4. TOLERANCE INDUCTION: Design altered peptide ligands that occupy the
+       same p-adic region but don't trigger T cell activation.
+    
+
+  Saved results to C:\Users\Gestalt\Desktop\ternary\repos\ternary-vaes\research\bioinformatics\rheumatoid_arthritis\results\citrullination_results.json

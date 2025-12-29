@@ -1,0 +1,93 @@
+{
+  "n_epitopes": 14,
+  "n_with_cit_site": 12,
+  "n_boundary_crossed": 2,
+  "arginine_codon_spread": 0.020524034276604652,
+  "arginine_variance": 9.311059693573043e-05,
+  "epitopes": {
+    "FGA_R38": {
+      "protein": "Fibrinogen \u03b1",
+      "immunodominant": true,
+      "shift": 0.3332434296607971,
+      "boundary_crossed": true
+    },
+    "FGA_R42": {
+      "protein": "Fibrinogen \u03b1",
+      "immunodominant": true,
+      "shift": 0.2934691905975342,
+      "boundary_crossed": true
+    },
+    "FGB_R72": {
+      "protein": "Fibrinogen \u03b2",
+      "immunodominant": false,
+      "shift": null,
+      "boundary_crossed": null
+    },
+    "FGB_R74": {
+      "protein": "Fibrinogen \u03b2",
+      "immunodominant": true,
+      "shift": 0.2934691607952118,
+      "boundary_crossed": false
+    },
+    "VIM_R71": {
+      "protein": "Vimentin",
+      "immunodominant": true,
+      "shift": 0.2934691905975342,
+      "boundary_crossed": false
+    },
+    "VIM_R257": {
+      "protein": "Vimentin",
+      "immunodominant": true,
+      "shift": 0.2934691905975342,
+      "boundary_crossed": false
+    },
+    "VIM_R450": {
+      "protein": "Vimentin",
+      "immunodominant": false,
+      "shift": null,
+      "boundary_crossed": null
+    },
+    "ENO1_R9": {
+      "protein": "Alpha-enolase",
+      "immunodominant": true,
+      "shift": 0.2627600133419037,
+      "boundary_crossed": false
+    },
+    "ENO1_R15": {
+      "protein": "Alpha-enolase",
+      "immunodominant": true,
+      "shift": 0.2257455736398697,
+      "boundary_crossed": false
+    },
+    "COL2_R124": {
+      "protein": "Collagen II",
+      "immunodominant": true,
+      "shift": 0.2998620867729187,
+      "boundary_crossed": false
+    },
+    "COL2_R260": {
+      "protein": "Collagen II",
+      "immunodominant": false,
+      "shift": 0.2934691905975342,
+      "boundary_crossed": false
+    },
+    "FLG_R30": {
+      "protein": "Filaggrin",
+      "immunodominant": true,
+      "shift": 0.2934691607952118,
+      "boundary_crossed": false
+    },
+    "HYAL_R205": {
+      "protein": "Hyaluronan synthase 2",
+      "immunodominant": false,
+      "shift": 0.3046337366104126,
+      "boundary_crossed": false
+    },
+    "PRG4_R100": {
+      "protein": "Lubricin (PRG4)",
+      "immunodominant": false,
+      "shift": 0.2934691905975342,
+      "boundary_crossed": false
+    }
+  }
+}

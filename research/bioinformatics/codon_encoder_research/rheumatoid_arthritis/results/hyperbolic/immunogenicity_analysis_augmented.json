@@ -1,0 +1,1717 @@
+{
+  "metadata": {
+    "encoder_version": "3-adic (V5.11.3)",
+    "total_epitopes": 57,
+    "immunodominant_count": 31,
+    "silent_count": 26,
+    "with_arginine": 43
+  },
+  "statistical_comparisons": {
+    "embedding_norm": {
+      "metric": "embedding_norm",
+      "immunodominant_mean": 0.9269338961570494,
+      "immunodominant_std": 0.016827602330352572,
+      "immunodominant_n": 31,
+      "silent_mean": 0.9238768632595356,
+      "silent_std": 0.015585316240027205,
+      "silent_n": 26,
+      "t_statistic": 0.6939275797744184,
+      "p_value": 0.4906482517371671,
+      "cohens_d": 0.18453725362765028,
+      "mann_whitney_u": 462.0,
+      "mann_whitney_p": 0.3486194074895269,
+      "significant_005": "False",
+      "significant_001": "False"
+    },
+    "cluster_homogeneity": {
+      "metric": "cluster_homogeneity",
+      "immunodominant_mean": 0.27265530168755975,
+      "immunodominant_std": 0.09276120904470078,
+      "immunodominant_n": 31,
+      "silent_mean": 0.2893316085623778,
+      "silent_std": 0.11374298669536123,
+      "silent_n": 26,
+      "t_statistic": -0.5988391098326916,
+      "p_value": 0.5517387765683959,
+      "cohens_d": -0.15925022794284438,
+      "mann_whitney_u": 409.5,
+      "mann_whitney_p": 0.9222489914949819,
+      "significant_005": "False",
+      "significant_001": "False"
+    },
+    "mean_neighbor_distance": {
+      "metric": "mean_neighbor_distance",
+      "immunodominant_mean": 5.677045837525399,
+      "immunodominant_std": 0.5180470830360236,
+      "immunodominant_n": 31,
+      "silent_mean": 5.358633243120634,
+      "silent_std": 0.8791384712165067,
+      "silent_n": 26,
+      "t_statistic": 1.6658322635903358,
+      "p_value": 0.10143321898248112,
+      "cohens_d": 0.4429973987200791,
+      "mann_whitney_u": 460.0,
+      "mann_whitney_p": 0.36534508102965413,
+      "significant_005": "False",
+      "significant_001": "False"
+    },
+    "boundary_potential": {
+      "metric": "boundary_potential",
+      "immunodominant_mean": 4.066591078235257,
+      "immunodominant_std": 0.4663028170909607,
+      "immunodominant_n": 31,
+      "silent_mean": 3.962430614691514,
+      "silent_std": 0.4172070862428964,
+      "silent_n": 26,
+      "t_statistic": 0.8654176345129035,
+      "p_value": 0.3905688835759009,
+      "cohens_d": 0.2301418751717804,
+      "mann_whitney_u": 472.0,
+      "mann_whitney_p": 0.2724282378971119,
+      "significant_005": "False",
+      "significant_001": "False"
+    },
+    "cit_mean_centroid_shift": {
+      "metric": "mean_centroid_shift",
+      "immunodominant_mean": 0.2560914902677459,
+      "immunodominant_std": 0.05372041465472466,
+      "immunodominant_n": 31,
+      "silent_mean": 0.239740127697587,
+      "silent_std": 0.044295397047385825,
+      "silent_n": 12,
+      "t_statistic": 0.9160723153099896,
+      "p_value": 0.3649859294263754,
+      "cohens_d": 0.3114529978789755,
+      "mann_whitney_u": 195.0,
+      "mann_whitney_p": 0.8179748996535882,
+      "significant_005": "False",
+      "significant_001": "False"
+    },
+    "cit_mean_js_divergence": {
+      "metric": "mean_js_divergence",
+      "immunodominant_mean": 0.04487048905010499,
+      "immunodominant_std": 0.017390741419623854,
+      "immunodominant_n": 31,
+      "silent_mean": 0.05628581715188869,
+      "silent_std": 0.013713954136329299,
+      "silent_n": 12,
+      "t_statistic": -1.9933431405458768,
+      "p_value": 0.05290643302359833,
+      "cohens_d": -0.6777114470609897,
+      "mann_whitney_u": 121.5,
+      "mann_whitney_p": 0.07979980352967532,
+      "significant_005": "False",
+      "significant_001": "False"
+    },
+    "cit_mean_entropy_change": {
+      "metric": "mean_entropy_change",
+      "immunodominant_mean": 0.03636655553067274,
+      "immunodominant_std": 0.09029535306229089,
+      "immunodominant_n": 31,
+      "silent_mean": -0.03706968141729514,
+      "silent_std": 0.08860841632609431,
+      "silent_n": 12,
+      "t_statistic": 2.347981948303218,
+      "p_value": 0.023780920766835502,
+      "cohens_d": 0.7982841585113007,
+      "mann_whitney_u": 254.0,
+      "mann_whitney_p": 0.0590459085806369,
+      "significant_005": "True",
+      "significant_001": "False"
+    }
+  },
+  "acpa_correlations": {
+    "embedding_norm": {
+      "r": 0.019288147834242302,
+      "p": 0.8867567109802408
+    },
+    "cluster_homogeneity": {
+      "r": -0.10867642157467765,
+      "p": 0.42099350477379605
+    },
+    "mean_neighbor_distance": {
+      "r": 0.07331637673480744,
+      "p": 0.5878228767202421
+    },
+    "boundary_potential": {
+      "r": 0.009903120961087503,
+      "p": 0.9417167954310761
+    }
+  },
+  "significant_findings": [
+    {
+      "metric": "cit_mean_entropy_change",
+      "p_value": 0.023780920766835502,
+      "cohens_d": 0.7982841585113007,
+      "direction": "higher in IMM"
+    }
+  ],
+  "epitope_analyses": [
+    {
+      "epitope_id": "VIM_R71",
+      "protein_id": "VIM",
+      "sequence": "RLRSSVPGVR",
+      "immunodominant": true,
+      "acpa_reactivity": 0.85,
+      "has_arginine": true,
+      "n_arginines": 3,
+      "metrics": {
+        "embedding_norm": 0.9313322305679321,
+        "cluster_homogeneity": 0.3,
+        "mean_neighbor_distance": 5.454489707946777,
+        "boundary_potential": 4.242680549621582
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.2736249566078186,
+        "mean_js_divergence": 0.03969123741566947,
+        "mean_entropy_change": 0.19095425038653424,
+        "per_position": [
+          {
+            "position": 0,
+            "centroid_shift": 0.27362480759620667,
+            "js_divergence": 0.03969123741566947,
+            "entropy_change": 0.19095425038653424
+          },
+          {
+            "position": 2,
+            "centroid_shift": 0.2736252546310425,
+            "js_divergence": 0.03969123741566947,
+            "entropy_change": 0.19095425038653424
+          },
+          {
+            "position": 9,
+            "centroid_shift": 0.27362480759620667,
+            "js_divergence": 0.03969123741566947,
+            "entropy_change": 0.19095425038653424
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "VIM_R257",
+      "protein_id": "VIM",
+      "sequence": "SSLNLRETNL",
+      "immunodominant": true,
+      "acpa_reactivity": 0.72,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9384021759033203,
+        "cluster_homogeneity": 0.3,
+        "mean_neighbor_distance": 5.71403694152832,
+        "boundary_potential": 4.159506320953369
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.2338428646326065,
+        "mean_js_divergence": 0.06931471805599453,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 5,
+            "centroid_shift": 0.2338428646326065,
+            "js_divergence": 0.06931471805599453,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "VIM_R45",
+      "protein_id": "VIM",
+      "sequence": "SSRSFRTYSF",
+      "immunodominant": false,
+      "acpa_reactivity": 0.15,
+      "has_arginine": true,
+      "n_arginines": 2,
+      "metrics": {
+        "embedding_norm": 0.9338053464889526,
+        "cluster_homogeneity": 0.4,
+        "mean_neighbor_distance": 5.672060012817383,
+        "boundary_potential": 4.064343452453613
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.2740216851234436,
+        "mean_js_divergence": 0.04315231086776712,
+        "mean_entropy_change": 0.13862943601060285,
+        "per_position": [
+          {
+            "position": 2,
+            "centroid_shift": 0.2740216851234436,
+            "js_divergence": 0.04315231086776712,
+            "entropy_change": 0.13862943601060285
+          },
+          {
+            "position": 5,
+            "centroid_shift": 0.2740216851234436,
+            "js_divergence": 0.04315231086776712,
+            "entropy_change": 0.13862943601060285
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "VIM_R201",
+      "protein_id": "VIM",
+      "sequence": "ARLRSSLAGS",
+      "immunodominant": true,
+      "acpa_reactivity": 0.68,
+      "has_arginine": true,
+      "n_arginines": 2,
+      "metrics": {
+        "embedding_norm": 0.9364047050476074,
+        "cluster_homogeneity": 0.3,
+        "mean_neighbor_distance": 5.464813232421875,
+        "boundary_potential": 4.2933855056762695
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.464166522026062,
+        "mean_js_divergence": 0.04315231086776712,
+        "mean_entropy_change": 0.13862943601060307,
+        "per_position": [
+          {
+            "position": 0,
+            "centroid_shift": 0.44456028938293457,
+            "js_divergence": 0.04315231086776712,
+            "entropy_change": 0.13862943601060307
+          },
+          {
+            "position": 2,
+            "centroid_shift": 0.48377275466918945,
+            "js_divergence": 0.04315231086776712,
+            "entropy_change": 0.13862943601060307
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "VIM_R64",
+      "protein_id": "VIM",
+      "sequence": "ETNLDSLPLVD",
+      "immunodominant": false,
+      "acpa_reactivity": 0.05,
+      "has_arginine": false,
+      "n_arginines": 0,
+      "metrics": {
+        "embedding_norm": 0.9284887909889221,
+        "cluster_homogeneity": 0.2727272727272727,
+        "mean_neighbor_distance": 6.108824253082275,
+        "boundary_potential": 4.032310485839844
+      },
+      "citrullination": null
+    },
+    {
+      "epitope_id": "VIM_R38",
+      "protein_id": "VIM",
+      "sequence": "TSRLEQQNK",
+      "immunodominant": false,
+      "acpa_reactivity": 0.18,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9318426847457886,
+        "cluster_homogeneity": 0.2222222222222222,
+        "mean_neighbor_distance": 5.245652675628662,
+        "boundary_potential": 3.9775733947753906
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.28073927760124207,
+        "mean_js_divergence": 0.04410137490629945,
+        "mean_entropy_change": -0.21217138932924673,
+        "per_position": [
+          {
+            "position": 2,
+            "centroid_shift": 0.28073927760124207,
+            "js_divergence": 0.04410137490629945,
+            "entropy_change": -0.21217138932924673
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "VIM_R364",
+      "protein_id": "VIM",
+      "sequence": "LLQDSVDFSLA",
+      "immunodominant": false,
+      "acpa_reactivity": 0.03,
+      "has_arginine": false,
+      "n_arginines": 0,
+      "metrics": {
+        "embedding_norm": 0.9245299696922302,
+        "cluster_homogeneity": 0.2727272727272727,
+        "mean_neighbor_distance": 5.291614532470703,
+        "boundary_potential": 3.994612693786621
+      },
+      "citrullination": null
+    },
+    {
+      "epitope_id": "VIM_R450",
+      "protein_id": "VIM",
+      "sequence": "RLQDEIQNMK",
+      "immunodominant": true,
+      "acpa_reactivity": 0.58,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.8951530456542969,
+        "cluster_homogeneity": 0.2,
+        "mean_neighbor_distance": 5.119816780090332,
+        "boundary_potential": 3.111860752105713
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.255275160074234,
+        "mean_js_divergence": 0.03969123741566947,
+        "mean_entropy_change": -0.19095425038653446,
+        "per_position": [
+          {
+            "position": 0,
+            "centroid_shift": 0.255275160074234,
+            "js_divergence": 0.03969123741566947,
+            "entropy_change": -0.19095425038653446
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FGA_R38",
+      "protein_id": "FGA",
+      "sequence": "GPRVVERHQS",
+      "immunodominant": true,
+      "acpa_reactivity": 0.78,
+      "has_arginine": true,
+      "n_arginines": 2,
+      "metrics": {
+        "embedding_norm": 0.9155575037002563,
+        "cluster_homogeneity": 0.2,
+        "mean_neighbor_distance": 4.8078532218933105,
+        "boundary_potential": 3.8642208576202393
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.25714001059532166,
+        "mean_js_divergence": 0.01698990367953971,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 2,
+            "centroid_shift": 0.25714001059532166,
+            "js_divergence": 0.01698990367953971,
+            "entropy_change": 0.0
+          },
+          {
+            "position": 6,
+            "centroid_shift": 0.25714001059532166,
+            "js_divergence": 0.01698990367953971,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FGA_R573",
+      "protein_id": "FGA",
+      "sequence": "MELERPGGNEI",
+      "immunodominant": true,
+      "acpa_reactivity": 0.65,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9048704504966736,
+        "cluster_homogeneity": 0.2727272727272727,
+        "mean_neighbor_distance": 5.286683082580566,
+        "boundary_potential": 3.3835763931274414
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.22766703367233276,
+        "mean_js_divergence": 0.06301338005090411,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 4,
+            "centroid_shift": 0.22766703367233276,
+            "js_divergence": 0.06301338005090411,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FGA_R84",
+      "protein_id": "FGA",
+      "sequence": "RHPDEAAFFDT",
+      "immunodominant": false,
+      "acpa_reactivity": 0.22,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.930546760559082,
+        "cluster_homogeneity": 0.18181818181818182,
+        "mean_neighbor_distance": 4.600860595703125,
+        "boundary_potential": 4.105602264404297
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.21467143297195435,
+        "mean_js_divergence": 0.06301338005090411,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 0,
+            "centroid_shift": 0.21467143297195435,
+            "js_divergence": 0.06301338005090411,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FGA_R35",
+      "protein_id": "FGA",
+      "sequence": "DSGEGDFLAEG",
+      "immunodominant": false,
+      "acpa_reactivity": 0.04,
+      "has_arginine": false,
+      "n_arginines": 0,
+      "metrics": {
+        "embedding_norm": 0.9299879670143127,
+        "cluster_homogeneity": 0.2727272727272727,
+        "mean_neighbor_distance": 5.753897666931152,
+        "boundary_potential": 4.105827331542969
+      },
+      "citrullination": null
+    },
+    {
+      "epitope_id": "FGA_R263",
+      "protein_id": "FGA",
+      "sequence": "TWKTRWYSMK",
+      "immunodominant": true,
+      "acpa_reactivity": 0.55,
+      "has_arginine": true,
+      "n_arginines": 2,
+      "metrics": {
+        "embedding_norm": 0.9094091653823853,
+        "cluster_homogeneity": 0.2,
+        "mean_neighbor_distance": 5.818404197692871,
+        "boundary_potential": 3.1192431449890137
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.2412768453359604,
+        "mean_js_divergence": 0.056233514461880824,
+        "mean_entropy_change": 0.06931471800530153,
+        "per_position": [
+          {
+            "position": 3,
+            "centroid_shift": 0.2734943926334381,
+            "js_divergence": 0.04315231086776712,
+            "entropy_change": 0.13862943601060307
+          },
+          {
+            "position": 6,
+            "centroid_shift": 0.20905929803848267,
+            "js_divergence": 0.06931471805599453,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FGA_R425",
+      "protein_id": "FGA",
+      "sequence": "LKKREEVDLKD",
+      "immunodominant": true,
+      "acpa_reactivity": 0.61,
+      "has_arginine": true,
+      "n_arginines": 2,
+      "metrics": {
+        "embedding_norm": 0.9335704445838928,
+        "cluster_homogeneity": 0.2727272727272727,
+        "mean_neighbor_distance": 4.9862260818481445,
+        "boundary_potential": 4.305809020996094
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.27883516252040863,
+        "mean_js_divergence": 0.051121376783528016,
+        "mean_entropy_change": 0.06301338000033141,
+        "per_position": [
+          {
+            "position": 3,
+            "centroid_shift": 0.277177631855011,
+            "js_divergence": 0.06301338005090411,
+            "entropy_change": 2.220446049250313e-16
+          },
+          {
+            "position": 4,
+            "centroid_shift": 0.2804926931858063,
+            "js_divergence": 0.03922937351615193,
+            "entropy_change": 0.1260267600006626
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FGA_R591",
+      "protein_id": "FGA",
+      "sequence": "FVSGKDYGRW",
+      "immunodominant": false,
+      "acpa_reactivity": 0.19,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.922879695892334,
+        "cluster_homogeneity": 0.2,
+        "mean_neighbor_distance": 5.913110733032227,
+        "boundary_potential": 3.8408966064453125
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.23889006674289703,
+        "mean_js_divergence": 0.06931471805599453,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 8,
+            "centroid_shift": 0.23889006674289703,
+            "js_divergence": 0.06931471805599453,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FGB_R74",
+      "protein_id": "FGB",
+      "sequence": "HARPAKAATN",
+      "immunodominant": true,
+      "acpa_reactivity": 0.71,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9364684820175171,
+        "cluster_homogeneity": 0.4,
+        "mean_neighbor_distance": 5.672489643096924,
+        "boundary_potential": 4.442391395568848
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.26363909244537354,
+        "mean_js_divergence": 0.06931471805599453,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 2,
+            "centroid_shift": 0.26363909244537354,
+            "js_divergence": 0.06931471805599453,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FGB_R44",
+      "protein_id": "FGB",
+      "sequence": "NEEGFFRHNDK",
+      "immunodominant": false,
+      "acpa_reactivity": 0.18,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.934266984462738,
+        "cluster_homogeneity": 0.18181818181818182,
+        "mean_neighbor_distance": 4.64919376373291,
+        "boundary_potential": 4.161696910858154
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.10802430659532547,
+        "mean_js_divergence": 0.06301338005090405,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 7,
+            "centroid_shift": 0.10802430659532547,
+            "js_divergence": 0.06301338005090405,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FGB_R255",
+      "protein_id": "FGB",
+      "sequence": "CRMKGLIDEV",
+      "immunodominant": true,
+      "acpa_reactivity": 0.52,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.8827037811279297,
+        "cluster_homogeneity": 0.2,
+        "mean_neighbor_distance": 5.212175369262695,
+        "boundary_potential": 3.2977383136749268
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.23929454386234283,
+        "mean_js_divergence": 0.06931471805599453,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 1,
+            "centroid_shift": 0.23929454386234283,
+            "js_divergence": 0.06931471805599453,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FGB_R157",
+      "protein_id": "FGB",
+      "sequence": "DNENVVNEYE",
+      "immunodominant": false,
+      "acpa_reactivity": 0.06,
+      "has_arginine": false,
+      "n_arginines": 0,
+      "metrics": {
+        "embedding_norm": 0.9079033732414246,
+        "cluster_homogeneity": 0.3,
+        "mean_neighbor_distance": 4.849361896514893,
+        "boundary_potential": 3.5792441368103027
+      },
+      "citrullination": null
+    },
+    {
+      "epitope_id": "FGB_R406",
+      "protein_id": "FGB",
+      "sequence": "SARGHRPLDKK",
+      "immunodominant": true,
+      "acpa_reactivity": 0.48,
+      "has_arginine": true,
+      "n_arginines": 2,
+      "metrics": {
+        "embedding_norm": 0.9373267889022827,
+        "cluster_homogeneity": 0.18181818181818182,
+        "mean_neighbor_distance": 5.385687828063965,
+        "boundary_potential": 4.418371200561523
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.16674666479229927,
+        "mean_js_divergence": 0.05112137678352803,
+        "mean_entropy_change": 0.06301338000033119,
+        "per_position": [
+          {
+            "position": 2,
+            "centroid_shift": 0.2317449301481247,
+            "js_divergence": 0.03922937351615196,
+            "entropy_change": 0.12602676000066237
+          },
+          {
+            "position": 4,
+            "centroid_shift": 0.10174839943647385,
+            "js_divergence": 0.06301338005090411,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "ENO1_CEP1",
+      "protein_id": "ENO1",
+      "sequence": "KIREEIFDSRGNP",
+      "immunodominant": true,
+      "acpa_reactivity": 0.62,
+      "has_arginine": true,
+      "n_arginines": 2,
+      "metrics": {
+        "embedding_norm": 0.9127814173698425,
+        "cluster_homogeneity": 0.15384615384615385,
+        "mean_neighbor_distance": 5.46948766708374,
+        "boundary_potential": 3.5899696350097656
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.17982354760169983,
+        "mean_js_divergence": 0.0331940852828978,
+        "mean_entropy_change": 0.10663802767763286,
+        "per_position": [
+          {
+            "position": 2,
+            "centroid_shift": 0.17982354760169983,
+            "js_divergence": 0.0331940852828978,
+            "entropy_change": 0.10663802767763286
+          },
+          {
+            "position": 9,
+            "centroid_shift": 0.17982354760169983,
+            "js_divergence": 0.0331940852828978,
+            "entropy_change": 0.10663802767763286
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "ENO1_R400",
+      "protein_id": "ENO1",
+      "sequence": "SFRSGKYKSV",
+      "immunodominant": false,
+      "acpa_reactivity": 0.12,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9324811100959778,
+        "cluster_homogeneity": 0.3,
+        "mean_neighbor_distance": 6.521735668182373,
+        "boundary_potential": 4.319340705871582
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.24057599902153015,
+        "mean_js_divergence": 0.06931471805599453,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 2,
+            "centroid_shift": 0.24057599902153015,
+            "js_divergence": 0.06931471805599453,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "ENO1_R14",
+      "protein_id": "ENO1",
+      "sequence": "TGRILSKIRE",
+      "immunodominant": true,
+      "acpa_reactivity": 0.45,
+      "has_arginine": true,
+      "n_arginines": 2,
+      "metrics": {
+        "embedding_norm": 0.910101592540741,
+        "cluster_homogeneity": 0.2,
+        "mean_neighbor_distance": 6.011167526245117,
+        "boundary_potential": 3.5650107860565186
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.2688485309481621,
+        "mean_js_divergence": 0.04315231086776712,
+        "mean_entropy_change": 0.13862943601060262,
+        "per_position": [
+          {
+            "position": 2,
+            "centroid_shift": 0.23285768926143646,
+            "js_divergence": 0.04315231086776712,
+            "entropy_change": 0.13862943601060262
+          },
+          {
+            "position": 7,
+            "centroid_shift": 0.3048393726348877,
+            "js_divergence": 0.04315231086776712,
+            "entropy_change": 0.13862943601060262
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "ENO1_R246",
+      "protein_id": "ENO1",
+      "sequence": "DATNVGDEGGF",
+      "immunodominant": false,
+      "acpa_reactivity": 0.03,
+      "has_arginine": false,
+      "n_arginines": 0,
+      "metrics": {
+        "embedding_norm": 0.9314835071563721,
+        "cluster_homogeneity": 0.2727272727272727,
+        "mean_neighbor_distance": 5.089006423950195,
+        "boundary_potential": 4.209681987762451
+      },
+      "citrullination": null
+    },
+    {
+      "epitope_id": "ENO1_R336",
+      "protein_id": "ENO1",
+      "sequence": "YPIVSIEDPFD",
+      "immunodominant": false,
+      "acpa_reactivity": 0.05,
+      "has_arginine": false,
+      "n_arginines": 0,
+      "metrics": {
+        "embedding_norm": 0.8906622529029846,
+        "cluster_homogeneity": 0.18181818181818182,
+        "mean_neighbor_distance": 5.391095161437988,
+        "boundary_potential": 3.1407692432403564
+      },
+      "citrullination": null
+    },
+    {
+      "epitope_id": "CII_259_273",
+      "protein_id": "COL2A1",
+      "sequence": "GARGLTGRPGDAGK",
+      "immunodominant": true,
+      "acpa_reactivity": 0.45,
+      "has_arginine": true,
+      "n_arginines": 2,
+      "metrics": {
+        "embedding_norm": 0.9462876915931702,
+        "cluster_homogeneity": 0.35714285714285715,
+        "mean_neighbor_distance": 6.2599921226501465,
+        "boundary_potential": 4.6334967613220215
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.21650460362434387,
+        "mean_js_divergence": 0.03082307919126226,
+        "mean_entropy_change": 0.09902102569357063,
+        "per_position": [
+          {
+            "position": 2,
+            "centroid_shift": 0.21650460362434387,
+            "js_divergence": 0.03082307919126226,
+            "entropy_change": 0.09902102569357063
+          },
+          {
+            "position": 7,
+            "centroid_shift": 0.21650460362434387,
+            "js_divergence": 0.03082307919126226,
+            "entropy_change": 0.09902102569357063
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "CII_511_525",
+      "protein_id": "COL2A1",
+      "sequence": "PGERGAPGFRGPAG",
+      "immunodominant": true,
+      "acpa_reactivity": 0.38,
+      "has_arginine": true,
+      "n_arginines": 2,
+      "metrics": {
+        "embedding_norm": 0.9466155171394348,
+        "cluster_homogeneity": 0.35714285714285715,
+        "mean_neighbor_distance": 6.29551887512207,
+        "boundary_potential": 4.587228298187256
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.22175195813179016,
+        "mean_js_divergence": 0.030823079191262242,
+        "mean_entropy_change": 0.09902102569357085,
+        "per_position": [
+          {
+            "position": 3,
+            "centroid_shift": 0.22175195813179016,
+            "js_divergence": 0.030823079191262242,
+            "entropy_change": 0.09902102569357085
+          },
+          {
+            "position": 9,
+            "centroid_shift": 0.22175195813179016,
+            "js_divergence": 0.030823079191262242,
+            "entropy_change": 0.09902102569357085
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "CII_CONTROL",
+      "protein_id": "COL2A1",
+      "sequence": "GPKGDTGPKGPAG",
+      "immunodominant": false,
+      "acpa_reactivity": 0.02,
+      "has_arginine": false,
+      "n_arginines": 0,
+      "metrics": {
+        "embedding_norm": 0.9499362111091614,
+        "cluster_homogeneity": 0.38461538461538464,
+        "mean_neighbor_distance": 6.575658798217773,
+        "boundary_potential": 4.7473368644714355
+      },
+      "citrullination": null
+    },
+    {
+      "epitope_id": "CII_124_138",
+      "protein_id": "COL2A1",
+      "sequence": "GARGFPGTPGLPGK",
+      "immunodominant": true,
+      "acpa_reactivity": 0.42,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9535982012748718,
+        "cluster_homogeneity": 0.35714285714285715,
+        "mean_neighbor_distance": 6.6971001625061035,
+        "boundary_potential": 4.780797481536865
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.1997457593679428,
+        "mean_js_divergence": 0.04951051289713893,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 2,
+            "centroid_shift": 0.1997457593679428,
+            "js_divergence": 0.04951051289713893,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "CII_786_800",
+      "protein_id": "COL2A1",
+      "sequence": "GPRGDKGETGEQG",
+      "immunodominant": false,
+      "acpa_reactivity": 0.21,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9376609325408936,
+        "cluster_homogeneity": 0.38461538461538464,
+        "mean_neighbor_distance": 5.946341037750244,
+        "boundary_potential": 4.294933795928955
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.2630905210971832,
+        "mean_js_divergence": 0.03319408528289777,
+        "mean_entropy_change": -0.10663802767763264,
+        "per_position": [
+          {
+            "position": 2,
+            "centroid_shift": 0.2630905210971832,
+            "js_divergence": 0.03319408528289777,
+            "entropy_change": -0.10663802767763264
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "CII_359_373",
+      "protein_id": "COL2A1",
+      "sequence": "GARGEPGNIGFPG",
+      "immunodominant": true,
+      "acpa_reactivity": 0.36,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9333053231239319,
+        "cluster_homogeneity": 0.38461538461538464,
+        "mean_neighbor_distance": 6.198333740234375,
+        "boundary_potential": 4.232212543487549
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.20246364176273346,
+        "mean_js_divergence": 0.05331901388922656,
+        "mean_entropy_change": -2.220446049250313e-16,
+        "per_position": [
+          {
+            "position": 2,
+            "centroid_shift": 0.20246364176273346,
+            "js_divergence": 0.05331901388922656,
+            "entropy_change": -2.220446049250313e-16
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FLG_CCP",
+      "protein_id": "FLG",
+      "sequence": "SHQESTRGRS",
+      "immunodominant": true,
+      "acpa_reactivity": 0.75,
+      "has_arginine": true,
+      "n_arginines": 2,
+      "metrics": {
+        "embedding_norm": 0.9219415783882141,
+        "cluster_homogeneity": 0.3,
+        "mean_neighbor_distance": 5.615054130554199,
+        "boundary_potential": 3.7939071655273438
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.2593368589878082,
+        "mean_js_divergence": 0.01698990367953971,
+        "mean_entropy_change": 2.220446049250313e-16,
+        "per_position": [
+          {
+            "position": 6,
+            "centroid_shift": 0.2593368589878082,
+            "js_divergence": 0.01698990367953971,
+            "entropy_change": 2.220446049250313e-16
+          },
+          {
+            "position": 8,
+            "centroid_shift": 0.2593368589878082,
+            "js_divergence": 0.01698990367953971,
+            "entropy_change": 2.220446049250313e-16
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FLG_SEC",
+      "protein_id": "FLG",
+      "sequence": "DSHRGSSSSS",
+      "immunodominant": false,
+      "acpa_reactivity": 0.2,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9161621332168579,
+        "cluster_homogeneity": 0.6,
+        "mean_neighbor_distance": 3.2277088165283203,
+        "boundary_potential": 3.7132866382598877
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.2811158001422882,
+        "mean_js_divergence": 0.06931471805599453,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 3,
+            "centroid_shift": 0.2811158001422882,
+            "js_divergence": 0.06931471805599453,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FLG_304",
+      "protein_id": "FLG",
+      "sequence": "SHQESTRGRSG",
+      "immunodominant": true,
+      "acpa_reactivity": 0.72,
+      "has_arginine": true,
+      "n_arginines": 2,
+      "metrics": {
+        "embedding_norm": 0.9244862198829651,
+        "cluster_homogeneity": 0.2727272727272727,
+        "mean_neighbor_distance": 5.677689552307129,
+        "boundary_potential": 3.891247034072876
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.23788896203041077,
+        "mean_js_divergence": 0.015445366981399766,
+        "mean_entropy_change": -2.220446049250313e-16,
+        "per_position": [
+          {
+            "position": 6,
+            "centroid_shift": 0.23788896203041077,
+            "js_divergence": 0.015445366981399766,
+            "entropy_change": -2.220446049250313e-16
+          },
+          {
+            "position": 8,
+            "centroid_shift": 0.23788896203041077,
+            "js_divergence": 0.015445366981399766,
+            "entropy_change": -2.220446049250313e-16
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FLG_420",
+      "protein_id": "FLG",
+      "sequence": "SSGHSSSSGHS",
+      "immunodominant": false,
+      "acpa_reactivity": 0.04,
+      "has_arginine": false,
+      "n_arginines": 0,
+      "metrics": {
+        "embedding_norm": 0.9127798676490784,
+        "cluster_homogeneity": 0.6363636363636364,
+        "mean_neighbor_distance": 3.4811763763427734,
+        "boundary_potential": 3.7191946506500244
+      },
+      "citrullination": null
+    },
+    {
+      "epitope_id": "FLG_589",
+      "protein_id": "FLG",
+      "sequence": "RHGGSSRGRSGS",
+      "immunodominant": true,
+      "acpa_reactivity": 0.58,
+      "has_arginine": true,
+      "n_arginines": 3,
+      "metrics": {
+        "embedding_norm": 0.9315261244773865,
+        "cluster_homogeneity": 0.3333333333333333,
+        "mean_neighbor_distance": 4.8177103996276855,
+        "boundary_potential": 4.1757941246032715
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.26456138491630554,
+        "mean_js_divergence": 0.03307603117972458,
+        "mean_entropy_change": 0.15912854197237736,
+        "per_position": [
+          {
+            "position": 0,
+            "centroid_shift": 0.26456138491630554,
+            "js_divergence": 0.03307603117972458,
+            "entropy_change": 0.15912854197237736
+          },
+          {
+            "position": 6,
+            "centroid_shift": 0.26456138491630554,
+            "js_divergence": 0.03307603117972458,
+            "entropy_change": 0.15912854197237736
+          },
+          {
+            "position": 8,
+            "centroid_shift": 0.26456138491630554,
+            "js_divergence": 0.03307603117972458,
+            "entropy_change": 0.15912854197237736
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "H2B_1_12",
+      "protein_id": "HIST1H2A/HIST1H2B/HIST1H3/HIST1H4",
+      "sequence": "PEPAKSAPAPKKGS",
+      "immunodominant": false,
+      "acpa_reactivity": 0.08,
+      "has_arginine": false,
+      "n_arginines": 0,
+      "metrics": {
+        "embedding_norm": 0.9444231390953064,
+        "cluster_homogeneity": 0.2857142857142857,
+        "mean_neighbor_distance": 5.9671783447265625,
+        "boundary_potential": 4.590027332305908
+      },
+      "citrullination": null
+    },
+    {
+      "epitope_id": "H2A_R3",
+      "protein_id": "HIST1H2A/HIST1H2B/HIST1H3/HIST1H4",
+      "sequence": "SGRGKQGGKAR",
+      "immunodominant": true,
+      "acpa_reactivity": 0.35,
+      "has_arginine": true,
+      "n_arginines": 2,
+      "metrics": {
+        "embedding_norm": 0.9446459412574768,
+        "cluster_homogeneity": 0.36363636363636365,
+        "mean_neighbor_distance": 5.674983024597168,
+        "boundary_potential": 4.598887920379639
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.2970336377620697,
+        "mean_js_divergence": 0.015445366981399797,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 2,
+            "centroid_shift": 0.2970336377620697,
+            "js_divergence": 0.015445366981399797,
+            "entropy_change": 0.0
+          },
+          {
+            "position": 10,
+            "centroid_shift": 0.2970336377620697,
+            "js_divergence": 0.015445366981399797,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "H3_R2",
+      "protein_id": "HIST1H2A/HIST1H2B/HIST1H3/HIST1H4",
+      "sequence": "ARTKQTARKS",
+      "immunodominant": true,
+      "acpa_reactivity": 0.42,
+      "has_arginine": true,
+      "n_arginines": 2,
+      "metrics": {
+        "embedding_norm": 0.9440013766288757,
+        "cluster_homogeneity": 0.2,
+        "mean_neighbor_distance": 6.550673961639404,
+        "boundary_potential": 4.464096546173096
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.3600919246673584,
+        "mean_js_divergence": 0.01698990367953971,
+        "mean_entropy_change": -2.220446049250313e-16,
+        "per_position": [
+          {
+            "position": 0,
+            "centroid_shift": 0.4011346995830536,
+            "js_divergence": 0.01698990367953971,
+            "entropy_change": -2.220446049250313e-16
+          },
+          {
+            "position": 5,
+            "centroid_shift": 0.3190491497516632,
+            "js_divergence": 0.01698990367953971,
+            "entropy_change": -2.220446049250313e-16
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "H3_R17",
+      "protein_id": "HIST1H2A/HIST1H2B/HIST1H3/HIST1H4",
+      "sequence": "KQLATKAARKS",
+      "immunodominant": false,
+      "acpa_reactivity": 0.15,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.94431471824646,
+        "cluster_homogeneity": 0.2727272727272727,
+        "mean_neighbor_distance": 5.903203010559082,
+        "boundary_potential": 4.59921407699585
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.25180259346961975,
+        "mean_js_divergence": 0.03922937351615196,
+        "mean_entropy_change": -0.12602676000066237,
+        "per_position": [
+          {
+            "position": 8,
+            "centroid_shift": 0.25180259346961975,
+            "js_divergence": 0.03922937351615196,
+            "entropy_change": -0.12602676000066237
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "H4_R3",
+      "protein_id": "HIST1H2A/HIST1H2B/HIST1H3/HIST1H4",
+      "sequence": "SGRGKGGKGLG",
+      "immunodominant": true,
+      "acpa_reactivity": 0.38,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9514680504798889,
+        "cluster_homogeneity": 0.5454545454545454,
+        "mean_neighbor_distance": 5.940343856811523,
+        "boundary_potential": 4.836523056030273
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.31563013792037964,
+        "mean_js_divergence": 0.06301338005090414,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 2,
+            "centroid_shift": 0.31563013792037964,
+            "js_divergence": 0.06301338005090414,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "H2B_R29",
+      "protein_id": "HIST1H2A/HIST1H2B/HIST1H3/HIST1H4",
+      "sequence": "KAVTKYTSSK",
+      "immunodominant": false,
+      "acpa_reactivity": 0.06,
+      "has_arginine": false,
+      "n_arginines": 0,
+      "metrics": {
+        "embedding_norm": 0.9356911778450012,
+        "cluster_homogeneity": 0.3,
+        "mean_neighbor_distance": 5.702102184295654,
+        "boundary_potential": 4.444655895233154
+      },
+      "citrullination": null
+    },
+    {
+      "epitope_id": "TNC_R1",
+      "protein_id": "TNC",
+      "sequence": "RLDAPSQIEV",
+      "immunodominant": true,
+      "acpa_reactivity": 0.48,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9060608744621277,
+        "cluster_homogeneity": 0.1,
+        "mean_neighbor_distance": 5.533712387084961,
+        "boundary_potential": 3.51227068901062
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.228713721036911,
+        "mean_js_divergence": 0.04315231086776712,
+        "mean_entropy_change": -0.13862943601060262,
+        "per_position": [
+          {
+            "position": 0,
+            "centroid_shift": 0.228713721036911,
+            "js_divergence": 0.04315231086776712,
+            "entropy_change": -0.13862943601060262
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "TNC_R2",
+      "protein_id": "TNC",
+      "sequence": "VTRNDEGSCL",
+      "immunodominant": true,
+      "acpa_reactivity": 0.44,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9128718376159668,
+        "cluster_homogeneity": 0.1,
+        "mean_neighbor_distance": 5.4220147132873535,
+        "boundary_potential": 3.938678741455078
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.22961820662021637,
+        "mean_js_divergence": 0.06931471805599453,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 2,
+            "centroid_shift": 0.22961820662021637,
+            "js_divergence": 0.06931471805599453,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "TNC_R3",
+      "protein_id": "TNC",
+      "sequence": "DLQITSGQFE",
+      "immunodominant": false,
+      "acpa_reactivity": 0.07,
+      "has_arginine": false,
+      "n_arginines": 0,
+      "metrics": {
+        "embedding_norm": 0.911514401435852,
+        "cluster_homogeneity": 0.2,
+        "mean_neighbor_distance": 5.971410751342773,
+        "boundary_potential": 3.485288619995117
+      },
+      "citrullination": null
+    },
+    {
+      "epitope_id": "TNC_R4",
+      "protein_id": "TNC",
+      "sequence": "GSRRLRALSV",
+      "immunodominant": true,
+      "acpa_reactivity": 0.52,
+      "has_arginine": true,
+      "n_arginines": 3,
+      "metrics": {
+        "embedding_norm": 0.9353307485580444,
+        "cluster_homogeneity": 0.3,
+        "mean_neighbor_distance": 5.465924263000488,
+        "boundary_potential": 4.3107686042785645
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.29207751154899597,
+        "mean_js_divergence": 0.03969123741566947,
+        "mean_entropy_change": 0.19095425038653424,
+        "per_position": [
+          {
+            "position": 2,
+            "centroid_shift": 0.29207751154899597,
+            "js_divergence": 0.03969123741566947,
+            "entropy_change": 0.19095425038653424
+          },
+          {
+            "position": 3,
+            "centroid_shift": 0.29207751154899597,
+            "js_divergence": 0.03969123741566947,
+            "entropy_change": 0.19095425038653424
+          },
+          {
+            "position": 5,
+            "centroid_shift": 0.29207751154899597,
+            "js_divergence": 0.03969123741566947,
+            "entropy_change": 0.19095425038653424
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FN1_R1",
+      "protein_id": "FN1",
+      "sequence": "GRGDSPKQGT",
+      "immunodominant": true,
+      "acpa_reactivity": 0.39,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9396929740905762,
+        "cluster_homogeneity": 0.3,
+        "mean_neighbor_distance": 6.078461170196533,
+        "boundary_potential": 4.342803955078125
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.28316473960876465,
+        "mean_js_divergence": 0.04315231086776712,
+        "mean_entropy_change": -0.13862943601060307,
+        "per_position": [
+          {
+            "position": 1,
+            "centroid_shift": 0.28316473960876465,
+            "js_divergence": 0.04315231086776712,
+            "entropy_change": -0.13862943601060307
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FN1_R2",
+      "protein_id": "FN1",
+      "sequence": "IRVRVTTGGV",
+      "immunodominant": true,
+      "acpa_reactivity": 0.45,
+      "has_arginine": true,
+      "n_arginines": 2,
+      "metrics": {
+        "embedding_norm": 0.9152721166610718,
+        "cluster_homogeneity": 0.3,
+        "mean_neighbor_distance": 4.630367755889893,
+        "boundary_potential": 3.9450526237487793
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.2541315257549286,
+        "mean_js_divergence": 0.04315231086776712,
+        "mean_entropy_change": 0.13862943601060285,
+        "per_position": [
+          {
+            "position": 1,
+            "centroid_shift": 0.2541315257549286,
+            "js_divergence": 0.04315231086776712,
+            "entropy_change": 0.13862943601060285
+          },
+          {
+            "position": 3,
+            "centroid_shift": 0.2541315257549286,
+            "js_divergence": 0.04315231086776712,
+            "entropy_change": 0.13862943601060285
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "FN1_R3",
+      "protein_id": "FN1",
+      "sequence": "QNQVSLTCLT",
+      "immunodominant": false,
+      "acpa_reactivity": 0.05,
+      "has_arginine": false,
+      "n_arginines": 0,
+      "metrics": {
+        "embedding_norm": 0.9122784733772278,
+        "cluster_homogeneity": 0.2,
+        "mean_neighbor_distance": 5.836038112640381,
+        "boundary_potential": 3.8527114391326904
+      },
+      "citrullination": null
+    },
+    {
+      "epitope_id": "FN1_R4",
+      "protein_id": "FN1",
+      "sequence": "MRGESNPVSE",
+      "immunodominant": false,
+      "acpa_reactivity": 0.18,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9097356796264648,
+        "cluster_homogeneity": 0.2,
+        "mean_neighbor_distance": 5.969799518585205,
+        "boundary_potential": 3.5494518280029297
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.23060517013072968,
+        "mean_js_divergence": 0.06931471805599453,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 1,
+            "centroid_shift": 0.23060517013072968,
+            "js_divergence": 0.06931471805599453,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "BiP_R1",
+      "protein_id": "HSPA5",
+      "sequence": "IINEPTAAAI",
+      "immunodominant": false,
+      "acpa_reactivity": 0.04,
+      "has_arginine": false,
+      "n_arginines": 0,
+      "metrics": {
+        "embedding_norm": 0.8871822357177734,
+        "cluster_homogeneity": 0.3,
+        "mean_neighbor_distance": 3.726619243621826,
+        "boundary_potential": 3.058769941329956
+      },
+      "citrullination": null
+    },
+    {
+      "epitope_id": "BiP_R2",
+      "protein_id": "HSPA5",
+      "sequence": "KRNNRTLTKI",
+      "immunodominant": true,
+      "acpa_reactivity": 0.41,
+      "has_arginine": true,
+      "n_arginines": 3,
+      "metrics": {
+        "embedding_norm": 0.9374674558639526,
+        "cluster_homogeneity": 0.2,
+        "mean_neighbor_distance": 6.232717514038086,
+        "boundary_potential": 4.23192834854126
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.2433900684118271,
+        "mean_js_divergence": 0.04315231086776713,
+        "mean_entropy_change": 0.13862943601060285,
+        "per_position": [
+          {
+            "position": 1,
+            "centroid_shift": 0.25132662057876587,
+            "js_divergence": 0.04315231086776712,
+            "entropy_change": 0.13862943601060285
+          },
+          {
+            "position": 3,
+            "centroid_shift": 0.22751696407794952,
+            "js_divergence": 0.04315231086776712,
+            "entropy_change": 0.13862943601060285
+          },
+          {
+            "position": 4,
+            "centroid_shift": 0.25132662057876587,
+            "js_divergence": 0.04315231086776712,
+            "entropy_change": 0.13862943601060285
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "BiP_R3",
+      "protein_id": "HSPA5",
+      "sequence": "MVNDAERFYD",
+      "immunodominant": false,
+      "acpa_reactivity": 0.16,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.901972770690918,
+        "cluster_homogeneity": 0.2,
+        "mean_neighbor_distance": 5.541009902954102,
+        "boundary_potential": 3.4467480182647705
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.25466182827949524,
+        "mean_js_divergence": 0.06931471805599453,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 6,
+            "centroid_shift": 0.25466182827949524,
+            "js_divergence": 0.06931471805599453,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "BiP_R4",
+      "protein_id": "HSPA5",
+      "sequence": "NETIGRFELE",
+      "immunodominant": true,
+      "acpa_reactivity": 0.38,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9213302731513977,
+        "cluster_homogeneity": 0.3,
+        "mean_neighbor_distance": 6.027035236358643,
+        "boundary_potential": 3.7248318195343018
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.25093626976013184,
+        "mean_js_divergence": 0.06931471805599453,
+        "mean_entropy_change": -2.220446049250313e-16,
+        "per_position": [
+          {
+            "position": 5,
+            "centroid_shift": 0.25093626976013184,
+            "js_divergence": 0.06931471805599453,
+            "entropy_change": -2.220446049250313e-16
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "CLU_R1",
+      "protein_id": "CLU",
+      "sequence": "CTLRVNSGFL",
+      "immunodominant": true,
+      "acpa_reactivity": 0.36,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9249666929244995,
+        "cluster_homogeneity": 0.2,
+        "mean_neighbor_distance": 6.467456817626953,
+        "boundary_potential": 4.270033836364746
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.231614351272583,
+        "mean_js_divergence": 0.06931471805599453,
+        "mean_entropy_change": 0.0,
+        "per_position": [
+          {
+            "position": 3,
+            "centroid_shift": 0.231614351272583,
+            "js_divergence": 0.06931471805599453,
+            "entropy_change": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "CLU_R2",
+      "protein_id": "CLU",
+      "sequence": "SGHLRELQTE",
+      "immunodominant": false,
+      "acpa_reactivity": 0.14,
+      "has_arginine": true,
+      "n_arginines": 1,
+      "metrics": {
+        "embedding_norm": 0.9241033792495728,
+        "cluster_homogeneity": 0.2,
+        "mean_neighbor_distance": 6.139684200286865,
+        "boundary_potential": 3.875706911087036
+      },
+      "citrullination": {
+        "mean_centroid_shift": 0.2386828511953354,
+        "mean_js_divergence": 0.04315231086776712,
+        "mean_entropy_change": -0.13862943601060285,
+        "per_position": [
+          {
+            "position": 4,
+            "centroid_shift": 0.2386828511953354,
+            "js_divergence": 0.04315231086776712,
+            "entropy_change": -0.13862943601060285
+          }
+        ]
+      }
+    },
+    {
+      "epitope_id": "CLU_R3",
+      "protein_id": "CLU",
+      "sequence": "LLEEPNGSSL",
+      "immunodominant": false,
+      "acpa_reactivity": 0.03,
+      "has_arginine": false,
+      "n_arginines": 0,
+      "metrics": {
+        "embedding_norm": 0.9341648817062378,
+        "cluster_homogeneity": 0.3,
+        "mean_neighbor_distance": 4.250120639801025,
+        "boundary_potential": 4.113970756530762
+      },
+      "citrullination": null
+    }
+  ]
+}

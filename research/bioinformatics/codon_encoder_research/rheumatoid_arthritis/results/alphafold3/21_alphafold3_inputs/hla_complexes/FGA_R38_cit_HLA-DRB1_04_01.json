@@ -1,0 +1,32 @@
+{
+  "name": "FGA_R38_cit_HLA-DRB1_04_01",
+  "sequences": [
+    {
+      "protein": {
+        "id": "A",
+        "sequence": "GPRVVERHQS",
+        "modifications": [
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 3
+          },
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 7
+          }
+        ]
+      }
+    },
+    {
+      "protein": {
+        "id": "B",
+        "sequence": "GDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQRRAAVDTYCRHNYGVGESFTVQRR"
+      }
+    }
+  ],
+  "modelSeeds": [
+    1
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}

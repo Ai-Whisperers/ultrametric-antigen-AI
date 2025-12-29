@@ -1,0 +1,26 @@
+{
+  "name": "H3_R2_citrullinated",
+  "sequences": [
+    {
+      "protein": {
+        "id": "A",
+        "sequence": "ARTKQTARKS",
+        "modifications": [
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 2
+          },
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 8
+          }
+        ]
+      }
+    }
+  ],
+  "modelSeeds": [
+    1
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}

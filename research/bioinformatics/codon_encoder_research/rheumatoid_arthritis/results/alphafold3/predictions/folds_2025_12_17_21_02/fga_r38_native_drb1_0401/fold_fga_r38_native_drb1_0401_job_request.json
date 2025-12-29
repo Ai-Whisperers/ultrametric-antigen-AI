@@ -1,0 +1,25 @@
+[{
+ "name": "FGA_R38_native_DRB1_0401",
+ "modelSeeds": [
+  "950932472"
+ ],
+ "sequences": [
+  {
+   "proteinChain": {
+    "sequence": "GPRVVERHQS",
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  },
+  {
+   "proteinChain": {
+    "sequence": "GDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQRRAAVDTYCRHNYGVGESFTVQRR",
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  }
+ ],
+ "dialect": "alphafoldserver",
+ "version": 1
+}
+]

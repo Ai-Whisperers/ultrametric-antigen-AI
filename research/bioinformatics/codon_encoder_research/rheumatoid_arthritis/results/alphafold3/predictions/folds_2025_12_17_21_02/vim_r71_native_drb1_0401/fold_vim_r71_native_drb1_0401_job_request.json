@@ -1,0 +1,25 @@
+[{
+ "name": "VIM_R71_native_DRB1_0401",
+ "modelSeeds": [
+  "743884312"
+ ],
+ "sequences": [
+  {
+   "proteinChain": {
+    "sequence": "RLRSSVPGVR",
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  },
+  {
+   "proteinChain": {
+    "sequence": "GDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQRRAAVDTYCRHNYGVGESFTVQRR",
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  }
+ ],
+ "dialect": "alphafoldserver",
+ "version": 1
+}
+]

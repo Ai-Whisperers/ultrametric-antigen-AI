@@ -1,0 +1,338 @@
+================================================================================
+AUTOANTIGEN EPITOPE ANALYSIS - P-ADIC SIGNATURES OF RA AUTOANTIGENS
+================================================================================
+
+Loading encoder from: C:\Users\Gestalt\Desktop\ternary\repos\ternary-vaes\research\genetic_code\data\codon_encoder.pt
+Loaded mapping for 64 codons
+
+================================================================================
+ANALYZING AUTOANTIGEN EPITOPES
+================================================================================
+
+────────────────────────────────────────────────────────────
+PROTEIN: Vimentin (VIM)
+Function: Intermediate filament protein, cytoskeleton
+Clinical: Anti-MCV antibodies highly specific for RA (98%)
+────────────────────────────────────────────────────────────
+
+  Epitope: VIM_R71
+  Sequence: RLRSSVPGVR
+  Immunodominant: True
+  ACPA reactivity: 85%
+
+  Arginine analysis:
+    Position 0: Codon=CGG, Cluster=1, BoundaryPotential=2.673
+    Position 2: Codon=CGG, Cluster=1, BoundaryPotential=2.673
+    Position 9: Codon=CGG, Cluster=1, BoundaryPotential=2.673
+
+  Centroid shifts upon citrullination:
+    Position 0: Shift=0.2722 (22.2% relative)
+    Position 2: Shift=0.2722 (22.2% relative)
+    Position 9: Shift=0.2722 (22.2% relative)
+
+  Epitope: VIM_R257
+  Sequence: SSLNLRETNL
+  Immunodominant: True
+  ACPA reactivity: 72%
+
+  Arginine analysis:
+    Position 5: Codon=CGG, Cluster=1, BoundaryPotential=4.523
+
+  Centroid shifts upon citrullination:
+    Position 5: Shift=0.3514 (27.0% relative)
+
+  Epitope: VIM_R45
+  Sequence: SSRSFRTYSF
+  Immunodominant: False
+  ACPA reactivity: 15%
+
+  Arginine analysis:
+    Position 2: Codon=CGG, Cluster=1, BoundaryPotential=3.426
+    Position 5: Codon=CGG, Cluster=1, BoundaryPotential=3.426
+
+  Centroid shifts upon citrullination:
+    Position 2: Shift=0.3331 (17.1% relative)
+    Position 5: Shift=0.3331 (17.1% relative)
+
+  Epitope: VIM_R201
+  Sequence: ARLRSSLAGS
+  Immunodominant: True
+  ACPA reactivity: 68%
+
+  Arginine analysis:
+    Position 0: Codon=GCT, Cluster=3, BoundaryPotential=3.523
+    Position 2: Codon=CTG, Cluster=0, BoundaryPotential=3.603
+
+  Centroid shifts upon citrullination:
+    Position 0: Shift=0.3233 (23.2% relative)
+    Position 2: Shift=0.3353 (24.0% relative)
+
+────────────────────────────────────────────────────────────
+PROTEIN: Fibrinogen α (FGA)
+Function: Coagulation, deposited in RA synovium
+Clinical: Anti-cit-fibrinogen correlates with erosive disease
+────────────────────────────────────────────────────────────
+
+  Epitope: FGA_R38
+  Sequence: GPRVVERHQS
+  Immunodominant: True
+  ACPA reactivity: 78%
+
+  Arginine analysis:
+    Position 2: Codon=CGG, Cluster=1, BoundaryPotential=3.478
+    Position 6: Codon=CGG, Cluster=1, BoundaryPotential=3.478
+
+  Centroid shifts upon citrullination:
+    Position 2: Shift=0.3009 (27.8% relative)
+    Position 6: Shift=0.3009 (27.8% relative)
+
+  Epitope: FGA_R573
+  Sequence: MELERPGGNEI
+  Immunodominant: True
+  ACPA reactivity: 65%
+
+  Arginine analysis:
+    Position 4: Codon=CGG, Cluster=1, BoundaryPotential=4.433
+
+  Centroid shifts upon citrullination:
+    Position 4: Shift=0.3016 (26.9% relative)
+
+  Epitope: FGA_R84
+  Sequence: RHPDEAAFFDT
+  Immunodominant: False
+  ACPA reactivity: 22%
+
+  Arginine analysis:
+    Position 0: Codon=CGG, Cluster=1, BoundaryPotential=4.601
+
+  Centroid shifts upon citrullination:
+    Position 0: Shift=0.3188 (30.3% relative)
+
+────────────────────────────────────────────────────────────
+PROTEIN: Fibrinogen β (FGB)
+Function: Coagulation, β-chain
+Clinical: β-chain epitopes in citrullinated fibrinogen
+────────────────────────────────────────────────────────────
+
+  Epitope: FGB_R74
+  Sequence: HARPAKAATN
+  Immunodominant: True
+  ACPA reactivity: 71%
+
+  Arginine analysis:
+    Position 2: Codon=CGG, Cluster=1, BoundaryPotential=4.293
+
+  Centroid shifts upon citrullination:
+    Position 2: Shift=0.3465 (22.4% relative)
+
+  Epitope: FGB_R44
+  Sequence: NEEGFFRHNDK
+  Immunodominant: False
+  ACPA reactivity: 18%
+
+  Arginine analysis:
+    Position 7: Codon=CAC, Cluster=14, BoundaryPotential=4.317
+
+  Centroid shifts upon citrullination:
+    Position 7: Shift=0.2731 (30.0% relative)
+
+────────────────────────────────────────────────────────────
+PROTEIN: Alpha-enolase (ENO1)
+Function: Glycolysis enzyme, surface-expressed in inflammation
+Clinical: CEP-1 antibodies nearly 100% specific for RA
+────────────────────────────────────────────────────────────
+
+  Epitope: ENO1_CEP1
+  Sequence: KIREEIFDSRGNP
+  Immunodominant: True
+  ACPA reactivity: 62%
+
+  Arginine analysis:
+    Position 2: Codon=CGG, Cluster=1, BoundaryPotential=3.842
+    Position 9: Codon=CGG, Cluster=1, BoundaryPotential=3.842
+
+  Centroid shifts upon citrullination:
+    Position 2: Shift=0.2439 (28.0% relative)
+    Position 9: Shift=0.2439 (28.0% relative)
+
+  Epitope: ENO1_R400
+  Sequence: SFRSGKYKSV
+  Immunodominant: False
+  ACPA reactivity: 12%
+
+  Arginine analysis:
+    Position 2: Codon=CGG, Cluster=1, BoundaryPotential=4.348
+    Position 6: Codon=TAC, Cluster=18, BoundaryPotential=4.437
+
+  Centroid shifts upon citrullination:
+    Position 2: Shift=0.3224 (34.1% relative)
+    Position 6: Shift=0.3318 (35.1% relative)
+
+────────────────────────────────────────────────────────────
+PROTEIN: Collagen type II (COL2A1)
+Function: Cartilage structural protein
+Clinical: Anti-CII correlates with cartilage destruction
+────────────────────────────────────────────────────────────
+
+  Epitope: CII_259_273
+  Sequence: GARGLTGRPGDAGK
+  Immunodominant: True
+  ACPA reactivity: 45%
+
+  Arginine analysis:
+    Position 2: Codon=CGG, Cluster=1, BoundaryPotential=3.505
+    Position 7: Codon=CGG, Cluster=1, BoundaryPotential=3.505
+
+  Centroid shifts upon citrullination:
+    Position 2: Shift=0.2062 (14.2% relative)
+    Position 7: Shift=0.2062 (14.2% relative)
+
+  Epitope: CII_511_525
+  Sequence: PGERGAPGFRGPAG
+  Immunodominant: True
+  ACPA reactivity: 38%
+
+  Arginine analysis:
+    Position 3: Codon=CGG, Cluster=1, BoundaryPotential=3.386
+    Position 10: Codon=GGC, Cluster=4, BoundaryPotential=2.015
+
+  Centroid shifts upon citrullination:
+    Position 3: Shift=0.1932 (12.6% relative)
+    Position 10: Shift=0.1555 (10.1% relative)
+
+  Epitope: CII_CONTROL
+  Sequence: GPKGDTGPKGPAG
+  Immunodominant: False
+  ACPA reactivity: 2%
+
+────────────────────────────────────────────────────────────
+PROTEIN: Filaggrin (FLG)
+Function: Epidermal protein, keratin aggregation
+Clinical: Anti-CCP original target, diagnostic use
+────────────────────────────────────────────────────────────
+
+  Epitope: FLG_CCP
+  Sequence: SHQESTRGRS
+  Immunodominant: True
+  ACPA reactivity: 75%
+
+  Arginine analysis:
+    Position 6: Codon=CGG, Cluster=1, BoundaryPotential=3.175
+    Position 8: Codon=CGG, Cluster=1, BoundaryPotential=3.175
+
+  Centroid shifts upon citrullination:
+    Position 6: Shift=0.2651 (17.3% relative)
+    Position 8: Shift=0.2651 (17.3% relative)
+
+  Epitope: FLG_SEC
+  Sequence: DSHRGSSSSS
+  Immunodominant: False
+  ACPA reactivity: 20%
+
+  Arginine analysis:
+    Position 3: Codon=CGG, Cluster=1, BoundaryPotential=3.972
+
+  Centroid shifts upon citrullination:
+    Position 3: Shift=0.3277 (16.6% relative)
+
+────────────────────────────────────────────────────────────
+PROTEIN: Histones H2A/H2B (HIST1H2A)
+Function: Chromatin structure, released in NETosis
+Clinical: Anti-cit-histones in RA and lupus
+────────────────────────────────────────────────────────────
+
+  Epitope: H2B_1_12
+  Sequence: PEPAKSAPAPKKGS
+  Immunodominant: False
+  ACPA reactivity: 8%
+
+  Epitope: H2A_R3
+  Sequence: SGRGKQGGKAR
+  Immunodominant: True
+  ACPA reactivity: 35%
+
+  Arginine analysis:
+    Position 2: Codon=CGG, Cluster=1, BoundaryPotential=3.179
+    Position 10: Codon=CGG, Cluster=1, BoundaryPotential=3.179
+
+  Centroid shifts upon citrullination:
+    Position 2: Shift=0.2389 (15.6% relative)
+    Position 10: Shift=0.2389 (15.6% relative)
+
+================================================================================
+STATISTICAL COMPARISON: IMMUNODOMINANT vs SILENT EPITOPES
+================================================================================
+
+EMBEDDING_NORM:
+  Immunodominant: 2.9622 ± 0.0803
+  Silent:         2.9867 ± 0.1082
+  t-statistic:    -0.607
+  p-value:        0.5493 
+  Effect size:    -0.257
+
+MEAN_NEIGHBOR_DISTANCE:
+  Immunodominant: 3.8083 ± 0.3899
+  Silent:         4.1979 ± 0.2785
+  t-statistic:    -2.343
+  p-value:        0.0274 *
+  Effect size:    -1.150
+
+CLUSTER_HOMOGENEITY:
+  Immunodominant: 0.1119 ± 0.0768
+  Silent:         0.0317 ± 0.0502
+  t-statistic:    2.479
+  p-value:        0.0203 *
+  Effect size:    1.236
+
+BOUNDARY_CROSSING_POTENTIAL:
+  Immunodominant: 3.4077 ± 0.6045
+  Silent:         4.0755 ± 0.4461
+  t-statistic:    -2.577
+  p-value:        0.0162 *
+  Effect size:    -1.257
+
+================================================================================
+ARGININE CODON USAGE IN IMMUNODOMINANT vs SILENT EPITOPES
+================================================================================
+
+Codon distribution:
+  Codon  Imm.     Silent   Family   Wobble
+  ----------------------------------------
+  CGT    0        0        CG       T
+  CGC    0        0        CG       C
+  CGA    0        0        CG       A
+  CGG    17       5        CG       G
+  AGA    0        0        AG       A
+  AGG    0        0        AG       G
+
+Chi-square test: χ² = 0.00, p = 1.0000
+
+================================================================================
+KEY FINDINGS SUMMARY
+================================================================================
+
+1. DATASET OVERVIEW:
+   - Analyzed 7 proteins
+   - Total epitopes: 18
+   - Immunodominant: 11
+   - Silent/control: 7
+
+2. BOUNDARY CROSSING POTENTIAL:
+   - Immunodominant mean: 3.4077
+   - Silent mean:         4.0755
+   - Ratio: 0.84x higher in immunodominant
+
+3. P-ADIC NEIGHBOR DISTANCE:
+   - Immunodominant arginines are 0.91x more distant from neighbors
+   - Statistical significance: p = 0.0274
+
+4. CLUSTER HOMOGENEITY:
+   - Immunodominant: 0.11 (lower = more boundary exposure)
+   - Silent:         0.03
+
+
+Results saved to: C:\Users\Gestalt\Desktop\ternary\repos\ternary-vaes\research\bioinformatics\rheumatoid_arthritis\results\autoantigen_padic_analysis.json
+
+================================================================================
+ANALYSIS COMPLETE
+================================================================================

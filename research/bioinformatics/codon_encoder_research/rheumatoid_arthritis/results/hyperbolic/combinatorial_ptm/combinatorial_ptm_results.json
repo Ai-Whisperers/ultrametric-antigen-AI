@@ -1,0 +1,4242 @@
+{
+  "analysis_date": "2025-12-24T22:34:02.261386",
+  "total_pairs": 543,
+  "synergistic_count": 0,
+  "antagonistic_count": 543,
+  "additive_count": 0,
+  "potentiation_count": 68,
+  "summary": {
+    "synergistic_rate": 0.0,
+    "potentiation_rate": 0.1252302025782689,
+    "mean_synergy_ratio": 0.4027164498048415,
+    "distance_synergy_correlation": -0.9795313794825903
+  },
+  "top_synergistic": [
+    {
+      "pair": {
+        "protein": "Alpha-enolase",
+        "r_position": 429,
+        "n_position": 430,
+        "distance": 1,
+        "r_context": "AGRNFRNPLAK",
+        "n_context": "GRNFRNPLAK-"
+      },
+      "r_alone": {
+        "centroid_shift": 0.1800864189863205,
+        "relative_shift": 0.8041540384292603,
+        "entropy_change": 0.09407162666320801,
+        "js_divergence": 0.016158711165189743,
+        "original_entropy": 2.3874270915985107,
+        "modified_entropy": 2.4814987182617188
+      },
+      "n_alone": {
+        "centroid_shift": 0.18290379643440247,
+        "relative_shift": 0.9060348272323608,
+        "entropy_change": 0.06646299362182617,
+        "js_divergence": 0.01737251691520214,
+        "original_entropy": 2.374610424041748,
+        "modified_entropy": 2.441073417663574
+      },
+      "combined": {
+        "centroid_shift": 0.2070363610982895,
+        "relative_shift": 0.9244956970214844,
+        "entropy_change": 0.0975959300994873,
+        "js_divergence": 0.03659825026988983,
+        "original_entropy": 2.3874270915985107,
+        "modified_entropy": 2.485023021697998
+      },
+      "synergy": {
+        "shift_synergy": -0.15595385432243347,
+        "entropy_synergy": -0.06293869018554688,
+        "js_synergy": 0.003067024052143097,
+        "synergy_ratio": 0.5703634760548246,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Alpha-enolase",
+        "r_position": 426,
+        "n_position": 427,
+        "distance": 1,
+        "r_context": "AKFAGRNFRNP",
+        "n_context": "KFAGRNFRNPL"
+      },
+      "r_alone": {
+        "centroid_shift": 0.14849844574928284,
+        "relative_shift": 0.5790807604789734,
+        "entropy_change": 0.0730128288269043,
+        "js_divergence": 0.012357394210994244,
+        "original_entropy": 2.411729335784912,
+        "modified_entropy": 2.4847421646118164
+      },
+      "n_alone": {
+        "centroid_shift": 0.15095658600330353,
+        "relative_shift": 0.5664474964141846,
+        "entropy_change": 0.04175686836242676,
+        "js_divergence": 0.012183327227830887,
+        "original_entropy": 2.3479678630828857,
+        "modified_entropy": 2.3897247314453125
+      },
+      "combined": {
+        "centroid_shift": 0.17071685194969177,
+        "relative_shift": 0.6657230854034424,
+        "entropy_change": 0.07349967956542969,
+        "js_divergence": 0.028363853693008423,
+        "original_entropy": 2.411729335784912,
+        "modified_entropy": 2.485229015350342
+      },
+      "synergy": {
+        "shift_synergy": -0.1287381798028946,
+        "entropy_synergy": -0.04127001762390137,
+        "js_synergy": 0.0038231313228607178,
+        "synergy_ratio": 0.5700917793684999,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 131,
+        "n_position": 132,
+        "distance": 1,
+        "r_context": "SSLERRNNRKG",
+        "n_context": "SLERRNNRKGN"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15230834484100342,
+        "relative_shift": 0.5115195512771606,
+        "entropy_change": 0.1221771240234375,
+        "js_divergence": 0.009700092487037182,
+        "original_entropy": 2.2880003452301025,
+        "modified_entropy": 2.41017746925354
+      },
+      "n_alone": {
+        "centroid_shift": 0.14524732530117035,
+        "relative_shift": 0.48780548572540283,
+        "entropy_change": 0.06724286079406738,
+        "js_divergence": 0.009676892310380936,
+        "original_entropy": 2.2880003452301025,
+        "modified_entropy": 2.35524320602417
+      },
+      "combined": {
+        "centroid_shift": 0.168583944439888,
+        "relative_shift": 0.5224120020866394,
+        "entropy_change": 0.15430545806884766,
+        "js_divergence": 0.022107895463705063,
+        "original_entropy": 2.239905834197998,
+        "modified_entropy": 2.3942112922668457
+      },
+      "synergy": {
+        "shift_synergy": -0.12897172570228577,
+        "entropy_synergy": -0.03511452674865723,
+        "js_synergy": 0.0027309097349643707,
+        "synergy_ratio": 0.5665627017044621,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Fibrinogen alpha",
+        "r_position": 308,
+        "n_position": 309,
+        "distance": 1,
+        "r_context": "GSTGNRNPGSS",
+        "n_context": "STGNRNPGSSG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16588781774044037,
+        "relative_shift": 0.40506163239479065,
+        "entropy_change": 0.049596548080444336,
+        "js_divergence": 0.02000878006219864,
+        "original_entropy": 2.009138345718384,
+        "modified_entropy": 2.058734893798828
+      },
+      "n_alone": {
+        "centroid_shift": 0.15942588448524475,
+        "relative_shift": 0.3892829716205597,
+        "entropy_change": 0.055294036865234375,
+        "js_divergence": 0.013494417071342468,
+        "original_entropy": 2.009138345718384,
+        "modified_entropy": 2.064432382583618
+      },
+      "combined": {
+        "centroid_shift": 0.18408535420894623,
+        "relative_shift": 0.43041589856147766,
+        "entropy_change": 0.0587160587310791,
+        "js_divergence": 0.03485259786248207,
+        "original_entropy": 1.97459077835083,
+        "modified_entropy": 2.033306837081909
+      },
+      "synergy": {
+        "shift_synergy": -0.1412283480167389,
+        "entropy_synergy": -0.04617452621459961,
+        "js_synergy": 0.0013494007289409637,
+        "synergy_ratio": 0.5658702750388629,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 122,
+        "n_position": 121,
+        "distance": 1,
+        "r_context": "ENKENRKRPSS",
+        "n_context": "EENKENRKRPS"
+      },
+      "r_alone": {
+        "centroid_shift": 0.1559172123670578,
+        "relative_shift": 0.48689836263656616,
+        "entropy_change": 0.05990457534790039,
+        "js_divergence": 0.0062974295578897,
+        "original_entropy": 2.409432888031006,
+        "modified_entropy": 2.4693374633789062
+      },
+      "n_alone": {
+        "centroid_shift": 0.15031088888645172,
+        "relative_shift": 0.4260280430316925,
+        "entropy_change": 0.006012916564941406,
+        "js_divergence": 0.007076272275298834,
+        "original_entropy": 2.4117536544799805,
+        "modified_entropy": 2.417766571044922
+      },
+      "combined": {
+        "centroid_shift": 0.17307491600513458,
+        "relative_shift": 0.49736154079437256,
+        "entropy_change": 0.04044771194458008,
+        "js_divergence": 0.01589917205274105,
+        "original_entropy": 2.3907880783081055,
+        "modified_entropy": 2.4312357902526855
+      },
+      "synergy": {
+        "shift_synergy": -0.13315318524837494,
+        "entropy_synergy": -0.02546977996826172,
+        "js_synergy": 0.002525470219552517,
+        "synergy_ratio": 0.5651829967274525,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 2265,
+        "n_position": 2266,
+        "distance": 1,
+        "r_context": "SGSASRNHHGS",
+        "n_context": "GSASRNHHGSA"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15941472351551056,
+        "relative_shift": 0.42659902572631836,
+        "entropy_change": 0.051505327224731445,
+        "js_divergence": 0.0050626760348677635,
+        "original_entropy": 2.22643780708313,
+        "modified_entropy": 2.2779431343078613
+      },
+      "n_alone": {
+        "centroid_shift": 0.15101401507854462,
+        "relative_shift": 0.44043874740600586,
+        "entropy_change": -0.06944608688354492,
+        "js_divergence": 0.011543823406100273,
+        "original_entropy": 2.2779431343078613,
+        "modified_entropy": 2.2084970474243164
+      },
+      "combined": {
+        "centroid_shift": 0.1751573532819748,
+        "relative_shift": 0.472216933965683,
+        "entropy_change": -0.04186749458312988,
+        "js_divergence": 0.016839193180203438,
+        "original_entropy": 2.2592828273773193,
+        "modified_entropy": 2.2174153327941895
+      },
+      "synergy": {
+        "shift_synergy": -0.13527138531208038,
+        "entropy_synergy": -0.023926734924316406,
+        "js_synergy": 0.00023269467055797577,
+        "synergy_ratio": 0.564243355878858,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 3885,
+        "n_position": 3886,
+        "distance": 1,
+        "r_context": "SESASRNHHGS",
+        "n_context": "ESASRNHHGSS"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16009682416915894,
+        "relative_shift": 0.42017096281051636,
+        "entropy_change": 0.09098100662231445,
+        "js_divergence": 0.005701406858861446,
+        "original_entropy": 2.1340770721435547,
+        "modified_entropy": 2.225058078765869
+      },
+      "n_alone": {
+        "centroid_shift": 0.1514066904783249,
+        "relative_shift": 0.43815967440605164,
+        "entropy_change": -0.054436683654785156,
+        "js_divergence": 0.012271739542484283,
+        "original_entropy": 2.225058078765869,
+        "modified_entropy": 2.170621395111084
+      },
+      "combined": {
+        "centroid_shift": 0.1757076531648636,
+        "relative_shift": 0.4669879972934723,
+        "entropy_change": -0.0007834434509277344,
+        "js_divergence": 0.01796044409275055,
+        "original_entropy": 2.19327449798584,
+        "modified_entropy": 2.192491054534912
+      },
+      "synergy": {
+        "shift_synergy": -0.13579586148262024,
+        "entropy_synergy": -0.03732776641845703,
+        "js_synergy": -1.2703239917755127e-05,
+        "synergy_ratio": 0.5640631480749059,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 643,
+        "n_position": 644,
+        "distance": 1,
+        "r_context": "SGSASRNHHGS",
+        "n_context": "GSASRNHHGSA"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15392297506332397,
+        "relative_shift": 0.4712424874305725,
+        "entropy_change": 0.024539709091186523,
+        "js_divergence": 0.0066771069541573524,
+        "original_entropy": 2.3653531074523926,
+        "modified_entropy": 2.389892816543579
+      },
+      "n_alone": {
+        "centroid_shift": 0.14554062485694885,
+        "relative_shift": 0.48991790413856506,
+        "entropy_change": -0.06871771812438965,
+        "js_divergence": 0.011494293808937073,
+        "original_entropy": 2.389892816543579,
+        "modified_entropy": 2.3211750984191895
+      },
+      "combined": {
+        "centroid_shift": 0.16877314448356628,
+        "relative_shift": 0.5172401666641235,
+        "entropy_change": -0.06640911102294922,
+        "js_divergence": 0.018243256956338882,
+        "original_entropy": 2.389829158782959,
+        "modified_entropy": 2.3234200477600098
+      },
+      "synergy": {
+        "shift_synergy": -0.13069045543670654,
+        "entropy_synergy": -0.022231101989746094,
+        "js_synergy": 7.185712456703186e-05,
+        "synergy_ratio": 0.5635848379306895,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 2589,
+        "n_position": 2590,
+        "distance": 1,
+        "r_context": "SGSASRNHHGS",
+        "n_context": "GSASRNHHGSA"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15392297506332397,
+        "relative_shift": 0.4712424874305725,
+        "entropy_change": 0.024539709091186523,
+        "js_divergence": 0.0066771069541573524,
+        "original_entropy": 2.3653531074523926,
+        "modified_entropy": 2.389892816543579
+      },
+      "n_alone": {
+        "centroid_shift": 0.14554062485694885,
+        "relative_shift": 0.48991790413856506,
+        "entropy_change": -0.06871771812438965,
+        "js_divergence": 0.011494293808937073,
+        "original_entropy": 2.389892816543579,
+        "modified_entropy": 2.3211750984191895
+      },
+      "combined": {
+        "centroid_shift": 0.16877314448356628,
+        "relative_shift": 0.5172401666641235,
+        "entropy_change": -0.06640911102294922,
+        "js_divergence": 0.018243256956338882,
+        "original_entropy": 2.389829158782959,
+        "modified_entropy": 2.3234200477600098
+      },
+      "synergy": {
+        "shift_synergy": -0.13069045543670654,
+        "entropy_synergy": -0.022231101989746094,
+        "js_synergy": 7.185712456703186e-05,
+        "synergy_ratio": 0.5635848379306895,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 2913,
+        "n_position": 2914,
+        "distance": 1,
+        "r_context": "SGSASRNHHGS",
+        "n_context": "GSASRNHHGSA"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15392297506332397,
+        "relative_shift": 0.4712424874305725,
+        "entropy_change": 0.024539709091186523,
+        "js_divergence": 0.0066771069541573524,
+        "original_entropy": 2.3653531074523926,
+        "modified_entropy": 2.389892816543579
+      },
+      "n_alone": {
+        "centroid_shift": 0.14554062485694885,
+        "relative_shift": 0.48991790413856506,
+        "entropy_change": -0.06871771812438965,
+        "js_divergence": 0.011494293808937073,
+        "original_entropy": 2.389892816543579,
+        "modified_entropy": 2.3211750984191895
+      },
+      "combined": {
+        "centroid_shift": 0.16877314448356628,
+        "relative_shift": 0.5172401666641235,
+        "entropy_change": -0.06640911102294922,
+        "js_divergence": 0.018243256956338882,
+        "original_entropy": 2.389829158782959,
+        "modified_entropy": 2.3234200477600098
+      },
+      "synergy": {
+        "shift_synergy": -0.13069045543670654,
+        "entropy_synergy": -0.022231101989746094,
+        "js_synergy": 7.185712456703186e-05,
+        "synergy_ratio": 0.5635848379306895,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 319,
+        "n_position": 320,
+        "distance": 1,
+        "r_context": "SGSASRNHHGS",
+        "n_context": "GSASRNHHGSA"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15217885375022888,
+        "relative_shift": 0.48963916301727295,
+        "entropy_change": 0.03274798393249512,
+        "js_divergence": 0.007274282164871693,
+        "original_entropy": 2.3464102745056152,
+        "modified_entropy": 2.3791582584381104
+      },
+      "n_alone": {
+        "centroid_shift": 0.14364440739154816,
+        "relative_shift": 0.5155848860740662,
+        "entropy_change": -0.05844759941101074,
+        "js_divergence": 0.01094222441315651,
+        "original_entropy": 2.3791587352752686,
+        "modified_entropy": 2.320711135864258
+      },
+      "combined": {
+        "centroid_shift": 0.16665711998939514,
+        "relative_shift": 0.5364130139350891,
+        "entropy_change": -0.05374765396118164,
+        "js_divergence": 0.01829175464808941,
+        "original_entropy": 2.380006790161133,
+        "modified_entropy": 2.326259136199951
+      },
+      "synergy": {
+        "shift_synergy": -0.1291661411523819,
+        "entropy_synergy": -0.028048038482666016,
+        "js_synergy": 7.524900138378143e-05,
+        "synergy_ratio": 0.563367191916615,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Fibrinogen beta",
+        "r_position": 285,
+        "n_position": 284,
+        "distance": 1,
+        "r_context": "TVIQNRQDGSV",
+        "n_context": "WTVIQNRQDGS"
+      },
+      "r_alone": {
+        "centroid_shift": 0.14633099734783173,
+        "relative_shift": 0.6569293141365051,
+        "entropy_change": -0.026749134063720703,
+        "js_divergence": 0.014553332701325417,
+        "original_entropy": 2.718088388442993,
+        "modified_entropy": 2.6913392543792725
+      },
+      "n_alone": {
+        "centroid_shift": 0.13725297152996063,
+        "relative_shift": 0.6161749958992004,
+        "entropy_change": -0.0331568717956543,
+        "js_divergence": 0.011825519613921642,
+        "original_entropy": 2.718088388442993,
+        "modified_entropy": 2.684931516647339
+      },
+      "combined": {
+        "centroid_shift": 0.15950331091880798,
+        "relative_shift": 0.6260977983474731,
+        "entropy_change": -0.06587576866149902,
+        "js_divergence": 0.026481596753001213,
+        "original_entropy": 2.6705191135406494,
+        "modified_entropy": 2.6046433448791504
+      },
+      "synergy": {
+        "shift_synergy": -0.12408065795898438,
+        "entropy_synergy": -0.0059697628021240234,
+        "js_synergy": 0.00010274536907672882,
+        "synergy_ratio": 0.5624553161229603,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 3237,
+        "n_position": 3238,
+        "distance": 1,
+        "r_context": "SGSASRNHRGS",
+        "n_context": "GSASRNHRGSV"
+      },
+      "r_alone": {
+        "centroid_shift": 0.1555764526128769,
+        "relative_shift": 0.4487070143222809,
+        "entropy_change": 0.06652450561523438,
+        "js_divergence": 0.00564990658313036,
+        "original_entropy": 2.3899364471435547,
+        "modified_entropy": 2.456460952758789
+      },
+      "n_alone": {
+        "centroid_shift": 0.14656296372413635,
+        "relative_shift": 0.4784218966960907,
+        "entropy_change": -0.0658726692199707,
+        "js_divergence": 0.013138203881680965,
+        "original_entropy": 2.456460952758789,
+        "modified_entropy": 2.3905882835388184
+      },
+      "combined": {
+        "centroid_shift": 0.16993537545204163,
+        "relative_shift": 0.5000126361846924,
+        "entropy_change": -0.029143810272216797,
+        "js_divergence": 0.0188429094851017,
+        "original_entropy": 2.426633834838867,
+        "modified_entropy": 2.3974900245666504
+      },
+      "synergy": {
+        "shift_synergy": -0.13220404088497162,
+        "entropy_synergy": -0.02979564666748047,
+        "js_synergy": 5.4799020290374756e-05,
+        "synergy_ratio": 0.5624402716335686,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 1616,
+        "n_position": 1617,
+        "distance": 1,
+        "r_context": "SESASRNHYGS",
+        "n_context": "ESASRNHYGSA"
+      },
+      "r_alone": {
+        "centroid_shift": 0.1566404551267624,
+        "relative_shift": 0.4404073655605316,
+        "entropy_change": 0.1086735725402832,
+        "js_divergence": 0.007196585647761822,
+        "original_entropy": 2.2249817848205566,
+        "modified_entropy": 2.33365535736084
+      },
+      "n_alone": {
+        "centroid_shift": 0.14764335751533508,
+        "relative_shift": 0.4675615429878235,
+        "entropy_change": -0.040880680084228516,
+        "js_divergence": 0.012934200465679169,
+        "original_entropy": 2.33365535736084,
+        "modified_entropy": 2.2927746772766113
+      },
+      "combined": {
+        "centroid_shift": 0.17105703055858612,
+        "relative_shift": 0.4919605255126953,
+        "entropy_change": 0.018971681594848633,
+        "js_divergence": 0.019527621567249298,
+        "original_entropy": 2.295722007751465,
+        "modified_entropy": 2.3146936893463135
+      },
+      "synergy": {
+        "shift_synergy": -0.13322678208351135,
+        "entropy_synergy": -0.048821210861206055,
+        "js_synergy": -0.000603165477514267,
+        "synergy_ratio": 0.5621627684268874,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Fibrinogen alpha",
+        "r_position": 830,
+        "n_position": 831,
+        "distance": 1,
+        "r_context": "GSYDPRNNSPY",
+        "n_context": "SYDPRNNSPYE"
+      },
+      "r_alone": {
+        "centroid_shift": 0.14788851141929626,
+        "relative_shift": 0.6499084234237671,
+        "entropy_change": 0.010164260864257812,
+        "js_divergence": 0.020111722871661186,
+        "original_entropy": 2.491957187652588,
+        "modified_entropy": 2.5021214485168457
+      },
+      "n_alone": {
+        "centroid_shift": 0.13669945299625397,
+        "relative_shift": 0.6345812678337097,
+        "entropy_change": 0.08394169807434082,
+        "js_divergence": 0.009113678708672523,
+        "original_entropy": 2.497913122177124,
+        "modified_entropy": 2.581854820251465
+      },
+      "combined": {
+        "centroid_shift": 0.15980592370033264,
+        "relative_shift": 0.6840909719467163,
+        "entropy_change": 0.04901480674743652,
+        "js_divergence": 0.030731182545423508,
+        "original_entropy": 2.4809181690216064,
+        "modified_entropy": 2.529932975769043
+      },
+      "synergy": {
+        "shift_synergy": -0.12478204071521759,
+        "entropy_synergy": -0.04509115219116211,
+        "js_synergy": 0.001505780965089798,
+        "synergy_ratio": 0.5615343711824491,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 968,
+        "n_position": 969,
+        "distance": 1,
+        "r_context": "SGSASRNHRGS",
+        "n_context": "GSASRNHRGSA"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16011165082454681,
+        "relative_shift": 0.41882088780403137,
+        "entropy_change": 0.06646919250488281,
+        "js_divergence": 0.0056455922313034534,
+        "original_entropy": 2.304868221282959,
+        "modified_entropy": 2.371337413787842
+      },
+      "n_alone": {
+        "centroid_shift": 0.15111307799816132,
+        "relative_shift": 0.43883031606674194,
+        "entropy_change": -0.06666970252990723,
+        "js_divergence": 0.0131941307336092,
+        "original_entropy": 2.371337413787842,
+        "modified_entropy": 2.3046677112579346
+      },
+      "combined": {
+        "centroid_shift": 0.17475605010986328,
+        "relative_shift": 0.4695844054222107,
+        "entropy_change": -0.029918432235717773,
+        "js_divergence": 0.01888856664299965,
+        "original_entropy": 2.3465378284454346,
+        "modified_entropy": 2.316619396209717
+      },
+      "synergy": {
+        "shift_synergy": -0.13646867871284485,
+        "entropy_synergy": -0.02971792221069336,
+        "js_synergy": 4.8844143748283386e-05,
+        "synergy_ratio": 0.5615108115437173,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 3561,
+        "n_position": 3562,
+        "distance": 1,
+        "r_context": "SGSASRNHRGS",
+        "n_context": "GSASRNHRGSA"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16011165082454681,
+        "relative_shift": 0.41882088780403137,
+        "entropy_change": 0.06646919250488281,
+        "js_divergence": 0.0056455922313034534,
+        "original_entropy": 2.304868221282959,
+        "modified_entropy": 2.371337413787842
+      },
+      "n_alone": {
+        "centroid_shift": 0.15111307799816132,
+        "relative_shift": 0.43883031606674194,
+        "entropy_change": -0.06666970252990723,
+        "js_divergence": 0.0131941307336092,
+        "original_entropy": 2.371337413787842,
+        "modified_entropy": 2.3046677112579346
+      },
+      "combined": {
+        "centroid_shift": 0.17475605010986328,
+        "relative_shift": 0.4695844054222107,
+        "entropy_change": -0.029918432235717773,
+        "js_divergence": 0.01888856664299965,
+        "original_entropy": 2.3465378284454346,
+        "modified_entropy": 2.316619396209717
+      },
+      "synergy": {
+        "shift_synergy": -0.13646867871284485,
+        "entropy_synergy": -0.02971792221069336,
+        "js_synergy": 4.8844143748283386e-05,
+        "synergy_ratio": 0.5615108115437173,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 197,
+        "n_position": 196,
+        "distance": 1,
+        "r_context": "RLGDNRKRLSE",
+        "n_context": "TRLGDNRKRLS"
+      },
+      "r_alone": {
+        "centroid_shift": 0.14877574145793915,
+        "relative_shift": 0.5638270378112793,
+        "entropy_change": 0.1387324333190918,
+        "js_divergence": 0.011546695604920387,
+        "original_entropy": 2.306931257247925,
+        "modified_entropy": 2.4456636905670166
+      },
+      "n_alone": {
+        "centroid_shift": 0.14078226685523987,
+        "relative_shift": 0.5335334539413452,
+        "entropy_change": 0.06651997566223145,
+        "js_divergence": 0.012901393696665764,
+        "original_entropy": 2.3069310188293457,
+        "modified_entropy": 2.373450994491577
+      },
+      "combined": {
+        "centroid_shift": 0.16254761815071106,
+        "relative_shift": 0.5665375590324402,
+        "entropy_change": 0.15043020248413086,
+        "js_divergence": 0.027033070102334023,
+        "original_entropy": 2.315906286239624,
+        "modified_entropy": 2.466336488723755
+      },
+      "synergy": {
+        "shift_synergy": -0.12701039016246796,
+        "entropy_synergy": -0.05482220649719238,
+        "js_synergy": 0.0025849808007478714,
+        "synergy_ratio": 0.5613646089137586,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 1292,
+        "n_position": 1293,
+        "distance": 1,
+        "r_context": "SGSASRNHHGS",
+        "n_context": "GSASRNHHGSS"
+      },
+      "r_alone": {
+        "centroid_shift": 0.1571451872587204,
+        "relative_shift": 0.4345609247684479,
+        "entropy_change": 0.07578539848327637,
+        "js_divergence": 0.006506290286779404,
+        "original_entropy": 2.2205758094787598,
+        "modified_entropy": 2.296361207962036
+      },
+      "n_alone": {
+        "centroid_shift": 0.14777684211730957,
+        "relative_shift": 0.46474939584732056,
+        "entropy_change": -0.05538463592529297,
+        "js_divergence": 0.012426617555320263,
+        "original_entropy": 2.296361207962036,
+        "modified_entropy": 2.240976572036743
+      },
+      "combined": {
+        "centroid_shift": 0.17094185948371887,
+        "relative_shift": 0.4891640245914459,
+        "entropy_change": -0.016562461853027344,
+        "js_divergence": 0.018818948417901993,
+        "original_entropy": 2.2765419483184814,
+        "modified_entropy": 2.259979486465454
+      },
+      "synergy": {
+        "shift_synergy": -0.1339801698923111,
+        "entropy_synergy": -0.03696322441101074,
+        "js_synergy": -0.00011396035552024841,
+        "synergy_ratio": 0.5606084275952803,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 3166,
+        "n_position": 3167,
+        "distance": 1,
+        "r_context": "ASRTTRNEEQS",
+        "n_context": "SRTTRNEEQSG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.1520211547613144,
+        "relative_shift": 0.5039655566215515,
+        "entropy_change": 0.08200287818908691,
+        "js_divergence": 0.0068483734503388405,
+        "original_entropy": 2.3170106410980225,
+        "modified_entropy": 2.3990135192871094
+      },
+      "n_alone": {
+        "centroid_shift": 0.1445874273777008,
+        "relative_shift": 0.4909310042858124,
+        "entropy_change": -0.02760624885559082,
+        "js_divergence": 0.015411986038088799,
+        "original_entropy": 2.2941198348999023,
+        "modified_entropy": 2.2665135860443115
+      },
+      "combined": {
+        "centroid_shift": 0.1662771999835968,
+        "relative_shift": 0.5344082713127136,
+        "entropy_change": 0.030234575271606445,
+        "js_divergence": 0.024316396564245224,
+        "original_entropy": 2.27685284614563,
+        "modified_entropy": 2.3070874214172363
+      },
+      "synergy": {
+        "shift_synergy": -0.1303313821554184,
+        "entropy_synergy": -0.02416205406188965,
+        "js_synergy": 0.0020560361444950104,
+        "synergy_ratio": 0.5605947027170176,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": false,
+        "potentiation": false
+      }
+    }
+  ],
+  "potentiation_cases": [
+    {
+      "pair": {
+        "protein": "Fibrinogen alpha",
+        "r_position": 308,
+        "n_position": 296,
+        "distance": 12,
+        "r_context": "GSTGNRNPGSS",
+        "n_context": "SAGSWNSGSSG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16588781774044037,
+        "relative_shift": 0.40506163239479065,
+        "entropy_change": 0.049596548080444336,
+        "js_divergence": 0.02000878006219864,
+        "original_entropy": 2.009138345718384,
+        "modified_entropy": 2.058734893798828
+      },
+      "n_alone": {
+        "centroid_shift": 0.18020622432231903,
+        "relative_shift": 0.35581937432289124,
+        "entropy_change": -0.0058612823486328125,
+        "js_divergence": 0.026379426941275597,
+        "original_entropy": 1.8496489524841309,
+        "modified_entropy": 1.843787670135498
+      },
+      "combined": {
+        "centroid_shift": 0.10862618684768677,
+        "relative_shift": 0.26733943819999695,
+        "entropy_change": 0.04856467247009277,
+        "js_divergence": 0.01794489659368992,
+        "original_entropy": 2.0684170722961426,
+        "modified_entropy": 2.1169817447662354
+      },
+      "synergy": {
+        "shift_synergy": -0.23746785521507263,
+        "entropy_synergy": 0.00482940673828125,
+        "js_synergy": -0.028443312272429466,
+        "synergy_ratio": 0.31386320945855106,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Fibrinogen alpha",
+        "r_position": 725,
+        "n_position": 711,
+        "distance": 14,
+        "r_context": "RGSVLRVELED",
+        "n_context": "EFWLGNDYLHL"
+      },
+      "r_alone": {
+        "centroid_shift": 0.1547592282295227,
+        "relative_shift": 0.45798856019973755,
+        "entropy_change": 0.06175541877746582,
+        "js_divergence": 0.008831167593598366,
+        "original_entropy": 2.5542047023773193,
+        "modified_entropy": 2.615960121154785
+      },
+      "n_alone": {
+        "centroid_shift": 0.14194798469543457,
+        "relative_shift": 0.47590938210487366,
+        "entropy_change": -0.027816295623779297,
+        "js_divergence": 0.011834302917122841,
+        "original_entropy": 2.509153366088867,
+        "modified_entropy": 2.481337070465088
+      },
+      "combined": {
+        "centroid_shift": 0.0929107517004013,
+        "relative_shift": 0.29832345247268677,
+        "entropy_change": -0.005342245101928711,
+        "js_divergence": 0.011050282046198845,
+        "original_entropy": 2.6380624771118164,
+        "modified_entropy": 2.6327202320098877
+      },
+      "synergy": {
+        "shift_synergy": -0.20379646122455597,
+        "entropy_synergy": -0.039281368255615234,
+        "js_synergy": -0.009615188464522362,
+        "synergy_ratio": 0.31313951134914336,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Vimentin",
+        "r_position": 113,
+        "n_position": 98,
+        "distance": 15,
+        "r_context": "QELNDRFANYI",
+        "n_context": "NTEFKNTRTNE"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15660937130451202,
+        "relative_shift": 0.48832449316978455,
+        "entropy_change": -0.037406206130981445,
+        "js_divergence": 0.020130669698119164,
+        "original_entropy": 2.661890983581543,
+        "modified_entropy": 2.6244847774505615
+      },
+      "n_alone": {
+        "centroid_shift": 0.15202350914478302,
+        "relative_shift": 0.389064759016037,
+        "entropy_change": 0.08908486366271973,
+        "js_divergence": 0.010116403922438622,
+        "original_entropy": 2.4780099391937256,
+        "modified_entropy": 2.5670948028564453
+      },
+      "combined": {
+        "centroid_shift": 0.09032243490219116,
+        "relative_shift": 0.2942991256713867,
+        "entropy_change": 0.03836846351623535,
+        "js_divergence": 0.007949165999889374,
+        "original_entropy": 2.6900434494018555,
+        "modified_entropy": 2.728411912918091
+      },
+      "synergy": {
+        "shift_synergy": -0.21831044554710388,
+        "entropy_synergy": -0.01331019401550293,
+        "js_synergy": -0.02229790762066841,
+        "synergy_ratio": 0.29265331270420103,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Vimentin",
+        "r_position": 155,
+        "n_position": 166,
+        "distance": 11,
+        "r_context": "YEEEMRELRRQ",
+        "n_context": "VDQLTNDKARV"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16094131767749786,
+        "relative_shift": 0.4374830424785614,
+        "entropy_change": 0.048549652099609375,
+        "js_divergence": 0.0053784530609846115,
+        "original_entropy": 2.4132115840911865,
+        "modified_entropy": 2.461761236190796
+      },
+      "n_alone": {
+        "centroid_shift": 0.15067076683044434,
+        "relative_shift": 0.40959975123405457,
+        "entropy_change": -0.046296119689941406,
+        "js_divergence": 0.012321360409259796,
+        "original_entropy": 2.4888315200805664,
+        "modified_entropy": 2.442535400390625
+      },
+      "combined": {
+        "centroid_shift": 0.10763590782880783,
+        "relative_shift": 0.2992529571056366,
+        "entropy_change": 0.010750055313110352,
+        "js_divergence": 0.009915228933095932,
+        "original_entropy": 2.545541524887085,
+        "modified_entropy": 2.5562915802001953
+      },
+      "synergy": {
+        "shift_synergy": -0.20397617667913437,
+        "entropy_synergy": 0.008496522903442383,
+        "js_synergy": -0.007784584537148476,
+        "synergy_ratio": 0.3454163466228564,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Collagen type II alpha 1",
+        "r_position": 149,
+        "n_position": 160,
+        "distance": 11,
+        "r_context": "GAPGPRGRDGE",
+        "n_context": "PGTPGNPGPPG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.19697722792625427,
+        "relative_shift": 0.35917288064956665,
+        "entropy_change": 0.09132981300354004,
+        "js_divergence": 0.01375882513821125,
+        "original_entropy": 2.092876434326172,
+        "modified_entropy": 2.184206247329712
+      },
+      "n_alone": {
+        "centroid_shift": 0.20033298432826996,
+        "relative_shift": 0.3496163487434387,
+        "entropy_change": -0.018596887588500977,
+        "js_divergence": 0.02214433252811432,
+        "original_entropy": 1.6924959421157837,
+        "modified_entropy": 1.6738990545272827
+      },
+      "combined": {
+        "centroid_shift": 0.13438200950622559,
+        "relative_shift": 0.24879959225654602,
+        "entropy_change": 0.009225606918334961,
+        "js_divergence": 0.01902238465845585,
+        "original_entropy": 1.9850354194641113,
+        "modified_entropy": 1.9942610263824463
+      },
+      "synergy": {
+        "shift_synergy": -0.26292820274829865,
+        "entropy_synergy": -0.0635073184967041,
+        "js_synergy": -0.01688077114522457,
+        "synergy_ratio": 0.33822943716914844,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Collagen type II alpha 1",
+        "r_position": 151,
+        "n_position": 160,
+        "distance": 9,
+        "r_context": "PGPRGRDGEPG",
+        "n_context": "PGTPGNPGPPG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.20164147019386292,
+        "relative_shift": 0.35575342178344727,
+        "entropy_change": 0.10164475440979004,
+        "js_divergence": 0.014291168190538883,
+        "original_entropy": 1.91556978225708,
+        "modified_entropy": 2.01721453666687
+      },
+      "n_alone": {
+        "centroid_shift": 0.20033298432826996,
+        "relative_shift": 0.3496163487434387,
+        "entropy_change": -0.018596887588500977,
+        "js_divergence": 0.02214433252811432,
+        "original_entropy": 1.6924959421157837,
+        "modified_entropy": 1.6738990545272827
+      },
+      "combined": {
+        "centroid_shift": 0.1474711000919342,
+        "relative_shift": 0.2681633234024048,
+        "entropy_change": 0.018761038780212402,
+        "js_divergence": 0.021629951894283295,
+        "original_entropy": 1.8736486434936523,
+        "modified_entropy": 1.8924096822738647
+      },
+      "synergy": {
+        "shift_synergy": -0.25450335443019867,
+        "entropy_synergy": -0.06428682804107666,
+        "js_synergy": -0.014805547893047333,
+        "synergy_ratio": 0.3668668453833991,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Collagen type II alpha 1",
+        "r_position": 326,
+        "n_position": 317,
+        "distance": 9,
+        "r_context": "GPMGPRGLPGE",
+        "n_context": "GSPGENGSPGP"
+      },
+      "r_alone": {
+        "centroid_shift": 0.17908351123332977,
+        "relative_shift": 0.36648616194725037,
+        "entropy_change": 0.13309741020202637,
+        "js_divergence": 0.013428980484604836,
+        "original_entropy": 2.052363872528076,
+        "modified_entropy": 2.1854612827301025
+      },
+      "n_alone": {
+        "centroid_shift": 0.15829305350780487,
+        "relative_shift": 0.3937169015407562,
+        "entropy_change": 0.004819393157958984,
+        "js_divergence": 0.021305780857801437,
+        "original_entropy": 2.080172061920166,
+        "modified_entropy": 2.084991455078125
+      },
+      "combined": {
+        "centroid_shift": 0.12687364220619202,
+        "relative_shift": 0.28546562790870667,
+        "entropy_change": 0.04949688911437988,
+        "js_divergence": 0.022380903363227844,
+        "original_entropy": 2.1838035583496094,
+        "modified_entropy": 2.2333004474639893
+      },
+      "synergy": {
+        "shift_synergy": -0.21050292253494263,
+        "entropy_synergy": -0.08841991424560547,
+        "js_synergy": -0.012353859841823578,
+        "synergy_ratio": 0.37605944048287654,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Collagen type II alpha 1",
+        "r_position": 332,
+        "n_position": 317,
+        "distance": 15,
+        "r_context": "GLPGERGRTGP",
+        "n_context": "GSPGENGSPGP"
+      },
+      "r_alone": {
+        "centroid_shift": 0.19227847456932068,
+        "relative_shift": 0.3544016182422638,
+        "entropy_change": 0.13657212257385254,
+        "js_divergence": 0.014218488708138466,
+        "original_entropy": 2.004452705383301,
+        "modified_entropy": 2.1410248279571533
+      },
+      "n_alone": {
+        "centroid_shift": 0.15829305350780487,
+        "relative_shift": 0.3937169015407562,
+        "entropy_change": 0.004819393157958984,
+        "js_divergence": 0.021305780857801437,
+        "original_entropy": 2.080172061920166,
+        "modified_entropy": 2.084991455078125
+      },
+      "combined": {
+        "centroid_shift": 0.10432843118906021,
+        "relative_shift": 0.22520801424980164,
+        "entropy_change": 0.038094282150268555,
+        "js_divergence": 0.017466573044657707,
+        "original_entropy": 2.231055974960327,
+        "modified_entropy": 2.2691502571105957
+      },
+      "synergy": {
+        "shift_synergy": -0.24624309688806534,
+        "entropy_synergy": -0.10329723358154297,
+        "js_synergy": -0.018057698383927345,
+        "synergy_ratio": 0.2975952774360743,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Collagen type II alpha 1",
+        "r_position": 332,
+        "n_position": 346,
+        "distance": 14,
+        "r_context": "GLPGERGRTGP",
+        "n_context": "AGARGNDGQPG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.19227847456932068,
+        "relative_shift": 0.3544016182422638,
+        "entropy_change": 0.13657212257385254,
+        "js_divergence": 0.014218488708138466,
+        "original_entropy": 2.004452705383301,
+        "modified_entropy": 2.1410248279571533
+      },
+      "n_alone": {
+        "centroid_shift": 0.18396104872226715,
+        "relative_shift": 0.35151150822639465,
+        "entropy_change": -0.04146265983581543,
+        "js_divergence": 0.01613074541091919,
+        "original_entropy": 1.9872978925704956,
+        "modified_entropy": 1.9458352327346802
+      },
+      "combined": {
+        "centroid_shift": 0.11533893644809723,
+        "relative_shift": 0.2237541824579239,
+        "entropy_change": 0.01334381103515625,
+        "js_divergence": 0.012707626447081566,
+        "original_entropy": 2.1170156002044678,
+        "modified_entropy": 2.130359411239624
+      },
+      "synergy": {
+        "shift_synergy": -0.2609005868434906,
+        "entropy_synergy": -0.08176565170288086,
+        "js_synergy": -0.01764160767197609,
+        "synergy_ratio": 0.30655720432659905,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Collagen type II alpha 1",
+        "r_position": 334,
+        "n_position": 346,
+        "distance": 12,
+        "r_context": "PGERGRTGPAG",
+        "n_context": "AGARGNDGQPG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.20290113985538483,
+        "relative_shift": 0.3507813513278961,
+        "entropy_change": 0.11702728271484375,
+        "js_divergence": 0.01679353229701519,
+        "original_entropy": 1.953566074371338,
+        "modified_entropy": 2.0705933570861816
+      },
+      "n_alone": {
+        "centroid_shift": 0.18396104872226715,
+        "relative_shift": 0.35151150822639465,
+        "entropy_change": -0.04146265983581543,
+        "js_divergence": 0.01613074541091919,
+        "original_entropy": 1.9872978925704956,
+        "modified_entropy": 1.9458352327346802
+      },
+      "combined": {
+        "centroid_shift": 0.12431000918149948,
+        "relative_shift": 0.23890535533428192,
+        "entropy_change": 0.006730318069458008,
+        "js_divergence": 0.014107830822467804,
+        "original_entropy": 2.114558696746826,
+        "modified_entropy": 2.121289014816284
+      },
+      "synergy": {
+        "shift_synergy": -0.2625521793961525,
+        "entropy_synergy": -0.06883430480957031,
+        "js_synergy": -0.018816448748111725,
+        "synergy_ratio": 0.3213289197541071,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Collagen type II alpha 1",
+        "r_position": 533,
+        "n_position": 545,
+        "distance": 12,
+        "r_context": "GAPGERGPSGL",
+        "n_context": "GPKGANGDPGR"
+      },
+      "r_alone": {
+        "centroid_shift": 0.18787096440792084,
+        "relative_shift": 0.3595714867115021,
+        "entropy_change": 0.04381728172302246,
+        "js_divergence": 0.02066122367978096,
+        "original_entropy": 2.075422525405884,
+        "modified_entropy": 2.1192398071289062
+      },
+      "n_alone": {
+        "centroid_shift": 0.16887503862380981,
+        "relative_shift": 0.3648800849914551,
+        "entropy_change": -0.008345365524291992,
+        "js_divergence": 0.020672224462032318,
+        "original_entropy": 2.2128958702087402,
+        "modified_entropy": 2.2045505046844482
+      },
+      "combined": {
+        "centroid_shift": 0.12095402926206589,
+        "relative_shift": 0.24326197803020477,
+        "entropy_change": 0.011927127838134766,
+        "js_divergence": 0.01877501793205738,
+        "original_entropy": 2.1828901767730713,
+        "modified_entropy": 2.194817304611206
+      },
+      "synergy": {
+        "shift_synergy": -0.23579197376966476,
+        "entropy_synergy": -0.023544788360595703,
+        "js_synergy": -0.022558430209755898,
+        "synergy_ratio": 0.3390480291306946,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Collagen type II alpha 1",
+        "r_position": 560,
+        "n_position": 545,
+        "distance": 15,
+        "r_context": "GLPGARGLTGR",
+        "n_context": "GPKGANGDPGR"
+      },
+      "r_alone": {
+        "centroid_shift": 0.17505508661270142,
+        "relative_shift": 0.37410855293273926,
+        "entropy_change": 0.10490918159484863,
+        "js_divergence": 0.015068786218762398,
+        "original_entropy": 2.117220878601074,
+        "modified_entropy": 2.222130060195923
+      },
+      "n_alone": {
+        "centroid_shift": 0.16887503862380981,
+        "relative_shift": 0.3648800849914551,
+        "entropy_change": -0.008345365524291992,
+        "js_divergence": 0.020672224462032318,
+        "original_entropy": 2.2128958702087402,
+        "modified_entropy": 2.2045505046844482
+      },
+      "combined": {
+        "centroid_shift": 0.10390441864728928,
+        "relative_shift": 0.22558067739009857,
+        "entropy_change": 0.029140233993530273,
+        "js_divergence": 0.01595064252614975,
+        "original_entropy": 2.196072816848755,
+        "modified_entropy": 2.225213050842285
+      },
+      "synergy": {
+        "shift_synergy": -0.24002570658922195,
+        "entropy_synergy": -0.06742358207702637,
+        "js_synergy": -0.019790366291999817,
+        "synergy_ratio": 0.30210909424007615,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Collagen type II alpha 1",
+        "r_position": 596,
+        "n_position": 611,
+        "distance": 15,
+        "r_context": "GPQGARGQPGV",
+        "n_context": "GPKGANGEPGK"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16511845588684082,
+        "relative_shift": 0.4068484306335449,
+        "entropy_change": -0.025503158569335938,
+        "js_divergence": 0.012927809730172157,
+        "original_entropy": 2.232930898666382,
+        "modified_entropy": 2.207427740097046
+      },
+      "n_alone": {
+        "centroid_shift": 0.17308588325977325,
+        "relative_shift": 0.35791146755218506,
+        "entropy_change": -0.015641212463378906,
+        "js_divergence": 0.02143927291035652,
+        "original_entropy": 2.1630210876464844,
+        "modified_entropy": 2.1473798751831055
+      },
+      "combined": {
+        "centroid_shift": 0.10431816428899765,
+        "relative_shift": 0.22715076804161072,
+        "entropy_change": -0.05504560470581055,
+        "js_divergence": 0.012827008962631226,
+        "original_entropy": 2.2880921363830566,
+        "modified_entropy": 2.233046531677246
+      },
+      "synergy": {
+        "shift_synergy": -0.23388617485761642,
+        "entropy_synergy": -0.013901233673095703,
+        "js_synergy": -0.021540075540542603,
+        "synergy_ratio": 0.308447149203873,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Collagen type II alpha 1",
+        "r_position": 785,
+        "n_position": 800,
+        "distance": 15,
+        "r_context": "GKDGGRGLTGP",
+        "n_context": "GPAGANGEKGE"
+      },
+      "r_alone": {
+        "centroid_shift": 0.17524805665016174,
+        "relative_shift": 0.37813785672187805,
+        "entropy_change": 0.04180026054382324,
+        "js_divergence": 0.020340146496891975,
+        "original_entropy": 2.195052146911621,
+        "modified_entropy": 2.2368524074554443
+      },
+      "n_alone": {
+        "centroid_shift": 0.17640890181064606,
+        "relative_shift": 0.3548976480960846,
+        "entropy_change": -0.015810012817382812,
+        "js_divergence": 0.022168856114149094,
+        "original_entropy": 2.0915884971618652,
+        "modified_entropy": 2.0757784843444824
+      },
+      "combined": {
+        "centroid_shift": 0.10693613439798355,
+        "relative_shift": 0.22135581076145172,
+        "entropy_change": -0.004845380783081055,
+        "js_divergence": 0.018264831975102425,
+        "original_entropy": 2.2420992851257324,
+        "modified_entropy": 2.2372539043426514
+      },
+      "synergy": {
+        "shift_synergy": -0.24472082406282425,
+        "entropy_synergy": -0.030835628509521484,
+        "js_synergy": -0.024244172498583794,
+        "synergy_ratio": 0.3040921892620315,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Collagen type II alpha 1",
+        "r_position": 904,
+        "n_position": 913,
+        "distance": 9,
+        "r_context": "PGAAGRVGPPG",
+        "n_context": "PGSNGNPGPPG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.17114508152008057,
+        "relative_shift": 0.3799280822277069,
+        "entropy_change": 0.052397966384887695,
+        "js_divergence": 0.020529620349407196,
+        "original_entropy": 2.1014063358306885,
+        "modified_entropy": 2.153804302215576
+      },
+      "n_alone": {
+        "centroid_shift": 0.18579280376434326,
+        "relative_shift": 0.3529652953147888,
+        "entropy_change": 0.03809988498687744,
+        "js_divergence": 0.01142473891377449,
+        "original_entropy": 1.6762746572494507,
+        "modified_entropy": 1.7143745422363281
+      },
+      "combined": {
+        "centroid_shift": 0.1291535645723343,
+        "relative_shift": 0.2823892831802368,
+        "entropy_change": 0.025336265563964844,
+        "js_divergence": 0.01983484998345375,
+        "original_entropy": 2.000500440597534,
+        "modified_entropy": 2.025836706161499
+      },
+      "synergy": {
+        "shift_synergy": -0.22778432071208954,
+        "entropy_synergy": -0.06516158580780029,
+        "js_synergy": -0.012119509279727936,
+        "synergy_ratio": 0.36183764699909976,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Collagen type II alpha 1",
+        "r_position": 1163,
+        "n_position": 1178,
+        "distance": 15,
+        "r_context": "GPSGPRGPPGP",
+        "n_context": "GKDGANGIPGP"
+      },
+      "r_alone": {
+        "centroid_shift": 0.20258696377277374,
+        "relative_shift": 0.35535797476768494,
+        "entropy_change": 0.05063450336456299,
+        "js_divergence": 0.020370444282889366,
+        "original_entropy": 1.7417525053024292,
+        "modified_entropy": 1.7923870086669922
+      },
+      "n_alone": {
+        "centroid_shift": 0.15253661572933197,
+        "relative_shift": 0.414758563041687,
+        "entropy_change": 0.006118059158325195,
+        "js_divergence": 0.017958011478185654,
+        "original_entropy": 2.2312302589416504,
+        "modified_entropy": 2.2373483180999756
+      },
+      "combined": {
+        "centroid_shift": 0.1030176505446434,
+        "relative_shift": 0.22940628230571747,
+        "entropy_change": -0.005368947982788086,
+        "js_divergence": 0.017558323219418526,
+        "original_entropy": 2.125776767730713,
+        "modified_entropy": 2.120407819747925
+      },
+      "synergy": {
+        "shift_synergy": -0.2521059289574623,
+        "entropy_synergy": -0.06212151050567627,
+        "js_synergy": -0.020770130679011345,
+        "synergy_ratio": 0.2900895813791593,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Collagen type II alpha 1",
+        "r_position": 1190,
+        "n_position": 1178,
+        "distance": 12,
+        "r_context": "GPPGPRGRSGE",
+        "n_context": "GKDGANGIPGP"
+      },
+      "r_alone": {
+        "centroid_shift": 0.18577367067337036,
+        "relative_shift": 0.3646387755870819,
+        "entropy_change": 0.10157084465026855,
+        "js_divergence": 0.014456180855631828,
+        "original_entropy": 2.0002758502960205,
+        "modified_entropy": 2.101846694946289
+      },
+      "n_alone": {
+        "centroid_shift": 0.15253661572933197,
+        "relative_shift": 0.414758563041687,
+        "entropy_change": 0.006118059158325195,
+        "js_divergence": 0.017958011478185654,
+        "original_entropy": 2.2312302589416504,
+        "modified_entropy": 2.2373483180999756
+      },
+      "combined": {
+        "centroid_shift": 0.11284084618091583,
+        "relative_shift": 0.2572627067565918,
+        "entropy_change": 0.02286052703857422,
+        "js_divergence": 0.01787523925304413,
+        "original_entropy": 2.2265660762786865,
+        "modified_entropy": 2.2494266033172607
+      },
+      "synergy": {
+        "shift_synergy": -0.2254694402217865,
+        "entropy_synergy": -0.08482837677001953,
+        "js_synergy": -0.014538951218128204,
+        "synergy_ratio": 0.33354246288935846,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Collagen type II alpha 1",
+        "r_position": 1190,
+        "n_position": 1204,
+        "distance": 14,
+        "r_context": "GPPGPRGRSGE",
+        "n_context": "AGPPGNPGPPG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.18577367067337036,
+        "relative_shift": 0.3646387755870819,
+        "entropy_change": 0.10157084465026855,
+        "js_divergence": 0.014456180855631828,
+        "original_entropy": 2.0002758502960205,
+        "modified_entropy": 2.101846694946289
+      },
+      "n_alone": {
+        "centroid_shift": 0.2107129693031311,
+        "relative_shift": 0.35316401720046997,
+        "entropy_change": -0.0289078950881958,
+        "js_divergence": 0.02328447252511978,
+        "original_entropy": 1.539651870727539,
+        "modified_entropy": 1.5107439756393433
+      },
+      "combined": {
+        "centroid_shift": 0.1210208609700203,
+        "relative_shift": 0.2234257459640503,
+        "entropy_change": 0.014505386352539062,
+        "js_divergence": 0.017419369891285896,
+        "original_entropy": 1.8994215726852417,
+        "modified_entropy": 1.9139269590377808
+      },
+      "synergy": {
+        "shift_synergy": -0.27546577900648117,
+        "entropy_synergy": -0.05815756320953369,
+        "js_synergy": -0.020321285352110863,
+        "synergy_ratio": 0.3052331371031052,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Collagen type II alpha 1",
+        "r_position": 1192,
+        "n_position": 1178,
+        "distance": 14,
+        "r_context": "PGPRGRSGETG",
+        "n_context": "GKDGANGIPGP"
+      },
+      "r_alone": {
+        "centroid_shift": 0.2041558474302292,
+        "relative_shift": 0.353829950094223,
+        "entropy_change": 0.10847628116607666,
+        "js_divergence": 0.015121432021260262,
+        "original_entropy": 1.9085921049118042,
+        "modified_entropy": 2.017068386077881
+      },
+      "n_alone": {
+        "centroid_shift": 0.15253661572933197,
+        "relative_shift": 0.414758563041687,
+        "entropy_change": 0.006118059158325195,
+        "js_divergence": 0.017958011478185654,
+        "original_entropy": 2.2312302589416504,
+        "modified_entropy": 2.2373483180999756
+      },
+      "combined": {
+        "centroid_shift": 0.10654263943433762,
+        "relative_shift": 0.23642775416374207,
+        "entropy_change": 0.022043704986572266,
+        "js_divergence": 0.01663655787706375,
+        "original_entropy": 2.2182345390319824,
+        "modified_entropy": 2.2402782440185547
+      },
+      "synergy": {
+        "shift_synergy": -0.25014982372522354,
+        "entropy_synergy": -0.09255063533782959,
+        "js_synergy": -0.016442887485027313,
+        "synergy_ratio": 0.2986960768969422,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Collagen type II alpha 1",
+        "r_position": 1192,
+        "n_position": 1204,
+        "distance": 12,
+        "r_context": "PGPRGRSGETG",
+        "n_context": "AGPPGNPGPPG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.2041558474302292,
+        "relative_shift": 0.353829950094223,
+        "entropy_change": 0.10847628116607666,
+        "js_divergence": 0.015121432021260262,
+        "original_entropy": 1.9085921049118042,
+        "modified_entropy": 2.017068386077881
+      },
+      "n_alone": {
+        "centroid_shift": 0.2107129693031311,
+        "relative_shift": 0.35316401720046997,
+        "entropy_change": -0.0289078950881958,
+        "js_divergence": 0.02328447252511978,
+        "original_entropy": 1.539651870727539,
+        "modified_entropy": 1.5107439756393433
+      },
+      "combined": {
+        "centroid_shift": 0.13661076128482819,
+        "relative_shift": 0.23859462141990662,
+        "entropy_change": 0.010577797889709473,
+        "js_divergence": 0.019962403923273087,
+        "original_entropy": 1.8193166255950928,
+        "modified_entropy": 1.8298944234848022
+      },
+      "synergy": {
+        "shift_synergy": -0.2782580554485321,
+        "entropy_synergy": -0.06899058818817139,
+        "js_synergy": -0.018443498760461807,
+        "synergy_ratio": 0.3292866461441001,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 102,
+        "n_position": 113,
+        "distance": 11,
+        "r_context": "SGHKHRKHSHH",
+        "n_context": "DKHEDNKQEEN"
+      },
+      "r_alone": {
+        "centroid_shift": 0.1701391041278839,
+        "relative_shift": 0.4152396619319916,
+        "entropy_change": -0.08138275146484375,
+        "js_divergence": 0.014202571474015713,
+        "original_entropy": 2.4124231338500977,
+        "modified_entropy": 2.331040382385254
+      },
+      "n_alone": {
+        "centroid_shift": 0.23273895680904388,
+        "relative_shift": 0.34911197423934937,
+        "entropy_change": 0.013056039810180664,
+        "js_divergence": 0.003935875371098518,
+        "original_entropy": 2.085803747177124,
+        "modified_entropy": 2.0988597869873047
+      },
+      "combined": {
+        "centroid_shift": 0.12262271344661713,
+        "relative_shift": 0.2614753544330597,
+        "entropy_change": -0.06687664985656738,
+        "js_divergence": 0.010258777067065239,
+        "original_entropy": 2.4605581760406494,
+        "modified_entropy": 2.393681526184082
+      },
+      "synergy": {
+        "shift_synergy": -0.28025534749031067,
+        "entropy_synergy": 0.0014500617980957031,
+        "js_synergy": -0.007879668846726418,
+        "synergy_ratio": 0.3043668179175871,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 122,
+        "n_position": 137,
+        "distance": 15,
+        "r_context": "ENKENRKRPSS",
+        "n_context": "NNRKGNKGRSK"
+      },
+      "r_alone": {
+        "centroid_shift": 0.1559172123670578,
+        "relative_shift": 0.48689836263656616,
+        "entropy_change": 0.05990457534790039,
+        "js_divergence": 0.0062974295578897,
+        "original_entropy": 2.409432888031006,
+        "modified_entropy": 2.4693374633789062
+      },
+      "n_alone": {
+        "centroid_shift": 0.1559385359287262,
+        "relative_shift": 0.41121941804885864,
+        "entropy_change": 0.058489084243774414,
+        "js_divergence": 0.00917511060833931,
+        "original_entropy": 2.054649829864502,
+        "modified_entropy": 2.1131389141082764
+      },
+      "combined": {
+        "centroid_shift": 0.0927029699087143,
+        "relative_shift": 0.279274582862854,
+        "entropy_change": 0.0675811767578125,
+        "js_divergence": 0.0057954490184783936,
+        "original_entropy": 2.3539066314697266,
+        "modified_entropy": 2.421487808227539
+      },
+      "synergy": {
+        "shift_synergy": -0.2191527783870697,
+        "entropy_synergy": -0.050812482833862305,
+        "js_synergy": -0.009677091613411903,
+        "synergy_ratio": 0.2972623412766553,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 124,
+        "n_position": 113,
+        "distance": 11,
+        "r_context": "KENRKRPSSLE",
+        "n_context": "DKHEDNKQEEN"
+      },
+      "r_alone": {
+        "centroid_shift": 0.150995135307312,
+        "relative_shift": 0.5500231981277466,
+        "entropy_change": 0.11710786819458008,
+        "js_divergence": 0.00961463525891304,
+        "original_entropy": 2.2920775413513184,
+        "modified_entropy": 2.4091854095458984
+      },
+      "n_alone": {
+        "centroid_shift": 0.23273895680904388,
+        "relative_shift": 0.34911197423934937,
+        "entropy_change": 0.013056039810180664,
+        "js_divergence": 0.003935875371098518,
+        "original_entropy": 2.085803747177124,
+        "modified_entropy": 2.0988597869873047
+      },
+      "combined": {
+        "centroid_shift": 0.11319975554943085,
+        "relative_shift": 0.28338292241096497,
+        "entropy_change": 0.019391536712646484,
+        "js_divergence": 0.005192862823605537,
+        "original_entropy": 2.440894842147827,
+        "modified_entropy": 2.4602863788604736
+      },
+      "synergy": {
+        "shift_synergy": -0.27053433656692505,
+        "entropy_synergy": -0.11077237129211426,
+        "js_synergy": -0.008357647806406021,
+        "synergy_ratio": 0.2949953049405026,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 130,
+        "n_position": 118,
+        "distance": 12,
+        "r_context": "PSSLERRNNRK",
+        "n_context": "NKQEENKENRK"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15318605303764343,
+        "relative_shift": 0.5117588043212891,
+        "entropy_change": 0.11558365821838379,
+        "js_divergence": 0.009133601561188698,
+        "original_entropy": 2.2711100578308105,
+        "modified_entropy": 2.3866937160491943
+      },
+      "n_alone": {
+        "centroid_shift": 0.16678737103939056,
+        "relative_shift": 0.36062732338905334,
+        "entropy_change": 0.03186297416687012,
+        "js_divergence": 0.00534411333501339,
+        "original_entropy": 2.3052589893341064,
+        "modified_entropy": 2.3371219635009766
+      },
+      "combined": {
+        "centroid_shift": 0.10631681233644485,
+        "relative_shift": 0.28513866662979126,
+        "entropy_change": 0.07075262069702148,
+        "js_divergence": 0.006525370292365551,
+        "original_entropy": 2.3612778186798096,
+        "modified_entropy": 2.432030439376831
+      },
+      "synergy": {
+        "shift_synergy": -0.21365661174058914,
+        "entropy_synergy": -0.07669401168823242,
+        "js_synergy": -0.007952344603836536,
+        "synergy_ratio": 0.33226763319450614,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 131,
+        "n_position": 118,
+        "distance": 13,
+        "r_context": "SSLERRNNRKG",
+        "n_context": "NKQEENKENRK"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15230834484100342,
+        "relative_shift": 0.5115195512771606,
+        "entropy_change": 0.1221771240234375,
+        "js_divergence": 0.009700092487037182,
+        "original_entropy": 2.2880003452301025,
+        "modified_entropy": 2.41017746925354
+      },
+      "n_alone": {
+        "centroid_shift": 0.16678737103939056,
+        "relative_shift": 0.36062732338905334,
+        "entropy_change": 0.03186297416687012,
+        "js_divergence": 0.00534411333501339,
+        "original_entropy": 2.3052589893341064,
+        "modified_entropy": 2.3371219635009766
+      },
+      "combined": {
+        "centroid_shift": 0.10283728688955307,
+        "relative_shift": 0.273396760225296,
+        "entropy_change": 0.06891417503356934,
+        "js_divergence": 0.006292189471423626,
+        "original_entropy": 2.3757691383361816,
+        "modified_entropy": 2.444683313369751
+      },
+      "synergy": {
+        "shift_synergy": -0.2162584289908409,
+        "entropy_synergy": -0.08512592315673828,
+        "js_synergy": -0.008752016350626945,
+        "synergy_ratio": 0.3222772407758418,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 134,
+        "n_position": 121,
+        "distance": 13,
+        "r_context": "ERRNNRKGNKG",
+        "n_context": "EENKENRKRPS"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15369293093681335,
+        "relative_shift": 0.49768921732902527,
+        "entropy_change": 0.127396821975708,
+        "js_divergence": 0.009706174954771996,
+        "original_entropy": 2.201619863510132,
+        "modified_entropy": 2.32901668548584
+      },
+      "n_alone": {
+        "centroid_shift": 0.15031088888645172,
+        "relative_shift": 0.4260280430316925,
+        "entropy_change": 0.006012916564941406,
+        "js_divergence": 0.007076272275298834,
+        "original_entropy": 2.4117536544799805,
+        "modified_entropy": 2.417766571044922
+      },
+      "combined": {
+        "centroid_shift": 0.1011866107583046,
+        "relative_shift": 0.2839511036872864,
+        "entropy_change": 0.0685892105102539,
+        "js_divergence": 0.006299501284956932,
+        "original_entropy": 2.337658643722534,
+        "modified_entropy": 2.406247854232788
+      },
+      "synergy": {
+        "shift_synergy": -0.20281720906496048,
+        "entropy_synergy": -0.06482052803039551,
+        "js_synergy": -0.010482946410775185,
+        "synergy_ratio": 0.3328465108887301,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 145,
+        "n_position": 132,
+        "distance": 13,
+        "r_context": "RSKSPRETGGK",
+        "n_context": "SLERRNNRKGN"
+      },
+      "r_alone": {
+        "centroid_shift": 0.17743578553199768,
+        "relative_shift": 0.37874481081962585,
+        "entropy_change": 0.07351136207580566,
+        "js_divergence": 0.007051657885313034,
+        "original_entropy": 2.265000104904175,
+        "modified_entropy": 2.3385114669799805
+      },
+      "n_alone": {
+        "centroid_shift": 0.14524732530117035,
+        "relative_shift": 0.48780548572540283,
+        "entropy_change": 0.06724286079406738,
+        "js_divergence": 0.009676892310380936,
+        "original_entropy": 2.2880003452301025,
+        "modified_entropy": 2.35524320602417
+      },
+      "combined": {
+        "centroid_shift": 0.10049859434366226,
+        "relative_shift": 0.2859427034854889,
+        "entropy_change": 0.06101489067077637,
+        "js_divergence": 0.007932644337415695,
+        "original_entropy": 2.4092230796813965,
+        "modified_entropy": 2.470237970352173
+      },
+      "synergy": {
+        "shift_synergy": -0.22218451648950577,
+        "entropy_synergy": -0.07973933219909668,
+        "js_synergy": -0.008795905858278275,
+        "synergy_ratio": 0.3114467133189281,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 145,
+        "n_position": 133,
+        "distance": 12,
+        "r_context": "RSKSPRETGGK",
+        "n_context": "LERRNNRKGNK"
+      },
+      "r_alone": {
+        "centroid_shift": 0.17743578553199768,
+        "relative_shift": 0.37874481081962585,
+        "entropy_change": 0.07351136207580566,
+        "js_divergence": 0.007051657885313034,
+        "original_entropy": 2.265000104904175,
+        "modified_entropy": 2.3385114669799805
+      },
+      "n_alone": {
+        "centroid_shift": 0.14308755099773407,
+        "relative_shift": 0.519785463809967,
+        "entropy_change": 0.07811403274536133,
+        "js_divergence": 0.010355391539633274,
+        "original_entropy": 2.19827938079834,
+        "modified_entropy": 2.276393413543701
+      },
+      "combined": {
+        "centroid_shift": 0.10365675389766693,
+        "relative_shift": 0.29888808727264404,
+        "entropy_change": 0.06683468818664551,
+        "js_divergence": 0.008394339121878147,
+        "original_entropy": 2.3887429237365723,
+        "modified_entropy": 2.4555776119232178
+      },
+      "synergy": {
+        "shift_synergy": -0.21686658263206482,
+        "entropy_synergy": -0.08479070663452148,
+        "js_synergy": -0.009012709371745586,
+        "synergy_ratio": 0.32339846136511147,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 151,
+        "n_position": 137,
+        "distance": 14,
+        "r_context": "ETGGKRHESSS",
+        "n_context": "NNRKGNKGRSK"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16892842948436737,
+        "relative_shift": 0.40199798345565796,
+        "entropy_change": 0.044672250747680664,
+        "js_divergence": 0.008774853311479092,
+        "original_entropy": 2.3124148845672607,
+        "modified_entropy": 2.3570871353149414
+      },
+      "n_alone": {
+        "centroid_shift": 0.1559385359287262,
+        "relative_shift": 0.41121941804885864,
+        "entropy_change": 0.058489084243774414,
+        "js_divergence": 0.00917511060833931,
+        "original_entropy": 2.054649829864502,
+        "modified_entropy": 2.1131389141082764
+      },
+      "combined": {
+        "centroid_shift": 0.09969963133335114,
+        "relative_shift": 0.2623598873615265,
+        "entropy_change": 0.05800318717956543,
+        "js_divergence": 0.0074394866824150085,
+        "original_entropy": 2.2928414344787598,
+        "modified_entropy": 2.350844621658325
+      },
+      "synergy": {
+        "shift_synergy": -0.22516733407974243,
+        "entropy_synergy": -0.04515814781188965,
+        "js_synergy": -0.010510478168725967,
+        "synergy_ratio": 0.3068937193287287,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 161,
+        "n_position": 176,
+        "distance": 15,
+        "r_context": "SEKKERKGYSP",
+        "n_context": "EEYGKNHHNSS"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15893518924713135,
+        "relative_shift": 0.45200008153915405,
+        "entropy_change": 0.03732562065124512,
+        "js_divergence": 0.008616084232926369,
+        "original_entropy": 2.3694398403167725,
+        "modified_entropy": 2.4067654609680176
+      },
+      "n_alone": {
+        "centroid_shift": 0.15638937056064606,
+        "relative_shift": 0.3889220356941223,
+        "entropy_change": 0.012236833572387695,
+        "js_divergence": 0.0066138459369540215,
+        "original_entropy": 2.4069769382476807,
+        "modified_entropy": 2.4192137718200684
+      },
+      "combined": {
+        "centroid_shift": 0.09268498420715332,
+        "relative_shift": 0.28084030747413635,
+        "entropy_change": -0.013426780700683594,
+        "js_divergence": 0.007165770046412945,
+        "original_entropy": 2.470277786254883,
+        "modified_entropy": 2.456851005554199
+      },
+      "synergy": {
+        "shift_synergy": -0.22263957560062408,
+        "entropy_synergy": -0.0629892349243164,
+        "js_synergy": -0.008064160123467445,
+        "synergy_ratio": 0.29393518929911705,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 169,
+        "n_position": 179,
+        "distance": 10,
+        "r_context": "YSPTHREEEYG",
+        "n_context": "GKNHHNSSKKE"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16425447165966034,
+        "relative_shift": 0.4392821490764618,
+        "entropy_change": -0.04627108573913574,
+        "js_divergence": 0.016003496944904327,
+        "original_entropy": 2.5830090045928955,
+        "modified_entropy": 2.5367379188537598
+      },
+      "n_alone": {
+        "centroid_shift": 0.16622225940227509,
+        "relative_shift": 0.35960572957992554,
+        "entropy_change": 0.03067159652709961,
+        "js_divergence": 0.005099261179566383,
+        "original_entropy": 2.2403016090393066,
+        "modified_entropy": 2.2709732055664062
+      },
+      "combined": {
+        "centroid_shift": 0.11744911223649979,
+        "relative_shift": 0.2973891794681549,
+        "entropy_change": -0.040497541427612305,
+        "js_divergence": 0.012436578050255775,
+        "original_entropy": 2.491018533706665,
+        "modified_entropy": 2.4505209922790527
+      },
+      "synergy": {
+        "shift_synergy": -0.21302761882543564,
+        "entropy_synergy": -0.024898052215576172,
+        "js_synergy": -0.008666180074214935,
+        "synergy_ratio": 0.3553929858346035,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 192,
+        "n_position": 179,
+        "distance": 13,
+        "r_context": "KTENTRLGDNR",
+        "n_context": "GKNHHNSSKKE"
+      },
+      "r_alone": {
+        "centroid_shift": 0.1573520302772522,
+        "relative_shift": 0.4865734279155731,
+        "entropy_change": 0.10020613670349121,
+        "js_divergence": 0.010360165499150753,
+        "original_entropy": 2.279712438583374,
+        "modified_entropy": 2.3799185752868652
+      },
+      "n_alone": {
+        "centroid_shift": 0.16622225940227509,
+        "relative_shift": 0.35960572957992554,
+        "entropy_change": 0.03067159652709961,
+        "js_divergence": 0.005099261179566383,
+        "original_entropy": 2.2403016090393066,
+        "modified_entropy": 2.2709732055664062
+      },
+      "combined": {
+        "centroid_shift": 0.10011537373065948,
+        "relative_shift": 0.29048454761505127,
+        "entropy_change": 0.041847944259643555,
+        "js_divergence": 0.006794339045882225,
+        "original_entropy": 2.5107522010803223,
+        "modified_entropy": 2.552600145339966
+      },
+      "synergy": {
+        "shift_synergy": -0.2234589159488678,
+        "entropy_synergy": -0.08902978897094727,
+        "js_synergy": -0.008665087632834911,
+        "synergy_ratio": 0.3094046000962399,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 197,
+        "n_position": 210,
+        "distance": 13,
+        "r_context": "RLGDNRKRLSE",
+        "n_context": "EEKEDNEEGVY"
+      },
+      "r_alone": {
+        "centroid_shift": 0.14877574145793915,
+        "relative_shift": 0.5638270378112793,
+        "entropy_change": 0.1387324333190918,
+        "js_divergence": 0.011546695604920387,
+        "original_entropy": 2.306931257247925,
+        "modified_entropy": 2.4456636905670166
+      },
+      "n_alone": {
+        "centroid_shift": 0.17880386114120483,
+        "relative_shift": 0.3398122489452362,
+        "entropy_change": 0.0299069881439209,
+        "js_divergence": 0.016696399077773094,
+        "original_entropy": 2.285153865814209,
+        "modified_entropy": 2.31506085395813
+      },
+      "combined": {
+        "centroid_shift": 0.10138752311468124,
+        "relative_shift": 0.2734602391719818,
+        "entropy_change": 0.08708596229553223,
+        "js_divergence": 0.011845769360661507,
+        "original_entropy": 2.475054979324341,
+        "modified_entropy": 2.562140941619873
+      },
+      "synergy": {
+        "shift_synergy": -0.22619207948446274,
+        "entropy_synergy": -0.08155345916748047,
+        "js_synergy": -0.016397325322031975,
+        "synergy_ratio": 0.30950499444801416,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 199,
+        "n_position": 210,
+        "distance": 11,
+        "r_context": "GDNRKRLSERL",
+        "n_context": "EEKEDNEEGVY"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15910391509532928,
+        "relative_shift": 0.43638667464256287,
+        "entropy_change": 0.13901090621948242,
+        "js_divergence": 0.011315757408738136,
+        "original_entropy": 2.203616142272949,
+        "modified_entropy": 2.3426270484924316
+      },
+      "n_alone": {
+        "centroid_shift": 0.17880386114120483,
+        "relative_shift": 0.3398122489452362,
+        "entropy_change": 0.0299069881439209,
+        "js_divergence": 0.016696399077773094,
+        "original_entropy": 2.285153865814209,
+        "modified_entropy": 2.31506085395813
+      },
+      "combined": {
+        "centroid_shift": 0.11170393228530884,
+        "relative_shift": 0.27961990237236023,
+        "entropy_change": 0.08451056480407715,
+        "js_divergence": 0.013881128281354904,
+        "original_entropy": 2.4022674560546875,
+        "modified_entropy": 2.4867780208587646
+      },
+      "synergy": {
+        "shift_synergy": -0.22620384395122528,
+        "entropy_synergy": -0.08440732955932617,
+        "js_synergy": -0.014131028205156326,
+        "synergy_ratio": 0.330575204561315,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 203,
+        "n_position": 190,
+        "distance": 13,
+        "r_context": "KRLSERLEEKE",
+        "n_context": "KNKTENTRLGD"
+      },
+      "r_alone": {
+        "centroid_shift": 0.1638486385345459,
+        "relative_shift": 0.427680104970932,
+        "entropy_change": 0.11152029037475586,
+        "js_divergence": 0.011460813693702221,
+        "original_entropy": 2.2310092449188232,
+        "modified_entropy": 2.342529535293579
+      },
+      "n_alone": {
+        "centroid_shift": 0.16361959278583527,
+        "relative_shift": 0.3621540069580078,
+        "entropy_change": 0.07441926002502441,
+        "js_divergence": 0.008901386521756649,
+        "original_entropy": 2.2639853954315186,
+        "modified_entropy": 2.338404655456543
+      },
+      "combined": {
+        "centroid_shift": 0.10509322583675385,
+        "relative_shift": 0.2597183883190155,
+        "entropy_change": 0.08682894706726074,
+        "js_divergence": 0.010827139019966125,
+        "original_entropy": 2.345360279083252,
+        "modified_entropy": 2.4321892261505127
+      },
+      "synergy": {
+        "shift_synergy": -0.22237500548362732,
+        "entropy_synergy": -0.09911060333251953,
+        "js_synergy": -0.009535061195492744,
+        "synergy_ratio": 0.32092647699264115,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 524,
+        "n_position": 537,
+        "distance": 13,
+        "r_context": "HPGSSRGGRQG",
+        "n_context": "HEQSVNRSGHS"
+      },
+      "r_alone": {
+        "centroid_shift": 0.18203969299793243,
+        "relative_shift": 0.3645966351032257,
+        "entropy_change": 0.03957700729370117,
+        "js_divergence": 0.004521901719272137,
+        "original_entropy": 2.027223587036133,
+        "modified_entropy": 2.066800594329834
+      },
+      "n_alone": {
+        "centroid_shift": 0.14338448643684387,
+        "relative_shift": 0.5181353092193604,
+        "entropy_change": -0.060820817947387695,
+        "js_divergence": 0.009807704016566277,
+        "original_entropy": 2.255643129348755,
+        "modified_entropy": 2.194822311401367
+      },
+      "combined": {
+        "centroid_shift": 0.1039261743426323,
+        "relative_shift": 0.2651263177394867,
+        "entropy_change": -0.03156685829162598,
+        "js_divergence": 0.006993664428591728,
+        "original_entropy": 2.228502035140991,
+        "modified_entropy": 2.1969351768493652
+      },
+      "synergy": {
+        "shift_synergy": -0.221498005092144,
+        "entropy_synergy": -0.010323047637939453,
+        "js_synergy": -0.007335941307246685,
+        "synergy_ratio": 0.31935603092309944,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 587,
+        "n_position": 573,
+        "distance": 14,
+        "r_context": "RHSGSRHHEAS",
+        "n_context": "SRQTRNEEQSG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15836651623249054,
+        "relative_shift": 0.43759527802467346,
+        "entropy_change": 0.013493061065673828,
+        "js_divergence": 0.006315178703516722,
+        "original_entropy": 2.281770944595337,
+        "modified_entropy": 2.2952640056610107
+      },
+      "n_alone": {
+        "centroid_shift": 0.14635857939720154,
+        "relative_shift": 0.468798965215683,
+        "entropy_change": -0.04963970184326172,
+        "js_divergence": 0.013535885140299797,
+        "original_entropy": 2.4324405193328857,
+        "modified_entropy": 2.382800817489624
+      },
+      "combined": {
+        "centroid_shift": 0.09461447596549988,
+        "relative_shift": 0.2954023778438568,
+        "entropy_change": -0.025255203247070312,
+        "js_divergence": 0.007034020032733679,
+        "original_entropy": 2.398601770401001,
+        "modified_entropy": 2.3733465671539307
+      },
+      "synergy": {
+        "shift_synergy": -0.2101106196641922,
+        "entropy_synergy": 0.010891437530517578,
+        "js_synergy": -0.01281704381108284,
+        "synergy_ratio": 0.31049125028228103,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 658,
+        "n_position": 644,
+        "distance": 14,
+        "r_context": "SRDGSRHPRSH",
+        "n_context": "GSASRNHHGSA"
+      },
+      "r_alone": {
+        "centroid_shift": 0.1630047857761383,
+        "relative_shift": 0.42340540885925293,
+        "entropy_change": 0.03095412254333496,
+        "js_divergence": 0.004569311626255512,
+        "original_entropy": 2.3034112453460693,
+        "modified_entropy": 2.3343653678894043
+      },
+      "n_alone": {
+        "centroid_shift": 0.14554062485694885,
+        "relative_shift": 0.48991790413856506,
+        "entropy_change": -0.06871771812438965,
+        "js_divergence": 0.011494293808937073,
+        "original_entropy": 2.389892816543579,
+        "modified_entropy": 2.3211750984191895
+      },
+      "combined": {
+        "centroid_shift": 0.09472134709358215,
+        "relative_shift": 0.2953658998012543,
+        "entropy_change": -0.02724623680114746,
+        "js_divergence": 0.006315154954791069,
+        "original_entropy": 2.431187868118286,
+        "modified_entropy": 2.4039416313171387
+      },
+      "synergy": {
+        "shift_synergy": -0.213824063539505,
+        "entropy_synergy": 0.010517358779907227,
+        "js_synergy": -0.009748449549078941,
+        "synergy_ratio": 0.3069932133118732,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 701,
+        "n_position": 687,
+        "distance": 14,
+        "r_context": "SHEQARSSAGE",
+        "n_context": "TRHTQNSSSGQ"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16331250965595245,
+        "relative_shift": 0.4045350253582001,
+        "entropy_change": 0.02625584602355957,
+        "js_divergence": 0.0067153917625546455,
+        "original_entropy": 2.1941745281219482,
+        "modified_entropy": 2.220430374145508
+      },
+      "n_alone": {
+        "centroid_shift": 0.15351976454257965,
+        "relative_shift": 0.41745293140411377,
+        "entropy_change": -0.07029986381530762,
+        "js_divergence": 0.01323305256664753,
+        "original_entropy": 2.211826801300049,
+        "modified_entropy": 2.141526937484741
+      },
+      "combined": {
+        "centroid_shift": 0.09695439040660858,
+        "relative_shift": 0.2742216885089874,
+        "entropy_change": -0.03659772872924805,
+        "js_divergence": 0.00769412238150835,
+        "original_entropy": 2.315424680709839,
+        "modified_entropy": 2.278826951980591
+      },
+      "synergy": {
+        "shift_synergy": -0.21987788379192352,
+        "entropy_synergy": 0.0074462890625,
+        "js_synergy": -0.0122543228790164,
+        "synergy_ratio": 0.3060117237780336,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 884,
+        "n_position": 898,
+        "distance": 14,
+        "r_context": "RSDASRGQSGS",
+        "n_context": "SRTTRNEEQSR"
+      },
+      "r_alone": {
+        "centroid_shift": 0.17883503437042236,
+        "relative_shift": 0.3628740906715393,
+        "entropy_change": 0.06828951835632324,
+        "js_divergence": 0.0054202601313591,
+        "original_entropy": 2.033461093902588,
+        "modified_entropy": 2.101750612258911
+      },
+      "n_alone": {
+        "centroid_shift": 0.14555124938488007,
+        "relative_shift": 0.48251715302467346,
+        "entropy_change": -0.02795696258544922,
+        "js_divergence": 0.015402371063828468,
+        "original_entropy": 2.3170106410980225,
+        "modified_entropy": 2.2890536785125732
+      },
+      "combined": {
+        "centroid_shift": 0.09892909228801727,
+        "relative_shift": 0.26137226819992065,
+        "entropy_change": 0.00697779655456543,
+        "js_divergence": 0.008819840848445892,
+        "original_entropy": 2.2733561992645264,
+        "modified_entropy": 2.280333995819092
+      },
+      "synergy": {
+        "shift_synergy": -0.22545719146728516,
+        "entropy_synergy": -0.033354759216308594,
+        "js_synergy": -0.012002790346741676,
+        "synergy_ratio": 0.3049731052504863,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 912,
+        "n_position": 898,
+        "distance": 14,
+        "r_context": "RHSGSRHHEAS",
+        "n_context": "SRTTRNEEQSR"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16018502414226532,
+        "relative_shift": 0.42058369517326355,
+        "entropy_change": 0.02299046516418457,
+        "js_divergence": 0.006747545674443245,
+        "original_entropy": 2.1289541721343994,
+        "modified_entropy": 2.151944637298584
+      },
+      "n_alone": {
+        "centroid_shift": 0.14555124938488007,
+        "relative_shift": 0.48251715302467346,
+        "entropy_change": -0.02795696258544922,
+        "js_divergence": 0.015402371063828468,
+        "original_entropy": 2.3170106410980225,
+        "modified_entropy": 2.2890536785125732
+      },
+      "combined": {
+        "centroid_shift": 0.09435369074344635,
+        "relative_shift": 0.2962319850921631,
+        "entropy_change": -0.0034427642822265625,
+        "js_divergence": 0.007415438070893288,
+        "original_entropy": 2.3389458656311035,
+        "modified_entropy": 2.335503101348877
+      },
+      "synergy": {
+        "shift_synergy": -0.21138258278369904,
+        "entropy_synergy": 0.001523733139038086,
+        "js_synergy": -0.014734478667378426,
+        "synergy_ratio": 0.3086113715721986,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 979,
+        "n_position": 969,
+        "distance": 10,
+        "r_context": "AQEQSRHGSRH",
+        "n_context": "GSASRNHRGSA"
+      },
+      "r_alone": {
+        "centroid_shift": 0.17194309830665588,
+        "relative_shift": 0.38288217782974243,
+        "entropy_change": 0.031766414642333984,
+        "js_divergence": 0.004343586042523384,
+        "original_entropy": 2.2263870239257812,
+        "modified_entropy": 2.2581534385681152
+      },
+      "n_alone": {
+        "centroid_shift": 0.15111307799816132,
+        "relative_shift": 0.43883031606674194,
+        "entropy_change": -0.06666970252990723,
+        "js_divergence": 0.0131941307336092,
+        "original_entropy": 2.371337413787842,
+        "modified_entropy": 2.3046677112579346
+      },
+      "combined": {
+        "centroid_shift": 0.11847348511219025,
+        "relative_shift": 0.2862111032009125,
+        "entropy_change": -0.019937753677368164,
+        "js_divergence": 0.00901493988931179,
+        "original_entropy": 2.2930216789245605,
+        "modified_entropy": 2.2730839252471924
+      },
+      "synergy": {
+        "shift_synergy": -0.20458269119262695,
+        "entropy_synergy": 0.014965534210205078,
+        "js_synergy": -0.008522776886820793,
+        "synergy_ratio": 0.36672719410797694,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 983,
+        "n_position": 969,
+        "distance": 14,
+        "r_context": "SRHGSRHPRSH",
+        "n_context": "GSASRNHRGSA"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16694168746471405,
+        "relative_shift": 0.4076630473136902,
+        "entropy_change": 0.02243185043334961,
+        "js_divergence": 0.004316243343055248,
+        "original_entropy": 2.2908897399902344,
+        "modified_entropy": 2.313321590423584
+      },
+      "n_alone": {
+        "centroid_shift": 0.15111307799816132,
+        "relative_shift": 0.43883031606674194,
+        "entropy_change": -0.06666970252990723,
+        "js_divergence": 0.0131941307336092,
+        "original_entropy": 2.371337413787842,
+        "modified_entropy": 2.3046677112579346
+      },
+      "combined": {
+        "centroid_shift": 0.09727060794830322,
+        "relative_shift": 0.27405989170074463,
+        "entropy_change": -0.02209782600402832,
+        "js_divergence": 0.006304647773504257,
+        "original_entropy": 2.3939666748046875,
+        "modified_entropy": 2.371868848800659
+      },
+      "synergy": {
+        "shift_synergy": -0.22078415751457214,
+        "entropy_synergy": 0.022140026092529297,
+        "js_synergy": -0.011205725371837616,
+        "synergy_ratio": 0.30582974531495916,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 1490,
+        "n_position": 1475,
+        "distance": 15,
+        "r_context": "GQDTIRGHPGS",
+        "n_context": "HEQARNSSRHS"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15865635871887207,
+        "relative_shift": 0.4463498592376709,
+        "entropy_change": 0.014880180358886719,
+        "js_divergence": 0.006192040629684925,
+        "original_entropy": 2.438861131668091,
+        "modified_entropy": 2.4537413120269775
+      },
+      "n_alone": {
+        "centroid_shift": 0.1561325490474701,
+        "relative_shift": 0.4117163419723511,
+        "entropy_change": -0.06998801231384277,
+        "js_divergence": 0.011527938768267632,
+        "original_entropy": 2.1495678424835205,
+        "modified_entropy": 2.0795798301696777
+      },
+      "combined": {
+        "centroid_shift": 0.09213881939649582,
+        "relative_shift": 0.2801041305065155,
+        "entropy_change": -0.01615452766418457,
+        "js_divergence": 0.006154239177703857,
+        "original_entropy": 2.446701765060425,
+        "modified_entropy": 2.4305472373962402
+      },
+      "synergy": {
+        "shift_synergy": -0.22265008836984634,
+        "entropy_synergy": 0.038953304290771484,
+        "js_synergy": -0.011565741151571274,
+        "synergy_ratio": 0.2927003369369594,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 1560,
+        "n_position": 1546,
+        "distance": 14,
+        "r_context": "RHSGSRHHEPS",
+        "n_context": "SRQTRNEEQSG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16416123509407043,
+        "relative_shift": 0.40562084317207336,
+        "entropy_change": 0.05232405662536621,
+        "js_divergence": 0.005438787396997213,
+        "original_entropy": 2.2841978073120117,
+        "modified_entropy": 2.336521863937378
+      },
+      "n_alone": {
+        "centroid_shift": 0.1463569700717926,
+        "relative_shift": 0.4747811555862427,
+        "entropy_change": -0.05063128471374512,
+        "js_divergence": 0.013728326186537743,
+        "original_entropy": 2.3856191635131836,
+        "modified_entropy": 2.3349878787994385
+      },
+      "combined": {
+        "centroid_shift": 0.09599330276250839,
+        "relative_shift": 0.28297147154808044,
+        "entropy_change": -0.01400136947631836,
+        "js_divergence": 0.007241050712764263,
+        "original_entropy": 2.4057133197784424,
+        "modified_entropy": 2.391711950302124
+      },
+      "synergy": {
+        "shift_synergy": -0.21452490240335464,
+        "entropy_synergy": -0.015694141387939453,
+        "js_synergy": -0.01192606333643198,
+        "synergy_ratio": 0.3091390492880111,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 1631,
+        "n_position": 1617,
+        "distance": 14,
+        "r_context": "SRHGSRNPRSH",
+        "n_context": "ESASRNHYGSA"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16182680428028107,
+        "relative_shift": 0.43343475461006165,
+        "entropy_change": 0.02520298957824707,
+        "js_divergence": 0.00433717668056488,
+        "original_entropy": 2.3579742908477783,
+        "modified_entropy": 2.3831772804260254
+      },
+      "n_alone": {
+        "centroid_shift": 0.14764335751533508,
+        "relative_shift": 0.4675615429878235,
+        "entropy_change": -0.040880680084228516,
+        "js_divergence": 0.012934200465679169,
+        "original_entropy": 2.33365535736084,
+        "modified_entropy": 2.2927746772766113
+      },
+      "combined": {
+        "centroid_shift": 0.09508006274700165,
+        "relative_shift": 0.2916610836982727,
+        "entropy_change": 0.012938261032104492,
+        "js_divergence": 0.004843768663704395,
+        "original_entropy": 2.383345127105713,
+        "modified_entropy": 2.3962833881378174
+      },
+      "synergy": {
+        "shift_synergy": -0.2143900990486145,
+        "entropy_synergy": 0.028615951538085938,
+        "js_synergy": -0.012427608482539654,
+        "synergy_ratio": 0.3072349921058691,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 1856,
+        "n_position": 1870,
+        "distance": 14,
+        "r_context": "RSDVSRGQSGS",
+        "n_context": "SRQTRNEKQSG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16013389825820923,
+        "relative_shift": 0.4159596860408783,
+        "entropy_change": 0.06562256813049316,
+        "js_divergence": 0.005420859903097153,
+        "original_entropy": 2.154322862625122,
+        "modified_entropy": 2.2199454307556152
+      },
+      "n_alone": {
+        "centroid_shift": 0.14414061605930328,
+        "relative_shift": 0.503751814365387,
+        "entropy_change": -0.05620837211608887,
+        "js_divergence": 0.01360759325325489,
+        "original_entropy": 2.444705009460449,
+        "modified_entropy": 2.3884966373443604
+      },
+      "combined": {
+        "centroid_shift": 0.09543867409229279,
+        "relative_shift": 0.2861264944076538,
+        "entropy_change": -0.013914346694946289,
+        "js_divergence": 0.008086067624390125,
+        "original_entropy": 2.360461473464966,
+        "modified_entropy": 2.3465471267700195
+      },
+      "synergy": {
+        "shift_synergy": -0.20883584022521973,
+        "entropy_synergy": -0.023328542709350586,
+        "js_synergy": -0.010942385531961918,
+        "synergy_ratio": 0.31365976961624825,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 1884,
+        "n_position": 1870,
+        "distance": 14,
+        "r_context": "RHSGSRHHEAS",
+        "n_context": "SRQTRNEKQSG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16822674870491028,
+        "relative_shift": 0.3848474323749542,
+        "entropy_change": 0.0626833438873291,
+        "js_divergence": 0.005674651823937893,
+        "original_entropy": 2.081981897354126,
+        "modified_entropy": 2.144665241241455
+      },
+      "n_alone": {
+        "centroid_shift": 0.14414061605930328,
+        "relative_shift": 0.503751814365387,
+        "entropy_change": -0.05620837211608887,
+        "js_divergence": 0.01360759325325489,
+        "original_entropy": 2.444705009460449,
+        "modified_entropy": 2.3884966373443604
+      },
+      "combined": {
+        "centroid_shift": 0.0955396443605423,
+        "relative_shift": 0.28531414270401,
+        "entropy_change": -0.01343989372253418,
+        "js_divergence": 0.007304033264517784,
+        "original_entropy": 2.3982369899749756,
+        "modified_entropy": 2.3847970962524414
+      },
+      "synergy": {
+        "shift_synergy": -0.21682772040367126,
+        "entropy_synergy": -0.019914865493774414,
+        "js_synergy": -0.011978210881352425,
+        "synergy_ratio": 0.30585667744795775,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 2276,
+        "n_position": 2266,
+        "distance": 10,
+        "r_context": "AQEQSRDGSRH",
+        "n_context": "GSASRNHHGSA"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16715122759342194,
+        "relative_shift": 0.3949568271636963,
+        "entropy_change": 0.04245877265930176,
+        "js_divergence": 0.004665772430598736,
+        "original_entropy": 2.266265869140625,
+        "modified_entropy": 2.3087246417999268
+      },
+      "n_alone": {
+        "centroid_shift": 0.15101401507854462,
+        "relative_shift": 0.44043874740600586,
+        "entropy_change": -0.06944608688354492,
+        "js_divergence": 0.011543823406100273,
+        "original_entropy": 2.2779431343078613,
+        "modified_entropy": 2.2084970474243164
+      },
+      "combined": {
+        "centroid_shift": 0.1162070706486702,
+        "relative_shift": 0.2950243055820465,
+        "entropy_change": -0.016496658325195312,
+        "js_divergence": 0.008644246496260166,
+        "original_entropy": 2.265192747116089,
+        "modified_entropy": 2.2486960887908936
+      },
+      "synergy": {
+        "shift_synergy": -0.20195817202329636,
+        "entropy_synergy": 0.010490655899047852,
+        "js_synergy": -0.007565348409116268,
+        "synergy_ratio": 0.3652412489693521,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 2280,
+        "n_position": 2266,
+        "distance": 14,
+        "r_context": "SRDGSRHPRSH",
+        "n_context": "GSASRNHHGSA"
+      },
+      "r_alone": {
+        "centroid_shift": 0.1630047857761383,
+        "relative_shift": 0.42340540885925293,
+        "entropy_change": 0.03095412254333496,
+        "js_divergence": 0.004569311626255512,
+        "original_entropy": 2.3034112453460693,
+        "modified_entropy": 2.3343653678894043
+      },
+      "n_alone": {
+        "centroid_shift": 0.15101401507854462,
+        "relative_shift": 0.44043874740600586,
+        "entropy_change": -0.06944608688354492,
+        "js_divergence": 0.011543823406100273,
+        "original_entropy": 2.2779431343078613,
+        "modified_entropy": 2.2084970474243164
+      },
+      "combined": {
+        "centroid_shift": 0.09671840071678162,
+        "relative_shift": 0.27817580103874207,
+        "entropy_change": -0.020394563674926758,
+        "js_divergence": 0.006122553255409002,
+        "original_entropy": 2.3458187580108643,
+        "modified_entropy": 2.3254241943359375
+      },
+      "synergy": {
+        "shift_synergy": -0.2173004001379013,
+        "entropy_synergy": 0.018097400665283203,
+        "js_synergy": -0.00999058224260807,
+        "synergy_ratio": 0.308001942631261,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 2323,
+        "n_position": 2309,
+        "distance": 14,
+        "r_context": "SHEQARSSAGE",
+        "n_context": "THHAENSSGGQ"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16331250965595245,
+        "relative_shift": 0.4045350253582001,
+        "entropy_change": 0.02625584602355957,
+        "js_divergence": 0.0067153917625546455,
+        "original_entropy": 2.1941745281219482,
+        "modified_entropy": 2.220430374145508
+      },
+      "n_alone": {
+        "centroid_shift": 0.14753229916095734,
+        "relative_shift": 0.4565899968147278,
+        "entropy_change": -0.05211687088012695,
+        "js_divergence": 0.012243915349245071,
+        "original_entropy": 2.2334482669830322,
+        "modified_entropy": 2.1813313961029053
+      },
+      "combined": {
+        "centroid_shift": 0.09616301953792572,
+        "relative_shift": 0.27854683995246887,
+        "entropy_change": -0.043656110763549805,
+        "js_divergence": 0.008316770195960999,
+        "original_entropy": 2.307328224182129,
+        "modified_entropy": 2.263672113418579
+      },
+      "synergy": {
+        "shift_synergy": -0.21468178927898407,
+        "entropy_synergy": -0.017795085906982422,
+        "js_synergy": -0.010642535984516144,
+        "synergy_ratio": 0.3093602234278602,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 2533,
+        "n_position": 2519,
+        "distance": 14,
+        "r_context": "RHSGSRHHEAS",
+        "n_context": "SRQTRNDEQSG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16822674870491028,
+        "relative_shift": 0.3848474323749542,
+        "entropy_change": 0.0626833438873291,
+        "js_divergence": 0.005674651823937893,
+        "original_entropy": 2.081981897354126,
+        "modified_entropy": 2.144665241241455
+      },
+      "n_alone": {
+        "centroid_shift": 0.14417190849781036,
+        "relative_shift": 0.5019643306732178,
+        "entropy_change": -0.04542136192321777,
+        "js_divergence": 0.012751694768667221,
+        "original_entropy": 2.3896312713623047,
+        "modified_entropy": 2.344209909439087
+      },
+      "combined": {
+        "centroid_shift": 0.09566664695739746,
+        "relative_shift": 0.2834743559360504,
+        "entropy_change": -0.0068874359130859375,
+        "js_divergence": 0.007208844646811485,
+        "original_entropy": 2.323817014694214,
+        "modified_entropy": 2.316929578781128
+      },
+      "synergy": {
+        "shift_synergy": -0.21673201024532318,
+        "entropy_synergy": -0.024149417877197266,
+        "js_synergy": -0.011217502877116203,
+        "synergy_ratio": 0.3062325804579068,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 2829,
+        "n_position": 2843,
+        "distance": 14,
+        "r_context": "RSDASRGQSGS",
+        "n_context": "SRTTRNEEQSG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.17883503437042236,
+        "relative_shift": 0.3628740906715393,
+        "entropy_change": 0.06828951835632324,
+        "js_divergence": 0.0054202601313591,
+        "original_entropy": 2.033461093902588,
+        "modified_entropy": 2.101750612258911
+      },
+      "n_alone": {
+        "centroid_shift": 0.145830899477005,
+        "relative_shift": 0.4743143618106842,
+        "entropy_change": -0.027407407760620117,
+        "js_divergence": 0.015420190989971161,
+        "original_entropy": 2.341789484024048,
+        "modified_entropy": 2.3143820762634277
+      },
+      "combined": {
+        "centroid_shift": 0.09859166294336319,
+        "relative_shift": 0.262858122587204,
+        "entropy_change": 0.001703500747680664,
+        "js_divergence": 0.008952261880040169,
+        "original_entropy": 2.281487226486206,
+        "modified_entropy": 2.2831907272338867
+      },
+      "synergy": {
+        "shift_synergy": -0.22607427090406418,
+        "entropy_synergy": -0.03917860984802246,
+        "js_synergy": -0.011888189241290092,
+        "synergy_ratio": 0.30367110507913025,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 3153,
+        "n_position": 3167,
+        "distance": 14,
+        "r_context": "RSDASRGQSGS",
+        "n_context": "SRTTRNEEQSG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.17883503437042236,
+        "relative_shift": 0.3628740906715393,
+        "entropy_change": 0.06828951835632324,
+        "js_divergence": 0.0054202601313591,
+        "original_entropy": 2.033461093902588,
+        "modified_entropy": 2.101750612258911
+      },
+      "n_alone": {
+        "centroid_shift": 0.1445874273777008,
+        "relative_shift": 0.4909310042858124,
+        "entropy_change": -0.02760624885559082,
+        "js_divergence": 0.015411986038088799,
+        "original_entropy": 2.2941198348999023,
+        "modified_entropy": 2.2665135860443115
+      },
+      "combined": {
+        "centroid_shift": 0.09812822937965393,
+        "relative_shift": 0.2655140459537506,
+        "entropy_change": 0.0013666152954101562,
+        "js_divergence": 0.008952530100941658,
+        "original_entropy": 2.2666590213775635,
+        "modified_entropy": 2.2680256366729736
+      },
+      "synergy": {
+        "shift_synergy": -0.22529423236846924,
+        "entropy_synergy": -0.039316654205322266,
+        "js_synergy": -0.01187971606850624,
+        "synergy_ratio": 0.3034057338470642,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 3248,
+        "n_position": 3238,
+        "distance": 10,
+        "r_context": "VQEQSRHGSRH",
+        "n_context": "GSASRNHRGSV"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16667990386486053,
+        "relative_shift": 0.39785969257354736,
+        "entropy_change": 0.03159976005554199,
+        "js_divergence": 0.004346325993537903,
+        "original_entropy": 2.2618255615234375,
+        "modified_entropy": 2.2934253215789795
+      },
+      "n_alone": {
+        "centroid_shift": 0.14656296372413635,
+        "relative_shift": 0.4784218966960907,
+        "entropy_change": -0.0658726692199707,
+        "js_divergence": 0.013138203881680965,
+        "original_entropy": 2.456460952758789,
+        "modified_entropy": 2.3905882835388184
+      },
+      "combined": {
+        "centroid_shift": 0.11594680696725845,
+        "relative_shift": 0.2955044209957123,
+        "entropy_change": -0.019506454467773438,
+        "js_divergence": 0.00899394229054451,
+        "original_entropy": 2.3482038974761963,
+        "modified_entropy": 2.328697443008423
+      },
+      "synergy": {
+        "shift_synergy": -0.19729606062173843,
+        "entropy_synergy": 0.014766454696655273,
+        "js_synergy": -0.008490588515996933,
+        "synergy_ratio": 0.3701498706823748,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 3252,
+        "n_position": 3238,
+        "distance": 14,
+        "r_context": "SRHGSRHPRSH",
+        "n_context": "GSASRNHRGSV"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16694168746471405,
+        "relative_shift": 0.4076630473136902,
+        "entropy_change": 0.02243185043334961,
+        "js_divergence": 0.004316243343055248,
+        "original_entropy": 2.2908897399902344,
+        "modified_entropy": 2.313321590423584
+      },
+      "n_alone": {
+        "centroid_shift": 0.14656296372413635,
+        "relative_shift": 0.4784218966960907,
+        "entropy_change": -0.0658726692199707,
+        "js_divergence": 0.013138203881680965,
+        "original_entropy": 2.456460952758789,
+        "modified_entropy": 2.3905882835388184
+      },
+      "combined": {
+        "centroid_shift": 0.09625209867954254,
+        "relative_shift": 0.2811760902404785,
+        "entropy_change": -0.02186751365661621,
+        "js_divergence": 0.0062941620126366615,
+        "original_entropy": 2.4351675510406494,
+        "modified_entropy": 2.413300037384033
+      },
+      "synergy": {
+        "shift_synergy": -0.21725255250930786,
+        "entropy_synergy": 0.021573305130004883,
+        "js_synergy": -0.011160285212099552,
+        "synergy_ratio": 0.30701968306958155,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 3477,
+        "n_position": 3491,
+        "distance": 14,
+        "r_context": "RSDASRGQSGS",
+        "n_context": "SRQTRNDEQSG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.17883503437042236,
+        "relative_shift": 0.3628740906715393,
+        "entropy_change": 0.06828951835632324,
+        "js_divergence": 0.0054202601313591,
+        "original_entropy": 2.033461093902588,
+        "modified_entropy": 2.101750612258911
+      },
+      "n_alone": {
+        "centroid_shift": 0.14417190849781036,
+        "relative_shift": 0.5019643306732178,
+        "entropy_change": -0.04542136192321777,
+        "js_divergence": 0.012751694768667221,
+        "original_entropy": 2.3896312713623047,
+        "modified_entropy": 2.344209909439087
+      },
+      "combined": {
+        "centroid_shift": 0.09833178669214249,
+        "relative_shift": 0.26501405239105225,
+        "entropy_change": -0.007637500762939453,
+        "js_divergence": 0.007922736927866936,
+        "original_entropy": 2.2835793495178223,
+        "modified_entropy": 2.275941848754883
+      },
+      "synergy": {
+        "shift_synergy": -0.22467515617609024,
+        "entropy_synergy": -0.030505657196044922,
+        "js_synergy": -0.010249217972159386,
+        "synergy_ratio": 0.30442623241635175,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 3619,
+        "n_position": 3605,
+        "distance": 14,
+        "r_context": "SHEQARSSAGE",
+        "n_context": "THHAENSSGGQ"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16331250965595245,
+        "relative_shift": 0.4045350253582001,
+        "entropy_change": 0.02625584602355957,
+        "js_divergence": 0.0067153917625546455,
+        "original_entropy": 2.1941745281219482,
+        "modified_entropy": 2.220430374145508
+      },
+      "n_alone": {
+        "centroid_shift": 0.14753229916095734,
+        "relative_shift": 0.4565899968147278,
+        "entropy_change": -0.05211687088012695,
+        "js_divergence": 0.012243915349245071,
+        "original_entropy": 2.2334482669830322,
+        "modified_entropy": 2.1813313961029053
+      },
+      "combined": {
+        "centroid_shift": 0.09616301953792572,
+        "relative_shift": 0.27854683995246887,
+        "entropy_change": -0.043656110763549805,
+        "js_divergence": 0.008316770195960999,
+        "original_entropy": 2.307328224182129,
+        "modified_entropy": 2.263672113418579
+      },
+      "synergy": {
+        "shift_synergy": -0.21468178927898407,
+        "entropy_synergy": -0.017795085906982422,
+        "js_synergy": -0.010642535984516144,
+        "synergy_ratio": 0.3093602234278602,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 3829,
+        "n_position": 3815,
+        "distance": 14,
+        "r_context": "RHSGSRHHEAS",
+        "n_context": "SRETRNEEQSG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15836651623249054,
+        "relative_shift": 0.4375952482223511,
+        "entropy_change": 0.013493061065673828,
+        "js_divergence": 0.006315206177532673,
+        "original_entropy": 2.281770944595337,
+        "modified_entropy": 2.2952640056610107
+      },
+      "n_alone": {
+        "centroid_shift": 0.14648190140724182,
+        "relative_shift": 0.4676174819469452,
+        "entropy_change": -0.027249813079833984,
+        "js_divergence": 0.015425320714712143,
+        "original_entropy": 2.333491563796997,
+        "modified_entropy": 2.306241750717163
+      },
+      "combined": {
+        "centroid_shift": 0.09413771331310272,
+        "relative_shift": 0.29893603920936584,
+        "entropy_change": -0.015790224075317383,
+        "js_divergence": 0.0075268493965268135,
+        "original_entropy": 2.3955700397491455,
+        "modified_entropy": 2.379779815673828
+      },
+      "synergy": {
+        "shift_synergy": -0.21071070432662964,
+        "entropy_synergy": -0.0020334720611572266,
+        "js_synergy": -0.014213676564395428,
+        "synergy_ratio": 0.30880171204783424,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 3896,
+        "n_position": 3886,
+        "distance": 10,
+        "r_context": "SREQSRDGSRH",
+        "n_context": "ESASRNHHGSS"
+      },
+      "r_alone": {
+        "centroid_shift": 0.17000865936279297,
+        "relative_shift": 0.38311028480529785,
+        "entropy_change": 0.06259870529174805,
+        "js_divergence": 0.005493487231433392,
+        "original_entropy": 2.1146607398986816,
+        "modified_entropy": 2.1772594451904297
+      },
+      "n_alone": {
+        "centroid_shift": 0.1514066904783249,
+        "relative_shift": 0.43815967440605164,
+        "entropy_change": -0.054436683654785156,
+        "js_divergence": 0.012271739542484283,
+        "original_entropy": 2.225058078765869,
+        "modified_entropy": 2.170621395111084
+      },
+      "combined": {
+        "centroid_shift": 0.11500223726034164,
+        "relative_shift": 0.299565851688385,
+        "entropy_change": -0.0034067630767822266,
+        "js_divergence": 0.009460218250751495,
+        "original_entropy": 2.230144739151001,
+        "modified_entropy": 2.2267379760742188
+      },
+      "synergy": {
+        "shift_synergy": -0.20641311258077621,
+        "entropy_synergy": -0.011568784713745117,
+        "js_synergy": -0.008305009454488754,
+        "synergy_ratio": 0.3577994556931075,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "Filaggrin",
+        "r_position": 3900,
+        "n_position": 3886,
+        "distance": 14,
+        "r_context": "SRDGSRHPGSS",
+        "n_context": "ESASRNHHGSS"
+      },
+      "r_alone": {
+        "centroid_shift": 0.1615978181362152,
+        "relative_shift": 0.4210846722126007,
+        "entropy_change": 0.045055389404296875,
+        "js_divergence": 0.004917779937386513,
+        "original_entropy": 2.2493703365325928,
+        "modified_entropy": 2.2944257259368896
+      },
+      "n_alone": {
+        "centroid_shift": 0.1514066904783249,
+        "relative_shift": 0.43815967440605164,
+        "entropy_change": -0.054436683654785156,
+        "js_divergence": 0.012271739542484283,
+        "original_entropy": 2.225058078765869,
+        "modified_entropy": 2.170621395111084
+      },
+      "combined": {
+        "centroid_shift": 0.09843824058771133,
+        "relative_shift": 0.26535722613334656,
+        "entropy_change": -0.0008854866027832031,
+        "js_divergence": 0.007048330269753933,
+        "original_entropy": 2.237393379211426,
+        "modified_entropy": 2.2365078926086426
+      },
+      "synergy": {
+        "shift_synergy": -0.21456626802682877,
+        "entropy_synergy": 0.008495807647705078,
+        "js_synergy": -0.010141189210116863,
+        "synergy_ratio": 0.31449464096214325,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "hnRNP A2/B1",
+        "r_position": 203,
+        "n_position": 218,
+        "distance": 15,
+        "r_context": "SSRSGRGGNFG",
+        "n_context": "RGGGGNFGPGP"
+      },
+      "r_alone": {
+        "centroid_shift": 0.1558280885219574,
+        "relative_shift": 0.4454602897167206,
+        "entropy_change": 0.06442904472351074,
+        "js_divergence": 0.008433864451944828,
+        "original_entropy": 2.2612357139587402,
+        "modified_entropy": 2.325664758682251
+      },
+      "n_alone": {
+        "centroid_shift": 0.15688659250736237,
+        "relative_shift": 0.39807695150375366,
+        "entropy_change": 0.0617518424987793,
+        "js_divergence": 0.01305997185409069,
+        "original_entropy": 2.076868772506714,
+        "modified_entropy": 2.138620615005493
+      },
+      "combined": {
+        "centroid_shift": 0.09443061798810959,
+        "relative_shift": 0.25718361139297485,
+        "entropy_change": 0.049973487854003906,
+        "js_divergence": 0.008070014417171478,
+        "original_entropy": 2.200115203857422,
+        "modified_entropy": 2.250088691711426
+      },
+      "synergy": {
+        "shift_synergy": -0.21828406304121017,
+        "entropy_synergy": -0.07620739936828613,
+        "js_synergy": -0.013423822820186615,
+        "synergy_ratio": 0.30197052996389007,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "hnRNP A2/B1",
+        "r_position": 213,
+        "n_position": 226,
+        "distance": 13,
+        "r_context": "GFGDSRGGGGN",
+        "n_context": "PGPGSNFRGGS"
+      },
+      "r_alone": {
+        "centroid_shift": 0.16020505130290985,
+        "relative_shift": 0.42660120129585266,
+        "entropy_change": 0.05325722694396973,
+        "js_divergence": 0.020407581701874733,
+        "original_entropy": 2.078136682510376,
+        "modified_entropy": 2.1313939094543457
+      },
+      "n_alone": {
+        "centroid_shift": 0.14916399121284485,
+        "relative_shift": 0.44375431537628174,
+        "entropy_change": 0.010501623153686523,
+        "js_divergence": 0.01986061781644821,
+        "original_entropy": 2.2150349617004395,
+        "modified_entropy": 2.225536584854126
+      },
+      "combined": {
+        "centroid_shift": 0.09957780689001083,
+        "relative_shift": 0.2836275100708008,
+        "entropy_change": 0.07333207130432129,
+        "js_divergence": 0.014111846685409546,
+        "original_entropy": 2.167555332183838,
+        "modified_entropy": 2.240887403488159
+      },
+      "synergy": {
+        "shift_synergy": -0.20979123562574387,
+        "entropy_synergy": 0.009573221206665039,
+        "js_synergy": -0.02615635097026825,
+        "synergy_ratio": 0.32187385669900187,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "hnRNP A2/B1",
+        "r_position": 228,
+        "n_position": 218,
+        "distance": 10,
+        "r_context": "PGSNFRGGSDG",
+        "n_context": "RGGGGNFGPGP"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15724636614322662,
+        "relative_shift": 0.4419713318347931,
+        "entropy_change": 0.0449221134185791,
+        "js_divergence": 0.01931312307715416,
+        "original_entropy": 2.176182270050049,
+        "modified_entropy": 2.221104383468628
+      },
+      "n_alone": {
+        "centroid_shift": 0.15688659250736237,
+        "relative_shift": 0.39807695150375366,
+        "entropy_change": 0.0617518424987793,
+        "js_divergence": 0.01305997185409069,
+        "original_entropy": 2.076868772506714,
+        "modified_entropy": 2.138620615005493
+      },
+      "combined": {
+        "centroid_shift": 0.11436125636100769,
+        "relative_shift": 0.2976393699645996,
+        "entropy_change": 0.07027816772460938,
+        "js_divergence": 0.01718149147927761,
+        "original_entropy": 2.138601779937744,
+        "modified_entropy": 2.2088799476623535
+      },
+      "synergy": {
+        "shift_synergy": -0.1997717022895813,
+        "entropy_synergy": -0.03639578819274902,
+        "js_synergy": -0.01519160158932209,
+        "synergy_ratio": 0.3640536695540014,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "hnRNP A2/B1",
+        "r_position": 238,
+        "n_position": 226,
+        "distance": 12,
+        "r_context": "GYGSGRGFGDG",
+        "n_context": "PGPGSNFRGGS"
+      },
+      "r_alone": {
+        "centroid_shift": 0.15985791385173798,
+        "relative_shift": 0.42775508761405945,
+        "entropy_change": 0.054962873458862305,
+        "js_divergence": 0.019781887531280518,
+        "original_entropy": 2.1084935665130615,
+        "modified_entropy": 2.163456439971924
+      },
+      "n_alone": {
+        "centroid_shift": 0.14916399121284485,
+        "relative_shift": 0.44375431537628174,
+        "entropy_change": 0.010501623153686523,
+        "js_divergence": 0.01986061781644821,
+        "original_entropy": 2.2150349617004395,
+        "modified_entropy": 2.225536584854126
+      },
+      "combined": {
+        "centroid_shift": 0.10499013215303421,
+        "relative_shift": 0.28238368034362793,
+        "entropy_change": 0.06234598159790039,
+        "js_divergence": 0.015095619484782219,
+        "original_entropy": 2.167656660079956,
+        "modified_entropy": 2.2300026416778564
+      },
+      "synergy": {
+        "shift_synergy": -0.20403177291154861,
+        "entropy_synergy": -0.0031185150146484375,
+        "js_synergy": -0.02454688586294651,
+        "synergy_ratio": 0.339749805429221,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "hnRNP A2/B1",
+        "r_position": 266,
+        "n_position": 255,
+        "distance": 11,
+        "r_context": "GYGGGRGGYGG",
+        "n_context": "GPGGGNFGGSP"
+      },
+      "r_alone": {
+        "centroid_shift": 0.20478461682796478,
+        "relative_shift": 0.3518661856651306,
+        "entropy_change": 0.055068016052246094,
+        "js_divergence": 0.01780560612678528,
+        "original_entropy": 1.6624739170074463,
+        "modified_entropy": 1.7175419330596924
+      },
+      "n_alone": {
+        "centroid_shift": 0.183480367064476,
+        "relative_shift": 0.3514236807823181,
+        "entropy_change": 0.00018417835235595703,
+        "js_divergence": 0.022020909935235977,
+        "original_entropy": 1.74997878074646,
+        "modified_entropy": 1.750162959098816
+      },
+      "combined": {
+        "centroid_shift": 0.14516307413578033,
+        "relative_shift": 0.24443495273590088,
+        "entropy_change": 0.010952949523925781,
+        "js_divergence": 0.02189614810049534,
+        "original_entropy": 1.6618077754974365,
+        "modified_entropy": 1.6727607250213623
+      },
+      "synergy": {
+        "shift_synergy": -0.24310190975666046,
+        "entropy_synergy": -0.04429924488067627,
+        "js_synergy": -0.017930367961525917,
+        "synergy_ratio": 0.37387629613956264,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "hnRNP A2/B1",
+        "r_position": 266,
+        "n_position": 278,
+        "distance": 12,
+        "r_context": "GYGGGRGGYGG",
+        "n_context": "GPGYGNQGGGY"
+      },
+      "r_alone": {
+        "centroid_shift": 0.20478461682796478,
+        "relative_shift": 0.3518661856651306,
+        "entropy_change": 0.055068016052246094,
+        "js_divergence": 0.01780560612678528,
+        "original_entropy": 1.6624739170074463,
+        "modified_entropy": 1.7175419330596924
+      },
+      "n_alone": {
+        "centroid_shift": 0.19991759955883026,
+        "relative_shift": 0.3475235104560852,
+        "entropy_change": -0.03667104244232178,
+        "js_divergence": 0.014490462839603424,
+        "original_entropy": 1.6161129474639893,
+        "modified_entropy": 1.5794419050216675
+      },
+      "combined": {
+        "centroid_shift": 0.12986311316490173,
+        "relative_shift": 0.23674376308918,
+        "entropy_change": -0.021118879318237305,
+        "js_divergence": 0.014196023344993591,
+        "original_entropy": 1.7311389446258545,
+        "modified_entropy": 1.7100200653076172
+      },
+      "synergy": {
+        "shift_synergy": -0.2748391032218933,
+        "entropy_synergy": -0.03951585292816162,
+        "js_synergy": -0.01810004562139511,
+        "synergy_ratio": 0.3208855990269552,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    },
+    {
+      "pair": {
+        "protein": "hnRNP A2/B1",
+        "r_position": 350,
+        "n_position": 335,
+        "distance": 15,
+        "r_context": "GGYGGRSRY--",
+        "n_context": "PYGGGNYGPGG"
+      },
+      "r_alone": {
+        "centroid_shift": 0.2548951208591461,
+        "relative_shift": 0.5250691175460815,
+        "entropy_change": 0.16851294040679932,
+        "js_divergence": 0.022446177899837494,
+        "original_entropy": 1.7728651762008667,
+        "modified_entropy": 1.941378116607666
+      },
+      "n_alone": {
+        "centroid_shift": 0.1813500076532364,
+        "relative_shift": 0.3530409038066864,
+        "entropy_change": 0.0012012720108032227,
+        "js_divergence": 0.01961216703057289,
+        "original_entropy": 1.7163407802581787,
+        "modified_entropy": 1.717542052268982
+      },
+      "combined": {
+        "centroid_shift": 0.1254999190568924,
+        "relative_shift": 0.26662561297416687,
+        "entropy_change": 0.033359646797180176,
+        "js_divergence": 0.018970444798469543,
+        "original_entropy": 1.8647756576538086,
+        "modified_entropy": 1.8981353044509888
+      },
+      "synergy": {
+        "shift_synergy": -0.3107452094554901,
+        "entropy_synergy": -0.13635456562042236,
+        "js_synergy": -0.02308790013194084,
+        "synergy_ratio": 0.28768210995521054,
+        "is_synergistic": 0,
+        "is_antagonistic": 1
+      },
+      "goldilocks": {
+        "r_in_zone": false,
+        "n_in_zone": false,
+        "combined_in_zone": true,
+        "potentiation": 1
+      }
+    }
+  ]
+}

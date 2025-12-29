@@ -1,0 +1,26 @@
+{
+  "name": "FGB_R406_citrullinated",
+  "sequences": [
+    {
+      "protein": {
+        "id": "A",
+        "sequence": "SARGHRPLDKK",
+        "modifications": [
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 3
+          },
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 6
+          }
+        ]
+      }
+    }
+  ],
+  "modelSeeds": [
+    1
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}

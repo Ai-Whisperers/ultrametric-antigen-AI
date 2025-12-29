@@ -1,0 +1,37 @@
+{
+  "n_alleles": 17,
+  "n_positions": 84,
+  "top_discriminative_positions": [
+    {
+      "position": 65,
+      "fisher_ratio": 9.634859279022727
+    },
+    {
+      "position": 77,
+      "fisher_ratio": 3.0342577626619724
+    },
+    {
+      "position": 72,
+      "fisher_ratio": 2.992669875657062
+    },
+    {
+      "position": 87,
+      "fisher_ratio": 2.6328795925730133
+    },
+    {
+      "position": 46,
+      "fisher_ratio": 2.625299414335338
+    }
+  ],
+  "permutation_test": {
+    "observed_ratio": 1.179688607936001,
+    "null_mean": 1.0013581569725916,
+    "null_std": 0.05580124812266912,
+    "p_value": 0.016,
+    "z_score": 3.1958141619563785
+  },
+  "or_correlation": {
+    "correlation": 0.5478651007886477,
+    "p_value": 0.028022224252192137
+  }
+}

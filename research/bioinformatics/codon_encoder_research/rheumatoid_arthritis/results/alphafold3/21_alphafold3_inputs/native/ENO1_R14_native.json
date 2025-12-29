@@ -1,0 +1,16 @@
+{
+  "name": "ENO1_R14_native",
+  "sequences": [
+    {
+      "protein": {
+        "id": "A",
+        "sequence": "TGRILSKIRE"
+      }
+    }
+  ],
+  "modelSeeds": [
+    1
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}

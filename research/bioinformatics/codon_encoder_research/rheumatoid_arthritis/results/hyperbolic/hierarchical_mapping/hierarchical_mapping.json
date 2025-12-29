@@ -1,0 +1,750 @@
+{
+  "analysis_date": "2025-12-25T00:23:00.002645",
+  "encoder_version": "3-adic V5.11.3",
+  "hierarchy": {
+    "n_clusters": 21,
+    "max_depth": 14,
+    "levels": {
+      "1": {
+        "n_clusters": 1,
+        "threshold": 6.624161982536316,
+        "labels": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "2": {
+        "n_clusters": 2,
+        "threshold": 6.503559815256219,
+        "labels": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "3": {
+        "n_clusters": 3,
+        "threshold": 6.068201965755886,
+        "labels": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          3,
+          1,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "4": {
+        "n_clusters": 4,
+        "threshold": 5.862667223986457,
+        "labels": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          4,
+          1,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "5": {
+        "n_clusters": 5,
+        "threshold": 5.748877972364426,
+        "labels": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          5,
+          1,
+          4,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "6": {
+        "n_clusters": 6,
+        "threshold": 5.719377104441325,
+        "labels": [
+          1,
+          1,
+          1,
+          1,
+          2,
+          3,
+          4,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          6,
+          1,
+          5,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "7": {
+        "n_clusters": 7,
+        "threshold": 5.574216570172991,
+        "labels": [
+          1,
+          2,
+          1,
+          1,
+          3,
+          4,
+          5,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          7,
+          1,
+          6,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "8": {
+        "n_clusters": 8,
+        "threshold": 5.311603327592214,
+        "labels": [
+          2,
+          3,
+          1,
+          1,
+          4,
+          5,
+          6,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          8,
+          1,
+          7,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "9": {
+        "n_clusters": 9,
+        "threshold": 5.076168537139893,
+        "labels": [
+          3,
+          4,
+          2,
+          2,
+          5,
+          6,
+          7,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          9,
+          1,
+          8,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "10": {
+        "n_clusters": 10,
+        "threshold": 4.969332304867831,
+        "labels": [
+          4,
+          5,
+          2,
+          3,
+          6,
+          7,
+          8,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          10,
+          1,
+          9,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "11": {
+        "n_clusters": 11,
+        "threshold": 4.7212071518103285,
+        "labels": [
+          5,
+          6,
+          3,
+          4,
+          7,
+          8,
+          9,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          11,
+          1,
+          10,
+          2,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "12": {
+        "n_clusters": 12,
+        "threshold": 4.339429616928101,
+        "labels": [
+          6,
+          7,
+          4,
+          5,
+          8,
+          9,
+          10,
+          2,
+          1,
+          1,
+          1,
+          2,
+          2,
+          12,
+          1,
+          11,
+          3,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "13": {
+        "n_clusters": 13,
+        "threshold": 4.238111476103465,
+        "labels": [
+          7,
+          8,
+          5,
+          6,
+          9,
+          10,
+          11,
+          3,
+          1,
+          1,
+          1,
+          2,
+          2,
+          13,
+          1,
+          12,
+          4,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "14": {
+        "n_clusters": 14,
+        "threshold": 3.8825561702251434,
+        "labels": [
+          8,
+          9,
+          6,
+          7,
+          10,
+          11,
+          12,
+          4,
+          2,
+          2,
+          2,
+          3,
+          3,
+          14,
+          1,
+          13,
+          5,
+          1,
+          2,
+          2,
+          2
+        ]
+      }
+    }
+  },
+  "aa_cluster_assignments": {
+    "A": {
+      "codon": "GCT",
+      "primary_cluster": 3,
+      "properties": {
+        "hydrophobic": true,
+        "charge": 0,
+        "size": "small",
+        "polar": false
+      }
+    },
+    "R": {
+      "codon": "CGG",
+      "primary_cluster": 1,
+      "properties": {
+        "hydrophobic": false,
+        "charge": 1,
+        "size": "large",
+        "polar": true
+      }
+    },
+    "N": {
+      "codon": "AAC",
+      "primary_cluster": 16,
+      "properties": {
+        "hydrophobic": false,
+        "charge": 0,
+        "size": "medium",
+        "polar": true
+      }
+    },
+    "D": {
+      "codon": "GAC",
+      "primary_cluster": 11,
+      "properties": {
+        "hydrophobic": false,
+        "charge": -1,
+        "size": "medium",
+        "polar": true
+      }
+    },
+    "C": {
+      "codon": "TGC",
+      "primary_cluster": 10,
+      "properties": {
+        "hydrophobic": true,
+        "charge": 0,
+        "size": "small",
+        "polar": false
+      }
+    },
+    "E": {
+      "codon": "GAG",
+      "primary_cluster": 12,
+      "properties": {
+        "hydrophobic": false,
+        "charge": -1,
+        "size": "medium",
+        "polar": true
+      }
+    },
+    "Q": {
+      "codon": "CAG",
+      "primary_cluster": 17,
+      "properties": {
+        "hydrophobic": false,
+        "charge": 0,
+        "size": "medium",
+        "polar": true
+      }
+    },
+    "G": {
+      "codon": "GGC",
+      "primary_cluster": 4,
+      "properties": {
+        "hydrophobic": true,
+        "charge": 0,
+        "size": "tiny",
+        "polar": false
+      }
+    },
+    "H": {
+      "codon": "CAC",
+      "primary_cluster": 14,
+      "properties": {
+        "hydrophobic": false,
+        "charge": 0.5,
+        "size": "medium",
+        "polar": true
+      }
+    },
+    "I": {
+      "codon": "ATC",
+      "primary_cluster": 9,
+      "properties": {
+        "hydrophobic": true,
+        "charge": 0,
+        "size": "large",
+        "polar": false
+      }
+    },
+    "L": {
+      "codon": "CTG",
+      "primary_cluster": 0,
+      "properties": {
+        "hydrophobic": true,
+        "charge": 0,
+        "size": "large",
+        "polar": false
+      }
+    },
+    "K": {
+      "codon": "AAG",
+      "primary_cluster": 15,
+      "properties": {
+        "hydrophobic": false,
+        "charge": 1,
+        "size": "large",
+        "polar": true
+      }
+    },
+    "M": {
+      "codon": "ATG",
+      "primary_cluster": 9,
+      "properties": {
+        "hydrophobic": true,
+        "charge": 0,
+        "size": "large",
+        "polar": false
+      }
+    },
+    "F": {
+      "codon": "TTC",
+      "primary_cluster": 13,
+      "properties": {
+        "hydrophobic": true,
+        "charge": 0,
+        "size": "large",
+        "polar": false
+      }
+    },
+    "P": {
+      "codon": "CCG",
+      "primary_cluster": 5,
+      "properties": {
+        "hydrophobic": true,
+        "charge": 0,
+        "size": "small",
+        "polar": false
+      }
+    },
+    "S": {
+      "codon": "TCG",
+      "primary_cluster": 2,
+      "properties": {
+        "hydrophobic": false,
+        "charge": 0,
+        "size": "small",
+        "polar": true
+      }
+    },
+    "T": {
+      "codon": "ACC",
+      "primary_cluster": 6,
+      "properties": {
+        "hydrophobic": false,
+        "charge": 0,
+        "size": "medium",
+        "polar": true
+      }
+    },
+    "W": {
+      "codon": "TGG",
+      "primary_cluster": 8,
+      "properties": {
+        "hydrophobic": true,
+        "charge": 0,
+        "size": "large",
+        "polar": false
+      }
+    },
+    "Y": {
+      "codon": "TAC",
+      "primary_cluster": 18,
+      "properties": {
+        "hydrophobic": true,
+        "charge": 0,
+        "size": "large",
+        "polar": true
+      }
+    },
+    "V": {
+      "codon": "GTG",
+      "primary_cluster": 7,
+      "properties": {
+        "hydrophobic": true,
+        "charge": 0,
+        "size": "medium",
+        "polar": false
+      }
+    }
+  },
+  "ptm_transitions": {
+    "R\u2192Q": {
+      "from_aa": "R",
+      "to_aa": "Q",
+      "name": "Citrullination",
+      "charge_change": -1,
+      "from_cluster": 1,
+      "to_cluster": 17,
+      "same_cluster": 0,
+      "embedding_distance": 5.540298938751221,
+      "cluster_distance": 5.481220722198486,
+      "divergence_level": 7,
+      "js_divergence": 0.6167422579647195,
+      "entropy_change": 0.9574969309477848,
+      "from_entropy": 0.37455207726610956,
+      "to_entropy": 1.3320490082138943
+    },
+    "N\u2192Q": {
+      "from_aa": "N",
+      "to_aa": "Q",
+      "name": "Deamidation",
+      "charge_change": 0,
+      "from_cluster": 16,
+      "to_cluster": 17,
+      "same_cluster": 0,
+      "embedding_distance": 5.272900104522705,
+      "cluster_distance": 5.181520938873291,
+      "divergence_level": 11,
+      "js_divergence": 0.5164212578267825,
+      "entropy_change": 0.3808526167426518,
+      "from_entropy": 0.9511963914712425,
+      "to_entropy": 1.3320490082138943
+    },
+    "N\u2192D": {
+      "from_aa": "N",
+      "to_aa": "D",
+      "name": "Deamidation-D",
+      "charge_change": -1,
+      "from_cluster": 16,
+      "to_cluster": 11,
+      "same_cluster": 0,
+      "embedding_distance": 4.986124515533447,
+      "cluster_distance": 4.845588207244873,
+      "divergence_level": 11,
+      "js_divergence": 0.4592199097290912,
+      "entropy_change": 0.23854647900031067,
+      "from_entropy": 0.9511963914712425,
+      "to_entropy": 1.1897428704715531
+    },
+    "S\u2192D": {
+      "from_aa": "S",
+      "to_aa": "D",
+      "name": "Phosphorylation-S",
+      "charge_change": -1,
+      "from_cluster": 2,
+      "to_cluster": 11,
+      "same_cluster": 0,
+      "embedding_distance": 6.049397945404053,
+      "cluster_distance": 5.974085330963135,
+      "divergence_level": 9,
+      "js_divergence": 0.6841075802241934,
+      "entropy_change": 0.687209910354657,
+      "from_entropy": 0.5025329601168962,
+      "to_entropy": 1.1897428704715531
+    },
+    "T\u2192D": {
+      "from_aa": "T",
+      "to_aa": "D",
+      "name": "Phosphorylation-T",
+      "charge_change": -1,
+      "from_cluster": 6,
+      "to_cluster": 11,
+      "same_cluster": 0,
+      "embedding_distance": 6.196364879608154,
+      "cluster_distance": 6.097734451293945,
+      "divergence_level": 4,
+      "js_divergence": 0.6525245307903793,
+      "entropy_change": 0.7354772856075882,
+      "from_entropy": 0.45426558486396496,
+      "to_entropy": 1.1897428704715531
+    },
+    "K\u2192Q": {
+      "from_aa": "K",
+      "to_aa": "Q",
+      "name": "Acetylation",
+      "charge_change": -1,
+      "from_cluster": 15,
+      "to_cluster": 17,
+      "same_cluster": 0,
+      "embedding_distance": 5.690831661224365,
+      "cluster_distance": 5.6225762367248535,
+      "divergence_level": 3,
+      "js_divergence": 0.4606517902280781,
+      "entropy_change": 0.653285921122932,
+      "from_entropy": 0.6787630870909622,
+      "to_entropy": 1.3320490082138943
+    },
+    "M\u2192Q": {
+      "from_aa": "M",
+      "to_aa": "Q",
+      "name": "Oxidation",
+      "charge_change": 0,
+      "from_cluster": 9,
+      "to_cluster": 17,
+      "same_cluster": 0,
+      "embedding_distance": 4.63388729095459,
+      "cluster_distance": 4.383143901824951,
+      "divergence_level": 14,
+      "js_divergence": 0.6431108680321347,
+      "entropy_change": 0.24140364435446404,
+      "from_entropy": 1.0906453638594302,
+      "to_entropy": 1.3320490082138943
+    },
+    "Y\u2192D": {
+      "from_aa": "Y",
+      "to_aa": "D",
+      "name": "Phosphorylation-Y",
+      "charge_change": -1,
+      "from_cluster": 18,
+      "to_cluster": 11,
+      "same_cluster": 0,
+      "embedding_distance": 4.815439224243164,
+      "cluster_distance": 4.55710506439209,
+      "divergence_level": 12,
+      "js_divergence": 0.6088561421436327,
+      "entropy_change": 0.036581489744418105,
+      "from_entropy": 1.153161380727135,
+      "to_entropy": 1.1897428704715531
+    }
+  },
+  "pair_hierarchy": {
+    "same_branch_count": 12,
+    "cross_branch_count": 16,
+    "by_effect_magnitude": {
+      "large": 28
+    }
+  },
+  "goldilocks": {
+    "single_goldilocks": [],
+    "pair_goldilocks": [],
+    "single_rate": 0.0,
+    "pair_rate": 0.0
+  },
+  "key_findings": {
+    "dominant_clusters": [
+      9
+    ],
+    "high_distance_ptms": [
+      "R\u2192Q",
+      "N\u2192Q",
+      "N\u2192D",
+      "S\u2192D",
+      "T\u2192D",
+      "K\u2192Q",
+      "M\u2192Q",
+      "Y\u2192D"
+    ],
+    "low_distance_ptms": [],
+    "goldilocks_optimal_pairs": []
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "n_comparisons": 4,
+  "mean_delta_iptm": 0.14099999999999996,
+  "mean_delta_ranking": 0.07750000000000003,
+  "increased_binding": 4,
+  "decreased_binding": 0,
+  "percent_increased": 100.0,
+  "entropy_iptm_correlation": -0.6250843623655252,
+  "epitope_summary": {
+    "fga_r38": {
+      "mean_delta_iptm": 0.1859999999999999,
+      "mean_delta_ranking": 0.07800000000000007,
+      "n_hla_tested": 1,
+      "entropy_change": 0.041
+    },
+    "fgb_r406": {
+      "mean_delta_iptm": 0.14600000000000002,
+      "mean_delta_ranking": 0.03600000000000003,
+      "n_hla_tested": 1,
+      "entropy_change": 0.038
+    },
+    "vim_r71": {
+      "mean_delta_iptm": 0.11599999999999999,
+      "mean_delta_ranking": 0.098,
+      "n_hla_tested": 2,
+      "entropy_change": 0.049
+    }
+  }
+}

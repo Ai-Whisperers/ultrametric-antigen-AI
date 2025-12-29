@@ -1,0 +1,30 @@
+{
+  "name": "VIM_R71_citrullinated",
+  "sequences": [
+    {
+      "protein": {
+        "id": "A",
+        "sequence": "RLRSSVPGVR",
+        "modifications": [
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 1
+          },
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 3
+          },
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 10
+          }
+        ]
+      }
+    }
+  ],
+  "modelSeeds": [
+    1
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}

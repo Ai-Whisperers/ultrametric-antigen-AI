@@ -1,0 +1,1253 @@
+{
+  "metadata": {
+    "analysis": "Combinatorial Phosphorylation",
+    "encoder": "3-adic (V5.11.3)",
+    "tau_isoform": "2N4R (441 aa)",
+    "n_combinations": 14
+  },
+  "individual_shifts": {
+    "181": 0.00528156291693449,
+    "202": 0.00738901924341917,
+    "205": 0.00528156291693449,
+    "208": 0.00738901924341917,
+    "212": 0.00528156291693449,
+    "214": 0.00738901924341917,
+    "217": 0.00528156291693449,
+    "231": 0.00528156291693449,
+    "235": 0.00738901924341917,
+    "262": 0.00738901924341917,
+    "293": 0.00738901924341917,
+    "324": 0.00738901924341917,
+    "356": 0.00738901924341917,
+    "396": 0.00738901924341917,
+    "404": 0.00738901924341917,
+    "409": 0.00738901924341917,
+    "422": 0.00738901924341917
+  },
+  "combination_results": [
+    {
+      "name": "AT8",
+      "sites": [
+        202,
+        205
+      ],
+      "n_sites": 2,
+      "description": "Early tangle marker, gold standard for AD staging",
+      "stage": "early",
+      "combined_shift": 0.012079338543117046,
+      "combined_shift_pct": 1.2079338543117046,
+      "synergy_ratio": 0.9533372966013653,
+      "synergy_type": "ADDITIVE",
+      "expected_additive": 0.01267058216035366,
+      "actual": 0.012079338543117046,
+      "excess": -0.0005912436172366142
+    },
+    {
+      "name": "AT8_extended",
+      "sites": [
+        202,
+        205,
+        208
+      ],
+      "n_sites": 3,
+      "description": "Extended AT8 with pS208",
+      "stage": "early",
+      "combined_shift": 0.01928526721894741,
+      "combined_shift_pct": 1.928526721894741,
+      "synergy_ratio": 0.9613983264552912,
+      "synergy_type": "ADDITIVE",
+      "expected_additive": 0.02005960140377283,
+      "actual": 0.01928526721894741,
+      "excess": -0.0007743341848254204
+    },
+    {
+      "name": "AT100",
+      "sites": [
+        212,
+        214
+      ],
+      "n_sites": 2,
+      "description": "AD-specific phosphorylation pattern",
+      "stage": "mid",
+      "combined_shift": 0.012079338543117046,
+      "combined_shift_pct": 1.2079338543117046,
+      "synergy_ratio": 0.9533372966013653,
+      "synergy_type": "ADDITIVE",
+      "expected_additive": 0.01267058216035366,
+      "actual": 0.012079338543117046,
+      "excess": -0.0005912436172366142
+    },
+    {
+      "name": "AT180",
+      "sites": [
+        231,
+        235
+      ],
+      "n_sites": 2,
+      "description": "Conformational epitope, proline-directed",
+      "stage": "early",
+      "combined_shift": 0.012079338543117046,
+      "combined_shift_pct": 1.2079338543117046,
+      "synergy_ratio": 0.9533372966013653,
+      "synergy_type": "ADDITIVE",
+      "expected_additive": 0.01267058216035366,
+      "actual": 0.012079338543117046,
+      "excess": -0.0005912436172366142
+    },
+    {
+      "name": "PHF-1",
+      "sites": [
+        396,
+        404
+      ],
+      "n_sites": 2,
+      "description": "Paired helical filament marker",
+      "stage": "late",
+      "combined_shift": 0.014745636843144894,
+      "combined_shift_pct": 1.4745636843144894,
+      "synergy_ratio": 0.9978074462505762,
+      "synergy_type": "ADDITIVE",
+      "expected_additive": 0.01477803848683834,
+      "actual": 0.014745636843144894,
+      "excess": -3.240164369344711e-05
+    },
+    {
+      "name": "MTBR_R1_R2",
+      "sites": [
+        262,
+        293
+      ],
+      "n_sites": 2,
+      "description": "KXGS motifs in R1 and R2",
+      "stage": "mid",
+      "combined_shift": 0.014745636843144894,
+      "combined_shift_pct": 1.4745636843144894,
+      "synergy_ratio": 0.9978074462505762,
+      "synergy_type": "ADDITIVE",
+      "expected_additive": 0.01477803848683834,
+      "actual": 0.014745636843144894,
+      "excess": -3.240164369344711e-05
+    },
+    {
+      "name": "MTBR_R3_R4",
+      "sites": [
+        324,
+        356
+      ],
+      "n_sites": 2,
+      "description": "KXGS motifs in R3 and R4",
+      "stage": "mid",
+      "combined_shift": 0.014745636843144894,
+      "combined_shift_pct": 1.4745636843144894,
+      "synergy_ratio": 0.9978074462505762,
+      "synergy_type": "ADDITIVE",
+      "expected_additive": 0.01477803848683834,
+      "actual": 0.014745636843144894,
+      "excess": -3.240164369344711e-05
+    },
+    {
+      "name": "MTBR_full",
+      "sites": [
+        262,
+        293,
+        324,
+        356
+      ],
+      "n_sites": 4,
+      "description": "All four KXGS motifs",
+      "stage": "mid-late",
+      "combined_shift": 0.02939736470580101,
+      "combined_shift_pct": 2.939736470580101,
+      "synergy_ratio": 0.9946301307843722,
+      "synergy_type": "ADDITIVE",
+      "expected_additive": 0.02955607697367668,
+      "actual": 0.02939736470580101,
+      "excess": -0.0001587122678756714
+    },
+    {
+      "name": "CSF_early",
+      "sites": [
+        181,
+        217
+      ],
+      "n_sites": 2,
+      "description": "Clinical CSF biomarkers (p-tau181, p-tau217)",
+      "stage": "early",
+      "combined_shift": 0.01056308951228857,
+      "combined_shift_pct": 1.056308951228857,
+      "synergy_ratio": 0.9999965614742282,
+      "synergy_type": "ADDITIVE",
+      "expected_additive": 0.01056312583386898,
+      "actual": 0.01056308951228857,
+      "excess": -3.632158041000366e-08
+    },
+    {
+      "name": "CSF_extended",
+      "sites": [
+        181,
+        217,
+        231
+      ],
+      "n_sites": 3,
+      "description": "Extended CSF panel with p-tau231",
+      "stage": "early",
+      "combined_shift": 0.015844540670514107,
+      "combined_shift_pct": 1.5844540670514107,
+      "synergy_ratio": 0.999990654263287,
+      "synergy_type": "ADDITIVE",
+      "expected_additive": 0.01584468875080347,
+      "actual": 0.015844540670514107,
+      "excess": -1.4808028936386108e-07
+    },
+    {
+      "name": "Braak_I_II",
+      "sites": [
+        181,
+        231,
+        202,
+        205
+      ],
+      "n_sites": 4,
+      "description": "Transentorhinal stage phosphorylation",
+      "stage": "early",
+      "combined_shift": 0.022263240069150925,
+      "combined_shift_pct": 2.2263240069150925,
+      "synergy_ratio": 0.9582301746534373,
+      "synergy_type": "ADDITIVE",
+      "expected_additive": 0.02323370799422264,
+      "actual": 0.022263240069150925,
+      "excess": -0.0009704679250717163
+    },
+    {
+      "name": "Braak_III_IV",
+      "sites": [
+        181,
+        231,
+        202,
+        205,
+        262,
+        396
+      ],
+      "n_sites": 6,
+      "description": "Limbic stage phosphorylation",
+      "stage": "mid",
+      "combined_shift": 0.03613414242863655,
+      "combined_shift_pct": 3.613414242863655,
+      "synergy_ratio": 0.9506046360337604,
+      "synergy_type": "ADDITIVE",
+      "expected_additive": 0.03801174648106098,
+      "actual": 0.03613414242863655,
+      "excess": -0.0018776040524244308
+    },
+    {
+      "name": "Braak_V_VI",
+      "sites": [
+        181,
+        231,
+        202,
+        205,
+        262,
+        293,
+        324,
+        356,
+        396,
+        404,
+        422
+      ],
+      "n_sites": 11,
+      "description": "Neocortical stage (severe)",
+      "stage": "late",
+      "combined_shift": 0.07168056815862656,
+      "combined_shift_pct": 7.168056815862656,
+      "synergy_ratio": 0.9562911880810737,
+      "synergy_type": "ADDITIVE",
+      "expected_additive": 0.07495684269815683,
+      "actual": 0.07168056815862656,
+      "excess": -0.0032762745395302773
+    },
+    {
+      "name": "C_term_seed",
+      "sites": [
+        396,
+        404,
+        409,
+        422
+      ],
+      "n_sites": 4,
+      "description": "C-terminal aggregation-prone region",
+      "stage": "late",
+      "combined_shift": 0.02939736470580101,
+      "combined_shift_pct": 2.939736470580101,
+      "synergy_ratio": 0.9946301307843722,
+      "synergy_type": "ADDITIVE",
+      "expected_additive": 0.02955607697367668,
+      "actual": 0.02939736470580101,
+      "excess": -0.0001587122678756714
+    }
+  ],
+  "synergy_analysis": {
+    "synergistic": [],
+    "antagonistic": [],
+    "additive": [
+      "AT8",
+      "AT8_extended",
+      "AT100",
+      "AT180",
+      "PHF-1",
+      "MTBR_R1_R2",
+      "MTBR_R3_R4",
+      "MTBR_full",
+      "CSF_early",
+      "CSF_extended",
+      "Braak_I_II",
+      "Braak_III_IV",
+      "Braak_V_VI",
+      "C_term_seed"
+    ]
+  },
+  "tipping_points": {
+    "0.15": {
+      "threshold": 0.15,
+      "minimal_sites": [
+        46,
+        56,
+        61,
+        64,
+        68,
+        184,
+        185,
+        191,
+        195,
+        198,
+        199,
+        202,
+        208,
+        210,
+        214,
+        235,
+        237,
+        238,
+        258,
+        262,
+        285,
+        289
+      ],
+      "final_shift": 0.1550520360469818,
+      "crossed": true,
+      "trajectory": [
+        {
+          "n_phospho": 1,
+          "added_site": 46,
+          "cumulative_shift": 0.00738901924341917,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 2,
+          "added_site": 56,
+          "cumulative_shift": 0.014745636843144894,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 3,
+          "added_site": 61,
+          "cumulative_shift": 0.022085845470428467,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 4,
+          "added_site": 64,
+          "cumulative_shift": 0.02939736470580101,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 5,
+          "added_site": 68,
+          "cumulative_shift": 0.036677584052085876,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 6,
+          "added_site": 184,
+          "cumulative_shift": 0.04392821714282036,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 7,
+          "added_site": 185,
+          "cumulative_shift": 0.051149897277355194,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 8,
+          "added_site": 191,
+          "cumulative_shift": 0.05833674222230911,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 9,
+          "added_site": 195,
+          "cumulative_shift": 0.06549081951379776,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 10,
+          "added_site": 198,
+          "cumulative_shift": 0.07261167466640472,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 11,
+          "added_site": 199,
+          "cumulative_shift": 0.07969596236944199,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 12,
+          "added_site": 202,
+          "cumulative_shift": 0.08674410730600357,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 13,
+          "added_site": 208,
+          "cumulative_shift": 0.09375506639480591,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 14,
+          "added_site": 210,
+          "cumulative_shift": 0.10072805732488632,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 15,
+          "added_site": 214,
+          "cumulative_shift": 0.10766134411096573,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 16,
+          "added_site": 235,
+          "cumulative_shift": 0.11455454677343369,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 17,
+          "added_site": 237,
+          "cumulative_shift": 0.12140839546918869,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 18,
+          "added_site": 238,
+          "cumulative_shift": 0.1282205432653427,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 19,
+          "added_site": 258,
+          "cumulative_shift": 0.13499176502227783,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 20,
+          "added_site": 262,
+          "cumulative_shift": 0.1417209804058075,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 21,
+          "added_site": 285,
+          "cumulative_shift": 0.14840802550315857,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 22,
+          "added_site": 289,
+          "cumulative_shift": 0.1550520360469818,
+          "crossed_threshold": true
+        }
+      ]
+    },
+    "0.25": {
+      "threshold": 0.25,
+      "minimal_sites": [
+        46,
+        56,
+        61,
+        64,
+        68,
+        184,
+        185,
+        191,
+        195,
+        198,
+        199,
+        202,
+        208,
+        210,
+        214,
+        235,
+        237,
+        238,
+        258,
+        262,
+        285,
+        289,
+        293,
+        305,
+        316,
+        320,
+        324,
+        352,
+        356,
+        396,
+        400,
+        404,
+        409,
+        412,
+        413,
+        422,
+        416,
+        50
+      ],
+      "final_shift": 0.25321003794670105,
+      "crossed": true,
+      "trajectory": [
+        {
+          "n_phospho": 1,
+          "added_site": 46,
+          "cumulative_shift": 0.00738901924341917,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 2,
+          "added_site": 56,
+          "cumulative_shift": 0.014745636843144894,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 3,
+          "added_site": 61,
+          "cumulative_shift": 0.022085845470428467,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 4,
+          "added_site": 64,
+          "cumulative_shift": 0.02939736470580101,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 5,
+          "added_site": 68,
+          "cumulative_shift": 0.036677584052085876,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 6,
+          "added_site": 184,
+          "cumulative_shift": 0.04392821714282036,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 7,
+          "added_site": 185,
+          "cumulative_shift": 0.051149897277355194,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 8,
+          "added_site": 191,
+          "cumulative_shift": 0.05833674222230911,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 9,
+          "added_site": 195,
+          "cumulative_shift": 0.06549081951379776,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 10,
+          "added_site": 198,
+          "cumulative_shift": 0.07261167466640472,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 11,
+          "added_site": 199,
+          "cumulative_shift": 0.07969596236944199,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 12,
+          "added_site": 202,
+          "cumulative_shift": 0.08674410730600357,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 13,
+          "added_site": 208,
+          "cumulative_shift": 0.09375506639480591,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 14,
+          "added_site": 210,
+          "cumulative_shift": 0.10072805732488632,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 15,
+          "added_site": 214,
+          "cumulative_shift": 0.10766134411096573,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 16,
+          "added_site": 235,
+          "cumulative_shift": 0.11455454677343369,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 17,
+          "added_site": 237,
+          "cumulative_shift": 0.12140839546918869,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 18,
+          "added_site": 238,
+          "cumulative_shift": 0.1282205432653427,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 19,
+          "added_site": 258,
+          "cumulative_shift": 0.13499176502227783,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 20,
+          "added_site": 262,
+          "cumulative_shift": 0.1417209804058075,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 21,
+          "added_site": 285,
+          "cumulative_shift": 0.14840802550315857,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 22,
+          "added_site": 289,
+          "cumulative_shift": 0.1550520360469818,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 23,
+          "added_site": 293,
+          "cumulative_shift": 0.16165289282798767,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 24,
+          "added_site": 305,
+          "cumulative_shift": 0.16821050643920898,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 25,
+          "added_site": 316,
+          "cumulative_shift": 0.17472414672374725,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 26,
+          "added_site": 320,
+          "cumulative_shift": 0.18119435012340546,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 27,
+          "added_site": 324,
+          "cumulative_shift": 0.1876203566789627,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 28,
+          "added_site": 352,
+          "cumulative_shift": 0.19400210678577423,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 29,
+          "added_site": 356,
+          "cumulative_shift": 0.20033946633338928,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 30,
+          "added_site": 396,
+          "cumulative_shift": 0.2066323459148407,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 31,
+          "added_site": 400,
+          "cumulative_shift": 0.2128811627626419,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 32,
+          "added_site": 404,
+          "cumulative_shift": 0.21908459067344666,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 33,
+          "added_site": 409,
+          "cumulative_shift": 0.2252441942691803,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 34,
+          "added_site": 412,
+          "cumulative_shift": 0.23135915398597717,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 35,
+          "added_site": 413,
+          "cumulative_shift": 0.23742981255054474,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 36,
+          "added_site": 422,
+          "cumulative_shift": 0.2434564083814621,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 37,
+          "added_site": 416,
+          "cumulative_shift": 0.24943819642066956,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 38,
+          "added_site": 50,
+          "cumulative_shift": 0.25321003794670105,
+          "crossed_threshold": true
+        }
+      ]
+    },
+    "0.35": {
+      "threshold": 0.35,
+      "minimal_sites": null,
+      "final_shift": 0.30963197350502014,
+      "crossed": false,
+      "trajectory": [
+        {
+          "n_phospho": 1,
+          "added_site": 46,
+          "cumulative_shift": 0.00738901924341917,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 2,
+          "added_site": 56,
+          "cumulative_shift": 0.014745636843144894,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 3,
+          "added_site": 61,
+          "cumulative_shift": 0.022085845470428467,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 4,
+          "added_site": 64,
+          "cumulative_shift": 0.02939736470580101,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 5,
+          "added_site": 68,
+          "cumulative_shift": 0.036677584052085876,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 6,
+          "added_site": 184,
+          "cumulative_shift": 0.04392821714282036,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 7,
+          "added_site": 185,
+          "cumulative_shift": 0.051149897277355194,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 8,
+          "added_site": 191,
+          "cumulative_shift": 0.05833674222230911,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 9,
+          "added_site": 195,
+          "cumulative_shift": 0.06549081951379776,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 10,
+          "added_site": 198,
+          "cumulative_shift": 0.07261167466640472,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 11,
+          "added_site": 199,
+          "cumulative_shift": 0.07969596236944199,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 12,
+          "added_site": 202,
+          "cumulative_shift": 0.08674410730600357,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 13,
+          "added_site": 208,
+          "cumulative_shift": 0.09375506639480591,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 14,
+          "added_site": 210,
+          "cumulative_shift": 0.10072805732488632,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 15,
+          "added_site": 214,
+          "cumulative_shift": 0.10766134411096573,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 16,
+          "added_site": 235,
+          "cumulative_shift": 0.11455454677343369,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 17,
+          "added_site": 237,
+          "cumulative_shift": 0.12140839546918869,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 18,
+          "added_site": 238,
+          "cumulative_shift": 0.1282205432653427,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 19,
+          "added_site": 258,
+          "cumulative_shift": 0.13499176502227783,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 20,
+          "added_site": 262,
+          "cumulative_shift": 0.1417209804058075,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 21,
+          "added_site": 285,
+          "cumulative_shift": 0.14840802550315857,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 22,
+          "added_site": 289,
+          "cumulative_shift": 0.1550520360469818,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 23,
+          "added_site": 293,
+          "cumulative_shift": 0.16165289282798767,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 24,
+          "added_site": 305,
+          "cumulative_shift": 0.16821050643920898,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 25,
+          "added_site": 316,
+          "cumulative_shift": 0.17472414672374725,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 26,
+          "added_site": 320,
+          "cumulative_shift": 0.18119435012340546,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 27,
+          "added_site": 324,
+          "cumulative_shift": 0.1876203566789627,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 28,
+          "added_site": 352,
+          "cumulative_shift": 0.19400210678577423,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 29,
+          "added_site": 356,
+          "cumulative_shift": 0.20033946633338928,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 30,
+          "added_site": 396,
+          "cumulative_shift": 0.2066323459148407,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 31,
+          "added_site": 400,
+          "cumulative_shift": 0.2128811627626419,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 32,
+          "added_site": 404,
+          "cumulative_shift": 0.21908459067344666,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 33,
+          "added_site": 409,
+          "cumulative_shift": 0.2252441942691803,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 34,
+          "added_site": 412,
+          "cumulative_shift": 0.23135915398597717,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 35,
+          "added_site": 413,
+          "cumulative_shift": 0.23742981255054474,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 36,
+          "added_site": 422,
+          "cumulative_shift": 0.2434564083814621,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 37,
+          "added_site": 416,
+          "cumulative_shift": 0.24943819642066956,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 38,
+          "added_site": 50,
+          "cumulative_shift": 0.25321003794670105,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 39,
+          "added_site": 39,
+          "cumulative_shift": 0.2569955289363861,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 40,
+          "added_site": 52,
+          "cumulative_shift": 0.26079270243644714,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 41,
+          "added_site": 63,
+          "cumulative_shift": 0.26460006833076477,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 42,
+          "added_site": 69,
+          "cumulative_shift": 0.2684154212474823,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 43,
+          "added_site": 71,
+          "cumulative_shift": 0.2722378671169281,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 44,
+          "added_site": 153,
+          "cumulative_shift": 0.2760649621486664,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 45,
+          "added_site": 175,
+          "cumulative_shift": 0.2798956036567688,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 46,
+          "added_site": 181,
+          "cumulative_shift": 0.28372830152511597,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 47,
+          "added_site": 205,
+          "cumulative_shift": 0.2875617444515228,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 48,
+          "added_site": 212,
+          "cumulative_shift": 0.29139500856399536,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 49,
+          "added_site": 217,
+          "cumulative_shift": 0.29522690176963806,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 50,
+          "added_site": 231,
+          "cumulative_shift": 0.299055814743042,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 51,
+          "added_site": 263,
+          "cumulative_shift": 0.30288100242614746,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 52,
+          "added_site": 18,
+          "cumulative_shift": 0.30510881543159485,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 53,
+          "added_site": 394,
+          "cumulative_shift": 0.3073596656322479,
+          "crossed_threshold": false
+        },
+        {
+          "n_phospho": 54,
+          "added_site": 29,
+          "cumulative_shift": 0.30963197350502014,
+          "crossed_threshold": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total_combinations_tested": 14,
+    "synergistic_count": 0,
+    "antagonistic_count": 0,
+    "additive_count": 14,
+    "highest_synergy": {
+      "name": "CSF_early",
+      "ratio": 0.9999965614742282,
+      "sites": [
+        181,
+        217
+      ]
+    },
+    "highest_shift": {
+      "name": "Braak_V_VI",
+      "shift_pct": 7.168056815862656,
+      "sites": [
+        181,
+        231,
+        202,
+        205,
+        262,
+        293,
+        324,
+        356,
+        396,
+        404,
+        422
+      ]
+    }
+  },
+  "stage_analysis": {
+    "early": {
+      "mean_shift_pct": 1.535246909285585,
+      "n_combinations": 6
+    },
+    "mid": {
+      "mean_shift_pct": 1.9426188664510846,
+      "n_combinations": 4
+    },
+    "mid-late": {
+      "mean_shift_pct": 2.939736470580101,
+      "n_combinations": 1
+    },
+    "late": {
+      "mean_shift_pct": 3.860785656919082,
+      "n_combinations": 3
+    }
+  },
+  "mtbr_analysis": [
+    {
+      "sites": [
+        262
+      ],
+      "n_sites": 1,
+      "shift": 0.00738901924341917
+    },
+    {
+      "sites": [
+        293
+      ],
+      "n_sites": 1,
+      "shift": 0.00738901924341917
+    },
+    {
+      "sites": [
+        324
+      ],
+      "n_sites": 1,
+      "shift": 0.00738901924341917
+    },
+    {
+      "sites": [
+        356
+      ],
+      "n_sites": 1,
+      "shift": 0.00738901924341917
+    },
+    {
+      "sites": [
+        262,
+        293
+      ],
+      "n_sites": 2,
+      "shift": 0.014745636843144894
+    },
+    {
+      "sites": [
+        262,
+        324
+      ],
+      "n_sites": 2,
+      "shift": 0.014745636843144894
+    },
+    {
+      "sites": [
+        262,
+        356
+      ],
+      "n_sites": 2,
+      "shift": 0.014745636843144894
+    },
+    {
+      "sites": [
+        293,
+        324
+      ],
+      "n_sites": 2,
+      "shift": 0.014745636843144894
+    },
+    {
+      "sites": [
+        293,
+        356
+      ],
+      "n_sites": 2,
+      "shift": 0.014745636843144894
+    },
+    {
+      "sites": [
+        324,
+        356
+      ],
+      "n_sites": 2,
+      "shift": 0.014745636843144894
+    },
+    {
+      "sites": [
+        262,
+        293,
+        324
+      ],
+      "n_sites": 3,
+      "shift": 0.022085845470428467
+    },
+    {
+      "sites": [
+        262,
+        293,
+        356
+      ],
+      "n_sites": 3,
+      "shift": 0.022085845470428467
+    },
+    {
+      "sites": [
+        262,
+        324,
+        356
+      ],
+      "n_sites": 3,
+      "shift": 0.022085845470428467
+    },
+    {
+      "sites": [
+        293,
+        324,
+        356
+      ],
+      "n_sites": 3,
+      "shift": 0.022085845470428467
+    },
+    {
+      "sites": [
+        262,
+        293,
+        324,
+        356
+      ],
+      "n_sites": 4,
+      "shift": 0.02939736470580101
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+
+[{
+ "name": "fold_fgb_r406_cit_drb1_0401_template_hit_0_chains_a.cif",
+ "queryIndices": [
+  2,
+  4,
+  9,
+  8,
+  5,
+  3,
+  1,
+  7,
+  10,
+  6,
+  0
+ ],
+ "templateIndices": [
+  52,
+  54,
+  59,
+  58,
+  55,
+  53,
+  51,
+  57,
+  60,
+  56,
+  50
+ ]
+}
+]

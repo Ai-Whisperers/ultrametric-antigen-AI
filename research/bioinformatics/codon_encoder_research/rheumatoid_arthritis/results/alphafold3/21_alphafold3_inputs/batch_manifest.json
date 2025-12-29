@@ -1,0 +1,156 @@
+{
+  "generated_at": "2025-12-17T04:55:34.908424",
+  "description": "AlphaFold 3 input files for citrullination study",
+  "research_context": {
+    "hypothesis": "Citrullination causes structural changes that correlate with immunogenicity",
+    "goldilocks_zone": "Entropy change in [-0.12, +0.05] distinguishes immunodominant sites",
+    "key_metric": "Compare native vs citrullinated structures"
+  },
+  "epitopes_included": [
+    {
+      "id": "VIM_R71",
+      "sequence": "RLRSSVPGVR",
+      "immunodominant": true,
+      "entropy_change": 0.04852867126464844,
+      "n_arginines": 3
+    },
+    {
+      "id": "ENO1_R14",
+      "sequence": "TGRILSKIRE",
+      "immunodominant": true,
+      "entropy_change": 0.043009042739868164,
+      "n_arginines": 2
+    },
+    {
+      "id": "FGA_R38",
+      "sequence": "GPRVVERHQS",
+      "immunodominant": true,
+      "entropy_change": 0.04113578796386719,
+      "n_arginines": 2
+    },
+    {
+      "id": "TNC_R4",
+      "sequence": "GSRRLRALSV",
+      "immunodominant": true,
+      "entropy_change": 0.040926575660705566,
+      "n_arginines": 3
+    },
+    {
+      "id": "FGB_R406",
+      "sequence": "SARGHRPLDKK",
+      "immunodominant": true,
+      "entropy_change": 0.03847956657409668,
+      "n_arginines": 2
+    },
+    {
+      "id": "FLG_CCP",
+      "sequence": "SHQESTRGRS",
+      "immunodominant": true,
+      "entropy_change": 0.0278170108795166,
+      "n_arginines": 2
+    },
+    {
+      "id": "ENO1_CEP1",
+      "sequence": "KIREEIFDSRGNP",
+      "immunodominant": true,
+      "entropy_change": 0.026399850845336914,
+      "n_arginines": 2
+    },
+    {
+      "id": "FLG_304",
+      "sequence": "SHQESTRGRSG",
+      "immunodominant": true,
+      "entropy_change": 0.018452882766723633,
+      "n_arginines": 2
+    },
+    {
+      "id": "FLG_589",
+      "sequence": "RHGGSSRGRSGS",
+      "immunodominant": true,
+      "entropy_change": 0.00689244270324707,
+      "n_arginines": 3
+    },
+    {
+      "id": "H3_R2",
+      "sequence": "ARTKQTARKS",
+      "immunodominant": true,
+      "entropy_change": 0.002438783645629883,
+      "n_arginines": 2
+    }
+  ],
+  "files": {
+    "native": [
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\native\\VIM_R71_native.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\native\\ENO1_R14_native.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\native\\FGA_R38_native.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\native\\TNC_R4_native.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\native\\FGB_R406_native.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\native\\FLG_CCP_native.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\native\\ENO1_CEP1_native.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\native\\FLG_304_native.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\native\\FLG_589_native.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\native\\H3_R2_native.json"
+    ],
+    "citrullinated": [
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\citrullinated\\VIM_R71_citrullinated.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\citrullinated\\ENO1_R14_citrullinated.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\citrullinated\\FGA_R38_citrullinated.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\citrullinated\\TNC_R4_citrullinated.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\citrullinated\\FGB_R406_citrullinated.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\citrullinated\\FLG_CCP_citrullinated.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\citrullinated\\ENO1_CEP1_citrullinated.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\citrullinated\\FLG_304_citrullinated.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\citrullinated\\FLG_589_citrullinated.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\citrullinated\\H3_R2_citrullinated.json"
+    ],
+    "comparison": [
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\comparison\\VIM_R71_comparison.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\comparison\\ENO1_R14_comparison.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\comparison\\FGA_R38_comparison.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\comparison\\TNC_R4_comparison.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\comparison\\FGB_R406_comparison.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\comparison\\FLG_CCP_comparison.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\comparison\\ENO1_CEP1_comparison.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\comparison\\FLG_304_comparison.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\comparison\\FLG_589_comparison.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\comparison\\H3_R2_comparison.json"
+    ],
+    "hla_complexes": [
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\VIM_R71_native_HLA-DRB1_04_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\VIM_R71_cit_HLA-DRB1_04_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\VIM_R71_native_HLA-DRB1_01_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\VIM_R71_cit_HLA-DRB1_01_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\ENO1_R14_native_HLA-DRB1_04_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\ENO1_R14_cit_HLA-DRB1_04_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\ENO1_R14_native_HLA-DRB1_01_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\ENO1_R14_cit_HLA-DRB1_01_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\FGA_R38_native_HLA-DRB1_04_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\FGA_R38_cit_HLA-DRB1_04_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\FGA_R38_native_HLA-DRB1_01_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\FGA_R38_cit_HLA-DRB1_01_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\TNC_R4_native_HLA-DRB1_04_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\TNC_R4_cit_HLA-DRB1_04_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\TNC_R4_native_HLA-DRB1_01_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\TNC_R4_cit_HLA-DRB1_01_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\FGB_R406_native_HLA-DRB1_04_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\FGB_R406_cit_HLA-DRB1_04_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\FGB_R406_native_HLA-DRB1_01_01.json",
+      "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\bioinformatics\\rheumatoid_arthritis\\results\\alphafold3\\21_alphafold3_inputs\\hla_complexes\\FGB_R406_cit_HLA-DRB1_01_01.json"
+    ]
+  },
+  "total_files": 50,
+  "usage_instructions": {
+    "alphafold3_command": "python run_alphafold.py --json_path <input.json> --output_dir <output>",
+    "recommended_order": [
+      "1. Run comparison JSONs first (native + cit in same prediction)",
+      "2. Run individual native/citrullinated for higher accuracy",
+      "3. Run HLA complexes for antigen presentation modeling"
+    ]
+  },
+  "expected_analyses": [
+    "RMSD between native and citrullinated structures",
+    "Contact map differences",
+    "Surface accessibility changes at R/Cit positions",
+    "HLA binding groove occupancy differences"
+  ]
+}

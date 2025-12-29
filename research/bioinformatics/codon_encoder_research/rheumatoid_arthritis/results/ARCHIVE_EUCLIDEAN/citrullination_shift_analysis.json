@@ -1,0 +1,523 @@
+{
+  "all_shifts": [
+    {
+      "epitope_id": "VIM_R71",
+      "immunodominant": true,
+      "acpa": 0.85,
+      "arg_shifts": [
+        {
+          "position": 0,
+          "centroid_shift": 0.27220988273620605,
+          "relative_shift": 0.2218244969844818,
+          "kl_divergence": 0.01620815135538578,
+          "js_divergence": 0.003913683816790581,
+          "entropy_change": 0.03973948955535889,
+          "original_entropy": 1.7086923122406006,
+          "cit_entropy": 1.7484318017959595,
+          "arg_cluster": 1,
+          "max_gain_cluster": 7,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.022176116704940796
+        },
+        {
+          "position": 2,
+          "centroid_shift": 0.27220988273620605,
+          "relative_shift": 0.2218244969844818,
+          "kl_divergence": 0.01620815135538578,
+          "js_divergence": 0.003913683816790581,
+          "entropy_change": 0.03973948955535889,
+          "original_entropy": 1.7086923122406006,
+          "cit_entropy": 1.7484318017959595,
+          "arg_cluster": 1,
+          "max_gain_cluster": 7,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.022176116704940796
+        },
+        {
+          "position": 9,
+          "centroid_shift": 0.27220985293388367,
+          "relative_shift": 0.22182446718215942,
+          "kl_divergence": 0.016208117827773094,
+          "js_divergence": 0.003913667984306812,
+          "entropy_change": 0.03973948955535889,
+          "original_entropy": 1.7086923122406006,
+          "cit_entropy": 1.7484318017959595,
+          "arg_cluster": 1,
+          "max_gain_cluster": 7,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.02217613160610199
+        }
+      ]
+    },
+    {
+      "epitope_id": "VIM_R257",
+      "immunodominant": true,
+      "acpa": 0.72,
+      "arg_shifts": [
+        {
+          "position": 5,
+          "centroid_shift": 0.3514118790626526,
+          "relative_shift": 0.269915908575058,
+          "kl_divergence": 0.5941793322563171,
+          "js_divergence": 0.035558149218559265,
+          "entropy_change": -0.17119073867797852,
+          "original_entropy": 1.7171179056167603,
+          "cit_entropy": 1.5459271669387817,
+          "arg_cluster": 1,
+          "max_gain_cluster": 0,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.033264994621276855
+        }
+      ]
+    },
+    {
+      "epitope_id": "VIM_R45",
+      "immunodominant": false,
+      "acpa": 0.15,
+      "arg_shifts": [
+        {
+          "position": 2,
+          "centroid_shift": 0.33306241035461426,
+          "relative_shift": 0.17145328223705292,
+          "kl_divergence": 0.03315950185060501,
+          "js_divergence": 0.0075851124711334705,
+          "entropy_change": -0.04334127902984619,
+          "original_entropy": 1.490783929824829,
+          "cit_entropy": 1.447442650794983,
+          "arg_cluster": 1,
+          "max_gain_cluster": 2,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.04431062936782837
+        },
+        {
+          "position": 5,
+          "centroid_shift": 0.33306241035461426,
+          "relative_shift": 0.17145328223705292,
+          "kl_divergence": 0.033159516751766205,
+          "js_divergence": 0.007585117127746344,
+          "entropy_change": -0.04334127902984619,
+          "original_entropy": 1.490783929824829,
+          "cit_entropy": 1.447442650794983,
+          "arg_cluster": 1,
+          "max_gain_cluster": 2,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.04431062936782837
+        }
+      ]
+    },
+    {
+      "epitope_id": "VIM_R201",
+      "immunodominant": true,
+      "acpa": 0.68,
+      "arg_shifts": [
+        {
+          "position": 0,
+          "centroid_shift": 0.3232625424861908,
+          "relative_shift": 0.2315194457769394,
+          "kl_divergence": 0.03319553658366203,
+          "js_divergence": 0.007592248264700174,
+          "entropy_change": -0.034026265144348145,
+          "original_entropy": 1.5733121633529663,
+          "cit_entropy": 1.5392858982086182,
+          "arg_cluster": 3,
+          "max_gain_cluster": 2,
+          "max_loss_cluster": 3,
+          "max_cluster_gain": 0.03325483202934265
+        },
+        {
+          "position": 2,
+          "centroid_shift": 0.3353004455566406,
+          "relative_shift": 0.24014095962047577,
+          "kl_divergence": 0.033208850771188736,
+          "js_divergence": 0.007595540024340153,
+          "entropy_change": -0.03420710563659668,
+          "original_entropy": 1.5733121633529663,
+          "cit_entropy": 1.5391050577163696,
+          "arg_cluster": 0,
+          "max_gain_cluster": 2,
+          "max_loss_cluster": 0,
+          "max_cluster_gain": 0.03325444459915161
+        }
+      ]
+    },
+    {
+      "epitope_id": "FGA_R38",
+      "immunodominant": true,
+      "acpa": 0.78,
+      "arg_shifts": [
+        {
+          "position": 2,
+          "centroid_shift": 0.30091118812561035,
+          "relative_shift": 0.2781696021556854,
+          "kl_divergence": 0.033093806356191635,
+          "js_divergence": 0.007570317946374416,
+          "entropy_change": 0.018606901168823242,
+          "original_entropy": 2.0382745265960693,
+          "cit_entropy": 2.0568814277648926,
+          "arg_cluster": 1,
+          "max_gain_cluster": 7,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.02217237651348114
+        },
+        {
+          "position": 6,
+          "centroid_shift": 0.30091121792793274,
+          "relative_shift": 0.2781696021556854,
+          "kl_divergence": 0.033093806356191635,
+          "js_divergence": 0.007570317946374416,
+          "entropy_change": 0.018606901168823242,
+          "original_entropy": 2.0382745265960693,
+          "cit_entropy": 2.0568814277648926,
+          "arg_cluster": 1,
+          "max_gain_cluster": 7,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.02217237651348114
+        }
+      ]
+    },
+    {
+      "epitope_id": "FGA_R573",
+      "immunodominant": true,
+      "acpa": 0.65,
+      "arg_shifts": [
+        {
+          "position": 4,
+          "centroid_shift": 0.3015928566455841,
+          "relative_shift": 0.26900625228881836,
+          "kl_divergence": 0.4558129608631134,
+          "js_divergence": 0.031849075108766556,
+          "entropy_change": -0.1353163719177246,
+          "original_entropy": 1.9899758100509644,
+          "cit_entropy": 1.8546594381332397,
+          "arg_cluster": 1,
+          "max_gain_cluster": 12,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.02715238928794861
+        }
+      ]
+    },
+    {
+      "epitope_id": "FGA_R84",
+      "immunodominant": false,
+      "acpa": 0.22,
+      "arg_shifts": [
+        {
+          "position": 0,
+          "centroid_shift": 0.3188466727733612,
+          "relative_shift": 0.3033860921859741,
+          "kl_divergence": 0.5073633193969727,
+          "js_divergence": 0.03209652379155159,
+          "entropy_change": -0.13090622425079346,
+          "original_entropy": 2.0418763160705566,
+          "cit_entropy": 1.9109700918197632,
+          "arg_cluster": 1,
+          "max_gain_cluster": 3,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.01814459264278412
+        }
+      ]
+    },
+    {
+      "epitope_id": "FGB_R74",
+      "immunodominant": true,
+      "acpa": 0.71,
+      "arg_shifts": [
+        {
+          "position": 2,
+          "centroid_shift": 0.34651854634284973,
+          "relative_shift": 0.22448928654193878,
+          "kl_divergence": 0.5463852286338806,
+          "js_divergence": 0.035382483154535294,
+          "entropy_change": -0.16525697708129883,
+          "original_entropy": 1.7630375623703003,
+          "cit_entropy": 1.5977805852890015,
+          "arg_cluster": 1,
+          "max_gain_cluster": 3,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.04433509707450867
+        }
+      ]
+    },
+    {
+      "epitope_id": "FGB_R44",
+      "immunodominant": false,
+      "acpa": 0.18,
+      "arg_shifts": [
+        {
+          "position": 7,
+          "centroid_shift": 0.2730758488178253,
+          "relative_shift": 0.30031201243400574,
+          "kl_divergence": 0.4674566090106964,
+          "js_divergence": 0.031866829842329025,
+          "entropy_change": -0.1317211389541626,
+          "original_entropy": 2.0396838188171387,
+          "cit_entropy": 1.907962679862976,
+          "arg_cluster": 14,
+          "max_gain_cluster": 12,
+          "max_loss_cluster": 14,
+          "max_cluster_gain": 0.018125057220458984
+        }
+      ]
+    },
+    {
+      "epitope_id": "ENO1_CEP1",
+      "immunodominant": true,
+      "acpa": 0.62,
+      "arg_shifts": [
+        {
+          "position": 2,
+          "centroid_shift": 0.24385403096675873,
+          "relative_shift": 0.2803764045238495,
+          "kl_divergence": 0.026470856741070747,
+          "js_divergence": 0.0059992000460624695,
+          "entropy_change": 0.00921630859375,
+          "original_entropy": 2.257293224334717,
+          "cit_entropy": 2.266509532928467,
+          "arg_cluster": 1,
+          "max_gain_cluster": 9,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.012782707810401917
+        },
+        {
+          "position": 9,
+          "centroid_shift": 0.24385403096675873,
+          "relative_shift": 0.2803764045238495,
+          "kl_divergence": 0.026470834389328957,
+          "js_divergence": 0.005999184213578701,
+          "entropy_change": 0.00921630859375,
+          "original_entropy": 2.257293224334717,
+          "cit_entropy": 2.266509532928467,
+          "arg_cluster": 1,
+          "max_gain_cluster": 9,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.01278272271156311
+        }
+      ]
+    },
+    {
+      "epitope_id": "ENO1_R400",
+      "immunodominant": false,
+      "acpa": 0.12,
+      "arg_shifts": [
+        {
+          "position": 2,
+          "centroid_shift": 0.32242411375045776,
+          "relative_shift": 0.34144389629364014,
+          "kl_divergence": 0.5186671018600464,
+          "js_divergence": 0.035252053290605545,
+          "entropy_change": -0.1547391414642334,
+          "original_entropy": 1.8546799421310425,
+          "cit_entropy": 1.699940800666809,
+          "arg_cluster": 1,
+          "max_gain_cluster": 2,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.03321200609207153
+        }
+      ]
+    },
+    {
+      "epitope_id": "CII_259",
+      "immunodominant": true,
+      "acpa": 0.45,
+      "arg_shifts": [
+        {
+          "position": 2,
+          "centroid_shift": 0.20619118213653564,
+          "relative_shift": 0.14178919792175293,
+          "kl_divergence": 0.024759506806731224,
+          "js_divergence": 0.005600304342806339,
+          "entropy_change": -0.026522159576416016,
+          "original_entropy": 1.8794140815734863,
+          "cit_entropy": 1.8528919219970703,
+          "arg_cluster": 1,
+          "max_gain_cluster": 4,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.027381867170333862
+        },
+        {
+          "position": 7,
+          "centroid_shift": 0.20619118213653564,
+          "relative_shift": 0.14178919792175293,
+          "kl_divergence": 0.024759477004408836,
+          "js_divergence": 0.005600293166935444,
+          "entropy_change": -0.026522159576416016,
+          "original_entropy": 1.8794140815734863,
+          "cit_entropy": 1.8528919219970703,
+          "arg_cluster": 1,
+          "max_gain_cluster": 4,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.02738189697265625
+        }
+      ]
+    },
+    {
+      "epitope_id": "CII_511",
+      "immunodominant": true,
+      "acpa": 0.38,
+      "arg_shifts": [
+        {
+          "position": 3,
+          "centroid_shift": 0.1931878626346588,
+          "relative_shift": 0.12583796679973602,
+          "kl_divergence": 0.024707268923521042,
+          "js_divergence": 0.005589639768004417,
+          "entropy_change": -0.04419875144958496,
+          "original_entropy": 1.646929383277893,
+          "cit_entropy": 1.602730631828308,
+          "arg_cluster": 1,
+          "max_gain_cluster": 4,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.02738913893699646
+        },
+        {
+          "position": 10,
+          "centroid_shift": 0.15553529560565948,
+          "relative_shift": 0.10131197422742844,
+          "kl_divergence": 0.005561448633670807,
+          "js_divergence": 0.0013722913572564721,
+          "entropy_change": 0.04124343395233154,
+          "original_entropy": 1.646929383277893,
+          "cit_entropy": 1.6881728172302246,
+          "arg_cluster": 4,
+          "max_gain_cluster": 5,
+          "max_loss_cluster": 4,
+          "max_cluster_gain": 0.01643259823322296
+        }
+      ]
+    },
+    {
+      "epitope_id": "FLG_CCP",
+      "immunodominant": true,
+      "acpa": 0.75,
+      "arg_shifts": [
+        {
+          "position": 6,
+          "centroid_shift": 0.2650657594203949,
+          "relative_shift": 0.17260636389255524,
+          "kl_divergence": 0.03312060236930847,
+          "js_divergence": 0.0075765326619148254,
+          "entropy_change": -0.003102421760559082,
+          "original_entropy": 1.8480889797210693,
+          "cit_entropy": 1.8449865579605103,
+          "arg_cluster": 1,
+          "max_gain_cluster": 2,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.03322157263755798
+        },
+        {
+          "position": 8,
+          "centroid_shift": 0.2650657296180725,
+          "relative_shift": 0.17260634899139404,
+          "kl_divergence": 0.03312060236930847,
+          "js_divergence": 0.0075765326619148254,
+          "entropy_change": -0.003102421760559082,
+          "original_entropy": 1.8480889797210693,
+          "cit_entropy": 1.8449865579605103,
+          "arg_cluster": 1,
+          "max_gain_cluster": 2,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.03322157263755798
+        }
+      ]
+    },
+    {
+      "epitope_id": "FLG_SEC",
+      "immunodominant": false,
+      "acpa": 0.2,
+      "arg_shifts": [
+        {
+          "position": 3,
+          "centroid_shift": 0.32773736119270325,
+          "relative_shift": 0.16645926237106323,
+          "kl_divergence": 0.4716987907886505,
+          "js_divergence": 0.03495430201292038,
+          "entropy_change": -0.22137737274169922,
+          "original_entropy": 1.2485523223876953,
+          "cit_entropy": 1.027174949645996,
+          "arg_cluster": 1,
+          "max_gain_cluster": 2,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.06645548343658447
+        }
+      ]
+    },
+    {
+      "epitope_id": "H2A_R3",
+      "immunodominant": true,
+      "acpa": 0.35,
+      "arg_shifts": [
+        {
+          "position": 2,
+          "centroid_shift": 0.2389264851808548,
+          "relative_shift": 0.15550348162651062,
+          "kl_divergence": 0.030546436086297035,
+          "js_divergence": 0.006962718442082405,
+          "entropy_change": -0.031612515449523926,
+          "original_entropy": 1.6586451530456543,
+          "cit_entropy": 1.6270326375961304,
+          "arg_cluster": 1,
+          "max_gain_cluster": 4,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.03624793887138367
+        },
+        {
+          "position": 10,
+          "centroid_shift": 0.2389264851808548,
+          "relative_shift": 0.15550348162651062,
+          "kl_divergence": 0.030546432361006737,
+          "js_divergence": 0.006962704472243786,
+          "entropy_change": -0.031612515449523926,
+          "original_entropy": 1.6586451530456543,
+          "cit_entropy": 1.6270326375961304,
+          "arg_cluster": 1,
+          "max_gain_cluster": 4,
+          "max_loss_cluster": 1,
+          "max_cluster_gain": 0.036247968673706055
+        }
+      ]
+    }
+  ],
+  "comparisons": {
+    "centroid_shift": {
+      "imm_mean": 0.266666816920042,
+      "imm_std": 0.05137024325262552,
+      "sil_mean": 0.3180348028739293,
+      "sil_std": 0.020764674905712547,
+      "t_stat": -2.2976516665575475,
+      "p_value": 0.03060369397624668,
+      "effect_size": -1.311091921185286
+    },
+    "relative_shift": {
+      "imm_mean": 0.2092292670160532,
+      "imm_std": 0.05709582741853481,
+      "sil_mean": 0.2424179712931315,
+      "sil_std": 0.0738429247725549,
+      "t_stat": -1.1162835101548696,
+      "p_value": 0.27535276826755695,
+      "effect_size": -0.5028386360337659
+    },
+    "js_divergence": {
+      "imm_mean": 0.010204928420716897,
+      "imm_std": 0.010255144756741249,
+      "sil_mean": 0.024889989756047726,
+      "sil_std": 0.012303052242026116,
+      "t_stat": -2.816373592034252,
+      "p_value": 0.00955829751315301,
+      "effect_size": -1.2966389632145374
+    },
+    "entropy_change": {
+      "imm_mean": -0.024528104066848754,
+      "imm_std": 0.06241048029179667,
+      "sil_mean": -0.1209044059117635,
+      "sil_std": 0.06256825843390725,
+      "t_stat": 3.185532854343852,
+      "p_value": 0.00397749857907781,
+      "effect_size": 1.5422819277517157
+    }
+  },
+  "acpa_correlation": {
+    "r": 0.0006052299805354849,
+    "p": 0.9982250934569997,
+    "n": 16
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "FLG_304_native",
+  "sequences": [
+    {
+      "protein": {
+        "id": "A",
+        "sequence": "SHQESTRGRSG"
+      }
+    }
+  ],
+  "modelSeeds": [
+    1
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}
