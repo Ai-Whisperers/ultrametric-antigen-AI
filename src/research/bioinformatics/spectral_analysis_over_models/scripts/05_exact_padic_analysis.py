@@ -36,6 +36,14 @@ from scipy import stats
 from scipy.optimize import curve_fit
 
 
+def hyperbolic_radius(embeddings: torch.Tensor, c: float = 1.0) -> np.ndarray:
+    """V5.12.2: Compute hyperbolic distance from origin in Poincare ball."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = torch.norm(embeddings, dim=-1)
+    clamped = torch.clamp(euclidean_norms * sqrt_c, max=0.999)
+    return (2.0 * torch.arctanh(clamped) / sqrt_c).numpy()
+
+
 def v3_exact(n: int) -> int:
     """Compute EXACT 3-adic valuation. No floating point errors."""
     if n == 0:
@@ -239,7 +247,8 @@ def main():
 
     # Use VAE-B (better 3-adic structure)
     z_B = data.get("z_B_hyp", data["z_hyperbolic"])
-    radii = torch.norm(z_B, dim=-1).numpy()
+    # V5.12.2: Use hyperbolic radius for Poincare ball embeddings
+    radii = hyperbolic_radius(z_B)
 
     # Compute exact valuations
     print("Computing exact 3-adic valuations...")

@@ -80,6 +80,14 @@ def poincare_distance(x, y, c=1.0, eps=1e-10):
     return dist.squeeze(-1)
 
 
+def hyperbolic_radius(embeddings: torch.Tensor, c: float = 1.0) -> torch.Tensor:
+    """V5.12.2: Compute hyperbolic distance from origin in Poincare ball."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = torch.norm(embeddings, dim=-1)
+    clamped = torch.clamp(euclidean_norms * sqrt_c, max=0.999)
+    return 2.0 * torch.arctanh(clamped) / sqrt_c
+
+
 def exp_map_0(v, c=1.0, eps=1e-10):
     """Exponential map from origin in Poincare ball."""
     norm_v = torch.norm(v, dim=-1, keepdim=True).clamp(min=eps)
@@ -163,7 +171,8 @@ def discover_natural_positions(embeddings, n_clusters=21, cluster_sizes=CLUSTER_
     """
     from sklearn.cluster import KMeans
 
-    radii = torch.norm(embeddings, dim=1).numpy()
+    # V5.12.2: Use hyperbolic radius for Poincare ball embeddings
+    radii = hyperbolic_radius(embeddings).numpy()
     n_ops = len(embeddings)
 
     # Sort by radius (hierarchical ordering)
@@ -299,7 +308,8 @@ def center_alignment_loss_poincare(embeddings, clusters, cluster_centers):
 
 def radial_hierarchy_loss(embeddings, clusters, target_radii):
     """Encourage radii to follow cluster ordering (3-adic structure)."""
-    radii = torch.norm(embeddings, dim=1)
+    # V5.12.2: Use hyperbolic radius for Poincare ball embeddings
+    radii = hyperbolic_radius(embeddings)
     loss = torch.tensor(0.0, device=embeddings.device)
 
     for i, cluster_id in enumerate(clusters):
@@ -392,7 +402,8 @@ def train_model(model, data, vae_embeddings, cluster_to_positions, config):
             preds = cluster_logits.argmax(dim=1)
             acc = (preds == clusters).float().mean().item()
 
-            radii = torch.norm(z_hyp, dim=1).numpy()
+            # V5.12.2: Use hyperbolic radius for Poincare ball embeddings
+            radii = hyperbolic_radius(z_hyp).numpy()
             hier = spearmanr(clusters.numpy(), radii)[0]
 
         history["loss"].append(loss.item())
@@ -455,8 +466,8 @@ def evaluate_model(model, data, vae_embeddings):
     mean_between = np.mean(between_dists) if between_dists else 0
     separation = mean_between / mean_within if mean_within > 0 else 0
 
-    # Hierarchy
-    radii = torch.norm(z_hyp, dim=1).numpy()
+    # Hierarchy - V5.12.2: Use hyperbolic radius
+    radii = hyperbolic_radius(z_hyp).numpy()
     hierarchy = spearmanr(clusters.numpy(), radii)[0]
 
     print("\n  Evaluation Results:")

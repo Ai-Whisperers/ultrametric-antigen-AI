@@ -234,8 +234,8 @@ def run_test():
     results_by_radius = {}
     all_results = []
 
-    # Stratify by radius bins
-    sample_radii = np.linalg.norm(samples, axis=1)
+    # Stratify by radius bins - V5.12.2: Use hyperbolic radii
+    sample_radii = hyperbolic_radii(samples)
     radius_bins = [
         (0.4, 0.55),
         (0.55, 0.65),
@@ -248,7 +248,8 @@ def run_test():
         if i % 20 == 0:
             print(f"  Processing sample {i+1}/{len(samples)}...")
 
-        r = np.linalg.norm(z)
+        # V5.12.2: Use hyperbolic radius for Poincare ball embeddings
+        r = hyperbolic_radii(z.reshape(1, -1))[0]
 
         # Compute control matrix
         control = compute_control_matrix(decoder, z, device, epsilon=0.02)

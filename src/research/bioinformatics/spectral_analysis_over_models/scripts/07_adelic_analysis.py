@@ -32,6 +32,24 @@ from scipy import stats
 from scipy.linalg import eigvalsh
 
 
+def hyperbolic_radius_np(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
+    """V5.12.2: Compute hyperbolic distance from origin in Poincare ball."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = np.linalg.norm(embeddings, axis=-1)
+    clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
+def poincare_distance_np(x: np.ndarray, y: np.ndarray, c: float = 1.0) -> float:
+    """V5.12.2: Compute hyperbolic distance between two points."""
+    x_norm_sq = np.clip(np.sum(x**2), 0, 0.999)
+    y_norm_sq = np.clip(np.sum(y**2), 0, 0.999)
+    diff_norm_sq = np.sum((x - y) ** 2)
+    denom = (1 - c * x_norm_sq) * (1 - c * y_norm_sq)
+    arg = 1 + 2 * c * diff_norm_sq / (denom + 1e-10)
+    return float(np.arccosh(np.clip(arg, 1.0, 1e10)))
+
+
 def v_p(n: int, p: int) -> int:
     """Compute p-adic valuation of n."""
     if n == 0:
@@ -62,7 +80,8 @@ def analyze_prime_correlations(embeddings, valuations):
     print("=" * 60)
 
     z_B = embeddings["z_B"]
-    radii = np.linalg.norm(z_B, axis=1)
+    # V5.12.2: Use hyperbolic radius for Poincare ball embeddings
+    radii = hyperbolic_radius_np(z_B)
 
     results = {}
 
@@ -130,8 +149,8 @@ def analyze_adelic_structure(embeddings, n_samples=2000):
 
     for i, j in zip(idx_i, idx_j):
         if i != j:
-            # Embedding distance
-            emb_dists.append(np.linalg.norm(z_B[i] - z_B[j]))
+            # V5.12.2: Use hyperbolic distance for Poincare ball embeddings
+            emb_dists.append(poincare_distance_np(z_B[i], z_B[j]))
 
             # 3-adic distance only
             diff = abs(i - j)
@@ -190,8 +209,8 @@ def compute_adelic_laplacian(embeddings, primes=[2, 3, 5], n_samples=500):
 
     for i in range(n):
         for j in range(i + 1, n):
-            # Euclidean distance in embedding
-            emb_dist = np.linalg.norm(z_sample[i] - z_sample[j])
+            # V5.12.2: Use hyperbolic distance for Poincare ball embeddings
+            emb_dist = poincare_distance_np(z_sample[i], z_sample[j])
 
             # Adelic distance
             adelic_dist = compute_adelic_distance(indices[i], indices[j], primes)
@@ -272,12 +291,13 @@ def analyze_prime_residues(embeddings, valuations):
         class_radii = {}
         for r in range(p):
             mask = residues == r
-            radii = np.linalg.norm(z_B[mask], axis=1)
+            # V5.12.2: Use hyperbolic radius for Poincare ball embeddings
+            radii = hyperbolic_radius_np(z_B[mask])
             class_radii[r] = radii.mean()
             print(f"    r ≡ {r} (mod {p}): mean radius = {radii.mean():.4f}")
 
-        # ANOVA test
-        groups = [np.linalg.norm(z_B[residues == r], axis=1) for r in range(p)]
+        # ANOVA test - V5.12.2: Use hyperbolic radius
+        groups = [hyperbolic_radius_np(z_B[residues == r]) for r in range(p)]
         f_stat, p_val = stats.f_oneway(*groups)
         print(f"    ANOVA: F = {f_stat:.2f}, p = {p_val:.2e}")
 
@@ -293,7 +313,8 @@ def analyze_prime_residues(embeddings, valuations):
 def visualize_adelic_structure(embeddings, valuations, output_dir):
     """Visualize multi-prime structure in embedding."""
     z_B = embeddings["z_B"]
-    radii = np.linalg.norm(z_B, axis=1)
+    # V5.12.2: Use hyperbolic radius for Poincare ball embeddings
+    radii = hyperbolic_radius_np(z_B)
 
     fig, axes = plt.subplots(2, 3, figsize=(15, 10))
 
@@ -338,7 +359,8 @@ def euler_product_test(embeddings, valuations):
     print("=" * 60)
 
     z_B = embeddings["z_B"]
-    radii = np.linalg.norm(z_B, axis=1)
+    # V5.12.2: Use hyperbolic radius for Poincare ball embeddings
+    radii = hyperbolic_radius_np(z_B)
 
     # Define partition function
     def Z(beta, mask=None):

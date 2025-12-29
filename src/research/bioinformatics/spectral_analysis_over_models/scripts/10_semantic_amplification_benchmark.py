@@ -28,6 +28,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 
+def hyperbolic_radius_np(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
+    """V5.12.2: Compute hyperbolic distance from origin in Poincare ball."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = np.linalg.norm(embeddings, axis=-1)
+    clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 def v3_exact(n: int) -> int:
     """Compute exact 3-adic valuation."""
     if n == 0:
@@ -191,8 +199,8 @@ def run_benchmark():
 
     print(f"Loaded {len(indices)} embeddings, shape {z.shape}")
 
-    # Compute radii (Euclidean norm in Poincaré ball)
-    radii = np.linalg.norm(z, axis=1)
+    # V5.12.2: Use hyperbolic radius for Poincare ball embeddings
+    radii = hyperbolic_radius_np(z)
 
     # Compute ground truth valuations
     print("\nComputing ground truth 3-adic valuations...")

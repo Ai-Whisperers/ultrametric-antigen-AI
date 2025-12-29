@@ -20,6 +20,7 @@ import numpy as np
 import torch
 
 from src.config.paths import CHECKPOINTS_DIR
+from src.geometry import poincare_distance
 from src.data.generation import generate_all_ternary_operations
 from src.models.ternary_vae import TernaryVAEV5_11
 
@@ -250,8 +251,11 @@ def main():
     print("\n=== Embedding Statistics ===")
     print(f"Shape: {z_hyp.shape}")
 
-    radii_A = torch.norm(z_A_hyp, dim=-1)
-    radii_B = torch.norm(z_B_hyp, dim=-1)
+    # V5.12.2: Use hyperbolic distance from origin for Poincare ball embeddings
+    origin_A = torch.zeros_like(z_A_hyp)
+    origin_B = torch.zeros_like(z_B_hyp)
+    radii_A = poincare_distance(z_A_hyp, origin_A, c=1.0)
+    radii_B = poincare_distance(z_B_hyp, origin_B, c=1.0)
     print(f"VAE-A radii: min={radii_A.min():.4f}, max={radii_A.max():.4f}, mean={radii_A.mean():.4f}")
     print(f"VAE-B radii: min={radii_B.min():.4f}, max={radii_B.max():.4f}, mean={radii_B.mean():.4f}")
 

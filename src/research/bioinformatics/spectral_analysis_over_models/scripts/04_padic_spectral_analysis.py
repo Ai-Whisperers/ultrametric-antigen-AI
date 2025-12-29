@@ -57,6 +57,14 @@ def poincare_distance(u: torch.Tensor, v: torch.Tensor, eps: float = 1e-8) -> fl
     return distance.item()
 
 
+def hyperbolic_radius(embeddings: torch.Tensor, c: float = 1.0) -> np.ndarray:
+    """V5.12.2: Compute hyperbolic distance from origin in Poincare ball."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = torch.norm(embeddings, dim=-1)
+    clamped = torch.clamp(euclidean_norms * sqrt_c, max=0.999)
+    return (2.0 * torch.arctanh(clamped) / sqrt_c).numpy()
+
+
 def gue_distribution(s: np.ndarray) -> np.ndarray:
     """GUE spacing distribution."""
     return (32 / np.pi**2) * s**2 * np.exp(-4 * s**2 / np.pi)
@@ -91,7 +99,8 @@ def main():
 
     # Analyze radial distribution by 3-adic level
     print("\n=== Radial Structure by 3-adic Level ===")
-    radii = torch.norm(z_hyp, dim=-1).numpy()
+    # V5.12.2: Use hyperbolic radius for Poincare ball embeddings
+    radii = hyperbolic_radius(z_hyp)
 
     # Group operations by their 3-adic valuation structure
     # v_3(i) for i = 0, 1, ..., 19682

@@ -42,6 +42,24 @@ def v3_exact(n: int) -> int:
     return v
 
 
+def hyperbolic_radius_np(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
+    """V5.12.2: Compute hyperbolic distance from origin in Poincare ball."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = np.linalg.norm(embeddings, axis=-1)
+    clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
+def poincare_distance_np(x: np.ndarray, y: np.ndarray, c: float = 1.0) -> float:
+    """V5.12.2: Compute hyperbolic distance between two points."""
+    x_norm_sq = np.clip(np.sum(x**2), 0, 0.999)
+    y_norm_sq = np.clip(np.sum(y**2), 0, 0.999)
+    diff_norm_sq = np.sum((x - y) ** 2)
+    denom = (1 - c * x_norm_sq) * (1 - c * y_norm_sq)
+    arg = 1 + 2 * c * diff_norm_sq / (denom + 1e-10)
+    return float(np.arccosh(np.clip(arg, 1.0, 1e10)))
+
+
 def gue_spacing_pdf(s):
     """GUE Wigner surmise: P(s) = (32/π²) s² exp(-4s²/π)"""
     return (32 / np.pi**2) * s**2 * np.exp(-4 * s**2 / np.pi)
@@ -103,7 +121,8 @@ def operator_1_weighted_laplacian(embeddings, n_samples=500):
 
     for i in range(n):
         for j in range(i + 1, n):
-            emb_dist = np.linalg.norm(z_sample[i] - z_sample[j])
+            # V5.12.2: Use hyperbolic distance for Poincare ball embeddings
+            emb_dist = poincare_distance_np(z_sample[i], z_sample[j])
             diff = abs(indices[i] - indices[j])
             v3 = v3_exact(diff) if diff > 0 else 9
 
@@ -193,7 +212,8 @@ def operator_3_radial_operator(embeddings, n_samples=500):
     np.random.seed(42)
     indices = np.random.choice(len(z_B), min(n_samples, len(z_B)), replace=False)
     z_sample = z_B[indices]
-    radii = np.linalg.norm(z_sample, axis=1)
+    # V5.12.2: Use hyperbolic radius for Poincare ball embeddings
+    radii = hyperbolic_radius_np(z_sample)
 
     # Create diagonal operator: H_ii = -log(1 - r_i²)
     # This maps radius to hyperbolic depth

@@ -35,6 +35,14 @@ from scipy import stats
 from sklearn.decomposition import PCA
 
 
+def hyperbolic_radius_np(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
+    """V5.12.2: Compute hyperbolic distance from origin in Poincare ball."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = np.linalg.norm(embeddings, axis=-1)
+    clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 def v_p(n: int, p: int) -> int:
     """Compute p-adic valuation."""
     if n == 0:
@@ -112,7 +120,8 @@ def analyze_joint_valuation_structure(embeddings):
     print("=" * 60)
 
     z_B = embeddings["z_B"]
-    radii = np.linalg.norm(z_B, axis=1)
+    # V5.12.2: Use hyperbolic radius for Poincare ball embeddings
+    radii = hyperbolic_radius_np(z_B)
     n_ops = len(z_B)
 
     # Compute both valuations
@@ -178,7 +187,8 @@ def analyze_within_level_binary_structure(embeddings):
     print("=" * 60)
 
     z_B = embeddings["z_B"]
-    radii = np.linalg.norm(z_B, axis=1)
+    # V5.12.2: Use hyperbolic radius for Poincare ball embeddings
+    radii = hyperbolic_radius_np(z_B)
     n_ops = len(z_B)
 
     v3_vals = np.array([v_p(i, 3) if i > 0 else 9 for i in range(n_ops)])
@@ -286,7 +296,8 @@ def analyze_radial_formula_decomposition(embeddings):
     print("=" * 60)
 
     z_B = embeddings["z_B"]
-    radii = np.linalg.norm(z_B, axis=1)
+    # V5.12.2: Use hyperbolic radius for Poincare ball embeddings
+    radii = hyperbolic_radius_np(z_B)
     n_ops = len(z_B)
 
     v2_vals = np.array([v_p(i, 2) if i > 0 else 0 for i in range(n_ops)])
