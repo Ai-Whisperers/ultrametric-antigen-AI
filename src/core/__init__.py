@@ -53,7 +53,9 @@ from .ternary import (
 # Metrics (consolidated from metrics/)
 # =============================================================================
 from .metrics import (
+    ComprehensiveMetrics,
     compute_3adic_valuation,
+    compute_comprehensive_metrics,
     compute_ranking_correlation_hyperbolic,
     poincare_distance,
     project_to_poincare,
@@ -211,6 +213,8 @@ __all__ = [
     "project_to_poincare",
     "poincare_distance",
     "compute_3adic_valuation",
+    "ComprehensiveMetrics",
+    "compute_comprehensive_metrics",
     "compute_ranking_correlation_hyperbolic",
     # P-adic math
     "DEFAULT_P",
