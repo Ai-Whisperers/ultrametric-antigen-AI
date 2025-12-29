@@ -348,6 +348,8 @@ def plot_radial_distribution(
     ax: Optional[Axes] = None,
     figsize: Tuple[float, float] = (10, 6),
     n_bins: int = 30,
+    use_hyperbolic: bool = True,
+    curvature: float = 1.0,
 ) -> Tuple[Figure, Axes]:
     """Plot distribution of embedding distances from origin.
 
@@ -360,6 +362,8 @@ def plot_radial_distribution(
         ax: Existing axes
         figsize: Figure size
         n_bins: Number of histogram bins
+        use_hyperbolic: If True, compute hyperbolic distance (V5.12.2)
+        curvature: Hyperbolic curvature parameter
 
     Returns:
         Figure and Axes objects
@@ -370,7 +374,15 @@ def plot_radial_distribution(
         fig = ax.get_figure()
 
     # Compute distances from origin
-    distances = np.linalg.norm(embeddings, axis=1)
+    # V5.12.2: Use hyperbolic distance for Poincare ball embeddings
+    euclidean_norms = np.linalg.norm(embeddings, axis=1)
+    if use_hyperbolic:
+        # Hyperbolic distance from origin: d_H = 2 * arctanh(sqrt(c) * ||x||)
+        sqrt_c = np.sqrt(curvature)
+        clamped_norms = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+        distances = 2.0 * np.arctanh(clamped_norms) / sqrt_c
+    else:
+        distances = euclidean_norms
 
     if labels is None:
         ax.hist(distances, bins=n_bins, edgecolor="white", alpha=0.7, color=SEMANTIC.primary)

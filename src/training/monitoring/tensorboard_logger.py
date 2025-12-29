@@ -25,6 +25,7 @@ import numpy as np
 import torch
 
 from src.data.generation import generate_all_ternary_operations
+from src.geometry import poincare_distance
 
 # TensorBoard integration (optional)
 try:
@@ -458,12 +459,18 @@ class TensorBoardLogger:
             z_A = outputs["z_A"]
             z_B = outputs["z_B"]
 
-            # Project to Poincare ball
-            z_A_norm = torch.norm(z_A, dim=1, keepdim=True)
-            z_A_poincare = z_A / (1 + z_A_norm) * 0.95
+            # Project to Poincare ball for visualization
+            z_A_euc_norm = torch.norm(z_A, dim=1, keepdim=True)
+            z_A_poincare = z_A / (1 + z_A_euc_norm) * 0.95
 
-            z_B_norm = torch.norm(z_B, dim=1, keepdim=True)
-            z_B_poincare = z_B / (1 + z_B_norm) * 0.95
+            z_B_euc_norm = torch.norm(z_B, dim=1, keepdim=True)
+            z_B_poincare = z_B / (1 + z_B_euc_norm) * 0.95
+
+            # V5.12.2: Compute hyperbolic radii for metadata
+            origin_A = torch.zeros_like(z_A_poincare)
+            origin_B = torch.zeros_like(z_B_poincare)
+            hyp_radii_A = poincare_distance(z_A_poincare, origin_A, c=1.0)
+            hyp_radii_B = poincare_distance(z_B_poincare, origin_B, c=1.0)
 
         # Compute 3-adic metadata
         metadata = []
@@ -482,8 +489,8 @@ class TensorBoardLogger:
             prefix_2 = op_idx % 9
             prefix_3 = op_idx % 27
             depth = self._compute_3adic_depth(op_idx)
-            r_A = z_A_norm[idx, 0].item()
-            r_B = z_B_norm[idx, 0].item()
+            r_A = hyp_radii_A[idx].item()
+            r_B = hyp_radii_B[idx].item()
 
             metadata.append([
                 str(op_idx),
