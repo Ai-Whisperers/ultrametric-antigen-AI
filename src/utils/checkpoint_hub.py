@@ -25,7 +25,7 @@ from pathlib import Path
 from typing import Optional
 
 # Hub configuration
-DEFAULT_REPO_ID = "ai-whisperers/ternary-vae-checkpoints"
+DEFAULT_REPO_ID = "ivanpol/ternary-vae-checkpoints"
 CHECKPOINT_SUBDIRS = [
     "outputs/models",
     "sandbox-training/checkpoints",
