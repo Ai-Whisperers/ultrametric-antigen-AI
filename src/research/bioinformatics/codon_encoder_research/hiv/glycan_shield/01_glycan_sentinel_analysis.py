@@ -25,6 +25,25 @@ from typing import List, Tuple
 import numpy as np
 import torch
 
+
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """V5.12.2: Proper hyperbolic distance from origin."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
+def poincare_distance_np(x: np.ndarray, y: np.ndarray, c: float = 1.0) -> float:
+    """V5.12.2: Proper hyperbolic distance between two points."""
+    x_norm_sq = np.clip(np.sum(x ** 2), 0, 0.999)
+    y_norm_sq = np.clip(np.sum(y ** 2), 0, 0.999)
+    diff_norm_sq = np.sum((x - y) ** 2)
+    denom = (1 - c * x_norm_sq) * (1 - c * y_norm_sq)
+    arg = 1 + 2 * c * diff_norm_sq / (denom + 1e-10)
+    return float(np.arccosh(np.clip(arg, 1.0, 1e10)))
+
+
 # Import shared utilities from local scripts folder
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 from hyperbolic_utils import AA_TO_CODON, codon_to_onehot, load_codon_encoder
@@ -208,10 +227,10 @@ def analyze_glycan_site(
     wt_emb = get_embedding_for_sequence(encoder, wt_context, aa_to_codon)
     mut_emb = get_embedding_for_sequence(encoder, mut_context, aa_to_codon)
 
-    # Calculate centroid shift
-    wt_norm = np.linalg.norm(wt_emb)
-    if wt_norm > 0:
-        centroid_shift = np.linalg.norm(mut_emb - wt_emb) / wt_norm
+    # Calculate centroid shift (V5.12.2: use hyperbolic distance)
+    wt_radius = hyperbolic_radius(wt_emb)
+    if wt_radius > 0:
+        centroid_shift = poincare_distance_np(mut_emb, wt_emb) / wt_radius
     else:
         centroid_shift = 0.0
 

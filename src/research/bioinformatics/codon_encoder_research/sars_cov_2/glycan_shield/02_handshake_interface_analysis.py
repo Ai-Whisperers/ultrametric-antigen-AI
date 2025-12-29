@@ -25,6 +25,15 @@ from typing import Dict, List, Tuple
 
 import numpy as np
 
+
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """V5.12.2: Proper hyperbolic distance from origin."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 # Add path to hyperbolic utils
 # Path: .../codon_encoder_research/sars_cov_2/glycan_shield/this_script.py
 # parent = glycan_shield, parent.parent = sars_cov_2, parent.parent.parent = codon_encoder_research
@@ -460,7 +469,7 @@ def main():
     furin_emb = encode_sequence(SPIKE_FURIN_SITE, encoder)
     if len(furin_emb) > 0:
         furin_centroid = hyperbolic_centroid(furin_emb)
-        print(f"Furin site (PRRAR): encoded, centroid norm = {np.linalg.norm(furin_centroid):.4f}")
+        print(f"Furin site (PRRAR): encoded, centroid norm = {hyperbolic_radius(furin_centroid):.4f}")  # V5.12.2
 
         # Test disruption
         print("\nFurin site modification analysis:")
@@ -479,7 +488,7 @@ def main():
     tmprss2_emb = encode_sequence(SPIKE_S2PRIME_SITE, encoder)
     if len(tmprss2_emb) > 0:
         tmprss2_centroid = hyperbolic_centroid(tmprss2_emb)
-        print(f"\nTMPRSS2 site (S2'): encoded, centroid norm = {np.linalg.norm(tmprss2_centroid):.4f}")
+        print(f"\nTMPRSS2 site (S2'): encoded, centroid norm = {hyperbolic_radius(tmprss2_centroid):.4f}")  # V5.12.2
 
     results["interfaces"]["cleavage_sites"] = {
         "furin_site": SPIKE_FURIN_SITE,
@@ -507,8 +516,8 @@ def main():
         host_centroid = hyperbolic_centroid(np.array(all_host_emb))
         interface_distance = poincare_distance(viral_centroid, host_centroid)
 
-        print(f"Overall RBD interface centroid norm: {np.linalg.norm(viral_centroid):.4f}")
-        print(f"Overall ACE2 interface centroid norm: {np.linalg.norm(host_centroid):.4f}")
+        print(f"Overall RBD interface centroid norm: {hyperbolic_radius(viral_centroid):.4f}")  # V5.12.2
+        print(f"Overall ACE2 interface centroid norm: {hyperbolic_radius(host_centroid):.4f}")  # V5.12.2
         print(f"Interface geometric distance: {interface_distance:.4f}")
 
         results["geometry"] = {
