@@ -38,6 +38,25 @@ from scipy import stats
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
+
+
+def hyperbolic_radius(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
+    """Compute hyperbolic distance from origin (radius) for Poincare ball embeddings.
+
+    V5.12.2: Use proper hyperbolic distance formula instead of Euclidean norm.
+
+    Args:
+        embeddings: Array of shape (..., dim) in Poincare ball
+        c: Curvature parameter (default 1.0)
+
+    Returns:
+        Hyperbolic radii of same shape as embeddings[..., 0]
+    """
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = np.linalg.norm(embeddings, axis=-1)
+    # Clamp to avoid numerical issues at boundary
+    clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
 from sklearn.metrics import accuracy_score, roc_auc_score, roc_curve
 from sklearn.model_selection import cross_val_score, train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -199,7 +218,7 @@ def encode_v3_sequences(v3_df: pd.DataFrame, encoder) -> pd.DataFrame:
             if len(emb) > 0:
                 embeddings_list.append(emb)
                 mean_embeddings.append(emb.mean(axis=0))
-                radii.append(np.mean(np.linalg.norm(emb, axis=1)))
+                radii.append(np.mean(hyperbolic_radius(emb)))
             else:
                 embeddings_list.append(None)
                 mean_embeddings.append(None)
@@ -320,9 +339,9 @@ def analyze_position_importance(v3_df: pd.DataFrame, encoder) -> pd.DataFrame:
         x4_mean = x4_emb.mean(axis=0)
         separation = np.linalg.norm(r5_mean - x4_mean)
 
-        # Radial comparison
-        r5_radii = np.linalg.norm(r5_emb, axis=1)
-        x4_radii = np.linalg.norm(x4_emb, axis=1)
+        # Radial comparison (V5.12.2: hyperbolic radii)
+        r5_radii = hyperbolic_radius(r5_emb)
+        x4_radii = hyperbolic_radius(x4_emb)
         _, pval = stats.mannwhitneyu(r5_radii, x4_radii)
 
         results.append(

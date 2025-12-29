@@ -97,9 +97,30 @@ def euclidean_distance(x: np.ndarray, y: np.ndarray) -> float:
     return np.linalg.norm(x - y)
 
 
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """Compute hyperbolic distance from origin for a Poincare ball embedding.
+
+    V5.12.2: Use proper hyperbolic distance formula instead of Euclidean norm.
+
+    Args:
+        embedding: Array of shape (dim,) in Poincare ball
+        c: Curvature parameter (default 1.0)
+
+    Returns:
+        Hyperbolic radius (scalar)
+    """
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 def compute_radial_shift(x: np.ndarray, y: np.ndarray) -> float:
-    """Compute absolute radial shift (key p-adic feature)."""
-    return abs(np.linalg.norm(x) - np.linalg.norm(y))
+    """Compute absolute radial shift (key p-adic feature).
+
+    V5.12.2: Uses hyperbolic radius for proper Poincare ball geometry.
+    """
+    return abs(hyperbolic_radius(x) - hyperbolic_radius(y))
 
 
 # ============================================================================
@@ -228,9 +249,9 @@ def run_severity_experiment(encoder):
         euc_dist = euclidean_distance(emb_wt, emb_mut)
         radial_shift = compute_radial_shift(emb_wt, emb_mut)
 
-        # Radii
-        wt_radius = np.linalg.norm(emb_wt)
-        mut_radius = np.linalg.norm(emb_mut)
+        # Radii (V5.12.2: hyperbolic distance from origin)
+        wt_radius = hyperbolic_radius(emb_wt)
+        mut_radius = hyperbolic_radius(emb_mut)
 
         results.append({
             "mutation": mutation,

@@ -27,6 +27,24 @@ import numpy as np
 import pandas as pd
 
 
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """Compute hyperbolic distance from origin for a Poincare ball embedding.
+
+    V5.12.2: Use proper hyperbolic distance formula instead of Euclidean norm.
+
+    Args:
+        embedding: Array of shape (dim,) in Poincare ball
+        c: Curvature parameter (default 1.0)
+
+    Returns:
+        Hyperbolic radius (scalar)
+    """
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 # Epitope classification for bnAbs
 BNAB_EPITOPES = {
     # CD4 binding site antibodies
@@ -550,7 +568,8 @@ def analyze_with_hyperbolic_features(
         # Get hyperbolic features if available
         if virus_id in hyperbolic_embeddings:
             embedding = hyperbolic_embeddings[virus_id]
-            radial_dist = np.linalg.norm(embedding)
+            # V5.12.2: Use hyperbolic distance from origin
+            radial_dist = hyperbolic_radius(embedding)
             # Calculate centrality (inverse of radial distance in Poincaré disk)
             centrality = 1 / (1 + radial_dist)
         else:
