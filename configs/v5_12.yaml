@@ -34,7 +34,7 @@ model:
   use_controller: true
   use_dual_projection: true
   learnable_curvature: true
-  manifold_aware: true
+  manifold_aware: true                    # Note: Passed via **kwargs, implementation pending
 
   # Projection network capacity
   projection_hidden_dim: 64

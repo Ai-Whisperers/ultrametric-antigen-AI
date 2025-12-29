@@ -188,7 +188,7 @@ def compute_quick_metrics(model, all_ops, indices, device):
     all_radii_A = np.concatenate(all_radii_A)
     all_radii_B = np.concatenate(all_radii_B)
     all_correct = np.concatenate(all_correct)
-    valuations = TERNARY.valuation(indices).numpy()
+    valuations = TERNARY.valuation(indices).cpu().numpy()
 
     coverage = (all_correct == 1.0).mean()
     hierarchy_A = spearmanr(valuations, all_radii_A)[0]
@@ -412,7 +412,7 @@ def main():
     model_cfg = config['model']
     model = TernaryVAEV5_11_PartialFreeze(
         latent_dim=model_cfg.get('latent_dim', 16),
-        hidden_dim=model_cfg.get('projection_hidden_dim', 64),
+        hidden_dim=model_cfg.get('hidden_dim', 64),
         max_radius=model_cfg.get('max_radius', 0.95),
         curvature=model_cfg.get('curvature', 1.0),
         use_controller=model_cfg.get('use_controller', True),
@@ -420,6 +420,7 @@ def main():
         n_projection_layers=model_cfg.get('projection_layers', 2),
         projection_dropout=model_cfg.get('projection_dropout', 0.1),
         learnable_curvature=model_cfg.get('learnable_curvature', True),
+        manifold_aware=model_cfg.get('manifold_aware', True),
         freeze_encoder_b=False,
         encoder_b_lr_scale=config['option_c'].get('encoder_b_lr_scale', 0.1),
         encoder_a_lr_scale=config['option_c'].get('encoder_a_lr_scale', 0.05),
@@ -577,6 +578,8 @@ def main():
     start_epoch = 0
     best_Q = 0.0
     best_hierarchy = 0.0
+    epochs_without_improvement = 0
+    best_epoch = 0
 
     if args.resume:
         latest_path = save_dir / 'latest.pt'
@@ -647,7 +650,20 @@ def main():
 
             if state_changed:
                 model.apply_homeostasis_state(homeo_state)
-                optimizer = model.rebuild_optimizer(optimizer, base_lr)
+                # Rebuild optimizer preserving Riemannian type
+                param_groups = model.get_param_groups(base_lr)
+                if config['riemannian'].get('enabled', True):
+                    optimizer = get_riemannian_optimizer(
+                        param_groups,
+                        lr=base_lr,
+                        optimizer_type=config['riemannian'].get('optimizer', 'adam'),
+                        weight_decay=train_cfg.get('weight_decay', 1e-4),
+                    )
+                else:
+                    optimizer = torch.optim.AdamW(
+                        param_groups,
+                        weight_decay=train_cfg.get('weight_decay', 1e-4)
+                    )
                 scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
                     optimizer, T_0=sched_cfg.get('T_0', 25), T_mult=sched_cfg.get('T_mult', 2)
                 )
@@ -691,7 +707,25 @@ def main():
 
             if is_best_Q:
                 best_Q = metrics['Q']
+                best_epoch = epoch
+                epochs_without_improvement = 0
                 print(f"  [NEW BEST Q: {best_Q:.3f}]")
+
+                # Save best Q checkpoint
+                full_metrics_q = compute_comprehensive_metrics(model, device)
+                torch.save({
+                    'epoch': epoch,
+                    'model_state_dict': model.state_dict(),
+                    'optimizer_state': optimizer.state_dict(),
+                    'metrics': full_metrics_q.to_dict(),
+                    'train_metrics': train_metrics,
+                    'richness_ratio': richness_ratio,
+                    'best_Q': best_Q,
+                    'best_hierarchy': best_hierarchy,
+                    'homeostasis_state': homeostasis.get_state_summary(),
+                    'config': config,
+                    'version': config.get('version', {}),
+                }, save_dir / 'best_Q.pt')
 
             if is_best_hier:
                 best_hierarchy = metrics['hierarchy_B']
@@ -714,6 +748,12 @@ def main():
                     'version': config.get('version', {}),
                 }, save_dir / 'best.pt')
 
+            # Track epochs without improvement
+            if not is_best_Q and not is_best_hier:
+                epochs_without_improvement += 1
+            elif is_best_hier:
+                epochs_without_improvement = 0  # Reset on hierarchy improvement too
+
         # Periodic checkpoint
         if epoch % save_every == 0 or epoch == n_epochs - 1:
             torch.save({
@@ -722,8 +762,18 @@ def main():
                 'optimizer_state': optimizer.state_dict(),
                 'best_Q': best_Q,
                 'best_hierarchy': best_hierarchy,
+                'epochs_without_improvement': epochs_without_improvement,
                 'config': config,
             }, save_dir / 'latest.pt')
+
+        # Early stopping check
+        patience = train_cfg.get('patience', 25)
+        min_epochs = train_cfg.get('min_epochs', 40)
+        if epoch >= min_epochs and epochs_without_improvement >= patience:
+            print(f"\n[EARLY STOPPING] No improvement for {patience} epochs.")
+            print(f"  Best Q: {best_Q:.3f} at epoch {best_epoch}")
+            print(f"  Best Hierarchy: {best_hierarchy:.4f}")
+            break
 
     # === Final Summary ===
     print("\n" + "="*60)
