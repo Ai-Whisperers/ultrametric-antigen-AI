@@ -37,6 +37,25 @@ from unified_data_loader import load_stanford_hivdb
 
 warnings.filterwarnings("ignore")
 
+
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """Compute hyperbolic distance from origin for a Poincare ball embedding.
+
+    V5.12.2: Use proper hyperbolic distance formula instead of Euclidean norm.
+
+    Args:
+        embedding: Array of shape (dim,) in Poincare ball
+        c: Curvature parameter (default 1.0)
+
+    Returns:
+        Hyperbolic radius (scalar)
+    """
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
@@ -268,8 +287,8 @@ def analyze_drug_resistance(encoder, encoder_name: str):
                 )[0]
 
                 # Compute radial shift
-                wt_radius = np.linalg.norm(wt_emb)
-                mut_radius = np.linalg.norm(mut_emb)
+                wt_radius = hyperbolic_radius(wt_emb)
+                mut_radius = hyperbolic_radius(mut_emb)
                 radial_shift = abs(mut_radius - wt_radius)
 
                 results.append({
@@ -329,8 +348,8 @@ def analyze_benchmark_mutations(encoder, encoder_name: str):
                     mut_emb.reshape(1, -1)
                 )[0]
 
-                wt_radius = np.linalg.norm(wt_emb)
-                mut_radius = np.linalg.norm(mut_emb)
+                wt_radius = hyperbolic_radius(wt_emb)
+                mut_radius = hyperbolic_radius(mut_emb)
                 radial_shift = abs(mut_radius - wt_radius)
 
                 results[category].append({
@@ -391,7 +410,7 @@ def analyze_radial_structure(encoder, encoder_name: str):
     for codon in all_codons:
         try:
             emb = encode_codon(codon, encoder)
-            radius = np.linalg.norm(emb)
+            radius = hyperbolic_radius(emb)
             radii.append(radius)
         except Exception:
             continue

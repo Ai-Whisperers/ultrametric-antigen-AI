@@ -45,6 +45,25 @@ from unified_data_loader import load_lanl_ctl, parse_hla_restrictions
 
 warnings.filterwarnings("ignore")
 
+
+def hyperbolic_radius(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
+    """Compute hyperbolic distance from origin for Poincare ball embeddings.
+
+    V5.12.2: Use proper hyperbolic distance formula instead of Euclidean norm.
+
+    Args:
+        embeddings: Array of shape (..., dim) in Poincare ball
+        c: Curvature parameter (default 1.0)
+
+    Returns:
+        Hyperbolic radii of same shape as embeddings[..., 0]
+    """
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = np.linalg.norm(embeddings, axis=-1)
+    clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
@@ -168,7 +187,7 @@ def encode_epitopes(df: pd.DataFrame, encoder) -> pd.DataFrame:
             emb = encode_amino_acid_sequence(epitope, encoder)
             if len(emb) > 0:
                 embeddings_list.append(emb)
-                radii_list.append(np.mean(np.linalg.norm(emb, axis=1)))
+                radii_list.append(np.mean(hyperbolic_radius(emb)))
                 centroids_list.append(emb.mean(axis=0))
             else:
                 embeddings_list.append(None)
