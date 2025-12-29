@@ -43,8 +43,15 @@ from .padic_shift import (
 
 # Checkpoint utilities
 from .checkpoint import (
+    CheckpointInfo,
+    CheckpointMetrics,
     NumpyBackwardsCompatUnpickler,
+    compare_checkpoints,
     extract_model_state,
+    get_checkpoint_info,
+    get_checkpoint_metrics,
+    get_model_state_dict,
+    list_checkpoints,
     load_checkpoint_compat,
     save_checkpoint,
 )
@@ -85,4 +92,11 @@ __all__ = [
     "load_checkpoint_compat",
     "save_checkpoint",
     "extract_model_state",
+    "get_model_state_dict",
+    "get_checkpoint_info",
+    "get_checkpoint_metrics",
+    "list_checkpoints",
+    "compare_checkpoints",
+    "CheckpointInfo",
+    "CheckpointMetrics",
 ]
