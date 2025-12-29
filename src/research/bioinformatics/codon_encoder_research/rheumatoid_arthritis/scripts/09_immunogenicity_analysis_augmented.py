@@ -19,6 +19,16 @@ from pathlib import Path
 import numpy as np
 import torch
 from scipy import stats
+
+
+def hyperbolic_radii(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
+    """V5.12.2: Compute hyperbolic radii for batch of embeddings."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = np.linalg.norm(embeddings, axis=1)
+    clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 from scipy.spatial.distance import jensenshannon
 
 warnings.filterwarnings("ignore")
@@ -67,8 +77,9 @@ def encode_sequence(sequence: str, encoder, device="cpu") -> tuple:
 
 def compute_embedding_norm(embeddings: np.ndarray) -> float:
     """Mean embedding norm (distance from origin in Poincare ball)."""
-    norms = np.linalg.norm(embeddings, axis=1)
-    return float(np.mean(norms))
+    # V5.12.2: Use hyperbolic radius
+    radii = hyperbolic_radii(embeddings)
+    return float(np.mean(radii))
 
 
 def compute_cluster_homogeneity(clusters: list) -> float:
