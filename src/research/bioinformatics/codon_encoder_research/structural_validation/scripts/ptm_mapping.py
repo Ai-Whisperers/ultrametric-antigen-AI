@@ -27,6 +27,17 @@ from scipy.spatial.distance import cdist
 import warnings
 warnings.filterwarnings('ignore')
 
+
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """Compute hyperbolic distance from origin for a Poincare ball embedding.
+
+    V5.12.2: Use proper hyperbolic distance formula instead of Euclidean norm.
+    """
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
@@ -364,7 +375,7 @@ def load_padic_embeddings() -> Tuple[Dict[str, np.ndarray], Dict[str, float]]:
     radii = {}
     for aa in aa_embs:
         embeddings[aa] = np.mean(aa_embs[aa], axis=0)
-        radii[aa] = np.linalg.norm(embeddings[aa])
+        radii[aa] = hyperbolic_radius(embeddings[aa])  # V5.12.2: Use hyperbolic distance
 
     return embeddings, radii
 
@@ -421,7 +432,7 @@ def predict_ptm_embedding(ptm: PTM, aa_embeddings: Dict[str, np.ndarray],
 
         # Predicted embedding: interpolate
         pred_emb = (1 - weight) * base_emb + weight * match_emb
-        pred_radius = np.linalg.norm(pred_emb)
+        pred_radius = hyperbolic_radius(pred_emb)  # V5.12.2: Use hyperbolic distance
 
         return pred_emb, pred_radius
 

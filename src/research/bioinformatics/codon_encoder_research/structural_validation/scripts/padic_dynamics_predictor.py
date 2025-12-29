@@ -20,6 +20,18 @@ from dataclasses import dataclass
 from typing import Dict, List, Tuple, Optional
 import sys
 
+
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """Compute hyperbolic distance from origin for a Poincare ball embedding.
+
+    V5.12.2: Use proper hyperbolic distance formula instead of Euclidean norm.
+    """
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 # Paths
 SCRIPT_DIR = Path(__file__).parent
 GENETIC_CODE_DIR = SCRIPT_DIR.parent.parent.parent / "genetic_code" / "data"
@@ -158,7 +170,7 @@ class PadicDynamicsPredictor:
             k_exp = data['k_exp']
 
             # Radius from embedding
-            radius = np.linalg.norm(emb)
+            radius = hyperbolic_radius(emb)  # V5.12.2: Use hyperbolic distance
 
             # Dimension 13 value (physics dimension)
             dim13 = emb[13] if len(emb) > 13 else 0.0
