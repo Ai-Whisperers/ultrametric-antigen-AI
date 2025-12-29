@@ -349,8 +349,304 @@ src/config/
 
 ---
 
+## Issue 7: Checkpoint Chaos - 115 Directories, No Organization
+
+### Problem Description
+
+The `sandbox-training/checkpoints/` directory contains **115 checkpoint directories** with:
+- No clear naming convention
+- No documented purpose for most
+- Inconsistent metric storage formats
+- Mix of production, experimental, test, and dead checkpoints
+- Massive disk space usage with redundant data
+
+### Full Checkpoint Inventory
+
+**Analysis performed:** 2025-12-29 via `scripts/analysis/analyze_all_checkpoints.py`
+
+```
+Total directories: 115
+  - complete: 102 (have best.pt)
+  - crashed: 8 (have epoch files but no best.pt)
+  - empty: 4 (no checkpoint files)
+  - partial: 1 (have latest.pt only)
+```
+
+### Category Breakdown
+
+#### PRODUCTION (24 directories) - Core Model Versions
+
+These are the versioned model checkpoints. Most have similar metrics but different training approaches.
+
+| Checkpoint | Status | Coverage | Hierarchy_B | Richness | Notes |
+|------------|--------|----------|-------------|----------|-------|
+| `v5_5` | complete | N/A | N/A | N/A | **FOUNDATION** - 100% coverage, frozen for V5.11+ |
+| `v5_6` | complete | N/A | N/A | N/A | Legacy |
+| `v5_7` | complete | N/A | N/A | N/A | Legacy |
+| `v5_8` | complete | N/A | N/A | N/A | Legacy |
+| `v5_9` | complete | N/A | N/A | N/A | Legacy |
+| `v5_9_2` | complete | N/A | N/A | N/A | Legacy |
+| `v5_10` | **partial** | N/A | N/A | N/A | **INCOMPLETE** - training crashed |
+| `v5_11` | complete | 100% | -0.8302 | N/A | Base V5.11 |
+| `v5_11_annealing` | complete | 100% | -0.8318 | N/A | |
+| `v5_11_homeostasis` | complete | 99.9% | -0.8318 | N/A | **RECOMMENDED** for hierarchy |
+| `v5_11_learnable` | complete | 100% | -0.8295 | N/A | |
+| `v5_11_npairs4k` | complete | 100% | -0.8314 | N/A | |
+| `v5_11_npairs8300` | complete | 100% | -0.8312 | N/A | |
+| `v5_11_npairs8600` | complete | 100% | -0.8313 | N/A | |
+| `v5_11_npairs8k` | complete | 100% | -0.8313 | N/A | |
+| `v5_11_npairs9k` | complete | 100% | -0.8315 | N/A | |
+| `v5_11_progressive` | complete | 99.9% | -0.8299 | N/A | |
+| `v5_11_radial05` | complete | 100% | -0.8310 | N/A | |
+| `v5_11_radial09` | complete | 100% | -0.8309 | N/A | |
+| `v5_11_radial1` | complete | 100% | -0.8315 | N/A | |
+| `v5_11_repro` | complete | 100% | -0.8315 | N/A | |
+| `v5_11_structural` | complete | 100% | -0.8320 | N/A | **BEST HIERARCHY** |
+| `v5_11_thresh725` | complete | 100% | -0.8313 | N/A | |
+| `v5_11_validation` | complete | 100% | -0.8308 | N/A | |
+
+**PROBLEM:** 24 "production" checkpoints with nearly identical metrics (-0.829 to -0.832 hierarchy). Why keep all?
+
+#### HOMEOSTATIC_EXPERIMENT (1 directory) - Best Balance Found
+
+| Checkpoint | Status | Coverage | Hierarchy_B | Richness | Notes |
+|------------|--------|----------|-------------|----------|-------|
+| `homeostatic_rich` | complete | 100% | -0.6944 | 0.006615 | **BEST RICHNESS+HIERARCHY BALANCE** |
+
+**This is the checkpoint the CLAUDE.md recommends!** But it's buried among 114 others.
+
+#### LOSS_EXPERIMENT (11 directories) - Hierarchy vs Richness Tradeoffs
+
+| Checkpoint | Status | Coverage | Hierarchy_B | Richness | Notes |
+|------------|--------|----------|-------------|----------|-------|
+| `balanced_radial` | complete | 100% | -0.8321 | 0.000048 | Ceiling hierarchy, collapsed richness |
+| `final_rich_lr1e4` | complete | 100% | -0.6840 | 0.006825 | Good richness |
+| `final_rich_lr3e4` | complete | 100% | -0.6691 | 0.008205 | **HIGHEST RICHNESS** |
+| `final_rich_lr5e5` | complete | 100% | -0.6932 | 0.008583 | High richness |
+| `hierarchy_extreme` | complete | 100% | -0.8321 | N/A | Ceiling hierarchy |
+| `hierarchy_focused` | complete | 100% | -0.8320 | N/A | |
+| `max_hierarchy` | complete | 100% | -0.8298 | 0.000265 | Near-collapsed richness |
+| `radial_collapse` | complete | 100% | -0.8321 | N/A | Ceiling hierarchy |
+| `radial_snapped` | complete | 100% | N/A | N/A | No metrics stored |
+| `radial_target` | complete | 100% | -0.8321 | N/A | |
+| `soft_radial` | complete | 100% | N/A | N/A | No metrics stored |
+
+#### SWEEP_TEST (45 directories) - Hyperparameter Searches
+
+**MASSIVE REDUNDANCY:** 45 directories from various sweeps.
+
+| Sweep Group | Count | Status | Notes |
+|-------------|-------|--------|-------|
+| `stability_run_*` | 10 | complete | Similar metrics across all |
+| `stable_run_*` | 10 | complete | Similar metrics across all |
+| `sweep2_*` | 5 | **crashed** | All 5 crashed - DEAD |
+| `sweep3_*` | 6 | complete | LR schedule experiments |
+| `sweep4_*` | 8 | complete | LR value experiments |
+| `sweep_curv_*` | 3 | complete | Curvature experiments |
+| `sweep_latent_*` | 3 | 1 complete, 2 crashed | Latent dim experiments |
+
+**Metrics range across sweeps:**
+- Coverage: 99.9% (all similar)
+- Hierarchy_B: -0.65 to -0.79 (moderate variance)
+- Richness: 0.001 to 0.004 (all low)
+- Q: 0.99 to 1.11 (all similar)
+
+#### TEST (12 directories) - Validation & Debugging
+
+| Checkpoint | Status | Coverage | Hierarchy_B | Notes |
+|------------|--------|----------|-------------|-------|
+| `adamw_test` | complete | 100% | -0.8317 | Optimizer test |
+| `base_trainer_e2e_test` | complete | 100% | -0.8320 | |
+| `base_trainer_test` | complete | 100% | -0.5115 | **LOW HIERARCHY** |
+| `geometry_validation` | complete | 100% | -0.6590 | |
+| `learnable_curvature_test` | complete | 100% | -0.6925 | |
+| `max_radius_096_test` | complete | 100% | -0.6516 | |
+| `max_radius_097_test` | complete | 100% | -0.6538 | |
+| `refactor_validation` | complete | 100% | -0.6937 | |
+| `riemannian_test` | complete | 100% | -0.8316 | |
+| `v5_11_11_test` | complete | 100% | -0.8318 | |
+| `v5_11_12_validation` | complete | 100% | -0.8320 | |
+| `v5_11_9_test` | complete | 100% | -0.8184 | |
+
+#### TRAINING_EXPERIMENT (6 directories) - Progressive/Annealing Tests
+
+| Checkpoint | Status | Coverage | Hierarchy_B | Notes |
+|------------|--------|----------|-------------|-------|
+| `progressive_conservative` | complete | **0.1%** | -0.8320 | **FAILED** - coverage collapse |
+| `progressive_tiny_lr` | complete | **60.4%** | -0.8320 | **FAILED** - coverage collapse |
+| `v5_11_annealing_long` | complete | **98.2%** | -0.8320 | Slight coverage loss |
+| `v5_11_learnable_qreg` | complete | 100% | -0.8303 | Good |
+| `v5_11_progressive_50ep` | complete | **1.3%** | -0.8320 | **FAILED** - coverage collapse |
+| `v5_11_progressive_non_fixed` | complete | **0.3%** | -0.8320 | **FAILED** - coverage collapse |
+
+**4 of 6 are FAILED experiments with collapsed coverage!**
+
+#### FINAL_PUSH (6 directories) - Recent Attempts
+
+| Checkpoint | Status | Coverage | Hierarchy_B | Richness | Notes |
+|------------|--------|----------|-------------|----------|-------|
+| `final_homeo_lr1e3` | complete | 99.9% | -0.6813 | 0.001924 | |
+| `final_homeo_lr3e4` | **empty** | N/A | N/A | N/A | **NO CHECKPOINTS** |
+| `final_homeo_lr5e4` | complete | 99.9% | -0.6770 | 0.002229 | |
+| `scratch_run_1` | **empty** | N/A | N/A | N/A | **NO CHECKPOINTS** |
+| `scratch_run_2` | **empty** | N/A | N/A | N/A | **NO CHECKPOINTS** |
+| `scratch_run_3` | **empty** | N/A | N/A | N/A | **NO CHECKPOINTS** |
+
+**4 of 6 are empty or incomplete!**
+
+#### OTHER (10 directories) - Miscellaneous
+
+| Checkpoint | Status | Coverage | Hierarchy_B | Notes |
+|------------|--------|----------|-------------|-------|
+| `appetitive` | complete | N/A | N/A | Different model type |
+| `hyperbolic_structure` | **crashed** | N/A | N/A | Training crashed |
+| `purposeful` | complete | N/A | N/A | No metrics |
+| `purposeful_v5.10` | complete | N/A | N/A | No metrics |
+| `purposeful_v5.6` | complete | N/A | N/A | No metrics |
+| `ternary` | complete | 100% | -0.8320 | Generic name |
+| `v5_11_11_production` | complete | 100% | -0.6926 | Moderate hierarchy |
+| `v5_11_9_homeo_zero` | complete | 99.5% | -0.7457 | |
+| `v5_11_9_zero` | complete | 100% | -0.7583 | |
+| `v5_11_epsilon_coupled` | complete | 100% | **+0.0018** | **INVERTED HIERARCHY!** |
+
+### Metric Storage Format Chaos
+
+Different checkpoints store metrics in different formats:
+
+| Format | Example Checkpoints | Structure |
+|--------|---------------------|-----------|
+| Format 1: Direct dict | `v5_11_homeostasis` | `ckpt['metrics'] = {'coverage': 0.999, ...}` |
+| Format 2: Separate keys | `v5_11_structural` | `ckpt['coverage'] = 0.999; ckpt['hierarchy'] = -0.83` |
+| Format 3: eval_metrics | `sweep3_*` | `ckpt['eval_metrics'] = {...}` |
+| Format 4: No metrics | `v5_5`, `v5_6`, `appetitive` | Metrics not stored at all |
+| Format 5: radial_corr | Some v5.11 | `ckpt['radial_corr_A']`, `ckpt['radial_corr_B']` |
+
+**No standardization = impossible to compare programmatically!**
+
+### Summary Statistics
+
+```
+USEFUL checkpoints (production-ready):
+  - v5_5 (foundation, 100% coverage)
+  - v5_11_homeostasis (best hierarchy)
+  - v5_11_structural (best hierarchy)
+  - homeostatic_rich (best balance)
+  - final_rich_lr3e4 (best richness)
+  Total: 5 checkpoints
+
+DEAD/FAILED checkpoints:
+  - crashed: 8
+  - empty: 4
+  - coverage collapsed: 4
+  - inverted hierarchy: 1
+  Total: 17 checkpoints
+
+REDUNDANT/EXPERIMENTAL:
+  - sweep tests: 45 (keep 1-2 best)
+  - production duplicates: ~20 (nearly identical metrics)
+  - test checkpoints: 12 (delete after validation)
+  Total: ~77 checkpoints
+
+RECOMMENDATION: Keep ~10, archive/delete 105
+```
+
+### Disk Space Analysis
+
+Each checkpoint directory contains:
+- `best.pt`: ~5-10 MB
+- `latest.pt`: ~5-10 MB
+- `epoch_*.pt`: ~5-10 MB each (10-30 files per directory)
+
+**Estimated total:** 115 dirs × ~100 MB avg = **~11.5 GB** of checkpoints
+
+**After cleanup:** ~10 dirs × ~100 MB = **~1 GB** needed
+
+---
+
+## Issue 8: No Checkpoint Metadata Standard
+
+### Problem Description
+
+Checkpoints lack standardized metadata making it impossible to:
+1. Understand what training produced this checkpoint
+2. Compare checkpoints programmatically
+3. Track lineage (which checkpoint was used as base)
+
+### Required Metadata (not present in most checkpoints)
+
+```python
+# What SHOULD be in every checkpoint:
+{
+    'version': '5.12',
+    'created_at': '2025-12-29T10:00:00',
+    'training_script': 'scripts/training/train_v5_12.py',
+    'config_path': 'configs/v5_12.yaml',
+    'config_hash': 'abc123...',  # For reproducibility
+    'base_checkpoint': 'sandbox-training/checkpoints/v5_5/latest.pt',
+    'epoch': 150,
+    'metrics': {
+        'coverage': 1.0,
+        'hierarchy_A': -0.51,
+        'hierarchy_B': -0.83,
+        'richness': 0.00787,
+        'dist_corr': 0.65,
+        'Q': 1.8,
+        'r_v0': 0.89,
+        'r_v9': 0.12,
+    },
+    'architecture': {
+        'model_class': 'TernaryVAEV5_11_PartialFreeze',
+        'latent_dim': 16,
+        'hidden_dim': 64,
+        'dual_projection': True,
+        'use_controller': True,
+    },
+    'training_summary': {
+        'total_epochs': 200,
+        'final_loss': 0.123,
+        'training_time_hours': 2.5,
+    },
+}
+```
+
+### What's Actually Stored (varies wildly)
+
+| Checkpoint | Has epoch | Has metrics | Has config | Has architecture |
+|------------|-----------|-------------|------------|------------------|
+| `v5_5` | Yes | **NO** | **NO** | **NO** |
+| `v5_11_homeostasis` | Yes | Partial | **NO** | **NO** |
+| `homeostatic_rich` | Yes | Yes | Partial | **NO** |
+| `sweep3_*` | Yes | Yes | Partial | **NO** |
+| Most others | Varies | **NO** | **NO** | **NO** |
+
+---
+
+## Recommended Checkpoint Structure (For V5.12+)
+
+### Keep (5 checkpoints)
+1. `v5_5/best.pt` - Foundation (100% coverage)
+2. `v5_11_homeostasis/best.pt` - Best hierarchy (-0.8318)
+3. `v5_11_structural/best.pt` - Best hierarchy alternative
+4. `homeostatic_rich/best.pt` - Best balance (hierarchy + richness)
+5. `final_rich_lr3e4/best.pt` - Best richness (0.008205)
+
+### Archive (move to cold storage)
+- All `v5_6` through `v5_10` (superseded)
+- All `sweep*` directories (keep summary JSONs only)
+- All `*_test` directories
+- All duplicate v5_11 variants
+
+### Delete (after verification)
+- All `*_run_*` numbered directories
+- Empty directories
+- Crashed training directories
+- Failed experiments (coverage < 90%)
+
+---
+
 ## Version History
 
 | Date | Version | Author | Changes |
 |------|---------|--------|---------|
 | 2025-12-29 | 1.0 | AI Whisperers | Initial critical issue documentation |
+| 2025-12-29 | 1.1 | AI Whisperers | Added checkpoint chaos analysis (Issues 7-8) |
