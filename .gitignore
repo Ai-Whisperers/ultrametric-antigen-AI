@@ -138,11 +138,9 @@ sandbox-training/
 
 # Large model checkpoints (stored on Hugging Face Hub)
 # Use: python -m src.utils.checkpoint_hub download --checkpoint <name>
-outputs/models/**/*.pt
-outputs/optimal/**/*.pt
-checkpoints/**/*.pt
+**/*.pt
 *.7z
-test_trajectory.pt
+outputs/
 
 # Keep the directory structure
 !outputs/models/.gitkeep
