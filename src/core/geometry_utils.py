@@ -5,6 +5,22 @@
 
 """Geometry utilities - Centralized geometric operations.
 
+.. deprecated:: V5.12.2
+    This module is DEPRECATED. Use `src.geometry` instead, which provides
+    geoopt-backed implementations with better numerical stability.
+
+    Migration guide:
+        # OLD (deprecated):
+        from src.core.geometry_utils import poincare_distance, exp_map_zero
+
+        # NEW (recommended):
+        from src.geometry import poincare_distance, exp_map_zero
+
+    All functions in this module have equivalent implementations in src.geometry.
+    This file will be archived in a future release.
+
+---
+
 This module provides unified geometric operations for Euclidean, hyperbolic,
 and other geometric spaces used throughout the project.
 
@@ -20,6 +36,7 @@ Key Features:
 - Curvature-aware computations
 
 Usage:
+    # DEPRECATED - use src.geometry instead
     from src.core.geometry_utils import (
         project_to_ball,
         mobius_add,

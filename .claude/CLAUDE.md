@@ -32,17 +32,22 @@ origin = torch.zeros_like(z_hyp)
 radius = poincare_distance(z_hyp, origin, c=curvature)
 ```
 
-**Fixed (HIGH priority):**
-- `src/api/cli/train.py`
-- `src/encoders/holographic_encoder.py`
-- `src/losses/consequence_predictor.py`
+**Fixed (ALL CORE FILES COMPLETE):**
+- HIGH: `src/api/cli/train.py`, `src/encoders/holographic_encoder.py`, `src/losses/consequence_predictor.py`
+- MEDIUM: `src/analysis/crispr/embedder.py`, `src/analysis/evolution.py`, `src/analysis/hiv/analyze_all_datasets.py`, `src/geometry/holographic_poincare.py`, `src/encoders/ptm_encoder.py`
+- LOW: `src/visualization/plots/manifold.py`, `src/training/monitoring/tensorboard_logger.py`
 
-**Pending (MEDIUM/LOW priority):**
-- `src/analysis/` - crispr/embedder.py, evolution.py, hiv/analyze_all_datasets.py
-- `src/geometry/holographic_poincare.py`
-- `src/encoders/ptm_encoder.py`
-- `src/visualization/plots/manifold.py`
-- `src/training/monitoring/tensorboard_logger.py`
+**Remaining (LOWEST - research scripts only):**
+- ~40 research scripts in `src/research/` use `radii = norm()` patterns
+
+---
+
+## Deprecated Modules
+
+**`src/core/geometry_utils.py`** - DEPRECATED as of V5.12.2
+- Use `src.geometry` instead (geoopt-backed implementations)
+- Migration: `from src.geometry import poincare_distance, exp_map_zero`
+- Will be archived in a future release
 
 ---
 
@@ -289,6 +294,7 @@ hierarchy = spearmanr(valuations.cpu(), radii_B.cpu())[0]  # Use VAE-B for p-adi
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2025-12-29 | 1.3 | V5.12.2 audit COMPLETE - all core files fixed, deprecated geometry_utils.py |
 | 2025-12-29 | 1.2 | V5.12.2 hyperbolic audit warning, fixed Quick Evaluation example |
 | 2025-12-28 | 1.1 | Added codon-encoder research section with key discoveries |
 | 2025-12-27 | 1.0 | Initial CLAUDE.md with architecture docs, checkpoint reference, overnight warning |

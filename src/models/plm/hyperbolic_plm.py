@@ -16,7 +16,7 @@ from typing import Optional, Union
 import torch
 import torch.nn as nn
 
-from src.core.geometry_utils import exp_map_zero, project_to_poincare
+from src.geometry import exp_map_zero, project_to_poincare
 from src.models.plm.base import PLMEncoderBase
 from src.models.plm.esm_encoder import ESM2Config, ESM2Encoder
 
