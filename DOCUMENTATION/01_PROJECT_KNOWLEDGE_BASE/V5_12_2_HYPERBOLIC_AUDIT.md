@@ -1,6 +1,6 @@
 # V5.12.2 Hyperbolic Geometry Audit Report
 
-**Doc-Type:** Technical Audit · Version 1.9 · Updated 2025-12-29 · AI Whisperers
+**Doc-Type:** Technical Audit · Version 2.0 · Updated 2025-12-29 · AI Whisperers
 
 ---
 
@@ -701,13 +701,13 @@ earth_vec = earth_vec / np.linalg.norm(earth_vec)
 | File | Lines | Status |
 |------|-------|--------|
 | `src/encoders/ptm_encoder.py` | 248-249 | ✅ FIXED - `compute_entropy_change()` uses hyperbolic distance for radial comparison |
-| `src/diseases/rheumatoid_arthritis.py` | 346 | LOW - Still pending |
+| `src/diseases/rheumatoid_arthritis.py` | 346 | ✅ CORRECT - LSTM outputs, not hyperbolic embeddings |
 
-### Visualization/Monitoring (Lower Priority - Display Only)
-| File | Lines | Priority |
-|------|-------|----------|
-| `src/visualization/plots/manifold.py` | 373 | LOW |
-| `src/training/monitoring/tensorboard_logger.py` | 462-466, 485-486 | LOW |
+### Visualization/Monitoring - ✅ FIXED
+| File | Lines | Status |
+|------|-------|--------|
+| `src/visualization/plots/manifold.py` | 373 | ✅ FIXED - `plot_radial_distribution()` now uses hyperbolic distance via `use_hyperbolic=True` parameter |
+| `src/training/monitoring/tensorboard_logger.py` | 485-486 | ✅ FIXED - Metadata radii now use `poincare_distance`. Lines 462-466 are projection formula (CORRECT) |
 
 ### Research Scripts (Lowest Priority - Experimental)
 | File | Lines | Priority |
@@ -731,8 +731,9 @@ earth_vec = earth_vec / np.linalg.norm(earth_vec)
 **Files Audited (Deep Read):** 50+
 **HIGH Priority Fixed:** 3 files (train.py, holographic_encoder.py, consequence_predictor.py) - VERIFIED CLEAN
 **MEDIUM Priority Fixed:** 5 files (crispr/embedder.py, evolution.py, hiv/analyze_all_datasets.py, holographic_poincare.py, ptm_encoder.py) - VERIFIED CLEAN
-**Issues Remaining (Core):** ~4 files (rheumatoid_arthritis.py, manifold.py, tensorboard_logger.py)
-**Issues Remaining (Research):** ~40+ research scripts with `radii = norm()` patterns
+**LOW Priority Fixed:** 2 files (manifold.py, tensorboard_logger.py) + 1 verified correct (rheumatoid_arthritis.py)
+**Issues Remaining (Core):** 0 - All core files complete!
+**Issues Remaining (Research):** ~40+ research scripts with `radii = norm()` patterns (LOWEST priority)
 **Files Verified Correct:** 30+
 **Categories:**
 - Low-level geometry primitives (exp/log maps): CORRECT
@@ -784,6 +785,7 @@ Is this operating on hyperbolic embeddings (z_A_hyp, z_B_hyp, Poincare ball)?
 | 2025-12-29 | 1.7 | MEDIUM priority (Analysis Scripts) fixes: crispr/embedder.py, evolution.py, analyze_all_datasets.py |
 | 2025-12-29 | 1.8 | Deep verification: HIGH/MEDIUM fixes verified clean, ~40 research scripts identified |
 | 2025-12-29 | 1.9 | MEDIUM priority (Geometry/Encoders) fixes: holographic_poincare.py, ptm_encoder.py |
+| 2025-12-29 | 2.0 | LOW priority (Visualization) fixes: manifold.py, tensorboard_logger.py. All core files complete! |
 
 ---
 
