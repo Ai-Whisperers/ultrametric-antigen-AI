@@ -20,6 +20,14 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 
+
+def hyperbolic_radii(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
+    """V5.12.2: Compute hyperbolic radii for batch of embeddings."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = np.linalg.norm(embeddings, axis=1)
+    clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
@@ -138,8 +146,8 @@ def load_training_data() -> tuple:
             embeddings = np.array(embeddings)
             cluster_probs = np.array(cluster_probs_list)
 
-            # Compute features (matching Script 11)
-            norms = np.linalg.norm(embeddings, axis=1)
+            # Compute features (matching Script 11) - V5.12.2: use hyperbolic radii
+            norms = hyperbolic_radii(embeddings)
             cluster_ids = np.argmax(cluster_probs, axis=1)
             majority = np.argmax(np.bincount(cluster_ids))
             homogeneity = np.mean(cluster_ids == majority)
