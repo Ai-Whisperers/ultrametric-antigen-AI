@@ -58,7 +58,7 @@ class TestTBEnums:
         """Test drug category definitions."""
         categories = list(TBDrugCategory)
         assert TBDrugCategory.FIRST_LINE in categories
-        assert TBDrugCategory.SECOND_LINE in categories
+        assert TBDrugCategory.SECOND_LINE_INJECTABLE in categories
 
 
 class TestTBMutationDatabase:
@@ -153,7 +153,7 @@ class TestTuberculosisAnalyzer:
     def test_encode_sequence(self, analyzer):
         """Test sequence encoding."""
         test_seq = "MKLVFLVLLFLGALGLCLA"
-        encoding = analyzer.encode_sequence(test_seq)
+        encoding = analyzer.encode_gene_sequence(test_seq)
 
         assert isinstance(encoding, np.ndarray)
         assert encoding.dtype == np.float32
@@ -163,7 +163,7 @@ class TestTuberculosisAnalyzer:
     def test_encode_sequence_with_unknown(self, analyzer):
         """Test encoding with unknown amino acids."""
         test_seq = "MKXYZ"  # Contains unknown AAs
-        encoding = analyzer.encode_sequence(test_seq)
+        encoding = analyzer.encode_gene_sequence(test_seq)
 
         assert isinstance(encoding, np.ndarray)
         # Should handle unknowns gracefully
@@ -172,7 +172,7 @@ class TestTuberculosisAnalyzer:
         """Test sequence padding."""
         short_seq = "MK"
         max_length = 100
-        encoding = analyzer.encode_sequence(short_seq, max_length=max_length)
+        encoding = analyzer.encode_gene_sequence(short_seq, max_length=max_length)
 
         n_aa = len(analyzer.aa_alphabet)
         expected_size = max_length * n_aa
@@ -207,7 +207,7 @@ class TestTBDrugResistance:
 
         results = analyzer.analyze(test_sequences)
 
-        expected_keys = ["n_sequences", "genes_analyzed"]
+        expected_keys = ["n_isolates", "genes_analyzed"]
         for key in expected_keys:
             assert key in results, f"Missing key: {key}"
 
@@ -339,7 +339,7 @@ class TestTBIntegration:
 
         # Encode a sample sequence
         test_seq = "MKLVFLVLLFLGALGLCLA" * 10
-        encoding = analyzer.encode_sequence(test_seq)
+        encoding = analyzer.encode_gene_sequence(test_seq)
 
         assert len(encoding) > 0
         assert encoding.dtype == np.float32

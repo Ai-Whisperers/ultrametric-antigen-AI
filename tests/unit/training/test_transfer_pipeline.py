@@ -352,20 +352,27 @@ class TestTransferLearningPipeline:
 
             assert finetuned is not None
 
-    def test_evaluate_transfer(self, pipeline, datasets):
+    def test_evaluate_transfer(self, pipeline):
         """Test transfer evaluation."""
-        disease_outputs = {"hiv": 25, "hbv": 6}
-        pipeline.pretrain(datasets, disease_outputs, input_dim=64)
+        # Create datasets with same output dimensions for proper transfer evaluation
+        test_datasets = {
+            "hiv": SimpleDataset(50, 64, 6),
+            "hbv": SimpleDataset(50, 64, 6),
+        }
+        disease_outputs = {"hiv": 6, "hbv": 6}
+        pipeline.pretrain(test_datasets, disease_outputs, input_dim=64)
 
-        # Evaluate transfer from HIV to HBV
-        metrics = pipeline.evaluate_transfer("hiv", "hbv", datasets["hbv"])
+        # Evaluate transfer from HIV to HBV (same output dimensions)
+        metrics = pipeline.evaluate_transfer("hiv", "hbv", test_datasets["hbv"])
 
         assert "mse" in metrics or "error" in metrics
 
     def test_checkpoint_saving(self, pipeline, datasets):
         """Test checkpoint saving."""
         disease_outputs = {"hiv": 25}
-        pipeline.pretrain(datasets[:1], disease_outputs, input_dim=64)
+        # Use only HIV dataset
+        hiv_only = {"hiv": datasets["hiv"]}
+        pipeline.pretrain(hiv_only, disease_outputs, input_dim=64)
 
         # Check checkpoint exists
         checkpoints = list(pipeline.checkpoint_dir.glob("*.pt"))

@@ -38,7 +38,7 @@ class TestHyperbolicProjection:
         import torch
         from src.models.hyperbolic_projection import HyperbolicProjection
 
-        proj = HyperbolicProjection(input_dim=16, output_dim=16)
+        proj = HyperbolicProjection(latent_dim=16)
         assert proj is not None
         assert isinstance(proj, torch.nn.Module)
 
@@ -47,7 +47,7 @@ class TestHyperbolicProjection:
         import torch
         from src.models.hyperbolic_projection import HyperbolicProjection
 
-        proj = HyperbolicProjection(input_dim=16, output_dim=16)
+        proj = HyperbolicProjection(latent_dim=16)
         x = torch.randn(32, 16)  # batch_size=32, dim=16
         z_hyp = proj(x)
 
@@ -58,7 +58,7 @@ class TestHyperbolicProjection:
         import torch
         from src.models.hyperbolic_projection import HyperbolicProjection
 
-        proj = HyperbolicProjection(input_dim=16, output_dim=16, max_radius=0.95)
+        proj = HyperbolicProjection(latent_dim=16, max_radius=0.95)
         x = torch.randn(100, 16) * 10  # Large input
         z_hyp = proj(x)
 
@@ -70,7 +70,7 @@ class TestHyperbolicProjection:
         import torch
         from src.models.hyperbolic_projection import HyperbolicProjection
 
-        proj = HyperbolicProjection(input_dim=16, output_dim=16)
+        proj = HyperbolicProjection(latent_dim=16)
         x = torch.randn(8, 16, requires_grad=True)
         z_hyp = proj(x)
 
@@ -119,15 +119,20 @@ class TestSimpleVAE:
         model = SimpleVAE(input_dim=100, latent_dim=16, hidden_dims=[64, 32])
         x = torch.randn(8, 100)
 
-        # Encode
-        mu, logvar = model.encode(x)
+        # Encode via encoder network (returns mu, logvar tuple)
+        mu, logvar = model.encoder(x)
         assert mu.shape == (8, 16)
         assert logvar.shape == (8, 16)
+
+        # Encode method returns just mu
+        mu_only = model.encode(x)
+        assert mu_only.shape == (8, 16)
 
         # Decode
         z = mu  # Use mean for deterministic test
         x_recon = model.decode(z)
-        assert x_recon.shape == (8, 100)
+        # Decoder returns logits of shape (batch, input_dim, 3) for ternary classification
+        assert x_recon.shape == (8, 100, 3)
 
     def test_reparameterize(self):
         """Test reparameterization trick."""
@@ -152,28 +157,30 @@ class TestPadicNetworks:
 
     def test_import(self):
         """Test that p-adic networks can be imported."""
-        from src.models.padic_networks import PAdicEncoder
-        assert PAdicEncoder is not None
+        from src.models.padic_networks import HierarchicalPAdicMLP, PAdicEmbedding
+        assert HierarchicalPAdicMLP is not None
+        assert PAdicEmbedding is not None
 
-    def test_encoder_instantiation(self):
-        """Test PAdicEncoder instantiation."""
+    def test_mlp_instantiation(self):
+        """Test HierarchicalPAdicMLP instantiation."""
         import torch
-        from src.models.padic_networks import PAdicEncoder
+        from src.models.padic_networks import HierarchicalPAdicMLP
 
-        encoder = PAdicEncoder(input_dim=100, latent_dim=16, prime=3)
-        assert encoder is not None
+        mlp = HierarchicalPAdicMLP(input_dim=32, hidden_dims=[64], output_dim=16, p=3)
+        assert mlp is not None
 
-    def test_encoder_forward(self):
-        """Test PAdicEncoder forward pass."""
+    def test_mlp_forward(self):
+        """Test HierarchicalPAdicMLP forward pass."""
         import torch
-        from src.models.padic_networks import PAdicEncoder
+        from src.models.padic_networks import HierarchicalPAdicMLP
 
-        encoder = PAdicEncoder(input_dim=100, latent_dim=16, prime=3)
-        x = torch.randn(8, 100)
+        mlp = HierarchicalPAdicMLP(input_dim=32, hidden_dims=[64], output_dim=16, p=3)
+        x = torch.randn(8, 32)
+        indices = torch.randint(0, 27, (8,))  # p^3 = 27 possible indices
 
-        output = encoder(x)
-        # Output should contain mu and logvar or similar
+        output = mlp(x, indices)
         assert output is not None
+        assert output.shape == (8, 16)
 
 
 class TestResistanceTransformer:
@@ -191,15 +198,15 @@ class TestResistanceTransformer:
         """Test ResistanceTransformer instantiation."""
         import torch
         try:
-            from src.models.resistance_transformer import ResistanceTransformer
+            from src.models.resistance_transformer import ResistanceTransformer, TransformerConfig
 
-            model = ResistanceTransformer(
-                vocab_size=22,  # 20 AA + gap + unknown
+            cfg = TransformerConfig(
+                n_aa=22,  # 20 AA + gap + unknown
                 d_model=64,
                 n_heads=4,
                 n_layers=2,
-                n_drugs=5,
             )
+            model = ResistanceTransformer(cfg)
             assert model is not None
         except ImportError:
             pytest.skip("ResistanceTransformer not available")
@@ -242,8 +249,8 @@ class TestModelIntegration:
         model = SimpleVAE(input_dim=100, latent_dim=16, hidden_dims=[64, 32])
         optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
-        # Create dummy data
-        x = torch.randn(8, 100)
+        # Create ternary data in {-1, 0, 1}
+        x = torch.randint(-1, 2, (8, 100)).float()
 
         # Forward pass
         model.train()
@@ -252,12 +259,22 @@ class TestModelIntegration:
         # Compute loss (reconstruction + KL)
         if "recon" in output:
             recon = output["recon"]
+            recon_loss = torch.nn.functional.mse_loss(recon, x)
         elif "x_recon" in output:
             recon = output["x_recon"]
+            recon_loss = torch.nn.functional.mse_loss(recon, x)
         else:
-            recon = output.get("logits", x)
-
-        recon_loss = torch.nn.functional.mse_loss(recon, x)
+            # SimpleVAE returns logits of shape (batch, input_dim, 3)
+            logits = output.get("logits", x)
+            if logits.dim() == 3 and logits.shape[-1] == 3:
+                # Use cross-entropy loss for ternary classification
+                # Convert x from {-1, 0, 1} to class indices {0, 1, 2}
+                target_classes = (x + 1).long()
+                recon_loss = torch.nn.functional.cross_entropy(
+                    logits.view(-1, 3), target_classes.view(-1)
+                )
+            else:
+                recon_loss = torch.nn.functional.mse_loss(logits, x)
 
         mu = output["mu"]
         logvar = output.get("logvar", output.get("log_var", torch.zeros_like(mu)))

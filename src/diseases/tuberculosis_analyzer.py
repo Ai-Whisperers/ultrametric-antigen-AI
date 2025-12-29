@@ -69,6 +69,31 @@ class TBDrug(Enum):
     DELAMANID = "DLM"
 
 
+class TBDrugCategory(Enum):
+    """WHO TB drug categories."""
+
+    FIRST_LINE = "first_line"
+    FLUOROQUINOLONES = "fluoroquinolones"
+    SECOND_LINE_INJECTABLE = "second_line_injectable"
+    NEWER_AGENTS = "newer_agents"
+
+    @classmethod
+    def get_category(cls, drug: TBDrug) -> "TBDrugCategory":
+        """Get category for a drug."""
+        first_line = {TBDrug.RIFAMPICIN, TBDrug.ISONIAZID, TBDrug.ETHAMBUTOL, TBDrug.PYRAZINAMIDE}
+        fqs = {TBDrug.LEVOFLOXACIN, TBDrug.MOXIFLOXACIN}
+        injectables = {TBDrug.AMIKACIN, TBDrug.CAPREOMYCIN, TBDrug.KANAMYCIN}
+
+        if drug in first_line:
+            return cls.FIRST_LINE
+        elif drug in fqs:
+            return cls.FLUOROQUINOLONES
+        elif drug in injectables:
+            return cls.SECOND_LINE_INJECTABLE
+        else:
+            return cls.NEWER_AGENTS
+
+
 class TBGene(Enum):
     """TB genes associated with drug resistance."""
 
@@ -268,6 +293,10 @@ GENE_MUTATION_DB = {
     TBGene.RV0678: RV0678_MUTATIONS,
     TBGene.PNCA: PNCA_MUTATIONS,
 }
+
+# Aliases for backward compatibility
+GENE_MUTATIONS = GENE_MUTATION_DB
+DRUG_TO_GENE = DRUG_GENE_MAP
 
 
 class TuberculosisAnalyzer(DiseaseAnalyzer):
