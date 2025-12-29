@@ -30,6 +30,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from src.core import TERNARY
 from src.data.generation import generate_all_ternary_operations
 from src.models import TernaryVAEV5_11_PartialFreeze
+from src.utils.checkpoint import load_checkpoint_compat, get_model_state_dict
 
 
 class SoftRadialProjection(nn.Module):
@@ -352,8 +353,9 @@ def main():
     ckpt_path = PROJECT_ROOT / args.checkpoint
     if ckpt_path.exists():
         print(f"Loading from: {ckpt_path}")
-        ckpt = torch.load(ckpt_path, map_location=device, weights_only=False)
-        base_model.load_state_dict(ckpt.get('model_state_dict', {}), strict=False)
+        ckpt = load_checkpoint_compat(ckpt_path, map_location=device)
+        model_state = get_model_state_dict(ckpt)
+        base_model.load_state_dict(model_state, strict=False)
 
     base_model = base_model.to(device)
 

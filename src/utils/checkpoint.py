@@ -89,6 +89,39 @@ def save_checkpoint(
     torch.save(checkpoint, path)
 
 
+def get_model_state_dict(checkpoint: dict[str, Any]) -> dict[str, torch.Tensor]:
+    """Extract model state dict from checkpoint, handling various key formats.
+
+    Different checkpoint versions use different key names:
+    - model_state_dict: New standard format (homeostatic_rich)
+    - model_state: v5.11 format (v5_11_homeostasis, v5_11_structural)
+    - model: v5.5 format
+
+    Args:
+        checkpoint: Full checkpoint dictionary
+
+    Returns:
+        Model state dict
+
+    Raises:
+        ValueError: If no model state can be found
+    """
+    # Try different key formats in order of preference
+    for key in ["model_state_dict", "model_state", "model"]:
+        if key in checkpoint:
+            return checkpoint[key]
+
+    # If no known key found, check if checkpoint looks like a state dict
+    if isinstance(checkpoint, dict) and any(
+        isinstance(v, torch.Tensor) for v in checkpoint.values()
+    ):
+        return checkpoint
+
+    raise ValueError(
+        f"Cannot find model state in checkpoint. Keys: {list(checkpoint.keys())}"
+    )
+
+
 def extract_model_state(
     checkpoint: dict[str, Any],
     prefix: str,
@@ -104,7 +137,7 @@ def extract_model_state(
     Returns:
         Filtered state dict
     """
-    model_state = checkpoint.get("model", checkpoint)
+    model_state = get_model_state_dict(checkpoint)
     prefix_dot = f"{prefix}." if not prefix.endswith(".") else prefix
 
     filtered = {}
@@ -120,5 +153,6 @@ __all__ = [
     "NumpyBackwardsCompatUnpickler",
     "load_checkpoint_compat",
     "save_checkpoint",
+    "get_model_state_dict",
     "extract_model_state",
 ]

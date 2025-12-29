@@ -33,6 +33,7 @@ from src.core import TERNARY
 from src.data.generation import generate_all_ternary_operations
 from src.models import TernaryVAEV5_11_PartialFreeze
 from src.models.homeostasis import HomeostasisController, compute_Q
+from src.utils.checkpoint import load_checkpoint_compat, get_model_state_dict
 
 
 class RichHierarchyLoss(nn.Module):
@@ -232,7 +233,7 @@ def main():
     parser.add_argument("--batch_size", type=int, default=512)
     parser.add_argument("--lr", type=float, default=5e-4)
     parser.add_argument("--checkpoint", type=str,
-                        default="sandbox-training/checkpoints/v5_11_overnight/best.pt")
+                        default="sandbox-training/checkpoints/v5_11_homeostasis/best.pt")
     parser.add_argument("--save_dir", type=str,
                         default="sandbox-training/checkpoints/homeostatic_rich")
     parser.add_argument("--device", type=str, default="cuda")
@@ -261,8 +262,10 @@ def main():
     ckpt_path = PROJECT_ROOT / args.checkpoint
     if ckpt_path.exists():
         print(f"Loading from: {ckpt_path}")
-        ckpt = torch.load(ckpt_path, map_location=device, weights_only=False)
-        model.load_state_dict(ckpt.get('model_state_dict', {}), strict=False)
+        ckpt = load_checkpoint_compat(ckpt_path, map_location=device)
+        model_state = get_model_state_dict(ckpt)
+        model.load_state_dict(model_state, strict=False)
+        print(f"Loaded checkpoint (keys: {list(ckpt.keys())[:5]}...)")
 
     model = model.to(device)
 

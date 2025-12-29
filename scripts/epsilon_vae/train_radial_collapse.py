@@ -34,6 +34,7 @@ from src.core import TERNARY
 from src.data.generation import generate_all_ternary_operations
 from src.models import TernaryVAEV5_11_PartialFreeze
 from src.losses import RadialStratificationLoss
+from src.utils.checkpoint import load_checkpoint_compat, get_model_state_dict
 
 
 class CollapsedRadialLoss(nn.Module):
@@ -210,8 +211,8 @@ def main():
     start_path = PROJECT_ROOT / args.start_checkpoint
     if start_path.exists():
         print(f"Loading from: {start_path}")
-        ckpt = torch.load(start_path, map_location=device, weights_only=False)
-        model_state = ckpt.get('model_state_dict') or {}
+        ckpt = load_checkpoint_compat(start_path, map_location=device)
+        model_state = get_model_state_dict(ckpt)
         model.load_state_dict(model_state, strict=False)
 
     model.set_encoder_a_frozen(False)
