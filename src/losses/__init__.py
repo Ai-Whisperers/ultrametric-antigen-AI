@@ -74,6 +74,7 @@ from .padic import (
 )
 from .radial_stratification import (RadialStratificationLoss,
                                     compute_single_index_valuation)
+from .rich_hierarchy import RichHierarchyLoss
 from .registry import (
     LossComponentRegistry,
     LossGroup,
@@ -180,6 +181,8 @@ __all__ = [
     "CombinedGeodesicLoss",
     "GlobalRankLoss",
     "MonotonicRadialLoss",
+    # Rich Hierarchy Loss (richness preservation)
+    "RichHierarchyLoss",
     "ConsequencePredictor",
     "evaluate_addition_accuracy",
     "PurposefulRankingLoss",

@@ -526,8 +526,255 @@ These modules follow the same patterns as core modules and import from validated
 
 ---
 
+## scripts/ Folder (147 Python files)
+
+### Consumer Pattern Verification ✅
+
+All scripts properly CONSUME from src/ (correct pattern). Scripts import from:
+- `src.models` - TernaryVAEV5_11, TernaryVAEV5_11_PartialFreeze, HomeostasisController
+- `src.core` - TERNARY singleton, metrics
+- `src.losses` - PAdicGeodesicLoss, RadialHierarchyLoss, CombinedZeroStructureLoss
+- `src.data` / `src.dataio` - generate_all_ternary_operations
+- `src.config` - CHECKPOINTS_DIR, paths
+- `src.geometry` - get_riemannian_optimizer
+- `src.utils` - load_checkpoint_compat, get_model_state_dict
+
+### Scripts Structure
+
+| Folder | Files | Purpose |
+|--------|-------|---------|
+| scripts/train.py | 1 | **Main V5.11 training script** |
+| scripts/training/ | 13 | Training launchers and pipelines |
+| scripts/experiments/epsilon_vae/ | 30 | V5.11 training experiments |
+| scripts/experiments/hiv/ | 5 | HIV bioinformatics experiments |
+| scripts/experiments/ | 36 | Other experiment scripts |
+| scripts/analysis/ | 13 | Checkpoint/code analysis tools |
+| scripts/visualization/ | 11 | Plotting and visualization |
+| scripts/evaluation/ | 5 | Evaluation and validation |
+| scripts/ingest/ | 6 | Data ingestion scripts |
+| scripts/examples/ | 6 | Usage examples |
+| scripts/api_integration/ | 2 | External API integrations |
+| scripts/benchmarks/ | 2 | Performance benchmarks |
+| scripts/optimization/ | 1 | Optimization utilities |
+| scripts/utils/ | 10 | Maintenance utilities |
+
+### Key Scripts Verified
+
+**scripts/train.py** - ✅ Clean (Main training entry point)
+- Imports: src.config.paths, src.core, src.data.generation, src.geometry, src.losses, src.models
+- Implements: AdaptiveCurriculum, stratified sampling, homeostatic control
+- Proper consumer of src/ infrastructure
+
+**scripts/experiments/epsilon_vae/train_homeostatic_rich.py** - ✅ Clean
+- Imports: src.core, src.data.generation, src.models, src.utils.checkpoint
+- Implements: RichHierarchyLoss (local to script, NOT in src/)
+- Note: Contains local loss class - could be refactored to src/losses/ if reused
+
+**scripts/training/train_v5_11_11_homeostatic.py** - ✅ Clean
+- Imports: src.config.paths
+- Delegates to scripts/train.py via subprocess
+- Proper launcher pattern
+
+### Pattern Verification: No Reverse Dependencies
+
+Verified that src/ does NOT import from scripts/:
+- src/ modules only import from other src/ modules
+- scripts/ are pure consumers, not providers
+
+---
+
+## configs/ Folder (11 YAML files)
+
+### Current Configs
+
+| File | Purpose | Status |
+|------|---------|--------|
+| **ternary.yaml** | V5.11 base config | ✅ Valid |
+| **ternary_fast_test.yaml** | Quick testing | ✅ Valid |
+| **v5_11_11_homeostatic_ale_device.yaml** | RTX 2060S optimized | ✅ Valid |
+| **v5_11_11_homeostatic_rtx2060s.yaml** | RTX 2060S variant | ✅ Valid |
+
+### Archived Configs
+
+| File | Purpose | Status |
+|------|---------|--------|
+| configs/archive/ternary_v5_6.yaml | V5.6 config (legacy) | ⚠️ References non-existent model |
+| configs/archive/ternary_v5_7.yaml | V5.7 config | Archived |
+| configs/archive/ternary_v5_8.yaml | V5.8 config | Archived |
+| configs/archive/ternary_v5_9.yaml | V5.9 config | Archived |
+| configs/archive/ternary_v5_9_2.yaml | V5.9.2 config | Archived |
+| configs/archive/ternary_v5_10.yaml | V5.10 config | Archived |
+| configs/archive/appetitive_vae.yaml | Experimental | Archived |
+
+### Config Structure Analysis
+
+**ternary.yaml (V5.11 base)**
+- model.name: TernaryVAEV5_11 ✅
+- References: sandbox-training/checkpoints/v5_5/latest.pt
+- Loss config: geodesic, radial, curriculum
+- Training: epochs=100, batch_size=512, lr=1e-3
+
+**v5_11_11_homeostatic_ale_device.yaml**
+- model.name: TernaryVAEV5_11_PartialFreeze ✅
+- Features: use_controller, use_dual_projection, learnable_curvature
+- Homeostasis: Q-gated annealing, coverage thresholds
+- Riemannian: enabled with geoopt
+- Memory optimized for 8GB VRAM
+
+### Archived Config Warning
+
+**configs/archive/ternary_v5_6.yaml** line 219 references:
+```
+# Model file: src/models/ternary_vae_v5_6.py
+```
+This file no longer exists (archived to src/ARCHIVE/v5_6_era/).
+The config is correctly in archive/ folder, so no action needed.
+
+---
+
+## scripts/ + configs/ Summary
+
+### Statistics
+
+| Category | Count | Status |
+|----------|-------|--------|
+| scripts/ Python files | 147 | ✅ All consume from src/ |
+| configs/ active YAML | 4 | ✅ Valid |
+| configs/ archived YAML | 7 | ⚠️ Legacy (archive/) |
+
+### Architecture Verification ✅
+
+**Correct dependency direction confirmed:**
+```
+scripts/ → imports from → src/
+configs/ → consumed by → scripts/ and src/
+src/ → does NOT import from → scripts/ or configs/
+```
+
+This follows the proper layered architecture where:
+- src/ is the Single Source of Truth for features
+- scripts/ are consumers that orchestrate training/evaluation
+- configs/ are pure data files with no executable code
+
+### Recommendations
+
+1. **No action needed**: Architecture is correct
+2. **Optional cleanup**: `RichHierarchyLoss` in train_homeostatic_rich.py could be moved to src/losses/ if reused elsewhere
+3. **Archived configs**: Already properly in configs/archive/, consistent with archived scripts
+
+---
+
+---
+
+## Refactoring: RichHierarchyLoss Moved to src/losses/
+
+**Date:** 2025-12-29
+**Status:** ✅ Complete
+
+### Problem
+
+`RichHierarchyLoss` was defined locally in `scripts/experiments/epsilon_vae/train_homeostatic_rich.py`
+instead of in `src/losses/`. This violated the architecture where src/ should be the Single Source of Truth.
+
+### Solution
+
+1. Created `src/losses/rich_hierarchy.py` with documented RichHierarchyLoss class
+2. Updated `src/losses/__init__.py` to export RichHierarchyLoss
+3. Updated script to import from `src.losses` instead of defining locally
+
+### Files Changed
+
+| File | Change |
+|------|--------|
+| `src/losses/rich_hierarchy.py` | **NEW** - RichHierarchyLoss implementation |
+| `src/losses/__init__.py` | Added import and export for RichHierarchyLoss |
+| `scripts/.../train_homeostatic_rich.py` | Removed local class, now imports from src.losses |
+
+### RichHierarchyLoss Innovation
+
+Key difference from existing losses (RadialStratificationLoss, RadialHierarchyLoss):
+
+```python
+# Existing: Push individual samples to targets (collapses variance)
+loss = mse(actual_radius[i], target_radius[i])
+
+# RichHierarchyLoss: Push level MEANS, preserve variance
+mean_r = radii[mask].mean()
+hierarchy_loss += (mean_r - target_r) ** 2
+
+# Plus: Penalize variance collapse
+if ratio < min_richness_ratio:
+    richness_loss += penalty
+```
+
+### Verification
+
+```
+$ python -c "from src.losses import RichHierarchyLoss; print(RichHierarchyLoss)"
+<class 'src.losses.rich_hierarchy.RichHierarchyLoss'>
+```
+
+---
+
+---
+
+## V5.12 Production Training Implementation
+
+**Date Added:** 2025-12-29
+
+### New Files Created
+
+| File | Purpose | Lines |
+|------|---------|-------|
+| `configs/v5_12.yaml` | V5.12 production configuration | 198 |
+| `scripts/training/train_v5_12.py` | V5.12 training script | ~550 |
+| `DOCUMENTATION/01_PROJECT_KNOWLEDGE_BASE/V5_12_DESIGN.md` | Design document | 243 |
+
+### V5.12 Key Features
+
+1. **RichHierarchyLoss as PRIMARY** - Preserves richness while maximizing hierarchy
+2. **ComprehensiveMetrics integration** - Standardized checkpoint storage
+3. **Two-phase loss strategy**:
+   - Phase 1 (epochs 0-50): Structure establishment
+   - Phase 2 (epochs 50+): Geometry refinement with PAdicGeodesicLoss
+4. **Enhanced stratified sampling** - 25% high-v budget (up from 20%)
+5. **Tighter radial targets** - inner_radius=0.08 for better v=9 separation
+6. **Q-gated homeostasis** - Slower annealing (0.003 vs 0.005)
+
+### Target Metrics
+
+| Metric | V5.11 Best | V5.12 Target |
+|--------|------------|--------------|
+| Coverage | 100% | 100% |
+| Hierarchy_B | -0.8321 | -0.8321 |
+| Richness | 0.00787 | >0.008 |
+| r_v9 | 0.19 | 0.12-0.15 |
+| dist_corr | ~0.6 | >0.7 |
+
+### Usage
+
+```bash
+# Run V5.12 training
+python scripts/training/train_v5_12.py
+
+# With custom config
+python scripts/training/train_v5_12.py --config configs/v5_12.yaml
+
+# Resume from checkpoint
+python scripts/training/train_v5_12.py --resume
+```
+
+### Architecture Verification
+
+```
+$ python -m py_compile scripts/training/train_v5_12.py
+# No errors - syntax verified
+```
+
+---
+
 **Audit Complete:** 2025-12-29
 **Audited by:** Claude Opus 4.5
-**Files Audited:** 205/619 (core infrastructure)
-**Issues Found:** 0 (after prior fixes)
+**Files Audited:** 205 src/ + 147 scripts/ + 12 configs/ = 364 files
+**Issues Found:** 0 critical, 1 refactoring completed
 
