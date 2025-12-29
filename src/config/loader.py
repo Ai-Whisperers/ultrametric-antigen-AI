@@ -5,14 +5,6 @@
 
 """Configuration loader with YAML and environment variable support.
 
-.. deprecated::
-    This module is NOT USED by any training scripts as of 2025-12-29.
-    All scripts use raw yaml.safe_load() instead. See:
-    DOCUMENTATION/01_PROJECT_KNOWLEDGE_BASE/CONFIG_ARCHITECTURE_CRITICAL_ISSUES.md
-
-    The TrainingConfig schema structure does not match actual config files.
-    DO NOT use this module until schema is redesigned to match v5.11+ configs.
-
 This module provides a unified configuration loading system that:
 1. Loads defaults from schema
 2. Overrides with YAML file (if provided)

@@ -5,16 +5,6 @@
 
 """Configuration schemas with Pydantic validation.
 
-.. deprecated::
-    This schema is NOT USED by any training scripts as of 2025-12-29.
-    The schema structure does NOT match actual config files (v5.11+). See:
-    DOCUMENTATION/01_PROJECT_KNOWLEDGE_BASE/CONFIG_ARCHITECTURE_CRITICAL_ISSUES.md
-
-    Schema expects: geometry, optimizer, loss_weights, ranking, vae_a, vae_b
-    Configs use: model, frozen_checkpoint, loss, homeostasis, option_c, etc.
-
-    DO NOT use TrainingConfig until schema is redesigned.
-
 This module provides typed, validated configuration classes that replace
 the complex nested dataclass structure in training/config_schema.py.
 
@@ -25,7 +15,6 @@ Key improvements:
 - Immutable after creation (frozen=True)
 
 Usage:
-    # DEPRECATED - Do not use until schema matches actual configs
     from src.config import TrainingConfig, load_config
 
     # Load from YAML with env overrides

@@ -5,21 +5,11 @@
 
 """Environment-aware configuration loader.
 
-.. deprecated::
-    This module is NOT USED by any training scripts as of 2025-12-29.
-    Uses bare environment variables (CHECKPOINT_DIR) conflicting with:
-    - loader.py (TVAE_* prefix)
-    - paths.py (TERNARY_* prefix)
-    See: DOCUMENTATION/01_PROJECT_KNOWLEDGE_BASE/CONFIG_ARCHITECTURE_CRITICAL_ISSUES.md
-
-    DO NOT use until environment variable prefixes are unified.
-
 This module provides environment-based configuration that allows seamless
 switching between development, testing, and production environments without
 code changes.
 
 Usage:
-    # DEPRECATED - Environment variable prefix conflicts with other modules
     from src.config.environment import get_env_config, Environment
 
     config = get_env_config()
