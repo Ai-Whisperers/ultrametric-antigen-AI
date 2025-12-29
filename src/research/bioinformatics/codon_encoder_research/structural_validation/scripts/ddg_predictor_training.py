@@ -35,6 +35,18 @@ from typing import Dict, List, Optional, Tuple
 import numpy as np
 from scipy import stats
 
+
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """Compute hyperbolic distance from origin for a Poincare ball embedding.
+
+    V5.12.2: Use proper hyperbolic distance formula instead of Euclidean norm.
+    """
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 # Set up paths
 SCRIPT_DIR = Path(__file__).parent
 VALIDATION_DIR = SCRIPT_DIR.parent
@@ -444,7 +456,7 @@ def load_padic_embeddings() -> Tuple[Dict[str, float], Dict[str, np.ndarray]]:
     embeddings = {}
     for aa in aa_embs:
         mean_emb = np.mean(aa_embs[aa], axis=0)
-        radii[aa] = np.linalg.norm(mean_emb)
+        radii[aa] = hyperbolic_radius(mean_emb)
         embeddings[aa] = mean_emb
 
     return radii, embeddings
