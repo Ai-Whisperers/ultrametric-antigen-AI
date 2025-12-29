@@ -108,36 +108,72 @@ class HBVConfig(DiseaseConfig):
 # Numbering based on RT domain (starts at aa 1 of RT)
 # Note: RT overlaps with S gene
 # Consolidated to avoid duplicate keys (Python dict limitation)
+# Expanded database from EASL 2023 and AASLD guidelines
 
 RT_MUTATIONS = {
-    # Other positions (early positions)
+    # Early domain mutations
     80: {"L": {"mutations": ["V", "I"], "effect": "low", "drugs": ["lamivudine"]}},
 
-    # YMDD motif mutations (LAM, ETV, LdT resistance)
+    # rtA181 mutations (LAM/ADV cross-resistance)
+    181: {"A": {"mutations": ["T", "V", "S"], "effect": "high", "drugs": ["lamivudine", "adefovir", "telbivudine"]}},
+
+    # YMDD motif region (catalytic domain)
     169: {"I": {"mutations": ["T"], "effect": "moderate", "drugs": ["entecavir"]}},
-    # Position 173: Combined V->L and L->M (entecavir and lamivudine)
     173: {"V": {"mutations": ["L", "M"], "effect": "moderate", "drugs": ["lamivudine", "entecavir"]}},
+
+    # rtL180M - Primary LAM resistance (precedes M204V/I)
     180: {"L": {"mutations": ["M"], "effect": "high", "drugs": ["lamivudine", "telbivudine", "entecavir"]}},
-    181: {"A": {"mutations": ["T", "V", "S"], "effect": "high", "drugs": ["lamivudine", "adefovir"]}},
-    # Position 184: Combined T/S mutations (entecavir)
+
+    # rtT184 - ETV resistance (requires LAM background)
     184: {"T": {"mutations": ["G", "S", "I", "A", "L"], "effect": "high", "drugs": ["entecavir"]}},
+
+    # Tenofovir resistance (rare but emerging)
     194: {"A": {"mutations": ["T"], "effect": "moderate", "drugs": ["tenofovir_df", "tenofovir_af"]}},
 
-    # Additional ETV resistance positions
+    # rtS202 - Secondary ETV resistance
     202: {"S": {"mutations": ["G", "I", "C"], "effect": "high", "drugs": ["entecavir"]}},
 
-    # YMDD core mutations
+    # rtM204V/I - YMDD motif (primary LAM/LdT resistance)
     204: {"M": {"mutations": ["V", "I", "S"], "effect": "high", "drugs": ["lamivudine", "telbivudine", "entecavir"]}},
+
+    # Secondary/compensatory mutations
     207: {"V": {"mutations": ["I"], "effect": "low", "drugs": ["lamivudine"]}},
     213: {"L": {"mutations": ["M"], "effect": "low", "drugs": ["lamivudine"]}},
 
-    # Adefovir resistance
+    # Adefovir resistance mutations
     233: {"I": {"mutations": ["V"], "effect": "moderate", "drugs": ["adefovir"]}},
-    # Position 236: Combined adefovir and tenofovir resistance
     236: {"N": {"mutations": ["T"], "effect": "high", "drugs": ["adefovir", "tenofovir_df", "tenofovir_af"]}},
 
-    # Additional ETV resistance
+    # rtM250 - Secondary ETV resistance
     250: {"M": {"mutations": ["V", "I", "L"], "effect": "high", "drugs": ["entecavir"]}},
+
+    # Additional clinically relevant mutations (EASL 2023)
+    # rtI169T + others for ETV
+    163: {"R": {"mutations": ["K", "Q"], "effect": "low", "drugs": ["entecavir"]}},
+
+    # rtT128N - Vaccine escape that also affects some NAs
+    128: {"T": {"mutations": ["N", "I"], "effect": "low", "drugs": ["lamivudine"]}},
+
+    # rtV214A - Compensatory mutation
+    214: {"V": {"mutations": ["A"], "effect": "low", "drugs": ["lamivudine", "entecavir"]}},
+
+    # rtQ215S - Compensatory mutation
+    215: {"Q": {"mutations": ["S", "H"], "effect": "low", "drugs": ["lamivudine", "entecavir"]}},
+
+    # rtN238 mutations - ADV/TDF pathway
+    238: {"N": {"mutations": ["T", "H", "D"], "effect": "moderate", "drugs": ["adefovir", "tenofovir_df"]}},
+
+    # rtP237H - Rare TDF mutation
+    237: {"P": {"mutations": ["H"], "effect": "low", "drugs": ["tenofovir_df", "tenofovir_af"]}},
+
+    # rtS219A - Minor LAM resistance
+    219: {"S": {"mutations": ["A"], "effect": "low", "drugs": ["lamivudine"]}},
+
+    # rtI233V precursor changes
+    229: {"F": {"mutations": ["Y", "L"], "effect": "low", "drugs": ["adefovir"]}},
+
+    # rtA222 - Background polymorphism affecting resistance
+    222: {"A": {"mutations": ["T", "V"], "effect": "low", "drugs": ["entecavir"]}},
 }
 
 # Cross-resistance patterns
@@ -424,7 +460,7 @@ def create_hbv_synthetic_dataset(
     X, y, ids = create_mutation_based_dataset(
         reference_sequence=reference,
         mutation_db=drug_mutation_db if drug_mutation_db else RT_MUTATIONS,
-        encode_fn=analyzer.encode_sequence,
+        encode_fn=lambda s, ml: analyzer.encode_sequence(s, max_length=ml),
         max_length=350,
         n_random_mutants=30,
         seed=42,

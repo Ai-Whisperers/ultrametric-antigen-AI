@@ -10,10 +10,43 @@ Core VAE Models
    :show-inheritance:
 
 
+BaseVAE
+-------
+
+Abstract base class for all VAE variants, reducing code duplication across 19+ models.
+
+.. automodule:: src.models.base_vae
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Structure-Aware VAE
+-------------------
+
+VAE with integrated 3D protein structure encoding using AlphaFold2 predictions.
+
+.. automodule:: src.models.structure_aware_vae
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
 SwarmVAE
 --------
 
 .. automodule:: src.models.swarm_vae
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Epistasis Module
+----------------
+
+Mutation interaction modeling for epistatic effects in drug resistance.
+
+.. automodule:: src.models.epistasis_module
    :members:
    :undoc-members:
    :show-inheritance:

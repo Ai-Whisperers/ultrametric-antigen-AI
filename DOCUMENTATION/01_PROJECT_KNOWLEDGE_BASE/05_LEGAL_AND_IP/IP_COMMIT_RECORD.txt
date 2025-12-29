@@ -1,2 +1,0 @@
-1b8bfbd03ee6939b533a2970a24eac2b6c2d50ad revert: Restore hierarchy_threshold to -0.70
-012734aaca8a954f1b6f43e3787d3dc936857786601001e5c3acb801f10d7ed7 *IP_TIMESTAMP_MANIFEST.txt

@@ -141,3 +141,26 @@ research/alphafold3/repo/
 **/VALIDATION_REALITY*
 
 bin/
+
+# Sandbox and experimental training
+sandbox-training/
+
+# Large research data (keep structure, ignore large files)
+research/bioinformatics/codon_encoder_research/hiv/data/
+research/embeddings_analysis/
+
+# Legacy documentation (replaced by docs/content/)
+# DOCUMENTATION/ (Migrated to docs/content)
+
+# Knowledge synthesis (AI-generated)
+# UNDERSTANDING/ (Migrated to docs/content)
+
+# Legacy/archive code
+src/ARCHIVE/
+
+# Empty duplicate directories (from reorganization)
+scripts/benchmark/
+scripts/eval/
+scripts/validation/
+src/observability/
+src/metrics/

@@ -25,6 +25,10 @@ Step-by-step tutorials for common tasks with Ternary VAE.
 
    epsilon_vae
    meta_learning
+   uncertainty
+   transfer_learning
+   structure_aware
+   epistasis
 
 
 Quick Start Guide
@@ -63,6 +67,18 @@ Epsilon-VAE (:doc:`epsilon_vae`)
 
 Meta-Learning (:doc:`meta_learning`)
     Few-shot adaptation with MAML and Reptile
+
+Uncertainty Quantification (:doc:`uncertainty`)
+    MC Dropout, Evidential, and Ensemble uncertainty methods with calibration
+
+Transfer Learning (:doc:`transfer_learning`)
+    Pre-train on multiple diseases, fine-tune on target with MAML, LoRA, and Adapters
+
+Structure-Aware Modeling (:doc:`structure_aware`)
+    Integrate AlphaFold2 3D structures with SE(3)-equivariant encoders
+
+Epistasis Analysis (:doc:`epistasis`)
+    Model mutation interactions for multi-mutation resistance patterns
 
 
 Prerequisites

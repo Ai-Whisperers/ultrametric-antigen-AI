@@ -205,6 +205,54 @@ RT_MUTATIONS = {
     101: {"K": {"mutations": ["E", "P", "H"], "effect": "moderate", "drugs": ["NVP", "EFV", "RPV"]}},
     # P225H - ETR resistance
     225: {"P": {"mutations": ["H"], "effect": "moderate", "drugs": ["ETR", "RPV"]}},
+
+    # Additional NRTI mutations (IAS-USA 2023)
+    # K65E - Alternative to K65R
+    # Already covered above with K65R/E/N
+
+    # T69 insertion complex (multi-NRTI resistance)
+    69: {"T": {"mutations": ["D", "N", "S"], "effect": "high", "drugs": ["AZT", "D4T", "ABC", "DDI", "TDF"]}},
+
+    # A62V - Accessory NRTI mutation
+    62: {"A": {"mutations": ["V"], "effect": "low", "drugs": ["TDF", "DDI"]}},
+
+    # V75T/M/A - D4T/DDI resistance
+    75: {"V": {"mutations": ["T", "M", "A"], "effect": "moderate", "drugs": ["D4T", "DDI"]}},
+
+    # F77L - TAM accessory
+    77: {"F": {"mutations": ["L"], "effect": "low", "drugs": ["AZT", "D4T"]}},
+
+    # F116Y - TAM accessory
+    116: {"F": {"mutations": ["Y"], "effect": "low", "drugs": ["AZT", "D4T", "ABC"]}},
+
+    # Additional NNRTI mutations
+    # A98G - NNRTI accessory
+    98: {"A": {"mutations": ["G", "S"], "effect": "low", "drugs": ["NVP", "EFV", "DOR"]}},
+
+    # K100I - DOR resistance
+    100: {"K": {"mutations": ["I"], "effect": "moderate", "drugs": ["DOR", "EFV"]}},
+
+    # V108I - NNRTI accessory
+    108: {"V": {"mutations": ["I"], "effect": "low", "drugs": ["NVP", "EFV"]}},
+
+    # E138A/G/K/Q/R - Second-gen NNRTI (multiple already covered)
+    # V179D/E/F/T - ETR/RPV accessory
+    179: {"V": {"mutations": ["D", "E", "F", "T", "L"], "effect": "moderate", "drugs": ["ETR", "RPV", "DOR"]}},
+
+    # Y318F - NNRTI resistance
+    318: {"Y": {"mutations": ["F"], "effect": "moderate", "drugs": ["NVP", "DOR"]}},
+
+    # H221Y - RPV/ETR resistance
+    221: {"H": {"mutations": ["Y"], "effect": "moderate", "drugs": ["RPV", "ETR"]}},
+
+    # F227L/C - ETR/RPV resistance
+    227: {"F": {"mutations": ["L", "C"], "effect": "moderate", "drugs": ["ETR", "RPV"]}},
+
+    # M230L - NNRTI resistance
+    230: {"M": {"mutations": ["L", "I"], "effect": "high", "drugs": ["ETR", "RPV", "DOR"]}},
+
+    # L234I - DOR-specific
+    234: {"L": {"mutations": ["I"], "effect": "moderate", "drugs": ["DOR"]}},
 }
 
 

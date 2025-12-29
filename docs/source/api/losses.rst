@@ -44,3 +44,25 @@ Composite Losses
    :members:
    :undoc-members:
    :show-inheritance:
+
+
+Epistasis Loss
+--------------
+
+Unified epistasis loss combining coevolution, drug interaction, and learned epistasis components.
+
+.. automodule:: src.losses.epistasis_loss
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Coevolution Loss
+----------------
+
+Evolutionary constraint modeling using p-adic geometry.
+
+.. automodule:: src.losses.coevolution_loss
+   :members:
+   :undoc-members:
+   :show-inheritance:

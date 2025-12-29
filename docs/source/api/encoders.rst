@@ -26,3 +26,14 @@ Sequence Encoder
    :members:
    :undoc-members:
    :show-inheritance:
+
+
+AlphaFold Encoder
+-----------------
+
+SE(3)-equivariant encoder for AlphaFold2 predicted protein structures with pLDDT confidence weighting.
+
+.. automodule:: src.encoders.alphafold_encoder
+   :members:
+   :undoc-members:
+   :show-inheritance:

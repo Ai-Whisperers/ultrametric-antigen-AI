@@ -289,11 +289,18 @@ class PAdicEmbedding(nn.Module):
     def _create_positional_encoding(self, n_positions: int, dim: int) -> torch.Tensor:
         """Create sinusoidal positional encoding."""
         position = torch.arange(n_positions).unsqueeze(1)
-        div_term = torch.exp(torch.arange(0, dim, 2) * (-math.log(10000.0) / dim))
+
+        # Handle odd dimensions properly
+        half_dim = (dim + 1) // 2  # ceil division for odd dims
+        div_term = torch.exp(torch.arange(0, half_dim) * (-math.log(10000.0) / max(dim, 1)))
 
         pe = torch.zeros(n_positions, dim)
-        pe[:, 0::2] = torch.sin(position * div_term)
-        pe[:, 1::2] = torch.cos(position * div_term)
+        sin_indices = torch.arange(0, dim, 2)
+        cos_indices = torch.arange(1, dim, 2)
+
+        pe[:, sin_indices] = torch.sin(position * div_term[: len(sin_indices)])
+        if len(cos_indices) > 0:
+            pe[:, cos_indices] = torch.cos(position * div_term[: len(cos_indices)])
 
         return pe
 

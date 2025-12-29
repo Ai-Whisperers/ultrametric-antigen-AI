@@ -14,4 +14,5 @@ This section contains the complete API reference for the Ternary VAE library.
    losses
    training
    encoders
+   diseases
    cli

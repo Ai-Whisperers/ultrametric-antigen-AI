@@ -44,10 +44,19 @@ python scripts/train/train.py --config configs/ternary.yaml
 
 ## 📚 Documentation
 
-- **Theory & Foundations** – detailed mathematical background, biological context, and validation strategy: `DOCUMENTATION/01_PROJECT_KNOWLEDGE_BASE/02_THEORY_AND_FOUNDATIONS/`
-- **Research Proposals** – organized proposals for future work: `DOCUMENTATION/01_PROJECT_KNOWLEDGE_BASE/02_THEORY_AND_FOUNDATIONS/09_BIBLIOGRAPHY_AND_RESOURCES/RESEARCH_PROPOSALS/`
-- **Project Management** – roadmaps, risk register, and code‑health metrics: `DOCUMENTATION/02_PROJECT_MANAGEMENT/`
-- **API Reference** – generated automatically from the `src/` package (see `docs/` after running `scripts/doc_builder.py`).
+**All documentation is consolidated in [`docs/content/`](docs/content/README.md)**.
+
+| I need to... | Go to |
+|:-------------|:------|
+| Get started quickly | [docs/content/getting-started/](docs/content/getting-started/README.md) |
+| Understand the architecture | [docs/content/architecture/](docs/content/architecture/README.md) |
+| Learn the theory | [docs/content/theory/](docs/content/theory/README.md) |
+| See research findings | [docs/content/research/](docs/content/research/README.md) |
+| Contribute to development | [docs/content/development/](docs/content/development/README.md) |
+| Find role-specific guides | [docs/content/stakeholders/](docs/content/stakeholders/README.md) |
+| API Reference | [docs/source/api/](docs/source/api/index.rst) |
+
+> **Note**: Legacy documentation in `DOCUMENTATION/` is being phased out. Use `docs/content/` for current documentation.
 
 ### 🧬 HIV Analysis Documentation
 
@@ -140,6 +149,50 @@ print(results["mdr_classification"])  # DS-TB, MDR-TB, pre-XDR-TB, or XDR-TB
 ```
 
 See [`src/diseases/README.md`](src/diseases/README.md) for full documentation.
+
+### 🏗️ Architecture Improvements (NEW - 2025-12-28)
+
+**New capabilities added to the framework:**
+
+| Feature | Module | Description |
+|---------|--------|-------------|
+| **BaseVAE** | `src/models/base_vae.py` | Unified base class for all 19+ VAE variants |
+| **Uncertainty** | `src/diseases/uncertainty_aware_analyzer.py` | MC Dropout, Evidential, Ensemble methods |
+| **Epistasis** | `src/models/epistasis_module.py` | Mutation interaction modeling |
+| **Transfer Learning** | `src/training/transfer_pipeline.py` | Pre-train → fine-tune pipeline |
+| **Structure-Aware** | `src/models/structure_aware_vae.py` | AlphaFold2 integration with SE(3) encoders |
+
+**Uncertainty Quantification:**
+```python
+from src.diseases.uncertainty_aware_analyzer import (
+    UncertaintyAwareAnalyzer, UncertaintyConfig, UncertaintyMethod
+)
+
+config = UncertaintyConfig(method=UncertaintyMethod.EVIDENTIAL, calibrate=True)
+analyzer = UncertaintyAwareAnalyzer(base_analyzer, config=config, model=model)
+results = analyzer.analyze_with_uncertainty(sequences, encodings=x)
+# Returns predictions with confidence intervals and epistemic/aleatoric decomposition
+```
+
+**Transfer Learning:**
+```python
+from src.training.transfer_pipeline import TransferLearningPipeline, TransferConfig
+
+pipeline = TransferLearningPipeline(config)
+pretrained = pipeline.pretrain(all_disease_data)  # Pre-train on all diseases
+finetuned = pipeline.finetune("hiv", hiv_data)    # Fine-tune on target
+```
+
+**Structure-Aware Modeling:**
+```python
+from src.models.structure_aware_vae import StructureAwareVAE, StructureConfig
+
+config = StructureConfig(use_structure=True, use_plddt=True)
+model = StructureAwareVAE(input_dim=128, latent_dim=32, structure_config=config)
+outputs = model(x=seq_embed, structure=alphafold_coords, plddt=confidence)
+```
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for full details on the architecture improvements.
 
 ---
 

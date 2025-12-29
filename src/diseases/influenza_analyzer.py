@@ -153,6 +153,48 @@ NA_B_MUTATIONS = {
     371: {"G": {"mutations": ["R"], "drug": "peramivir", "effect": "moderate"}},
 }
 
+# Combined NA mutations dictionary by subtype
+NA_MUTATIONS_BY_SUBTYPE = {
+    "H1N1": NA_H1N1_MUTATIONS,
+    "H3N2": NA_H3N2_MUTATIONS,
+    "B": NA_B_MUTATIONS,
+}
+
+
+def _merge_na_mutations():
+    """Merge all NA mutation dictionaries into a flat structure with 'drugs' key."""
+    merged = {}
+    for pos, info in NA_H1N1_MUTATIONS.items():
+        for ref_aa, data in info.items():
+            merged[pos] = {ref_aa: {"mutations": data["mutations"], "effect": data["effect"], "drugs": [data["drug"]]}}
+    for pos, info in NA_H3N2_MUTATIONS.items():
+        if pos in merged:
+            for ref_aa, data in info.items():
+                if ref_aa in merged[pos]:
+                    if data["drug"] not in merged[pos][ref_aa]["drugs"]:
+                        merged[pos][ref_aa]["drugs"].append(data["drug"])
+                else:
+                    merged[pos][ref_aa] = {"mutations": data["mutations"], "effect": data["effect"], "drugs": [data["drug"]]}
+        else:
+            for ref_aa, data in info.items():
+                merged[pos] = {ref_aa: {"mutations": data["mutations"], "effect": data["effect"], "drugs": [data["drug"]]}}
+    for pos, info in NA_B_MUTATIONS.items():
+        if pos in merged:
+            for ref_aa, data in info.items():
+                if ref_aa in merged[pos]:
+                    if data["drug"] not in merged[pos][ref_aa]["drugs"]:
+                        merged[pos][ref_aa]["drugs"].append(data["drug"])
+                else:
+                    merged[pos][ref_aa] = {"mutations": data["mutations"], "effect": data["effect"], "drugs": [data["drug"]]}
+        else:
+            for ref_aa, data in info.items():
+                merged[pos] = {ref_aa: {"mutations": data["mutations"], "effect": data["effect"], "drugs": [data["drug"]]}}
+    return merged
+
+
+# Flat combined NA mutations dictionary with integer position keys
+NA_MUTATIONS = _merge_na_mutations()
+
 # PA mutations for baloxavir resistance
 PA_MUTATIONS = {
     # PA cap-dependent endonuclease active site

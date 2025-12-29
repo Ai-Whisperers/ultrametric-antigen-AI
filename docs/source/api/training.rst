@@ -44,3 +44,14 @@ Early Stopping
    :members:
    :undoc-members:
    :show-inheritance:
+
+
+Transfer Learning Pipeline
+--------------------------
+
+Unified pre-train → fine-tune pipeline for multi-disease transfer learning.
+
+.. automodule:: src.training.transfer_pipeline
+   :members:
+   :undoc-members:
+   :show-inheritance:

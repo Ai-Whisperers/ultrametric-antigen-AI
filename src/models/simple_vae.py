@@ -176,6 +176,10 @@ class SimpleVAE(nn.Module):
         mu, _ = self.encoder(x)
         return mu
 
+    def decode(self, z: torch.Tensor) -> torch.Tensor:
+        """Decode latent representation back to input space."""
+        return self.decoder(z)
+
     def count_parameters(self) -> dict:
         """Count model parameters."""
         total = sum(p.numel() for p in self.parameters())
