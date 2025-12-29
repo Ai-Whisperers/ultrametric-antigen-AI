@@ -26,6 +26,25 @@ from scipy.spatial.distance import pdist, squareform
 import warnings
 warnings.filterwarnings('ignore')
 
+
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """Compute hyperbolic distance from origin for a Poincare ball embedding.
+
+    V5.12.2: Use proper hyperbolic distance formula instead of Euclidean norm.
+
+    Args:
+        embedding: Array of shape (dim,) in Poincare ball
+        c: Curvature parameter (default 1.0)
+
+    Returns:
+        Hyperbolic radius (scalar)
+    """
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
@@ -333,7 +352,7 @@ class PadicEncoder:
                             # Compute radius levels
                             self.radius_levels = {}
                             for aa, emb in self.aa_embeddings_full.items():
-                                self.radius_levels[aa] = np.linalg.norm(emb)
+                                self.radius_levels[aa] = hyperbolic_radius(emb)
 
                             print(f"  Loaded embeddings for {len(self.aa_embeddings)} amino acids")
                             print(f"  Embedding dimension: {len(next(iter(self.aa_embeddings_full.values())))}")
@@ -409,7 +428,8 @@ class PadicEncoder:
         e2 = self.aa_embeddings_full[aa2]
 
         # Radial component (valuation difference)
-        radial = abs(np.linalg.norm(e1) - np.linalg.norm(e2))
+        # V5.12.2: Use hyperbolic radius for radial shift
+        radial = abs(hyperbolic_radius(e1) - hyperbolic_radius(e2))
 
         # Angular component (direction difference)
         if np.linalg.norm(e1) > 0 and np.linalg.norm(e2) > 0:
