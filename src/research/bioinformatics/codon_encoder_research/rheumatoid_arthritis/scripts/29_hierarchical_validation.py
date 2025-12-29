@@ -30,6 +30,16 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+
+
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """V5.12.2: Proper hyperbolic distance from origin."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 from scipy.stats import mannwhitneyu, pearsonr, spearmanr
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score, roc_curve
@@ -122,9 +132,9 @@ def compute_epitope_hierarchical_features(
     embeddings = np.array(embeddings)
     cluster_probs = np.array(cluster_probs_list)
 
-    # Feature 1: Mean embedding (centroid)
+    # Feature 1: Mean embedding (centroid) - V5.12.2: use hyperbolic radius
     centroid = np.mean(embeddings, axis=0)
-    centroid_norm = np.linalg.norm(centroid)
+    centroid_norm = hyperbolic_radius(centroid)
 
     # Feature 2: Cluster diversity (unique clusters / total)
     unique_clusters = len(set(cluster_ids))

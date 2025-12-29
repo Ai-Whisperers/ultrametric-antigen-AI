@@ -33,6 +33,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
+
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """V5.12.2: Proper hyperbolic distance from origin."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 matplotlib.use("Agg")
 
 # Add path for imports
@@ -239,8 +248,8 @@ def compute_multi_ptm_effect(
         + np.sum(mod_mean_probs * np.log((mod_mean_probs + 1e-10) / (m + 1e-10)))
     )
 
-    # Relative shift
-    orig_norm = np.linalg.norm(orig_centroid)
+    # Relative shift (V5.12.2: use hyperbolic radius)
+    orig_norm = hyperbolic_radius(orig_centroid)
     relative_shift = centroid_shift / (orig_norm + 1e-10)
 
     return {

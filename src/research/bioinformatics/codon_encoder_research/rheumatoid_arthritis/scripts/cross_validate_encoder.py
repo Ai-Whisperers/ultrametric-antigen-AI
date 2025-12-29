@@ -23,6 +23,16 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from scipy import stats
+
+
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """V5.12.2: Proper hyperbolic distance from origin."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 from sklearn.linear_model import LogisticRegression, LinearRegression
 from sklearn.metrics import roc_auc_score, r2_score, accuracy_score
 from sklearn.model_selection import cross_val_score
@@ -163,10 +173,10 @@ def encode_sequence_context(window: str, encoder):
         emb_left = encoder(x_left)["z_hyp"].numpy().squeeze()
         emb_right = encoder(x_right)["z_hyp"].numpy().squeeze()
 
-    # Compute features
-    r_radius = np.linalg.norm(emb_r)
-    left_radius = np.linalg.norm(emb_left)
-    right_radius = np.linalg.norm(emb_right)
+    # Compute features (V5.12.2: use hyperbolic radii)
+    r_radius = hyperbolic_radius(emb_r)
+    left_radius = hyperbolic_radius(emb_left)
+    right_radius = hyperbolic_radius(emb_right)
 
     # Radial context: how R relates to neighbors
     radial_context = abs(r_radius - (left_radius + right_radius) / 2)

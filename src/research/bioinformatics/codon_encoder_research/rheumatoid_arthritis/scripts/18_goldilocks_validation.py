@@ -23,6 +23,14 @@ import numpy as np
 import torch
 from scipy import stats
 
+
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """V5.12.2: Proper hyperbolic distance from origin."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
 matplotlib.use("Agg")
 
 # Import epitope database
@@ -95,7 +103,7 @@ def compute_epitope_metrics(epitope: dict, encoder, device="cpu") -> Dict:
     original_centroid = np.mean(embeddings, axis=0)
     original_probs = np.mean(cluster_probs, axis=0)
     original_entropy = -np.sum(original_probs * np.log(original_probs + 1e-10))
-    original_norm = np.linalg.norm(original_centroid)
+    original_norm = hyperbolic_radius(original_centroid)  # V5.12.2
 
     # Per-arginine citrullination effects
     per_r_metrics = []

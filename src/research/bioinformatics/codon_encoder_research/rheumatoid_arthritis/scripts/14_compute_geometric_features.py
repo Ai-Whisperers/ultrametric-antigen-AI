@@ -20,6 +20,16 @@ from typing import Dict, List, Optional
 import numpy as np
 import pandas as pd
 import torch
+
+
+def hyperbolic_radii(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
+    """V5.12.2: Compute hyperbolic radii for batch of embeddings."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = np.linalg.norm(embeddings, axis=1)
+    clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 # Local imports
 from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot, load_codon_encoder,
                               poincare_distance)
@@ -108,8 +118,8 @@ def compute_site_features(site: Dict, encoder, device: str = "cpu") -> Optional[
     if embeddings is None or len(embeddings) < 2:
         return None
 
-    # Basic embedding metrics
-    norms = np.linalg.norm(embeddings, axis=1)
+    # Basic embedding metrics (V5.12.2: use hyperbolic radii)
+    norms = hyperbolic_radii(embeddings)
 
     # Cluster homogeneity
     cluster_ids = np.argmax(cluster_probs, axis=1)
