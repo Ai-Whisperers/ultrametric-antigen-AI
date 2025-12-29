@@ -1,8 +1,0 @@
-stateDiagram-v2
-    [*] --> Monitor
-    Monitor --> Check: Evaluate Metrics
-    Check --> Stable: In Bounds
-    Check --> Unstable: Out of Bounds
-    Unstable --> Adjust: Update Controller
-    Adjust --> Monitor
-    Stable --> Monitor
