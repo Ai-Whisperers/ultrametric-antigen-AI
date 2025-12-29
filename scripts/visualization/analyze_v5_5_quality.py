@@ -30,6 +30,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.config.paths import CHECKPOINTS_DIR
 from src.data.generation import generate_all_ternary_operations
+from src.geometry import poincare_distance
 
 
 def load_v5_5_checkpoint(device: str = "cpu"):
@@ -171,8 +172,10 @@ def analyze_manifold_quality(encoder_A, encoder_B, decoder_A, device="cpu"):
     print("2. RADIAL DISTRIBUTION (Hyperbolic Structure)")
     print("-" * 70)
 
-    radii_A = torch.norm(z_A, dim=1).cpu().numpy()
-    radii_B = torch.norm(z_B, dim=1).cpu().numpy()
+    # V5.12.2: Use hyperbolic distance for radii
+    origin = torch.zeros_like(z_A)
+    radii_A = poincare_distance(z_A, origin, c=1.0).cpu().numpy()
+    radii_B = poincare_distance(z_B, origin, c=1.0).cpu().numpy()
 
     print(f"\nVAE-A radii: mean={radii_A.mean():.4f}, std={radii_A.std():.4f}, min={radii_A.min():.4f}, max={radii_A.max():.4f}")
     print(f"VAE-B radii: mean={radii_B.mean():.4f}, std={radii_B.std():.4f}, min={radii_B.min():.4f}, max={radii_B.max():.4f}")

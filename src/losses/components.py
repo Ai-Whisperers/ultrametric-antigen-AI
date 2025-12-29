@@ -24,6 +24,7 @@ import torch.nn.functional as F
 
 from .base import DualVAELossComponent, LossComponent, LossResult
 from .padic import PAdicRankingLossHyperbolic, PAdicRankingLossV2
+from ..geometry import poincare_distance
 
 
 class ReconstructionLossComponent(LossComponent):
@@ -434,6 +435,7 @@ class RadialStratificationLossComponent(DualVAELossComponent):
         outer_radius: float = 0.85,
         max_valuation: int = 9,
         valuation_weighting: bool = True,
+        curvature: float = 1.0,
     ):
         """Initialize radial stratification loss.
 
@@ -443,12 +445,14 @@ class RadialStratificationLossComponent(DualVAELossComponent):
             outer_radius: Target radius for low-valuation points
             max_valuation: Maximum possible valuation (log_3(19683) = 9)
             valuation_weighting: Weight high-valuation points more
+            curvature: Hyperbolic curvature for poincare_distance (V5.12.2)
         """
         super().__init__(weight=weight, name="radial_stratification")
         self.inner_radius = inner_radius
         self.outer_radius = outer_radius
         self.max_valuation = max_valuation
         self.valuation_weighting = valuation_weighting
+        self.curvature = curvature
 
         # Import here to avoid circular dependency
         from ..core import TERNARY
@@ -480,8 +484,9 @@ class RadialStratificationLossComponent(DualVAELossComponent):
         valuations = self.ternary.valuation(batch_indices).float()
         normalized_v = valuations / self.max_valuation
 
-        # Compute actual radius
-        actual_radius = torch.norm(z, dim=1)
+        # V5.12.2: Compute actual radius using hyperbolic distance
+        origin = torch.zeros_like(z)
+        actual_radius = poincare_distance(z, origin, c=self.curvature)
 
         # Compute target radius (inverse relationship: high v -> small r)
         target_radius = self.outer_radius - normalized_v * (self.outer_radius - self.inner_radius)

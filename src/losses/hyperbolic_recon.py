@@ -94,7 +94,9 @@ class HyperbolicReconLoss(nn.Module):
         Returns:
             Weights (batch_size,) in [0.5, 2.0] range
         """
-        radius = torch.norm(z_hyp, dim=-1)
+        # V5.12.2: Use hyperbolic distance instead of Euclidean norm
+        origin = torch.zeros_like(z_hyp)
+        radius = poincare_distance(z_hyp, origin, c=self.curvature)
         normalized_radius = radius / self.max_norm
 
         # Weight = (1 - radius)^power + 0.5
@@ -191,7 +193,9 @@ class HyperbolicReconLoss(nn.Module):
         """
         z_enc_hyp = self._project_to_poincare(z_enc)
 
-        metrics = {"mean_radius": torch.norm(z_enc_hyp, dim=-1).mean().item()}
+        # V5.12.2: Use hyperbolic distance instead of Euclidean norm
+        origin = torch.zeros_like(z_enc_hyp)
+        metrics = {"mean_radius": poincare_distance(z_enc_hyp, origin, c=self.curvature).mean().item()}
 
         if self.mode == "geodesic":
             if z_dec is None:

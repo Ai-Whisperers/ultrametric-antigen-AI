@@ -1,12 +1,48 @@
 # Ternary VAE Project - Claude Context
 
-**Doc-Type:** Project Configuration · Version 1.0 · Updated 2025-12-27 · AI Whisperers
+**Doc-Type:** Project Configuration · Version 1.2 · Updated 2025-12-29 · AI Whisperers
 
 ---
 
 ## Project Overview
 
 This repository implements a Variational Autoencoder for learning 3-adic (p-adic) hierarchical structure over ternary operations. The model embeds 19,683 ternary operations (3^9) into a hyperbolic Poincaré ball where radial position encodes 3-adic valuation.
+
+---
+
+## V5.12.2 HYPERBOLIC AUDIT - NOT PRODUCTION READY
+
+**Status:** Architecture migration in progress. Do NOT use for production training.
+
+**Issue:** Many files in `src/`, `configs/`, and `scripts/` incorrectly use Euclidean `.norm()` on hyperbolic Poincaré ball embeddings instead of `poincare_distance()`. This causes:
+- Incorrect radial hierarchy computation (coverage stuck at ~20%)
+- Metric correlations computed in wrong geometry
+- Training scripts producing misleading results
+
+**Audit Document:** `DOCUMENTATION/01_PROJECT_KNOWLEDGE_BASE/V5_12_2_HYPERBOLIC_AUDIT.md`
+
+**Correct Pattern:**
+```python
+# WRONG - Euclidean norm on hyperbolic embeddings
+radius = torch.norm(z_hyp, dim=-1)
+
+# CORRECT - Hyperbolic distance from origin
+from src.geometry import poincare_distance
+origin = torch.zeros_like(z_hyp)
+radius = poincare_distance(z_hyp, origin, c=curvature)
+```
+
+**Fixed (HIGH priority):**
+- `src/api/cli/train.py`
+- `src/encoders/holographic_encoder.py`
+- `src/losses/consequence_predictor.py`
+
+**Pending (MEDIUM/LOW priority):**
+- `src/analysis/` - crispr/embedder.py, evolution.py, hiv/analyze_all_datasets.py
+- `src/geometry/holographic_poincare.py`
+- `src/encoders/ptm_encoder.py`
+- `src/visualization/plots/manifold.py`
+- `src/training/monitoring/tensorboard_logger.py`
 
 ---
 
@@ -224,6 +260,7 @@ python analysis/proteingym_pipeline.py
 ```python
 from src.models import TernaryVAEV5_11_PartialFreeze
 from src.core import TERNARY
+from src.geometry import poincare_distance
 
 model = TernaryVAEV5_11_PartialFreeze(
     latent_dim=16, hidden_dim=64, max_radius=0.99,
@@ -233,13 +270,17 @@ model.load_state_dict(torch.load('path/to/best.pt')['model_state_dict'])
 
 # Get embeddings
 out = model(ops, compute_control=False)
-radii_A = out['z_A_hyp'].norm(dim=-1)  # VAE-A radii
-radii_B = out['z_B_hyp'].norm(dim=-1)  # VAE-B radii
+
+# V5.12.2: Use hyperbolic distance for radii (NOT .norm())
+origin_A = torch.zeros_like(out['z_A_hyp'])
+origin_B = torch.zeros_like(out['z_B_hyp'])
+radii_A = poincare_distance(out['z_A_hyp'], origin_A, c=1.0)
+radii_B = poincare_distance(out['z_B_hyp'], origin_B, c=1.0)
 
 # Compute hierarchy
 from scipy.stats import spearmanr
 valuations = TERNARY.valuation(indices)
-hierarchy = spearmanr(valuations, radii_B)[0]  # Use VAE-B for p-adic
+hierarchy = spearmanr(valuations.cpu(), radii_B.cpu())[0]  # Use VAE-B for p-adic
 ```
 
 ---
@@ -248,6 +289,7 @@ hierarchy = spearmanr(valuations, radii_B)[0]  # Use VAE-B for p-adic
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2025-12-29 | 1.2 | V5.12.2 hyperbolic audit warning, fixed Quick Evaluation example |
 | 2025-12-28 | 1.1 | Added codon-encoder research section with key discoveries |
 | 2025-12-27 | 1.0 | Initial CLAUDE.md with architecture docs, checkpoint reference, overnight warning |
 

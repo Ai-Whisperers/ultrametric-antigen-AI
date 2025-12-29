@@ -33,7 +33,7 @@ from typing import Dict, Optional, Tuple
 import torch
 import torch.nn as nn
 
-from src.geometry.poincare import PoincareModule
+from src.geometry.poincare import PoincareModule, poincare_distance
 
 
 class PTMType(IntEnum):
@@ -244,12 +244,14 @@ class PTMGoldilocksEncoder(PoincareModule):
         # Compute Poincare distance as proxy for entropy change
         dist = self.dist(z_native, z_modified)
 
-        # Normalize by embedding norm (conformal factor)
-        native_norm = torch.norm(z_native, dim=-1, keepdim=True)
-        modified_norm = torch.norm(z_modified, dim=-1, keepdim=True)
+        # V5.12.2: Use hyperbolic distance from origin for radial comparison
+        origin_native = torch.zeros_like(z_native)
+        origin_modified = torch.zeros_like(z_modified)
+        native_hyp_dist = poincare_distance(z_native, origin_native, c=self.c)
+        modified_hyp_dist = poincare_distance(z_modified, origin_modified, c=self.c)
 
         # Direction of shift (negative = towards origin, positive = away)
-        direction = torch.sign(modified_norm - native_norm).squeeze(-1)
+        direction = torch.sign(modified_hyp_dist - native_hyp_dist)
 
         return direction * dist
 

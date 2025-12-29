@@ -267,6 +267,7 @@ def train_resume(
     # Import training components
     from src.core import TERNARY
     from src.data.generation import generate_all_ternary_operations
+    from src.geometry import poincare_distance
     from src.losses import PAdicGeodesicLoss, RadialHierarchyLoss
     from src.models import TernaryVAEV5_11, TernaryVAEV5_11_PartialFreeze
 
@@ -400,8 +401,9 @@ def train_resume(
             correct = (preds == x.long()).float().mean(dim=1)
             coverage = (correct == 1.0).sum().item() / len(x)
 
-            # Radial correlation
-            radii = torch.norm(z_A, dim=1).cpu().numpy()
+            # V5.12.2: Radial correlation using hyperbolic distance
+            origin = torch.zeros_like(z_A)
+            radii = poincare_distance(z_A, origin, c=1.0).cpu().numpy()
             valuations = TERNARY.valuation(indices).cpu().numpy()
             radial_corr = spearmanr(valuations, radii)[0]
 

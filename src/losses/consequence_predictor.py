@@ -22,6 +22,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from src.geometry import poincare_distance
+
 
 class ConsequencePredictor(nn.Module):
     """Predicts closure capability from metric quality.
@@ -33,14 +35,16 @@ class ConsequencePredictor(nn.Module):
     it whether that prediction was correct.
     """
 
-    def __init__(self, latent_dim: int = 16, hidden_dim: int = 32):
+    def __init__(self, latent_dim: int = 16, hidden_dim: int = 32, curvature: float = 1.0):
         """Initialize consequence predictor.
 
         Args:
             latent_dim: Latent space dimension
             hidden_dim: Hidden layer dimension
+            curvature: Curvature for hyperbolic distance (V5.12.2)
         """
         super().__init__()
+        self.curvature = curvature
 
         # Input: [ranking_corr, z_mean_norm, z_std, coverage_estimate]
         # Output: predicted addition accuracy [0, 1]
@@ -69,10 +73,12 @@ class ConsequencePredictor(nn.Module):
             z: Latent codes (batch_size, latent_dim)
 
         Returns:
-            (mean_norm, std) of latent vectors
+            (mean_hyp_dist, std) of latent vectors
         """
-        norms = torch.norm(z, dim=1)
-        return norms.mean().item(), z.std().item()
+        # V5.12.2: Use hyperbolic distance from origin
+        origin = torch.zeros_like(z)
+        hyp_dists = poincare_distance(z, origin, c=self.curvature)
+        return hyp_dists.mean().item(), z.std().item()
 
     def forward(
         self,
@@ -161,7 +167,9 @@ class ConsequencePredictor(nn.Module):
         return (numerator / denominator).item()
 
 
-def evaluate_addition_accuracy(model: nn.Module, device: str, n_samples: int = 1000) -> float:
+def evaluate_addition_accuracy(
+    model: nn.Module, device: str, n_samples: int = 1000, curvature: float = 1.0
+) -> float:
     """Evaluate model's emergent addition capability.
 
     Tests: z_a + z_b - z_0 ≈ z_{a∘b}
@@ -170,6 +178,7 @@ def evaluate_addition_accuracy(model: nn.Module, device: str, n_samples: int = 1
         model: VAE model with encode method
         device: Device
         n_samples: Number of test pairs
+        curvature: Curvature for hyperbolic distance (V5.12.2)
 
     Returns:
         Addition accuracy (0-1)
@@ -210,14 +219,17 @@ def evaluate_addition_accuracy(model: nn.Module, device: str, n_samples: int = 1
             z0_outputs = model(zero_op.float(), 1.0, 1.0, 0.5, 0.5)
         z_0 = z0_outputs["z_A"]  # (1, latent_dim)
 
-        # Test 1: Identity operation should be near origin (small norm)
+        # Test 1: Identity operation should be near origin (small hyperbolic distance)
         # A well-structured latent space places identity centrally
-        z_0_norm = torch.norm(z_0).item()
-        z_A_norms = torch.norm(z_A, dim=1)
-        mean_norm = z_A_norms.mean().item()
+        # V5.12.2: Use hyperbolic distance from origin
+        origin_0 = torch.zeros_like(z_0)
+        origin_A = torch.zeros_like(z_A)
+        z_0_dist = poincare_distance(z_0, origin_0, c=curvature).item()
+        z_A_dists = poincare_distance(z_A, origin_A, c=curvature)
+        mean_dist = z_A_dists.mean().item()
 
-        # Identity should have below-average norm (near center)
-        identity_central = 1.0 if z_0_norm < mean_norm else 0.5
+        # Identity should have below-average distance (near center)
+        identity_central = 1.0 if z_0_dist < mean_dist else 0.5
 
         # Test 2: 3-adically close operations should be latent-close
         # Sample random pairs and check if 3-adic neighbors are latent neighbors
@@ -239,8 +251,8 @@ def evaluate_addition_accuracy(model: nn.Module, device: str, n_samples: int = 1
                 v_3adic[mask] += 1
                 remaining[mask] = remaining[mask] // 3
 
-            # Compute latent distances
-            latent_dist = torch.norm(z_A[i_idx] - z_A[j_idx], dim=1)
+            # V5.12.2: Compute hyperbolic latent distances
+            latent_dist = poincare_distance(z_A[i_idx], z_A[j_idx], c=curvature)
 
             # Check correlation: high 3-adic valuation should correlate with low latent distance
             # Normalize to [0,1] for comparison

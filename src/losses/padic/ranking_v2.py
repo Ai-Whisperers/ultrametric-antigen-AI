@@ -27,6 +27,7 @@ from src.config.constants import (
     DEFAULT_MARGIN_SCALE,
     DEFAULT_N_TRIPLETS,
 )
+from src.geometry import poincare_distance
 
 from .triplet_mining import EuclideanTripletMiner
 
@@ -51,6 +52,8 @@ class PAdicRankingLossV2(nn.Module):
         n_triplets: int = DEFAULT_N_TRIPLETS,
         hard_negative_ratio: float = DEFAULT_HARD_NEGATIVE_RATIO,
         semi_hard: bool = True,
+        use_hyperbolic: bool = False,
+        curvature: float = 1.0,
     ):
         """Initialize Enhanced p-Adic Ranking Loss.
 
@@ -60,6 +63,8 @@ class PAdicRankingLossV2(nn.Module):
             n_triplets: Number of triplets to sample per batch
             hard_negative_ratio: Fraction of triplets that should be hard negatives
             semi_hard: If True, use semi-hard negatives (close but wrong ordering)
+            use_hyperbolic: If True, use poincare_distance (V5.12.2)
+            curvature: Hyperbolic curvature for poincare_distance
         """
         super().__init__()
         self.base_margin = base_margin
@@ -67,6 +72,8 @@ class PAdicRankingLossV2(nn.Module):
         self.n_triplets = n_triplets
         self.hard_negative_ratio = hard_negative_ratio
         self.semi_hard = semi_hard
+        self.use_hyperbolic = use_hyperbolic
+        self.curvature = curvature
 
         # Reuse triplet mining logic from base class
         self.miner = EuclideanTripletMiner(
@@ -116,9 +123,13 @@ class PAdicRankingLossV2(nn.Module):
             triplets.v_pos, triplets.v_neg
         )
 
-        # Compute latent distances (Euclidean)
-        d_anchor_pos = torch.norm(z[triplets.anchor_idx] - z[triplets.pos_idx], dim=1)
-        d_anchor_neg = torch.norm(z[triplets.anchor_idx] - z[triplets.neg_idx], dim=1)
+        # V5.12.2: Compute latent distances (Euclidean or Hyperbolic)
+        if self.use_hyperbolic:
+            d_anchor_pos = poincare_distance(z[triplets.anchor_idx], z[triplets.pos_idx], c=self.curvature)
+            d_anchor_neg = poincare_distance(z[triplets.anchor_idx], z[triplets.neg_idx], c=self.curvature)
+        else:
+            d_anchor_pos = torch.norm(z[triplets.anchor_idx] - z[triplets.pos_idx], dim=1)
+            d_anchor_neg = torch.norm(z[triplets.anchor_idx] - z[triplets.neg_idx], dim=1)
 
         # Triplet loss with hierarchical margin
         # We want d_pos < d_neg (positive is 3-adically closer)

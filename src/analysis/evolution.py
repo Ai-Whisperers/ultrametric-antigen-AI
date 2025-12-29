@@ -34,6 +34,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from src.geometry import poincare_distance
+
 
 class SelectionType(Enum):
     """Types of evolutionary selection pressure."""
@@ -828,16 +830,20 @@ class EvolutionaryTrajectoryPredictor(nn.Module):
         device = embedding.device
 
         trajectory = [embedding]
+        # V5.12.2: Use hyperbolic distance for radius computation
+        origin = torch.zeros_like(embedding)
+        init_radii = poincare_distance(embedding, origin, c=self.curvature)
         transmissibility = [
             torch.tensor([self.mapper.radius_to_transmissibility(
-                torch.norm(embedding[i]).item()
+                init_radii[i].item()
             ) for i in range(batch_size)], device=device)
         ]
 
         current = embedding
         for _ in range(n_steps - 1):
-            # Compute radius feature
-            radius = torch.norm(current, dim=-1, keepdim=True)
+            # V5.12.2: Compute hyperbolic radius feature
+            origin_current = torch.zeros_like(current)
+            radius = poincare_distance(current, origin_current, c=self.curvature).unsqueeze(-1)
 
             # Predict velocity in tangent space
             input_features = torch.cat([current, radius], dim=-1)

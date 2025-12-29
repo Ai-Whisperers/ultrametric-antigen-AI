@@ -27,6 +27,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from src.geometry import poincare_distance
 from src.models.hyperbolic_projection import HyperbolicProjection
 from src.analysis.set_theory.mutation_sets import MutationSet
 from src.analysis.set_theory.lattice import (
@@ -191,8 +192,9 @@ class LatticeAwareHyperbolicProjection(nn.Module):
         # Get target radii from levels
         target_radii = self.level_radii[levels]
 
-        # Blend current radius with target
-        current_radii = torch.norm(hyp_embeddings, dim=-1)
+        # V5.12.2: Blend current radius with target using hyperbolic distance
+        origin = torch.zeros_like(hyp_embeddings)
+        current_radii = poincare_distance(hyp_embeddings, origin, c=self.config.curvature)
         adjusted_radii = 0.7 * current_radii + 0.3 * target_radii * adjustment
 
         # Rescale embeddings
@@ -257,7 +259,9 @@ class LatticeAwareHyperbolicProjection(nn.Module):
             Ordering loss
         """
         device = hyp_embeddings.device
-        radii = torch.norm(hyp_embeddings, dim=-1)
+        # V5.12.2: Use hyperbolic distance for radii
+        origin = torch.zeros_like(hyp_embeddings)
+        radii = poincare_distance(hyp_embeddings, origin, c=self.config.curvature)
 
         loss = torch.tensor(0.0, device=device)
         n_pairs = 0
@@ -299,7 +303,9 @@ class LatticeAwareHyperbolicProjection(nn.Module):
             Level consistency loss
         """
         device = hyp_embeddings.device
-        radii = torch.norm(hyp_embeddings, dim=-1)
+        # V5.12.2: Use hyperbolic distance for radii
+        origin = torch.zeros_like(hyp_embeddings)
+        radii = poincare_distance(hyp_embeddings, origin, c=self.config.curvature)
 
         # Group by level
         levels = [self.lattice.resistance_level(ms).value for ms in mutation_sets]
@@ -453,6 +459,7 @@ class LatticeGuidedDecoder(nn.Module):
         base_decoder: nn.Module,
         lattice: ResistanceLattice,
         latent_dim: int = 16,
+        curvature: float = 1.0,
     ):
         """Initialize lattice-guided decoder.
 
@@ -460,11 +467,13 @@ class LatticeGuidedDecoder(nn.Module):
             base_decoder: Base decoder network
             lattice: Resistance lattice
             latent_dim: Latent dimension
+            curvature: Hyperbolic curvature for poincare_distance (V5.12.2)
         """
         super().__init__()
         self.decoder = base_decoder
         self.lattice = lattice
         self.latent_dim = latent_dim
+        self.curvature = curvature
 
         # Level conditioning
         n_levels = len(ResistanceLevel)
@@ -489,7 +498,9 @@ class LatticeGuidedDecoder(nn.Module):
 
         # Infer levels from radii if not provided
         if target_level is None:
-            radii = torch.norm(hyp_embeddings, dim=-1)
+            # V5.12.2: Use hyperbolic distance for radii
+            origin = torch.zeros_like(hyp_embeddings)
+            radii = poincare_distance(hyp_embeddings, origin, c=self.curvature)
             # Map radii to nearest level
             level_radii = self.lattice_projection.level_radii.unsqueeze(0)
             diffs = (radii.unsqueeze(-1) - level_radii).abs()

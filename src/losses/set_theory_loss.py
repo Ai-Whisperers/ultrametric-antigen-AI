@@ -21,6 +21,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from src.geometry import poincare_distance
 from src.analysis.set_theory.mutation_sets import MutationSet
 from src.analysis.set_theory.lattice import ResistanceLattice, ResistanceLevel
 from src.analysis.set_theory.formal_concepts import ConceptLattice, FormalConcept
@@ -63,6 +64,7 @@ class LatticeOrderingLoss(nn.Module):
         lattice: ResistanceLattice,
         margin: float = 0.1,
         distance_fn: str = "euclidean",
+        curvature: float = 1.0,
     ):
         """Initialize lattice ordering loss.
 
@@ -70,11 +72,13 @@ class LatticeOrderingLoss(nn.Module):
             lattice: Resistance lattice structure
             margin: Ranking margin
             distance_fn: Distance function ('euclidean' or 'hyperbolic')
+            curvature: Hyperbolic curvature for poincare_distance (V5.12.2)
         """
         super().__init__()
         self.lattice = lattice
         self.margin = margin
         self.distance_fn = distance_fn
+        self.curvature = curvature
 
     def forward(
         self,
@@ -100,9 +104,9 @@ class LatticeOrderingLoss(nn.Module):
         if self.distance_fn == "euclidean":
             distances = torch.norm(embeddings, dim=-1)
         else:
-            # Hyperbolic distance from origin (Poincare ball)
-            norms = torch.norm(embeddings, dim=-1)
-            distances = 2 * torch.arctanh(torch.clamp(norms, max=0.99))
+            # V5.12.2: Use proper poincare_distance from origin
+            origin = torch.zeros_like(embeddings)
+            distances = poincare_distance(embeddings, origin, c=self.curvature)
 
         # Check all pairs for ordering violations
         for i in range(len(mutation_sets)):

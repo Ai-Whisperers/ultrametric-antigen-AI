@@ -43,6 +43,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset, ConcatDataset
 
+from src.geometry import poincare_distance
+
 
 # =============================================================================
 # GENETIC CODE (imported from centralized biology module)
@@ -473,8 +475,15 @@ def train_model(model, train_loader, val_loader, device, n_epochs=30, model_name
     return best_val_loss, history
 
 
-def analyze_latent_space(model, dataloader, device) -> dict:
-    """Analyze the learned latent space."""
+def analyze_latent_space(model, dataloader, device, curvature: float = 1.0) -> dict:
+    """Analyze the learned latent space.
+
+    Args:
+        model: VAE model with encode method
+        dataloader: DataLoader for the dataset
+        device: Device to use
+        curvature: Curvature for hyperbolic distance (V5.12.2)
+    """
     model.eval()
     all_z = []
 
@@ -484,25 +493,31 @@ def analyze_latent_space(model, dataloader, device) -> dict:
             mu, _ = model.encode(batch)
             all_z.append(mu.cpu())
 
-    all_z = torch.cat(all_z, dim=0).numpy()
+    all_z_tensor = torch.cat(all_z, dim=0)
+    all_z = all_z_tensor.numpy()
 
-    # Compute statistics
+    # V5.12.2: Compute hyperbolic radii (distance from origin)
+    origin = torch.zeros_like(all_z_tensor)
+    hyp_radii = poincare_distance(all_z_tensor, origin, c=curvature).numpy()
+
+    # Compute statistics using hyperbolic distance
     results = {
         "n_samples": len(all_z),
         "latent_dim": all_z.shape[1],
-        "mean_norm": float(np.mean(np.linalg.norm(all_z, axis=1))),
-        "std_norm": float(np.std(np.linalg.norm(all_z, axis=1))),
+        "mean_norm": float(np.mean(hyp_radii)),
+        "std_norm": float(np.std(hyp_radii)),
         "mean_per_dim": [float(x) for x in np.mean(all_z, axis=0)],
         "std_per_dim": [float(x) for x in np.std(all_z, axis=0)],
     }
 
-    # Compute pairwise distances (sample)
+    # V5.12.2: Compute pairwise hyperbolic distances (sample)
     n_sample = min(200, len(all_z))
-    sample_z = all_z[:n_sample]
+    sample_z = all_z_tensor[:n_sample]
     distances = []
     for i in range(n_sample):
         for j in range(i + 1, n_sample):
-            distances.append(np.linalg.norm(sample_z[i] - sample_z[j]))
+            dist = poincare_distance(sample_z[i:i+1], sample_z[j:j+1], c=curvature).item()
+            distances.append(dist)
 
     results["mean_pairwise_dist"] = float(np.mean(distances))
     results["std_pairwise_dist"] = float(np.std(distances))

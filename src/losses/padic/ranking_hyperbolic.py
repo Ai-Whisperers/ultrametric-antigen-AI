@@ -128,8 +128,9 @@ class PAdicRankingLossHyperbolic(nn.Module):
         # Target radius: high valuation -> small radius (near center)
         target_radius = (1 - normalized_val) * self.max_norm * 0.9
 
-        # Actual radius in Poincaré ball
-        actual_radius = torch.norm(z_hyp, dim=1)
+        # V5.12.2: Actual radius using hyperbolic distance
+        origin = torch.zeros_like(z_hyp)
+        actual_radius = poincare_distance(z_hyp, origin, c=self.curvature)
 
         # MSE loss on radii
         radial_loss = F.mse_loss(actual_radius, target_radius)

@@ -30,6 +30,7 @@ import torch
 from scipy import stats
 
 from src.data.generation import generate_all_ternary_operations
+from src.geometry import poincare_distance
 from src.models import TernaryVAE_PartialFreeze
 
 
@@ -98,12 +99,16 @@ def analyze_checkpoint(checkpoint_path: str, device: str = "cuda"):
     print("Encoding all 19,683 ternary operations...")
     with torch.no_grad():
         outputs = model(all_ops_tensor)
-        z_A_hyp = outputs["z_A_hyp"].cpu().numpy()
-        z_B_hyp = outputs["z_B_hyp"].cpu().numpy()
+        z_A_hyp = outputs["z_A_hyp"].cpu()
+        z_B_hyp = outputs["z_B_hyp"].cpu()
 
-    # Compute latent properties
-    radius_A = np.linalg.norm(z_A_hyp, axis=1)
-    radius_B = np.linalg.norm(z_B_hyp, axis=1)
+    # V5.12.2: Compute latent radii using hyperbolic distance
+    origin_A = torch.zeros_like(z_A_hyp)
+    origin_B = torch.zeros_like(z_B_hyp)
+    radius_A = poincare_distance(z_A_hyp, origin_A, c=1.0).numpy()
+    radius_B = poincare_distance(z_B_hyp, origin_B, c=1.0).numpy()
+    z_A_hyp = z_A_hyp.numpy()
+    z_B_hyp = z_B_hyp.numpy()
 
     # Compute input properties for each operation
     zero_counts = np.array([compute_zero_count(op) for op in all_ops])

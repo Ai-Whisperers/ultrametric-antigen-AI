@@ -28,6 +28,7 @@ import torch.nn.functional as F
 
 from .poincare import (
     PoincareModule,
+    poincare_distance,
 )
 
 
@@ -125,9 +126,13 @@ class HolographicPoincareManifold(PoincareModule):
             - boundary_directions: Unit vectors to boundary (B, dim)
             - radial_info: Radial coordinate information (B, 1)
         """
-        # Compute radial coordinates
-        norm = torch.norm(z, dim=-1, keepdim=True)
-        radial_info = norm / (1.0 / math.sqrt(self.c) - eps)
+        # Compute radial coordinates using hyperbolic distance
+        # V5.12.2: Use poincare_distance for proper hyperbolic radial coordinate
+        origin = torch.zeros_like(z)
+        hyp_dist = poincare_distance(z, origin, c=self.c).unsqueeze(-1)
+        max_hyp_dist = float("inf")  # In hyperbolic space, distance to boundary is infinite
+        # Normalize by arctanh of max_norm for finite ratio
+        radial_info = hyp_dist / (torch.arctanh(torch.tensor(self.max_norm)) + eps)
 
         # Direction to boundary
         direction = F.normalize(z + eps, dim=-1)

@@ -24,6 +24,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from src.geometry import poincare_distance
 from src.models.holographic.bulk_boundary import (
     BulkBoundaryPropagator,
     DecayType,
@@ -202,8 +203,9 @@ class HolographicDecoder(nn.Module):
             logits: Output logits
         """
         if target_radius is not None:
-            # Rescale z to target radius while preserving direction
-            current_radius = torch.norm(z, dim=-1, keepdim=True)
+            # V5.12.2: Rescale z to target radius using hyperbolic distance
+            origin = torch.zeros_like(z)
+            current_radius = poincare_distance(z, origin, c=self.config.curvature).unsqueeze(-1)
             direction = z / current_radius.clamp(min=1e-8)
             z = direction * target_radius.unsqueeze(-1).clamp(
                 max=self.config.curvature - 1e-3

@@ -81,9 +81,10 @@ def compute_detailed_metrics(model, x, indices, device, name="Model"):
         mu_A = outputs["mu_A"]
         mu_B = outputs["mu_B"]
 
-    # Convert to numpy
-    radii_A = torch.norm(z_A_hyp, dim=1).cpu().numpy()
-    radii_B = torch.norm(z_B_hyp, dim=1).cpu().numpy()
+    # V5.12.2: Convert to numpy using hyperbolic distance
+    origin = torch.zeros_like(z_A_hyp)
+    radii_A = poincare_distance(z_A_hyp, origin, c=1.0).cpu().numpy()
+    radii_B = poincare_distance(z_B_hyp, origin, c=1.0).cpu().numpy()
     valuations = TERNARY.valuation(indices).cpu().numpy()
 
     # 1. Overall radial correlations

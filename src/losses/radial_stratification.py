@@ -23,6 +23,7 @@ import torch.nn.functional as F
 
 # STRUCTURAL FIX: Use core module's TERNARY singleton as single source of truth
 from ..core import TERNARY
+from ..geometry import poincare_distance
 
 
 def compute_single_index_valuation(indices: torch.Tensor) -> torch.Tensor:
@@ -68,6 +69,7 @@ class RadialStratificationLoss(nn.Module):
         max_valuation: int = 9,
         valuation_weighting: bool = True,
         loss_type: str = "smooth_l1",
+        curvature: float = 1.0,
     ):
         super().__init__()
         self.inner_radius = inner_radius
@@ -75,6 +77,7 @@ class RadialStratificationLoss(nn.Module):
         self.max_valuation = max_valuation
         self.valuation_weighting = valuation_weighting
         self.loss_type = loss_type
+        self.curvature = curvature
 
         # Precompute radius range for efficiency
         self.radius_range = outer_radius - inner_radius
@@ -109,8 +112,9 @@ class RadialStratificationLoss(nn.Module):
         # 1. Compute 3-adic valuation for each index
         valuations = compute_single_index_valuation(batch_indices)
 
-        # 2. Compute actual radius (Euclidean norm)
-        actual_radius = torch.norm(z, dim=1)
+        # 2. V5.12.2: Compute actual radius using hyperbolic distance
+        origin = torch.zeros_like(z)
+        actual_radius = poincare_distance(z, origin, c=self.curvature)
 
         # 3. Compute target radius based on valuation
         target_radius = self.compute_target_radius(valuations)

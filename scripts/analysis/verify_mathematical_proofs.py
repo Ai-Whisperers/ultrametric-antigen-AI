@@ -30,6 +30,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from src.analysis.geometry import (compute_delta_hyperbolicity,
                                    compute_ultrametricity_score)
 from src.data.generation import generate_all_ternary_operations
+from src.geometry import poincare_distance
 from src.models import TernaryVAEV5_11
 
 # Import the existing specific zero analysis logic
@@ -141,7 +142,9 @@ def verify_proofs(
         return cnt
 
     vals = np.array([valuation(op) for op in ops])
-    radii = torch.norm(embeddings, dim=1).cpu().numpy()
+    # V5.12.2: Use hyperbolic distance for radii
+    origin = torch.zeros_like(embeddings)
+    radii = poincare_distance(embeddings, origin, c=1.0).cpu().numpy()
 
     # Check correlation
     from scipy import stats

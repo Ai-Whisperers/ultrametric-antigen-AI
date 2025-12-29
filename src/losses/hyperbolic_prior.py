@@ -310,8 +310,9 @@ class HomeostaticHyperbolicPrior(HyperbolicPrior):
             kl: Current KL divergence
             coverage: Current coverage percentage (0-100)
         """
-        # Compute current mean radius
-        current_radius = torch.norm(z_hyperbolic, dim=-1).mean()
+        # V5.12.2: Compute current mean radius using hyperbolic distance
+        origin = torch.zeros_like(z_hyperbolic)
+        current_radius = poincare_distance(z_hyperbolic, origin, self.curvature).mean()
 
         # Update EMAs using configured alpha
         alpha = self.ema_alpha

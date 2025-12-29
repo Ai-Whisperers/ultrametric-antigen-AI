@@ -140,6 +140,7 @@ def compute_comprehensive_metrics(
     device: Union[str, torch.device],
     batch_size: int = 4096,
     dist_corr_samples: int = 1000,
+    curvature: float = 1.0,
 ) -> ComprehensiveMetrics:
     """Compute full metrics matching training script outputs.
 
@@ -153,6 +154,7 @@ def compute_comprehensive_metrics(
         device: Device to run evaluation on
         batch_size: Batch size for processing all 19683 operations
         dist_corr_samples: Number of samples for pairwise distance correlation
+        curvature: Hyperbolic curvature for poincare_distance (V5.12.2)
 
     Returns:
         ComprehensiveMetrics dataclass with all metrics
@@ -186,9 +188,11 @@ def compute_comprehensive_metrics(
             z_A = out["z_A_hyp"]
             z_B = out["z_B_hyp"]
 
-            # Compute radii
-            radii_A = z_A.norm(dim=-1).cpu().numpy()
-            radii_B = z_B.norm(dim=-1).cpu().numpy()
+            # V5.12.2: Compute radii using hyperbolic distance
+            origin_A = torch.zeros_like(z_A)
+            origin_B = torch.zeros_like(z_B)
+            radii_A = poincare_distance(z_A, origin_A, c=curvature).cpu().numpy()
+            radii_B = poincare_distance(z_B, origin_B, c=curvature).cpu().numpy()
             all_radii_A.append(radii_A)
             all_radii_B.append(radii_B)
 

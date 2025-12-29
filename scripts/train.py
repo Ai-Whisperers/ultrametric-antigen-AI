@@ -48,6 +48,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.config.paths import CHECKPOINTS_DIR
+from src.geometry import poincare_distance
 from src.core import TERNARY
 from src.data.generation import generate_all_ternary_operations
 from src.geometry import get_riemannian_optimizer
@@ -553,9 +554,10 @@ def compute_metrics(model, x, indices, geodesic_loss_fn, radial_loss_fn, device)
         rad_loss_A, rad_metrics_A = radial_loss_fn(z_A_hyp, indices)
         rad_loss_B, rad_metrics_B = radial_loss_fn(z_B_hyp, indices)
 
-        # Radial distribution
-        radii_A = torch.norm(z_A_hyp, dim=1).cpu().numpy()
-        radii_B = torch.norm(z_B_hyp, dim=1).cpu().numpy()
+        # V5.12.2: Radial distribution using hyperbolic distance
+        origin = torch.zeros_like(z_A_hyp)
+        radii_A = poincare_distance(z_A_hyp, origin, c=1.0).cpu().numpy()
+        radii_B = poincare_distance(z_B_hyp, origin, c=1.0).cpu().numpy()
         valuations = TERNARY.valuation(indices).cpu().numpy()
 
         # Radial hierarchy correlation (should be NEGATIVE)

@@ -63,6 +63,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.core import TERNARY
 from src.data.generation import generate_all_ternary_operations
+from src.geometry import poincare_distance
 from src.models.ternary_vae import TernaryVAEV5_11_PartialFreeze
 
 
@@ -228,8 +229,10 @@ def extract_embeddings(checkpoints, device="cpu", force=False):
     z_A_euc = outputs["z_A_euc"].cpu()
     z_B_euc = outputs["z_B_euc"].cpu()
 
-    radii_A = torch.norm(z_A_hyp, dim=1)
-    radii_B = torch.norm(z_B_hyp, dim=1)
+    # V5.12.2: Use hyperbolic distance for radii
+    origin = torch.zeros_like(z_A_hyp)
+    radii_A = poincare_distance(z_A_hyp, origin, c=1.0)
+    radii_B = poincare_distance(z_B_hyp, origin, c=1.0)
 
     # Compute hierarchy correlation
     corr_B, _ = spearmanr(valuations.cpu().numpy(), radii_B.numpy())

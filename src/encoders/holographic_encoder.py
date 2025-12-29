@@ -26,6 +26,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from src.geometry.poincare import (
+    poincare_distance,
     project_to_poincare,
 )
 
@@ -376,10 +377,17 @@ class HolographicEncoder(nn.Module):
         Returns:
             Hierarchy scores (B,) - higher = higher in hierarchy
         """
-        # Distance from origin
-        norm = torch.norm(z, dim=-1)
+        # V5.12.2: Use hyperbolic distance from origin
+        origin = torch.zeros_like(z)
+        hyp_dist = poincare_distance(z, origin, c=self.curvature)
         # Invert: closer to origin = higher score
-        hierarchy = 1.0 - norm / self.max_norm
+        # Normalize by approximate max hyperbolic distance at max_norm
+        max_hyp_dist = poincare_distance(
+            torch.full_like(z[:1], self.max_norm / z.shape[-1] ** 0.5),
+            torch.zeros_like(z[:1]),
+            c=self.curvature,
+        )
+        hierarchy = 1.0 - hyp_dist / (max_hyp_dist.item() + 1e-6)
         return hierarchy
 
 
@@ -550,12 +558,13 @@ class HierarchicalProteinEmbedding(nn.Module):
         Returns:
             Scalar loss
         """
-        # Distance from origin should correlate with hierarchy
-        norm = torch.norm(z, dim=-1)
+        # V5.12.2: Use hyperbolic distance from origin
+        origin = torch.zeros_like(z)
+        hyp_dist = poincare_distance(z, origin, c=self.curvature)
 
-        # High hierarchy = low norm (near origin)
+        # High hierarchy = low hyperbolic distance (near origin)
         # Compute rank correlation loss
-        pred_ranks = torch.argsort(torch.argsort(norm))
+        pred_ranks = torch.argsort(torch.argsort(hyp_dist))
         true_ranks = torch.argsort(torch.argsort(hierarchy_labels))
 
         # MSE on ranks (simple approximation)

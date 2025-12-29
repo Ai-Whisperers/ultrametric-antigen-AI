@@ -38,6 +38,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.config.paths import CHECKPOINTS_DIR, OUTPUT_DIR
 from src.data.generation import generate_all_ternary_operations
+from src.geometry import poincare_distance
 from src.models.ternary_vae import TernaryVAEV5_11
 
 
@@ -144,14 +145,18 @@ def compute_dual_coverage(model, base_ops: torch.Tensor, extended_ops: torch.Ten
         # Coverage on original ops
         outputs_base = model(base_ops.to(device), compute_control=False)
         z_base = outputs_base["z_A_hyp"]
-        norms_base = z_base.norm(dim=-1)
-        coverage_base = ((norms_base > 0.1) & (norms_base < 0.99)).float().mean().item()
+        # V5.12.2: Use hyperbolic distance for radii
+        origin_base = torch.zeros_like(z_base)
+        radii_base = poincare_distance(z_base, origin_base, c=1.0)
+        coverage_base = ((radii_base > 0.1) & (radii_base < 0.99)).float().mean().item()
 
         # Coverage on extended ops
         outputs_ext = model(extended_ops.to(device), compute_control=False)
         z_ext = outputs_ext["z_A_hyp"]
-        norms_ext = z_ext.norm(dim=-1)
-        coverage_ext = ((norms_ext > 0.1) & (norms_ext < 0.99)).float().mean().item()
+        # V5.12.2: Use hyperbolic distance for radii
+        origin_ext = torch.zeros_like(z_ext)
+        radii_ext = poincare_distance(z_ext, origin_ext, c=1.0)
+        coverage_ext = ((radii_ext > 0.1) & (radii_ext < 0.99)).float().mean().item()
 
         # Check for collisions in extended space
         dists = torch.cdist(z_ext, z_ext)

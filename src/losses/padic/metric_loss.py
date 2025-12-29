@@ -19,6 +19,7 @@ import torch.nn.functional as F
 
 from src.config.constants import DEFAULT_METRIC_LOSS_SCALE, DEFAULT_METRIC_N_PAIRS
 from src.core import TERNARY
+from src.geometry import poincare_distance
 
 
 class PAdicMetricLoss(nn.Module):
@@ -35,16 +36,22 @@ class PAdicMetricLoss(nn.Module):
         self,
         scale: float = DEFAULT_METRIC_LOSS_SCALE,
         n_pairs: int = DEFAULT_METRIC_N_PAIRS,
+        use_hyperbolic: bool = False,
+        curvature: float = 1.0,
     ):
         """Initialize p-Adic Metric Loss.
 
         Args:
             scale: Scaling factor C for 3-adic distances
             n_pairs: Number of pairs to sample per batch
+            use_hyperbolic: If True, use poincare_distance (V5.12.2)
+            curvature: Hyperbolic curvature for poincare_distance
         """
         super().__init__()
         self.scale = scale
         self.n_pairs = n_pairs
+        self.use_hyperbolic = use_hyperbolic
+        self.curvature = curvature
 
     def forward(self, z: torch.Tensor, batch_indices: torch.Tensor) -> torch.Tensor:
         """Compute p-Adic metric loss.
@@ -70,8 +77,11 @@ class PAdicMetricLoss(nn.Module):
         same_mask = i_idx == j_idx
         j_idx[same_mask] = (j_idx[same_mask] + 1) % batch_size
 
-        # Compute latent distances (Euclidean)
-        d_latent = torch.norm(z[i_idx] - z[j_idx], dim=1)
+        # V5.12.2: Compute latent distances (Euclidean or Hyperbolic)
+        if self.use_hyperbolic:
+            d_latent = poincare_distance(z[i_idx], z[j_idx], c=self.curvature)
+        else:
+            d_latent = torch.norm(z[i_idx] - z[j_idx], dim=1)
 
         # Compute 3-adic distances using TERNARY singleton
         d_3adic = TERNARY.distance(batch_indices[i_idx], batch_indices[j_idx])

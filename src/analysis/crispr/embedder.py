@@ -15,7 +15,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from src.geometry import project_to_poincare
+from src.geometry import poincare_distance, project_to_poincare
 
 from .types import NUCLEOTIDE_TO_IDX
 
@@ -186,18 +186,8 @@ class HyperbolicOfftargetEmbedder(nn.Module):
             result["offtarget_embeddings"] = offtarget_emb
             result["attention_weights"] = attn_weights
 
-            # Compute hyperbolic distances
-            diff = target_emb - offtarget_emb
-            euclidean_dist = torch.norm(diff, dim=-1)
-
-            # Poincaré distance approximation
-            target_norm = torch.norm(target_emb, dim=-1)
-            offtarget_norm = torch.norm(offtarget_emb, dim=-1)
-            hyperbolic_dist = torch.acosh(
-                1 + 2 * euclidean_dist ** 2 /
-                ((1 - target_norm ** 2) * (1 - offtarget_norm ** 2) + 1e-8)
-            )
-
+            # V5.12.2: Use proper hyperbolic distance function
+            hyperbolic_dist = poincare_distance(target_emb, offtarget_emb, c=self.curvature)
             result["hyperbolic_distances"] = hyperbolic_dist
 
         return result

@@ -72,6 +72,7 @@ def run_quick_training(args):
     from src.config.paths import CHECKPOINTS_DIR
     from src.core import TERNARY
     from src.data.generation import generate_all_ternary_operations
+    from src.geometry import poincare_distance
     from src.losses import PAdicGeodesicLoss, RadialHierarchyLoss
     from src.models import TernaryVAEV5_11_PartialFreeze
 
@@ -203,8 +204,9 @@ def run_quick_training(args):
             correct = (preds == x.long()).float().mean(dim=1)
             coverage = (correct == 1.0).sum().item() / len(x)
 
-            # Radial correlation
-            radii = torch.norm(z_A, dim=1).cpu().numpy()
+            # V5.12.2: Radial correlation using hyperbolic distance
+            origin = torch.zeros_like(z_A)
+            radii = poincare_distance(z_A, origin, c=1.0).cpu().numpy()
             valuations = TERNARY.valuation(indices).cpu().numpy()
             radial_corr = spearmanr(valuations, radii)[0]
 
@@ -229,9 +231,10 @@ def run_quick_training(args):
         correct = (preds == x.long()).float().mean(dim=1)
         coverage = (correct == 1.0).sum().item() / len(x)
 
-        # Radial correlations
-        radii_A = torch.norm(z_A, dim=1).cpu().numpy()
-        radii_B = torch.norm(z_B, dim=1).cpu().numpy()
+        # V5.12.2: Radial correlations using hyperbolic distance
+        origin = torch.zeros_like(z_A)
+        radii_A = poincare_distance(z_A, origin, c=1.0).cpu().numpy()
+        radii_B = poincare_distance(z_B, origin, c=1.0).cpu().numpy()
         valuations = TERNARY.valuation(indices).cpu().numpy()
 
         radial_corr_A = spearmanr(valuations, radii_A)[0]

@@ -19,6 +19,7 @@ import torch.nn.functional as F
 
 from src.config.constants import DEFAULT_N_TRIPLETS, DEFAULT_RANKING_MARGIN
 from src.core import TERNARY
+from src.geometry import poincare_distance
 
 
 class PAdicRankingLoss(nn.Module):
@@ -40,16 +41,22 @@ class PAdicRankingLoss(nn.Module):
         self,
         margin: float = DEFAULT_RANKING_MARGIN,
         n_triplets: int = DEFAULT_N_TRIPLETS,
+        use_hyperbolic: bool = False,
+        curvature: float = 1.0,
     ):
         """Initialize p-Adic Ranking Loss.
 
         Args:
             margin: Margin for triplet loss (how much closer pos should be than neg)
             n_triplets: Number of triplets to sample per batch
+            use_hyperbolic: If True, use poincare_distance (V5.12.2)
+            curvature: Hyperbolic curvature for poincare_distance
         """
         super().__init__()
         self.margin = margin
         self.n_triplets = n_triplets
+        self.use_hyperbolic = use_hyperbolic
+        self.curvature = curvature
 
     def forward(self, z: torch.Tensor, batch_indices: torch.Tensor) -> torch.Tensor:
         """Compute p-Adic ranking loss.
@@ -82,9 +89,13 @@ class PAdicRankingLoss(nn.Module):
         d3_anchor_pos = TERNARY.distance(batch_indices[anchor_idx], batch_indices[pos_idx])
         d3_anchor_neg = TERNARY.distance(batch_indices[anchor_idx], batch_indices[neg_idx])
 
-        # Compute latent distances
-        d_anchor_pos = torch.norm(z[anchor_idx] - z[pos_idx], dim=1)
-        d_anchor_neg = torch.norm(z[anchor_idx] - z[neg_idx], dim=1)
+        # V5.12.2: Compute latent distances (Euclidean or Hyperbolic)
+        if self.use_hyperbolic:
+            d_anchor_pos = poincare_distance(z[anchor_idx], z[pos_idx], c=self.curvature)
+            d_anchor_neg = poincare_distance(z[anchor_idx], z[neg_idx], c=self.curvature)
+        else:
+            d_anchor_pos = torch.norm(z[anchor_idx] - z[pos_idx], dim=1)
+            d_anchor_neg = torch.norm(z[anchor_idx] - z[neg_idx], dim=1)
 
         # Select triplets where pos is 3-adically closer than neg
         # (smaller 3-adic distance = closer in p-adic metric)
