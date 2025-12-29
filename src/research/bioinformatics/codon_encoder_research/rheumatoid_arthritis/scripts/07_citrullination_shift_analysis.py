@@ -22,6 +22,26 @@ from collections import defaultdict
 
 import numpy as np
 import torch
+
+
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """V5.12.2: Proper hyperbolic distance from origin."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
+def poincare_distance_np(x: np.ndarray, y: np.ndarray, c: float = 1.0) -> float:
+    """V5.12.2: Proper hyperbolic distance between two points."""
+    x_norm_sq = np.clip(np.sum(x ** 2), 0, 0.999)
+    y_norm_sq = np.clip(np.sum(y ** 2), 0, 0.999)
+    diff_norm_sq = np.sum((x - y) ** 2)
+    denom = (1 - c * x_norm_sq) * (1 - c * y_norm_sq)
+    arg = 1 + 2 * c * diff_norm_sq / (denom + 1e-10)
+    return float(np.arccosh(np.clip(arg, 1.0, 1e10)))
+
+
 # Import hyperbolic utilities
 from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot, get_results_dir,
                               load_codon_encoder)
@@ -217,9 +237,10 @@ def compute_epitope_shift_profile(epitope, encoder, device="cpu"):
         cit_cluster_dist = np.mean(remaining_probs, axis=0)
         cit_entropy = -np.sum(cit_cluster_dist * np.log(cit_cluster_dist + 1e-10))
 
-        # Compute shifts
-        centroid_shift = np.linalg.norm(cit_centroid - original_centroid)
-        relative_shift = centroid_shift / np.linalg.norm(original_centroid) if np.linalg.norm(original_centroid) > 0 else 0
+        # Compute shifts (V5.12.2: use hyperbolic distance)
+        centroid_shift = poincare_distance_np(cit_centroid, original_centroid)
+        orig_radius = hyperbolic_radius(original_centroid)
+        relative_shift = centroid_shift / orig_radius if orig_radius > 0 else 0
 
         # KL divergence between original and citrullinated cluster distributions
         kl_div = np.sum(original_cluster_dist * np.log((original_cluster_dist + 1e-10) / (cit_cluster_dist + 1e-10)))
