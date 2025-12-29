@@ -38,6 +38,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from src.core import TERNARY
+from src.geometry.poincare import poincare_distance
 
 
 class RichHierarchyLoss(nn.Module):
@@ -80,6 +81,7 @@ class RichHierarchyLoss(nn.Module):
         richness_weight: float = 2.0,
         separation_weight: float = 3.0,
         min_richness_ratio: float = 0.5,
+        curvature: float = 1.0,
     ):
         super().__init__()
         self.inner_radius = inner_radius
@@ -90,8 +92,9 @@ class RichHierarchyLoss(nn.Module):
         self.separation_weight = separation_weight
         self.min_richness_ratio = min_richness_ratio
         self.max_valuation = 9
+        self.curvature = curvature
 
-        # Precompute target radii for each valuation level
+        # Precompute target radii for each valuation level (in hyperbolic distance)
         # v=0 → outer_radius, v=9 → inner_radius
         target_radii = torch.tensor([
             outer_radius - (v / self.max_valuation) * (outer_radius - inner_radius)
@@ -122,7 +125,10 @@ class RichHierarchyLoss(nn.Module):
                            'richness_loss', 'separation_loss'
         """
         device = z_hyp.device
-        radii = z_hyp.norm(dim=-1)
+        # V5.12.2: Use hyperbolic distance instead of Euclidean norm
+        # This ensures loss operates in consistent geometry with decoder
+        origin = torch.zeros_like(z_hyp)
+        radii = poincare_distance(z_hyp, origin, c=self.curvature)
         valuations = TERNARY.valuation(indices).long().to(device)
 
         # === 1. Hierarchy: Push mean radius per level toward target ===
@@ -211,5 +217,6 @@ class RichHierarchyLoss(nn.Module):
             f"coverage_weight={self.coverage_weight}, "
             f"richness_weight={self.richness_weight}, "
             f"separation_weight={self.separation_weight}, "
-            f"min_richness_ratio={self.min_richness_ratio}"
+            f"min_richness_ratio={self.min_richness_ratio}, "
+            f"curvature={self.curvature}"
         )

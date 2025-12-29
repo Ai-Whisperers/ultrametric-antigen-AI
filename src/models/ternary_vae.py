@@ -83,6 +83,7 @@ from typing import Dict
 import torch
 import torch.nn as nn
 
+from src.geometry.poincare import poincare_distance
 from src.utils.checkpoint import load_checkpoint_compat
 
 from .differentiable_controller import DifferentiableController
@@ -285,9 +286,11 @@ class TernaryVAEV5_11(nn.Module):
 
         # Compute control signals (if enabled)
         if compute_control and self.controller is not None:
-            # Compute batch statistics (all tensors for gradient flow)
-            radius_A = torch.norm(z_A_hyp, dim=-1).mean()
-            radius_B = torch.norm(z_B_hyp, dim=-1).mean()
+            # V5.12.2: Use hyperbolic distance for consistent geometry
+            curvature = self.projection.get_curvature() if hasattr(self.projection, 'get_curvature') else 1.0
+            origin = torch.zeros_like(z_A_hyp)
+            radius_A = poincare_distance(z_A_hyp, origin, c=curvature).mean()
+            radius_B = poincare_distance(z_B_hyp, origin, c=curvature).mean()
 
             # Use mean embeddings for other stats
             kl_A = -0.5 * (1 + logvar_A - mu_A.pow(2) - logvar_A.exp()).sum(dim=-1).mean()

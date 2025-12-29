@@ -27,6 +27,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from src.geometry.poincare import poincare_distance
+
 
 def compute_operation_zero_valuation(operations: torch.Tensor) -> torch.Tensor:
     """Compute zero-valuation directly from operation vectors.
@@ -105,6 +107,7 @@ class ZeroValuationLoss(nn.Module):
         outer_radius: float = 0.85,
         weight: float = 1.0,
         loss_type: str = "smooth_l1",
+        curvature: float = 1.0,
     ):
         """Initialize Zero Valuation Loss.
 
@@ -113,6 +116,7 @@ class ZeroValuationLoss(nn.Module):
             outer_radius: Target radius for zero zero-valuation (default: 0.85)
             weight: Loss weight multiplier
             loss_type: 'smooth_l1' or 'mse'
+            curvature: Hyperbolic curvature for poincare_distance (V5.12.2)
         """
         super().__init__()
         self.inner_radius = inner_radius
@@ -120,6 +124,7 @@ class ZeroValuationLoss(nn.Module):
         self.weight = weight
         self.loss_type = loss_type
         self.radius_range = outer_radius - inner_radius
+        self.curvature = curvature
 
     def forward(
         self,
@@ -140,8 +145,9 @@ class ZeroValuationLoss(nn.Module):
         # Compute zero-valuation from operation vectors
         valuations = compute_operation_zero_valuation(operations)
 
-        # Compute actual radius
-        actual_radius = torch.norm(z, dim=1)
+        # V5.12.2: Compute actual radius using hyperbolic distance
+        origin = torch.zeros_like(z)
+        actual_radius = poincare_distance(z, origin, c=self.curvature)
 
         # Compute target radius (high valuation → small radius)
         normalized_v = valuations / 9.0
@@ -183,17 +189,19 @@ class ZeroSparsityLoss(nn.Module):
     representations when multiple encodings are equivalent.
     """
 
-    def __init__(self, target_correlation: float = -0.3, weight: float = 0.5):
+    def __init__(self, target_correlation: float = -0.3, weight: float = 0.5, curvature: float = 1.0):
         """Initialize Zero Sparsity Loss.
 
         Args:
             target_correlation: Target correlation between zero-count and radius
                                Negative = more zeros means smaller radius
             weight: Loss weight multiplier
+            curvature: Hyperbolic curvature for poincare_distance (V5.12.2)
         """
         super().__init__()
         self.target_correlation = target_correlation
         self.weight = weight
+        self.curvature = curvature
 
     def forward(
         self,
@@ -214,8 +222,9 @@ class ZeroSparsityLoss(nn.Module):
         # Compute zero count
         zero_counts = compute_operation_zero_count(operations)
 
-        # Compute radius
-        radius = torch.norm(z, dim=1)
+        # V5.12.2: Compute radius using hyperbolic distance
+        origin = torch.zeros_like(z)
+        radius = poincare_distance(z, origin, c=self.curvature)
 
         # Compute current correlation
         # Standardize
@@ -263,6 +272,7 @@ class CombinedZeroStructureLoss(nn.Module):
         inner_radius: float = 0.1,
         outer_radius: float = 0.85,
         target_correlation: float = -0.3,
+        curvature: float = 1.0,
     ):
         """Initialize Combined Zero Structure Loss.
 
@@ -272,6 +282,7 @@ class CombinedZeroStructureLoss(nn.Module):
             inner_radius: Target radius for high-valuation operations
             outer_radius: Target radius for low-valuation operations
             target_correlation: Target zero-count/radius correlation
+            curvature: Hyperbolic curvature for poincare_distance (V5.12.2)
         """
         super().__init__()
 
@@ -279,9 +290,14 @@ class CombinedZeroStructureLoss(nn.Module):
             inner_radius=inner_radius,
             outer_radius=outer_radius,
             weight=valuation_weight,
+            curvature=curvature,
         )
 
-        self.sparsity_loss = ZeroSparsityLoss(target_correlation=target_correlation, weight=sparsity_weight)
+        self.sparsity_loss = ZeroSparsityLoss(
+            target_correlation=target_correlation,
+            weight=sparsity_weight,
+            curvature=curvature,
+        )
 
     def forward(
         self,

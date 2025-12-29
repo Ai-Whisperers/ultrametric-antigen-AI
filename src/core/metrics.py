@@ -358,9 +358,10 @@ def compute_ranking_correlation_hyperbolic(
         z_A_euc = outputs["z_A_euc"]
         z_B_euc = outputs["z_B_euc"]
 
-        # Compute mean radius (for homeostatic monitoring)
-        mean_radius_A = torch.norm(z_A_hyp, dim=1).mean().item()
-        mean_radius_B = torch.norm(z_B_hyp, dim=1).mean().item()
+        # V5.12.2: Compute mean radius using hyperbolic distance (for homeostatic monitoring)
+        origin = torch.zeros_like(z_A_hyp)
+        mean_radius_A = poincare_distance(z_A_hyp, origin, c=curvature).mean().item()
+        mean_radius_B = poincare_distance(z_B_hyp, origin, c=curvature).mean().item()
 
         # Sample triplet indices
         i_idx = torch.randint(n_samples, (n_triplets,), device=device)

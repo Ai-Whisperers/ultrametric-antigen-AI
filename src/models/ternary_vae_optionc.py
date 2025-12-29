@@ -31,6 +31,7 @@ from typing import Dict
 import torch
 import torch.optim as optim
 
+from src.geometry.poincare import log_map_zero, poincare_distance
 from .ternary_vae import TernaryVAEV5_11
 
 logger = logging.getLogger(__name__)
@@ -144,6 +145,19 @@ class TernaryVAEV5_11_PartialFreeze(TernaryVAEV5_11):
         for param in self.controller.parameters():
             param.requires_grad = not frozen
 
+    def set_decoder_frozen(self, frozen: bool):
+        """Set decoder_A freeze state.
+
+        V5.12.1: Decoder must be trainable when using log_map_zero(z_hyp) input,
+        since it was originally trained on mu (Euclidean) and needs to adapt.
+
+        Args:
+            frozen: True to freeze, False to unfreeze
+        """
+        self.freeze_decoder = frozen
+        for param in self.decoder_A.parameters():
+            param.requires_grad = not frozen
+
     def apply_homeostasis_state(self, state: dict):
         """Apply freeze states from HomeostasisController.
 
@@ -212,8 +226,12 @@ class TernaryVAEV5_11_PartialFreeze(TernaryVAEV5_11):
 
         # Compute control signals (if enabled)
         if compute_control and self.controller is not None:
-            radius_A = torch.norm(z_A_hyp, dim=-1).mean()
-            radius_B = torch.norm(z_B_hyp, dim=-1).mean()
+            # V5.12.2: Use hyperbolic distance (poincare_distance) instead of Euclidean norm
+            # This ensures Controller operates in consistent geometry with losses
+            curvature_ctrl = self.projection.get_curvature() if hasattr(self.projection, 'get_curvature') else 1.0
+            origin = torch.zeros_like(z_A_hyp)
+            radius_A = poincare_distance(z_A_hyp, origin, c=curvature_ctrl).mean()
+            radius_B = poincare_distance(z_B_hyp, origin, c=curvature_ctrl).mean()
             kl_A = -0.5 * (1 + logvar_A - mu_A.pow(2) - logvar_A.exp()).sum(dim=-1).mean()
             kl_B = -0.5 * (1 + logvar_B - mu_B.pow(2) - logvar_B.exp()).sum(dim=-1).mean()
 
@@ -233,9 +251,12 @@ class TernaryVAEV5_11_PartialFreeze(TernaryVAEV5_11):
         else:
             control = {k: torch.tensor(v, device=x.device) for k, v in self.default_control.items()}
 
-        # Verification reconstruction
-        with torch.no_grad():
-            logits_A = self.decoder_A(mu_A)  # Use mean for deterministic verification
+        # V5.12.1: Decoder uses hyperbolic representation via log_map_zero
+        # This creates gradient flow through the hyperbolic projection,
+        # providing geometric pressure for richness preservation
+        curvature = self.projection.get_curvature() if hasattr(self.projection, 'get_curvature') else 1.0
+        z_tangent_A = log_map_zero(z_A_hyp, c=curvature)
+        logits_A = self.decoder_A(z_tangent_A)
 
         return {
             "z_A_euc": z_A_euc,
@@ -246,6 +267,7 @@ class TernaryVAEV5_11_PartialFreeze(TernaryVAEV5_11):
             "logvar_B": logvar_B,
             "z_A_hyp": z_A_hyp,
             "z_B_hyp": z_B_hyp,
+            "z_tangent_A": z_tangent_A,  # V5.12.1: tangent space representation
             "control": control,
             "logits_A": logits_A,
         }
@@ -326,6 +348,14 @@ class TernaryVAEV5_11_PartialFreeze(TernaryVAEV5_11):
                 "params": list(self.encoder_B.parameters()),
                 "lr": base_lr * self.encoder_b_lr_scale,
                 "name": "encoder_B",
+            })
+
+        # Decoder A (V5.12.1: must be trainable when using hyperbolic input)
+        if not getattr(self, "freeze_decoder", True):
+            param_groups.append({
+                "params": list(self.decoder_A.parameters()),
+                "lr": base_lr,  # Full LR for decoder adaptation
+                "name": "decoder_A",
             })
 
         return param_groups

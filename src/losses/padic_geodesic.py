@@ -170,6 +170,7 @@ class RadialHierarchyLoss(nn.Module):
         valuation_weighting: bool = True,
         margin_weight: float = 1.0,
         use_margin_loss: bool = True,
+        curvature: float = 1.0,
     ):
         """Initialize RadialHierarchyLoss.
 
@@ -180,6 +181,7 @@ class RadialHierarchyLoss(nn.Module):
             valuation_weighting: Weight high-valuation points more
             margin_weight: Weight for margin-based separation loss
             use_margin_loss: Enable pairwise margin loss for radial separation
+            curvature: Hyperbolic curvature for poincare_distance (V5.12.2)
         """
         super().__init__()
         self.inner_radius = inner_radius
@@ -188,6 +190,7 @@ class RadialHierarchyLoss(nn.Module):
         self.valuation_weighting = valuation_weighting
         self.margin_weight = margin_weight
         self.use_margin_loss = use_margin_loss
+        self.curvature = curvature
 
         # Compute radius step per valuation level
         self.radius_step = (outer_radius - inner_radius) / max_valuation
@@ -208,8 +211,10 @@ class RadialHierarchyLoss(nn.Module):
         # Compute 3-adic valuation for each index
         valuations = TERNARY.valuation(batch_indices).float()
 
-        # Compute actual radius
-        actual_radius = torch.norm(z_hyp, dim=1)
+        # V5.12.2: Compute actual radius using hyperbolic distance, not Euclidean norm
+        # This ensures consistent geometry throughout the system
+        origin = torch.zeros_like(z_hyp)
+        actual_radius = poincare_distance(z_hyp, origin, c=self.curvature)
 
         # Compute target radius (inverse relationship with valuation)
         normalized_v = valuations / self.max_valuation
@@ -366,6 +371,7 @@ class GlobalRankLoss(nn.Module):
         temperature: float = 0.1,
         n_pairs: int = 2000,
         use_all_pairs: bool = False,
+        curvature: float = 1.0,
     ):
         """Initialize GlobalRankLoss.
 
@@ -373,11 +379,13 @@ class GlobalRankLoss(nn.Module):
             temperature: Softness of the ranking (lower = sharper)
             n_pairs: Number of pairs to sample (if not using all pairs)
             use_all_pairs: If True, use all O(n²) pairs (expensive but exact)
+            curvature: Hyperbolic curvature for poincare_distance (V5.12.2)
         """
         super().__init__()
         self.temperature = temperature
         self.n_pairs = n_pairs
         self.use_all_pairs = use_all_pairs
+        self.curvature = curvature
 
     def forward(self, z_hyp: torch.Tensor, batch_indices: torch.Tensor) -> Tuple[torch.Tensor, dict]:
         """Compute global rank loss.
@@ -397,7 +405,9 @@ class GlobalRankLoss(nn.Module):
 
         # Get valuations and radii
         valuations = TERNARY.valuation(batch_indices).float()
-        radii = torch.norm(z_hyp, dim=1)
+        # V5.12.2: Use hyperbolic distance instead of Euclidean norm
+        origin = torch.zeros_like(z_hyp)
+        radii = poincare_distance(z_hyp, origin, c=self.curvature)
 
         if self.use_all_pairs:
             # All pairs (expensive: O(n²))
@@ -501,6 +511,7 @@ class MonotonicRadialLoss(nn.Module):
         margin_scale: float = 1.0,
         use_soft_margin: bool = True,
         temperature: float = 0.05,
+        curvature: float = 1.0,
     ):
         """Initialize MonotonicRadialLoss.
 
@@ -512,11 +523,13 @@ class MonotonicRadialLoss(nn.Module):
             margin_scale: Scale factor for adaptive margins
             use_soft_margin: Use soft hinge loss (differentiable)
             temperature: Softness for soft margin (lower = sharper)
+            curvature: Hyperbolic curvature for poincare_distance (V5.12.2)
         """
         super().__init__()
         self.inner_radius = inner_radius
         self.outer_radius = outer_radius
         self.max_valuation = max_valuation
+        self.curvature = curvature
         self.min_margin = min_margin
         self.margin_scale = margin_scale
         self.use_soft_margin = use_soft_margin
@@ -544,7 +557,9 @@ class MonotonicRadialLoss(nn.Module):
 
         # Get valuations and radii
         valuations = TERNARY.valuation(batch_indices)
-        radii = torch.norm(z_hyp, dim=1)
+        # V5.12.2: Use hyperbolic distance instead of Euclidean norm
+        origin = torch.zeros_like(z_hyp)
+        radii = poincare_distance(z_hyp, origin, c=self.curvature)
 
         # Compute mean radius per valuation level
         level_means = []
