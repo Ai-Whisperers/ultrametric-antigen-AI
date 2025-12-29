@@ -57,6 +57,25 @@ def hyperbolic_radius(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
     # Clamp to avoid numerical issues at boundary
     clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
     return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
+def poincare_distance_np(x: np.ndarray, y: np.ndarray, c: float = 1.0) -> float:
+    """V5.12.2: Compute hyperbolic distance between two points in Poincare ball.
+
+    Args:
+        x: First point (shape (dim,))
+        y: Second point (shape (dim,))
+        c: Curvature parameter
+
+    Returns:
+        Hyperbolic distance (scalar)
+    """
+    x_norm_sq = np.clip(np.sum(x**2), 0, 0.999)
+    y_norm_sq = np.clip(np.sum(y**2), 0, 0.999)
+    diff_norm_sq = np.sum((x - y) ** 2)
+    denom = (1 - c * x_norm_sq) * (1 - c * y_norm_sq)
+    arg = 1 + 2 * c * diff_norm_sq / (denom + 1e-10)
+    return float(np.arccosh(np.clip(arg, 1.0, 1e10)))
 from sklearn.metrics import accuracy_score, roc_auc_score, roc_curve
 from sklearn.model_selection import cross_val_score, train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -269,8 +288,8 @@ def analyze_tropism_separation(v3_df: pd.DataFrame) -> dict:
     r5_centroid = r5_centroids.mean(axis=0)
     x4_centroid = x4_centroids.mean(axis=0)
 
-    # Distance between centroids
-    centroid_distance = np.linalg.norm(r5_centroid - x4_centroid)
+    # V5.12.2: Distance between centroids (hyperbolic)
+    centroid_distance = poincare_distance_np(r5_centroid, x4_centroid)
 
     # Radial positions
     r5_radii = r5_df["mean_radius"].dropna().values
@@ -334,10 +353,10 @@ def analyze_position_importance(v3_df: pd.DataFrame, encoder) -> pd.DataFrame:
         r5_emb = np.array(r5_emb)
         x4_emb = np.array(x4_emb)
 
-        # Calculate separation
+        # V5.12.2: Calculate separation (hyperbolic distance)
         r5_mean = r5_emb.mean(axis=0)
         x4_mean = x4_emb.mean(axis=0)
-        separation = np.linalg.norm(r5_mean - x4_mean)
+        separation = poincare_distance_np(r5_mean, x4_mean)
 
         # Radial comparison (V5.12.2: hyperbolic radii)
         r5_radii = hyperbolic_radius(r5_emb)
