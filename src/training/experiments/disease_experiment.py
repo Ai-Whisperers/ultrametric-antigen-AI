@@ -394,23 +394,118 @@ class CrossDiseaseExperiment:
     def _load_sars_cov_2_data(
         self, config: DiseaseExperimentConfig
     ) -> tuple[np.ndarray, np.ndarray]:
-        """Load SARS-CoV-2 data (placeholder)."""
-        # TODO: Implement SARS-CoV-2 data loading
-        raise NotImplementedError("SARS-CoV-2 data loading not yet implemented")
+        """Load SARS-CoV-2 data.
+
+        Uses synthetic data from disease analyzer for testing.
+        For production, load from GISAID or CoV-RDB.
+        """
+        from src.diseases.sars_cov2_analyzer import (
+            SARSCoV2Gene,
+            create_sars_cov2_dataset,
+        )
+
+        # Determine target gene based on config
+        gene = SARSCoV2Gene.NSP5  # Default: Mpro for Paxlovid resistance
+        if config.gene:
+            gene_mapping = {
+                "spike": SARSCoV2Gene.SPIKE,
+                "nsp5": SARSCoV2Gene.NSP5,
+                "mpro": SARSCoV2Gene.NSP5,
+            }
+            gene = gene_mapping.get(config.gene.lower(), SARSCoV2Gene.NSP5)
+
+        X, y, _ = create_sars_cov2_dataset(
+            gene=gene,
+            include_resistance=True,
+            min_samples=100,
+        )
+        return X, y
 
     def _load_tb_data(
         self, config: DiseaseExperimentConfig
     ) -> tuple[np.ndarray, np.ndarray]:
-        """Load Tuberculosis data (placeholder)."""
-        # TODO: Implement TB data loading
-        raise NotImplementedError("Tuberculosis data loading not yet implemented")
+        """Load Tuberculosis data.
+
+        Uses synthetic data from disease analyzer for testing.
+        For production, load from WHO Catalogue or CRyPTIC.
+        """
+        from src.diseases.tuberculosis_analyzer import (
+            TBDrug,
+            create_tb_synthetic_dataset,
+        )
+
+        # Map target drug from config
+        drug = TBDrug.RIFAMPICIN  # Default
+        if config.target:
+            drug_mapping = {
+                "rif": TBDrug.RIFAMPICIN,
+                "rifampicin": TBDrug.RIFAMPICIN,
+                "inh": TBDrug.ISONIAZID,
+                "isoniazid": TBDrug.ISONIAZID,
+                "emb": TBDrug.ETHAMBUTOL,
+                "ethambutol": TBDrug.ETHAMBUTOL,
+                "pza": TBDrug.PYRAZINAMIDE,
+                "pyrazinamide": TBDrug.PYRAZINAMIDE,
+                "lfx": TBDrug.LEVOFLOXACIN,
+                "mfx": TBDrug.MOXIFLOXACIN,
+                "amk": TBDrug.AMIKACIN,
+                "bdq": TBDrug.BEDAQUILINE,
+                "lzd": TBDrug.LINEZOLID,
+            }
+            drug = drug_mapping.get(config.target.lower(), TBDrug.RIFAMPICIN)
+
+        X, y, _ = create_tb_synthetic_dataset(
+            drug=drug,
+            min_samples=100,
+        )
+        return X, y
 
     def _load_influenza_data(
         self, config: DiseaseExperimentConfig
     ) -> tuple[np.ndarray, np.ndarray]:
-        """Load Influenza data (placeholder)."""
-        # TODO: Implement Influenza data loading
-        raise NotImplementedError("Influenza data loading not yet implemented")
+        """Load Influenza data.
+
+        Uses synthetic data from disease analyzer for testing.
+        For production, load from GISAID or FluDB.
+        """
+        from src.diseases.influenza_analyzer import (
+            InfluenzaDrug,
+            InfluenzaSubtype,
+            create_influenza_synthetic_dataset,
+        )
+
+        # Map subtype from config
+        subtype = InfluenzaSubtype.H3N2  # Default
+        if config.gene:
+            subtype_mapping = {
+                "h3n2": InfluenzaSubtype.H3N2,
+                "h1n1": InfluenzaSubtype.H1N1_SEASONAL,
+                "h1n1_pdm": InfluenzaSubtype.H1N1_PANDEMIC,
+                "b_victoria": InfluenzaSubtype.B_VICTORIA,
+                "b_yamagata": InfluenzaSubtype.B_YAMAGATA,
+            }
+            subtype = subtype_mapping.get(config.gene.lower(), InfluenzaSubtype.H3N2)
+
+        # Map target drug from config
+        drug = InfluenzaDrug.OSELTAMIVIR  # Default
+        if config.target:
+            drug_mapping = {
+                "oseltamivir": InfluenzaDrug.OSELTAMIVIR,
+                "tamiflu": InfluenzaDrug.OSELTAMIVIR,
+                "zanamivir": InfluenzaDrug.ZANAMIVIR,
+                "relenza": InfluenzaDrug.ZANAMIVIR,
+                "baloxavir": InfluenzaDrug.BALOXAVIR,
+                "xofluza": InfluenzaDrug.BALOXAVIR,
+                "peramivir": InfluenzaDrug.PERAMIVIR,
+            }
+            drug = drug_mapping.get(config.target.lower(), InfluenzaDrug.OSELTAMIVIR)
+
+        X, y, _ = create_influenza_synthetic_dataset(
+            subtype=subtype,
+            drug=drug,
+            min_samples=100,
+        )
+        return X, y
 
     def generate_comparison_report(self) -> str:
         """Generate comparison report across diseases.

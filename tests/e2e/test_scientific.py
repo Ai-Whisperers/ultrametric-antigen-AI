@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from scripts.eval.downstream_validation import \
+from scripts.evaluation.downstream_validation import \
     compute_production_readiness_score
 from tests.factories.embeddings import PoincareEmbeddingFactory
 

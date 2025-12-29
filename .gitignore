@@ -74,15 +74,6 @@ conductor/
 
 
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# Model checkpoints and data
-checkpoints/
-*.pth
-*.pt
-*.ckpt
-*.h5
 
 # Logs
 *.log
@@ -95,7 +86,6 @@ Thumbs.db
 
 # Project specific
 /data/          # Ignore data/ at root level only (not src/data/)
-outputs/
 local/
 
 # Generated metrics (can be regenerated, but keep curated analysis results)
@@ -106,8 +96,6 @@ local/
 /reports/*
 !/reports/README.md
 
-# Training runs (TensorBoard logs)
-runs/
 
 # Codon-encoder research: ignore heavy training artifacts, keep scripts and light results
 research/codon-encoder/results/training/**/checkpoints/
@@ -145,9 +133,17 @@ bin/
 # Sandbox and experimental training
 sandbox-training/
 
-# Large research data (keep structure, ignore large files)
-research/bioinformatics/codon_encoder_research/hiv/data/
-research/embeddings_analysis/
+# Large model checkpoints (stored on Hugging Face Hub)
+# Use: python -m src.utils.checkpoint_hub download --checkpoint <name>
+outputs/models/**/*.pt
+outputs/optimal/**/*.pt
+checkpoints/**/*.pt
+*.7z
+test_trajectory.pt
+
+# Keep the directory structure
+!outputs/models/.gitkeep
+!checkpoints/.gitkeep
 
 # Legacy documentation (replaced by docs/content/)
 # DOCUMENTATION/ (Migrated to docs/content)

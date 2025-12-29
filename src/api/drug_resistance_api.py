@@ -289,6 +289,189 @@ def interpret_resistance(score: float) -> str:
 
 
 # =============================================================================
+# Mutation Detection
+# =============================================================================
+
+# Reference sequences for HIV genes (consensus B subtype)
+# PI: Protease (99 aa), NRTI/NNRTI: RT (560 aa), INI: Integrase (288 aa)
+REFERENCE_SEQUENCES = {
+    "pi": (
+        "PQITLWQRPLVTIKIGGQLKEALLDTGADDTVLEEMNLPGRWKPKMIGGIGGFIKVRQYD"
+        "QILIEICGHKAIGTVLVGPTPVNIIGRNLLTQIGCTLNF"
+    ),
+    "nrti": (
+        "PISPIETVPVKLKPGMDGPKVKQWPLTEEKIKALVEICTEMEKEGKISKIGPENPYNTPV"
+        "FAIKKKDSTKWRKLVDFRELNKRTQDFWEVQLGIPHPAGLKKKKSVTVLDVGDAYFSVPL"
+        "DEDFRKYTAFTIPSINNETPGIRYQYNVLPQGWKGSPAIFQSSMTKILEPFRKQNPDIVI"
+        "YQYMDDLYVGSDLEIGQHRTKIEELRQHLLRWGLTTPDKKHQKEPPFLWMGYELHPDKWT"
+    ),
+    "nnrti": (
+        "PISPIETVPVKLKPGMDGPKVKQWPLTEEKIKALVEICTEMEKEGKISKIGPENPYNTPV"
+        "FAIKKKDSTKWRKLVDFRELNKRTQDFWEVQLGIPHPAGLKKKKSVTVLDVGDAYFSVPL"
+        "DEDFRKYTAFTIPSINNETPGIRYQYNVLPQGWKGSPAIFQSSMTKILEPFRKQNPDIVI"
+        "YQYMDDLYVGSDLEIGQHRTKIEELRQHLLRWGLTTPDKKHQKEPPFLWMGYELHPDKWT"
+        "VQPIVLPEKDSWTVNDIQKLVGKLNWASQIYPGIKVRQLCKLLRGTKALTEVIPLTEEAE"
+        "LELAENREILKEPVHGV"
+    ),
+    "ini": (
+        "FLDGIDKAQDEHEKYHSNWRAMASDFNLPPVVAKEIVASCDKCQLKGEAMHGQVDCSPGI"
+        "WQLDCTHLEGKVILVAVHVASGYIEAEVIPAETGQETAYFLLKLAGRWPVKTIHTDNGSN"
+        "FTSTTVKAACWWAGIKQEFGIPYNPQSQGVVESMNKELKKIIGQVRDQAEHLKTAVQMAV"
+        "FIHNFKRKGGIGGYSAGERIVDIIATDIQTKELQKQITKIQNFRVYYRDSRDPLWKGPAK"
+        "LLWKGEGAVVIQDNSDIKVVPRRKAKIIRDYGKQMAGDDCVASRQDED"
+    ),
+}
+
+# Key resistance mutation positions with wild-type residues
+# Format: {position: wild_type_residue}
+RESISTANCE_POSITIONS = {
+    "pi": {
+        10: "L", 20: "K", 24: "L", 30: "D", 32: "V", 33: "L", 36: "M",
+        46: "M", 47: "I", 48: "G", 50: "I", 53: "F", 54: "I", 58: "Q",
+        63: "L", 71: "A", 73: "G", 74: "T", 76: "L", 82: "V", 84: "I",
+        88: "N", 89: "L", 90: "L",
+    },
+    "nrti": {
+        41: "M", 44: "E", 62: "A", 65: "K", 67: "D", 69: "T", 70: "K",
+        74: "L", 75: "V", 77: "F", 115: "Y", 116: "F", 151: "Q", 184: "M",
+        210: "L", 215: "T", 219: "K",
+    },
+    "nnrti": {
+        98: "A", 100: "L", 101: "K", 103: "K", 106: "V", 108: "V",
+        138: "E", 179: "V", 181: "Y", 188: "Y", 190: "G", 221: "H",
+        225: "P", 227: "F", 230: "M",
+    },
+    "ini": {
+        51: "H", 66: "T", 74: "L", 92: "E", 97: "T", 118: "G", 121: "F",
+        138: "E", 140: "G", 143: "Y", 147: "S", 148: "Q", 155: "N",
+        157: "E", 263: "R",
+    },
+}
+
+
+def detect_mutations(sequence: str, drug: str) -> List[str]:
+    """Detect resistance mutations in a sequence for a specific drug.
+
+    Args:
+        sequence: Amino acid sequence
+        drug: Drug name (e.g., "LPV", "AZT")
+
+    Returns:
+        List of mutation strings (e.g., ["M46I", "I54V", "V82A"])
+    """
+    if drug not in DRUG_DATABASE:
+        return []
+
+    drug_info = DRUG_DATABASE[drug]
+    drug_class = drug_info["class"]
+
+    if drug_class not in REFERENCE_SEQUENCES:
+        return []
+
+    reference = REFERENCE_SEQUENCES[drug_class]
+    key_positions = RESISTANCE_POSITIONS.get(drug_class, {})
+    drug_mutations = drug_info.get("mutations", [])
+
+    mutations_found = []
+
+    for pos_str in drug_mutations:
+        try:
+            pos = int(pos_str)
+        except ValueError:
+            continue
+
+        # Check if position is in range
+        if pos <= 0 or pos > len(sequence) or pos > len(reference):
+            continue
+
+        ref_aa = reference[pos - 1]  # 1-indexed to 0-indexed
+        seq_aa = sequence[pos - 1].upper()
+
+        # Detect mutation if different from reference
+        if seq_aa != ref_aa and seq_aa in AA_ALPHABET and seq_aa != "-":
+            mutation_str = f"{ref_aa}{pos}{seq_aa}"
+            mutations_found.append(mutation_str)
+
+    # Also check other known resistance positions for this class
+    for pos, wt_aa in key_positions.items():
+        if pos <= 0 or pos > len(sequence):
+            continue
+
+        seq_aa = sequence[pos - 1].upper()
+        if seq_aa != wt_aa and seq_aa in AA_ALPHABET and seq_aa != "-":
+            mutation_str = f"{wt_aa}{pos}{seq_aa}"
+            if mutation_str not in mutations_found:
+                mutations_found.append(mutation_str)
+
+    return sorted(mutations_found, key=lambda m: int("".join(filter(str.isdigit, m))))
+
+
+def detect_novel_mutations(
+    sequence: str,
+    drug_class: str,
+    attention_threshold: float = 0.01,
+) -> List[dict]:
+    """Detect potentially novel mutations using position analysis.
+
+    This is a simplified version. In production, use attention weights
+    from a trained transformer model.
+
+    Args:
+        sequence: Amino acid sequence
+        drug_class: Drug class (pi, nrti, nnrti, ini)
+        attention_threshold: Minimum importance threshold
+
+    Returns:
+        List of novel mutation candidates with scores
+    """
+    if drug_class not in REFERENCE_SEQUENCES:
+        return []
+
+    reference = REFERENCE_SEQUENCES[drug_class]
+    known_positions = set(RESISTANCE_POSITIONS.get(drug_class, {}).keys())
+
+    novel_candidates = []
+
+    for pos in range(1, min(len(sequence), len(reference)) + 1):
+        ref_aa = reference[pos - 1]
+        seq_aa = sequence[pos - 1].upper()
+
+        # Skip if same as reference or at known position
+        if seq_aa == ref_aa or pos in known_positions:
+            continue
+
+        if seq_aa not in AA_ALPHABET or seq_aa == "-":
+            continue
+
+        # Compute a pseudo-attention score based on position and aa properties
+        # In production, this would come from model attention weights
+        hydrophobic = "AILMFVPW"
+        charged = "DEKRH"
+
+        score = 0.005  # Base score
+        if ref_aa in hydrophobic and seq_aa not in hydrophobic:
+            score += 0.005  # Hydrophobicity change
+        if ref_aa in charged and seq_aa not in charged:
+            score += 0.005  # Charge change
+        if (ref_aa in "GP") != (seq_aa in "GP"):
+            score += 0.003  # Proline/Glycine special
+
+        if score >= attention_threshold:
+            novel_candidates.append({
+                "position": pos,
+                "reference": ref_aa,
+                "mutation": seq_aa,
+                "notation": f"{ref_aa}{pos}{seq_aa}",
+                "attention_score": round(score, 4),
+                "known_status": "NOVEL_CANDIDATE",
+            })
+
+    # Sort by score and return top candidates
+    novel_candidates.sort(key=lambda x: x["attention_score"], reverse=True)
+    return novel_candidates[:10]
+
+
+# =============================================================================
 # Mock Model (Replace with actual trained model)
 # =============================================================================
 
@@ -448,12 +631,15 @@ if FASTAPI_AVAILABLE:
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
 
+        # Detect mutations
+        mutations = detect_mutations(input_data.sequence, input_data.drug)
+
         return PredictionOutput(
             drug=input_data.drug,
             resistance_score=round(score, 4),
             confidence=round(confidence, 4),
             interpretation=interpret_resistance(score),
-            mutations_detected=None,  # TODO: Add mutation detection
+            mutations_detected=mutations if mutations else None,
         )
 
     @app.post("/predict/batch", response_model=BatchOutput)
@@ -473,13 +659,14 @@ if FASTAPI_AVAILABLE:
                 encoded = encode_sequence(seq, expected_len)
                 x = torch.tensor(encoded).unsqueeze(0)
                 score, confidence = model.predict(x, input_data.drug)
+                mutations = detect_mutations(seq, input_data.drug)
 
                 predictions.append(PredictionOutput(
                     drug=input_data.drug,
                     resistance_score=round(score, 4),
                     confidence=round(confidence, 4),
                     interpretation=interpret_resistance(score),
-                    mutations_detected=None,
+                    mutations_detected=mutations if mutations else None,
                 ))
             except Exception as e:
                 predictions.append(PredictionOutput(
@@ -597,12 +784,13 @@ if FASTAPI_AVAILABLE:
                 x = torch.tensor(encoded).unsqueeze(0)
                 score, confidence = model.predict(x, drug)
 
+                mutations = detect_mutations(sequence, drug)
                 pred = PredictionOutput(
                     drug=drug,
                     resistance_score=round(score, 4),
                     confidence=round(confidence, 4),
                     interpretation=interpret_resistance(score),
-                    mutations_detected=None,
+                    mutations_detected=mutations if mutations else None,
                 )
                 results_by_class[drug_class].append(pred)
 
@@ -630,6 +818,13 @@ if FASTAPI_AVAILABLE:
         else:
             overall = "Susceptible to most drugs. Standard first-line regimens appropriate."
 
+        # Detect novel mutations across all drug classes
+        all_novel = []
+        for drug_class in ["pi", "nrti", "nnrti", "ini"]:
+            novel = detect_novel_mutations(sequence, drug_class)
+            for n in novel[:3]:  # Top 3 per class
+                all_novel.append(n["notation"])
+
         return ClinicalReportOutput(
             patient_id=patient_id,
             sequence_length=len(sequence),
@@ -638,7 +833,7 @@ if FASTAPI_AVAILABLE:
             recommended_drugs=recommended,
             avoid_drugs=avoid,
             cross_resistance_warnings=warnings,
-            novel_mutations=[],  # TODO: Add attention-based detection
+            novel_mutations=all_novel if all_novel else [],
             overall_recommendation=overall,
         )
 
