@@ -44,6 +44,28 @@ from .schedulers import (BetaScheduler, LearningRateScheduler,
                          TemperatureScheduler, cyclic_schedule,
                          linear_schedule)
 from .trainer import TernaryVAETrainer
+from .self_supervised import (
+    SelfSupervisedPretrainer,
+    SelfSupervisedConfig,
+    SelfSupervisedModel,
+    SequenceEncoder,
+    SequenceDecoder,
+    ContrastiveHead,
+    MaskedSequenceModeling,
+    MutationHead,
+    SequenceAugmenter,
+    PretrainingObjective,
+)
+from .transfer_pipeline import (
+    TransferLearningPipeline,
+    TransferConfig,
+    TransferStrategy,
+    MultiDiseaseModel,
+    SharedEncoder,
+    DiseaseHead,
+    AdapterLayer,
+    LoRALayer,
+)
 
 __all__ = [
     # Base trainer
@@ -89,4 +111,24 @@ __all__ = [
     "LocalComplexityEstimator",
     "WeightNormTracker",
     "analyze_training_log",
+    # Self-supervised pre-training
+    "SelfSupervisedPretrainer",
+    "SelfSupervisedConfig",
+    "SelfSupervisedModel",
+    "SequenceEncoder",
+    "SequenceDecoder",
+    "ContrastiveHead",
+    "MaskedSequenceModeling",
+    "MutationHead",
+    "SequenceAugmenter",
+    "PretrainingObjective",
+    # Transfer learning pipeline
+    "TransferLearningPipeline",
+    "TransferConfig",
+    "TransferStrategy",
+    "MultiDiseaseModel",
+    "SharedEncoder",
+    "DiseaseHead",
+    "AdapterLayer",
+    "LoRALayer",
 ]

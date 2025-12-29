@@ -28,22 +28,99 @@ Endpoints:
 from __future__ import annotations
 
 import sys
+import time
+from collections import defaultdict
+from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
-from dataclasses import dataclass
+from typing import Callable, Dict, List, Optional
+from dataclasses import dataclass, field
+from functools import wraps
 
 # Add project root
 root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(root))
 
 try:
-    from fastapi import FastAPI, HTTPException
+    from fastapi import FastAPI, HTTPException, Request, Depends
     from fastapi.middleware.cors import CORSMiddleware
+    from fastapi.responses import JSONResponse
+    from starlette.middleware.base import BaseHTTPMiddleware
     from pydantic import BaseModel, Field
     FASTAPI_AVAILABLE = True
 except ImportError:
     FASTAPI_AVAILABLE = False
     print("FastAPI not installed. Run: pip install fastapi uvicorn")
+
+# API Version
+API_VERSION = "v1"
+API_VERSION_FULL = "1.0.0"
+
+
+# =============================================================================
+# Rate Limiting
+# =============================================================================
+
+@dataclass
+class RateLimitConfig:
+    """Rate limiting configuration."""
+    requests_per_minute: int = 60
+    requests_per_hour: int = 1000
+    burst_limit: int = 10
+
+
+class RateLimiter:
+    """Simple in-memory rate limiter with sliding window."""
+
+    def __init__(self, config: RateLimitConfig = None):
+        self.config = config or RateLimitConfig()
+        self._requests: Dict[str, List[float]] = defaultdict(list)
+
+    def _clean_old_requests(self, client_id: str, window_seconds: int) -> None:
+        """Remove requests outside the time window."""
+        now = time.time()
+        cutoff = now - window_seconds
+        self._requests[client_id] = [
+            t for t in self._requests[client_id] if t > cutoff
+        ]
+
+    def is_allowed(self, client_id: str) -> tuple[bool, dict]:
+        """Check if request is allowed under rate limits.
+
+        Returns:
+            (allowed, headers) - Whether request is allowed and rate limit headers
+        """
+        now = time.time()
+
+        # Clean and check minute limit
+        self._clean_old_requests(client_id, 60)
+        minute_count = len(self._requests[client_id])
+
+        # Clean and check hour limit
+        self._clean_old_requests(client_id, 3600)
+        hour_count = len(self._requests[client_id])
+
+        headers = {
+            "X-RateLimit-Limit-Minute": str(self.config.requests_per_minute),
+            "X-RateLimit-Remaining-Minute": str(max(0, self.config.requests_per_minute - minute_count)),
+            "X-RateLimit-Limit-Hour": str(self.config.requests_per_hour),
+            "X-RateLimit-Remaining-Hour": str(max(0, self.config.requests_per_hour - hour_count)),
+        }
+
+        if minute_count >= self.config.requests_per_minute:
+            headers["Retry-After"] = "60"
+            return False, headers
+
+        if hour_count >= self.config.requests_per_hour:
+            headers["Retry-After"] = "3600"
+            return False, headers
+
+        # Record this request
+        self._requests[client_id].append(now)
+        return True, headers
+
+
+# Global rate limiter
+rate_limiter = RateLimiter()
 
 import numpy as np
 import torch
@@ -238,11 +315,60 @@ model = MockResistanceModel()
 # =============================================================================
 
 if FASTAPI_AVAILABLE:
+
+    class RateLimitMiddleware(BaseHTTPMiddleware):
+        """Middleware for rate limiting requests."""
+
+        async def dispatch(self, request: Request, call_next: Callable):
+            # Get client IP (consider X-Forwarded-For for proxies)
+            forwarded = request.headers.get("X-Forwarded-For")
+            if forwarded:
+                client_ip = forwarded.split(",")[0].strip()
+            else:
+                client_ip = request.client.host if request.client else "unknown"
+
+            # Check rate limit
+            allowed, headers = rate_limiter.is_allowed(client_ip)
+
+            if not allowed:
+                response = JSONResponse(
+                    status_code=429,
+                    content={"detail": "Rate limit exceeded. Please retry later."},
+                    headers=headers,
+                )
+                return response
+
+            # Process request
+            response = await call_next(request)
+
+            # Add rate limit headers to response
+            for key, value in headers.items():
+                response.headers[key] = value
+
+            return response
+
     app = FastAPI(
-        title="HIV Drug Resistance Prediction API",
-        description="P-adic VAE-based prediction of HIV drug resistance from sequences",
-        version="1.0.0",
+        title="Drug Resistance Prediction API",
+        description=(
+            "P-adic VAE-based prediction of drug resistance from sequences. "
+            "Supports HIV, SARS-CoV-2, TB, Influenza, HCV, HBV, Malaria, MRSA, "
+            "Candida auris, RSV, and Cancer."
+        ),
+        version=API_VERSION_FULL,
+        docs_url="/docs",
+        redoc_url="/redoc",
+        openapi_url="/openapi.json",
+        openapi_tags=[
+            {"name": "health", "description": "Health check endpoints"},
+            {"name": "drugs", "description": "Drug database queries"},
+            {"name": "prediction", "description": "Resistance prediction endpoints"},
+            {"name": "clinical", "description": "Clinical decision support"},
+            {"name": "diseases", "description": "Multi-disease support"},
+        ],
     )
+
+    # Rate limiting middleware
+    app.add_middleware(RateLimitMiddleware)
 
     # CORS middleware
     app.add_middleware(
@@ -253,13 +379,33 @@ if FASTAPI_AVAILABLE:
         allow_headers=["*"],
     )
 
-    @app.get("/health", response_model=HealthResponse)
+    @app.get("/", include_in_schema=False)
+    async def root():
+        """Root endpoint - redirect to docs."""
+        return {
+            "message": "Drug Resistance Prediction API",
+            "version": API_VERSION_FULL,
+            "docs": "/docs",
+            "openapi": "/openapi.json",
+        }
+
+    @app.get(f"/api/{API_VERSION}/version")
+    async def get_version():
+        """Get API version information."""
+        return {
+            "api_version": API_VERSION,
+            "version_full": API_VERSION_FULL,
+            "release_date": "2025-01-01",
+            "supported_diseases": list(DISEASE_DATABASE.keys()) if "DISEASE_DATABASE" in dir() else ["hiv"],
+        }
+
+    @app.get("/health", response_model=HealthResponse, tags=["health"])
     async def health_check():
         """Health check endpoint."""
         return HealthResponse(
             status="healthy",
             model_loaded=model.loaded,
-            version="1.0.0",
+            version=API_VERSION_FULL,
         )
 
     @app.get("/drugs", response_model=List[DrugInfo])

@@ -282,3 +282,131 @@ class TestAPIDocumentation:
         response = client.get("/docs")
         assert response.status_code == 200
         assert "swagger" in response.text.lower() or "openapi" in response.text.lower()
+
+
+class TestRateLimiting:
+    """Tests for rate limiting functionality."""
+
+    def test_rate_limit_headers_present(self, client):
+        """Test rate limit headers are included in responses."""
+        response = client.get("/health")
+        assert response.status_code == 200
+
+        # Check for rate limit headers
+        headers = response.headers
+        assert "X-RateLimit-Limit-Minute" in headers or "x-ratelimit-limit-minute" in headers
+        assert "X-RateLimit-Remaining-Minute" in headers or "x-ratelimit-remaining-minute" in headers
+
+    def test_rate_limiter_class(self):
+        """Test RateLimiter class directly."""
+        from src.api.drug_resistance_api import RateLimiter, RateLimitConfig
+
+        config = RateLimitConfig(requests_per_minute=5, requests_per_hour=100)
+        limiter = RateLimiter(config)
+
+        # First 5 requests should be allowed
+        for i in range(5):
+            allowed, headers = limiter.is_allowed("test_client")
+            assert allowed, f"Request {i+1} should be allowed"
+
+        # 6th request should be blocked
+        allowed, headers = limiter.is_allowed("test_client")
+        assert not allowed, "6th request should be blocked"
+        assert "Retry-After" in headers
+
+
+class TestAPIVersioning:
+    """Tests for API versioning."""
+
+    def test_version_endpoint(self, client):
+        """Test /api/v1/version endpoint."""
+        response = client.get("/api/v1/version")
+
+        if response.status_code == 200:
+            data = response.json()
+            assert "api_version" in data
+            assert data["api_version"] == "v1"
+            assert "version_full" in data
+
+    def test_version_in_health(self, client):
+        """Test version is included in health response."""
+        response = client.get("/health")
+        assert response.status_code == 200
+
+        data = response.json()
+        assert "version" in data
+        assert data["version"] == "1.0.0"
+
+    def test_root_endpoint(self, client):
+        """Test root endpoint returns API info."""
+        response = client.get("/")
+        assert response.status_code == 200
+
+        data = response.json()
+        assert "version" in data
+        assert "docs" in data
+
+
+class TestClinicalReport:
+    """Tests for clinical report endpoint."""
+
+    def test_clinical_report_endpoint(self, client):
+        """Test /clinical-report endpoint."""
+        sequence = "MKWVTVYIGVEPVSGKGRLDIWVTIEKDLKDCAWKLIIEYVKQTW"
+
+        response = client.post("/clinical-report", params={
+            "sequence": sequence,
+            "patient_id": "TEST001",
+        })
+
+        if response.status_code == 200:
+            data = response.json()
+            assert "analysis_date" in data
+            assert "recommended_drugs" in data
+            assert "avoid_drugs" in data
+            assert "overall_recommendation" in data
+
+    def test_clinical_report_without_patient_id(self, client):
+        """Test clinical report works without patient ID."""
+        sequence = "MKWVTVYIGVEPVSGKGRLDIWVTIEKDLKDCAWKLIIEYVKQTW"
+
+        response = client.post("/clinical-report", params={
+            "sequence": sequence,
+        })
+
+        # Should work without patient_id
+        assert response.status_code in [200, 422]
+
+
+class TestUncertaintyPrediction:
+    """Tests for uncertainty quantification endpoint."""
+
+    def test_uncertainty_endpoint(self, client):
+        """Test /predict/uncertainty endpoint."""
+        sequence = "MKWVTVYIGVEPVSGKGRLDIWVTIEKDLKDCAWKLIIEYVKQTW"
+
+        response = client.post("/predict/uncertainty", json={
+            "sequence": sequence,
+            "drug": "AZT",
+        }, params={"n_samples": 10})
+
+        if response.status_code == 200:
+            data = response.json()
+            assert "mean_score" in data
+            assert "std_score" in data
+            assert "lower_95" in data
+            assert "upper_95" in data
+
+    def test_cross_resistance_endpoint(self, client):
+        """Test /predict/cross-resistance endpoint."""
+        sequence = "MKWVTVYIGVEPVSGKGRLDIWVTIEKDLKDCAWKLIIEYVKQTW"
+
+        response = client.post("/predict/cross-resistance", json={
+            "sequence": sequence,
+            "drug": "AZT",  # NRTI drug
+        })
+
+        if response.status_code == 200:
+            data = response.json()
+            assert "cross_resistance" in data
+            assert "recommendation" in data

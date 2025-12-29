@@ -116,6 +116,24 @@ from .tam_aware_encoder import (
     detect_tam_patterns,
     extract_tam_features,
 )
+from .padic_amino_acid_encoder import (
+    AA_TO_GROUP,
+    AA_TO_INDEX,
+    AminoAcidGroup,
+    FiveAdicAminoAcidEncoder,
+    MultiPrimeAminoAcidEncoder,
+    MutationType,
+    MutationTypeEmbedding,
+    SevenAdicSecondaryStructureEncoder,
+    compute_5adic_distance,
+    compute_5adic_distance_matrix,
+)
+from .alphafold_encoder import (
+    AlphaFoldEncoder,
+    AlphaFoldStructureLoader,
+    AlphaFoldStructure,
+    AlphaFoldFeatureExtractor,
+)
 
 __all__ = [
     # Codon encoding
@@ -185,4 +203,20 @@ __all__ = [
     "NRTIFeatureExtractor",
     "detect_tam_patterns",
     "extract_tam_features",
+    # P-adic amino acid encoding
+    "FiveAdicAminoAcidEncoder",
+    "SevenAdicSecondaryStructureEncoder",
+    "MultiPrimeAminoAcidEncoder",
+    "MutationTypeEmbedding",
+    "AminoAcidGroup",
+    "MutationType",
+    "AA_TO_GROUP",
+    "AA_TO_INDEX",
+    "compute_5adic_distance",
+    "compute_5adic_distance_matrix",
+    # AlphaFold structure encoder
+    "AlphaFoldEncoder",
+    "AlphaFoldStructureLoader",
+    "AlphaFoldStructure",
+    "AlphaFoldFeatureExtractor",
 ]

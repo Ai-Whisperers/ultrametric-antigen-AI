@@ -15,12 +15,37 @@ Key components:
 - EnsemblePredictor: Ensemble disagreement
 - DeepEnsemble: Heteroscedastic ensemble with aleatoric uncertainty
 - CalibratedWrapper: Wrapper with isotonic calibration
+- TemperatureScaling: Post-hoc calibration
+- ConformalPredictionWrapper: Distribution-free prediction sets
 """
 
 from src.models.uncertainty.bayesian import (
     BayesianPredictor,
     BayesianResistancePredictor,
     MCDropoutWrapper,
+)
+from src.models.uncertainty.calibration import (
+    CalibrationMetrics,
+    CalibratedModel,
+    FocalLossCalibration,
+    IsotonicCalibration,
+    LabelSmoothingLoss,
+    PlattScaling,
+    TemperatureScaling,
+    VectorScaling,
+    auto_calibrate,
+    compute_calibration_metrics,
+)
+from src.models.uncertainty.conformal import (
+    AdaptiveConformalClassifier,
+    ConformalPredictionWrapper,
+    ConformalRegressor,
+    ConformizedQuantileRegressor,
+    PredictionSet,
+    RAPSConformalClassifier,
+    RegressionInterval,
+    SplitConformalClassifier,
+    evaluate_conformal_coverage,
 )
 from src.models.uncertainty.evidential import (
     EvidentialEnsemble,
@@ -59,4 +84,25 @@ __all__ = [
     "DeepEnsemble",
     "SnapshotEnsemble",
     "BatchEnsemble",
+    # Calibration methods
+    "TemperatureScaling",
+    "VectorScaling",
+    "PlattScaling",
+    "IsotonicCalibration",
+    "FocalLossCalibration",
+    "LabelSmoothingLoss",
+    "CalibratedModel",
+    "CalibrationMetrics",
+    "auto_calibrate",
+    "compute_calibration_metrics",
+    # Conformal prediction
+    "SplitConformalClassifier",
+    "AdaptiveConformalClassifier",
+    "RAPSConformalClassifier",
+    "ConformalRegressor",
+    "ConformizedQuantileRegressor",
+    "ConformalPredictionWrapper",
+    "PredictionSet",
+    "RegressionInterval",
+    "evaluate_conformal_coverage",
 ]

@@ -137,6 +137,55 @@ from src.diseases.hiv_analyzer import (
     HIVDrugClass,
     create_hiv_synthetic_dataset,
 )
+from src.diseases.dengue_analyzer import (
+    DengueAnalyzer,
+    DengueConfig,
+    DengueSerotype,
+    DengueGene,
+    DengueDrug,
+)
+from src.diseases.zika_analyzer import (
+    ZikaAnalyzer,
+    ZikaConfig,
+    ZikaLineage,
+    ZikaGene,
+    ZikaDrug,
+)
+from src.diseases.cdiff_analyzer import (
+    CDiffAnalyzer,
+    CDiffConfig,
+    CDiffRibotype,
+    CDiffGene,
+    CDiffDrug,
+)
+from src.diseases.gonorrhoeae_analyzer import (
+    GonorrhoeaeAnalyzer,
+    GonorrhoeaeConfig,
+    GCSequenceType,
+    GCGene,
+    GCDrug,
+)
+from src.diseases.vre_analyzer import (
+    VREAnalyzer,
+    VREConfig,
+    EnterococcusSpecies,
+    VREGene,
+    VREDrug,
+)
+from src.diseases.acinetobacter_analyzer import (
+    AcinetobacterAnalyzer,
+    AcinetobacterConfig,
+    ABClonalComplex,
+    ABGene,
+    ABDrug,
+)
+from src.diseases.uncertainty_aware_analyzer import (
+    UncertaintyAwareAnalyzer,
+    UncertaintyConfig,
+    UncertaintyMethod,
+    UncertaintyResult,
+    create_uncertainty_analyzer,
+)
 
 __all__ = [
     "DiseaseRegistry",
@@ -237,4 +286,46 @@ __all__ = [
     "HIVDrug",
     "HIVDrugClass",
     "create_hiv_synthetic_dataset",
+    # Dengue Fever specific
+    "DengueAnalyzer",
+    "DengueConfig",
+    "DengueSerotype",
+    "DengueGene",
+    "DengueDrug",
+    # Zika Fever specific
+    "ZikaAnalyzer",
+    "ZikaConfig",
+    "ZikaLineage",
+    "ZikaGene",
+    "ZikaDrug",
+    # Clostridioides difficile specific
+    "CDiffAnalyzer",
+    "CDiffConfig",
+    "CDiffRibotype",
+    "CDiffGene",
+    "CDiffDrug",
+    # Neisseria gonorrhoeae specific
+    "GonorrhoeaeAnalyzer",
+    "GonorrhoeaeConfig",
+    "GCSequenceType",
+    "GCGene",
+    "GCDrug",
+    # Vancomycin-Resistant Enterococcus specific
+    "VREAnalyzer",
+    "VREConfig",
+    "EnterococcusSpecies",
+    "VREGene",
+    "VREDrug",
+    # Acinetobacter baumannii specific
+    "AcinetobacterAnalyzer",
+    "AcinetobacterConfig",
+    "ABClonalComplex",
+    "ABGene",
+    "ABDrug",
+    # Uncertainty-aware analysis
+    "UncertaintyAwareAnalyzer",
+    "UncertaintyConfig",
+    "UncertaintyMethod",
+    "UncertaintyResult",
+    "create_uncertainty_analyzer",
 ]

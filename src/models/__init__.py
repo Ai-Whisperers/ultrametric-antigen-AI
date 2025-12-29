@@ -33,6 +33,22 @@ PheromoneField = None
 
 from .ternary_vae import (FrozenDecoder, FrozenEncoder, TernaryVAEV5_11,
                           TernaryVAEV5_11_OptionC, TernaryVAEV5_11_PartialFreeze)
+from .base_vae import BaseVAE, HyperbolicBaseVAE, ConditionalBaseVAE, VAEConfig, VAEOutput
+from .hierarchical_vae import HierarchicalVAE, HierarchicalVAEConfig
+from .epistasis_module import (
+    EpistasisModule,
+    EpistasisResult,
+    EpistasisPredictor,
+    PairwiseInteractionModule,
+    HigherOrderInteractionModule,
+)
+from .structure_aware_vae import (
+    StructureAwareVAE,
+    StructureConfig,
+    SE3Encoder,
+    StructureSequenceFusion,
+    InvariantPointAttention,
+)
 
 # Canonical exports (V5.11 architecture)
 TernaryVAE = TernaryVAEV5_11
@@ -82,6 +98,15 @@ __all__ = [
     "TernaryVAEV5_11_OptionC",  # Deprecated alias
     "FrozenEncoder",
     "FrozenDecoder",
+    # Base VAE abstraction
+    "BaseVAE",
+    "HyperbolicBaseVAE",
+    "ConditionalBaseVAE",
+    "VAEConfig",
+    "VAEOutput",
+    # Hierarchical VAE
+    "HierarchicalVAE",
+    "HierarchicalVAEConfig",
     # Projections
     "HyperbolicProjection",
     "DualHyperbolicProjection",
@@ -99,6 +124,18 @@ __all__ = [
     "AgentConfig",
     "AgentRole",
     "PheromoneField",
+    # Epistasis module
+    "EpistasisModule",
+    "EpistasisResult",
+    "EpistasisPredictor",
+    "PairwiseInteractionModule",
+    "HigherOrderInteractionModule",
+    # Structure-aware VAE
+    "StructureAwareVAE",
+    "StructureConfig",
+    "SE3Encoder",
+    "StructureSequenceFusion",
+    "InvariantPointAttention",
     # V6.0 modules (accessible via submodule imports)
     # from src.models.plm import ESM2Encoder
     # from src.models.uncertainty import BayesianPredictor

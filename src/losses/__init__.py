@@ -127,6 +127,15 @@ from .codon_usage import (
     Organism,
 )
 
+# Epistasis losses
+from .epistasis_loss import (
+    EpistasisLoss,
+    EpistasisLossResult,
+    LearnedEpistasisLoss,
+    DrugInteractionLoss,
+    MarginRankingLoss,
+)
+
 # Appetitive losses archived (unused in active training)
 # See src/losses/archive/appetitive_losses.py for legacy code
 
@@ -221,4 +230,10 @@ __all__ = [
     "CodonUsageConfig",
     "CodonOptimalityScore",
     "Organism",
+    # Epistasis losses
+    "EpistasisLoss",
+    "EpistasisLossResult",
+    "LearnedEpistasisLoss",
+    "DrugInteractionLoss",
+    "MarginRankingLoss",
 ]
