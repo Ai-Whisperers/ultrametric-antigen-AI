@@ -75,10 +75,12 @@ conductor/
 
 
 
-# Logs
+# Logs and TensorBoard
 *.log
 logs/
 wandb/
+runs/
+**/events.out.tfevents.*
 
 # OS
 .DS_Store
@@ -87,6 +89,7 @@ Thumbs.db
 # Project specific
 /data/          # Ignore data/ at root level only (not src/data/)
 local/
+deliverables/**/data/
 
 # Generated metrics (can be regenerated, but keep curated analysis results)
 **/metrics/
