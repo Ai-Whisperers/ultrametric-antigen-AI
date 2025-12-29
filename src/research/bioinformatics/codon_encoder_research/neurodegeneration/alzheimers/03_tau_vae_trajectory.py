@@ -23,6 +23,17 @@ from typing import Dict, List
 import matplotlib.pyplot as plt
 import numpy as np
 
+
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """Compute hyperbolic distance from origin for a Poincare ball embedding.
+
+    V5.12.2: Use proper hyperbolic distance formula instead of Euclidean norm.
+    """
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
 # Add paths
 # Path: .../codon_encoder_research/neurodegeneration/alzheimers/this_script.py
 # parent = alzheimers, parent.parent = neurodegeneration, parent.parent.parent = codon_encoder_research
@@ -134,7 +145,7 @@ def compute_trajectory_step(sequence: str, positions_so_far: List[int], new_posi
     dist_from_healthy = float(poincare_distance(cent_healthy, cent_after))
 
     # Radius in Poincare ball
-    radius = float(np.linalg.norm(cent_after))
+    radius = hyperbolic_radius(cent_after)  # V5.12.2: Use hyperbolic distance
 
     return {
         "n_phospho": len(positions_after),
@@ -171,7 +182,7 @@ def compute_full_trajectory(
             "new_site": None,
             "step_distance": 0.0,
             "cumulative_distance": 0.0,
-            "radius": float(np.linalg.norm(cent_healthy)),
+            "radius": hyperbolic_radius(cent_healthy),  # V5.12.2: Use hyperbolic distance
             "centroid": cent_healthy.tolist(),
         }
     )

@@ -28,6 +28,27 @@ import numpy as np
 import pandas as pd
 
 
+def poincare_distance_np(x: np.ndarray, y: np.ndarray, c: float = 1.0) -> float:
+    """Compute hyperbolic distance between two Poincare ball embeddings.
+
+    V5.12.2: Proper hyperbolic distance formula instead of Euclidean norm.
+
+    Uses: d(x,y) = arccosh(1 + 2 * ||x-y||² / ((1-||x||²)(1-||y||²)))
+    """
+    x_norm_sq = np.sum(x ** 2)
+    y_norm_sq = np.sum(y ** 2)
+    diff_norm_sq = np.sum((x - y) ** 2)
+
+    # Clamp norms to stay inside the ball
+    x_norm_sq = np.clip(x_norm_sq, 0, 0.999)
+    y_norm_sq = np.clip(y_norm_sq, 0, 0.999)
+
+    denom = (1 - c * x_norm_sq) * (1 - c * y_norm_sq)
+    arg = 1 + 2 * c * diff_norm_sq / (denom + 1e-10)
+
+    return float(np.arccosh(np.clip(arg, 1.0, 1e10)))
+
+
 @dataclass
 class MutationNode:
     """Represents a resistance state (set of mutations)."""
@@ -546,7 +567,8 @@ def integrate_hyperbolic_distances(
             try:
                 source_emb = hyperbolic_encoder(source_seq)
                 target_emb = hyperbolic_encoder(target_seq)
-                distance = np.linalg.norm(target_emb - source_emb)
+                # V5.12.2: Use proper hyperbolic distance
+                distance = poincare_distance_np(target_emb, source_emb)
                 edge.hyperbolic_distance = distance
             except Exception:
                 edge.hyperbolic_distance = 0.0
