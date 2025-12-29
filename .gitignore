@@ -149,3 +149,10 @@ UNDERSTANDING/
 
 # Legacy/archive code
 src/ARCHIVE/
+
+# Empty duplicate directories (from reorganization)
+scripts/benchmark/
+scripts/eval/
+scripts/validation/
+src/observability/
+src/metrics/
