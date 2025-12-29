@@ -297,8 +297,7 @@ def train_epoch_v512(
         out = model(x_batch, compute_control=False)
         z_A = out['z_A_hyp']
         z_B = out['z_B_hyp']
-        mu_A = out['mu_A']
-        logits = model.decoder_A(mu_A)
+        logits = out['logits_A']  # Already computed in forward pass
 
         # === PRIMARY: RichHierarchyLoss (preserves richness) ===
         rich_losses = rich_hierarchy_loss(z_B, idx_batch, logits, x_batch, orig_radii_batch)
