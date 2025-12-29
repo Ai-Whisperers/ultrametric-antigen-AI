@@ -24,6 +24,15 @@ from pathlib import Path
 import numpy as np
 import torch
 
+
+def hyperbolic_radii(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
+    """V5.12.2: Compute hyperbolic distance from origin for Poincare ball embeddings."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = np.linalg.norm(embeddings, axis=1)
+    clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 # Add project root to path
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(PROJECT_ROOT))
@@ -209,7 +218,7 @@ def run_test():
         return v
 
     valuations = np.array([v3(i) for i in range(len(embeddings))])
-    radii = np.linalg.norm(embeddings, axis=1)
+    radii = hyperbolic_radii(embeddings)  # V5.12.2: use hyperbolic distance
 
     print(f"Loaded {len(embeddings)} embeddings")
     print(f"Radius range: [{radii.min():.4f}, {radii.max():.4f}]")

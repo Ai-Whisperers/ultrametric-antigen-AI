@@ -25,6 +25,14 @@ import torch
 import torch.nn as nn
 
 
+def hyperbolic_radii(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
+    """V5.12.2: Compute hyperbolic distance from origin for Poincare ball embeddings."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = np.linalg.norm(embeddings, axis=1)
+    clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 def generate_all_ternary_operations() -> np.ndarray:
     """Generate all 19,683 possible ternary operations."""
     operations = []
@@ -347,11 +355,11 @@ def analyze_embedding_space(embeddings: torch.Tensor, valuations: np.ndarray, na
     """Perform comprehensive analysis of embedding space."""
     emb_np = embeddings.cpu().numpy()
 
-    # Basic statistics
-    norms = np.linalg.norm(emb_np, axis=1)
+    # Basic statistics (V5.12.2: use hyperbolic radii, not Euclidean norms)
+    norms = np.linalg.norm(emb_np, axis=1)  # Keep for reference
 
     # Radial analysis (for hyperbolic embeddings)
-    radii = norms  # In Poincare ball, norm = radius
+    radii = hyperbolic_radii(emb_np)  # V5.12.2: proper hyperbolic distance from origin
 
     # Correlation with p-adic valuations
     valuation_radial_corr = np.corrcoef(valuations, radii)[0, 1]
@@ -443,16 +451,16 @@ def analyze_embedding_space(embeddings: torch.Tensor, valuations: np.ndarray, na
 def compute_hyperbolic_metrics(embeddings: torch.Tensor, curvature: float = 1.0) -> Dict[str, float]:
     """Compute hyperbolic geometry specific metrics."""
     emb = embeddings.cpu().numpy()
-    radii = np.linalg.norm(emb, axis=1)
+    euclidean_norms = np.linalg.norm(emb, axis=1)
 
-    # Hyperbolic distance from origin
-    # d_H(0, x) = 2 * arctanh(|x|) for curvature -1
-    hyp_dists = 2 * np.arctanh(np.clip(radii, 0, 0.9999))
+    # Hyperbolic distance from origin (V5.12.2: use proper formula)
+    # d_H(0, x) = 2 * arctanh(sqrt(c) * |x|) / sqrt(c)
+    hyp_dists = hyperbolic_radii(emb, c=curvature)
 
     # Effective curvature estimation
     # Points near boundary have higher effective curvature
-    boundary_points = radii > 0.9
-    core_points = radii < 0.3
+    boundary_points = euclidean_norms > 0.9  # Boundary in Poincare ball
+    core_points = euclidean_norms < 0.3  # Core region
 
     return {
         "mean_hyperbolic_distance": float(np.mean(hyp_dists)),
