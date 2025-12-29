@@ -1,0 +1,232 @@
+{
+  "metadata": {
+    "encoder_version": "3-adic (V5.11.3)",
+    "n_samples": 57,
+    "n_immunodominant": 31,
+    "n_silent": 26,
+    "n_features": 12,
+    "feature_names": [
+      "embedding_norm",
+      "embedding_norm_std",
+      "cluster_homogeneity",
+      "mean_neighbor_distance",
+      "boundary_potential",
+      "sequence_length",
+      "n_arginines",
+      "centroid_shift",
+      "js_divergence",
+      "entropy_change",
+      "r_density",
+      "entropy_per_r"
+    ],
+    "n_proteins": 11
+  },
+  "cv_results": {
+    "lopo_logistic_regression": {
+      "accuracy": 0.7192982456140351,
+      "precision": 0.7272727272727273,
+      "recall": 0.7741935483870968,
+      "f1": 0.75,
+      "mcc": 0.43180630897755246,
+      "auc": 0.8734491315136477,
+      "brier": 0.14029467120957578
+    },
+    "lopo_random_forest": {
+      "accuracy": 0.7543859649122807,
+      "precision": 0.7575757575757576,
+      "recall": 0.8064516129032258,
+      "f1": 0.78125,
+      "mcc": 0.5031482208955829,
+      "auc": 0.8635235732009925,
+      "brier": 0.13754150627758224
+    },
+    "lopo_gradient_boosting": {
+      "accuracy": 0.7368421052631579,
+      "precision": 0.75,
+      "recall": 0.7741935483870968,
+      "f1": 0.7619047619047619,
+      "mcc": 0.4682473525035148,
+      "auc": 0.8188585607940446,
+      "brier": 0.18537641789061204
+    },
+    "skf_logistic_regression": {
+      "accuracy": 0.7017543859649122,
+      "precision": 0.7058823529411765,
+      "recall": 0.7741935483870968,
+      "f1": 0.7384615384615385,
+      "mcc": 0.3955111675576434,
+      "auc": 0.8746898263027296,
+      "brier": 0.13886586865893233
+    },
+    "skf_random_forest": {
+      "accuracy": 0.8070175438596491,
+      "precision": 0.7941176470588235,
+      "recall": 0.8709677419354839,
+      "f1": 0.8307692307692308,
+      "mcc": 0.6109010072148313,
+      "auc": 0.8821339950372208,
+      "brier": 0.13146506064462699
+    },
+    "skf_gradient_boosting": {
+      "accuracy": 0.7192982456140351,
+      "precision": 0.7142857142857143,
+      "recall": 0.8064516129032258,
+      "f1": 0.7575757575757576,
+      "mcc": 0.4315846933750896,
+      "auc": 0.8138957816377171,
+      "brier": 0.20440419724594205
+    }
+  },
+  "feature_importance": {
+    "logistic_regression": [
+      {
+        "feature": "n_arginines",
+        "importance": 1.0276149832581245
+      },
+      {
+        "feature": "r_density",
+        "importance": 0.8511585980873977
+      },
+      {
+        "feature": "centroid_shift",
+        "importance": 0.784356182610062
+      },
+      {
+        "feature": "embedding_norm_std",
+        "importance": 0.726209756330962
+      },
+      {
+        "feature": "sequence_length",
+        "importance": 0.5407167184547713
+      },
+      {
+        "feature": "boundary_potential",
+        "importance": 0.5089148516561611
+      },
+      {
+        "feature": "mean_neighbor_distance",
+        "importance": 0.33050096153850556
+      },
+      {
+        "feature": "embedding_norm",
+        "importance": 0.2140810108903847
+      },
+      {
+        "feature": "entropy_change",
+        "importance": 0.2061010552414258
+      },
+      {
+        "feature": "entropy_per_r",
+        "importance": 0.18323098599209547
+      },
+      {
+        "feature": "cluster_homogeneity",
+        "importance": 0.039875997253178586
+      },
+      {
+        "feature": "js_divergence",
+        "importance": 0.025324002827792458
+      }
+    ],
+    "random_forest": [
+      {
+        "feature": "centroid_shift",
+        "importance": 0.17554136688085498
+      },
+      {
+        "feature": "js_divergence",
+        "importance": 0.17214656608991702
+      },
+      {
+        "feature": "r_density",
+        "importance": 0.14271098953740863
+      },
+      {
+        "feature": "n_arginines",
+        "importance": 0.1322684926265576
+      },
+      {
+        "feature": "entropy_per_r",
+        "importance": 0.09174978475972864
+      },
+      {
+        "feature": "entropy_change",
+        "importance": 0.08667698263576945
+      },
+      {
+        "feature": "embedding_norm_std",
+        "importance": 0.06305191471178127
+      },
+      {
+        "feature": "boundary_potential",
+        "importance": 0.04574935111497077
+      },
+      {
+        "feature": "mean_neighbor_distance",
+        "importance": 0.0326307740843287
+      },
+      {
+        "feature": "embedding_norm",
+        "importance": 0.03232298903258273
+      },
+      {
+        "feature": "cluster_homogeneity",
+        "importance": 0.019865970278890185
+      },
+      {
+        "feature": "sequence_length",
+        "importance": 0.005284818247210281
+      }
+    ],
+    "gradient_boosting": [
+      {
+        "feature": "centroid_shift",
+        "importance": 0.3208721334804011
+      },
+      {
+        "feature": "js_divergence",
+        "importance": 0.24147550449745417
+      },
+      {
+        "feature": "embedding_norm_std",
+        "importance": 0.12848493256013577
+      },
+      {
+        "feature": "entropy_change",
+        "importance": 0.07177175463486792
+      },
+      {
+        "feature": "entropy_per_r",
+        "importance": 0.06032182741731567
+      },
+      {
+        "feature": "boundary_potential",
+        "importance": 0.06000261716235262
+      },
+      {
+        "feature": "r_density",
+        "importance": 0.03805832367245853
+      },
+      {
+        "feature": "cluster_homogeneity",
+        "importance": 0.036288529335724774
+      },
+      {
+        "feature": "mean_neighbor_distance",
+        "importance": 0.02222686000006078
+      },
+      {
+        "feature": "n_arginines",
+        "importance": 0.01479556203593388
+      },
+      {
+        "feature": "embedding_norm",
+        "importance": 0.005687044629891039
+      },
+      {
+        "feature": "sequence_length",
+        "importance": 1.4910573403774587e-05
+      }
+    ]
+  }
+}

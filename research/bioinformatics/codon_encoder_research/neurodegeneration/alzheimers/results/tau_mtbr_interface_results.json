@@ -1,0 +1,2063 @@
+{
+  "metadata": {
+    "analysis": "Tau-Microtubule Interface Handshake",
+    "encoder": "3-adic (V5.11.3)",
+    "tau_isoform": "2N4R (441 aa)",
+    "tubulin_source": "Human TUBA1A / TUBB H11-H12 regions"
+  },
+  "handshakes": {
+    "alpha": [
+      {
+        "tau_pos": 259,
+        "tau_aa": "K",
+        "tau_context": "DLKNVKSKIGSTENL",
+        "tau_domain": "R1",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 418,
+        "tubulin_aa": "R",
+        "tubulin_context": "LGVATASYEEKAYHE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.3134375214576721,
+        "is_known_pair": true
+      },
+      {
+        "tau_pos": 260,
+        "tau_aa": "I",
+        "tau_context": "LKNVKSKIGSTENLK",
+        "tau_domain": "R1",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 418,
+        "tubulin_aa": "R",
+        "tubulin_context": "LGVATASYEEKAYHE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.3273449242115021,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 318,
+        "tau_aa": "V",
+        "tau_context": "KPVDLSKVTSKCGSL",
+        "tau_domain": "R3",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 418,
+        "tubulin_aa": "R",
+        "tubulin_context": "LGVATASYEEKAYHE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.3948492705821991,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 321,
+        "tau_aa": "K",
+        "tau_context": "DLSKVTSKCGSLGNI",
+        "tau_domain": "R3",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 418,
+        "tubulin_aa": "R",
+        "tubulin_context": "LGVATASYEEKAYHE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.4100484251976013,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 318,
+        "tau_aa": "V",
+        "tau_context": "KPVDLSKVTSKCGSL",
+        "tau_domain": "R3",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 415,
+        "tubulin_aa": "Y",
+        "tubulin_context": "EAFLGVATASYEEKA",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "aromatic",
+        "distance": 0.4125116467475891,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 318,
+        "tau_aa": "V",
+        "tau_context": "KPVDLSKVTSKCGSL",
+        "tau_domain": "R3",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 411,
+        "tubulin_aa": "E",
+        "tubulin_context": "EVEAFLGVATASY",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.41402164101600647,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 321,
+        "tau_aa": "K",
+        "tau_context": "DLSKVTSKCGSLGNI",
+        "tau_domain": "R3",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 411,
+        "tubulin_aa": "E",
+        "tubulin_context": "EVEAFLGVATASY",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.41859373450279236,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 259,
+        "tau_aa": "K",
+        "tau_context": "DLKNVKSKIGSTENL",
+        "tau_domain": "R1",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 447,
+        "tubulin_aa": "E",
+        "tubulin_context": "ANQMVKCDPRHGK",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.429727166891098,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 259,
+        "tau_aa": "K",
+        "tau_context": "DLKNVKSKIGSTENL",
+        "tau_domain": "R1",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 445,
+        "tubulin_aa": "E",
+        "tubulin_context": "EPANQMVKCDPRHGK",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.43231257796287537,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 260,
+        "tau_aa": "I",
+        "tau_context": "LKNVKSKIGSTENLK",
+        "tau_domain": "R1",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 445,
+        "tubulin_aa": "E",
+        "tubulin_context": "EPANQMVKCDPRHGK",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.4325934648513794,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 260,
+        "tau_aa": "I",
+        "tau_context": "LKNVKSKIGSTENLK",
+        "tau_domain": "R1",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 447,
+        "tubulin_aa": "E",
+        "tubulin_context": "ANQMVKCDPRHGK",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.43384185433387756,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 259,
+        "tau_aa": "K",
+        "tau_context": "DLKNVKSKIGSTENL",
+        "tau_domain": "R1",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 413,
+        "tubulin_aa": "E",
+        "tubulin_context": "EVEAFLGVATASYEE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.4368436932563782,
+        "is_known_pair": true
+      },
+      {
+        "tau_pos": 256,
+        "tau_aa": "V",
+        "tau_context": "PMPDLKNVKSKIGST",
+        "tau_domain": "R1",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 418,
+        "tubulin_aa": "R",
+        "tubulin_context": "LGVATASYEEKAYHE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.438063383102417,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 321,
+        "tau_aa": "K",
+        "tau_context": "DLSKVTSKCGSLGNI",
+        "tau_domain": "R3",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 415,
+        "tubulin_aa": "Y",
+        "tubulin_context": "EAFLGVATASYEEKA",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "aromatic",
+        "distance": 0.43882057070732117,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 260,
+        "tau_aa": "I",
+        "tau_context": "LKNVKSKIGSTENLK",
+        "tau_domain": "R1",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 415,
+        "tubulin_aa": "Y",
+        "tubulin_context": "EAFLGVATASYEEKA",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "aromatic",
+        "distance": 0.4444172978401184,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 256,
+        "tau_aa": "V",
+        "tau_context": "PMPDLKNVKSKIGST",
+        "tau_domain": "R1",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 447,
+        "tubulin_aa": "E",
+        "tubulin_context": "ANQMVKCDPRHGK",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.4471936821937561,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 256,
+        "tau_aa": "V",
+        "tau_context": "PMPDLKNVKSKIGST",
+        "tau_domain": "R1",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 445,
+        "tubulin_aa": "E",
+        "tubulin_context": "EPANQMVKCDPRHGK",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.44921165704727173,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 259,
+        "tau_aa": "K",
+        "tau_context": "DLKNVKSKIGSTENL",
+        "tau_domain": "R1",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 415,
+        "tubulin_aa": "Y",
+        "tubulin_context": "EAFLGVATASYEEKA",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "aromatic",
+        "distance": 0.45226171612739563,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 322,
+        "tau_aa": "C",
+        "tau_context": "LSKVTSKCGSLGNIH",
+        "tau_domain": "R3",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 418,
+        "tubulin_aa": "R",
+        "tubulin_context": "LGVATASYEEKAYHE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.47007933259010315,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 260,
+        "tau_aa": "I",
+        "tau_context": "LKNVKSKIGSTENLK",
+        "tau_domain": "R1",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 413,
+        "tubulin_aa": "E",
+        "tubulin_context": "EVEAFLGVATASYEE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.4718073904514313,
+        "is_known_pair": true
+      }
+    ],
+    "beta": [
+      {
+        "tau_pos": 352,
+        "tau_aa": "S",
+        "tau_context": "DFKDRVQSKIGSLDN",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 420,
+        "tubulin_aa": "Y",
+        "tubulin_context": "QEDELFQEMQTAQLV",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "aromatic",
+        "distance": 0.165493905544281,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 349,
+        "tau_aa": "R",
+        "tau_context": "EKLDFKDRVQSKIGS",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 420,
+        "tubulin_aa": "Y",
+        "tubulin_context": "QEDELFQEMQTAQLV",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "aromatic",
+        "distance": 0.20266936719417572,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 352,
+        "tau_aa": "S",
+        "tau_context": "DFKDRVQSKIGSLDN",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 416,
+        "tubulin_aa": "E",
+        "tubulin_context": "SFTEQEDELFQEMQT",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.2605593800544739,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 352,
+        "tau_aa": "S",
+        "tau_context": "DFKDRVQSKIGSLDN",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 411,
+        "tubulin_aa": "E",
+        "tubulin_context": "GVDSFTEQEDELF",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.2702721357345581,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 352,
+        "tau_aa": "S",
+        "tau_context": "DFKDRVQSKIGSLDN",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 413,
+        "tubulin_aa": "G",
+        "tubulin_context": "GVDSFTEQEDELFQE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "backbone",
+        "distance": 0.2754485607147217,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 349,
+        "tau_aa": "R",
+        "tau_context": "EKLDFKDRVQSKIGS",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 413,
+        "tubulin_aa": "G",
+        "tubulin_context": "GVDSFTEQEDELFQE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "backbone",
+        "distance": 0.2805275619029999,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 349,
+        "tau_aa": "R",
+        "tau_context": "EKLDFKDRVQSKIGS",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 411,
+        "tubulin_aa": "E",
+        "tubulin_context": "GVDSFTEQEDELF",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.2853074371814728,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 349,
+        "tau_aa": "R",
+        "tau_context": "EKLDFKDRVQSKIGS",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 416,
+        "tubulin_aa": "E",
+        "tubulin_context": "SFTEQEDELFQEMQT",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.2923823595046997,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 353,
+        "tau_aa": "K",
+        "tau_context": "FKDRVQSKIGSLDNI",
+        "tau_domain": "R4",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 420,
+        "tubulin_aa": "Y",
+        "tubulin_context": "QEDELFQEMQTAQLV",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "aromatic",
+        "distance": 0.29473379254341125,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 353,
+        "tau_aa": "K",
+        "tau_context": "FKDRVQSKIGSLDNI",
+        "tau_domain": "R4",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 416,
+        "tubulin_aa": "E",
+        "tubulin_context": "SFTEQEDELFQEMQT",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.3392229676246643,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 290,
+        "tau_aa": "K",
+        "tau_context": "DLSNVQSKCGSKDNI",
+        "tau_domain": "R2",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 420,
+        "tubulin_aa": "Y",
+        "tubulin_context": "QEDELFQEMQTAQLV",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "aromatic",
+        "distance": 0.35711100697517395,
+        "is_known_pair": true
+      },
+      {
+        "tau_pos": 290,
+        "tau_aa": "K",
+        "tau_context": "DLSNVQSKCGSKDNI",
+        "tau_domain": "R2",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 416,
+        "tubulin_aa": "E",
+        "tubulin_context": "SFTEQEDELFQEMQT",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.37843528389930725,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 349,
+        "tau_aa": "R",
+        "tau_context": "EKLDFKDRVQSKIGS",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 438,
+        "tubulin_aa": "E",
+        "tubulin_context": "EAALDEAYEEEEDAE",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.3978537321090698,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 349,
+        "tau_aa": "R",
+        "tau_context": "EKLDFKDRVQSKIGS",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 440,
+        "tubulin_aa": "F",
+        "tubulin_context": "ALDEAYEEEEDAE",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "beta",
+        "interaction_type": "hydrophobic",
+        "distance": 0.39883166551589966,
+        "is_known_pair": true
+      },
+      {
+        "tau_pos": 349,
+        "tau_aa": "R",
+        "tau_context": "EKLDFKDRVQSKIGS",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 436,
+        "tubulin_aa": "E",
+        "tubulin_context": "KEEAALDEAYEEEED",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.40458014607429504,
+        "is_known_pair": true
+      },
+      {
+        "tau_pos": 353,
+        "tau_aa": "K",
+        "tau_context": "FKDRVQSKIGSLDNI",
+        "tau_domain": "R4",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 411,
+        "tubulin_aa": "E",
+        "tubulin_context": "GVDSFTEQEDELF",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.4086475074291229,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 291,
+        "tau_aa": "C",
+        "tau_context": "LSNVQSKCGSKDNIK",
+        "tau_domain": "R2",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 420,
+        "tubulin_aa": "Y",
+        "tubulin_context": "QEDELFQEMQTAQLV",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "aromatic",
+        "distance": 0.41996100544929504,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 353,
+        "tau_aa": "K",
+        "tau_context": "FKDRVQSKIGSLDNI",
+        "tau_domain": "R4",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 413,
+        "tubulin_aa": "G",
+        "tubulin_context": "GVDSFTEQEDELFQE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "backbone",
+        "distance": 0.43012735247612,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 291,
+        "tau_aa": "C",
+        "tau_context": "LSNVQSKCGSKDNIK",
+        "tau_domain": "R2",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 416,
+        "tubulin_aa": "E",
+        "tubulin_context": "SFTEQEDELFQEMQT",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.4301735460758209,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 352,
+        "tau_aa": "S",
+        "tau_context": "DFKDRVQSKIGSLDN",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 440,
+        "tubulin_aa": "F",
+        "tubulin_context": "ALDEAYEEEEDAE",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "beta",
+        "interaction_type": "hydrophobic",
+        "distance": 0.43031761050224304,
+        "is_known_pair": false
+      }
+    ],
+    "top_convergent": [
+      {
+        "tau_pos": 352,
+        "tau_aa": "S",
+        "tau_context": "DFKDRVQSKIGSLDN",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 420,
+        "tubulin_aa": "Y",
+        "tubulin_context": "QEDELFQEMQTAQLV",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "aromatic",
+        "distance": 0.165493905544281,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 349,
+        "tau_aa": "R",
+        "tau_context": "EKLDFKDRVQSKIGS",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 420,
+        "tubulin_aa": "Y",
+        "tubulin_context": "QEDELFQEMQTAQLV",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "aromatic",
+        "distance": 0.20266936719417572,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 352,
+        "tau_aa": "S",
+        "tau_context": "DFKDRVQSKIGSLDN",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 416,
+        "tubulin_aa": "E",
+        "tubulin_context": "SFTEQEDELFQEMQT",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.2605593800544739,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 352,
+        "tau_aa": "S",
+        "tau_context": "DFKDRVQSKIGSLDN",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 411,
+        "tubulin_aa": "E",
+        "tubulin_context": "GVDSFTEQEDELF",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.2702721357345581,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 352,
+        "tau_aa": "S",
+        "tau_context": "DFKDRVQSKIGSLDN",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 413,
+        "tubulin_aa": "G",
+        "tubulin_context": "GVDSFTEQEDELFQE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "backbone",
+        "distance": 0.2754485607147217,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 349,
+        "tau_aa": "R",
+        "tau_context": "EKLDFKDRVQSKIGS",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 413,
+        "tubulin_aa": "G",
+        "tubulin_context": "GVDSFTEQEDELFQE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "backbone",
+        "distance": 0.2805275619029999,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 349,
+        "tau_aa": "R",
+        "tau_context": "EKLDFKDRVQSKIGS",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 411,
+        "tubulin_aa": "E",
+        "tubulin_context": "GVDSFTEQEDELF",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.2853074371814728,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 349,
+        "tau_aa": "R",
+        "tau_context": "EKLDFKDRVQSKIGS",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 416,
+        "tubulin_aa": "E",
+        "tubulin_context": "SFTEQEDELFQEMQT",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.2923823595046997,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 353,
+        "tau_aa": "K",
+        "tau_context": "FKDRVQSKIGSLDNI",
+        "tau_domain": "R4",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 420,
+        "tubulin_aa": "Y",
+        "tubulin_context": "QEDELFQEMQTAQLV",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "aromatic",
+        "distance": 0.29473379254341125,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 259,
+        "tau_aa": "K",
+        "tau_context": "DLKNVKSKIGSTENL",
+        "tau_domain": "R1",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 418,
+        "tubulin_aa": "R",
+        "tubulin_context": "LGVATASYEEKAYHE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.3134375214576721,
+        "is_known_pair": true
+      },
+      {
+        "tau_pos": 260,
+        "tau_aa": "I",
+        "tau_context": "LKNVKSKIGSTENLK",
+        "tau_domain": "R1",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 418,
+        "tubulin_aa": "R",
+        "tubulin_context": "LGVATASYEEKAYHE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.3273449242115021,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 353,
+        "tau_aa": "K",
+        "tau_context": "FKDRVQSKIGSLDNI",
+        "tau_domain": "R4",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 416,
+        "tubulin_aa": "E",
+        "tubulin_context": "SFTEQEDELFQEMQT",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.3392229676246643,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 290,
+        "tau_aa": "K",
+        "tau_context": "DLSNVQSKCGSKDNI",
+        "tau_domain": "R2",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 420,
+        "tubulin_aa": "Y",
+        "tubulin_context": "QEDELFQEMQTAQLV",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "aromatic",
+        "distance": 0.35711100697517395,
+        "is_known_pair": true
+      },
+      {
+        "tau_pos": 290,
+        "tau_aa": "K",
+        "tau_context": "DLSNVQSKCGSKDNI",
+        "tau_domain": "R2",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 416,
+        "tubulin_aa": "E",
+        "tubulin_context": "SFTEQEDELFQEMQT",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.37843528389930725,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 318,
+        "tau_aa": "V",
+        "tau_context": "KPVDLSKVTSKCGSL",
+        "tau_domain": "R3",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 418,
+        "tubulin_aa": "R",
+        "tubulin_context": "LGVATASYEEKAYHE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.3948492705821991,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 349,
+        "tau_aa": "R",
+        "tau_context": "EKLDFKDRVQSKIGS",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 438,
+        "tubulin_aa": "E",
+        "tubulin_context": "EAALDEAYEEEEDAE",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.3978537321090698,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 349,
+        "tau_aa": "R",
+        "tau_context": "EKLDFKDRVQSKIGS",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 440,
+        "tubulin_aa": "F",
+        "tubulin_context": "ALDEAYEEEEDAE",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "beta",
+        "interaction_type": "hydrophobic",
+        "distance": 0.39883166551589966,
+        "is_known_pair": true
+      },
+      {
+        "tau_pos": 349,
+        "tau_aa": "R",
+        "tau_context": "EKLDFKDRVQSKIGS",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 436,
+        "tubulin_aa": "E",
+        "tubulin_context": "KEEAALDEAYEEEED",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.40458014607429504,
+        "is_known_pair": true
+      },
+      {
+        "tau_pos": 353,
+        "tau_aa": "K",
+        "tau_context": "FKDRVQSKIGSLDNI",
+        "tau_domain": "R4",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 411,
+        "tubulin_aa": "E",
+        "tubulin_context": "GVDSFTEQEDELF",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.4086475074291229,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 321,
+        "tau_aa": "K",
+        "tau_context": "DLSKVTSKCGSLGNI",
+        "tau_domain": "R3",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 418,
+        "tubulin_aa": "R",
+        "tubulin_context": "LGVATASYEEKAYHE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.4100484251976013,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 318,
+        "tau_aa": "V",
+        "tau_context": "KPVDLSKVTSKCGSL",
+        "tau_domain": "R3",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 415,
+        "tubulin_aa": "Y",
+        "tubulin_context": "EAFLGVATASYEEKA",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "aromatic",
+        "distance": 0.4125116467475891,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 318,
+        "tau_aa": "V",
+        "tau_context": "KPVDLSKVTSKCGSL",
+        "tau_domain": "R3",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 411,
+        "tubulin_aa": "E",
+        "tubulin_context": "EVEAFLGVATASY",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.41402164101600647,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 321,
+        "tau_aa": "K",
+        "tau_context": "DLSKVTSKCGSLGNI",
+        "tau_domain": "R3",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 411,
+        "tubulin_aa": "E",
+        "tubulin_context": "EVEAFLGVATASY",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.41859373450279236,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 291,
+        "tau_aa": "C",
+        "tau_context": "LSNVQSKCGSKDNIK",
+        "tau_domain": "R2",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 420,
+        "tubulin_aa": "Y",
+        "tubulin_context": "QEDELFQEMQTAQLV",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "aromatic",
+        "distance": 0.41996100544929504,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 259,
+        "tau_aa": "K",
+        "tau_context": "DLKNVKSKIGSTENL",
+        "tau_domain": "R1",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 447,
+        "tubulin_aa": "E",
+        "tubulin_context": "ANQMVKCDPRHGK",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.429727166891098,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 353,
+        "tau_aa": "K",
+        "tau_context": "FKDRVQSKIGSLDNI",
+        "tau_domain": "R4",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 413,
+        "tubulin_aa": "G",
+        "tubulin_context": "GVDSFTEQEDELFQE",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "backbone",
+        "distance": 0.43012735247612,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 291,
+        "tau_aa": "C",
+        "tau_context": "LSNVQSKCGSKDNIK",
+        "tau_domain": "R2",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 416,
+        "tubulin_aa": "E",
+        "tubulin_context": "SFTEQEDELFQEMQT",
+        "tubulin_domain": "H11-H12",
+        "tubulin_type": "beta",
+        "interaction_type": "electrostatic",
+        "distance": 0.4301735460758209,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 352,
+        "tau_aa": "S",
+        "tau_context": "DFKDRVQSKIGSLDN",
+        "tau_domain": "R4",
+        "tau_near_kxgs": false,
+        "tubulin_pos": 440,
+        "tubulin_aa": "F",
+        "tubulin_context": "ALDEAYEEEEDAE",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "beta",
+        "interaction_type": "hydrophobic",
+        "distance": 0.43031761050224304,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 259,
+        "tau_aa": "K",
+        "tau_context": "DLKNVKSKIGSTENL",
+        "tau_domain": "R1",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 445,
+        "tubulin_aa": "E",
+        "tubulin_context": "EPANQMVKCDPRHGK",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.43231257796287537,
+        "is_known_pair": false
+      },
+      {
+        "tau_pos": 260,
+        "tau_aa": "I",
+        "tau_context": "LKNVKSKIGSTENLK",
+        "tau_domain": "R1",
+        "tau_near_kxgs": true,
+        "tubulin_pos": 445,
+        "tubulin_aa": "E",
+        "tubulin_context": "EPANQMVKCDPRHGK",
+        "tubulin_domain": "H12-tail",
+        "tubulin_type": "alpha",
+        "interaction_type": "electrostatic",
+        "distance": 0.4325934648513794,
+        "is_known_pair": false
+      }
+    ]
+  },
+  "phospho_disruption": {
+    "most_disruptive": [
+      {
+        "phospho_site": 258,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK",
+          "PKA"
+        ],
+        "tau_shift": 0.1739008128643036,
+        "original_distance": 0.3134375214576721,
+        "new_distance": 0.3722229301929474,
+        "distance_change": 0.05878540873527527,
+        "distance_change_pct": 18.75506431453641,
+        "is_kxgs": false,
+        "handshake_info": {
+          "tau_pos": 259,
+          "tubulin_pos": 418,
+          "tubulin_type": "alpha",
+          "original_distance": 0.3134375214576721
+        }
+      },
+      {
+        "phospho_site": 262,
+        "aa": "S",
+        "epitope": "12E8",
+        "stage": "mid",
+        "kinases": [
+          "MARK",
+          "PKA",
+          "BRSK"
+        ],
+        "tau_shift": 0.1739008128643036,
+        "original_distance": 0.3134375214576721,
+        "new_distance": 0.3722229301929474,
+        "distance_change": 0.05878540873527527,
+        "distance_change_pct": 18.75506431453641,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 259,
+          "tubulin_pos": 418,
+          "tubulin_type": "alpha",
+          "original_distance": 0.3134375214576721
+        }
+      },
+      {
+        "phospho_site": 258,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK",
+          "PKA"
+        ],
+        "tau_shift": 0.18660441040992737,
+        "original_distance": 0.3273449242115021,
+        "new_distance": 0.3503296673297882,
+        "distance_change": 0.022984743118286133,
+        "distance_change_pct": 7.021566982793774,
+        "is_kxgs": false,
+        "handshake_info": {
+          "tau_pos": 260,
+          "tubulin_pos": 418,
+          "tubulin_type": "alpha",
+          "original_distance": 0.3273449242115021
+        }
+      },
+      {
+        "phospho_site": 262,
+        "aa": "S",
+        "epitope": "12E8",
+        "stage": "mid",
+        "kinases": [
+          "MARK",
+          "PKA",
+          "BRSK"
+        ],
+        "tau_shift": 0.18660441040992737,
+        "original_distance": 0.3273449242115021,
+        "new_distance": 0.3503296673297882,
+        "distance_change": 0.022984743118286133,
+        "distance_change_pct": 7.021566982793774,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 260,
+          "tubulin_pos": 418,
+          "tubulin_type": "alpha",
+          "original_distance": 0.3273449242115021
+        }
+      },
+      {
+        "phospho_site": 352,
+        "aa": "S",
+        "epitope": null,
+        "stage": "unknown",
+        "kinases": [
+          "GSK3"
+        ],
+        "tau_shift": 0.15951447188854218,
+        "original_distance": 0.165493905544281,
+        "new_distance": 0.17161715030670166,
+        "distance_change": 0.006123244762420654,
+        "distance_change_pct": 3.699982027907526,
+        "is_kxgs": false,
+        "handshake_info": {
+          "tau_pos": 352,
+          "tubulin_pos": 420,
+          "tubulin_type": "beta",
+          "original_distance": 0.165493905544281
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.15951447188854218,
+        "original_distance": 0.165493905544281,
+        "new_distance": 0.17161715030670166,
+        "distance_change": 0.006123244762420654,
+        "distance_change_pct": 3.699982027907526,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 352,
+          "tubulin_pos": 420,
+          "tubulin_type": "beta",
+          "original_distance": 0.165493905544281
+        }
+      },
+      {
+        "phospho_site": 352,
+        "aa": "S",
+        "epitope": null,
+        "stage": "unknown",
+        "kinases": [
+          "GSK3"
+        ],
+        "tau_shift": 0.15951447188854218,
+        "original_distance": 0.2605593800544739,
+        "new_distance": 0.2651752233505249,
+        "distance_change": 0.004615843296051025,
+        "distance_change_pct": 1.7715130021747876,
+        "is_kxgs": false,
+        "handshake_info": {
+          "tau_pos": 352,
+          "tubulin_pos": 416,
+          "tubulin_type": "beta",
+          "original_distance": 0.2605593800544739
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.15951447188854218,
+        "original_distance": 0.2605593800544739,
+        "new_distance": 0.2651752233505249,
+        "distance_change": 0.004615843296051025,
+        "distance_change_pct": 1.7715130021747876,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 352,
+          "tubulin_pos": 416,
+          "tubulin_type": "beta",
+          "original_distance": 0.2605593800544739
+        }
+      },
+      {
+        "phospho_site": 263,
+        "aa": "T",
+        "epitope": null,
+        "stage": "unknown",
+        "kinases": [
+          "GSK3"
+        ],
+        "tau_shift": 0.14206846058368683,
+        "original_distance": 0.3134375214576721,
+        "new_distance": 0.31481698155403137,
+        "distance_change": 0.001379460096359253,
+        "distance_change_pct": 0.44010687997529385,
+        "is_kxgs": false,
+        "handshake_info": {
+          "tau_pos": 259,
+          "tubulin_pos": 418,
+          "tubulin_type": "alpha",
+          "original_distance": 0.3134375214576721
+        }
+      },
+      {
+        "phospho_site": 352,
+        "aa": "S",
+        "epitope": null,
+        "stage": "unknown",
+        "kinases": [
+          "GSK3"
+        ],
+        "tau_shift": 0.17102719843387604,
+        "original_distance": 0.2923823595046997,
+        "new_distance": 0.25896701216697693,
+        "distance_change": -0.03341534733772278,
+        "distance_change_pct": -11.428646856236094,
+        "is_kxgs": false,
+        "handshake_info": {
+          "tau_pos": 349,
+          "tubulin_pos": 416,
+          "tubulin_type": "beta",
+          "original_distance": 0.2923823595046997
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.17102719843387604,
+        "original_distance": 0.2923823595046997,
+        "new_distance": 0.25896701216697693,
+        "distance_change": -0.03341534733772278,
+        "distance_change_pct": -11.428646856236094,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 349,
+          "tubulin_pos": 416,
+          "tubulin_type": "beta",
+          "original_distance": 0.2923823595046997
+        }
+      },
+      {
+        "phospho_site": 263,
+        "aa": "T",
+        "epitope": null,
+        "stage": "unknown",
+        "kinases": [
+          "GSK3"
+        ],
+        "tau_shift": 0.14907239377498627,
+        "original_distance": 0.3273449242115021,
+        "new_distance": 0.290300190448761,
+        "distance_change": -0.03704473376274109,
+        "distance_change_pct": -11.316727715260363,
+        "is_kxgs": false,
+        "handshake_info": {
+          "tau_pos": 260,
+          "tubulin_pos": 418,
+          "tubulin_type": "alpha",
+          "original_distance": 0.3273449242115021
+        }
+      },
+      {
+        "phospho_site": 352,
+        "aa": "S",
+        "epitope": null,
+        "stage": "unknown",
+        "kinases": [
+          "GSK3"
+        ],
+        "tau_shift": 0.17102719843387604,
+        "original_distance": 0.20266936719417572,
+        "new_distance": 0.1487797200679779,
+        "distance_change": -0.053889647126197815,
+        "distance_change_pct": -26.58993210087177,
+        "is_kxgs": false,
+        "handshake_info": {
+          "tau_pos": 349,
+          "tubulin_pos": 420,
+          "tubulin_type": "beta",
+          "original_distance": 0.20266936719417572
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.17102719843387604,
+        "original_distance": 0.20266936719417572,
+        "new_distance": 0.1487797200679779,
+        "distance_change": -0.053889647126197815,
+        "distance_change_pct": -26.58993210087177,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 349,
+          "tubulin_pos": 420,
+          "tubulin_type": "beta",
+          "original_distance": 0.20266936719417572
+        }
+      },
+      {
+        "phospho_site": 352,
+        "aa": "S",
+        "epitope": null,
+        "stage": "unknown",
+        "kinases": [
+          "GSK3"
+        ],
+        "tau_shift": 0.17568674683570862,
+        "original_distance": 0.3392229676246643,
+        "new_distance": 0.28041258454322815,
+        "distance_change": -0.05881038308143616,
+        "distance_change_pct": -17.336792816018086,
+        "is_kxgs": false,
+        "handshake_info": {
+          "tau_pos": 353,
+          "tubulin_pos": 416,
+          "tubulin_type": "beta",
+          "original_distance": 0.3392229676246643
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.17568674683570862,
+        "original_distance": 0.3392229676246643,
+        "new_distance": 0.28041258454322815,
+        "distance_change": -0.05881038308143616,
+        "distance_change_pct": -17.336792816018086,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 353,
+          "tubulin_pos": 416,
+          "tubulin_type": "beta",
+          "original_distance": 0.3392229676246643
+        }
+      },
+      {
+        "phospho_site": 352,
+        "aa": "S",
+        "epitope": null,
+        "stage": "unknown",
+        "kinases": [
+          "GSK3"
+        ],
+        "tau_shift": 0.15951447188854218,
+        "original_distance": 0.2702721357345581,
+        "new_distance": 0.2101140320301056,
+        "distance_change": -0.060158103704452515,
+        "distance_change_pct": -22.25834473870273,
+        "is_kxgs": false,
+        "handshake_info": {
+          "tau_pos": 352,
+          "tubulin_pos": 411,
+          "tubulin_type": "beta",
+          "original_distance": 0.2702721357345581
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.15951447188854218,
+        "original_distance": 0.2702721357345581,
+        "new_distance": 0.2101140320301056,
+        "distance_change": -0.060158103704452515,
+        "distance_change_pct": -22.25834473870273,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 352,
+          "tubulin_pos": 411,
+          "tubulin_type": "beta",
+          "original_distance": 0.2702721357345581
+        }
+      },
+      {
+        "phospho_site": 352,
+        "aa": "S",
+        "epitope": null,
+        "stage": "unknown",
+        "kinases": [
+          "GSK3"
+        ],
+        "tau_shift": 0.15951447188854218,
+        "original_distance": 0.2754485607147217,
+        "new_distance": 0.2032824009656906,
+        "distance_change": -0.07216615974903107,
+        "distance_change_pct": -26.199505113324072,
+        "is_kxgs": false,
+        "handshake_info": {
+          "tau_pos": 352,
+          "tubulin_pos": 413,
+          "tubulin_type": "beta",
+          "original_distance": 0.2754485607147217
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.15951447188854218,
+        "original_distance": 0.2754485607147217,
+        "new_distance": 0.2032824009656906,
+        "distance_change": -0.07216615974903107,
+        "distance_change_pct": -26.199505113324072,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 352,
+          "tubulin_pos": 413,
+          "tubulin_type": "beta",
+          "original_distance": 0.2754485607147217
+        }
+      }
+    ],
+    "kxgs_effects": [
+      {
+        "phospho_site": 262,
+        "aa": "S",
+        "epitope": "12E8",
+        "stage": "mid",
+        "kinases": [
+          "MARK",
+          "PKA",
+          "BRSK"
+        ],
+        "tau_shift": 0.1739008128643036,
+        "original_distance": 0.3134375214576721,
+        "new_distance": 0.3722229301929474,
+        "distance_change": 0.05878540873527527,
+        "distance_change_pct": 18.75506431453641,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 259,
+          "tubulin_pos": 418,
+          "tubulin_type": "alpha",
+          "original_distance": 0.3134375214576721
+        }
+      },
+      {
+        "phospho_site": 262,
+        "aa": "S",
+        "epitope": "12E8",
+        "stage": "mid",
+        "kinases": [
+          "MARK",
+          "PKA",
+          "BRSK"
+        ],
+        "tau_shift": 0.18660441040992737,
+        "original_distance": 0.3273449242115021,
+        "new_distance": 0.3503296673297882,
+        "distance_change": 0.022984743118286133,
+        "distance_change_pct": 7.021566982793774,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 260,
+          "tubulin_pos": 418,
+          "tubulin_type": "alpha",
+          "original_distance": 0.3273449242115021
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.15951447188854218,
+        "original_distance": 0.165493905544281,
+        "new_distance": 0.17161715030670166,
+        "distance_change": 0.006123244762420654,
+        "distance_change_pct": 3.699982027907526,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 352,
+          "tubulin_pos": 420,
+          "tubulin_type": "beta",
+          "original_distance": 0.165493905544281
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.15951447188854218,
+        "original_distance": 0.2605593800544739,
+        "new_distance": 0.2651752233505249,
+        "distance_change": 0.004615843296051025,
+        "distance_change_pct": 1.7715130021747876,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 352,
+          "tubulin_pos": 416,
+          "tubulin_type": "beta",
+          "original_distance": 0.2605593800544739
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.17102719843387604,
+        "original_distance": 0.2923823595046997,
+        "new_distance": 0.25896701216697693,
+        "distance_change": -0.03341534733772278,
+        "distance_change_pct": -11.428646856236094,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 349,
+          "tubulin_pos": 416,
+          "tubulin_type": "beta",
+          "original_distance": 0.2923823595046997
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.17102719843387604,
+        "original_distance": 0.20266936719417572,
+        "new_distance": 0.1487797200679779,
+        "distance_change": -0.053889647126197815,
+        "distance_change_pct": -26.58993210087177,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 349,
+          "tubulin_pos": 420,
+          "tubulin_type": "beta",
+          "original_distance": 0.20266936719417572
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.17568674683570862,
+        "original_distance": 0.3392229676246643,
+        "new_distance": 0.28041258454322815,
+        "distance_change": -0.05881038308143616,
+        "distance_change_pct": -17.336792816018086,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 353,
+          "tubulin_pos": 416,
+          "tubulin_type": "beta",
+          "original_distance": 0.3392229676246643
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.15951447188854218,
+        "original_distance": 0.2702721357345581,
+        "new_distance": 0.2101140320301056,
+        "distance_change": -0.060158103704452515,
+        "distance_change_pct": -22.25834473870273,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 352,
+          "tubulin_pos": 411,
+          "tubulin_type": "beta",
+          "original_distance": 0.2702721357345581
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.15951447188854218,
+        "original_distance": 0.2754485607147217,
+        "new_distance": 0.2032824009656906,
+        "distance_change": -0.07216615974903107,
+        "distance_change_pct": -26.199505113324072,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 352,
+          "tubulin_pos": 413,
+          "tubulin_type": "beta",
+          "original_distance": 0.2754485607147217
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.17568674683570862,
+        "original_distance": 0.29473379254341125,
+        "new_distance": 0.22060900926589966,
+        "distance_change": -0.0741247832775116,
+        "distance_change_pct": -25.149740258098763,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 353,
+          "tubulin_pos": 420,
+          "tubulin_type": "beta",
+          "original_distance": 0.29473379254341125
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.17102719843387604,
+        "original_distance": 0.3978537321090698,
+        "new_distance": 0.32008522748947144,
+        "distance_change": -0.07776850461959839,
+        "distance_change_pct": -19.547008949077423,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 349,
+          "tubulin_pos": 438,
+          "tubulin_type": "beta",
+          "original_distance": 0.3978537321090698
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.17102719843387604,
+        "original_distance": 0.39883166551589966,
+        "new_distance": 0.2994012236595154,
+        "distance_change": -0.09943044185638428,
+        "distance_change_pct": -24.930428161406965,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 349,
+          "tubulin_pos": 440,
+          "tubulin_type": "beta",
+          "original_distance": 0.39883166551589966
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.17568674683570862,
+        "original_distance": 0.4086475074291229,
+        "new_distance": 0.30544254183769226,
+        "distance_change": -0.10320496559143066,
+        "distance_change_pct": -25.255253908365233,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 353,
+          "tubulin_pos": 411,
+          "tubulin_type": "beta",
+          "original_distance": 0.4086475074291229
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.17102719843387604,
+        "original_distance": 0.40458014607429504,
+        "new_distance": 0.30111512541770935,
+        "distance_change": -0.1034650206565857,
+        "distance_change_pct": -25.573430051010437,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 349,
+          "tubulin_pos": 436,
+          "tubulin_type": "beta",
+          "original_distance": 0.40458014607429504
+        }
+      },
+      {
+        "phospho_site": 293,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.20234663784503937,
+        "original_distance": 0.37843528389930725,
+        "new_distance": 0.2649401128292084,
+        "distance_change": -0.11349517107009888,
+        "distance_change_pct": -29.990641966750985,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 290,
+          "tubulin_pos": 416,
+          "tubulin_type": "beta",
+          "original_distance": 0.37843528389930725
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.17102719843387604,
+        "original_distance": 0.2853074371814728,
+        "new_distance": 0.17133834958076477,
+        "distance_change": -0.11396908760070801,
+        "distance_change_pct": -39.94606264968017,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 349,
+          "tubulin_pos": 411,
+          "tubulin_type": "beta",
+          "original_distance": 0.2853074371814728
+        }
+      },
+      {
+        "phospho_site": 324,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.23346568644046783,
+        "original_distance": 0.4100484251976013,
+        "new_distance": 0.2867403030395508,
+        "distance_change": -0.12330812215805054,
+        "distance_change_pct": -30.071599982033504,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 321,
+          "tubulin_pos": 418,
+          "tubulin_type": "alpha",
+          "original_distance": 0.4100484251976013
+        }
+      },
+      {
+        "phospho_site": 293,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.20234663784503937,
+        "original_distance": 0.35711100697517395,
+        "new_distance": 0.22847798466682434,
+        "distance_change": -0.1286330223083496,
+        "distance_change_pct": -36.02045856774503,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 290,
+          "tubulin_pos": 420,
+          "tubulin_type": "beta",
+          "original_distance": 0.35711100697517395
+        }
+      },
+      {
+        "phospho_site": 356,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.17102719843387604,
+        "original_distance": 0.2805275619029999,
+        "new_distance": 0.1457836627960205,
+        "distance_change": -0.13474389910697937,
+        "distance_change_pct": -48.032321028609225,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 349,
+          "tubulin_pos": 413,
+          "tubulin_type": "beta",
+          "original_distance": 0.2805275619029999
+        }
+      },
+      {
+        "phospho_site": 324,
+        "aa": "S",
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "tau_shift": 0.23995976150035858,
+        "original_distance": 0.3948492705821991,
+        "new_distance": 0.21440014243125916,
+        "distance_change": -0.18044912815093994,
+        "distance_change_pct": -45.700762694805164,
+        "is_kxgs": true,
+        "handshake_info": {
+          "tau_pos": 318,
+          "tubulin_pos": 418,
+          "tubulin_type": "alpha",
+          "original_distance": 0.3948492705821991
+        }
+      }
+    ]
+  },
+  "summary": {
+    "total_handshakes_analyzed": 84,
+    "known_pairs_found": 19,
+    "tight_handshakes": 1,
+    "tightest_handshake": {
+      "tau_pos": 352,
+      "tau_aa": "S",
+      "tau_context": "DFKDRVQSKIGSLDN",
+      "tau_domain": "R4",
+      "tau_near_kxgs": false,
+      "tubulin_pos": 420,
+      "tubulin_aa": "Y",
+      "tubulin_context": "QEDELFQEMQTAQLV",
+      "tubulin_domain": "H11-H12",
+      "tubulin_type": "beta",
+      "interaction_type": "aromatic",
+      "distance": 0.165493905544281,
+      "is_known_pair": false
+    },
+    "most_disruptive_phospho": {
+      "site": 258,
+      "epitope": null,
+      "stage": "mid",
+      "kinases": [
+        "MARK",
+        "PKA"
+      ],
+      "disruption_score": 0.05878540873527527,
+      "is_kxgs": false
+    },
+    "top_kinase_target": [
+      "MARK",
+      0.12369406223297119,
+      3
+    ]
+  },
+  "kxgs_analysis": [
+    {
+      "motif": "R1",
+      "serine": 262,
+      "tau_shift": 0.1739008128643036,
+      "distance_change_pct": 18.75506431453641
+    },
+    {
+      "motif": "R2",
+      "serine": 293,
+      "tau_shift": 0.20234663784503937,
+      "distance_change_pct": -36.02045856774503
+    },
+    {
+      "motif": "R3",
+      "serine": 324,
+      "tau_shift": 0.23346568644046783,
+      "distance_change_pct": -30.071599982033504
+    },
+    {
+      "motif": "R4",
+      "serine": 356,
+      "tau_shift": 0.15951447188854218,
+      "distance_change_pct": 3.699982027907526
+    }
+  ],
+  "therapeutic_targets": {
+    "phosphatase_targets": [
+      {
+        "site": 258,
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK",
+          "PKA"
+        ],
+        "disruption_score": 0.05878540873527527,
+        "is_kxgs": false
+      },
+      {
+        "site": 262,
+        "epitope": "12E8",
+        "stage": "mid",
+        "kinases": [
+          "MARK",
+          "PKA",
+          "BRSK"
+        ],
+        "disruption_score": 0.05878540873527527,
+        "is_kxgs": true
+      },
+      {
+        "site": 352,
+        "epitope": null,
+        "stage": "unknown",
+        "kinases": [
+          "GSK3"
+        ],
+        "disruption_score": 0.006123244762420654,
+        "is_kxgs": false
+      },
+      {
+        "site": 356,
+        "epitope": null,
+        "stage": "mid",
+        "kinases": [
+          "MARK"
+        ],
+        "disruption_score": 0.006123244762420654,
+        "is_kxgs": true
+      },
+      {
+        "site": 263,
+        "epitope": null,
+        "stage": "unknown",
+        "kinases": [
+          "GSK3"
+        ],
+        "disruption_score": 0.001379460096359253,
+        "is_kxgs": false
+      }
+    ],
+    "kinase_priority": [
+      {
+        "kinase": "MARK",
+        "cumulative_score": 0.12369406223297119,
+        "target_count": 3
+      },
+      {
+        "kinase": "PKA",
+        "cumulative_score": 0.11757081747055054,
+        "target_count": 2
+      },
+      {
+        "kinase": "BRSK",
+        "cumulative_score": 0.05878540873527527,
+        "target_count": 1
+      },
+      {
+        "kinase": "GSK3",
+        "cumulative_score": 0.007502704858779907,
+        "target_count": 2
+      }
+    ]
+  }
+}

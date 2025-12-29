@@ -1,0 +1,35 @@
+[{
+ "name": "FGB_R406_cit_DRB1_0401",
+ "modelSeeds": [
+  "2022567151"
+ ],
+ "sequences": [
+  {
+   "proteinChain": {
+    "sequence": "SARGHRPLDKK",
+    "modifications": [
+     {
+      "ptmType": "CCD_CIR",
+      "ptmPosition": 3
+     },
+     {
+      "ptmType": "CCD_CIR",
+      "ptmPosition": 6
+     }
+    ],
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  },
+  {
+   "proteinChain": {
+    "sequence": "GDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQRRAAVDTYCRHNYGVGESFTVQRR",
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  }
+ ],
+ "dialect": "alphafoldserver",
+ "version": 1
+}
+]

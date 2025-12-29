@@ -1,0 +1,1457 @@
+{
+  "summary": {
+    "total_proteins": 7,
+    "total_epitopes": 18,
+    "immunodominant_count": 11
+  },
+  "analyses": {
+    "VIM": [
+      {
+        "epitope_id": "VIM_R71",
+        "sequence": "RLRSSVPGVR",
+        "immunodominant": true,
+        "acpa_reactivity": 0.85,
+        "profile": {
+          "codons": [
+            "CGG",
+            "CTG",
+            "CGG",
+            "TCG",
+            "TCG",
+            "GTG",
+            "CCG",
+            "GGC",
+            "GTG",
+            "CGG"
+          ],
+          "clusters": [
+            1,
+            0,
+            1,
+            2,
+            2,
+            7,
+            5,
+            4,
+            7,
+            1
+          ],
+          "padic_positions": [
+            10568,
+            9379,
+            10568,
+            15673,
+            15673,
+            9915,
+            4013,
+            16486,
+            9915,
+            10568
+          ]
+        },
+        "arg_analysis": [
+          {
+            "position": 0,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 0.9081388115882874,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.4014300107955933,
+            "cluster_homogeneity": 0.2222222222222222,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 0.7063301801681519
+          },
+          {
+            "position": 2,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 0.9081388115882874,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.4014300107955933,
+            "cluster_homogeneity": 0.2222222222222222,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 0.7063301801681519
+          },
+          {
+            "position": 9,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 0.9081388115882874,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.4014300107955933,
+            "cluster_homogeneity": 0.2222222222222222,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 0.7063301801681519
+          }
+        ],
+        "centroid_shifts": [
+          {
+            "position": 0,
+            "centroid_shift": "0.06401392",
+            "relative_shift": "0.13396144"
+          },
+          {
+            "position": 2,
+            "centroid_shift": "0.06401392",
+            "relative_shift": "0.13396144"
+          },
+          {
+            "position": 9,
+            "centroid_shift": "0.06401391",
+            "relative_shift": "0.13396142"
+          }
+        ]
+      },
+      {
+        "epitope_id": "VIM_R257",
+        "sequence": "SSLNLRETNL",
+        "immunodominant": true,
+        "acpa_reactivity": 0.72,
+        "profile": {
+          "codons": [
+            "TCG",
+            "TCG",
+            "CTG",
+            "AAC",
+            "CTG",
+            "CGG",
+            "GAG",
+            "ACC",
+            "AAC",
+            "CTG"
+          ],
+          "clusters": [
+            2,
+            2,
+            0,
+            16,
+            0,
+            1,
+            12,
+            6,
+            16,
+            0
+          ],
+          "padic_positions": [
+            15673,
+            15673,
+            9379,
+            11925,
+            9379,
+            10568,
+            9954,
+            12039,
+            11925,
+            9379
+          ]
+        },
+        "arg_analysis": [
+          {
+            "position": 5,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.420035719871521,
+            "min_neighbor_distance": 1.0423994064331055,
+            "max_neighbor_distance": 1.7422561645507812,
+            "cluster_homogeneity": 0.0,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 1.420035719871521
+          }
+        ],
+        "centroid_shifts": [
+          {
+            "position": 5,
+            "centroid_shift": "0.11324703",
+            "relative_shift": "0.5054466"
+          }
+        ]
+      },
+      {
+        "epitope_id": "VIM_R45",
+        "sequence": "SSRSFRTYSF",
+        "immunodominant": false,
+        "acpa_reactivity": 0.15,
+        "profile": {
+          "codons": [
+            "TCG",
+            "TCG",
+            "CGG",
+            "TCG",
+            "TTC",
+            "CGG",
+            "ACC",
+            "TAC",
+            "TCG",
+            "TTC"
+          ],
+          "clusters": [
+            2,
+            2,
+            1,
+            2,
+            13,
+            1,
+            6,
+            18,
+            2,
+            13
+          ],
+          "padic_positions": [
+            15673,
+            15673,
+            10568,
+            15673,
+            11979,
+            10568,
+            12039,
+            9882,
+            15673,
+            11979
+          ]
+        },
+        "arg_analysis": [
+          {
+            "position": 2,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.1122114658355713,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.6427847146987915,
+            "cluster_homogeneity": 0.1111111111111111,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 0.9886324405670166
+          },
+          {
+            "position": 5,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.1122114658355713,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.6427847146987915,
+            "cluster_homogeneity": 0.1111111111111111,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 0.9886324405670166
+          }
+        ],
+        "centroid_shifts": [
+          {
+            "position": 2,
+            "centroid_shift": "0.088117905",
+            "relative_shift": "0.19223753"
+          },
+          {
+            "position": 5,
+            "centroid_shift": "0.088117905",
+            "relative_shift": "0.19223753"
+          }
+        ]
+      },
+      {
+        "epitope_id": "VIM_R201",
+        "sequence": "ARLRSSLAGS",
+        "immunodominant": true,
+        "acpa_reactivity": 0.68,
+        "profile": {
+          "codons": [
+            "GCT",
+            "CGG",
+            "CTG",
+            "CGG",
+            "TCG",
+            "TCG",
+            "CTG",
+            "GCT",
+            "GGC",
+            "TCG"
+          ],
+          "clusters": [
+            3,
+            1,
+            0,
+            1,
+            2,
+            2,
+            0,
+            3,
+            4,
+            2
+          ],
+          "padic_positions": [
+            10814,
+            10568,
+            9379,
+            10568,
+            15673,
+            15673,
+            9379,
+            10814,
+            16486,
+            15673
+          ]
+        },
+        "arg_analysis": [
+          {
+            "position": 0,
+            "codon": "GCT",
+            "cluster": 3,
+            "embedding_norm": 0.931126058101654,
+            "mean_neighbor_distance": 0.9508309960365295,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.215938925743103,
+            "cluster_homogeneity": 0.1111111111111111,
+            "padic_position": 10814,
+            "boundary_crossing_potential": 0.8451831340789795
+          },
+          {
+            "position": 2,
+            "codon": "CTG",
+            "cluster": 0,
+            "embedding_norm": 0.9503834843635559,
+            "mean_neighbor_distance": 1.1470608711242676,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.4014300107955933,
+            "cluster_homogeneity": 0.1111111111111111,
+            "padic_position": 9379,
+            "boundary_crossing_potential": 1.0196096897125244
+          }
+        ],
+        "centroid_shifts": [
+          {
+            "position": 0,
+            "centroid_shift": "0.06979397",
+            "relative_shift": "0.11983388"
+          },
+          {
+            "position": 2,
+            "centroid_shift": "0.09932216",
+            "relative_shift": "0.1705328"
+          }
+        ]
+      }
+    ],
+    "FGA": [
+      {
+        "epitope_id": "FGA_R38",
+        "sequence": "GPRVVERHQS",
+        "immunodominant": true,
+        "acpa_reactivity": 0.78,
+        "profile": {
+          "codons": [
+            "GGC",
+            "CCG",
+            "CGG",
+            "GTG",
+            "GTG",
+            "GAG",
+            "CGG",
+            "CAC",
+            "CAG",
+            "TCG"
+          ],
+          "clusters": [
+            4,
+            5,
+            1,
+            7,
+            7,
+            12,
+            1,
+            14,
+            17,
+            2
+          ],
+          "padic_positions": [
+            16486,
+            4013,
+            10568,
+            9915,
+            9915,
+            9954,
+            10568,
+            9819,
+            9909,
+            15673
+          ]
+        },
+        "arg_analysis": [
+          {
+            "position": 2,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.0398874282836914,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.3639354705810547,
+            "cluster_homogeneity": 0.1111111111111111,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 0.9243443608283997
+          },
+          {
+            "position": 6,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.039887547492981,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.3639354705810547,
+            "cluster_homogeneity": 0.1111111111111111,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 0.9243444800376892
+          }
+        ],
+        "centroid_shifts": [
+          {
+            "position": 2,
+            "centroid_shift": "0.071850434",
+            "relative_shift": "0.1866965"
+          },
+          {
+            "position": 6,
+            "centroid_shift": "0.07185044",
+            "relative_shift": "0.18669651"
+          }
+        ]
+      },
+      {
+        "epitope_id": "FGA_R573",
+        "sequence": "MELERPGGNEI",
+        "immunodominant": true,
+        "acpa_reactivity": 0.65,
+        "profile": {
+          "codons": [
+            "ATG",
+            "GAG",
+            "CTG",
+            "GAG",
+            "CGG",
+            "CCG",
+            "GGC",
+            "GGC",
+            "AAC",
+            "GAG",
+            "ATC"
+          ],
+          "clusters": [
+            9,
+            12,
+            0,
+            12,
+            1,
+            5,
+            4,
+            4,
+            16,
+            12,
+            9
+          ],
+          "padic_positions": [
+            9858,
+            9954,
+            9379,
+            9954,
+            10568,
+            4013,
+            16486,
+            16486,
+            11925,
+            9954,
+            9858
+          ]
+        },
+        "arg_analysis": [
+          {
+            "position": 4,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.3513436317443848,
+            "min_neighbor_distance": 0.9574349522590637,
+            "max_neighbor_distance": 1.7422561645507812,
+            "cluster_homogeneity": 0.0,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 1.3513436317443848
+          }
+        ],
+        "centroid_shifts": [
+          {
+            "position": 4,
+            "centroid_shift": "0.10033903",
+            "relative_shift": "0.30445158"
+          }
+        ]
+      },
+      {
+        "epitope_id": "FGA_R84",
+        "sequence": "RHPDEAAFFDT",
+        "immunodominant": false,
+        "acpa_reactivity": 0.22,
+        "profile": {
+          "codons": [
+            "CGG",
+            "CAC",
+            "CCG",
+            "GAC",
+            "GAG",
+            "GCT",
+            "GCT",
+            "TTC",
+            "TTC",
+            "GAC",
+            "ACC"
+          ],
+          "clusters": [
+            1,
+            14,
+            5,
+            11,
+            12,
+            3,
+            3,
+            13,
+            13,
+            11,
+            6
+          ],
+          "padic_positions": [
+            10568,
+            9819,
+            4013,
+            9753,
+            9954,
+            10814,
+            10814,
+            11979,
+            11979,
+            9753,
+            12039
+          ]
+        },
+        "arg_analysis": [
+          {
+            "position": 0,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.3420743942260742,
+            "min_neighbor_distance": 1.1126548051834106,
+            "max_neighbor_distance": 1.6427847146987915,
+            "cluster_homogeneity": 0.0,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 1.3420743942260742
+          }
+        ],
+        "centroid_shifts": [
+          {
+            "position": 0,
+            "centroid_shift": "0.09203542",
+            "relative_shift": "0.3936364"
+          }
+        ]
+      }
+    ],
+    "FGB": [
+      {
+        "epitope_id": "FGB_R74",
+        "sequence": "HARPAKAATN",
+        "immunodominant": true,
+        "acpa_reactivity": 0.71,
+        "profile": {
+          "codons": [
+            "CAC",
+            "GCT",
+            "CGG",
+            "CCG",
+            "GCT",
+            "AAG",
+            "GCT",
+            "GCT",
+            "ACC",
+            "AAC"
+          ],
+          "clusters": [
+            14,
+            3,
+            1,
+            5,
+            3,
+            15,
+            3,
+            3,
+            6,
+            16
+          ],
+          "padic_positions": [
+            9819,
+            10814,
+            10568,
+            4013,
+            10814,
+            10524,
+            10814,
+            10814,
+            12039,
+            11925
+          ]
+        },
+        "arg_analysis": [
+          {
+            "position": 2,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.3265628814697266,
+            "min_neighbor_distance": 1.1126548051834106,
+            "max_neighbor_distance": 1.7422561645507812,
+            "cluster_homogeneity": 0.0,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 1.3265628814697266
+          }
+        ],
+        "centroid_shifts": [
+          {
+            "position": 2,
+            "centroid_shift": "0.10548384",
+            "relative_shift": "0.2682936"
+          }
+        ]
+      },
+      {
+        "epitope_id": "FGB_R44",
+        "sequence": "NEEGFFRHNDK",
+        "immunodominant": false,
+        "acpa_reactivity": 0.18,
+        "profile": {
+          "codons": [
+            "AAC",
+            "GAG",
+            "GAG",
+            "GGC",
+            "TTC",
+            "TTC",
+            "CGG",
+            "CAC",
+            "AAC",
+            "GAC",
+            "AAG"
+          ],
+          "clusters": [
+            16,
+            12,
+            12,
+            4,
+            13,
+            13,
+            1,
+            14,
+            16,
+            11,
+            15
+          ],
+          "padic_positions": [
+            11925,
+            9954,
+            9954,
+            16486,
+            11979,
+            11979,
+            10568,
+            9819,
+            11925,
+            9753,
+            10524
+          ]
+        },
+        "arg_analysis": [
+          {
+            "position": 7,
+            "codon": "CAC",
+            "cluster": 14,
+            "embedding_norm": 0.8604907393455505,
+            "mean_neighbor_distance": 1.102437138557434,
+            "min_neighbor_distance": 0.8541080355644226,
+            "max_neighbor_distance": 1.3840080499649048,
+            "cluster_homogeneity": 0.0,
+            "padic_position": 9819,
+            "boundary_crossing_potential": 1.102437138557434
+          }
+        ],
+        "centroid_shifts": [
+          {
+            "position": 7,
+            "centroid_shift": "0.067613125",
+            "relative_shift": "0.15190075"
+          }
+        ]
+      }
+    ],
+    "ENO1": [
+      {
+        "epitope_id": "ENO1_CEP1",
+        "sequence": "KIREEIFDSRGNP",
+        "immunodominant": true,
+        "acpa_reactivity": 0.62,
+        "profile": {
+          "codons": [
+            "AAG",
+            "ATC",
+            "CGG",
+            "GAG",
+            "GAG",
+            "ATC",
+            "TTC",
+            "GAC",
+            "TCG",
+            "CGG",
+            "GGC",
+            "AAC",
+            "CCG"
+          ],
+          "clusters": [
+            15,
+            9,
+            1,
+            12,
+            12,
+            9,
+            13,
+            11,
+            2,
+            1,
+            4,
+            16,
+            5
+          ],
+          "padic_positions": [
+            10524,
+            9858,
+            10568,
+            9954,
+            9954,
+            9858,
+            11979,
+            9753,
+            15673,
+            10568,
+            16486,
+            11925,
+            4013
+          ]
+        },
+        "arg_analysis": [
+          {
+            "position": 2,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.2599807977676392,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.7422561645507812,
+            "cluster_homogeneity": 0.08333333333333333,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 1.1549824476242065
+          },
+          {
+            "position": 9,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.2599807977676392,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.7422561645507812,
+            "cluster_homogeneity": 0.08333333333333333,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 1.1549824476242065
+          }
+        ],
+        "centroid_shifts": [
+          {
+            "position": 2,
+            "centroid_shift": "0.07695458",
+            "relative_shift": "0.36970255"
+          },
+          {
+            "position": 9,
+            "centroid_shift": "0.07695459",
+            "relative_shift": "0.36970258"
+          }
+        ]
+      },
+      {
+        "epitope_id": "ENO1_R400",
+        "sequence": "SFRSGKYKSV",
+        "immunodominant": false,
+        "acpa_reactivity": 0.12,
+        "profile": {
+          "codons": [
+            "TCG",
+            "TTC",
+            "CGG",
+            "TCG",
+            "GGC",
+            "AAG",
+            "TAC",
+            "AAG",
+            "TCG",
+            "GTG"
+          ],
+          "clusters": [
+            2,
+            13,
+            1,
+            2,
+            4,
+            15,
+            18,
+            15,
+            2,
+            7
+          ],
+          "padic_positions": [
+            15673,
+            11979,
+            10568,
+            15673,
+            16486,
+            10524,
+            9882,
+            10524,
+            15673,
+            9915
+          ]
+        },
+        "arg_analysis": [
+          {
+            "position": 2,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.2255405187606812,
+            "min_neighbor_distance": 0.9574349522590637,
+            "max_neighbor_distance": 1.4243804216384888,
+            "cluster_homogeneity": 0.0,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 1.2255405187606812
+          },
+          {
+            "position": 6,
+            "codon": "TAC",
+            "cluster": 18,
+            "embedding_norm": 0.8627060651779175,
+            "mean_neighbor_distance": 1.3576388359069824,
+            "min_neighbor_distance": 0.7965862154960632,
+            "max_neighbor_distance": 1.6471961736679077,
+            "cluster_homogeneity": 0.0,
+            "padic_position": 9882,
+            "boundary_crossing_potential": 1.3576388359069824
+          }
+        ],
+        "centroid_shifts": [
+          {
+            "position": 2,
+            "centroid_shift": "0.086004354",
+            "relative_shift": "0.29211628"
+          },
+          {
+            "position": 6,
+            "centroid_shift": "0.106322706",
+            "relative_shift": "0.36112815"
+          }
+        ]
+      }
+    ],
+    "COL2A1": [
+      {
+        "epitope_id": "CII_259_273",
+        "sequence": "GARGLTGRPGDAGK",
+        "immunodominant": true,
+        "acpa_reactivity": 0.45,
+        "profile": {
+          "codons": [
+            "GGC",
+            "GCT",
+            "CGG",
+            "GGC",
+            "CTG",
+            "ACC",
+            "GGC",
+            "CGG",
+            "CCG",
+            "GGC",
+            "GAC",
+            "GCT",
+            "GGC",
+            "AAG"
+          ],
+          "clusters": [
+            4,
+            3,
+            1,
+            4,
+            0,
+            6,
+            4,
+            1,
+            5,
+            4,
+            11,
+            3,
+            4,
+            15
+          ],
+          "padic_positions": [
+            16486,
+            10814,
+            10568,
+            16486,
+            9379,
+            12039,
+            16486,
+            10568,
+            4013,
+            16486,
+            9753,
+            10814,
+            16486,
+            10524
+          ]
+        },
+        "arg_analysis": [
+          {
+            "position": 2,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.096070408821106,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.6427847146987915,
+            "cluster_homogeneity": 0.07692307692307693,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 1.011757254600525
+          },
+          {
+            "position": 7,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.096070408821106,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.6427847146987915,
+            "cluster_homogeneity": 0.07692307692307693,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 1.011757254600525
+          }
+        ],
+        "centroid_shifts": [
+          {
+            "position": 2,
+            "centroid_shift": "0.06167933",
+            "relative_shift": "0.11578503"
+          },
+          {
+            "position": 7,
+            "centroid_shift": "0.06167933",
+            "relative_shift": "0.11578503"
+          }
+        ]
+      },
+      {
+        "epitope_id": "CII_511_525",
+        "sequence": "PGERGAPGFRGPAG",
+        "immunodominant": true,
+        "acpa_reactivity": 0.38,
+        "profile": {
+          "codons": [
+            "CCG",
+            "GGC",
+            "GAG",
+            "CGG",
+            "GGC",
+            "GCT",
+            "CCG",
+            "GGC",
+            "TTC",
+            "CGG",
+            "GGC",
+            "CCG",
+            "GCT",
+            "GGC"
+          ],
+          "clusters": [
+            5,
+            4,
+            12,
+            1,
+            4,
+            3,
+            5,
+            4,
+            13,
+            1,
+            4,
+            5,
+            3,
+            4
+          ],
+          "padic_positions": [
+            4013,
+            16486,
+            9954,
+            10568,
+            16486,
+            10814,
+            4013,
+            16486,
+            11979,
+            10568,
+            16486,
+            4013,
+            10814,
+            16486
+          ]
+        },
+        "arg_analysis": [
+          {
+            "position": 3,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.0254205465316772,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.409515380859375,
+            "cluster_homogeneity": 0.07692307692307693,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 0.9465420246124268
+          },
+          {
+            "position": 10,
+            "codon": "GGC",
+            "cluster": 4,
+            "embedding_norm": 0.9499329924583435,
+            "mean_neighbor_distance": 0.7759143114089966,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.5514202117919922,
+            "cluster_homogeneity": 0.3076923076923077,
+            "padic_position": 16486,
+            "boundary_crossing_potential": 0.537171483039856
+          }
+        ],
+        "centroid_shifts": [
+          {
+            "position": 3,
+            "centroid_shift": "0.053624243",
+            "relative_shift": "0.09732137"
+          },
+          {
+            "position": 10,
+            "centroid_shift": "0.038952358",
+            "relative_shift": "0.07069372"
+          }
+        ]
+      },
+      {
+        "epitope_id": "CII_CONTROL",
+        "sequence": "GPKGDTGPKGPAG",
+        "immunodominant": false,
+        "acpa_reactivity": 0.02,
+        "profile": {
+          "codons": [
+            "GGC",
+            "CCG",
+            "AAG",
+            "GGC",
+            "GAC",
+            "ACC",
+            "GGC",
+            "CCG",
+            "AAG",
+            "GGC",
+            "CCG",
+            "GCT",
+            "GGC"
+          ],
+          "clusters": [
+            4,
+            5,
+            15,
+            4,
+            11,
+            6,
+            4,
+            5,
+            15,
+            4,
+            5,
+            3,
+            4
+          ],
+          "padic_positions": [
+            16486,
+            4013,
+            10524,
+            16486,
+            9753,
+            12039,
+            16486,
+            4013,
+            10524,
+            16486,
+            4013,
+            10814,
+            16486
+          ]
+        },
+        "arg_analysis": [],
+        "centroid_shifts": []
+      }
+    ],
+    "FLG": [
+      {
+        "epitope_id": "FLG_CCP",
+        "sequence": "SHQESTRGRS",
+        "immunodominant": true,
+        "acpa_reactivity": 0.75,
+        "profile": {
+          "codons": [
+            "TCG",
+            "CAC",
+            "CAG",
+            "GAG",
+            "TCG",
+            "ACC",
+            "CGG",
+            "GGC",
+            "CGG",
+            "TCG"
+          ],
+          "clusters": [
+            2,
+            14,
+            17,
+            12,
+            2,
+            6,
+            1,
+            4,
+            1,
+            2
+          ],
+          "padic_positions": [
+            15673,
+            9819,
+            9909,
+            9954,
+            15673,
+            12039,
+            10568,
+            16486,
+            10568,
+            15673
+          ]
+        },
+        "arg_analysis": [
+          {
+            "position": 6,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.0396649837493896,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.6427847146987915,
+            "cluster_homogeneity": 0.1111111111111111,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 0.9241466522216797
+          },
+          {
+            "position": 8,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.0396649837493896,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.6427847146987915,
+            "cluster_homogeneity": 0.1111111111111111,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 0.9241466522216797
+          }
+        ],
+        "centroid_shifts": [
+          {
+            "position": 6,
+            "centroid_shift": "0.07314327",
+            "relative_shift": "0.18645243"
+          },
+          {
+            "position": 8,
+            "centroid_shift": "0.073143266",
+            "relative_shift": "0.18645242"
+          }
+        ]
+      },
+      {
+        "epitope_id": "FLG_SEC",
+        "sequence": "DSHRGSSSSS",
+        "immunodominant": false,
+        "acpa_reactivity": 0.2,
+        "profile": {
+          "codons": [
+            "GAC",
+            "TCG",
+            "CAC",
+            "CGG",
+            "GGC",
+            "TCG",
+            "TCG",
+            "TCG",
+            "TCG",
+            "TCG"
+          ],
+          "clusters": [
+            11,
+            2,
+            14,
+            1,
+            4,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "padic_positions": [
+            9753,
+            15673,
+            9819,
+            10568,
+            16486,
+            15673,
+            15673,
+            15673,
+            15673,
+            15673
+          ]
+        },
+        "arg_analysis": [
+          {
+            "position": 3,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.0904088020324707,
+            "min_neighbor_distance": 0.9574349522590637,
+            "max_neighbor_distance": 1.448613166809082,
+            "cluster_homogeneity": 0.0,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 1.0904088020324707
+          }
+        ],
+        "centroid_shifts": [
+          {
+            "position": 3,
+            "centroid_shift": "0.07728933",
+            "relative_shift": "0.15865529"
+          }
+        ]
+      }
+    ],
+    "HIST": [
+      {
+        "epitope_id": "H2B_1_12",
+        "sequence": "PEPAKSAPAPKKGS",
+        "immunodominant": false,
+        "acpa_reactivity": 0.08,
+        "profile": {
+          "codons": [
+            "CCG",
+            "GAG",
+            "CCG",
+            "GCT",
+            "AAG",
+            "TCG",
+            "GCT",
+            "CCG",
+            "GCT",
+            "CCG",
+            "AAG",
+            "AAG",
+            "GGC",
+            "TCG"
+          ],
+          "clusters": [
+            5,
+            12,
+            5,
+            3,
+            15,
+            2,
+            3,
+            5,
+            3,
+            5,
+            15,
+            15,
+            4,
+            2
+          ],
+          "padic_positions": [
+            4013,
+            9954,
+            4013,
+            10814,
+            10524,
+            15673,
+            10814,
+            4013,
+            10814,
+            4013,
+            10524,
+            10524,
+            16486,
+            15673
+          ]
+        },
+        "arg_analysis": [],
+        "centroid_shifts": []
+      },
+      {
+        "epitope_id": "H2A_R3",
+        "sequence": "SGRGKQGGKAR",
+        "immunodominant": true,
+        "acpa_reactivity": 0.35,
+        "profile": {
+          "codons": [
+            "TCG",
+            "GGC",
+            "CGG",
+            "GGC",
+            "AAG",
+            "CAG",
+            "GGC",
+            "GGC",
+            "AAG",
+            "GCT",
+            "CGG"
+          ],
+          "clusters": [
+            2,
+            4,
+            1,
+            4,
+            15,
+            17,
+            4,
+            4,
+            15,
+            3,
+            1
+          ],
+          "padic_positions": [
+            15673,
+            16486,
+            10568,
+            16486,
+            10524,
+            9909,
+            16486,
+            16486,
+            10524,
+            10814,
+            10568
+          ]
+        },
+        "arg_analysis": [
+          {
+            "position": 2,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.004923701286316,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.4243804216384888,
+            "cluster_homogeneity": 0.1,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 0.9044312834739685
+          },
+          {
+            "position": 10,
+            "codon": "CGG",
+            "cluster": 1,
+            "embedding_norm": 0.9498909115791321,
+            "mean_neighbor_distance": 1.0049235820770264,
+            "min_neighbor_distance": 0.0,
+            "max_neighbor_distance": 1.4243804216384888,
+            "cluster_homogeneity": 0.1,
+            "padic_position": 10568,
+            "boundary_crossing_potential": 0.9044312238693237
+          }
+        ],
+        "centroid_shifts": [
+          {
+            "position": 2,
+            "centroid_shift": "0.070238635",
+            "relative_shift": "0.12076224"
+          },
+          {
+            "position": 10,
+            "centroid_shift": "0.07023863",
+            "relative_shift": "0.12076222"
+          }
+        ]
+      }
+    ]
+  },
+  "statistical_comparison": {
+    "embedding_norm": {
+      "immunodominant_mean": "0.94897926",
+      "immunodominant_std": "0.0040972377",
+      "silent_mean": "0.92466456",
+      "silent_std": "0.039890885",
+      "t_statistic": 2.5843416421231638,
+      "p_value": 0.01598552044572201,
+      "effect_size": "0.8574948"
+    },
+    "mean_neighbor_distance": {
+      "immunodominant_mean": "1.0801319",
+      "immunodominant_std": "0.16406244",
+      "silent_mean": "1.1917889",
+      "silent_std": "0.10833671",
+      "t_statistic": -1.6138815028757998,
+      "p_value": 0.11910599423983939,
+      "effect_size": "-0.80317026"
+    },
+    "cluster_homogeneity": {
+      "immunodominant_mean": 0.11192307692307693,
+      "immunodominant_std": 0.07681199244111879,
+      "silent_mean": 0.031746031746031744,
+      "silent_std": 0.05019488349473617,
+      "t_statistic": 2.478625841269032,
+      "p_value": 0.020292267277206608,
+      "effect_size": 1.2357172106489127
+    },
+    "boundary_crossing_potential": {
+      "immunodominant_mean": "0.97023803",
+      "immunodominant_std": "0.2211882",
+      "silent_mean": "1.1564807",
+      "silent_std": "0.14308396",
+      "t_statistic": -2.002047646478921,
+      "p_value": 0.0562415023995469,
+      "effect_size": "-0.99982274"
+    }
+  },
+  "codon_usage": {
+    "immunodominant_codons": {
+      "CGG": 17
+    },
+    "silent_codons": {
+      "CGG": 5
+    },
+    "chi2": 0,
+    "p_value": 1,
+    "degrees_of_freedom": 0
+  }
+}

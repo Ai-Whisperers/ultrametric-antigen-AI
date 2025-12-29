@@ -1,0 +1,36 @@
+{
+  "name": "TNC_R4_cit_HLA-DRB1_01_01",
+  "sequences": [
+    {
+      "protein": {
+        "id": "A",
+        "sequence": "GSRRLRALSV",
+        "modifications": [
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 3
+          },
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 4
+          },
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 6
+          }
+        ]
+      }
+    },
+    {
+      "protein": {
+        "id": "B",
+        "sequence": "GDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQKRAAVDTYCRHNYGVGESFTVQRR"
+      }
+    }
+  ],
+  "modelSeeds": [
+    1
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}

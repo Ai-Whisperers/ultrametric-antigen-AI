@@ -1,0 +1,121 @@
+================================================================================
+CITRULLINATION SHIFT ANALYSIS - P-ADIC SPACE PERTURBATION
+================================================================================
+
+Loading encoder from: C:\Users\Gestalt\Desktop\ternary\repos\ternary-vaes\research\genetic_code\data\codon_encoder.pt
+
+================================================================================
+EPITOPE SHIFT ANALYSIS
+================================================================================
+
+VIM_R71 (IMMUNODOMINANT, ACPA=85%)
+  R@0: centroid_shift=0.2722, relative=22.2%, JS_div=0.0039, ΔS=0.0397
+  R@2: centroid_shift=0.2722, relative=22.2%, JS_div=0.0039, ΔS=0.0397
+  R@9: centroid_shift=0.2722, relative=22.2%, JS_div=0.0039, ΔS=0.0397
+
+VIM_R257 (IMMUNODOMINANT, ACPA=72%)
+  R@5: centroid_shift=0.3514, relative=27.0%, JS_div=0.0356, ΔS=-0.1712
+
+VIM_R45 (Silent, ACPA=15%)
+  R@2: centroid_shift=0.3331, relative=17.1%, JS_div=0.0076, ΔS=-0.0433
+  R@5: centroid_shift=0.3331, relative=17.1%, JS_div=0.0076, ΔS=-0.0433
+
+VIM_R201 (IMMUNODOMINANT, ACPA=68%)
+  R@0: centroid_shift=0.3233, relative=23.2%, JS_div=0.0076, ΔS=-0.0340
+  R@2: centroid_shift=0.3353, relative=24.0%, JS_div=0.0076, ΔS=-0.0342
+
+FGA_R38 (IMMUNODOMINANT, ACPA=78%)
+  R@2: centroid_shift=0.3009, relative=27.8%, JS_div=0.0076, ΔS=0.0186
+  R@6: centroid_shift=0.3009, relative=27.8%, JS_div=0.0076, ΔS=0.0186
+
+FGA_R573 (IMMUNODOMINANT, ACPA=65%)
+  R@4: centroid_shift=0.3016, relative=26.9%, JS_div=0.0318, ΔS=-0.1353
+
+FGA_R84 (Silent, ACPA=22%)
+  R@0: centroid_shift=0.3188, relative=30.3%, JS_div=0.0321, ΔS=-0.1309
+
+FGB_R74 (IMMUNODOMINANT, ACPA=71%)
+  R@2: centroid_shift=0.3465, relative=22.4%, JS_div=0.0354, ΔS=-0.1653
+
+FGB_R44 (Silent, ACPA=18%)
+  R@7: centroid_shift=0.2731, relative=30.0%, JS_div=0.0319, ΔS=-0.1317
+
+ENO1_CEP1 (IMMUNODOMINANT, ACPA=62%)
+  R@2: centroid_shift=0.2439, relative=28.0%, JS_div=0.0060, ΔS=0.0092
+  R@9: centroid_shift=0.2439, relative=28.0%, JS_div=0.0060, ΔS=0.0092
+
+ENO1_R400 (Silent, ACPA=12%)
+  R@2: centroid_shift=0.3224, relative=34.1%, JS_div=0.0353, ΔS=-0.1547
+
+CII_259 (IMMUNODOMINANT, ACPA=45%)
+  R@2: centroid_shift=0.2062, relative=14.2%, JS_div=0.0056, ΔS=-0.0265
+  R@7: centroid_shift=0.2062, relative=14.2%, JS_div=0.0056, ΔS=-0.0265
+
+CII_511 (IMMUNODOMINANT, ACPA=38%)
+  R@3: centroid_shift=0.1932, relative=12.6%, JS_div=0.0056, ΔS=-0.0442
+  R@10: centroid_shift=0.1555, relative=10.1%, JS_div=0.0014, ΔS=0.0412
+
+FLG_CCP (IMMUNODOMINANT, ACPA=75%)
+  R@6: centroid_shift=0.2651, relative=17.3%, JS_div=0.0076, ΔS=-0.0031
+  R@8: centroid_shift=0.2651, relative=17.3%, JS_div=0.0076, ΔS=-0.0031
+
+FLG_SEC (Silent, ACPA=20%)
+  R@3: centroid_shift=0.3277, relative=16.6%, JS_div=0.0350, ΔS=-0.2214
+
+H2A_R3 (IMMUNODOMINANT, ACPA=35%)
+  R@2: centroid_shift=0.2389, relative=15.6%, JS_div=0.0070, ΔS=-0.0316
+  R@10: centroid_shift=0.2389, relative=15.6%, JS_div=0.0070, ΔS=-0.0316
+
+================================================================================
+STATISTICAL COMPARISON: IMMUNODOMINANT vs SILENT
+================================================================================
+
+CENTROID SHIFT:
+  Immunodominant: 0.2667 ± 0.0514
+  Silent:         0.3180 ± 0.0208
+  t = -2.298, p = 0.0306 *
+  Cohen's d = -1.311
+
+RELATIVE SHIFT:
+  Immunodominant: 0.2092 ± 0.0571
+  Silent:         0.2424 ± 0.0738
+  t = -1.116, p = 0.2754 
+  Cohen's d = -0.503
+
+JS DIVERGENCE:
+  Immunodominant: 0.0102 ± 0.0103
+  Silent:         0.0249 ± 0.0123
+  t = -2.816, p = 0.0096 **
+  Cohen's d = -1.297
+
+ENTROPY CHANGE:
+  Immunodominant: -0.0245 ± 0.0624
+  Silent:         -0.1209 ± 0.0626
+  t = 3.186, p = 0.0040 **
+  Cohen's d = 1.542
+
+================================================================================
+CORRELATION: SHIFT MAGNITUDE vs ACPA REACTIVITY
+================================================================================
+
+Pearson correlation: r = 0.001, p = 0.9982 
+Sample size: n = 16
+
+POSITIVE correlation: Larger shifts → Higher ACPA reactivity
+
+================================================================================
+KEY FINDINGS
+================================================================================
+
+✓ CLUSTER DISTRIBUTION SHIFT:
+  Immunodominant JS divergence: 0.0102
+  Silent JS divergence:         0.0249
+  The cluster probability distribution changes less in immunodominant sites
+
+✓ ENTROPY EFFECT:
+  Citrullination decreases epitope entropy by 0.0245
+  in immunodominant sites
+
+
+Results saved to: C:\Users\Gestalt\Desktop\ternary\repos\ternary-vaes\research\bioinformatics\rheumatoid_arthritis\results\citrullination_shift_analysis.json
+================================================================================

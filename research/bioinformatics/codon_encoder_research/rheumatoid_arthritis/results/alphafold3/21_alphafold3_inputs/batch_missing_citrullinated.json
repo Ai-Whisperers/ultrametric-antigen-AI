@@ -1,0 +1,118 @@
+[
+  {
+    "name": "FGA_R38_cit_DRB1_0401",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "GPRVVERHQS",
+          "count": 1,
+          "modifications": [
+            {"ptmType": "CCD_CIR", "ptmPosition": 3},
+            {"ptmType": "CCD_CIR", "ptmPosition": 7}
+          ]
+        }
+      },
+      {
+        "proteinChain": {
+          "sequence": "GDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQRRAAVDTYCRHNYGVGESFTVQRR",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  },
+  {
+    "name": "FGA_R38_cit_DRB1_0101",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "GPRVVERHQS",
+          "count": 1,
+          "modifications": [
+            {"ptmType": "CCD_CIR", "ptmPosition": 3},
+            {"ptmType": "CCD_CIR", "ptmPosition": 7}
+          ]
+        }
+      },
+      {
+        "proteinChain": {
+          "sequence": "GDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQKRAAVDTYCRHNYGVGESFTVQRR",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  },
+  {
+    "name": "FGB_R406_cit_DRB1_0401",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "SARGHRPLDKK",
+          "count": 1,
+          "modifications": [
+            {"ptmType": "CCD_CIR", "ptmPosition": 3},
+            {"ptmType": "CCD_CIR", "ptmPosition": 6}
+          ]
+        }
+      },
+      {
+        "proteinChain": {
+          "sequence": "GDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQRRAAVDTYCRHNYGVGESFTVQRR",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  },
+  {
+    "name": "FGB_R406_cit_DRB1_0101",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "SARGHRPLDKK",
+          "count": 1,
+          "modifications": [
+            {"ptmType": "CCD_CIR", "ptmPosition": 3},
+            {"ptmType": "CCD_CIR", "ptmPosition": 6}
+          ]
+        }
+      },
+      {
+        "proteinChain": {
+          "sequence": "GDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQKRAAVDTYCRHNYGVGESFTVQRR",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  },
+  {
+    "name": "FGB_R406_native_DRB1_0101",
+    "modelSeeds": [],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "SARGHRPLDKK",
+          "count": 1
+        }
+      },
+      {
+        "proteinChain": {
+          "sequence": "GDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQKRAAVDTYCRHNYGVGESFTVQRR",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafoldserver",
+    "version": 1
+  }
+]

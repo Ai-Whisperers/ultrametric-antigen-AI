@@ -1,0 +1,7 @@
+{
+  "n_alleles": 17,
+  "n_positions": 84,
+  "top_discriminative_positions": [
+    {
+      "position": 65,
+      "fisher_ratio": 

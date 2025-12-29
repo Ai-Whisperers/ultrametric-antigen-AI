@@ -1,0 +1,88 @@
+======================================================================
+HLA FUNCTIONOMIC ANALYSIS
+Testing P-Adic Geometry for RA Association
+======================================================================
+
+Loading codon encoder...
+  Loaded encoder from C:\Users\Gestalt\Desktop\ternary\repos\ternary-vaes\research\genetic_code\data\codon_encoder.pt
+
+Encoding HLA-DRB1 alleles...
+  DRB1*04:01: QKRAA (OR=4.0, risk)
+  DRB1*04:04: QRRAA (OR=3.5, risk)
+  DRB1*04:05: QRRAA (OR=3.2, risk)
+  DRB1*01:01: QRRAA (OR=2.0, risk)
+  DRB1*07:01: DRRGQ (OR=0.5, protective)
+  DRB1*15:01: QARAA (OR=1.0, neutral)
+  DRB1*03:01: DRRAA (OR=0.9, neutral)
+  DRB1*13:01: DERAA (OR=0.4, protective)
+
+Computing distance matrices...
+
+  Distance function: euclidean
+    Ultrametric property: 66.7% (56/168 violations)
+    RA within-group mean: 0.4172
+    Control within-group mean: 1.3544
+    Between-group mean: 1.1477
+    Separation ratio: 1.30x
+    Most discriminative position: 70 (dist=3.7282)
+    OR correlation: r=-0.071, p=0.8790
+
+  Distance function: poincare
+    Ultrametric property: 66.7% (56/168 violations)
+    RA within-group mean: 10.0172
+    Control within-group mean: 15.7493
+    Between-group mean: 15.4277
+    Separation ratio: 1.20x
+    Most discriminative position: 70 (dist=17.8337)
+    OR correlation: r=-0.071, p=0.8790
+
+  Distance function: ultrametric
+    Ultrametric property: 66.7% (56/168 violations)
+    RA within-group mean: 0.1768
+    Control within-group mean: 0.4629
+    Between-group mean: 0.3463
+    Separation ratio: 1.08x
+    Most discriminative position: 70 (dist=1.1195)
+    OR correlation: r=-0.107, p=0.8192
+
+  Best distance function: euclidean
+
+Generating visualization...
+  Saved visualization to C:\Users\Gestalt\Desktop\ternary\repos\ternary-vaes\research\bioinformatics\rheumatoid_arthritis\results\hla_functionomic_analysis.png
+
+======================================================================
+SUMMARY
+======================================================================
+
+    Distance Function: euclidean
+
+    RA Separation:
+      - RA alleles within-group: 0.4172 ± 0.4097
+      - Control within-group:    1.3544 ± 0.3170
+      - Between groups:          1.1477 ± 0.2610
+      - Separation ratio:        1.30x
+
+    Ultrametric Property: 66.7%
+
+    Odds Ratio Correlation:
+      - Spearman r: -0.071
+      - p-value:    0.8790
+
+    Position Analysis (70-74):
+      Position 70: centroid_dist=3.7282
+      Position 71: centroid_dist=1.6062
+      Position 72: centroid_dist=0.0126
+      Position 73: centroid_dist=0.9635
+      Position 74: centroid_dist=1.1156
+
+----------------------------------------------------------------------
+INTERPRETATION
+----------------------------------------------------------------------
+
+    *** POSITIVE SIGNAL: RA-associated alleles cluster separately from controls ***
+
+    The p-adic embedding space shows group separation, suggesting that
+    the shared epitope's functional properties can be captured geometrically.
+        
+
+  Saved results to C:\Users\Gestalt\Desktop\ternary\repos\ternary-vaes\research\bioinformatics\rheumatoid_arthritis\results\hla_functionomic_results.json

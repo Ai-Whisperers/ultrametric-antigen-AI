@@ -1,0 +1,70 @@
+{
+  "n_proteins": 7,
+  "n_sites": 26,
+  "proteins": [
+    {
+      "gene": "VIM",
+      "n_residues": 466,
+      "mean_plddt": 77.08560085836909,
+      "pct_disordered": 24.034334763948497,
+      "n_domains": 15,
+      "n_sites": 6
+    },
+    {
+      "gene": "ENO1",
+      "n_residues": 434,
+      "mean_plddt": 97.61324884792626,
+      "pct_disordered": 0.0,
+      "n_domains": 1,
+      "n_sites": 2
+    },
+    {
+      "gene": "CLU",
+      "n_residues": 449,
+      "mean_plddt": 77.30997772828508,
+      "pct_disordered": 16.70378619153675,
+      "n_domains": 6,
+      "n_sites": 2
+    },
+    {
+      "gene": "FN1",
+      "n_residues": 2477,
+      "mean_plddt": 69.65148163100525,
+      "pct_disordered": 16.4715381509891,
+      "n_domains": 102,
+      "n_sites": 3
+    },
+    {
+      "gene": "FGB",
+      "n_residues": 491,
+      "mean_plddt": 84.06930753564154,
+      "pct_disordered": 15.071283095723015,
+      "n_domains": 6,
+      "n_sites": 4
+    },
+    {
+      "gene": "FGA",
+      "n_residues": 866,
+      "mean_plddt": 60.32842956120093,
+      "pct_disordered": 45.49653579676674,
+      "n_domains": 48,
+      "n_sites": 6
+    },
+    {
+      "gene": "TNC",
+      "n_residues": 2201,
+      "mean_plddt": 74.89321217628351,
+      "pct_disordered": 6.951385733757383,
+      "n_domains": 55,
+      "n_sites": 3
+    }
+  ],
+  "disorder_immunodominance_test": {
+    "imm_in_disordered": 13,
+    "imm_total": 18,
+    "silent_in_disordered": 6,
+    "silent_total": 8,
+    "odds_ratio": 0.8666666666666667,
+    "p_value": 1.0
+  }
+}

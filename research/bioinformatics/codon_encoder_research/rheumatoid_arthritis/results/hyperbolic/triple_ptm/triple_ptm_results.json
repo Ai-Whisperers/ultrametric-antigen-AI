@@ -1,0 +1,2578 @@
+{
+  "analysis_date": "2025-12-24T22:47:09.888475",
+  "total_triplets": 500,
+  "summary": {
+    "triple_vs_singles_mean": 0.3870174288749695,
+    "triple_vs_pairs_mean": 0.3547985255718231,
+    "incremental_gain_mean": -0.16844390332698822,
+    "triple_potentiation_count": 0,
+    "progressive_potentiation_count": 0
+  },
+  "by_x_type": {
+    "S": {
+      "count": 240,
+      "mean_shift": 1.014507532119751
+    },
+    "T": {
+      "count": 152,
+      "mean_shift": 0.7371086478233337
+    },
+    "K": {
+      "count": 108,
+      "mean_shift": 0.6159695386886597
+    }
+  },
+  "critical_triplets": [
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          69,
+          61,
+          66
+        ],
+        "residues": [
+          "R",
+          "N",
+          "S"
+        ],
+        "x_type": "S",
+        "max_distance": 8
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.14164970815181732,
+          "relative_shift": 1.0429247617721558,
+          "entropy_change": 0.017407894134521484,
+          "js_divergence": 0.020717309787869453
+        },
+        "N": {
+          "centroid_shift": 0.13688364624977112,
+          "relative_shift": 0.664496898651123,
+          "entropy_change": 0.008600950241088867,
+          "js_divergence": 0.017007458955049515
+        },
+        "X": {
+          "centroid_shift": 0.22851677238941193,
+          "relative_shift": 1.8603547811508179,
+          "entropy_change": -0.014467239379882812,
+          "js_divergence": 0.015004271641373634
+        },
+        "RN": {
+          "centroid_shift": 0.10744450986385345,
+          "relative_shift": 0.8157910108566284,
+          "entropy_change": -0.00061798095703125,
+          "js_divergence": 0.024319827556610107
+        },
+        "RX": {
+          "centroid_shift": 0.2693589925765991,
+          "relative_shift": 1.9914475679397583,
+          "entropy_change": -0.04447054862976074,
+          "js_divergence": 0.02848190814256668
+        },
+        "NX": {
+          "centroid_shift": 0.1621330976486206,
+          "relative_shift": 1.49068284034729,
+          "entropy_change": 0.01655292510986328,
+          "js_divergence": 0.015055039897561073
+        },
+        "RNX": {
+          "centroid_shift": 0.19096951186656952,
+          "relative_shift": 1.4499690532684326,
+          "entropy_change": -0.017856121063232422,
+          "js_divergence": 0.02774226665496826
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.4777911901473999,
+        "rx_ratio": 0.6859303712844849,
+        "nx_ratio": 0.5904040932655334,
+        "triple_vs_singles": 0.4064069390296936,
+        "triple_vs_pairs": 0.33736521005630493,
+        "incremental_gain": -0.5414785146713257
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 1.0429247617721558,
+        "N": 0.664496898651123,
+        "X": 1.8603547811508179,
+        "RN": 0.8157910108566284,
+        "RX": 1.9914475679397583,
+        "NX": 1.49068284034729,
+        "RNX": 1.4499690532684326
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          69,
+          61,
+          63
+        ],
+        "residues": [
+          "R",
+          "N",
+          "K"
+        ],
+        "x_type": "K",
+        "max_distance": 8
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.14164970815181732,
+          "relative_shift": 1.0429247617721558,
+          "entropy_change": 0.017407894134521484,
+          "js_divergence": 0.020717309787869453
+        },
+        "N": {
+          "centroid_shift": 0.13688364624977112,
+          "relative_shift": 0.664496898651123,
+          "entropy_change": 0.008600950241088867,
+          "js_divergence": 0.017007458955049515
+        },
+        "X": {
+          "centroid_shift": 0.11111987382173538,
+          "relative_shift": 0.6541220545768738,
+          "entropy_change": 0.06241011619567871,
+          "js_divergence": 0.010464625433087349
+        },
+        "RN": {
+          "centroid_shift": 0.10744450986385345,
+          "relative_shift": 0.8157910108566284,
+          "entropy_change": -0.00061798095703125,
+          "js_divergence": 0.024319827556610107
+        },
+        "RX": {
+          "centroid_shift": 0.12932834029197693,
+          "relative_shift": 0.8381736874580383,
+          "entropy_change": 0.030913352966308594,
+          "js_divergence": 0.024007229134440422
+        },
+        "NX": {
+          "centroid_shift": 0.17387764155864716,
+          "relative_shift": 1.0626899003982544,
+          "entropy_change": 0.035218000411987305,
+          "js_divergence": 0.026406168937683105
+        },
+        "RNX": {
+          "centroid_shift": 0.14053644239902496,
+          "relative_shift": 1.0670472383499146,
+          "entropy_change": 0.008047342300415039,
+          "js_divergence": 0.03413422033190727
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.4777911901473999,
+        "rx_ratio": 0.4939013421535492,
+        "nx_ratio": 0.8059112429618835,
+        "triple_vs_singles": 0.45184311270713806,
+        "triple_vs_pairs": 0.3927798569202423,
+        "incremental_gain": 0.004357337951660156
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 1.0429247617721558,
+        "N": 0.664496898651123,
+        "X": 0.6541220545768738,
+        "RN": 0.8157910108566284,
+        "RX": 0.8381736874580383,
+        "NX": 1.0626899003982544,
+        "RNX": 1.0670472383499146
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          69,
+          61,
+          71
+        ],
+        "residues": [
+          "R",
+          "N",
+          "K"
+        ],
+        "x_type": "K",
+        "max_distance": 10
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.14164970815181732,
+          "relative_shift": 1.0429247617721558,
+          "entropy_change": 0.017407894134521484,
+          "js_divergence": 0.020717309787869453
+        },
+        "N": {
+          "centroid_shift": 0.13688364624977112,
+          "relative_shift": 0.664496898651123,
+          "entropy_change": 0.008600950241088867,
+          "js_divergence": 0.017007458955049515
+        },
+        "X": {
+          "centroid_shift": 0.10928790271282196,
+          "relative_shift": 0.8468878865242004,
+          "entropy_change": -0.015697717666625977,
+          "js_divergence": 0.012681495398283005
+        },
+        "RN": {
+          "centroid_shift": 0.10744450986385345,
+          "relative_shift": 0.8157910108566284,
+          "entropy_change": -0.00061798095703125,
+          "js_divergence": 0.024319827556610107
+        },
+        "RX": {
+          "centroid_shift": 0.15834404528141022,
+          "relative_shift": 1.0659347772598267,
+          "entropy_change": -0.015334606170654297,
+          "js_divergence": 0.022386077791452408
+        },
+        "NX": {
+          "centroid_shift": 0.11874321103096008,
+          "relative_shift": 0.7780680060386658,
+          "entropy_change": 0.020780563354492188,
+          "js_divergence": 0.00950231309980154
+        },
+        "RNX": {
+          "centroid_shift": 0.13082072138786316,
+          "relative_shift": 0.8572062253952026,
+          "entropy_change": -0.01318979263305664,
+          "js_divergence": 0.02112394943833351
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.4777911901473999,
+        "rx_ratio": 0.5640425682067871,
+        "nx_ratio": 0.5148047208786011,
+        "triple_vs_singles": 0.3355921506881714,
+        "triple_vs_pairs": 0.32228296995162964,
+        "incremental_gain": -0.20872855186462402
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 1.0429247617721558,
+        "N": 0.664496898651123,
+        "X": 0.8468878865242004,
+        "RN": 0.8157910108566284,
+        "RX": 1.0659347772598267,
+        "NX": 0.7780680060386658,
+        "RNX": 0.8572062253952026
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          69,
+          78,
+          66
+        ],
+        "residues": [
+          "R",
+          "N",
+          "S"
+        ],
+        "x_type": "S",
+        "max_distance": 12
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.14164970815181732,
+          "relative_shift": 1.0429247617721558,
+          "entropy_change": 0.017407894134521484,
+          "js_divergence": 0.020717309787869453
+        },
+        "N": {
+          "centroid_shift": 0.1449706107378006,
+          "relative_shift": 0.4302445650100708,
+          "entropy_change": 0.05600094795227051,
+          "js_divergence": 0.005648341961205006
+        },
+        "X": {
+          "centroid_shift": 0.22851677238941193,
+          "relative_shift": 1.8603547811508179,
+          "entropy_change": -0.014467239379882812,
+          "js_divergence": 0.015004271641373634
+        },
+        "RN": {
+          "centroid_shift": 0.10442192107439041,
+          "relative_shift": 0.641823947429657,
+          "entropy_change": 0.032846927642822266,
+          "js_divergence": 0.010246879421174526
+        },
+        "RX": {
+          "centroid_shift": 0.2693589925765991,
+          "relative_shift": 1.9914475679397583,
+          "entropy_change": -0.04447054862976074,
+          "js_divergence": 0.02848190814256668
+        },
+        "NX": {
+          "centroid_shift": 0.12511372566223145,
+          "relative_shift": 0.667305052280426,
+          "entropy_change": -0.011348247528076172,
+          "js_divergence": 0.009155522100627422
+        },
+        "RNX": {
+          "centroid_shift": 0.1675751954317093,
+          "relative_shift": 0.8937770128250122,
+          "entropy_change": -0.008993387222290039,
+          "js_divergence": 0.015706047415733337
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.43567562103271484,
+        "rx_ratio": 0.6859303712844849,
+        "nx_ratio": 0.29132333397865295,
+        "triple_vs_singles": 0.268117755651474,
+        "triple_vs_pairs": 0.27079421281814575,
+        "incremental_gain": -1.097670555114746
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 1.0429247617721558,
+        "N": 0.4302445650100708,
+        "X": 1.8603547811508179,
+        "RN": 0.641823947429657,
+        "RX": 1.9914475679397583,
+        "NX": 0.667305052280426,
+        "RNX": 0.8937770128250122
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          69,
+          78,
+          71
+        ],
+        "residues": [
+          "R",
+          "N",
+          "K"
+        ],
+        "x_type": "K",
+        "max_distance": 9
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.14164970815181732,
+          "relative_shift": 1.0429247617721558,
+          "entropy_change": 0.017407894134521484,
+          "js_divergence": 0.020717309787869453
+        },
+        "N": {
+          "centroid_shift": 0.1449706107378006,
+          "relative_shift": 0.4302445650100708,
+          "entropy_change": 0.05600094795227051,
+          "js_divergence": 0.005648341961205006
+        },
+        "X": {
+          "centroid_shift": 0.10928790271282196,
+          "relative_shift": 0.8468878865242004,
+          "entropy_change": -0.015697717666625977,
+          "js_divergence": 0.012681495398283005
+        },
+        "RN": {
+          "centroid_shift": 0.10442192107439041,
+          "relative_shift": 0.641823947429657,
+          "entropy_change": 0.032846927642822266,
+          "js_divergence": 0.010246879421174526
+        },
+        "RX": {
+          "centroid_shift": 0.15834404528141022,
+          "relative_shift": 1.0659347772598267,
+          "entropy_change": -0.015334606170654297,
+          "js_divergence": 0.022386077791452408
+        },
+        "NX": {
+          "centroid_shift": 0.1334625780582428,
+          "relative_shift": 0.9436935782432556,
+          "entropy_change": 0.010483264923095703,
+          "js_divergence": 0.013397453352808952
+        },
+        "RNX": {
+          "centroid_shift": 0.13655158877372742,
+          "relative_shift": 0.8393072485923767,
+          "entropy_change": 0.030757427215576172,
+          "js_divergence": 0.017276804894208908
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.43567562103271484,
+        "rx_ratio": 0.5640425682067871,
+        "nx_ratio": 0.7389159202575684,
+        "triple_vs_singles": 0.3617614507675171,
+        "triple_vs_pairs": 0.316546231508255,
+        "incremental_gain": -0.22662752866744995
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 1.0429247617721558,
+        "N": 0.4302445650100708,
+        "X": 0.8468878865242004,
+        "RN": 0.641823947429657,
+        "RX": 1.0659347772598267,
+        "NX": 0.9436935782432556,
+        "RNX": 0.8393072485923767
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          84,
+          78,
+          82
+        ],
+        "residues": [
+          "R",
+          "N",
+          "T"
+        ],
+        "x_type": "T",
+        "max_distance": 6
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.15288729965686798,
+          "relative_shift": 0.5631997585296631,
+          "entropy_change": -0.04135608673095703,
+          "js_divergence": 0.019699200987815857
+        },
+        "N": {
+          "centroid_shift": 0.1449706107378006,
+          "relative_shift": 0.4302445650100708,
+          "entropy_change": 0.05600094795227051,
+          "js_divergence": 0.005648341961205006
+        },
+        "X": {
+          "centroid_shift": 0.21098853647708893,
+          "relative_shift": 0.5188485383987427,
+          "entropy_change": -0.07942938804626465,
+          "js_divergence": 0.015303372405469418
+        },
+        "RN": {
+          "centroid_shift": 0.12542694807052612,
+          "relative_shift": 0.44306549429893494,
+          "entropy_change": 0.006959199905395508,
+          "js_divergence": 0.018692191690206528
+        },
+        "RX": {
+          "centroid_shift": 0.21128499507904053,
+          "relative_shift": 0.6857929825782776,
+          "entropy_change": -0.10488700866699219,
+          "js_divergence": 0.030534397810697556
+        },
+        "NX": {
+          "centroid_shift": 0.18885934352874756,
+          "relative_shift": 0.5339028239250183,
+          "entropy_change": -0.006604909896850586,
+          "js_divergence": 0.014520380645990372
+        },
+        "RNX": {
+          "centroid_shift": 0.169566348195076,
+          "relative_shift": 0.5989860892295837,
+          "entropy_change": -0.044241905212402344,
+          "js_divergence": 0.028228294104337692
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.4459892511367798,
+        "rx_ratio": 0.633791446685791,
+        "nx_ratio": 0.5625399947166443,
+        "triple_vs_singles": 0.39607810974121094,
+        "triple_vs_pairs": 0.3602357804775238,
+        "incremental_gain": -0.08680689334869385
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.5631997585296631,
+        "N": 0.4302445650100708,
+        "X": 0.5188485383987427,
+        "RN": 0.44306549429893494,
+        "RX": 0.6857929825782776,
+        "NX": 0.5339028239250183,
+        "RNX": 0.5989860892295837
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          84,
+          78,
+          87
+        ],
+        "residues": [
+          "R",
+          "N",
+          "K"
+        ],
+        "x_type": "K",
+        "max_distance": 9
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.15288729965686798,
+          "relative_shift": 0.5631997585296631,
+          "entropy_change": -0.04135608673095703,
+          "js_divergence": 0.019699200987815857
+        },
+        "N": {
+          "centroid_shift": 0.1449706107378006,
+          "relative_shift": 0.4302445650100708,
+          "entropy_change": 0.05600094795227051,
+          "js_divergence": 0.005648341961205006
+        },
+        "X": {
+          "centroid_shift": 0.11522440612316132,
+          "relative_shift": 0.4378807842731476,
+          "entropy_change": 0.07051277160644531,
+          "js_divergence": 0.010760024189949036
+        },
+        "RN": {
+          "centroid_shift": 0.12542694807052612,
+          "relative_shift": 0.44306549429893494,
+          "entropy_change": 0.006959199905395508,
+          "js_divergence": 0.018692191690206528
+        },
+        "RX": {
+          "centroid_shift": 0.16077527403831482,
+          "relative_shift": 0.5691167712211609,
+          "entropy_change": -0.024929046630859375,
+          "js_divergence": 0.02402631565928459
+        },
+        "NX": {
+          "centroid_shift": 0.1298823356628418,
+          "relative_shift": 0.4559412896633148,
+          "entropy_change": 0.0656270980834961,
+          "js_divergence": 0.008353034034371376
+        },
+        "RNX": {
+          "centroid_shift": 0.1438477337360382,
+          "relative_shift": 0.5049656629562378,
+          "entropy_change": 0.02182769775390625,
+          "js_divergence": 0.02243051491677761
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.4459892511367798,
+        "rx_ratio": 0.5685024857521057,
+        "nx_ratio": 0.5252021551132202,
+        "triple_vs_singles": 0.35279592871665955,
+        "triple_vs_pairs": 0.34395310282707214,
+        "incremental_gain": -0.0641511082649231
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.5631997585296631,
+        "N": 0.4302445650100708,
+        "X": 0.4378807842731476,
+        "RN": 0.44306549429893494,
+        "RX": 0.5691167712211609,
+        "NX": 0.4559412896633148,
+        "RNX": 0.5049656629562378
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          84,
+          78,
+          89
+        ],
+        "residues": [
+          "R",
+          "N",
+          "K"
+        ],
+        "x_type": "K",
+        "max_distance": 11
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.15288729965686798,
+          "relative_shift": 0.5631997585296631,
+          "entropy_change": -0.04135608673095703,
+          "js_divergence": 0.019699200987815857
+        },
+        "N": {
+          "centroid_shift": 0.1449706107378006,
+          "relative_shift": 0.4302445650100708,
+          "entropy_change": 0.05600094795227051,
+          "js_divergence": 0.005648341961205006
+        },
+        "X": {
+          "centroid_shift": 0.11589960008859634,
+          "relative_shift": 0.4229048192501068,
+          "entropy_change": 0.05436873435974121,
+          "js_divergence": 0.005291391164064407
+        },
+        "RN": {
+          "centroid_shift": 0.12542694807052612,
+          "relative_shift": 0.44306549429893494,
+          "entropy_change": 0.006959199905395508,
+          "js_divergence": 0.018692191690206528
+        },
+        "RX": {
+          "centroid_shift": 0.14686496555805206,
+          "relative_shift": 0.49422693252563477,
+          "entropy_change": -0.032781362533569336,
+          "js_divergence": 0.017926882952451706
+        },
+        "NX": {
+          "centroid_shift": 0.1212809756398201,
+          "relative_shift": 0.4113294184207916,
+          "entropy_change": 0.04827737808227539,
+          "js_divergence": 0.005679146386682987
+        },
+        "RNX": {
+          "centroid_shift": 0.13440413773059845,
+          "relative_shift": 0.4558371603488922,
+          "entropy_change": 0.0006120204925537109,
+          "js_divergence": 0.01715848594903946
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.4459892511367798,
+        "rx_ratio": 0.5011911988258362,
+        "nx_ratio": 0.48213058710098267,
+        "triple_vs_singles": 0.3218395411968231,
+        "triple_vs_pairs": 0.33800220489501953,
+        "incremental_gain": -0.038389772176742554
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.5631997585296631,
+        "N": 0.4302445650100708,
+        "X": 0.4229048192501068,
+        "RN": 0.44306549429893494,
+        "RX": 0.49422693252563477,
+        "NX": 0.4113294184207916,
+        "RNX": 0.4558371603488922
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          84,
+          83,
+          91
+        ],
+        "residues": [
+          "R",
+          "N",
+          "S"
+        ],
+        "x_type": "S",
+        "max_distance": 8
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.15288729965686798,
+          "relative_shift": 0.5631997585296631,
+          "entropy_change": -0.04135608673095703,
+          "js_divergence": 0.019699200987815857
+        },
+        "N": {
+          "centroid_shift": 0.14272426068782806,
+          "relative_shift": 0.45868149399757385,
+          "entropy_change": 0.06293964385986328,
+          "js_divergence": 0.004908672533929348
+        },
+        "X": {
+          "centroid_shift": 0.25597402453422546,
+          "relative_shift": 0.8222787976264954,
+          "entropy_change": -0.05243802070617676,
+          "js_divergence": 0.021742716431617737
+        },
+        "RN": {
+          "centroid_shift": 0.16309578716754913,
+          "relative_shift": 0.5745086073875427,
+          "entropy_change": 0.0035376548767089844,
+          "js_divergence": 0.025995470583438873
+        },
+        "RX": {
+          "centroid_shift": 0.25385385751724243,
+          "relative_shift": 0.7449655532836914,
+          "entropy_change": -0.11187982559204102,
+          "js_divergence": 0.02685880847275257
+        },
+        "NX": {
+          "centroid_shift": 0.161347895860672,
+          "relative_shift": 0.46707868576049805,
+          "entropy_change": -0.025580644607543945,
+          "js_divergence": 0.014343095943331718
+        },
+        "RNX": {
+          "centroid_shift": 0.21836872398853302,
+          "relative_shift": 0.6321457028388977,
+          "entropy_change": -0.08156037330627441,
+          "js_divergence": 0.02849048376083374
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.5622068047523499,
+        "rx_ratio": 0.5376955270767212,
+        "nx_ratio": 0.36463165283203125,
+        "triple_vs_singles": 0.3427824378013611,
+        "triple_vs_pairs": 0.35383543372154236,
+        "incremental_gain": -0.1128198504447937
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.5631997585296631,
+        "N": 0.45868149399757385,
+        "X": 0.8222787976264954,
+        "RN": 0.5745086073875427,
+        "RX": 0.7449655532836914,
+        "NX": 0.46707868576049805,
+        "RNX": 0.6321457028388977
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          84,
+          83,
+          82
+        ],
+        "residues": [
+          "R",
+          "N",
+          "T"
+        ],
+        "x_type": "T",
+        "max_distance": 2
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.15288729965686798,
+          "relative_shift": 0.5631997585296631,
+          "entropy_change": -0.04135608673095703,
+          "js_divergence": 0.019699200987815857
+        },
+        "N": {
+          "centroid_shift": 0.14272426068782806,
+          "relative_shift": 0.45868149399757385,
+          "entropy_change": 0.06293964385986328,
+          "js_divergence": 0.004908672533929348
+        },
+        "X": {
+          "centroid_shift": 0.21098853647708893,
+          "relative_shift": 0.5188485383987427,
+          "entropy_change": -0.07942938804626465,
+          "js_divergence": 0.015303372405469418
+        },
+        "RN": {
+          "centroid_shift": 0.16309578716754913,
+          "relative_shift": 0.5745086073875427,
+          "entropy_change": 0.0035376548767089844,
+          "js_divergence": 0.025995470583438873
+        },
+        "RX": {
+          "centroid_shift": 0.21128499507904053,
+          "relative_shift": 0.6857929825782776,
+          "entropy_change": -0.10488700866699219,
+          "js_divergence": 0.030534397810697556
+        },
+        "NX": {
+          "centroid_shift": 0.21908028423786163,
+          "relative_shift": 0.6538754105567932,
+          "entropy_change": -0.01127481460571289,
+          "js_divergence": 0.018508024513721466
+        },
+        "RNX": {
+          "centroid_shift": 0.21223323047161102,
+          "relative_shift": 0.6888707876205444,
+          "entropy_change": -0.0629432201385498,
+          "js_divergence": 0.0372777059674263
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.5622068047523499,
+        "rx_ratio": 0.633791446685791,
+        "nx_ratio": 0.6689057350158691,
+        "triple_vs_singles": 0.44710680842399597,
+        "triple_vs_pairs": 0.3598783314228058,
+        "incremental_gain": 0.0030778050422668457
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.5631997585296631,
+        "N": 0.45868149399757385,
+        "X": 0.5188485383987427,
+        "RN": 0.5745086073875427,
+        "RX": 0.6857929825782776,
+        "NX": 0.6538754105567932,
+        "RNX": 0.6888707876205444
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          84,
+          83,
+          87
+        ],
+        "residues": [
+          "R",
+          "N",
+          "K"
+        ],
+        "x_type": "K",
+        "max_distance": 4
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.15288729965686798,
+          "relative_shift": 0.5631997585296631,
+          "entropy_change": -0.04135608673095703,
+          "js_divergence": 0.019699200987815857
+        },
+        "N": {
+          "centroid_shift": 0.14272426068782806,
+          "relative_shift": 0.45868149399757385,
+          "entropy_change": 0.06293964385986328,
+          "js_divergence": 0.004908672533929348
+        },
+        "X": {
+          "centroid_shift": 0.11522440612316132,
+          "relative_shift": 0.4378807842731476,
+          "entropy_change": 0.07051277160644531,
+          "js_divergence": 0.010760024189949036
+        },
+        "RN": {
+          "centroid_shift": 0.16309578716754913,
+          "relative_shift": 0.5745086073875427,
+          "entropy_change": 0.0035376548767089844,
+          "js_divergence": 0.025995470583438873
+        },
+        "RX": {
+          "centroid_shift": 0.16077527403831482,
+          "relative_shift": 0.5691167712211609,
+          "entropy_change": -0.024929046630859375,
+          "js_divergence": 0.02402631565928459
+        },
+        "NX": {
+          "centroid_shift": 0.16307176649570465,
+          "relative_shift": 0.5587521195411682,
+          "entropy_change": 0.06377601623535156,
+          "js_divergence": 0.011635910719633102
+        },
+        "RNX": {
+          "centroid_shift": 0.1813957542181015,
+          "relative_shift": 0.6215377449989319,
+          "entropy_change": 0.0054438114166259766,
+          "js_divergence": 0.030320513993501663
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.5622068047523499,
+        "rx_ratio": 0.5685024857521057,
+        "nx_ratio": 0.6232161521911621,
+        "triple_vs_singles": 0.42578020691871643,
+        "triple_vs_pairs": 0.36509981751441956,
+        "incremental_gain": 0.04702913761138916
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.5631997585296631,
+        "N": 0.45868149399757385,
+        "X": 0.4378807842731476,
+        "RN": 0.5745086073875427,
+        "RX": 0.5691167712211609,
+        "NX": 0.5587521195411682,
+        "RNX": 0.6215377449989319
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          84,
+          83,
+          89
+        ],
+        "residues": [
+          "R",
+          "N",
+          "K"
+        ],
+        "x_type": "K",
+        "max_distance": 6
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.15288729965686798,
+          "relative_shift": 0.5631997585296631,
+          "entropy_change": -0.04135608673095703,
+          "js_divergence": 0.019699200987815857
+        },
+        "N": {
+          "centroid_shift": 0.14272426068782806,
+          "relative_shift": 0.45868149399757385,
+          "entropy_change": 0.06293964385986328,
+          "js_divergence": 0.004908672533929348
+        },
+        "X": {
+          "centroid_shift": 0.11589960008859634,
+          "relative_shift": 0.4229048192501068,
+          "entropy_change": 0.05436873435974121,
+          "js_divergence": 0.005291391164064407
+        },
+        "RN": {
+          "centroid_shift": 0.16309578716754913,
+          "relative_shift": 0.5745086073875427,
+          "entropy_change": 0.0035376548767089844,
+          "js_divergence": 0.025995470583438873
+        },
+        "RX": {
+          "centroid_shift": 0.14686496555805206,
+          "relative_shift": 0.49422693252563477,
+          "entropy_change": -0.032781362533569336,
+          "js_divergence": 0.017926882952451706
+        },
+        "NX": {
+          "centroid_shift": 0.15009979903697968,
+          "relative_shift": 0.48984092473983765,
+          "entropy_change": 0.04693722724914551,
+          "js_divergence": 0.007488065864890814
+        },
+        "RNX": {
+          "centroid_shift": 0.16706602275371552,
+          "relative_shift": 0.5452091097831726,
+          "entropy_change": -0.015264034271240234,
+          "js_divergence": 0.022475365549325943
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.5622068047523499,
+        "rx_ratio": 0.5011911988258362,
+        "nx_ratio": 0.5556358098983765,
+        "triple_vs_singles": 0.3773632049560547,
+        "triple_vs_pairs": 0.34981220960617065,
+        "incremental_gain": -0.029299497604370117
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.5631997585296631,
+        "N": 0.45868149399757385,
+        "X": 0.4229048192501068,
+        "RN": 0.5745086073875427,
+        "RX": 0.49422693252563477,
+        "NX": 0.48984092473983765,
+        "RNX": 0.5452091097831726
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          84,
+          86,
+          91
+        ],
+        "residues": [
+          "R",
+          "N",
+          "S"
+        ],
+        "x_type": "S",
+        "max_distance": 7
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.15288729965686798,
+          "relative_shift": 0.5631997585296631,
+          "entropy_change": -0.04135608673095703,
+          "js_divergence": 0.019699200987815857
+        },
+        "N": {
+          "centroid_shift": 0.13798435032367706,
+          "relative_shift": 0.5443600416183472,
+          "entropy_change": 0.048496246337890625,
+          "js_divergence": 0.005605220794677734
+        },
+        "X": {
+          "centroid_shift": 0.25597402453422546,
+          "relative_shift": 0.8222787976264954,
+          "entropy_change": -0.05243802070617676,
+          "js_divergence": 0.021742716431617737
+        },
+        "RN": {
+          "centroid_shift": 0.15302085876464844,
+          "relative_shift": 0.5535644888877869,
+          "entropy_change": 0.003492116928100586,
+          "js_divergence": 0.02446945384144783
+        },
+        "RX": {
+          "centroid_shift": 0.25385385751724243,
+          "relative_shift": 0.7449655532836914,
+          "entropy_change": -0.11187982559204102,
+          "js_divergence": 0.02685880847275257
+        },
+        "NX": {
+          "centroid_shift": 0.18299192190170288,
+          "relative_shift": 0.5452615022659302,
+          "entropy_change": -0.020953893661499023,
+          "js_divergence": 0.017004461959004402
+        },
+        "RNX": {
+          "centroid_shift": 0.22700262069702148,
+          "relative_shift": 0.6661672592163086,
+          "entropy_change": -0.07696056365966797,
+          "js_divergence": 0.03005971945822239
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.4998055100440979,
+        "rx_ratio": 0.5376955270767212,
+        "nx_ratio": 0.39897993206977844,
+        "triple_vs_singles": 0.3451932370662689,
+        "triple_vs_pairs": 0.36130291223526,
+        "incremental_gain": -0.07879829406738281
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.5631997585296631,
+        "N": 0.5443600416183472,
+        "X": 0.8222787976264954,
+        "RN": 0.5535644888877869,
+        "RX": 0.7449655532836914,
+        "NX": 0.5452615022659302,
+        "RNX": 0.6661672592163086
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          84,
+          86,
+          82
+        ],
+        "residues": [
+          "R",
+          "N",
+          "T"
+        ],
+        "x_type": "T",
+        "max_distance": 4
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.15288729965686798,
+          "relative_shift": 0.5631997585296631,
+          "entropy_change": -0.04135608673095703,
+          "js_divergence": 0.019699200987815857
+        },
+        "N": {
+          "centroid_shift": 0.13798435032367706,
+          "relative_shift": 0.5443600416183472,
+          "entropy_change": 0.048496246337890625,
+          "js_divergence": 0.005605220794677734
+        },
+        "X": {
+          "centroid_shift": 0.21098853647708893,
+          "relative_shift": 0.5188485383987427,
+          "entropy_change": -0.07942938804626465,
+          "js_divergence": 0.015303372405469418
+        },
+        "RN": {
+          "centroid_shift": 0.15302085876464844,
+          "relative_shift": 0.5535644888877869,
+          "entropy_change": 0.003492116928100586,
+          "js_divergence": 0.02446945384144783
+        },
+        "RX": {
+          "centroid_shift": 0.21128499507904053,
+          "relative_shift": 0.6857929825782776,
+          "entropy_change": -0.10488700866699219,
+          "js_divergence": 0.030534397810697556
+        },
+        "NX": {
+          "centroid_shift": 0.18355271220207214,
+          "relative_shift": 0.5845695734024048,
+          "entropy_change": -0.017416715621948242,
+          "js_divergence": 0.015423143282532692
+        },
+        "RNX": {
+          "centroid_shift": 0.1915908008813858,
+          "relative_shift": 0.6101688742637634,
+          "entropy_change": -0.06407594680786133,
+          "js_divergence": 0.033110201358795166
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.4998055100440979,
+        "rx_ratio": 0.633791446685791,
+        "nx_ratio": 0.5498164296150208,
+        "triple_vs_singles": 0.37516340613365173,
+        "triple_vs_pairs": 0.33453577756881714,
+        "incremental_gain": -0.07562410831451416
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.5631997585296631,
+        "N": 0.5443600416183472,
+        "X": 0.5188485383987427,
+        "RN": 0.5535644888877869,
+        "RX": 0.6857929825782776,
+        "NX": 0.5845695734024048,
+        "RNX": 0.6101688742637634
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          84,
+          86,
+          87
+        ],
+        "residues": [
+          "R",
+          "N",
+          "K"
+        ],
+        "x_type": "K",
+        "max_distance": 3
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.15288729965686798,
+          "relative_shift": 0.5631997585296631,
+          "entropy_change": -0.04135608673095703,
+          "js_divergence": 0.019699200987815857
+        },
+        "N": {
+          "centroid_shift": 0.13798435032367706,
+          "relative_shift": 0.5443600416183472,
+          "entropy_change": 0.048496246337890625,
+          "js_divergence": 0.005605220794677734
+        },
+        "X": {
+          "centroid_shift": 0.11522440612316132,
+          "relative_shift": 0.4378807842731476,
+          "entropy_change": 0.07051277160644531,
+          "js_divergence": 0.010760024189949036
+        },
+        "RN": {
+          "centroid_shift": 0.15302085876464844,
+          "relative_shift": 0.5535644888877869,
+          "entropy_change": 0.003492116928100586,
+          "js_divergence": 0.02446945384144783
+        },
+        "RX": {
+          "centroid_shift": 0.16077527403831482,
+          "relative_shift": 0.5691167712211609,
+          "entropy_change": -0.024929046630859375,
+          "js_divergence": 0.02402631565928459
+        },
+        "NX": {
+          "centroid_shift": 0.18915338814258575,
+          "relative_shift": 0.7174062132835388,
+          "entropy_change": 0.05911421775817871,
+          "js_divergence": 0.014589803293347359
+        },
+        "RNX": {
+          "centroid_shift": 0.19009077548980713,
+          "relative_shift": 0.6728886365890503,
+          "entropy_change": 0.0024030208587646484,
+          "js_divergence": 0.03210298717021942
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.4998055100440979,
+        "rx_ratio": 0.5685024857521057,
+        "nx_ratio": 0.7303771376609802,
+        "triple_vs_singles": 0.4354024827480316,
+        "triple_vs_pairs": 0.3656829595565796,
+        "incremental_gain": -0.044517576694488525
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.5631997585296631,
+        "N": 0.5443600416183472,
+        "X": 0.4378807842731476,
+        "RN": 0.5535644888877869,
+        "RX": 0.5691167712211609,
+        "NX": 0.7174062132835388,
+        "RNX": 0.6728886365890503
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          84,
+          86,
+          89
+        ],
+        "residues": [
+          "R",
+          "N",
+          "K"
+        ],
+        "x_type": "K",
+        "max_distance": 5
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.15288729965686798,
+          "relative_shift": 0.5631997585296631,
+          "entropy_change": -0.04135608673095703,
+          "js_divergence": 0.019699200987815857
+        },
+        "N": {
+          "centroid_shift": 0.13798435032367706,
+          "relative_shift": 0.5443600416183472,
+          "entropy_change": 0.048496246337890625,
+          "js_divergence": 0.005605220794677734
+        },
+        "X": {
+          "centroid_shift": 0.11589960008859634,
+          "relative_shift": 0.4229048192501068,
+          "entropy_change": 0.05436873435974121,
+          "js_divergence": 0.005291391164064407
+        },
+        "RN": {
+          "centroid_shift": 0.15302085876464844,
+          "relative_shift": 0.5535644888877869,
+          "entropy_change": 0.003492116928100586,
+          "js_divergence": 0.02446945384144783
+        },
+        "RX": {
+          "centroid_shift": 0.14686496555805206,
+          "relative_shift": 0.49422693252563477,
+          "entropy_change": -0.032781362533569336,
+          "js_divergence": 0.017926882952451706
+        },
+        "NX": {
+          "centroid_shift": 0.1723606437444687,
+          "relative_shift": 0.5959774851799011,
+          "entropy_change": 0.04015469551086426,
+          "js_divergence": 0.009304710663855076
+        },
+        "RNX": {
+          "centroid_shift": 0.17420746386051178,
+          "relative_shift": 0.5862393379211426,
+          "entropy_change": -0.01860189437866211,
+          "js_divergence": 0.02365042269229889
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.4998055100440979,
+        "rx_ratio": 0.5011911988258362,
+        "nx_ratio": 0.6161471009254456,
+        "triple_vs_singles": 0.38304662704467773,
+        "triple_vs_pairs": 0.3566433787345886,
+        "incremental_gain": -0.009738147258758545
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.5631997585296631,
+        "N": 0.5443600416183472,
+        "X": 0.4229048192501068,
+        "RN": 0.5535644888877869,
+        "RX": 0.49422693252563477,
+        "NX": 0.5959774851799011,
+        "RNX": 0.5862393379211426
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          84,
+          90,
+          91
+        ],
+        "residues": [
+          "R",
+          "N",
+          "S"
+        ],
+        "x_type": "S",
+        "max_distance": 7
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.15288729965686798,
+          "relative_shift": 0.5631997585296631,
+          "entropy_change": -0.04135608673095703,
+          "js_divergence": 0.019699200987815857
+        },
+        "N": {
+          "centroid_shift": 0.14312158524990082,
+          "relative_shift": 0.4597569704055786,
+          "entropy_change": 0.05843925476074219,
+          "js_divergence": 0.004761886782944202
+        },
+        "X": {
+          "centroid_shift": 0.25597402453422546,
+          "relative_shift": 0.8222787976264954,
+          "entropy_change": -0.05243802070617676,
+          "js_divergence": 0.021742716431617737
+        },
+        "RN": {
+          "centroid_shift": 0.12928235530853271,
+          "relative_shift": 0.4050954580307007,
+          "entropy_change": -0.020096540451049805,
+          "js_divergence": 0.016561022028326988
+        },
+        "RX": {
+          "centroid_shift": 0.25385385751724243,
+          "relative_shift": 0.7449655532836914,
+          "entropy_change": -0.11187982559204102,
+          "js_divergence": 0.02685880847275257
+        },
+        "NX": {
+          "centroid_shift": 0.22750499844551086,
+          "relative_shift": 0.6695839166641235,
+          "entropy_change": 0.0157620906829834,
+          "js_divergence": 0.02366403490304947
+        },
+        "RNX": {
+          "centroid_shift": 0.22700262069702148,
+          "relative_shift": 0.6661672592163086,
+          "entropy_change": -0.07696056365966797,
+          "js_divergence": 0.03005971759557724
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.39600449800491333,
+        "rx_ratio": 0.5376955270767212,
+        "nx_ratio": 0.5222817659378052,
+        "triple_vs_singles": 0.36102017760276794,
+        "triple_vs_pairs": 0.3660973906517029,
+        "incremental_gain": -0.07879829406738281
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.5631997585296631,
+        "N": 0.4597569704055786,
+        "X": 0.8222787976264954,
+        "RN": 0.4050954580307007,
+        "RX": 0.7449655532836914,
+        "NX": 0.6695839166641235,
+        "RNX": 0.6661672592163086
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          84,
+          90,
+          82
+        ],
+        "residues": [
+          "R",
+          "N",
+          "T"
+        ],
+        "x_type": "T",
+        "max_distance": 8
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.15288729965686798,
+          "relative_shift": 0.5631997585296631,
+          "entropy_change": -0.04135608673095703,
+          "js_divergence": 0.019699200987815857
+        },
+        "N": {
+          "centroid_shift": 0.14312158524990082,
+          "relative_shift": 0.4597569704055786,
+          "entropy_change": 0.05843925476074219,
+          "js_divergence": 0.004761886782944202
+        },
+        "X": {
+          "centroid_shift": 0.21098853647708893,
+          "relative_shift": 0.5188485383987427,
+          "entropy_change": -0.07942938804626465,
+          "js_divergence": 0.015303372405469418
+        },
+        "RN": {
+          "centroid_shift": 0.12928235530853271,
+          "relative_shift": 0.4050954580307007,
+          "entropy_change": -0.020096540451049805,
+          "js_divergence": 0.016561022028326988
+        },
+        "RX": {
+          "centroid_shift": 0.21128499507904053,
+          "relative_shift": 0.6857929825782776,
+          "entropy_change": -0.10488700866699219,
+          "js_divergence": 0.030534397810697556
+        },
+        "NX": {
+          "centroid_shift": 0.15590959787368774,
+          "relative_shift": 0.45697543025016785,
+          "entropy_change": -0.020946025848388672,
+          "js_divergence": 0.011119809933006763
+        },
+        "RNX": {
+          "centroid_shift": 0.16296330094337463,
+          "relative_shift": 0.4776500463485718,
+          "entropy_change": -0.0727834701538086,
+          "js_divergence": 0.023853272199630737
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.39600449800491333,
+        "rx_ratio": 0.633791446685791,
+        "nx_ratio": 0.4669659435749054,
+        "triple_vs_singles": 0.3097991943359375,
+        "triple_vs_pairs": 0.30858656764030457,
+        "incremental_gain": -0.2081429362297058
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.5631997585296631,
+        "N": 0.4597569704055786,
+        "X": 0.5188485383987427,
+        "RN": 0.4050954580307007,
+        "RX": 0.6857929825782776,
+        "NX": 0.45697543025016785,
+        "RNX": 0.4776500463485718
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          84,
+          90,
+          87
+        ],
+        "residues": [
+          "R",
+          "N",
+          "K"
+        ],
+        "x_type": "K",
+        "max_distance": 6
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.15288729965686798,
+          "relative_shift": 0.5631997585296631,
+          "entropy_change": -0.04135608673095703,
+          "js_divergence": 0.019699200987815857
+        },
+        "N": {
+          "centroid_shift": 0.14312158524990082,
+          "relative_shift": 0.4597569704055786,
+          "entropy_change": 0.05843925476074219,
+          "js_divergence": 0.004761886782944202
+        },
+        "X": {
+          "centroid_shift": 0.11522440612316132,
+          "relative_shift": 0.4378807842731476,
+          "entropy_change": 0.07051277160644531,
+          "js_divergence": 0.010760024189949036
+        },
+        "RN": {
+          "centroid_shift": 0.12928235530853271,
+          "relative_shift": 0.4050954580307007,
+          "entropy_change": -0.020096540451049805,
+          "js_divergence": 0.016561022028326988
+        },
+        "RX": {
+          "centroid_shift": 0.16077527403831482,
+          "relative_shift": 0.5691167712211609,
+          "entropy_change": -0.024929046630859375,
+          "js_divergence": 0.02402631565928459
+        },
+        "NX": {
+          "centroid_shift": 0.17338919639587402,
+          "relative_shift": 0.5695099234580994,
+          "entropy_change": 0.08033370971679688,
+          "js_divergence": 0.011197986081242561
+        },
+        "RNX": {
+          "centroid_shift": 0.16884483397006989,
+          "relative_shift": 0.5290611982345581,
+          "entropy_change": -0.011056184768676758,
+          "js_divergence": 0.022204704582691193
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.39600449800491333,
+        "rx_ratio": 0.5685024857521057,
+        "nx_ratio": 0.634454071521759,
+        "triple_vs_singles": 0.3621629476547241,
+        "triple_vs_pairs": 0.34271788597106934,
+        "incremental_gain": -0.04044872522354126
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.5631997585296631,
+        "N": 0.4597569704055786,
+        "X": 0.4378807842731476,
+        "RN": 0.4050954580307007,
+        "RX": 0.5691167712211609,
+        "NX": 0.5695099234580994,
+        "RNX": 0.5290611982345581
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          84,
+          90,
+          89
+        ],
+        "residues": [
+          "R",
+          "N",
+          "K"
+        ],
+        "x_type": "K",
+        "max_distance": 6
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.15288729965686798,
+          "relative_shift": 0.5631997585296631,
+          "entropy_change": -0.04135608673095703,
+          "js_divergence": 0.019699200987815857
+        },
+        "N": {
+          "centroid_shift": 0.14312158524990082,
+          "relative_shift": 0.4597569704055786,
+          "entropy_change": 0.05843925476074219,
+          "js_divergence": 0.004761886782944202
+        },
+        "X": {
+          "centroid_shift": 0.11589960008859634,
+          "relative_shift": 0.4229048192501068,
+          "entropy_change": 0.05436873435974121,
+          "js_divergence": 0.005291391164064407
+        },
+        "RN": {
+          "centroid_shift": 0.12928235530853271,
+          "relative_shift": 0.4050954580307007,
+          "entropy_change": -0.020096540451049805,
+          "js_divergence": 0.016561022028326988
+        },
+        "RX": {
+          "centroid_shift": 0.14686496555805206,
+          "relative_shift": 0.49422693252563477,
+          "entropy_change": -0.032781362533569336,
+          "js_divergence": 0.017926882952451706
+        },
+        "NX": {
+          "centroid_shift": 0.19366596639156342,
+          "relative_shift": 0.6394497156143188,
+          "entropy_change": 0.08674430847167969,
+          "js_divergence": 0.012672019191086292
+        },
+        "RNX": {
+          "centroid_shift": 0.16884483397006989,
+          "relative_shift": 0.5290611982345581,
+          "entropy_change": -0.011056184768676758,
+          "js_divergence": 0.022204704582691193
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.39600449800491333,
+        "rx_ratio": 0.5011911988258362,
+        "nx_ratio": 0.7244560718536377,
+        "triple_vs_singles": 0.36591413617134094,
+        "triple_vs_pairs": 0.34382036328315735,
+        "incremental_gain": -0.11038851737976074
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.5631997585296631,
+        "N": 0.4597569704055786,
+        "X": 0.4229048192501068,
+        "RN": 0.4050954580307007,
+        "RX": 0.49422693252563477,
+        "NX": 0.6394497156143188,
+        "RNX": 0.5290611982345581
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          114,
+          108,
+          102
+        ],
+        "residues": [
+          "R",
+          "N",
+          "S"
+        ],
+        "x_type": "S",
+        "max_distance": 12
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.14437860250473022,
+          "relative_shift": 0.8242127299308777,
+          "entropy_change": 0.034189462661743164,
+          "js_divergence": 0.025260087102651596
+        },
+        "N": {
+          "centroid_shift": 0.133412703871727,
+          "relative_shift": 0.7383014559745789,
+          "entropy_change": 0.013773441314697266,
+          "js_divergence": 0.012882319279015064
+        },
+        "X": {
+          "centroid_shift": 0.2593059241771698,
+          "relative_shift": 0.7610796689987183,
+          "entropy_change": 0.01593947410583496,
+          "js_divergence": 0.008687358349561691
+        },
+        "RN": {
+          "centroid_shift": 0.11681549996137619,
+          "relative_shift": 0.8830063939094543,
+          "entropy_change": 0.02994513511657715,
+          "js_divergence": 0.021348105743527412
+        },
+        "RX": {
+          "centroid_shift": 0.18529964983463287,
+          "relative_shift": 1.020916223526001,
+          "entropy_change": -0.013493537902832031,
+          "js_divergence": 0.011300144717097282
+        },
+        "NX": {
+          "centroid_shift": 0.1630011647939682,
+          "relative_shift": 0.6878374814987183,
+          "entropy_change": 0.012939691543579102,
+          "js_divergence": 0.007703753188252449
+        },
+        "RNX": {
+          "centroid_shift": 0.16639775037765503,
+          "relative_shift": 0.9167754650115967,
+          "entropy_change": 0.014217138290405273,
+          "js_divergence": 0.014546265825629234
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.5651189684867859,
+        "rx_ratio": 0.6439924240112305,
+        "nx_ratio": 0.45874762535095215,
+        "triple_vs_singles": 0.3945506513118744,
+        "triple_vs_pairs": 0.35372698307037354,
+        "incremental_gain": -0.1041407585144043
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.8242127299308777,
+        "N": 0.7383014559745789,
+        "X": 0.7610796689987183,
+        "RN": 0.8830063939094543,
+        "RX": 1.020916223526001,
+        "NX": 0.6878374814987183,
+        "RNX": 0.9167754650115967
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          114,
+          108,
+          104
+        ],
+        "residues": [
+          "R",
+          "N",
+          "S"
+        ],
+        "x_type": "S",
+        "max_distance": 10
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.14437860250473022,
+          "relative_shift": 0.8242127299308777,
+          "entropy_change": 0.034189462661743164,
+          "js_divergence": 0.025260087102651596
+        },
+        "N": {
+          "centroid_shift": 0.133412703871727,
+          "relative_shift": 0.7383014559745789,
+          "entropy_change": 0.013773441314697266,
+          "js_divergence": 0.012882319279015064
+        },
+        "X": {
+          "centroid_shift": 0.26190707087516785,
+          "relative_shift": 0.7529121041297913,
+          "entropy_change": -0.006548881530761719,
+          "js_divergence": 0.007609573192894459
+        },
+        "RN": {
+          "centroid_shift": 0.11681549996137619,
+          "relative_shift": 0.8830063939094543,
+          "entropy_change": 0.02994513511657715,
+          "js_divergence": 0.021348105743527412
+        },
+        "RX": {
+          "centroid_shift": 0.19976826012134552,
+          "relative_shift": 1.0861912965774536,
+          "entropy_change": 0.0018389225006103516,
+          "js_divergence": 0.013606498017907143
+        },
+        "NX": {
+          "centroid_shift": 0.18017791211605072,
+          "relative_shift": 0.7312037944793701,
+          "entropy_change": 0.03336000442504883,
+          "js_divergence": 0.010085539892315865
+        },
+        "RNX": {
+          "centroid_shift": 0.17917154729366302,
+          "relative_shift": 0.9742017388343811,
+          "entropy_change": 0.041018009185791016,
+          "js_divergence": 0.018812328577041626
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.5651189684867859,
+        "rx_ratio": 0.6887161135673523,
+        "nx_ratio": 0.4903414249420166,
+        "triple_vs_singles": 0.42074400186538696,
+        "triple_vs_pairs": 0.3607617914676666,
+        "incremental_gain": -0.11198955774307251
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.8242127299308777,
+        "N": 0.7383014559745789,
+        "X": 0.7529121041297913,
+        "RN": 0.8830063939094543,
+        "RX": 1.0861912965774536,
+        "NX": 0.7312037944793701,
+        "RNX": 0.9742017388343811
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          114,
+          108,
+          118
+        ],
+        "residues": [
+          "R",
+          "N",
+          "S"
+        ],
+        "x_type": "S",
+        "max_distance": 10
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.14437860250473022,
+          "relative_shift": 0.8242127299308777,
+          "entropy_change": 0.034189462661743164,
+          "js_divergence": 0.025260087102651596
+        },
+        "N": {
+          "centroid_shift": 0.133412703871727,
+          "relative_shift": 0.7383014559745789,
+          "entropy_change": 0.013773441314697266,
+          "js_divergence": 0.012882319279015064
+        },
+        "X": {
+          "centroid_shift": 0.23186315596103668,
+          "relative_shift": 1.8287700414657593,
+          "entropy_change": -0.011267423629760742,
+          "js_divergence": 0.0066611808724701405
+        },
+        "RN": {
+          "centroid_shift": 0.11681549996137619,
+          "relative_shift": 0.8830063939094543,
+          "entropy_change": 0.02994513511657715,
+          "js_divergence": 0.021348105743527412
+        },
+        "RX": {
+          "centroid_shift": 0.26082298159599304,
+          "relative_shift": 1.4526079893112183,
+          "entropy_change": 0.06092715263366699,
+          "js_divergence": 0.016808856278657913
+        },
+        "NX": {
+          "centroid_shift": 0.13143713772296906,
+          "relative_shift": 0.9572774767875671,
+          "entropy_change": 0.06542015075683594,
+          "js_divergence": 0.005759412422776222
+        },
+        "RNX": {
+          "centroid_shift": 0.1756259649991989,
+          "relative_shift": 1.2791117429733276,
+          "entropy_change": 0.08091378211975098,
+          "js_divergence": 0.014303484000265598
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.5651189684867859,
+        "rx_ratio": 0.5475376844406128,
+        "nx_ratio": 0.3729064464569092,
+        "triple_vs_singles": 0.3771762251853943,
+        "triple_vs_pairs": 0.38844630122184753,
+        "incremental_gain": -0.17349624633789062
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.8242127299308777,
+        "N": 0.7383014559745789,
+        "X": 1.8287700414657593,
+        "RN": 0.8830063939094543,
+        "RX": 1.4526079893112183,
+        "NX": 0.9572774767875671,
+        "RNX": 1.2791117429733276
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          114,
+          108,
+          119
+        ],
+        "residues": [
+          "R",
+          "N",
+          "S"
+        ],
+        "x_type": "S",
+        "max_distance": 11
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.14437860250473022,
+          "relative_shift": 0.8242127299308777,
+          "entropy_change": 0.034189462661743164,
+          "js_divergence": 0.025260087102651596
+        },
+        "N": {
+          "centroid_shift": 0.133412703871727,
+          "relative_shift": 0.7383014559745789,
+          "entropy_change": 0.013773441314697266,
+          "js_divergence": 0.012882319279015064
+        },
+        "X": {
+          "centroid_shift": 0.2286248356103897,
+          "relative_shift": 2.7524516582489014,
+          "entropy_change": 0.004958391189575195,
+          "js_divergence": 0.007197917904704809
+        },
+        "RN": {
+          "centroid_shift": 0.11681549996137619,
+          "relative_shift": 0.8830063939094543,
+          "entropy_change": 0.02994513511657715,
+          "js_divergence": 0.021348105743527412
+        },
+        "RX": {
+          "centroid_shift": 0.24748733639717102,
+          "relative_shift": 1.4489455223083496,
+          "entropy_change": 0.053054094314575195,
+          "js_divergence": 0.01532614603638649
+        },
+        "NX": {
+          "centroid_shift": 0.12630073726177216,
+          "relative_shift": 0.9752545356750488,
+          "entropy_change": 0.06331205368041992,
+          "js_divergence": 0.005413651000708342
+        },
+        "RNX": {
+          "centroid_shift": 0.16881532967090607,
+          "relative_shift": 1.3035387992858887,
+          "entropy_change": 0.07636713981628418,
+          "js_divergence": 0.013493653386831284
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.5651189684867859,
+        "rx_ratio": 0.40511083602905273,
+        "nx_ratio": 0.27938225865364075,
+        "triple_vs_singles": 0.3020971417427063,
+        "triple_vs_pairs": 0.3941510319709778,
+        "incremental_gain": -0.14540672302246094
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.8242127299308777,
+        "N": 0.7383014559745789,
+        "X": 2.7524516582489014,
+        "RN": 0.8830063939094543,
+        "RX": 1.4489455223083496,
+        "NX": 0.9752545356750488,
+        "RNX": 1.3035387992858887
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          114,
+          108,
+          106
+        ],
+        "residues": [
+          "R",
+          "N",
+          "T"
+        ],
+        "x_type": "T",
+        "max_distance": 8
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.14437860250473022,
+          "relative_shift": 0.8242127299308777,
+          "entropy_change": 0.034189462661743164,
+          "js_divergence": 0.025260087102651596
+        },
+        "N": {
+          "centroid_shift": 0.133412703871727,
+          "relative_shift": 0.7383014559745789,
+          "entropy_change": 0.013773441314697266,
+          "js_divergence": 0.012882319279015064
+        },
+        "X": {
+          "centroid_shift": 0.18022333085536957,
+          "relative_shift": 0.8342743515968323,
+          "entropy_change": 0.013160467147827148,
+          "js_divergence": 0.007276141084730625
+        },
+        "RN": {
+          "centroid_shift": 0.11681549996137619,
+          "relative_shift": 0.8830063939094543,
+          "entropy_change": 0.02994513511657715,
+          "js_divergence": 0.021348105743527412
+        },
+        "RX": {
+          "centroid_shift": 0.1429804116487503,
+          "relative_shift": 0.9386646151542664,
+          "entropy_change": -0.016033411026000977,
+          "js_divergence": 0.016038399189710617
+        },
+        "NX": {
+          "centroid_shift": 0.18990115821361542,
+          "relative_shift": 0.9129137992858887,
+          "entropy_change": 0.03699541091918945,
+          "js_divergence": 0.012182151898741722
+        },
+        "RNX": {
+          "centroid_shift": 0.1443711817264557,
+          "relative_shift": 0.9477949738502502,
+          "entropy_change": 0.021411895751953125,
+          "js_divergence": 0.02217521145939827
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.5651189684867859,
+        "rx_ratio": 0.5659764409065247,
+        "nx_ratio": 0.5805213451385498,
+        "triple_vs_singles": 0.39544370770454407,
+        "triple_vs_pairs": 0.34659555554389954,
+        "incremental_gain": 0.009130358695983887
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.8242127299308777,
+        "N": 0.7383014559745789,
+        "X": 0.8342743515968323,
+        "RN": 0.8830063939094543,
+        "RX": 0.9386646151542664,
+        "NX": 0.9129137992858887,
+        "RNX": 0.9477949738502502
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          114,
+          108,
+          107
+        ],
+        "residues": [
+          "R",
+          "N",
+          "T"
+        ],
+        "x_type": "T",
+        "max_distance": 7
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.14437860250473022,
+          "relative_shift": 0.8242127299308777,
+          "entropy_change": 0.034189462661743164,
+          "js_divergence": 0.025260087102651596
+        },
+        "N": {
+          "centroid_shift": 0.133412703871727,
+          "relative_shift": 0.7383014559745789,
+          "entropy_change": 0.013773441314697266,
+          "js_divergence": 0.012882319279015064
+        },
+        "X": {
+          "centroid_shift": 0.17748790979385376,
+          "relative_shift": 1.000089406967163,
+          "entropy_change": 0.014712810516357422,
+          "js_divergence": 0.0073614297434687614
+        },
+        "RN": {
+          "centroid_shift": 0.11681549996137619,
+          "relative_shift": 0.8830063939094543,
+          "entropy_change": 0.02994513511657715,
+          "js_divergence": 0.021348105743527412
+        },
+        "RX": {
+          "centroid_shift": 0.14820381999015808,
+          "relative_shift": 1.0904161930084229,
+          "entropy_change": -0.014381170272827148,
+          "js_divergence": 0.0168628953397274
+        },
+        "NX": {
+          "centroid_shift": 0.1997326910495758,
+          "relative_shift": 1.0518198013305664,
+          "entropy_change": 0.005303859710693359,
+          "js_divergence": 0.016599375754594803
+        },
+        "RNX": {
+          "centroid_shift": 0.1497591733932495,
+          "relative_shift": 1.1018598079681396,
+          "entropy_change": 0.015038728713989258,
+          "js_divergence": 0.02369564026594162
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.5651189684867859,
+        "rx_ratio": 0.5977168679237366,
+        "nx_ratio": 0.6050536632537842,
+        "triple_vs_singles": 0.4299767017364502,
+        "triple_vs_pairs": 0.36422199010849,
+        "incremental_gain": 0.011443614959716797
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.8242127299308777,
+        "N": 0.7383014559745789,
+        "X": 1.000089406967163,
+        "RN": 0.8830063939094543,
+        "RX": 1.0904161930084229,
+        "NX": 1.0518198013305664,
+        "RNX": 1.1018598079681396
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          114,
+          121,
+          118
+        ],
+        "residues": [
+          "R",
+          "N",
+          "S"
+        ],
+        "x_type": "S",
+        "max_distance": 7
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.14437860250473022,
+          "relative_shift": 0.8242127299308777,
+          "entropy_change": 0.034189462661743164,
+          "js_divergence": 0.025260087102651596
+        },
+        "N": {
+          "centroid_shift": 0.13310855627059937,
+          "relative_shift": 0.9207654595375061,
+          "entropy_change": 0.1120457649230957,
+          "js_divergence": 0.009995073080062866
+        },
+        "X": {
+          "centroid_shift": 0.23186315596103668,
+          "relative_shift": 1.8287700414657593,
+          "entropy_change": -0.011267423629760742,
+          "js_divergence": 0.0066611808724701405
+        },
+        "RN": {
+          "centroid_shift": 0.11300939321517944,
+          "relative_shift": 0.709048330783844,
+          "entropy_change": 0.1352519989013672,
+          "js_divergence": 0.01695908233523369
+        },
+        "RX": {
+          "centroid_shift": 0.26082298159599304,
+          "relative_shift": 1.4526079893112183,
+          "entropy_change": 0.06092715263366699,
+          "js_divergence": 0.016808856278657913
+        },
+        "NX": {
+          "centroid_shift": 0.18088655173778534,
+          "relative_shift": 1.4881770610809326,
+          "entropy_change": 0.08810162544250488,
+          "js_divergence": 0.013474402949213982
+        },
+        "RNX": {
+          "centroid_shift": 0.20130883157253265,
+          "relative_shift": 1.263060450553894,
+          "entropy_change": 0.12539458274841309,
+          "js_divergence": 0.021466370671987534
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.4063364863395691,
+        "rx_ratio": 0.5475376844406128,
+        "nx_ratio": 0.5412467122077942,
+        "triple_vs_singles": 0.35342738032341003,
+        "triple_vs_pairs": 0.34605973958969116,
+        "incremental_gain": -0.22511661052703857
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.8242127299308777,
+        "N": 0.9207654595375061,
+        "X": 1.8287700414657593,
+        "RN": 0.709048330783844,
+        "RX": 1.4526079893112183,
+        "NX": 1.4881770610809326,
+        "RNX": 1.263060450553894
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          114,
+          121,
+          119
+        ],
+        "residues": [
+          "R",
+          "N",
+          "S"
+        ],
+        "x_type": "S",
+        "max_distance": 7
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.14437860250473022,
+          "relative_shift": 0.8242127299308777,
+          "entropy_change": 0.034189462661743164,
+          "js_divergence": 0.025260087102651596
+        },
+        "N": {
+          "centroid_shift": 0.13310855627059937,
+          "relative_shift": 0.9207654595375061,
+          "entropy_change": 0.1120457649230957,
+          "js_divergence": 0.009995073080062866
+        },
+        "X": {
+          "centroid_shift": 0.2286248356103897,
+          "relative_shift": 2.7524516582489014,
+          "entropy_change": 0.004958391189575195,
+          "js_divergence": 0.007197917904704809
+        },
+        "RN": {
+          "centroid_shift": 0.11300939321517944,
+          "relative_shift": 0.709048330783844,
+          "entropy_change": 0.1352519989013672,
+          "js_divergence": 0.01695908233523369
+        },
+        "RX": {
+          "centroid_shift": 0.24748733639717102,
+          "relative_shift": 1.4489455223083496,
+          "entropy_change": 0.053054094314575195,
+          "js_divergence": 0.01532614603638649
+        },
+        "NX": {
+          "centroid_shift": 0.18937629461288452,
+          "relative_shift": 1.9555485248565674,
+          "entropy_change": 0.10755610466003418,
+          "js_divergence": 0.014817753806710243
+        },
+        "RNX": {
+          "centroid_shift": 0.20130883157253265,
+          "relative_shift": 1.263060450553894,
+          "entropy_change": 0.12539458274841309,
+          "js_divergence": 0.021466370671987534
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.4063364863395691,
+        "rx_ratio": 0.40511083602905273,
+        "nx_ratio": 0.5323803424835205,
+        "triple_vs_singles": 0.2808404862880707,
+        "triple_vs_pairs": 0.30704933404922485,
+        "incremental_gain": -0.6924880743026733
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.8242127299308777,
+        "N": 0.9207654595375061,
+        "X": 2.7524516582489014,
+        "RN": 0.709048330783844,
+        "RX": 1.4489455223083496,
+        "NX": 1.9555485248565674,
+        "RNX": 1.263060450553894
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          114,
+          121,
+          126
+        ],
+        "residues": [
+          "R",
+          "N",
+          "T"
+        ],
+        "x_type": "T",
+        "max_distance": 12
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.14437860250473022,
+          "relative_shift": 0.8242127299308777,
+          "entropy_change": 0.034189462661743164,
+          "js_divergence": 0.025260087102651596
+        },
+        "N": {
+          "centroid_shift": 0.13310855627059937,
+          "relative_shift": 0.9207654595375061,
+          "entropy_change": 0.1120457649230957,
+          "js_divergence": 0.009995073080062866
+        },
+        "X": {
+          "centroid_shift": 0.17941425740718842,
+          "relative_shift": 1.048932433128357,
+          "entropy_change": -0.08773660659790039,
+          "js_divergence": 0.01814897358417511
+        },
+        "RN": {
+          "centroid_shift": 0.11300939321517944,
+          "relative_shift": 0.709048330783844,
+          "entropy_change": 0.1352519989013672,
+          "js_divergence": 0.01695908233523369
+        },
+        "RX": {
+          "centroid_shift": 0.12303993850946426,
+          "relative_shift": 0.7941781282424927,
+          "entropy_change": 0.041306257247924805,
+          "js_divergence": 0.009232278913259506
+        },
+        "NX": {
+          "centroid_shift": 0.16118596494197845,
+          "relative_shift": 1.1384447813034058,
+          "entropy_change": 0.008814811706542969,
+          "js_divergence": 0.020439792424440384
+        },
+        "RNX": {
+          "centroid_shift": 0.12428419291973114,
+          "relative_shift": 0.8022093176841736,
+          "entropy_change": 0.09080743789672852,
+          "js_divergence": 0.016640227288007736
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.4063364863395691,
+        "rx_ratio": 0.42398110032081604,
+        "nx_ratio": 0.5779793858528137,
+        "triple_vs_singles": 0.2871277928352356,
+        "triple_vs_pairs": 0.30367493629455566,
+        "incremental_gain": -0.3362354636192322
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.8242127299308777,
+        "N": 0.9207654595375061,
+        "X": 1.048932433128357,
+        "RN": 0.709048330783844,
+        "RX": 0.7941781282424927,
+        "NX": 1.1384447813034058,
+        "RNX": 0.8022093176841736
+      }
+    },
+    {
+      "triplet": {
+        "protein": "Fibrinogen alpha",
+        "positions": [
+          114,
+          122,
+          118
+        ],
+        "residues": [
+          "R",
+          "N",
+          "S"
+        ],
+        "x_type": "S",
+        "max_distance": 8
+      },
+      "effects": {
+        "R": {
+          "centroid_shift": 0.14437860250473022,
+          "relative_shift": 0.8242127299308777,
+          "entropy_change": 0.034189462661743164,
+          "js_divergence": 0.025260087102651596
+        },
+        "N": {
+          "centroid_shift": 0.13272403180599213,
+          "relative_shift": 0.8838881850242615,
+          "entropy_change": 0.11342144012451172,
+          "js_divergence": 0.01011546328663826
+        },
+        "X": {
+          "centroid_shift": 0.23186315596103668,
+          "relative_shift": 1.8287700414657593,
+          "entropy_change": -0.011267423629760742,
+          "js_divergence": 0.0066611808724701405
+        },
+        "RN": {
+          "centroid_shift": 0.10814209282398224,
+          "relative_shift": 0.6792395114898682,
+          "entropy_change": 0.12976288795471191,
+          "js_divergence": 0.016247045248746872
+        },
+        "RX": {
+          "centroid_shift": 0.26082298159599304,
+          "relative_shift": 1.4526079893112183,
+          "entropy_change": 0.06092715263366699,
+          "js_divergence": 0.016808856278657913
+        },
+        "NX": {
+          "centroid_shift": 0.17246729135513306,
+          "relative_shift": 1.274402379989624,
+          "entropy_change": 0.07960128784179688,
+          "js_divergence": 0.01273663341999054
+        },
+        "RNX": {
+          "centroid_shift": 0.19270563125610352,
+          "relative_shift": 1.210382342338562,
+          "entropy_change": 0.11702775955200195,
+          "js_divergence": 0.020522896200418472
+        }
+      },
+      "synergy": {
+        "rn_ratio": 0.39765772223472595,
+        "rx_ratio": 0.5475376844406128,
+        "nx_ratio": 0.46979835629463196,
+        "triple_vs_singles": 0.34221839904785156,
+        "triple_vs_pairs": 0.3553416430950165,
+        "incremental_gain": -0.24222564697265625
+      },
+      "goldilocks": {
+        "singles_in_zone": 0,
+        "pairs_in_zone": 0,
+        "triple_in_zone": false,
+        "triple_potentiation": false,
+        "progressive_potentiation": false
+      },
+      "shifts": {
+        "R": 0.8242127299308777,
+        "N": 0.8838881850242615,
+        "X": 1.8287700414657593,
+        "RN": 0.6792395114898682,
+        "RX": 1.4526079893112183,
+        "NX": 1.274402379989624,
+        "RNX": 1.210382342338562
+      }
+    }
+  ],
+  "triple_potentiation_cases": []
+}

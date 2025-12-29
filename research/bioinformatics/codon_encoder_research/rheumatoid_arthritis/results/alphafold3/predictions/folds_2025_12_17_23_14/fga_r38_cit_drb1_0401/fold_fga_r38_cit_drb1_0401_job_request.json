@@ -1,0 +1,35 @@
+[{
+ "name": "FGA_R38_cit_DRB1_0401",
+ "modelSeeds": [
+  "605674615"
+ ],
+ "sequences": [
+  {
+   "proteinChain": {
+    "sequence": "GPRVVERHQS",
+    "modifications": [
+     {
+      "ptmType": "CCD_CIR",
+      "ptmPosition": 3
+     },
+     {
+      "ptmType": "CCD_CIR",
+      "ptmPosition": 7
+     }
+    ],
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  },
+  {
+   "proteinChain": {
+    "sequence": "GDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQRRAAVDTYCRHNYGVGESFTVQRR",
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  }
+ ],
+ "dialect": "alphafoldserver",
+ "version": 1
+}
+]

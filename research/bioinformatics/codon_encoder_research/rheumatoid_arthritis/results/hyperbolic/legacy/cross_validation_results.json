@@ -1,0 +1,67 @@
+{
+  "classification_agreement": 1.0,
+  "shift_immuno_correlation": {
+    "r": -0.16919773585484704,
+    "p": 0.5991046226791061
+  },
+  "boundary_crossing_rate": 0.16666666666666666,
+  "fisher_test": {
+    "odds_ratio": Infinity,
+    "p": 1.0
+  },
+  "significant_findings": [
+    {
+      "source": "autoantigen",
+      "metric": "mean_neighbor_distance",
+      "p_value": 0.027372168506009875,
+      "direction": "immunodominant lower",
+      "effect": "-1.14986"
+    },
+    {
+      "source": "autoantigen",
+      "metric": "cluster_homogeneity",
+      "p_value": 0.020292267277206608,
+      "direction": "immunodominant higher",
+      "effect": 1.2357172106489127
+    },
+    {
+      "source": "autoantigen",
+      "metric": "boundary_crossing_potential",
+      "p_value": 0.01624018761179735,
+      "direction": "immunodominant lower",
+      "effect": "-1.2570108"
+    },
+    {
+      "source": "shift",
+      "metric": "centroid_shift",
+      "p_value": 0.03060369397624668,
+      "direction": "immunodominant lower",
+      "effect": -1.311091921185286
+    },
+    {
+      "source": "shift",
+      "metric": "js_divergence",
+      "p_value": 0.00955829751315301,
+      "direction": "immunodominant lower",
+      "effect": -1.2966389632145374
+    },
+    {
+      "source": "shift",
+      "metric": "entropy_change",
+      "p_value": 0.00397749857907781,
+      "direction": "immunodominant higher",
+      "effect": 1.5422819277517157
+    }
+  ],
+  "direction_consistency": {
+    "lower": 4,
+    "higher": 2
+  },
+  "conclusions": [
+    "Immunodominance classification: 100% agreement across analyses",
+    "Boundary crossing rate: 16.7% (citrullination rarely changes cluster)",
+    "6 independent metrics show p<0.05",
+    "Direction consistency: 4/6 metrics show immunodominant LOWER",
+    "HLA-DRB1 RA alleles: 1.30x separation ratio"
+  ]
+}

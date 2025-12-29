@@ -1,0 +1,19 @@
+{
+  "n_proteins": 20,
+  "pathways": [
+    "parasympathetic",
+    "sympathetic",
+    "regeneration",
+    "gut_barrier",
+    "inflammation"
+  ],
+  "regeneration_hypothesis": {
+    "separation_ratio": 0.34093567728996277,
+    "supported": false
+  },
+  "autonomic_analysis": {
+    "para_symp_distance": 0.09884461015462875,
+    "para_closer_to_regen": false,
+    "symp_closer_to_inflam": false
+  }
+}

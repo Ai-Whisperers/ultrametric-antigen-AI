@@ -1,0 +1,39 @@
+[{
+ "name": "VIM_R71_cit_DRB1_0401",
+ "modelSeeds": [
+  "509001026"
+ ],
+ "sequences": [
+  {
+   "proteinChain": {
+    "sequence": "RLRSSVPGVR",
+    "modifications": [
+     {
+      "ptmType": "CCD_CIR",
+      "ptmPosition": 1
+     },
+     {
+      "ptmType": "CCD_CIR",
+      "ptmPosition": 3
+     },
+     {
+      "ptmType": "CCD_CIR",
+      "ptmPosition": 10
+     }
+    ],
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  },
+  {
+   "proteinChain": {
+    "sequence": "GDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQRRAAVDTYCRHNYGVGESFTVQRR",
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  }
+ ],
+ "dialect": "alphafoldserver",
+ "version": 1
+}
+]

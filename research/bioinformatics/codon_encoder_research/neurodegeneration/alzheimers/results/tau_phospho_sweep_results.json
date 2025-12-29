@@ -1,0 +1,1137 @@
+{
+  "metadata": {
+    "protein": "Tau (MAPT)",
+    "isoform": "2N4R (441 aa)",
+    "encoder": "3-adic (V5.11.3)",
+    "analysis": "Single-site phosphorylation sweep",
+    "zone_thresholds": {
+      "tolerated": 0.15,
+      "transition": 0.35
+    }
+  },
+  "single_site_results": [
+    {
+      "position": 18,
+      "aa": "Y",
+      "domain": "N_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "Fyn"
+      ],
+      "context_wt": "MEDHAGTYGLGDRKD",
+      "context_mut": "MEDHAGTDGLGDRKD",
+      "centroid_shift": 0.0969875305891037,
+      "zone": "tolerated",
+      "dysfunction_score": 0.19397506117820743,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 29,
+      "aa": "T",
+      "domain": "N_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "CK1"
+      ],
+      "context_wt": "DRKDQGGYTMHQDQE",
+      "context_mut": "DRKDQGGDTMHQDQE",
+      "centroid_shift": 0.12136037647724152,
+      "zone": "tolerated",
+      "dysfunction_score": 0.24272075295448303,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 39,
+      "aa": "S",
+      "domain": "N_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "GSK3"
+      ],
+      "context_wt": "HQDQEGDTDAGLKES",
+      "context_mut": "HQDQEGDDDAGLKES",
+      "centroid_shift": 0.1055169478058815,
+      "zone": "tolerated",
+      "dysfunction_score": 0.211033895611763,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 46,
+      "aa": "T",
+      "domain": "N_terminal",
+      "epitope": null,
+      "stage": "early",
+      "kinases": [
+        "GSK3",
+        "CDK5"
+      ],
+      "context_wt": "TDAGLKESPLQTPTE",
+      "context_mut": "TDAGLKEDPLQTPTE",
+      "centroid_shift": 0.20050138235092163,
+      "zone": "transition",
+      "dysfunction_score": 0.40100276470184326,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 50,
+      "aa": "T",
+      "domain": "N_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "CK1"
+      ],
+      "context_wt": "LKESPLQTPTEDGSE",
+      "context_mut": "LKESPLQDPTEDGSE",
+      "centroid_shift": 0.1546909362077713,
+      "zone": "transition",
+      "dysfunction_score": 0.3093818724155426,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 52,
+      "aa": "S",
+      "domain": "N_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "CK1"
+      ],
+      "context_wt": "ESPLQTPTEDGSEEP",
+      "context_mut": "ESPLQTPDEDGSEEP",
+      "centroid_shift": 0.15164650976657867,
+      "zone": "transition",
+      "dysfunction_score": 0.30329301953315735,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 56,
+      "aa": "S",
+      "domain": "N_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "CK1"
+      ],
+      "context_wt": "QTPTEDGSEEPGSET",
+      "context_mut": "QTPTEDGDEEPGSET",
+      "centroid_shift": 0.17655538022518158,
+      "zone": "transition",
+      "dysfunction_score": 0.35311076045036316,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 61,
+      "aa": "T",
+      "domain": "N_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "GSK3"
+      ],
+      "context_wt": "DGSEEPGSETSDAKS",
+      "context_mut": "DGSEEPGDETSDAKS",
+      "centroid_shift": 0.2116459161043167,
+      "zone": "transition",
+      "dysfunction_score": 0.4232918322086334,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 63,
+      "aa": "S",
+      "domain": "N_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "CK1"
+      ],
+      "context_wt": "SEEPGSETSDAKSTP",
+      "context_mut": "SEEPGSEDSDAKSTP",
+      "centroid_shift": 0.15069440007209778,
+      "zone": "transition",
+      "dysfunction_score": 0.30138880014419556,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 64,
+      "aa": "S",
+      "domain": "N_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "CK1"
+      ],
+      "context_wt": "EEPGSETSDAKSTPT",
+      "context_mut": "EEPGSETDDAKSTPT",
+      "centroid_shift": 0.21251679956912994,
+      "zone": "transition",
+      "dysfunction_score": 0.4250335991382599,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 68,
+      "aa": "S",
+      "domain": "N_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "CK1"
+      ],
+      "context_wt": "SETSDAKSTPTAEDV",
+      "context_mut": "SETSDAKDTPTAEDV",
+      "centroid_shift": 0.21717171370983124,
+      "zone": "transition",
+      "dysfunction_score": 0.4343434274196625,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 69,
+      "aa": "T",
+      "domain": "N_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "GSK3"
+      ],
+      "context_wt": "ETSDAKSTPTAEDVT",
+      "context_mut": "ETSDAKSDPTAEDVT",
+      "centroid_shift": 0.15885449945926666,
+      "zone": "transition",
+      "dysfunction_score": 0.3177089989185333,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 71,
+      "aa": "T",
+      "domain": "N_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "GSK3"
+      ],
+      "context_wt": "SDAKSTPTAEDVTAP",
+      "context_mut": "SDAKSTPDAEDVTAP",
+      "centroid_shift": 0.1489042043685913,
+      "zone": "tolerated",
+      "dysfunction_score": 0.2978084087371826,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 153,
+      "aa": "T",
+      "domain": "PRR1",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "CDK5"
+      ],
+      "context_wt": "DGKTKIATPRGAAPP",
+      "context_mut": "DGKTKIADPRGAAPP",
+      "centroid_shift": 0.13477499783039093,
+      "zone": "tolerated",
+      "dysfunction_score": 0.26954999566078186,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 175,
+      "aa": "T",
+      "domain": "PRR1",
+      "epitope": "AT270",
+      "stage": "early",
+      "kinases": [
+        "GSK3",
+        "CDK5"
+      ],
+      "context_wt": "ATRIPAKTPPAPKTP",
+      "context_mut": "ATRIPAKDPPAPKTP",
+      "centroid_shift": 0.10429534316062927,
+      "zone": "tolerated",
+      "dysfunction_score": 0.20859068632125857,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 181,
+      "aa": "T",
+      "domain": "PRR1",
+      "epitope": "AT270",
+      "stage": "early",
+      "kinases": [
+        "GSK3",
+        "CDK5",
+        "CK1"
+      ],
+      "context_wt": "KTPPAPKTPPSSGEP",
+      "context_mut": "KTPPAPKDPPSSGEP",
+      "centroid_shift": 0.10789646953344345,
+      "zone": "tolerated",
+      "dysfunction_score": 0.2157929390668869,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 184,
+      "aa": "S",
+      "domain": "PRR1",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "GSK3"
+      ],
+      "context_wt": "PAPKTPPSSGEPPKS",
+      "context_mut": "PAPKTPPDSGEPPKS",
+      "centroid_shift": 0.16992489993572235,
+      "zone": "transition",
+      "dysfunction_score": 0.3398497998714447,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 185,
+      "aa": "S",
+      "domain": "PRR1",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "CK1"
+      ],
+      "context_wt": "APKTPPSSGEPPKSG",
+      "context_mut": "APKTPPSDGEPPKSG",
+      "centroid_shift": 0.18278123438358307,
+      "zone": "transition",
+      "dysfunction_score": 0.36556246876716614,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 191,
+      "aa": "Y",
+      "domain": "PRR1",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "Fyn",
+        "Src"
+      ],
+      "context_wt": "SSGEPPKSGDRSGYS",
+      "context_mut": "SSGEPPKDGDRSGYS",
+      "centroid_shift": 0.21271267533302307,
+      "zone": "transition",
+      "dysfunction_score": 0.42542535066604614,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 195,
+      "aa": "S",
+      "domain": "PRR1",
+      "epitope": "CP27",
+      "stage": "early",
+      "kinases": [
+        "GSK3",
+        "CDK5"
+      ],
+      "context_wt": "PPKSGDRSGYSSPGS",
+      "context_mut": "PPKSGDRDGYSSPGS",
+      "centroid_shift": 0.18381214141845703,
+      "zone": "transition",
+      "dysfunction_score": 0.36762428283691406,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 198,
+      "aa": "S",
+      "domain": "PRR1",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "PKA"
+      ],
+      "context_wt": "SGDRSGYSSPGSPGT",
+      "context_mut": "SGDRSGYDSPGSPGT",
+      "centroid_shift": 0.191680446267128,
+      "zone": "transition",
+      "dysfunction_score": 0.383360892534256,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 199,
+      "aa": "S",
+      "domain": "PRR2",
+      "epitope": "AT100",
+      "stage": "early",
+      "kinases": [
+        "GSK3"
+      ],
+      "context_wt": "GDRSGYSSPGSPGTP",
+      "context_mut": "GDRSGYSDPGSPGTP",
+      "centroid_shift": 0.19409063458442688,
+      "zone": "transition",
+      "dysfunction_score": 0.38818126916885376,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 202,
+      "aa": "S",
+      "domain": "PRR2",
+      "epitope": "AT8/CP13",
+      "stage": "early",
+      "kinases": [
+        "GSK3",
+        "CDK5",
+        "MARK"
+      ],
+      "context_wt": "SGYSSPGSPGTPGSR",
+      "context_mut": "SGYSSPGDPGTPGSR",
+      "centroid_shift": 0.16443860530853271,
+      "zone": "transition",
+      "dysfunction_score": 0.32887721061706543,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 205,
+      "aa": "T",
+      "domain": "PRR2",
+      "epitope": "AT8",
+      "stage": "early",
+      "kinases": [
+        "GSK3",
+        "CDK5"
+      ],
+      "context_wt": "SSPGSPGTPGSRSRT",
+      "context_mut": "SSPGSPGDPGSRSRT",
+      "centroid_shift": 0.10193536430597305,
+      "zone": "tolerated",
+      "dysfunction_score": 0.2038707286119461,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 208,
+      "aa": "S",
+      "domain": "PRR2",
+      "epitope": "AT8",
+      "stage": "early",
+      "kinases": [
+        "CK1"
+      ],
+      "context_wt": "GSPGTPGSRSRTPSL",
+      "context_mut": "GSPGTPGDRSRTPSL",
+      "centroid_shift": 0.16795356571674347,
+      "zone": "transition",
+      "dysfunction_score": 0.33590713143348694,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 210,
+      "aa": "T",
+      "domain": "PRR2",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "GSK3"
+      ],
+      "context_wt": "PGTPGSRSRTPSLPT",
+      "context_mut": "PGTPGSRDRTPSLPT",
+      "centroid_shift": 0.16577117145061493,
+      "zone": "transition",
+      "dysfunction_score": 0.33154234290122986,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 212,
+      "aa": "S",
+      "domain": "PRR2",
+      "epitope": "AT100",
+      "stage": "mid",
+      "kinases": [
+        "GSK3"
+      ],
+      "context_wt": "TPGSRSRTPSLPTPP",
+      "context_mut": "TPGSRSRDPSLPTPP",
+      "centroid_shift": 0.09833541512489319,
+      "zone": "tolerated",
+      "dysfunction_score": 0.19667083024978638,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 214,
+      "aa": "S",
+      "domain": "PRR2",
+      "epitope": "AT100",
+      "stage": "mid",
+      "kinases": [
+        "GSK3",
+        "CK1"
+      ],
+      "context_wt": "GSRSRTPSLPTPPTR",
+      "context_mut": "GSRSRTPDLPTPPTR",
+      "centroid_shift": 0.1578371673822403,
+      "zone": "transition",
+      "dysfunction_score": 0.3156743347644806,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 217,
+      "aa": "T",
+      "domain": "PRR2",
+      "epitope": null,
+      "stage": "early",
+      "kinases": [
+        "GSK3",
+        "CDK5"
+      ],
+      "context_wt": "SRTPSLPTPPTREPK",
+      "context_mut": "SRTPSLPDPPTREPK",
+      "centroid_shift": 0.11138932406902313,
+      "zone": "tolerated",
+      "dysfunction_score": 0.22277864813804626,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 231,
+      "aa": "T",
+      "domain": "PRR2",
+      "epitope": "TG3/AT180",
+      "stage": "early",
+      "kinases": [
+        "GSK3",
+        "CDK5"
+      ],
+      "context_wt": "KKVAVVRTPPKSPSS",
+      "context_mut": "KKVAVVRDPPKSPSS",
+      "centroid_shift": 0.14259018003940582,
+      "zone": "tolerated",
+      "dysfunction_score": 0.28518036007881165,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 235,
+      "aa": "S",
+      "domain": "PRR2",
+      "epitope": "AT180",
+      "stage": "early",
+      "kinases": [
+        "GSK3"
+      ],
+      "context_wt": "VVRTPPKSPSSAKSR",
+      "context_mut": "VVRTPPKDPSSAKSR",
+      "centroid_shift": 0.17555707693099976,
+      "zone": "transition",
+      "dysfunction_score": 0.3511141538619995,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 237,
+      "aa": "S",
+      "domain": "PRR2",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "CK1"
+      ],
+      "context_wt": "RTPPKSPSSAKSRLQ",
+      "context_mut": "RTPPKSPDSAKSRLQ",
+      "centroid_shift": 0.16263814270496368,
+      "zone": "transition",
+      "dysfunction_score": 0.32527628540992737,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 238,
+      "aa": "T",
+      "domain": "PRR2",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "GSK3"
+      ],
+      "context_wt": "TPPKSPSSAKSRLQT",
+      "context_mut": "TPPKSPSDAKSRLQT",
+      "centroid_shift": 0.1668158322572708,
+      "zone": "transition",
+      "dysfunction_score": 0.3336316645145416,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 258,
+      "aa": "S",
+      "domain": "R1",
+      "epitope": null,
+      "stage": "mid",
+      "kinases": [
+        "MARK",
+        "PKA"
+      ],
+      "context_wt": "PDLKNVKSKIGSTEN",
+      "context_mut": "PDLKNVKDKIGSTEN",
+      "centroid_shift": 0.1806025207042694,
+      "zone": "transition",
+      "dysfunction_score": 0.3612050414085388,
+      "is_mtbr": true,
+      "is_kxgs": false,
+      "near_tubulin_contact": true
+    },
+    {
+      "position": 262,
+      "aa": "S",
+      "domain": "R1",
+      "epitope": "12E8",
+      "stage": "mid",
+      "kinases": [
+        "MARK",
+        "PKA",
+        "BRSK"
+      ],
+      "context_wt": "NVKSKIGSTENLKHQ",
+      "context_mut": "NVKSKIGDTENLKHQ",
+      "centroid_shift": 0.16945576667785645,
+      "zone": "transition",
+      "dysfunction_score": 0.3389115333557129,
+      "is_mtbr": true,
+      "is_kxgs": true,
+      "near_tubulin_contact": true
+    },
+    {
+      "position": 263,
+      "aa": "T",
+      "domain": "R1",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "GSK3"
+      ],
+      "context_wt": "VKSKIGSTENLKHQP",
+      "context_mut": "VKSKIGSDENLKHQP",
+      "centroid_shift": 0.14822547137737274,
+      "zone": "tolerated",
+      "dysfunction_score": 0.2964509427547455,
+      "is_mtbr": true,
+      "is_kxgs": false,
+      "near_tubulin_contact": true
+    },
+    {
+      "position": 285,
+      "aa": "S",
+      "domain": "R2",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "GSK3"
+      ],
+      "context_wt": "INKKLDLSNVQSKCG",
+      "context_mut": "INKKLDLDNVQSKCG",
+      "centroid_shift": 0.19514122605323792,
+      "zone": "transition",
+      "dysfunction_score": 0.39028245210647583,
+      "is_mtbr": true,
+      "is_kxgs": false,
+      "near_tubulin_contact": true
+    },
+    {
+      "position": 289,
+      "aa": "S",
+      "domain": "R2",
+      "epitope": null,
+      "stage": "mid",
+      "kinases": [
+        "GSK3",
+        "CDK5"
+      ],
+      "context_wt": "LDLSNVQSKCGSKDN",
+      "context_mut": "LDLSNVQDKCGSKDN",
+      "centroid_shift": 0.21660073101520538,
+      "zone": "transition",
+      "dysfunction_score": 0.43320146203041077,
+      "is_mtbr": true,
+      "is_kxgs": false,
+      "near_tubulin_contact": true
+    },
+    {
+      "position": 293,
+      "aa": "S",
+      "domain": "R2",
+      "epitope": null,
+      "stage": "mid",
+      "kinases": [
+        "MARK"
+      ],
+      "context_wt": "NVQSKCGSKDNIKHV",
+      "context_mut": "NVQSKCGDKDNIKHV",
+      "centroid_shift": 0.16357533633708954,
+      "zone": "transition",
+      "dysfunction_score": 0.3271506726741791,
+      "is_mtbr": true,
+      "is_kxgs": true,
+      "near_tubulin_contact": true
+    },
+    {
+      "position": 305,
+      "aa": "S",
+      "domain": "R2",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "CK1"
+      ],
+      "context_wt": "KHVPGGGSVQIVYKP",
+      "context_mut": "KHVPGGGDVQIVYKP",
+      "centroid_shift": 0.17068280279636383,
+      "zone": "transition",
+      "dysfunction_score": 0.34136560559272766,
+      "is_mtbr": true,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 316,
+      "aa": "S",
+      "domain": "R3",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "GSK3"
+      ],
+      "context_wt": "VYKPVDLSKVTSKCG",
+      "context_mut": "VYKPVDLDKVTSKCG",
+      "centroid_shift": 0.20783403515815735,
+      "zone": "transition",
+      "dysfunction_score": 0.4156680703163147,
+      "is_mtbr": true,
+      "is_kxgs": false,
+      "near_tubulin_contact": true
+    },
+    {
+      "position": 320,
+      "aa": "S",
+      "domain": "R3",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "GSK3"
+      ],
+      "context_wt": "VDLSKVTSKCGSLGN",
+      "context_mut": "VDLSKVTDKCGSLGN",
+      "centroid_shift": 0.2278403639793396,
+      "zone": "transition",
+      "dysfunction_score": 0.4556807279586792,
+      "is_mtbr": true,
+      "is_kxgs": false,
+      "near_tubulin_contact": true
+    },
+    {
+      "position": 324,
+      "aa": "S",
+      "domain": "R3",
+      "epitope": null,
+      "stage": "mid",
+      "kinases": [
+        "MARK"
+      ],
+      "context_wt": "KVTSKCGSLGNIHHK",
+      "context_mut": "KVTSKCGDLGNIHHK",
+      "centroid_shift": 0.1967160999774933,
+      "zone": "transition",
+      "dysfunction_score": 0.3934321999549866,
+      "is_mtbr": true,
+      "is_kxgs": true,
+      "near_tubulin_contact": true
+    },
+    {
+      "position": 352,
+      "aa": "S",
+      "domain": "R4",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "GSK3"
+      ],
+      "context_wt": "DFKDRVQSKIGSLDN",
+      "context_mut": "DFKDRVQDKIGSLDN",
+      "centroid_shift": 0.15951447188854218,
+      "zone": "transition",
+      "dysfunction_score": 0.31902894377708435,
+      "is_mtbr": true,
+      "is_kxgs": false,
+      "near_tubulin_contact": true
+    },
+    {
+      "position": 356,
+      "aa": "S",
+      "domain": "R4",
+      "epitope": null,
+      "stage": "mid",
+      "kinases": [
+        "MARK"
+      ],
+      "context_wt": "RVQSKIGSLDNITHV",
+      "context_mut": "RVQSKIGDLDNITHV",
+      "centroid_shift": 0.17596665024757385,
+      "zone": "transition",
+      "dysfunction_score": 0.3519333004951477,
+      "is_mtbr": true,
+      "is_kxgs": true,
+      "near_tubulin_contact": true
+    },
+    {
+      "position": 394,
+      "aa": "S",
+      "domain": "C_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "GSK3"
+      ],
+      "context_wt": "DHGAEIVYKSPVVSG",
+      "context_mut": "DHGAEIVDKSPVVSG",
+      "centroid_shift": 0.11117017269134521,
+      "zone": "tolerated",
+      "dysfunction_score": 0.22234034538269043,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 396,
+      "aa": "S",
+      "domain": "C_terminal",
+      "epitope": "PHF-1",
+      "stage": "late",
+      "kinases": [
+        "GSK3",
+        "CDK5"
+      ],
+      "context_wt": "GAEIVYKSPVVSGDT",
+      "context_mut": "GAEIVYKDPVVSGDT",
+      "centroid_shift": 0.1783144474029541,
+      "zone": "transition",
+      "dysfunction_score": 0.3566288948059082,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 400,
+      "aa": "S",
+      "domain": "C_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "CK1"
+      ],
+      "context_wt": "VYKSPVVSGDTSPRH",
+      "context_mut": "VYKSPVVDGDTSPRH",
+      "centroid_shift": 0.22940556704998016,
+      "zone": "transition",
+      "dysfunction_score": 0.4588111340999603,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 404,
+      "aa": "S",
+      "domain": "C_terminal",
+      "epitope": "PHF-1",
+      "stage": "late",
+      "kinases": [
+        "GSK3",
+        "CDK5"
+      ],
+      "context_wt": "PVVSGDTSPRHLSNV",
+      "context_mut": "PVVSGDTDPRHLSNV",
+      "centroid_shift": 0.23455706238746643,
+      "zone": "transition",
+      "dysfunction_score": 0.46911412477493286,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 409,
+      "aa": "S",
+      "domain": "C_terminal",
+      "epitope": "PG5",
+      "stage": "late",
+      "kinases": [
+        "PKA",
+        "CK1"
+      ],
+      "context_wt": "DTSPRHLSNVSSTGS",
+      "context_mut": "DTSPRHLDNVSSTGS",
+      "centroid_shift": 0.21950632333755493,
+      "zone": "transition",
+      "dysfunction_score": 0.43901264667510986,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 412,
+      "aa": "S",
+      "domain": "C_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "CK1"
+      ],
+      "context_wt": "PRHLSNVSSTGSIDM",
+      "context_mut": "PRHLSNVDSTGSIDM",
+      "centroid_shift": 0.22509144246578217,
+      "zone": "transition",
+      "dysfunction_score": 0.45018288493156433,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 413,
+      "aa": "S",
+      "domain": "C_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "CK1"
+      ],
+      "context_wt": "RHLSNVSSTGSIDMV",
+      "context_mut": "RHLSNVSDTGSIDMV",
+      "centroid_shift": 0.21555735170841217,
+      "zone": "transition",
+      "dysfunction_score": 0.43111470341682434,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 416,
+      "aa": "S",
+      "domain": "C_terminal",
+      "epitope": null,
+      "stage": "unknown",
+      "kinases": [
+        "CK1"
+      ],
+      "context_wt": "SNVSSTGSIDMVDSP",
+      "context_mut": "SNVSSTGDIDMVDSP",
+      "centroid_shift": 0.2227945476770401,
+      "zone": "transition",
+      "dysfunction_score": 0.4455890953540802,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    },
+    {
+      "position": 422,
+      "aa": "S",
+      "domain": "C_terminal",
+      "epitope": null,
+      "stage": "late",
+      "kinases": [
+        "GSK3",
+        "CDK5"
+      ],
+      "context_wt": "GSIDMVDSPQLATLA",
+      "context_mut": "GSIDMVDDPQLATLA",
+      "centroid_shift": 0.20206204056739807,
+      "zone": "transition",
+      "dysfunction_score": 0.40412408113479614,
+      "is_mtbr": false,
+      "is_kxgs": false,
+      "near_tubulin_contact": false
+    }
+  ],
+  "epitope_results": [
+    {
+      "epitope": "AT8",
+      "sites": [
+        202,
+        205
+      ],
+      "description": "Early tangle marker, gold standard for AD staging",
+      "stage": "early",
+      "context_wt": "SGYSSPGSPGTPGSRSRTPSL",
+      "context_mut": "SGYSSPDSPDTPGSRSRTPSL",
+      "combined_shift": 0.10202987492084503,
+      "zone": "tolerated",
+      "num_phospho": 2
+    },
+    {
+      "epitope": "AT100",
+      "sites": [
+        212,
+        214
+      ],
+      "description": "Specific for AD-type phosphorylation",
+      "stage": "mid",
+      "context_wt": "GTPGSRSRTPSLPTPPTREPK",
+      "context_mut": "GTPGSRSDTDSLPTPPTREPK",
+      "combined_shift": 0.181921124458313,
+      "zone": "transition",
+      "num_phospho": 2
+    },
+    {
+      "epitope": "AT180",
+      "sites": [
+        231
+      ],
+      "description": "Conformational epitope, early pathology",
+      "stage": "early",
+      "context_wt": "REPKKVAVVRTPPKSPSSAKS",
+      "context_mut": "REPKKVAVVDTPPKSPSSAKS",
+      "combined_shift": 0.1049187183380127,
+      "zone": "tolerated",
+      "num_phospho": 1
+    },
+    {
+      "epitope": "AT270",
+      "sites": [
+        181
+      ],
+      "description": "N-terminal phospho, CSF biomarker",
+      "stage": "early",
+      "context_wt": "IPAKTPPAPKTPPSSGEPPKS",
+      "context_mut": "IPAKTPPAPDTPPSSGEPPKS",
+      "combined_shift": 0.05121741071343422,
+      "zone": "tolerated",
+      "num_phospho": 1
+    },
+    {
+      "epitope": "PHF-1",
+      "sites": [
+        396,
+        404
+      ],
+      "description": "Late-stage PHF marker",
+      "stage": "late",
+      "context_wt": "YKSPVVSGDTSPRHLSNVSST",
+      "context_mut": "YDSPVVSGDDSPRHLSNVSST",
+      "combined_shift": 0.1849571019411087,
+      "zone": "transition",
+      "num_phospho": 2
+    },
+    {
+      "epitope": "12E8",
+      "sites": [
+        262
+      ],
+      "description": "MTBR phosphorylation, MT detachment",
+      "stage": "mid",
+      "context_wt": "DLKNVKSKIGSTENLKHQPGG",
+      "context_mut": "DLKNVKSKIDSTENLKHQPGG",
+      "combined_shift": 0.08589305728673935,
+      "zone": "tolerated",
+      "num_phospho": 1
+    },
+    {
+      "epitope": "CP13",
+      "sites": [
+        202
+      ],
+      "description": "pS202 specific",
+      "stage": "early",
+      "context_wt": "GDRSGYSSPGSPGTPGSRSRT",
+      "context_mut": "GDRSGYSSPDSPGTPGSRSRT",
+      "combined_shift": 0.05383743718266487,
+      "zone": "tolerated",
+      "num_phospho": 1
+    },
+    {
+      "epitope": "TG3",
+      "sites": [
+        231
+      ],
+      "description": "Conformational epitope requiring pT231",
+      "stage": "early",
+      "context_wt": "REPKKVAVVRTPPKSPSSAKS",
+      "context_mut": "REPKKVAVVDTPPKSPSSAKS",
+      "combined_shift": 0.1049187183380127,
+      "zone": "tolerated",
+      "num_phospho": 1
+    }
+  ],
+  "summary": {
+    "total_sites": 54,
+    "zone_distribution": {
+      "tolerated": 13,
+      "transition": 41,
+      "severe": 0
+    },
+    "mean_shift": 0.17138688362858914,
+    "top_sites": [
+      404,
+      400,
+      320,
+      412,
+      416,
+      409,
+      68,
+      289,
+      413,
+      191
+    ],
+    "mtbr_sites_in_transition_or_severe": 11
+  }
+}

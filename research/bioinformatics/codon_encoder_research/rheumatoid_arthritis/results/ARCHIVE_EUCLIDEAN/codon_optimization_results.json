@@ -1,0 +1,60 @@
+{
+  "proteins": {
+    "PRG4_fragment": {
+      "name": "Lubricin (PRG4) - lubricating domain fragment",
+      "function": "Joint lubrication",
+      "original_sequence": "KEPAPTTTKPEPAPTTTKSPPVPAPT",
+      "optimized_dna": "AAGGAGCCCGCCCCCACCACCACCAAGCCCGAGCCCGCCCCCACCACCACCAAGAGCCCCCCCGTGCCCGCCCCCACC",
+      "metrics": {
+        "mean_margin": 0.38239702582359314,
+        "min_margin": 0.04106450080871582,
+        "n_epitope_windows": 18,
+        "n_r_positions": 0,
+        "n_cit_boundary_crossings": 0,
+        "cit_safety_rate": 1.0
+      }
+    },
+    "HAS2_fragment": {
+      "name": "Hyaluronan Synthase 2 - catalytic fragment",
+      "function": "Hyaluronic acid synthesis",
+      "original_sequence": "LLVKRWQNHLDIGFQVLDPRR",
+      "optimized_dna": "CTGCTGGTGAAGAGGTGGCAGAACCACCTGGACATCGGCTTCCAGGTGCTGGACCCCAGGAGG",
+      "metrics": {
+        "mean_margin": 0.19514234364032745,
+        "min_margin": 0.017097949981689453,
+        "n_epitope_windows": 13,
+        "n_r_positions": 3,
+        "n_cit_boundary_crossings": 1,
+        "cit_safety_rate": 0.6666666666666667
+      }
+    },
+    "COL2A1_fragment": {
+      "name": "Collagen II - immunogenic region",
+      "function": "Cartilage structure",
+      "original_sequence": "GARGLTGRPGDAGPQGKVGPS",
+      "optimized_dna": "GGCGCCAGGGGCCTGACCGGCAGGCCCGGCGACGCCGGCCCCCAGGGCAAGGTGGGCCCCAGC",
+      "metrics": {
+        "mean_margin": 0.6605067849159241,
+        "min_margin": 0.38983166217803955,
+        "n_epitope_windows": 13,
+        "n_r_positions": 2,
+        "n_cit_boundary_crossings": 0,
+        "cit_safety_rate": 1.0
+      }
+    },
+    "FN1_fragment": {
+      "name": "Fibronectin - RGD domain",
+      "function": "Cell adhesion",
+      "original_sequence": "GRGDSPKQGTWRPY",
+      "optimized_dna": "GGCAGGGGCGACAGCCCCAAGCAGGGCACCTGGAGGCCCTAC",
+      "metrics": {
+        "mean_margin": 0.2915852665901184,
+        "min_margin": 0.029211759567260742,
+        "n_epitope_windows": 6,
+        "n_r_positions": 2,
+        "n_cit_boundary_crossings": 1,
+        "cit_safety_rate": 0.5
+      }
+    }
+  }
+}

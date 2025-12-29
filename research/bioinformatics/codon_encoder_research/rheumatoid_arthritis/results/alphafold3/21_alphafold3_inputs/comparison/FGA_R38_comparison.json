@@ -1,0 +1,32 @@
+{
+  "name": "FGA_R38_comparison",
+  "sequences": [
+    {
+      "protein": {
+        "id": "A",
+        "sequence": "GPRVVERHQS"
+      }
+    },
+    {
+      "protein": {
+        "id": "B",
+        "sequence": "GPRVVERHQS",
+        "modifications": [
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 3
+          },
+          {
+            "ptmType": "CIR",
+            "ptmPosition": 7
+          }
+        ]
+      }
+    }
+  ],
+  "modelSeeds": [
+    1
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}

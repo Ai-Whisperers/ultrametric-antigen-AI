@@ -1,0 +1,22 @@
+{
+  "name": "TNC_R4_native_HLA-DRB1_01_01",
+  "sequences": [
+    {
+      "protein": {
+        "id": "A",
+        "sequence": "GSRRLRALSV"
+      }
+    },
+    {
+      "protein": {
+        "id": "B",
+        "sequence": "GDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQKRAAVDTYCRHNYGVGESFTVQRR"
+      }
+    }
+  ],
+  "modelSeeds": [
+    1
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}
