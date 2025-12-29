@@ -368,8 +368,8 @@ def main():
     print(f"\n  Cluster sizes: {output['cluster_sizes']}")
     print(f"  Target pattern: {DEGENERACY_PATTERN}")
 
-    # Check radii distribution
-    radii = np.linalg.norm(z_B[indices], axis=1)
+    # Check radii distribution - V5.12.2: Use hyperbolic radii
+    radii = hyperbolic_radii(z_B[indices])
     print(f"\n  Radius range: [{radii.min():.4f}, {radii.max():.4f}]")
 
     # Save
