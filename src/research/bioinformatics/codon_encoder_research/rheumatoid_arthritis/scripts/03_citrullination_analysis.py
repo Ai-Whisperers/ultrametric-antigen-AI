@@ -25,6 +25,19 @@ from pathlib import Path
 
 import numpy as np
 import torch
+
+
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """Compute hyperbolic distance from origin for a Poincare ball embedding.
+
+    V5.12.2: Use proper hyperbolic distance formula instead of Euclidean norm.
+    """
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 # Import hyperbolic utilities
 from hyperbolic_utils import (AA_TO_CODON, ARGININE_CODONS, codon_to_onehot,
                               get_results_dir, load_codon_encoder)
@@ -267,15 +280,16 @@ def compute_embedding_shift(original, modified):
     angular_shift = np.arccos(np.clip(cos_sim, -1, 1))
 
     # Radial shift (change in distance from origin - important in hyperbolic space)
-    radial_shift = np.linalg.norm(mod_mean) - np.linalg.norm(orig_mean)
+    # V5.12.2: Use proper hyperbolic radius
+    radial_shift = hyperbolic_radius(mod_mean) - hyperbolic_radius(orig_mean)
 
     return {
         "euclidean": euclidean_shift,
         "poincare": poincare_shift,
         "angular": angular_shift,
         "radial": radial_shift,
-        "original_norm": np.linalg.norm(orig_mean),
-        "modified_norm": np.linalg.norm(mod_mean),
+        "original_norm": hyperbolic_radius(orig_mean),  # V5.12.2
+        "modified_norm": hyperbolic_radius(mod_mean),   # V5.12.2
     }
 
 
