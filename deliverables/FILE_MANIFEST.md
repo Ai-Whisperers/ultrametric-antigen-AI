@@ -6,9 +6,10 @@ This document lists all files to include in each partner's deliverable package.
 
 ## Carlos Brizuela - Antimicrobial Peptides
 
-### To Copy:
+### To Copy
 
-```
+````text
+
 deliverables/carlos_brizuela/
 ├── README.md                          ← Partner-specific guide (created)
 ├── scripts/
@@ -23,11 +24,14 @@ deliverables/carlos_brizuela/
 └── docs/
     ├── TECHNICAL_BRIEF.md             ← From DOCUMENTATION/04_PARTNERSHIP_PROJECTS/01_BRIZUELA_AMPS/TECHNICAL_BRIEF.md
     └── IMPLEMENTATION_GUIDE.md        ← From DOCUMENTATION/04_PARTNERSHIP_PROJECTS/01_BRIZUELA_AMPS/IMPLEMENTATION_GUIDE.md
-```
+```text
 
-### Copy Commands (PowerShell):
 
-```powershell
+### Copy Commands (PowerShell)
+
+
+```text
+powershell
 $src = "C:\Users\Alejandro\Documents\Ivan\Work\ternary-vaes-bioinformatics"
 $dst = "$src\deliverables\carlos_brizuela"
 
@@ -46,7 +50,8 @@ Copy-Item "$src\results\partners\brizuela\pareto_peptides.csv" "$dst\results\"
 Copy-Item "$src\data\processed\demo_amp_embeddings.csv" "$dst\data\"
 Copy-Item "$src\DOCUMENTATION\04_PARTNERSHIP_PROJECTS\01_BRIZUELA_AMPS\TECHNICAL_BRIEF.md" "$dst\docs\"
 Copy-Item "$src\DOCUMENTATION\04_PARTNERSHIP_PROJECTS\01_BRIZUELA_AMPS\IMPLEMENTATION_GUIDE.md" "$dst\docs\"
-```
+```text
+
 
 ---
 
@@ -54,7 +59,8 @@ Copy-Item "$src\DOCUMENTATION\04_PARTNERSHIP_PROJECTS\01_BRIZUELA_AMPS\IMPLEMENT
 
 ### To Copy:
 
-```
+```text
+
 deliverables/jose_colbes/
 ├── README.md                          ← Partner-specific guide (created)
 ├── scripts/
@@ -69,11 +75,13 @@ deliverables/jose_colbes/
 └── docs/
     ├── TECHNICAL_PROPOSAL.md          ← From DOCUMENTATION/04_PARTNERSHIP_PROJECTS/02_COLBES_OPTIMIZATION/TECHNICAL_PROPOSAL.md
     └── IMPLEMENTATION_GUIDE.md        ← From DOCUMENTATION/04_PARTNERSHIP_PROJECTS/02_COLBES_OPTIMIZATION/IMPLEMENTATION_GUIDE.md
-```
+```text
+
 
 ### Copy Commands (PowerShell):
 
-```powershell
+```text
+powershell
 $src = "C:\Users\Alejandro\Documents\Ivan\Work\ternary-vaes-bioinformatics"
 $dst = "$src\deliverables\jose_colbes"
 
@@ -92,7 +100,8 @@ Copy-Item "$src\results\partners\colbes\rotamer_stability.json" "$dst\results\"
 Copy-Item "$src\data\processed\demo_rotamers.pt" "$dst\data\"
 Copy-Item "$src\DOCUMENTATION\04_PARTNERSHIP_PROJECTS\02_COLBES_OPTIMIZATION\TECHNICAL_PROPOSAL.md" "$dst\docs\"
 Copy-Item "$src\DOCUMENTATION\04_PARTNERSHIP_PROJECTS\02_COLBES_OPTIMIZATION\IMPLEMENTATION_GUIDE.md" "$dst\docs\"
-```
+```text
+
 
 ---
 
@@ -100,7 +109,8 @@ Copy-Item "$src\DOCUMENTATION\04_PARTNERSHIP_PROJECTS\02_COLBES_OPTIMIZATION\IMP
 
 ### To Copy:
 
-```
+```text
+
 deliverables/alejandra_rojas/
 ├── README.md                              ← Partner-specific guide (created)
 ├── scripts/
@@ -116,11 +126,13 @@ deliverables/alejandra_rojas/
 │   └── dengue_paraguay.fasta              ← From data/raw/dengue_paraguay.fasta
 └── docs/
     └── IMPLEMENTATION_GUIDE.md            ← From DOCUMENTATION/04_PARTNERSHIP_PROJECTS/03_ROJAS_ARBOVIRUSES/IMPLEMENTATION_GUIDE.md
-```
+```text
+
 
 ### Copy Commands (PowerShell):
 
-```powershell
+```text
+powershell
 $src = "C:\Users\Alejandro\Documents\Ivan\Work\ternary-vaes-bioinformatics"
 $dst = "$src\deliverables\alejandra_rojas"
 
@@ -140,7 +152,8 @@ Copy-Item "$src\results\partners\rojas\dengue_forecast.json" "$dst\results\"
 Copy-Item "$src\results\partners\rojas\primer_candidates.csv" "$dst\results\"
 Copy-Item "$src\data\raw\dengue_paraguay.fasta" "$dst\data\"
 Copy-Item "$src\DOCUMENTATION\04_PARTNERSHIP_PROJECTS\03_ROJAS_ARBOVIRUSES\IMPLEMENTATION_GUIDE.md" "$dst\docs\"
-```
+```text
+
 
 ---
 
@@ -148,7 +161,8 @@ Copy-Item "$src\DOCUMENTATION\04_PARTNERSHIP_PROJECTS\03_ROJAS_ARBOVIRUSES\IMPLE
 
 Save as `copy_deliverables.ps1`:
 
-```powershell
+```text
+powershell
 $src = "C:\Users\Alejandro\Documents\Ivan\Work\ternary-vaes-bioinformatics"
 
 # Carlos Brizuela
@@ -186,7 +200,8 @@ Copy-Item "$src\data\raw\dengue_paraguay.fasta" "$dst\data\"
 Copy-Item "$src\DOCUMENTATION\04_PARTNERSHIP_PROJECTS\03_ROJAS_ARBOVIRUSES\IMPLEMENTATION_GUIDE.md" "$dst\docs\" -ErrorAction SilentlyContinue
 
 Write-Host "Deliverables copied successfully!"
-```
+```text
+
 
 ---
 
@@ -194,7 +209,8 @@ Write-Host "Deliverables copied successfully!"
 
 After copying, create individual ZIP files for sending:
 
-```powershell
+```text
+powershell
 $deliverables = "C:\Users\Alejandro\Documents\Ivan\Work\ternary-vaes-bioinformatics\deliverables"
 
 Compress-Archive -Path "$deliverables\carlos_brizuela" -DestinationPath "$deliverables\carlos_brizuela_AMP_optimizer.zip" -Force
@@ -202,8 +218,46 @@ Compress-Archive -Path "$deliverables\jose_colbes" -DestinationPath "$deliverabl
 Compress-Archive -Path "$deliverables\alejandra_rojas" -DestinationPath "$deliverables\alejandra_rojas_arbovirus_surveillance.zip" -Force
 
 Write-Host "ZIP archives created!"
-```
+```text
+
 
 ---
 
-*This manifest ensures each partner receives a complete, self-contained package.*
+_This manifest ensures each partner receives a complete, self-contained package._
+
+---
+
+## HIV Research Package
+
+### To Copy:
+
+```text
+
+deliverables/hiv_research_package/
+├── README.md                          ← Package guide
+├── scripts/
+│   ├── run_complete_analysis.py       ← Main pipeline
+│   ├── 02_hiv_drug_resistance.py      ← Drug resistance logic
+│   ├── 07_validate_all_conjectures.py ← Validation logic
+│   └── analyze_stanford_resistance.py ← Data analysis
+└── docs/
+    └── COMPLETE_PLATFORM_ANALYSIS.md  ← Full technical report
+````
+
+### Copy Commands (PowerShell):
+
+```powershell
+$src = "C:\Users\Alejandro\Documents\Ivan\Work\ternary-vaes-bioinformatics"
+$dst = "$src\deliverables\hiv_research_package"
+
+# Create directories
+New-Item -ItemType Directory -Force -Path "$dst\scripts"
+New-Item -ItemType Directory -Force -Path "$dst\docs"
+
+# Copy files
+Copy-Item "$src\src\research\bioinformatics\codon_encoder_research\hiv\scripts\run_complete_analysis.py" "$dst\scripts\"
+Copy-Item "$src\src\research\bioinformatics\codon_encoder_research\hiv\scripts\02_hiv_drug_resistance.py" "$dst\scripts\"
+Copy-Item "$src\src\research\bioinformatics\codon_encoder_research\hiv\scripts\07_validate_all_conjectures.py" "$dst\scripts\"
+Copy-Item "$src\src\research\bioinformatics\codon_encoder_research\hiv\scripts\analyze_stanford_resistance.py" "$dst\scripts\"
+Copy-Item "$src\docs\content\research\hiv\complete_platform_analysis.md" "$dst\docs\COMPLETE_PLATFORM_ANALYSIS.md"
+```

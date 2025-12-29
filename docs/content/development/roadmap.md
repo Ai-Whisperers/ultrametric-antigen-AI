@@ -1,90 +1,76 @@
-# Project Roadmap
+# Future Implementation: Mathematical Frontiers
 
-> **Current status and future plans.**
-
----
-
-## Current Status (2025-12-28)
-
-### Completed
-
-| Feature | Status | Details |
-|:--------|:-------|:--------|
-| BaseVAE abstraction | Done | Unified base for 19+ VAE variants |
-| Uncertainty quantification | Done | MC Dropout, Evidential, Ensemble |
-| Epistasis modeling | Done | Mutation interaction network |
-| Transfer learning | Done | 5 strategies, cross-disease |
-| Structure-aware VAE | Done | AlphaFold2, SE(3) encoders |
-| Multi-disease platform | Done | 11 diseases supported |
-| Test suite | Done | 231 tests, 97.4% pass rate |
-| Documentation consolidation | Done | Unified docs/content/ |
-
-### In Progress
-
-| Feature | Status | ETA |
-|:--------|:-------|:----|
-| Legacy docs cleanup | 80% | 2025-12-29 |
-| Integration tests | 90% | 2025-12-29 |
+**Advanced Modules & Theoretical Expansions**
 
 ---
 
-## Next Steps
+## 1. Summary of Advanced Modules (Code Exists)
 
-### Short-term (Q1 2025)
+We have 8 advanced modules implemented in `src/` but not yet fully integrated into the production pipeline.
 
-1. **Clinical validation**
-   - Partner with HIV clinic for prospective validation
-   - FDA pre-submission meeting
-
-2. **TB module completion**
-   - MDR/XDR classification validation
-   - Integration with TB diagnostics workflows
-
-3. **API development**
-   - REST API for predictions
-   - Batch processing support
-
-### Medium-term (Q2-Q3 2025)
-
-1. **Regulatory pathway**
-   - FDA 510(k) preparation
-   - CE marking (EU)
-
-2. **Commercial partnerships**
-   - Pharma API integrations
-   - Diagnostic lab partnerships
-
-3. **Platform expansion**
-   - Additional disease modules
-   - Real-time surveillance integration
-
-### Long-term (2026+)
-
-1. **Novel target discovery**
-   - Drug-resistant mutation prediction
-   - Vaccine antigen design
-
-2. **Point-of-care integration**
-   - Rapid testing integration
-   - Resource-limited settings
+| Module                   | Location           | Purpose                                            | Integration Status               |
+| :----------------------- | :----------------- | :------------------------------------------------- | :------------------------------- |
+| **Tropical Geometry**    | `src/tropical/`    | Max-plus algebra for native tree learning.         | **Partially Live** (TropicalVAE) |
+| **Persistent Homology**  | `src/topology/`    | Topological fingerprints (H0, H1 features).        | Ready                            |
+| **Information Geometry** | `src/information/` | Natural Gradient (Fisher Metric) optimization.     | Ready                            |
+| **P-adic Contrastive**   | `src/contrastive/` | Self-supervised pretraining with p-adic positives. | Ready                            |
+| **Statistical Physics**  | `src/physics/`     | Spin Glass fitness landscapes (Parisi overlap).    | Experimental                     |
+| **Hyperbolic GNN**       | `src/graphs/`      | Graph Neural Networks in Poincaré space.           | Experimental                     |
+| **Category Theory**      | `src/categorical/` | Type-safe compositional types.                     | Utility Only                     |
+| **Meta-Learning**        | `src/meta/`        | Few-shot adaptation (MAML) for new viruses.        | Experimental                     |
 
 ---
 
-## Architecture Evolution
+## 2. Theoretical Frontiers (The Next Wave)
 
-```
-2024 Q4: Single VAE → Dual VAE (VAE-A + VAE-B)
-2025 Q1: Dual VAE → Multi-disease platform
-2025 Q4: Platform → Clinical-grade system
-2026+:   Clinical → Regulatory-approved diagnostic
-```
+### A. Tropical Geometry: The Algebra of Life
+
+Standard VAEs use Linear Algebra ($Wx+b$).
+Biological decisions are often "If X > Threshold then Y".
+**Tropical Algebra** ($\max(a+b)$) models these discrete thresholds natively.
+
+- **Application**: `TropicalVAE` (already showing 96.7% accuracy).
+- **Next Step**: "Tropical Transformers" (Max-plus attention).
+
+### B. Information Geometry: The Fisher Metric
+
+The standard gradient is Euclidean, but the latent space is Hyperbolic.
+**Natural Gradient Descent** corrects this by using the Fisher Information Matrix/Metric.
+
+- **Application**: Faster convergence near the boundary of the Poincaré ball.
+
+### C. Category Theory: Sheaves on Graphs
+
+Proteins have "local" constraints (chemistry) that must patch together into "global" stability (folding).
+**Sheaf Theory** formalizes this local-to-global patching.
+
+- **Application**: Mathematical proof of folding stability.
+
+### D. Ergodic Theory: P-adic Dynamics
+
+Viral evolution isn't random; it has "Attractors".
+**P-adic Ergodic Theory** studies dynamical systems on fractal spaces.
+
+- **Application**: Predict the "Limit Set" of viral evolution (future dominant strains).
 
 ---
 
-## Contributing
+## 3. Integration Plan
 
-See [contributing.md](contributing.md) for how to contribute to these goals.
+### Phase 1: The "Structure" Upgrade
 
----
+Combine `TropicalVAE` with **Persistent Homology**.
 
-_Last updated: 2025-12-28_
+- **Why**: Tropical gives good discrete boundaries; Topology gives robust shape features.
+
+### Phase 2: The "Speed" Upgrade
+
+Switch optimizer to **K-FAC** (Information Geometry).
+
+- **Why**: Handle high-curvature regions of the hyperbolic space better than Adam.
+
+### Phase 3: The "Generalization" Upgrade
+
+Deploy **Meta-Learning** (MAML) for Multi-Organism rollout.
+
+- **Why**: Train on HIV, adapt to COVID in 10 shots.
