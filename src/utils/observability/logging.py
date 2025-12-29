@@ -12,7 +12,7 @@ This module provides centralized logging setup that:
 - Integrates with file and console handlers
 
 Usage:
-    from src.observability.logging import setup_logging, get_logger
+    from src.utils.observability.logging import setup_logging, get_logger
 
     # At application startup
     setup_logging(level="INFO", log_file="training.log")

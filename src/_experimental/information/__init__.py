@@ -21,7 +21,7 @@ Example:
     optimizer = NaturalGradientOptimizer(model.parameters(), lr=0.01)
 """
 
-from src.information.fisher_geometry import (
+from src._experimental.information.fisher_geometry import (
     FisherInfo,
     FisherInformationEstimator,
     InformationGeometricAnalyzer,

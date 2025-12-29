@@ -21,7 +21,7 @@ Example:
     n_regions = analyzer.compute_linear_regions()
 """
 
-from src.tropical.tropical_geometry import (
+from src._experimental.tropical.tropical_geometry import (
     LinearRegion,
     TropicalConvexHull,
     TropicalMonomial,

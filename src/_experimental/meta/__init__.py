@@ -22,7 +22,7 @@ Example:
     maml = MAML(base_model, inner_lr=0.01)
 """
 
-from src.meta.meta_learning import (
+from src._experimental.meta.meta_learning import (
     MAML,
     FewShotAdapter,
     PAdicTaskSampler,

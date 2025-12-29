@@ -25,7 +25,7 @@ Example:
     autoencoder = layer1 >> layer2
 """
 
-from src.categorical.category_theory import (
+from src._experimental.categorical.category_theory import (
     AttentionOptic,
     CategoricalLayer,
     CategoricalNetwork,

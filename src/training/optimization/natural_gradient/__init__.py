@@ -19,7 +19,7 @@ References:
 - Salimbeni (2018): Natural Gradients in Practice
 """
 
-from src.optimization.natural_gradient.fisher_optimizer import (
+from src.training.optimization.natural_gradient.fisher_optimizer import (
     AdaptiveNaturalGradient,
     FisherRaoSGD,
     VAEFisherEstimator,

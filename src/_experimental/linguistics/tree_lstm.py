@@ -33,7 +33,7 @@ from typing import Dict, List, Optional, Tuple
 import torch
 import torch.nn as nn
 
-from src.linguistics.peptide_grammar import ParseTree
+from src._experimental.linguistics.peptide_grammar import ParseTree
 
 
 @dataclass

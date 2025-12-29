@@ -21,7 +21,7 @@ Quantum tunneling sites have distinct p-adic signatures that can be
 used to predict enzyme catalytic efficiency.
 
 Usage:
-    from src.quantum.biology import QuantumBiologyAnalyzer
+    from src._experimental.quantum.biology import QuantumBiologyAnalyzer
 
     analyzer = QuantumBiologyAnalyzer()
     result = analyzer.analyze_catalytic_site(sequence, [85, 90, 110])

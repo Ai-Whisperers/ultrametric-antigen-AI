@@ -30,14 +30,14 @@ References:
 - Dyer et al. (2016): Recurrent Neural Network Grammars
 """
 
-from src.linguistics.peptide_grammar import (
+from src._experimental.linguistics.peptide_grammar import (
     GrammarRule,
     MotifParser,
     ParseTree,
     PeptideGrammar,
     ProteinMotif,
 )
-from src.linguistics.tree_lstm import (
+from src._experimental.linguistics.tree_lstm import (
     ChildSumTreeLSTM,
     NaryTreeLSTM,
     ProteinTreeEncoder,

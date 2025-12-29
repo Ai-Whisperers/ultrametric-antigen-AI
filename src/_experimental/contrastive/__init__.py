@@ -21,14 +21,14 @@ Example:
     loss = loss_fn(embeddings, indices)
 """
 
-from src.contrastive.codon_sampler import (
+from src._experimental.contrastive.codon_sampler import (
     CodonContrastiveDataset,
     CodonPositiveSampler,
     CodonSamplerConfig,
     build_synonymous_codon_groups,
     build_wobble_variants,
 )
-from src.contrastive.padic_contrastive import (
+from src._experimental.contrastive.padic_contrastive import (
     ContrastiveConfig,
     ContrastiveDataAugmentation,
     MomentumContrastEncoder,

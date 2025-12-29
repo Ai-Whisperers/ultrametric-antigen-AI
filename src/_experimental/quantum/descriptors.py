@@ -21,7 +21,7 @@ recommended. This module provides estimated values based on amino acid
 and structural properties suitable for ML integration.
 
 Usage:
-    from src.quantum.descriptors import QuantumBioDescriptor
+    from src._experimental.quantum.descriptors import QuantumBioDescriptor
 
     descriptor = QuantumBioDescriptor()
     result = descriptor.compute_sequence_descriptors("MVLSPADKTNVKAAW")

@@ -26,7 +26,7 @@ from typing import Dict, Optional, Tuple
 
 import torch
 
-from ..core import TERNARY
+from src.core import TERNARY
 
 
 @dataclass

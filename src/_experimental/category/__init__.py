@@ -36,14 +36,14 @@ References:
 - Curry (2014): Sheaves, Cosheaves and Applications
 """
 
-from src.category.sheaves import (
+from src._experimental.category.sheaves import (
     ProteinSheaf,
     ResidueSection,
     SheafConstraint,
     SheafGluing,
     SheafMorphism,
 )
-from src.category.functors import (
+from src._experimental.category.functors import (
     CategoricalFunctor,
     CodonToProteinFunctor,
     LatentSpaceFunctor,

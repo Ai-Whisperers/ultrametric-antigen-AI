@@ -23,7 +23,7 @@ Example:
     samples = sampler.sample(landscape)
 """
 
-from src.physics.statistical_physics import (
+from src._experimental.physics.statistical_physics import (
     BoltzmannMachine,
     EnergyState,
     ParisiOverlapAnalyzer,

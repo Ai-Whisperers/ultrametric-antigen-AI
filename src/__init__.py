@@ -40,7 +40,7 @@ __license__ = "PolyForm-Noncommercial-1.0.0"
 from .config import TrainingConfig, load_config, save_config
 
 # Data
-from .data import TernaryOperationDataset, generate_all_ternary_operations
+from .dataio import TernaryOperationDataset, generate_all_ternary_operations
 
 # Losses (registry pattern)
 from .losses import (
@@ -64,20 +64,21 @@ from .training import HyperbolicVAETrainer, TernaryVAETrainer, TrainingMonitor
 from .training.callbacks import CallbackList, EarlyStoppingCallback, CheckpointCallback
 
 # Observability
-from .observability import setup_logging, get_logger, MetricsBuffer
+from .utils.observability import setup_logging, MetricsBuffer
+from .utils.observability.logging import get_logger
 
-# Advanced Modules (lazy imports to avoid heavy dependencies at startup)
+# Advanced Modules (experimental - lazy imports to avoid heavy dependencies at startup)
 # These are imported on demand when accessed
-from . import graphs
-from . import topology
-from . import information
-from . import contrastive
-from . import physics
-from . import tropical
-from . import categorical
-from . import meta
-from . import equivariant
-from . import diffusion
+from ._experimental import graphs
+from ._experimental import topology
+from ._experimental import information
+from ._experimental import contrastive
+from ._experimental import physics
+from ._experimental import tropical
+from ._experimental import categorical
+from ._experimental import meta
+from ._experimental import equivariant
+from ._experimental import diffusion
 
 # Canonical aliases (after imports)
 TernaryVAE = TernaryVAEV5_11
