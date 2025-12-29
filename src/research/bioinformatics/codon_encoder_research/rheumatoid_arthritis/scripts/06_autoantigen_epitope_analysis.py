@@ -21,6 +21,34 @@ from pathlib import Path
 
 import numpy as np
 import torch
+
+
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """Compute hyperbolic distance from origin for a Poincare ball embedding.
+
+    V5.12.2: Use proper hyperbolic distance formula instead of Euclidean norm.
+    """
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
+def poincare_distance_np(x: np.ndarray, y: np.ndarray, c: float = 1.0) -> float:
+    """Compute hyperbolic distance between two Poincare ball embeddings.
+
+    V5.12.2: Proper hyperbolic distance formula.
+    """
+    x_norm_sq = np.sum(x ** 2)
+    y_norm_sq = np.sum(y ** 2)
+    diff_norm_sq = np.sum((x - y) ** 2)
+    x_norm_sq = np.clip(x_norm_sq, 0, 0.999)
+    y_norm_sq = np.clip(y_norm_sq, 0, 0.999)
+    denom = (1 - c * x_norm_sq) * (1 - c * y_norm_sq)
+    arg = 1 + 2 * c * diff_norm_sq / (denom + 1e-10)
+    return float(np.arccosh(np.clip(arg, 1.0, 1e10)))
+
+
 # Import hyperbolic utilities
 from hyperbolic_utils import (AA_TO_CODON, ARGININE_CODONS, codon_to_onehot,
                               get_results_dir, load_codon_encoder)
@@ -369,11 +397,11 @@ def analyze_arginine_positions(epitope_profile, arg_positions):
         neighbor_dists = []
         for i in range(len(epitope_profile["embeddings"])):
             if i != idx:
-                d = np.linalg.norm(emb - epitope_profile["embeddings"][i])
+                d = poincare_distance_np(emb, epitope_profile["embeddings"][i])  # V5.12.2
                 neighbor_dists.append(d)
 
-        # Embedding magnitude
-        emb_norm = np.linalg.norm(emb)
+        # Embedding magnitude (V5.12.2: use hyperbolic radius)
+        emb_norm = hyperbolic_radius(emb)
 
         # Cluster homogeneity (are neighbors in same cluster?)
         neighbor_clusters = [epitope_profile["clusters"][i] for i in range(len(epitope_profile["clusters"])) if i != idx]
@@ -536,12 +564,14 @@ def compute_epitope_centroid_shift(epitope_profile, arg_positions):
 
         if len(remaining) > 0:
             new_centroid = np.mean(remaining, axis=0)
-            shift = np.linalg.norm(new_centroid - original_centroid)
+            # V5.12.2: use proper hyperbolic distance
+            shift = poincare_distance_np(new_centroid, original_centroid)
+            orig_radius = hyperbolic_radius(original_centroid)
             shifts.append(
                 {
                     "position": idx,
                     "centroid_shift": shift,
-                    "relative_shift": (shift / np.linalg.norm(original_centroid) if np.linalg.norm(original_centroid) > 0 else 0),
+                    "relative_shift": (shift / orig_radius if orig_radius > 0 else 0),
                 }
             )
 

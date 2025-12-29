@@ -39,6 +39,23 @@ from typing import Dict
 
 import numpy as np
 import torch
+
+
+def poincare_distance_np(x: np.ndarray, y: np.ndarray, c: float = 1.0) -> float:
+    """Compute hyperbolic distance between two Poincare ball embeddings.
+
+    V5.12.2: Proper hyperbolic distance formula instead of Euclidean norm.
+    """
+    x_norm_sq = np.sum(x ** 2)
+    y_norm_sq = np.sum(y ** 2)
+    diff_norm_sq = np.sum((x - y) ** 2)
+    x_norm_sq = np.clip(x_norm_sq, 0, 0.999)
+    y_norm_sq = np.clip(y_norm_sq, 0, 0.999)
+    denom = (1 - c * x_norm_sq) * (1 - c * y_norm_sq)
+    arg = 1 + 2 * c * diff_norm_sq / (denom + 1e-10)
+    return float(np.arccosh(np.clip(arg, 1.0, 1e10)))
+
+
 # Import hyperbolic utilities
 from hyperbolic_utils import (AA_TO_CODON, codon_to_onehot, get_results_dir,
                               load_codon_encoder)
@@ -300,14 +317,14 @@ def analyze_pathway_geometry(proteins: Dict, encoder) -> Dict:
         embs = pathway_embeddings[pathway]
         centroid = pathway_centroids[pathway]
 
-        # Within-pathway variance
-        within_var = np.mean([np.linalg.norm(e - centroid) ** 2 for e in embs])
+        # Within-pathway variance (V5.12.2: use poincare distance)
+        within_var = np.mean([poincare_distance_np(e, centroid) ** 2 for e in embs])
 
         # Distance to other pathways
         between_dists = {}
         for other in pathways:
             if other != pathway:
-                between_dists[other] = np.linalg.norm(centroid - pathway_centroids[other])
+                between_dists[other] = poincare_distance_np(centroid, pathway_centroids[other])
 
         pathway_stats[pathway] = {
             "n_proteins": len(embs),
@@ -347,12 +364,12 @@ def test_regeneration_hypothesis(analysis: Dict) -> Dict:
     pro_centroid = np.mean(pro_regen, axis=0)
     anti_centroid = np.mean(anti_regen, axis=0)
 
-    # Within-group distances
-    pro_within = np.mean([np.linalg.norm(e - pro_centroid) for e in pro_regen])
-    anti_within = np.mean([np.linalg.norm(e - anti_centroid) for e in anti_regen])
+    # Within-group distances (V5.12.2: use poincare distance)
+    pro_within = np.mean([poincare_distance_np(e, pro_centroid) for e in pro_regen])
+    anti_within = np.mean([poincare_distance_np(e, anti_centroid) for e in anti_regen])
 
-    # Between-group distance
-    between = np.linalg.norm(pro_centroid - anti_centroid)
+    # Between-group distance (V5.12.2: use poincare distance)
+    between = poincare_distance_np(pro_centroid, anti_centroid)
 
     # Separation ratio
     avg_within = (pro_within + anti_within) / 2
@@ -387,7 +404,8 @@ def analyze_autonomic_balance(analysis: Dict) -> Dict:
     para_centroid = para["centroid"]
     symp_centroid = symp["centroid"]
 
-    distance = np.linalg.norm(para_centroid - symp_centroid)
+    # V5.12.2: use poincare distance
+    distance = poincare_distance_np(para_centroid, symp_centroid)
 
     # Compare to regeneration and inflammation
     regen = analysis["pathway_stats"].get("regeneration", {})
@@ -401,12 +419,14 @@ def analyze_autonomic_balance(analysis: Dict) -> Dict:
     }
 
     if regen:
-        results["para_regen_distance"] = np.linalg.norm(para_centroid - regen["centroid"])
-        results["symp_regen_distance"] = np.linalg.norm(symp_centroid - regen["centroid"])
+        # V5.12.2: use poincare distance
+        results["para_regen_distance"] = poincare_distance_np(para_centroid, regen["centroid"])
+        results["symp_regen_distance"] = poincare_distance_np(symp_centroid, regen["centroid"])
 
     if inflam:
-        results["para_inflam_distance"] = np.linalg.norm(para_centroid - inflam["centroid"])
-        results["symp_inflam_distance"] = np.linalg.norm(symp_centroid - inflam["centroid"])
+        # V5.12.2: use poincare distance
+        results["para_inflam_distance"] = poincare_distance_np(para_centroid, inflam["centroid"])
+        results["symp_inflam_distance"] = poincare_distance_np(symp_centroid, inflam["centroid"])
 
     return results
 
@@ -554,7 +574,7 @@ def create_visualization(analysis: Dict, regen_test: Dict, autonomic: Dict, outp
             if i != j:
                 c1 = analysis["pathway_stats"][p1]["centroid"]
                 c2 = analysis["pathway_stats"][p2]["centroid"]
-                dist_matrix[i, j] = np.linalg.norm(c1 - c2)
+                dist_matrix[i, j] = poincare_distance_np(c1, c2)  # V5.12.2
 
     im = ax5.imshow(dist_matrix, cmap="viridis")
     ax5.set_xticks(range(n))
