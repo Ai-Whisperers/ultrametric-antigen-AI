@@ -31,6 +31,28 @@ from typing import Optional
 
 import numpy as np
 
+
+def poincare_distance_np(x: np.ndarray, y: np.ndarray, c: float = 1.0) -> float:
+    """Compute hyperbolic distance between two Poincare ball embeddings.
+
+    V5.12.2: Proper hyperbolic distance formula instead of Euclidean norm.
+
+    Uses: d(x,y) = arccosh(1 + 2 * ||x-y||² / ((1-||x||²)(1-||y||²)))
+    """
+    x_norm_sq = np.sum(x ** 2)
+    y_norm_sq = np.sum(y ** 2)
+    diff_norm_sq = np.sum((x - y) ** 2)
+
+    # Clamp norms to stay inside the ball
+    x_norm_sq = np.clip(x_norm_sq, 0, 0.999)
+    y_norm_sq = np.clip(y_norm_sq, 0, 0.999)
+
+    denom = (1 - c * x_norm_sq) * (1 - c * y_norm_sq)
+    arg = 1 + 2 * c * diff_norm_sq / (denom + 1e-10)
+
+    return float(np.arccosh(np.clip(arg, 1.0, 1e10)))
+
+
 # Lazy imports for optional dependencies
 _TORCH_AVAILABLE = False
 _TRANSFORMERS_AVAILABLE = False
@@ -595,9 +617,10 @@ class ESM2HyperbolicHybrid:
             ))
 
         if "hyperbolic_mean" in emb1 and "hyperbolic_mean" in emb2:
-            result["hyperbolic_distance"] = float(np.linalg.norm(
-                emb1["hyperbolic_mean"] - emb2["hyperbolic_mean"]
-            ))
+            # V5.12.2: Use proper hyperbolic distance
+            result["hyperbolic_distance"] = poincare_distance_np(
+                emb1["hyperbolic_mean"], emb2["hyperbolic_mean"]
+            )
 
         if "combined_embedding" in emb1 and "combined_embedding" in emb2:
             result["combined_distance"] = float(np.linalg.norm(
