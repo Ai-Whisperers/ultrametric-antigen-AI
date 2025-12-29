@@ -30,6 +30,7 @@ from src.analysis.set_theory.formal_concepts import (
     ConceptLattice,
 )
 from src.analysis.set_theory.lattice import ResistanceLattice
+from src.geometry import poincare_distance
 
 
 @dataclass
@@ -415,15 +416,21 @@ class ConceptPrototypeNetwork(nn.Module):
         self,
         concept_lattice: ConceptLattice,
         embed_dim: int = 64,
+        use_hyperbolic: bool = True,
+        curvature: float = 1.0,
     ):
         """Initialize prototype network.
 
         Args:
             concept_lattice: Concept lattice
             embed_dim: Embedding dimension
+            use_hyperbolic: V5.12.2 - Use poincare_distance for hyperbolic embeddings (default True)
+            curvature: Hyperbolic curvature for poincare_distance
         """
         super().__init__()
         self.lattice = concept_lattice
+        self.use_hyperbolic = use_hyperbolic
+        self.curvature = curvature
 
         n_concepts = len(concept_lattice.concepts)
         self.prototypes = nn.Parameter(torch.randn(n_concepts, embed_dim))
@@ -440,9 +447,19 @@ class ConceptPrototypeNetwork(nn.Module):
         Returns:
             Distances to each prototype (batch_size, n_concepts)
         """
-        # Euclidean distance to prototypes
-        diff = embeddings.unsqueeze(1) - self.prototypes.unsqueeze(0)
-        distances = torch.norm(diff, dim=-1)
+        # V5.12.2: Support both Euclidean and hyperbolic distance
+        if self.use_hyperbolic:
+            # Compute hyperbolic distances to each prototype
+            batch_size = embeddings.size(0)
+            n_concepts = self.prototypes.size(0)
+            distances = torch.zeros(batch_size, n_concepts, device=embeddings.device)
+            for i in range(n_concepts):
+                prototype = self.prototypes[i].unsqueeze(0).expand(batch_size, -1)
+                distances[:, i] = poincare_distance(embeddings, prototype, c=self.curvature)
+        else:
+            # Euclidean distance to prototypes
+            diff = embeddings.unsqueeze(1) - self.prototypes.unsqueeze(0)
+            distances = torch.norm(diff, dim=-1)
 
         return distances
 

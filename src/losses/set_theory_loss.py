@@ -63,7 +63,7 @@ class LatticeOrderingLoss(nn.Module):
         self,
         lattice: ResistanceLattice,
         margin: float = 0.1,
-        distance_fn: str = "euclidean",
+        distance_fn: str = "hyperbolic",
         curvature: float = 1.0,
     ):
         """Initialize lattice ordering loss.
@@ -71,8 +71,8 @@ class LatticeOrderingLoss(nn.Module):
         Args:
             lattice: Resistance lattice structure
             margin: Ranking margin
-            distance_fn: Distance function ('euclidean' or 'hyperbolic')
-            curvature: Hyperbolic curvature for poincare_distance (V5.12.2)
+            distance_fn: V5.12.2 - Distance function ('hyperbolic' default, or 'euclidean')
+            curvature: Hyperbolic curvature for poincare_distance
         """
         super().__init__()
         self.lattice = lattice

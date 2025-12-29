@@ -52,7 +52,7 @@ class PAdicRankingLossV2(nn.Module):
         n_triplets: int = DEFAULT_N_TRIPLETS,
         hard_negative_ratio: float = DEFAULT_HARD_NEGATIVE_RATIO,
         semi_hard: bool = True,
-        use_hyperbolic: bool = False,
+        use_hyperbolic: bool = True,
         curvature: float = 1.0,
     ):
         """Initialize Enhanced p-Adic Ranking Loss.
@@ -63,7 +63,7 @@ class PAdicRankingLossV2(nn.Module):
             n_triplets: Number of triplets to sample per batch
             hard_negative_ratio: Fraction of triplets that should be hard negatives
             semi_hard: If True, use semi-hard negatives (close but wrong ordering)
-            use_hyperbolic: If True, use poincare_distance (V5.12.2)
+            use_hyperbolic: V5.12.2 - Use poincare_distance for hyperbolic embeddings (default True)
             curvature: Hyperbolic curvature for poincare_distance
         """
         super().__init__()

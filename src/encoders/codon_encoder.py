@@ -43,6 +43,7 @@ from src.biology.codons import (
     codon_index_to_triplet,
 )
 from src.core.padic_math import padic_valuation
+from src.geometry import poincare_distance
 
 # Amino acid properties (normalized to [-1, 1])
 AA_PROPERTIES = {
@@ -387,12 +388,20 @@ class CodonEncoder(nn.Module):
         # MSE loss between distance matrices
         return torch.nn.functional.mse_loss(current, target)
 
-    def get_codon_similarity(self, idx1: int, idx2: int) -> dict:
+    def get_codon_similarity(
+        self,
+        idx1: int,
+        idx2: int,
+        use_hyperbolic: bool = True,
+        curvature: float = 1.0,
+    ) -> dict:
         """Get detailed similarity metrics between two codons.
 
         Args:
             idx1: First codon index (0-63)
             idx2: Second codon index (0-63)
+            use_hyperbolic: V5.12.2 - Use poincare_distance for hyperbolic embeddings (default True)
+            curvature: Hyperbolic curvature for poincare_distance
 
         Returns:
             Dictionary with similarity metrics
@@ -406,11 +415,14 @@ class CodonEncoder(nn.Module):
         padic_dist = compute_padic_distance_between_codons(idx1, idx2)
         aa_dist = compute_amino_acid_distance(idx1, idx2)
 
-        # Embedding distance
+        # V5.12.2: Embedding distance (Euclidean or hyperbolic)
         with torch.no_grad():
-            emb1 = self.embedding.weight[idx1]
-            emb2 = self.embedding.weight[idx2]
-            emb_dist = torch.norm(emb1 - emb2).item()
+            emb1 = self.embedding.weight[idx1].unsqueeze(0)
+            emb2 = self.embedding.weight[idx2].unsqueeze(0)
+            if use_hyperbolic:
+                emb_dist = poincare_distance(emb1, emb2, c=curvature).item()
+            else:
+                emb_dist = torch.norm(emb1 - emb2).item()
 
         return {
             "codon1": triplet1,

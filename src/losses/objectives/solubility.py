@@ -18,6 +18,7 @@ from typing import Any, Optional
 import torch
 
 from .base import Objective, ObjectiveResult
+from src.geometry import poincare_distance
 
 # Amino acid hydrophobicity scale (Kyte-Doolittle)
 # Higher values = more hydrophobic
@@ -204,6 +205,8 @@ class StabilityObjective(Objective):
         target_compactness: float = 0.8,
         entropy_weight: float = 0.5,
         weight: float = 1.0,
+        use_hyperbolic: bool = True,
+        curvature: float = 1.0,
     ):
         """Initialize stability objective.
 
@@ -211,10 +214,14 @@ class StabilityObjective(Objective):
             target_compactness: Target latent space compactness
             entropy_weight: Weight for structural entropy term
             weight: Weight for multi-objective combination
+            use_hyperbolic: V5.12.2 - Use poincare_distance for hyperbolic embeddings (default True)
+            curvature: Hyperbolic curvature for poincare_distance
         """
         super().__init__(name="stability", weight=weight)
         self.target_compactness = target_compactness
         self.entropy_weight = entropy_weight
+        self.use_hyperbolic = use_hyperbolic
+        self.curvature = curvature
 
     def _compute_compactness(self, latent: torch.Tensor) -> torch.Tensor:
         """Compute compactness of latent representation.
@@ -227,8 +234,13 @@ class StabilityObjective(Objective):
         Returns:
             Compactness scores, shape (Batch,)
         """
-        # L2 norm as compactness measure
-        norms = torch.norm(latent, dim=-1)
+        # V5.12.2: Use hyperbolic distance from origin for Poincaré ball embeddings
+        if self.use_hyperbolic:
+            origin = torch.zeros_like(latent)
+            norms = poincare_distance(latent, origin, c=self.curvature)
+        else:
+            # Euclidean L2 norm as compactness measure
+            norms = torch.norm(latent, dim=-1)
 
         # Normalize to [0, 1] range
         max_norm = norms.max() + 1e-8

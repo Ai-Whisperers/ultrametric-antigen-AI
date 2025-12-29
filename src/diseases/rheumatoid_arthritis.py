@@ -32,6 +32,8 @@ from enum import Enum
 import torch
 import torch.nn as nn
 
+from src.geometry import poincare_distance
+
 
 class PADEnzyme(Enum):
     """Peptidylarginine deiminase enzymes."""
@@ -252,16 +254,26 @@ class PAdicCitrullinationShift(nn.Module):
     citrullinated versions of epitopes.
     """
 
-    def __init__(self, p: int = 3, embedding_dim: int = 64):
+    def __init__(
+        self,
+        p: int = 3,
+        embedding_dim: int = 64,
+        use_hyperbolic: bool = True,
+        curvature: float = 1.0,
+    ):
         """Initialize shift calculator.
 
         Args:
             p: Prime for p-adic calculations
             embedding_dim: Embedding dimension for sequences
+            use_hyperbolic: V5.12.2 - Use poincare_distance for hyperbolic embeddings (default True)
+            curvature: Hyperbolic curvature for poincare_distance
         """
         super().__init__()
         self.p = p
         self.embedding_dim = embedding_dim
+        self.use_hyperbolic = use_hyperbolic
+        self.curvature = curvature
 
         # Amino acid embedding
         self.aa_embedding = nn.Embedding(22, embedding_dim)
@@ -341,19 +353,23 @@ class PAdicCitrullinationShift(nn.Module):
         cit_out, _ = self.encoder(cit_emb)
         cit_proj = self.padic_proj(cit_out.mean(dim=1))
 
-        # Compute p-adic shift
-        diff = native_proj - cit_proj
-        shift_magnitude = torch.norm(diff, dim=-1)
+        # V5.12.2: Compute p-adic shift using hyperbolic or Euclidean distance
+        if self.use_hyperbolic:
+            shift_magnitude = poincare_distance(native_proj, cit_proj, c=self.curvature)
+        else:
+            diff = native_proj - cit_proj
+            shift_magnitude = torch.norm(diff, dim=-1)
 
         # Compute p-adic valuation-based distance
         # (simplified - in full implementation would use proper p-adic norm)
-        padic_distance = torch.abs(diff).sum(dim=-1) / self.embedding_dim
+        diff = native_proj - cit_proj
+        padic_dist = torch.abs(diff).sum(dim=-1) / self.embedding_dim
 
         return {
             "native_embedding": native_proj,
             "citrullinated_embedding": cit_proj,
             "shift_magnitude": shift_magnitude,
-            "padic_distance": padic_distance,
+            "padic_distance": padic_dist,
         }
 
 

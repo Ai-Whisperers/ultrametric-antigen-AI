@@ -36,7 +36,7 @@ class PAdicMetricLoss(nn.Module):
         self,
         scale: float = DEFAULT_METRIC_LOSS_SCALE,
         n_pairs: int = DEFAULT_METRIC_N_PAIRS,
-        use_hyperbolic: bool = False,
+        use_hyperbolic: bool = True,
         curvature: float = 1.0,
     ):
         """Initialize p-Adic Metric Loss.
@@ -44,7 +44,7 @@ class PAdicMetricLoss(nn.Module):
         Args:
             scale: Scaling factor C for 3-adic distances
             n_pairs: Number of pairs to sample per batch
-            use_hyperbolic: If True, use poincare_distance (V5.12.2)
+            use_hyperbolic: V5.12.2 - Use poincare_distance for hyperbolic embeddings (default True)
             curvature: Hyperbolic curvature for poincare_distance
         """
         super().__init__()

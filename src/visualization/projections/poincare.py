@@ -41,6 +41,23 @@ from src.visualization.core.base import create_figure, despine
 from src.visualization.styles.palettes import SEMANTIC, TOLVIBRANT
 
 
+def hyperbolic_distance_from_origin_np(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
+    """V5.12.2: Compute hyperbolic distance from origin for numpy arrays.
+
+    Args:
+        embeddings: Points on Poincare ball, shape (N, D)
+        c: Curvature parameter
+
+    Returns:
+        Hyperbolic distances, shape (N,)
+    """
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = np.linalg.norm(embeddings, axis=1)
+    # Clamp to avoid arctanh(1) = infinity
+    clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 def project_to_2d_poincare(
     embeddings: np.ndarray,
     method: str = "pca",
@@ -126,6 +143,8 @@ def plot_3d_poincare_ball(
     elevation: float = 20,
     azimuth: float = 45,
     marker_size: float = 30,
+    use_hyperbolic: bool = True,
+    curvature: float = 1.0,
 ) -> Tuple[Figure, Axes3D]:
     """Plot embeddings in 3D Poincare ball.
 
@@ -139,6 +158,8 @@ def plot_3d_poincare_ball(
         elevation: Camera elevation angle
         azimuth: Camera azimuth angle
         marker_size: Size of scatter markers
+        use_hyperbolic: V5.12.2 - Use hyperbolic distance for coloring (default True)
+        curvature: Hyperbolic curvature parameter
 
     Returns:
         Figure and 3D Axes objects
@@ -173,8 +194,11 @@ def plot_3d_poincare_ball(
             )
         ax.legend()
     else:
-        # Color by distance from origin
-        norms = np.linalg.norm(embeddings, axis=1)
+        # V5.12.2: Color by distance from origin (hyperbolic or Euclidean)
+        if use_hyperbolic:
+            norms = hyperbolic_distance_from_origin_np(embeddings, c=curvature)
+        else:
+            norms = np.linalg.norm(embeddings, axis=1)
         scatter = ax.scatter(
             embeddings[:, 0],
             embeddings[:, 1],
@@ -184,7 +208,8 @@ def plot_3d_poincare_ball(
             s=marker_size,
             alpha=0.7,
         )
-        fig.colorbar(scatter, ax=ax, label="Distance from origin", shrink=0.6)
+        label = "Hyperbolic distance from origin" if use_hyperbolic else "Euclidean distance from origin"
+        fig.colorbar(scatter, ax=ax, label=label, shrink=0.6)
 
     # Draw coordinate axes
     ax.plot([-1, 1], [0, 0], [0, 0], "k--", alpha=0.3)
@@ -214,6 +239,8 @@ def plot_hierarchy_tree(
     ax: Optional[Axes] = None,
     figsize: Tuple[float, float] = (12, 10),
     max_depth: Optional[int] = None,
+    use_hyperbolic: bool = True,
+    curvature: float = 1.0,
 ) -> Tuple[Figure, Axes]:
     """Plot hierarchical tree structure on Poincare disk.
 
@@ -228,6 +255,8 @@ def plot_hierarchy_tree(
         ax: Existing axes
         figsize: Figure size
         max_depth: Maximum hierarchy depth to display
+        use_hyperbolic: V5.12.2 - Use hyperbolic distance for depth coloring (default True)
+        curvature: Hyperbolic curvature parameter
 
     Returns:
         Figure and Axes objects
@@ -256,8 +285,11 @@ def plot_hierarchy_tree(
                     zorder=1,
                 )
 
-    # Color by depth (distance from origin = hierarchy depth)
-    norms = np.linalg.norm(embeddings, axis=1)
+    # V5.12.2: Color by depth (hyperbolic or Euclidean distance from origin)
+    if use_hyperbolic:
+        norms = hyperbolic_distance_from_origin_np(embeddings, c=curvature)
+    else:
+        norms = np.linalg.norm(embeddings, axis=1)
     scatter = ax.scatter(
         embeddings[:, 0],
         embeddings[:, 1],
@@ -270,7 +302,8 @@ def plot_hierarchy_tree(
         zorder=2,
     )
 
-    fig.colorbar(scatter, ax=ax, label="Hierarchy Depth (radial distance)")
+    label = "Hierarchy Depth (hyperbolic distance)" if use_hyperbolic else "Hierarchy Depth (Euclidean distance)"
+    fig.colorbar(scatter, ax=ax, label=label)
 
     # Add node labels if provided
     if node_labels is not None:

@@ -41,7 +41,7 @@ class PAdicRankingLoss(nn.Module):
         self,
         margin: float = DEFAULT_RANKING_MARGIN,
         n_triplets: int = DEFAULT_N_TRIPLETS,
-        use_hyperbolic: bool = False,
+        use_hyperbolic: bool = True,
         curvature: float = 1.0,
     ):
         """Initialize p-Adic Ranking Loss.
@@ -49,7 +49,7 @@ class PAdicRankingLoss(nn.Module):
         Args:
             margin: Margin for triplet loss (how much closer pos should be than neg)
             n_triplets: Number of triplets to sample per batch
-            use_hyperbolic: If True, use poincare_distance (V5.12.2)
+            use_hyperbolic: V5.12.2 - Use poincare_distance for hyperbolic embeddings (default True)
             curvature: Hyperbolic curvature for poincare_distance
         """
         super().__init__()
