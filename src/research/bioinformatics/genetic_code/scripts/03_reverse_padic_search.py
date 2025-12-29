@@ -30,6 +30,32 @@ import torch
 from scipy.cluster.hierarchy import fcluster, linkage
 from scipy.spatial.distance import pdist
 
+
+def hyperbolic_radii(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
+    """V5.12.2: Compute hyperbolic distance from origin for Poincare ball embeddings."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = np.linalg.norm(embeddings, axis=1)
+    clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
+def hyperbolic_radius(embedding: np.ndarray, c: float = 1.0) -> float:
+    """V5.12.2: Compute hyperbolic distance from origin for single embedding."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norm = np.linalg.norm(embedding)
+    clamped = np.clip(euclidean_norm * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
+def poincare_distance_np(x: np.ndarray, y: np.ndarray, c: float = 1.0) -> float:
+    """V5.12.2: Compute hyperbolic distance between two points in Poincare ball."""
+    x_norm_sq = np.clip(np.sum(x**2), 0, 0.999)
+    y_norm_sq = np.clip(np.sum(y**2), 0, 0.999)
+    diff_norm_sq = np.sum((x - y) ** 2)
+    denom = (1 - c * x_norm_sq) * (1 - c * y_norm_sq)
+    arg = 1 + 2 * c * diff_norm_sq / (denom + 1e-10)
+    return float(np.arccosh(np.clip(arg, 1.0, 1e10)))
+
 # Genetic code degeneracy pattern: how many codons per amino acid
 # Sorted: [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4, 6, 6, 6]
 # That's: 2×1, 9×2, 2×3, 5×4, 3×6 = 2+18+6+20+18 = 64 codons, 21 "amino acids" (including stop)
@@ -286,7 +312,7 @@ def find_by_radius_bands(embeddings, n_clusters=21):
     """
     print("\n  Searching using radius bands...")
 
-    radii = np.linalg.norm(embeddings, axis=1)
+    radii = hyperbolic_radii(embeddings)  # V5.12.2: use hyperbolic distance
 
     # Sort by radius
     sorted_indices = np.argsort(radii)
@@ -347,7 +373,7 @@ def find_optimal_64_greedy(embeddings, valuations, n_clusters=21):
     target_pattern = sorted(GENETIC_CODE_DEGENERACY, reverse=True)  # Start with largest clusters
 
     # Sort all points by valuation (descending) then radius
-    radii = np.linalg.norm(embeddings, axis=1)
+    radii = hyperbolic_radii(embeddings)  # V5.12.2: use hyperbolic distance
     sort_key = list(zip(-valuations, radii, range(len(embeddings))))
     sort_key.sort()
     sorted_indices = [x[2] for x in sort_key]
@@ -397,9 +423,9 @@ def find_optimal_64_greedy(embeddings, valuations, n_clusters=21):
                 for cand in candidates:
                     if cand in used:
                         continue
-                    # Distance to cluster centroid
+                    # Distance to cluster centroid (V5.12.2: use hyperbolic distance)
                     centroid = embeddings[cluster_points].mean(axis=0)
-                    d = np.linalg.norm(embeddings[cand] - centroid)
+                    d = poincare_distance_np(embeddings[cand], centroid)
                     if d < best_dist:
                         best_dist = d
                         best_next = cand
@@ -438,7 +464,7 @@ def analyze_best_configuration(indices, labels, embeddings, valuations):
 
     # Get properties of selected points
     selected_valuations = valuations[indices]
-    selected_radii = np.linalg.norm(embeddings[indices], axis=1)
+    selected_radii = hyperbolic_radii(embeddings[indices])  # V5.12.2
 
     # Cluster statistics
     unique_labels = sorted(set(labels))
@@ -491,7 +517,7 @@ def visualize_configuration(indices, labels, embeddings, valuations, output_dir)
 
     selected_emb = embeddings[indices]
     selected_vals = valuations[indices]
-    selected_radii = np.linalg.norm(selected_emb, axis=1)
+    selected_radii = hyperbolic_radii(selected_emb)  # V5.12.2
 
     # 1. PCA projection colored by cluster
     ax1 = axes[0, 0]

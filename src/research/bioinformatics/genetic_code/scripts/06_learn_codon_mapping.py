@@ -34,6 +34,17 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 
+
+def poincare_distance_np(x: np.ndarray, y: np.ndarray, c: float = 1.0) -> float:
+    """V5.12.2: Compute hyperbolic distance between two points in Poincare ball."""
+    x_norm_sq = np.clip(np.sum(x**2), 0, 0.999)
+    y_norm_sq = np.clip(np.sum(y**2), 0, 0.999)
+    diff_norm_sq = np.sum((x - y) ** 2)
+    denom = (1 - c * x_norm_sq) * (1 - c * y_norm_sq)
+    arg = 1 + 2 * c * diff_norm_sq / (denom + 1e-10)
+    return float(np.arccosh(np.clip(arg, 1.0, 1e10)))
+
+
 # =============================================================================
 # GENETIC CODE DATA
 # =============================================================================
@@ -596,7 +607,7 @@ def visualize_results(model, data, vae_embeddings, eval_results, output_dir):
 
     for i in range(64):
         for j in range(i + 1, 64):
-            dist = np.linalg.norm(embeddings[i] - embeddings[j])
+            dist = poincare_distance_np(embeddings[i], embeddings[j])  # V5.12.2
             if clusters[i] == clusters[j]:
                 within_dists.append(dist)
             else:

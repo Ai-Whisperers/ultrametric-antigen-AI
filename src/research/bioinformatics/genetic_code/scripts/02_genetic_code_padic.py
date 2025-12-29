@@ -29,6 +29,23 @@ import numpy as np
 import torch
 from scipy import stats
 
+
+def hyperbolic_radii(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
+    """V5.12.2: Compute hyperbolic distance from origin for Poincare ball embeddings.
+
+    Args:
+        embeddings: Array of shape (n, dim) containing Poincare ball embeddings
+        c: Curvature parameter (default 1.0)
+
+    Returns:
+        Array of hyperbolic radii (distances from origin)
+    """
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = np.linalg.norm(embeddings, axis=1)
+    clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 # Suppress warnings for cleaner output
 warnings.filterwarnings("ignore")
 
@@ -439,7 +456,7 @@ def phase_1_4_degeneracy_radius(codon_embeddings, amino_acids):
     print("=" * 70)
 
     # Compute radius for each codon
-    radii = np.linalg.norm(codon_embeddings, axis=1)
+    radii = hyperbolic_radii(codon_embeddings)  # V5.12.2: use hyperbolic distance
 
     # Get degeneracy for each codon's amino acid
     degeneracies = np.array([AA_DEGENERACY[aa] for aa in amino_acids])
@@ -521,7 +538,7 @@ def visualize_padic_balls(geodesic_matrix, codons, amino_acids, codon_embeddings
 
     # 2. Radius distribution by degeneracy
     ax2 = axes[0, 1]
-    radii = np.linalg.norm(codon_embeddings, axis=1)
+    radii = hyperbolic_radii(codon_embeddings)  # V5.12.2: use hyperbolic distance
     degeneracies = np.array([AA_DEGENERACY[aa] for aa in amino_acids])
 
     for deg in sorted(set(degeneracies)):

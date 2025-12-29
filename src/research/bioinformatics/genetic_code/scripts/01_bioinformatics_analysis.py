@@ -29,6 +29,22 @@ from scipy import stats
 from scipy.cluster.hierarchy import dendrogram, linkage
 from scipy.spatial.distance import pdist, squareform
 
+
+def hyperbolic_radii(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
+    """V5.12.2: Compute hyperbolic distance from origin for Poincare ball embeddings.
+
+    Args:
+        embeddings: Array of shape (n, dim) containing Poincare ball embeddings
+        c: Curvature parameter (default 1.0)
+
+    Returns:
+        Array of hyperbolic radii (distances from origin)
+    """
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = np.linalg.norm(embeddings, axis=1)
+    clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
 # Standard genetic code
 GENETIC_CODE = {
     "TTT": "F",
@@ -605,7 +621,7 @@ def analyze_chemical_properties(embeddings, codon_results):
 
     z_B = embeddings["z_B"]
     codon_embeddings = z_B[ternary_indices]
-    radii = np.linalg.norm(codon_embeddings, axis=1)
+    radii = hyperbolic_radii(codon_embeddings)  # V5.12.2: use hyperbolic distance
 
     # Get hydrophobicity values
     hydrophobicity = np.array([AA_HYDROPHOBICITY[aa] for aa in amino_acids])

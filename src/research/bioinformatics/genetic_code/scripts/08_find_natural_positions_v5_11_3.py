@@ -27,6 +27,15 @@ import numpy as np
 import torch
 from sklearn.cluster import AgglomerativeClustering
 
+
+def hyperbolic_radii(embeddings: np.ndarray, c: float = 1.0) -> np.ndarray:
+    """V5.12.2: Compute hyperbolic distance from origin for Poincare ball embeddings."""
+    sqrt_c = np.sqrt(c)
+    euclidean_norms = np.linalg.norm(embeddings, axis=1)
+    clamped = np.clip(euclidean_norms * sqrt_c, 0, 0.999)
+    return 2.0 * np.arctanh(clamped) / sqrt_c
+
+
 # Genetic code degeneracy pattern: 21 clusters with these sizes (sorted)
 # Total = 64 codons
 DEGENERACY_PATTERN = sorted(
@@ -177,7 +186,7 @@ def find_natural_positions(embeddings, target_pattern=DEGENERACY_PATTERN):
     print(f"Target pattern: {target_pattern}")
 
     # Compute radii
-    radii = np.linalg.norm(embeddings, axis=1)
+    radii = hyperbolic_radii(embeddings)  # V5.12.2: use hyperbolic distance
 
     # Normalize for angular clustering
     z_normalized = embeddings / (radii[:, np.newaxis] + 1e-8)
@@ -256,7 +265,7 @@ def refine_positions(embeddings, indices, labels, iterations=5):
             cluster_indices = [best_indices[j] for j in range(len(best_indices)) if best_labels[j] == cluster]
 
             # Try swapping with nearby unselected points
-            radii = np.linalg.norm(embeddings, axis=1)
+            radii = hyperbolic_radii(embeddings)  # V5.12.2: use hyperbolic distance
             idx_radius = radii[idx]
 
             # Candidates: within 10% radius
