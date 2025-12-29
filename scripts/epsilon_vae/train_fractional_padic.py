@@ -41,7 +41,8 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.config.paths import CHECKPOINTS_DIR, OUTPUT_DIR
 from src.data.generation import generate_all_ternary_operations
-from scripts.epsilon_vae.fractional_padic_architecture import (
+from src.utils.checkpoint import load_checkpoint_compat, get_model_state_dict
+from src.models.fractional_padic_architecture import (
     compute_padic_dimensions,
     interpolate_operation_space,
     create_interpolation_schedule,
@@ -400,13 +401,8 @@ def load_baseline_model(checkpoint_path: Path, device: str = "cpu"):
     """
     from src.models.ternary_vae import TernaryVAEV5_11
 
-    ckpt = torch.load(checkpoint_path, map_location=device, weights_only=False)
-
-    model_state = (
-        ckpt.get("model_state_dict") or
-        ckpt.get("model_state") or
-        {}
-    )
+    ckpt = load_checkpoint_compat(checkpoint_path, map_location=device)
+    model_state = get_model_state_dict(ckpt)
 
     # Infer architecture
     latent_dim = 16
