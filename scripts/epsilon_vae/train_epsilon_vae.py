@@ -36,6 +36,7 @@ from src.models.epsilon_vae import (
     epsilon_vae_loss,
     extract_key_weights,
 )
+from src.utils.checkpoint import load_checkpoint_compat, get_model_state_dict
 
 
 class CheckpointDataset(Dataset):
@@ -53,14 +54,8 @@ class CheckpointDataset(Dataset):
         self.samples = []
         for i, item in enumerate(self.metadata):
             try:
-                ckpt = torch.load(item["path"], map_location="cpu", weights_only=False)
-                state_dict = (
-                    ckpt.get("model_state_dict") or
-                    ckpt.get("model_state") or
-                    ckpt.get("state_dict") or
-                    ckpt.get("model") or
-                    {}
-                )
+                ckpt = load_checkpoint_compat(item["path"], map_location="cpu")
+                state_dict = get_model_state_dict(ckpt)
                 weights = extract_key_weights(state_dict)
 
                 if weights:

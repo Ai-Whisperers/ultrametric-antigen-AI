@@ -39,6 +39,7 @@ from src.core import TERNARY
 from src.data.generation import generate_all_ternary_operations
 from src.models import TernaryVAEV5_11_PartialFreeze
 from src.losses import RadialHierarchyLoss, PAdicGeodesicLoss
+from src.utils.checkpoint import load_checkpoint_compat, get_model_state_dict
 
 
 class HierarchyFocusedLoss(nn.Module):
@@ -230,8 +231,8 @@ def main():
     start_path = Path(args.start_checkpoint)
     if start_path.exists():
         print(f"Loading from: {start_path}")
-        ckpt = torch.load(start_path, map_location=device, weights_only=False)
-        model_state = ckpt.get('model_state_dict') or ckpt.get('model_state') or ckpt.get('model') or {}
+        ckpt = load_checkpoint_compat(start_path, map_location=device)
+        model_state = get_model_state_dict(ckpt)
         model.load_state_dict(model_state, strict=False)
         print(f"  Starting epoch: {ckpt.get('epoch', 'N/A')}")
         print(f"  Starting coverage: {ckpt.get('metrics', {}).get('coverage', 'N/A')}")
