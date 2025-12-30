@@ -99,11 +99,15 @@ class Config:
 
     def get_partner_dir(self, partner: str) -> Path:
         """Get directory for a specific partner."""
+        partners_root = self.deliverables_root / "partners"
         partner_dirs = {
-            "alejandra": self.deliverables_root / "alejandra_rojas",
-            "carlos": self.deliverables_root / "carlos_brizuela",
-            "jose": self.deliverables_root / "jose_colbes",
-            "hiv": self.deliverables_root / "hiv_research_package",
+            "alejandra": partners_root / "alejandra_rojas",
+            "rojas": partners_root / "alejandra_rojas",
+            "carlos": partners_root / "carlos_brizuela",
+            "brizuela": partners_root / "carlos_brizuela",
+            "jose": partners_root / "jose_colbes",
+            "colbes": partners_root / "jose_colbes",
+            "hiv": partners_root / "hiv_research_package",
         }
         return partner_dirs.get(partner.lower(), self.deliverables_root)
 
