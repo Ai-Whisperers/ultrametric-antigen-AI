@@ -237,10 +237,55 @@ Current coverage: 67 tests
 
 ---
 
+## Partner Research Tools
+
+| Partner | Package | Key Scripts |
+|---------|---------|-------------|
+| Alejandra Rojas | `alejandra_rojas/` | A2_pan_arbovirus_primers.py |
+| Carlos Brizuela | `carlos_brizuela/` | B1, B8, B10 AMP design tools |
+| Jose Colbes | `jose_colbes/` | C1, C4 protein stability tools |
+| HIV Research | `hiv_research_package/` | H6, H7 clinical decision tools |
+
+See individual `README.md` files in each package for usage details.
+
+---
+
+## Project Structure (Cleaned)
+
+```
+deliverables/
+├── docs/                    # Core documentation (this folder)
+├── shared/                  # Common utilities and modules
+├── tutorials/               # Jupyter notebooks
+├── scripts/                 # Utility scripts
+├── alejandra_rojas/         # Arbovirus primer research
+│   ├── README.md
+│   ├── scripts/
+│   ├── data/
+│   └── docs/               # User guides only
+├── carlos_brizuela/         # AMP optimization research
+│   ├── README.md
+│   ├── scripts/
+│   ├── data/
+│   └── docs/               # User guides only
+├── jose_colbes/             # Protein stability research
+│   ├── README.md
+│   ├── scripts/
+│   ├── data/
+│   └── docs/               # User guides only
+└── hiv_research_package/    # HIV clinical tools
+    ├── README.md
+    ├── scripts/
+    └── docs/               # User guides only
+```
+
+---
+
 ## Version History
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.0.1 | 2025-12-30 | Cleaned up redundant docs, consolidated structure |
 | 1.0.0 | 2025-12-30 | Initial documentation release |
 
 ---
