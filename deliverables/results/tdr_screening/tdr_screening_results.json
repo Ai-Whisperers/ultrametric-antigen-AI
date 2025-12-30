@@ -1,0 +1,184 @@
+{
+  "summary": {
+    "total_patients": 5,
+    "tdr_positive": 5,
+    "tdr_prevalence": "100.0%"
+  },
+  "patients": [
+    {
+      "patient_id": "DEMO_PATIENT_001",
+      "tdr_positive": true,
+      "mutations_detected": 1,
+      "mutations": [
+        {
+          "mutation": "M184V",
+          "drug_class": "NRTI",
+          "affected_drugs": [
+            "3TC",
+            "FTC"
+          ],
+          "resistance_level": "high",
+          "prevalence": 5.2
+        }
+      ],
+      "resistance_summary": "TDR detected - NRTI: M184V",
+      "recommended_regimen": "TDF/3TC/DTG",
+      "alternative_regimens": [],
+      "drug_susceptibility": {
+        "TDF": "susceptible",
+        "TAF": "susceptible",
+        "ABC": "susceptible",
+        "3TC": "resistant",
+        "FTC": "resistant",
+        "EFV": "susceptible",
+        "NVP": "susceptible",
+        "DOR": "susceptible",
+        "DTG": "susceptible",
+        "RAL": "susceptible",
+        "EVG": "susceptible",
+        "BIC": "susceptible"
+      },
+      "confidence": 0.95
+    },
+    {
+      "patient_id": "DEMO_PATIENT_002",
+      "tdr_positive": true,
+      "mutations_detected": 1,
+      "mutations": [
+        {
+          "mutation": "M184V",
+          "drug_class": "NRTI",
+          "affected_drugs": [
+            "3TC",
+            "FTC"
+          ],
+          "resistance_level": "high",
+          "prevalence": 5.2
+        }
+      ],
+      "resistance_summary": "TDR detected - NRTI: M184V",
+      "recommended_regimen": "TDF/3TC/DTG",
+      "alternative_regimens": [],
+      "drug_susceptibility": {
+        "TDF": "susceptible",
+        "TAF": "susceptible",
+        "ABC": "susceptible",
+        "3TC": "resistant",
+        "FTC": "resistant",
+        "EFV": "susceptible",
+        "NVP": "susceptible",
+        "DOR": "susceptible",
+        "DTG": "susceptible",
+        "RAL": "susceptible",
+        "EVG": "susceptible",
+        "BIC": "susceptible"
+      },
+      "confidence": 0.95
+    },
+    {
+      "patient_id": "DEMO_PATIENT_003",
+      "tdr_positive": true,
+      "mutations_detected": 1,
+      "mutations": [
+        {
+          "mutation": "M184V",
+          "drug_class": "NRTI",
+          "affected_drugs": [
+            "3TC",
+            "FTC"
+          ],
+          "resistance_level": "high",
+          "prevalence": 5.2
+        }
+      ],
+      "resistance_summary": "TDR detected - NRTI: M184V",
+      "recommended_regimen": "TDF/3TC/DTG",
+      "alternative_regimens": [],
+      "drug_susceptibility": {
+        "TDF": "susceptible",
+        "TAF": "susceptible",
+        "ABC": "susceptible",
+        "3TC": "resistant",
+        "FTC": "resistant",
+        "EFV": "susceptible",
+        "NVP": "susceptible",
+        "DOR": "susceptible",
+        "DTG": "susceptible",
+        "RAL": "susceptible",
+        "EVG": "susceptible",
+        "BIC": "susceptible"
+      },
+      "confidence": 0.95
+    },
+    {
+      "patient_id": "DEMO_PATIENT_004",
+      "tdr_positive": true,
+      "mutations_detected": 1,
+      "mutations": [
+        {
+          "mutation": "M184V",
+          "drug_class": "NRTI",
+          "affected_drugs": [
+            "3TC",
+            "FTC"
+          ],
+          "resistance_level": "high",
+          "prevalence": 5.2
+        }
+      ],
+      "resistance_summary": "TDR detected - NRTI: M184V",
+      "recommended_regimen": "TDF/3TC/DTG",
+      "alternative_regimens": [],
+      "drug_susceptibility": {
+        "TDF": "susceptible",
+        "TAF": "susceptible",
+        "ABC": "susceptible",
+        "3TC": "resistant",
+        "FTC": "resistant",
+        "EFV": "susceptible",
+        "NVP": "susceptible",
+        "DOR": "susceptible",
+        "DTG": "susceptible",
+        "RAL": "susceptible",
+        "EVG": "susceptible",
+        "BIC": "susceptible"
+      },
+      "confidence": 0.95
+    },
+    {
+      "patient_id": "DEMO_PATIENT_005",
+      "tdr_positive": true,
+      "mutations_detected": 1,
+      "mutations": [
+        {
+          "mutation": "M184V",
+          "drug_class": "NRTI",
+          "affected_drugs": [
+            "3TC",
+            "FTC"
+          ],
+          "resistance_level": "high",
+          "prevalence": 5.2
+        }
+      ],
+      "resistance_summary": "TDR detected - NRTI: M184V",
+      "recommended_regimen": "TDF/3TC/DTG",
+      "alternative_regimens": [],
+      "drug_susceptibility": {
+        "TDF": "susceptible",
+        "TAF": "susceptible",
+        "ABC": "susceptible",
+        "3TC": "resistant",
+        "FTC": "resistant",
+        "EFV": "susceptible",
+        "NVP": "susceptible",
+        "DOR": "susceptible",
+        "DTG": "susceptible",
+        "RAL": "susceptible",
+        "EVG": "susceptible",
+        "BIC": "susceptible"
+      },
+      "confidence": 0.95
+    }
+  ]
+}

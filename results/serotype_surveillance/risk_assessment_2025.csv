@@ -1,0 +1,5 @@
+serotype,risk_score,risk_level,recommendation,component_divergence,component_momentum,component_virulence,component_case_trend,component_uncertainty
+DENV-1,0.3928896995440575,Moderate,Maintain routine surveillance for DENV-1.,0.5464495907850804,0.3521918782654043,0.5,0.3103448275862069,0.08482846303448952
+DENV-2,0.5687719059640429,High,Increase DENV-2 monitoring. Prepare outbreak response protocols.,0.5082142697856709,0.5093314515521059,0.9,0.5307692307692308,0.08642342965036061
+DENV-3,0.270932035181813,Low,Standard monitoring sufficient for DENV-3.,0.15323000862420905,0.2581546643807437,0.7,0.0,0.007473673617853149
+DENV-4,0.4084591304514457,Moderate,Maintain routine surveillance for DENV-4.,0.3892923158065323,0.10981430619796499,0.4,1.0,0.03147090740648031

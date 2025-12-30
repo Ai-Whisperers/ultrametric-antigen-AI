@@ -1,0 +1,50 @@
+{
+  "summary": {
+    "total_mutations": 3,
+    "destabilizing": 0,
+    "neutral": 1,
+    "stabilizing": 2,
+    "mean_ddg": -1.096762680989828
+  },
+  "predictions": [
+    {
+      "mutation": "V156A",
+      "position": 156,
+      "wt_aa": "V",
+      "mut_aa": "A",
+      "predicted_ddg": -1.4,
+      "classification": "stabilizing",
+      "confidence": 0.86,
+      "delta_volume": -51.4,
+      "delta_hydrophobicity": -0.46,
+      "delta_charge": 0,
+      "delta_geometric": -2.0
+    },
+    {
+      "mutation": "L99A",
+      "position": 99,
+      "wt_aa": "L",
+      "mut_aa": "A",
+      "predicted_ddg": -1.96,
+      "classification": "stabilizing",
+      "confidence": 0.81,
+      "delta_volume": -78.1,
+      "delta_hydrophobicity": -0.44,
+      "delta_charge": 0,
+      "delta_geometric": -2.794
+    },
+    {
+      "mutation": "F133A",
+      "position": 133,
+      "wt_aa": "F",
+      "mut_aa": "A",
+      "predicted_ddg": 0.07,
+      "classification": "neutral",
+      "confidence": 0.75,
+      "delta_volume": -101.3,
+      "delta_hydrophobicity": -0.57,
+      "delta_charge": 0,
+      "delta_geometric": -1.446
+    }
+  ]
+}

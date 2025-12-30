@@ -1,0 +1,65 @@
+{
+  "summary": {
+    "total_residues": 20,
+    "concordant_stable": 0,
+    "concordant_unstable": 15,
+    "rosetta_blind": 5,
+    "geometry_blind": 0,
+    "rosetta_blind_fraction": "25.0%"
+  },
+  "statistics": {
+    "mean_discordance": 0.2103218269230529,
+    "std_discordance": 0.05389201594217698,
+    "max_discordance": 0.38905697799852085,
+    "rosetta_blind_fraction": 0.25,
+    "mean_rosetta_score": 2.2272682766497978,
+    "mean_geometric_score": 2.1574607878939185
+  },
+  "rosetta_blind_residues": [
+    {
+      "pdb_id": "DEMO_0",
+      "chain_id": "A",
+      "residue_id": 4,
+      "residue_name": "TYR",
+      "rosetta_score": 1.257,
+      "geometric_score": 7.2,
+      "discordance_score": 0.389
+    },
+    {
+      "pdb_id": "DEMO_1",
+      "chain_id": "A",
+      "residue_id": 16,
+      "residue_name": "MET",
+      "rosetta_score": 1.289,
+      "geometric_score": 1.326,
+      "discordance_score": 0.249
+    },
+    {
+      "pdb_id": "DEMO_1",
+      "chain_id": "A",
+      "residue_id": 14,
+      "residue_name": "TYR",
+      "rosetta_score": 1.072,
+      "geometric_score": 0.977,
+      "discordance_score": 0.239
+    },
+    {
+      "pdb_id": "DEMO_0",
+      "chain_id": "A",
+      "residue_id": 0,
+      "residue_name": "LEU",
+      "rosetta_score": 1.104,
+      "geometric_score": 0.978,
+      "discordance_score": 0.235
+    },
+    {
+      "pdb_id": "DEMO_1",
+      "chain_id": "A",
+      "residue_id": 10,
+      "residue_name": "LEU",
+      "rosetta_score": 1.489,
+      "geometric_score": 1.14,
+      "discordance_score": 0.214
+    }
+  ]
+}

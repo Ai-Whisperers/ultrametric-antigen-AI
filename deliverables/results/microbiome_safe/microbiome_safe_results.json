@@ -1,0 +1,437 @@
+{
+  "objective": "Microbiome-safe AMP design",
+  "selectivity_target": "Kill pathogens, spare commensals",
+  "pathogens": [
+    "S_aureus",
+    "MRSA",
+    "P_acnes_pathogenic"
+  ],
+  "commensals": [
+    "S_epidermidis",
+    "C_acnes",
+    "Corynebacterium",
+    "Malassezia"
+  ],
+  "candidates": [
+    {
+      "rank": 1,
+      "sequence": "KGPQKHYHKRPGSANYRNRK",
+      "length": 20,
+      "net_charge": 8.0,
+      "hydrophobicity": -2.58,
+      "selectivity_index": 1.26,
+      "toxicity_score": 0.0,
+      "combined_score": 1.265,
+      "pathogen_mics": {
+        "S_aureus": 27.6,
+        "MRSA": 31.2,
+        "P_acnes_pathogenic": 24.5
+      },
+      "commensal_mics": {
+        "S_epidermidis": 39.6,
+        "C_acnes": 35.1,
+        "Corynebacterium": 44.7,
+        "Malassezia": 24.0
+      }
+    },
+    {
+      "rank": 2,
+      "sequence": "PKSTRKKSKKHKTTPHSWPQ",
+      "length": 20,
+      "net_charge": 8.0,
+      "hydrophobicity": -2.4,
+      "selectivity_index": 1.26,
+      "toxicity_score": 0.0,
+      "combined_score": 1.265,
+      "pathogen_mics": {
+        "S_aureus": 25.3,
+        "MRSA": 28.5,
+        "P_acnes_pathogenic": 22.4
+      },
+      "commensal_mics": {
+        "S_epidermidis": 36.2,
+        "C_acnes": 32.1,
+        "Corynebacterium": 40.8,
+        "Malassezia": 22.0
+      }
+    },
+    {
+      "rank": 3,
+      "sequence": "PHKRPTKSQSWPQRKHPPHK",
+      "length": 20,
+      "net_charge": 7.5,
+      "hydrophobicity": -2.62,
+      "selectivity_index": 1.25,
+      "toxicity_score": 0.0,
+      "combined_score": 1.248,
+      "pathogen_mics": {
+        "S_aureus": 29.5,
+        "MRSA": 33.0,
+        "P_acnes_pathogenic": 26.4
+      },
+      "commensal_mics": {
+        "S_epidermidis": 41.3,
+        "C_acnes": 36.9,
+        "Corynebacterium": 46.3,
+        "Malassezia": 26.0
+      }
+    },
+    {
+      "rank": 4,
+      "sequence": "WWYHYHHNRRGRYKYRSHHW",
+      "length": 20,
+      "net_charge": 7.5,
+      "hydrophobicity": -2.525,
+      "selectivity_index": 1.25,
+      "toxicity_score": 0.0,
+      "combined_score": 1.248,
+      "pathogen_mics": {
+        "S_aureus": 28.1,
+        "MRSA": 31.5,
+        "P_acnes_pathogenic": 25.1
+      },
+      "commensal_mics": {
+        "S_epidermidis": 39.4,
+        "C_acnes": 35.2,
+        "Corynebacterium": 44.1,
+        "Malassezia": 24.8
+      }
+    },
+    {
+      "rank": 5,
+      "sequence": "NYHWKHHGDYKKRWRWTKYP",
+      "length": 20,
+      "net_charge": 6.5,
+      "hydrophobicity": -2.525,
+      "selectivity_index": 1.22,
+      "toxicity_score": 0.0,
+      "combined_score": 1.216,
+      "pathogen_mics": {
+        "S_aureus": 30.8,
+        "MRSA": 33.9,
+        "P_acnes_pathogenic": 27.9
+      },
+      "commensal_mics": {
+        "S_epidermidis": 41.2,
+        "C_acnes": 37.4,
+        "Corynebacterium": 45.5,
+        "Malassezia": 28.0
+      }
+    },
+    {
+      "rank": 6,
+      "sequence": "RPQWGYCSHKPNSWGKRWRR",
+      "length": 20,
+      "net_charge": 6.5,
+      "hydrophobicity": -2.155,
+      "selectivity_index": 1.22,
+      "toxicity_score": 0.0,
+      "combined_score": 1.216,
+      "pathogen_mics": {
+        "S_aureus": 25.6,
+        "MRSA": 28.2,
+        "P_acnes_pathogenic": 23.2
+      },
+      "commensal_mics": {
+        "S_epidermidis": 34.3,
+        "C_acnes": 31.1,
+        "Corynebacterium": 37.8,
+        "Malassezia": 23.3
+      }
+    },
+    {
+      "rank": 7,
+      "sequence": "HRTKPPHYHPRWTPYNKPKG",
+      "length": 20,
+      "net_charge": 6.5,
+      "hydrophobicity": -2.355,
+      "selectivity_index": 1.22,
+      "toxicity_score": 0.0,
+      "combined_score": 1.216,
+      "pathogen_mics": {
+        "S_aureus": 28.3,
+        "MRSA": 31.2,
+        "P_acnes_pathogenic": 25.6
+      },
+      "commensal_mics": {
+        "S_epidermidis": 37.9,
+        "C_acnes": 34.4,
+        "Corynebacterium": 41.8,
+        "Malassezia": 25.7
+      }
+    },
+    {
+      "rank": 8,
+      "sequence": "WKRPRKPNSYYHSKTSPWQK",
+      "length": 20,
+      "net_charge": 6.5,
+      "hydrophobicity": -2.355,
+      "selectivity_index": 1.22,
+      "toxicity_score": 0.0,
+      "combined_score": 1.216,
+      "pathogen_mics": {
+        "S_aureus": 28.3,
+        "MRSA": 31.2,
+        "P_acnes_pathogenic": 25.6
+      },
+      "commensal_mics": {
+        "S_epidermidis": 37.9,
+        "C_acnes": 34.4,
+        "Corynebacterium": 41.8,
+        "Malassezia": 25.7
+      }
+    },
+    {
+      "rank": 9,
+      "sequence": "RHKKTQPWNRPSEKHRWHGY",
+      "length": 20,
+      "net_charge": 6.5,
+      "hydrophobicity": -2.675,
+      "selectivity_index": 1.22,
+      "toxicity_score": 0.0,
+      "combined_score": 1.216,
+      "pathogen_mics": {
+        "S_aureus": 33.2,
+        "MRSA": 36.6,
+        "P_acnes_pathogenic": 30.1
+      },
+      "commensal_mics": {
+        "S_epidermidis": 44.5,
+        "C_acnes": 40.3,
+        "Corynebacterium": 49.0,
+        "Malassezia": 30.2
+      }
+    },
+    {
+      "rank": 10,
+      "sequence": "PHNPTTTPRKKYWSHGKKTW",
+      "length": 20,
+      "net_charge": 6.0,
+      "hydrophobicity": -2.095,
+      "selectivity_index": 1.2,
+      "toxicity_score": 0.0,
+      "combined_score": 1.2,
+      "pathogen_mics": {
+        "S_aureus": 26.0,
+        "MRSA": 28.4,
+        "P_acnes_pathogenic": 23.7
+      },
+      "commensal_mics": {
+        "S_epidermidis": 34.0,
+        "C_acnes": 31.1,
+        "Corynebacterium": 37.2,
+        "Malassezia": 24.0
+      }
+    },
+    {
+      "rank": 11,
+      "sequence": "HSRQHPTRHKHPNTNPNRWT",
+      "length": 20,
+      "net_charge": 6.0,
+      "hydrophobicity": -2.64,
+      "selectivity_index": 1.2,
+      "toxicity_score": 0.0,
+      "combined_score": 1.2,
+      "pathogen_mics": {
+        "S_aureus": 34.1,
+        "MRSA": 37.3,
+        "P_acnes_pathogenic": 31.2
+      },
+      "commensal_mics": {
+        "S_epidermidis": 44.7,
+        "C_acnes": 40.8,
+        "Corynebacterium": 48.9,
+        "Malassezia": 31.5
+      }
+    },
+    {
+      "rank": 12,
+      "sequence": "SHYKYRSYSSWRTPWRWYHR",
+      "length": 20,
+      "net_charge": 6.0,
+      "hydrophobicity": -2.085,
+      "selectivity_index": 1.2,
+      "toxicity_score": 0.0,
+      "combined_score": 1.2,
+      "pathogen_mics": {
+        "S_aureus": 25.8,
+        "MRSA": 28.3,
+        "P_acnes_pathogenic": 23.6
+      },
+      "commensal_mics": {
+        "S_epidermidis": 33.9,
+        "C_acnes": 30.9,
+        "Corynebacterium": 37.0,
+        "Malassezia": 23.9
+      }
+    },
+    {
+      "rank": 13,
+      "sequence": "GTRWYTKGYYYTKPKPHRWH",
+      "length": 20,
+      "net_charge": 6.0,
+      "hydrophobicity": -2.01,
+      "selectivity_index": 1.2,
+      "toxicity_score": 0.0,
+      "combined_score": 1.2,
+      "pathogen_mics": {
+        "S_aureus": 24.9,
+        "MRSA": 27.2,
+        "P_acnes_pathogenic": 22.7
+      },
+      "commensal_mics": {
+        "S_epidermidis": 32.6,
+        "C_acnes": 29.8,
+        "Corynebacterium": 35.7,
+        "Malassezia": 23.0
+      }
+    },
+    {
+      "rank": 14,
+      "sequence": "SSRYHYPPPYYRYKRHRSTY",
+      "length": 20,
+      "net_charge": 6.0,
+      "hydrophobicity": -2.2,
+      "selectivity_index": 1.2,
+      "toxicity_score": 0.0,
+      "combined_score": 1.2,
+      "pathogen_mics": {
+        "S_aureus": 27.4,
+        "MRSA": 29.9,
+        "P_acnes_pathogenic": 25.0
+      },
+      "commensal_mics": {
+        "S_epidermidis": 35.9,
+        "C_acnes": 32.8,
+        "Corynebacterium": 39.2,
+        "Malassezia": 25.3
+      }
+    },
+    {
+      "rank": 15,
+      "sequence": "RRNPKSHKWWPSQYSYHKPQ",
+      "length": 20,
+      "net_charge": 6.0,
+      "hydrophobicity": -2.46,
+      "selectivity_index": 1.2,
+      "toxicity_score": 0.0,
+      "combined_score": 1.2,
+      "pathogen_mics": {
+        "S_aureus": 31.2,
+        "MRSA": 34.1,
+        "P_acnes_pathogenic": 28.5
+      },
+      "commensal_mics": {
+        "S_epidermidis": 40.8,
+        "C_acnes": 37.3,
+        "Corynebacterium": 44.7,
+        "Malassezia": 28.8
+      }
+    },
+    {
+      "rank": 16,
+      "sequence": "NKHHYQSWGYPQNHTSQLRP",
+      "length": 20,
+      "net_charge": 3.5,
+      "hydrophobicity": -2.055,
+      "selectivity_index": 1.12,
+      "toxicity_score": 0.0,
+      "combined_score": 1.124,
+      "pathogen_mics": {
+        "S_aureus": 31.9,
+        "MRSA": 33.6,
+        "P_acnes_pathogenic": 30.2
+      },
+      "commensal_mics": {
+        "S_epidermidis": 37.3,
+        "C_acnes": 35.4,
+        "Corynebacterium": 39.3,
+        "Malassezia": 31.7
+      }
+    },
+    {
+      "rank": 17,
+      "sequence": "PSTPGNKHGWHSTQHRPNSY",
+      "length": 20,
+      "net_charge": 3.5,
+      "hydrophobicity": -2.005,
+      "selectivity_index": 1.12,
+      "toxicity_score": 0.0,
+      "combined_score": 1.124,
+      "pathogen_mics": {
+        "S_aureus": 31.1,
+        "MRSA": 32.8,
+        "P_acnes_pathogenic": 29.5
+      },
+      "commensal_mics": {
+        "S_epidermidis": 36.4,
+        "C_acnes": 34.5,
+        "Corynebacterium": 38.4,
+        "Malassezia": 30.9
+      }
+    },
+    {
+      "rank": 18,
+      "sequence": "QHYGSHGYKWPHWTNWKYYP",
+      "length": 20,
+      "net_charge": 3.5,
+      "hydrophobicity": -1.89,
+      "selectivity_index": 1.12,
+      "toxicity_score": 0.0,
+      "combined_score": 1.124,
+      "pathogen_mics": {
+        "S_aureus": 29.4,
+        "MRSA": 30.9,
+        "P_acnes_pathogenic": 27.9
+      },
+      "commensal_mics": {
+        "S_epidermidis": 34.4,
+        "C_acnes": 32.6,
+        "Corynebacterium": 36.2,
+        "Malassezia": 29.2
+      }
+    },
+    {
+      "rank": 19,
+      "sequence": "YPYHSTHTGTQTTPNHSHQP",
+      "length": 20,
+      "net_charge": 2.0,
+      "hydrophobicity": -1.81,
+      "selectivity_index": 1.08,
+      "toxicity_score": 0.0,
+      "combined_score": 1.081,
+      "pathogen_mics": {
+        "S_aureus": 32.3,
+        "MRSA": 33.3,
+        "P_acnes_pathogenic": 31.3
+      },
+      "commensal_mics": {
+        "S_epidermidis": 35.3,
+        "C_acnes": 34.3,
+        "Corynebacterium": 36.4,
+        "Malassezia": 33.6
+      }
+    },
+    {
+      "rank": 20,
+      "sequence": "YHTHSYRNPPSYTYGSTGNS",
+      "length": 20,
+      "net_charge": 2.0,
+      "hydrophobicity": -1.62,
+      "selectivity_index": 1.08,
+      "toxicity_score": 0.0,
+      "combined_score": 1.081,
+      "pathogen_mics": {
+        "S_aureus": 29.4,
+        "MRSA": 30.2,
+        "P_acnes_pathogenic": 28.5
+      },
+      "commensal_mics": {
+        "S_epidermidis": 32.1,
+        "C_acnes": 31.2,
+        "Corynebacterium": 33.1,
+        "Malassezia": 30.6
+      }
+    }
+  ]
+}

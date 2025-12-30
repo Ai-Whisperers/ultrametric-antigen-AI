@@ -1,0 +1,89 @@
+{
+  "summary": {
+    "total_patients": 5,
+    "eligible": 2,
+    "eligible_rate": "40.0%",
+    "mean_success_probability": "83.5%"
+  },
+  "patients": [
+    {
+      "patient_id": "LA_PATIENT_001",
+      "eligible": true,
+      "success_probability": "92.7%",
+      "recommendation": "ELIGIBLE - Recommend LA injectable switch",
+      "cab_resistance_risk": "0.0%",
+      "rpv_resistance_risk": "0.0%",
+      "pk_adequacy": "100.0%",
+      "adherence_score": "72.2%",
+      "risk_factors": [
+        "Psychiatric history (monitor for mood changes)"
+      ],
+      "monitoring_plan": [
+        "HIV RNA at 1, 3, and 6 months post-switch",
+        "CD4 count at 6 months",
+        "Psychiatric assessment at each visit"
+      ]
+    },
+    {
+      "patient_id": "LA_PATIENT_002",
+      "eligible": false,
+      "success_probability": "77.0%",
+      "recommendation": "CONSIDER ALTERNATIVES - Risk factors present",
+      "cab_resistance_risk": "0.0%",
+      "rpv_resistance_risk": "0.0%",
+      "pk_adequacy": "99.8%",
+      "adherence_score": "70.0%",
+      "risk_factors": [
+        "Not virally suppressed (VL >= 50)",
+        "Prior NNRTI exposure (check for archived resistance)"
+      ],
+      "monitoring_plan": []
+    },
+    {
+      "patient_id": "LA_PATIENT_003",
+      "eligible": true,
+      "success_probability": "97.0%",
+      "recommendation": "ELIGIBLE - Recommend LA injectable switch",
+      "cab_resistance_risk": "0.0%",
+      "rpv_resistance_risk": "0.0%",
+      "pk_adequacy": "89.2%",
+      "adherence_score": "95.0%",
+      "risk_factors": [],
+      "monitoring_plan": [
+        "HIV RNA at 1, 3, and 6 months post-switch",
+        "CD4 count at 6 months",
+        "Consider drug level monitoring (Ctrough)"
+      ]
+    },
+    {
+      "patient_id": "LA_PATIENT_004",
+      "eligible": false,
+      "success_probability": "71.0%",
+      "recommendation": "CONSIDER ALTERNATIVES - Risk factors present",
+      "cab_resistance_risk": "0.0%",
+      "rpv_resistance_risk": "0.0%",
+      "pk_adequacy": "89.2%",
+      "adherence_score": "50.0%",
+      "risk_factors": [
+        "Not virally suppressed (VL >= 50)",
+        "Prior NNRTI exposure (check for archived resistance)"
+      ],
+      "monitoring_plan": []
+    },
+    {
+      "patient_id": "LA_PATIENT_005",
+      "eligible": false,
+      "success_probability": "80.0%",
+      "recommendation": "CONSIDER ALTERNATIVES - Risk factors present",
+      "cab_resistance_risk": "0.0%",
+      "rpv_resistance_risk": "0.0%",
+      "pk_adequacy": "100.0%",
+      "adherence_score": "80.8%",
+      "risk_factors": [
+        "Not virally suppressed (VL >= 50)",
+        "Prior NNRTI exposure (check for archived resistance)"
+      ],
+      "monitoring_plan": []
+    }
+  ]
+}
