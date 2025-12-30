@@ -18,7 +18,18 @@ for codon organization.
 Version History:
 - v1.0: Original with post-hoc Euclidean→Poincaré projection
 - v2.0: Native hyperbolic via codon-encoder-3-adic (trained on V5.11.3)
+- v2.1 (V5.12.2): Audit complete - all distance/radius computations use proper
+  hyperbolic formulas. Euclidean .norm() only used where mathematically correct
+  (inside exp_map/log_map, projection functions, ESM2 embeddings).
+
+Geometry Convention (V5.12.2):
+- Hyperbolic distance from origin: d_H = 2 * arctanh(sqrt(c) * ||x||) / sqrt(c)
+- Poincaré distance: d(x,y) = arccosh(1 + 2c||x-y||² / ((1-c||x||²)(1-c||y||²)))
+- NEVER use Euclidean .norm() directly on hyperbolic embeddings for radii/distances
 """
+
+__version__ = "2.1.0"
+__geometry_version__ = "V5.12.2"
 
 from pathlib import Path
 from typing import Optional, Tuple, Union
