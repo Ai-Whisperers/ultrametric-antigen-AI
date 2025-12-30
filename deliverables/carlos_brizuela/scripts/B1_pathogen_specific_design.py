@@ -19,7 +19,7 @@ Target Pathogens (WHO Priority):
 5. Helicobacter pylori (High - Clarithromycin-resistant)
 
 Key Features:
-1. Pathogen-specific activity prediction models
+1. Pathogen-specific activity prediction models (trained on DRAMP data)
 2. Multi-objective optimization (activity, toxicity, stability)
 3. Pareto front analysis per pathogen
 4. Cross-pathogen activity assessment
@@ -29,6 +29,9 @@ Usage:
         --pathogen "A_baumannii" \
         --generations 100 \
         --output results/pathogen_specific/
+
+    # Use trained ML models (recommended):
+    python scripts/B1_pathogen_specific_design.py --use-dramp --pathogen "A_baumannii"
 """
 
 from __future__ import annotations
@@ -40,6 +43,21 @@ from pathlib import Path
 from typing import Callable, Optional
 
 import numpy as np
+import sys
+from pathlib import Path
+
+# Add shared module to path
+_script_dir = Path(__file__).parent
+_deliverables_dir = _script_dir.parent.parent
+sys.path.insert(0, str(_deliverables_dir))
+
+# Import shared utilities
+from shared.peptide_utils import (
+    AA_PROPERTIES,
+    compute_peptide_properties,
+    compute_ml_features,
+    decode_latent_to_sequence,
+)
 
 try:
     import pandas as pd
@@ -47,6 +65,69 @@ try:
     HAS_PANDAS = True
 except ImportError:
     HAS_PANDAS = False
+
+try:
+    import joblib
+
+    HAS_JOBLIB = True
+except ImportError:
+    HAS_JOBLIB = False
+
+
+# Global flag and cache for trained models
+USE_TRAINED_MODELS = False
+_TRAINED_MODELS: dict = {}
+
+
+def load_trained_models() -> dict:
+    """Load trained activity prediction models from DRAMP data.
+
+    Returns:
+        Dictionary mapping pathogen keys to trained model objects.
+    """
+    global _TRAINED_MODELS
+
+    if _TRAINED_MODELS:
+        return _TRAINED_MODELS
+
+    if not HAS_JOBLIB:
+        print("Warning: joblib not available, falling back to heuristic models")
+        return {}
+
+    # Find models directory
+    models_dir = Path(__file__).parent.parent / "models"
+    if not models_dir.exists():
+        print(f"Warning: Models directory not found at {models_dir}")
+        return {}
+
+    # Map pathogen keys to model files
+    pathogen_model_map = {
+        "A_baumannii": "activity_acinetobacter.joblib",
+        "P_aeruginosa": "activity_pseudomonas.joblib",
+        "Enterobacteriaceae": "activity_escherichia.joblib",
+        "S_aureus": "activity_staphylococcus.joblib",
+        "H_pylori": "activity_general.joblib",  # Use general for H. pylori
+    }
+
+    for pathogen_key, model_file in pathogen_model_map.items():
+        model_path = models_dir / model_file
+        if model_path.exists():
+            try:
+                _TRAINED_MODELS[pathogen_key] = joblib.load(model_path)
+                print(f"Loaded trained model for {pathogen_key}")
+            except Exception as e:
+                print(f"Warning: Could not load model {model_file}: {e}")
+
+    # Load general model as fallback
+    general_path = models_dir / "activity_general.joblib"
+    if general_path.exists():
+        try:
+            _TRAINED_MODELS["_general"] = joblib.load(general_path)
+            print("Loaded general activity model as fallback")
+        except Exception:
+            pass
+
+    return _TRAINED_MODELS
 
 # Import from existing NSGA-II implementation
 try:
@@ -173,94 +254,15 @@ WHO_PRIORITY_PATHOGENS = {
 }
 
 
-# Amino acid properties for peptide analysis
-AA_PROPERTIES = {
-    "A": {"charge": 0, "hydrophobicity": 0.62, "volume": 88.6},
-    "R": {"charge": 1, "hydrophobicity": -2.53, "volume": 173.4},
-    "N": {"charge": 0, "hydrophobicity": -0.78, "volume": 114.1},
-    "D": {"charge": -1, "hydrophobicity": -0.90, "volume": 111.1},
-    "C": {"charge": 0, "hydrophobicity": 0.29, "volume": 108.5},
-    "Q": {"charge": 0, "hydrophobicity": -0.85, "volume": 143.8},
-    "E": {"charge": -1, "hydrophobicity": -0.74, "volume": 138.4},
-    "G": {"charge": 0, "hydrophobicity": 0.48, "volume": 60.1},
-    "H": {"charge": 0.5, "hydrophobicity": -0.40, "volume": 153.2},
-    "I": {"charge": 0, "hydrophobicity": 1.38, "volume": 166.7},
-    "L": {"charge": 0, "hydrophobicity": 1.06, "volume": 166.7},
-    "K": {"charge": 1, "hydrophobicity": -1.50, "volume": 168.6},
-    "M": {"charge": 0, "hydrophobicity": 0.64, "volume": 162.9},
-    "F": {"charge": 0, "hydrophobicity": 1.19, "volume": 189.9},
-    "P": {"charge": 0, "hydrophobicity": 0.12, "volume": 112.7},
-    "S": {"charge": 0, "hydrophobicity": -0.18, "volume": 89.0},
-    "T": {"charge": 0, "hydrophobicity": -0.05, "volume": 116.1},
-    "W": {"charge": 0, "hydrophobicity": 0.81, "volume": 227.8},
-    "Y": {"charge": 0, "hydrophobicity": 0.26, "volume": 193.6},
-    "V": {"charge": 0, "hydrophobicity": 1.08, "volume": 140.0},
-}
-
-
-def decode_latent_to_sequence(z: np.ndarray, length: int = 20) -> str:
-    """Decode latent vector to peptide sequence.
-
-    Uses deterministic mapping for reproducibility.
-    """
-    np.random.seed(int(abs(z[0] * 1000)))  # Deterministic seed
-
-    # Map latent dimensions to sequence properties
-    charge_preference = np.tanh(z[0])  # -1 to 1
-    hydro_preference = np.tanh(z[1])  # -1 to 1
-
-    # Build amino acid probability distribution
-    aa_list = list(AA_PROPERTIES.keys())
-    probs = np.zeros(len(aa_list))
-
-    for i, aa in enumerate(aa_list):
-        props = AA_PROPERTIES[aa]
-        # Score based on charge preference
-        charge_score = 1 - abs(props["charge"] - charge_preference)
-        # Score based on hydrophobicity preference
-        hydro_score = 1 - abs(props["hydrophobicity"] / 2 - hydro_preference)
-        probs[i] = charge_score + hydro_score + 0.1  # Base probability
-
-    # Ensure non-negative probabilities
-    probs = np.clip(probs, 0.01, None)
-    probs = probs / probs.sum()
-
-    # Generate sequence
-    sequence = "".join(np.random.choice(aa_list, size=length, p=probs))
-
-    return sequence
-
-
-def compute_peptide_properties(sequence: str) -> dict:
-    """Compute biophysical properties of peptide sequence."""
-    if not sequence:
-        return {"net_charge": 0, "hydrophobicity": 0, "length": 0}
-
-    total_charge = 0
-    total_hydro = 0
-    valid_count = 0
-
-    for aa in sequence:
-        if aa in AA_PROPERTIES:
-            total_charge += AA_PROPERTIES[aa]["charge"]
-            total_hydro += AA_PROPERTIES[aa]["hydrophobicity"]
-            valid_count += 1
-
-    if valid_count == 0:
-        return {"net_charge": 0, "hydrophobicity": 0, "length": len(sequence)}
-
-    return {
-        "net_charge": total_charge,
-        "hydrophobicity": total_hydro / valid_count,
-        "length": len(sequence),
-    }
+# AA_PROPERTIES, decode_latent_to_sequence, compute_peptide_properties,
+# and compute_ml_features are now imported from shared.peptide_utils
 
 
 def create_pathogen_activity_predictor(pathogen: str) -> Callable[[np.ndarray], float]:
     """Create activity prediction function for specific pathogen.
 
-    The predictor scores peptides based on how well they match the optimal
-    features for the target pathogen.
+    Uses trained ML models when USE_TRAINED_MODELS is True and models are available.
+    Falls back to heuristic scoring based on optimal features for the target pathogen.
     """
     if pathogen not in WHO_PRIORITY_PATHOGENS:
         raise ValueError(f"Unknown pathogen: {pathogen}")
@@ -269,10 +271,35 @@ def create_pathogen_activity_predictor(pathogen: str) -> Callable[[np.ndarray], 
     optimal = pathogen_info["optimal_amp_features"]
     membrane = pathogen_info["membrane_features"]
 
+    # Try to get trained model
+    trained_model = None
+    if USE_TRAINED_MODELS:
+        models = load_trained_models()
+        trained_model = models.get(pathogen) or models.get("_general")
+        if trained_model:
+            print(f"Using trained ML model for {pathogen}")
+        else:
+            print(f"No trained model available for {pathogen}, using heuristics")
+
     def predict_activity(z: np.ndarray) -> float:
         """Predict activity against pathogen (lower = better, to minimize)."""
         # Decode latent to sequence
         sequence = decode_latent_to_sequence(z)
+
+        # Use trained model if available
+        if trained_model is not None:
+            try:
+                features = compute_ml_features(sequence).reshape(1, -1)
+                # Model predicts MIC (lower MIC = more active)
+                # We want to minimize, so lower prediction = better
+                prediction = trained_model.predict(features)[0]
+                # Return negative because lower MIC is better (we want high activity)
+                # Scale to reasonable range for optimization
+                return -prediction
+            except Exception:
+                pass  # Fall through to heuristic
+
+        # Heuristic fallback
         props = compute_peptide_properties(sequence)
 
         # Score based on optimal features
@@ -676,6 +703,8 @@ def export_results(results: dict, output_dir: Path) -> None:
 
 def main():
     """Main entry point."""
+    global USE_TRAINED_MODELS
+
     parser = argparse.ArgumentParser(description="Pathogen-Specific AMP Design")
     parser.add_argument(
         "--pathogen",
@@ -707,8 +736,19 @@ def main():
         default="results/pathogen_specific",
         help="Output directory",
     )
+    parser.add_argument(
+        "--use-dramp",
+        action="store_true",
+        help="Use trained ML models from DRAMP data (recommended)",
+    )
 
     args = parser.parse_args()
+
+    # Set global flag for trained models
+    if args.use_dramp:
+        USE_TRAINED_MODELS = True
+        print("Using trained DRAMP activity models")
+        load_trained_models()  # Pre-load models
     output_dir = Path(args.output)
 
     config = OptimizationConfig(

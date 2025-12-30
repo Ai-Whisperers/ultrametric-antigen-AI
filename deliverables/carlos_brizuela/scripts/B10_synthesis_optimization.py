@@ -18,12 +18,15 @@ Synthesis Challenges:
 
 Key Features:
 1. Synthesis difficulty prediction
-2. Multi-objective: activity + synthesis feasibility
+2. Multi-objective: activity (using DRAMP-trained models) + synthesis feasibility
 3. Cost estimation
 4. Scale-up considerations
 
 Usage:
     python scripts/B10_synthesis_optimization.py --output results/synthesis_optimized/
+
+    # Use trained ML models for activity prediction (recommended):
+    python scripts/B10_synthesis_optimization.py --use-dramp
 """
 
 from __future__ import annotations
@@ -35,12 +38,61 @@ from pathlib import Path
 from typing import Optional
 
 import numpy as np
+import sys
+
+# Add shared module to path
+_script_dir = Path(__file__).parent
+_deliverables_dir = _script_dir.parent.parent
+sys.path.insert(0, str(_deliverables_dir))
+
+# Import shared utilities
+from shared.peptide_utils import (
+    AA_PROPERTIES,
+    compute_peptide_properties,
+    compute_ml_features,
+)
 
 try:
     import pandas as pd
     HAS_PANDAS = True
 except ImportError:
     HAS_PANDAS = False
+
+try:
+    import joblib
+    HAS_JOBLIB = True
+except ImportError:
+    HAS_JOBLIB = False
+
+
+# Global flag and cache for trained models
+USE_TRAINED_MODELS = False
+_TRAINED_MODEL = None
+
+
+def load_trained_model():
+    """Load trained activity prediction model from DRAMP data."""
+    global _TRAINED_MODEL
+
+    if _TRAINED_MODEL is not None:
+        return _TRAINED_MODEL
+
+    if not HAS_JOBLIB:
+        print("Warning: joblib not available, falling back to heuristic activity prediction")
+        return None
+
+    models_dir = Path(__file__).parent.parent / "models"
+    model_path = models_dir / "activity_general.joblib"
+
+    if model_path.exists():
+        try:
+            _TRAINED_MODEL = joblib.load(model_path)
+            print(f"Loaded trained activity model from {model_path}")
+            return _TRAINED_MODEL
+        except Exception as e:
+            print(f"Warning: Could not load model: {e}")
+
+    return None
 
 
 # Amino acid synthesis properties
@@ -98,28 +150,7 @@ class SynthesisOptimizedAMP:
     latent: np.ndarray
 
 
-def compute_peptide_properties(sequence: str) -> dict:
-    """Compute biophysical properties."""
-    charge = sum(
-        {"R": 1, "K": 1, "H": 0.5, "D": -1, "E": -1}.get(aa, 0)
-        for aa in sequence.upper()
-    )
-
-    hydrophobicities = {
-        "A": 0.62, "R": -2.53, "N": -0.78, "D": -0.90, "C": 0.29,
-        "Q": -0.85, "E": -0.74, "G": 0.48, "H": -0.40, "I": 1.38,
-        "L": 1.06, "K": -1.50, "M": 0.64, "F": 1.19, "P": 0.12,
-        "S": -0.18, "T": -0.05, "W": 0.81, "Y": 0.26, "V": 1.08,
-    }
-
-    hydro_values = [hydrophobicities.get(aa, 0) for aa in sequence.upper()]
-    avg_hydro = np.mean(hydro_values) if hydro_values else 0
-
-    return {
-        "net_charge": charge,
-        "hydrophobicity": avg_hydro,
-        "length": len(sequence),
-    }
+# compute_peptide_properties imported from shared.peptide_utils
 
 
 def predict_synthesis_difficulty(sequence: str) -> dict:
@@ -202,8 +233,57 @@ def predict_synthesis_difficulty(sequence: str) -> dict:
     }
 
 
+def compute_ml_features(sequence: str) -> np.ndarray:
+    """Compute features for ML model prediction."""
+    props = compute_peptide_properties(sequence)
+
+    # Amino acid composition (20 features)
+    aa_list = list(AA_SYNTHESIS.keys())
+    aa_comp = np.zeros(20)
+    seq_len = len(sequence)
+    if seq_len > 0:
+        for i, aa in enumerate(aa_list):
+            aa_comp[i] = sequence.count(aa) / seq_len
+
+    # Basic properties
+    charge = props["net_charge"]
+    hydro = props["hydrophobicity"]
+    length = seq_len
+
+    # Hydrophobic ratio
+    hydrophobic_aa = set("AILMFVW")
+    hydro_ratio = sum(1 for aa in sequence if aa in hydrophobic_aa) / max(seq_len, 1)
+
+    # Cationic ratio
+    cationic_aa = set("KRH")
+    cationic_ratio = sum(1 for aa in sequence if aa in cationic_aa) / max(seq_len, 1)
+
+    features = np.concatenate([
+        np.array([length, charge, hydro, hydro_ratio, cationic_ratio]),
+        aa_comp
+    ])
+
+    return features
+
+
 def predict_activity(sequence: str) -> float:
-    """Predict antimicrobial activity (simplified)."""
+    """Predict antimicrobial activity.
+
+    Uses trained ML model when USE_TRAINED_MODELS is True, otherwise uses heuristics.
+    """
+    # Try ML model prediction first
+    if USE_TRAINED_MODELS:
+        model = load_trained_model()
+        if model is not None:
+            try:
+                features = compute_ml_features(sequence).reshape(1, -1)
+                prediction = model.predict(features)[0]
+                # Normalize to 0-1 range
+                return max(0, min(1, prediction / 10))
+            except Exception:
+                pass  # Fall through to heuristic
+
+    # Heuristic fallback
     props = compute_peptide_properties(sequence)
 
     # Cationic peptides are generally more active
@@ -403,12 +483,25 @@ def export_results(candidates: list[SynthesisOptimizedAMP], output_dir: Path) ->
 
 def main():
     """Main entry point."""
+    global USE_TRAINED_MODELS
+
     parser = argparse.ArgumentParser(description="Synthesis-Optimized AMP Design")
     parser.add_argument("--population", type=int, default=200)
     parser.add_argument("--generations", type=int, default=50)
     parser.add_argument("--output", type=str, default="results/synthesis_optimized")
+    parser.add_argument(
+        "--use-dramp",
+        action="store_true",
+        help="Use trained ML models from DRAMP data for activity prediction (recommended)",
+    )
 
     args = parser.parse_args()
+
+    # Set global flag for trained models
+    if args.use_dramp:
+        USE_TRAINED_MODELS = True
+        print("Using trained DRAMP activity model")
+        load_trained_model()
 
     candidates = optimize_synthesis_amps(args.population, args.generations)
     export_results(candidates, Path(args.output))

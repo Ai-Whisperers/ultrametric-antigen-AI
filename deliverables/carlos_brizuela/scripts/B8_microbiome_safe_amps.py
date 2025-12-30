@@ -16,12 +16,15 @@ Target Selectivity:
 
 Key Features:
 1. Selectivity index optimization (pathogen MIC / commensal MIC)
-2. Multi-species activity prediction
+2. Multi-species activity prediction (using DRAMP-trained models)
 3. Commensal-friendly property optimization
 4. Skin/gut microbiome context
 
 Usage:
     python scripts/B8_microbiome_safe_amps.py --output results/microbiome_safe/
+
+    # Use trained ML models (recommended):
+    python scripts/B8_microbiome_safe_amps.py --use-dramp
 """
 
 from __future__ import annotations
@@ -33,12 +36,104 @@ from pathlib import Path
 from typing import Optional
 
 import numpy as np
+import sys
+
+# Add shared module to path
+_script_dir = Path(__file__).parent
+_deliverables_dir = _script_dir.parent.parent
+sys.path.insert(0, str(_deliverables_dir))
+
+# Import shared utilities
+from shared.peptide_utils import (
+    AA_PROPERTIES,
+    compute_peptide_properties,
+    compute_ml_features,
+    decode_latent_to_sequence,
+)
 
 try:
     import pandas as pd
     HAS_PANDAS = True
 except ImportError:
     HAS_PANDAS = False
+
+try:
+    import joblib
+    HAS_JOBLIB = True
+except ImportError:
+    HAS_JOBLIB = False
+
+
+# Global flag and cache for trained models
+USE_TRAINED_MODELS = False
+_TRAINED_MODELS: dict = {}
+
+
+def load_trained_models() -> dict:
+    """Load trained activity prediction models from DRAMP data."""
+    global _TRAINED_MODELS
+
+    if _TRAINED_MODELS:
+        return _TRAINED_MODELS
+
+    if not HAS_JOBLIB:
+        print("Warning: joblib not available, falling back to heuristic models")
+        return {}
+
+    models_dir = Path(__file__).parent.parent / "models"
+    if not models_dir.exists():
+        print(f"Warning: Models directory not found at {models_dir}")
+        return {}
+
+    # Load available models
+    model_files = {
+        "staphylococcus": "activity_staphylococcus.joblib",
+        "general": "activity_general.joblib",
+    }
+
+    for key, filename in model_files.items():
+        model_path = models_dir / filename
+        if model_path.exists():
+            try:
+                _TRAINED_MODELS[key] = joblib.load(model_path)
+                print(f"Loaded trained model: {key}")
+            except Exception as e:
+                print(f"Warning: Could not load {filename}: {e}")
+
+    return _TRAINED_MODELS
+
+
+def compute_ml_features(sequence: str) -> np.ndarray:
+    """Compute features for ML model prediction."""
+    props = compute_peptide_properties(sequence)
+
+    # Amino acid composition (20 features)
+    aa_list = list(AA_PROPERTIES.keys())
+    aa_comp = np.zeros(20)
+    seq_len = len(sequence)
+    if seq_len > 0:
+        for i, aa in enumerate(aa_list):
+            aa_comp[i] = sequence.count(aa) / seq_len
+
+    # Basic properties
+    charge = props["net_charge"]
+    hydro = props["hydrophobicity"]
+    length = seq_len
+
+    # Hydrophobic ratio
+    hydrophobic_aa = set("AILMFVW")
+    hydro_ratio = sum(1 for aa in sequence if aa in hydrophobic_aa) / max(seq_len, 1)
+
+    # Cationic ratio
+    cationic_aa = set("KRH")
+    cationic_ratio = sum(1 for aa in sequence if aa in cationic_aa) / max(seq_len, 1)
+
+    features = np.concatenate([
+        np.array([length, charge, hydro, hydro_ratio, cationic_ratio]),
+        aa_comp
+    ])
+
+    return features
 
 
 # Microbiome species definitions
@@ -103,29 +198,7 @@ SKIN_MICROBIOME = {
 }
 
 
-# Amino acid properties
-AA_PROPERTIES = {
-    "A": {"charge": 0, "hydrophobicity": 0.62},
-    "R": {"charge": 1, "hydrophobicity": -2.53},
-    "N": {"charge": 0, "hydrophobicity": -0.78},
-    "D": {"charge": -1, "hydrophobicity": -0.90},
-    "C": {"charge": 0, "hydrophobicity": 0.29},
-    "Q": {"charge": 0, "hydrophobicity": -0.85},
-    "E": {"charge": -1, "hydrophobicity": -0.74},
-    "G": {"charge": 0, "hydrophobicity": 0.48},
-    "H": {"charge": 0.5, "hydrophobicity": -0.40},
-    "I": {"charge": 0, "hydrophobicity": 1.38},
-    "L": {"charge": 0, "hydrophobicity": 1.06},
-    "K": {"charge": 1, "hydrophobicity": -1.50},
-    "M": {"charge": 0, "hydrophobicity": 0.64},
-    "F": {"charge": 0, "hydrophobicity": 1.19},
-    "P": {"charge": 0, "hydrophobicity": 0.12},
-    "S": {"charge": 0, "hydrophobicity": -0.18},
-    "T": {"charge": 0, "hydrophobicity": -0.05},
-    "W": {"charge": 0, "hydrophobicity": 0.81},
-    "Y": {"charge": 0, "hydrophobicity": 0.26},
-    "V": {"charge": 0, "hydrophobicity": 1.08},
-}
+# AA_PROPERTIES and compute_peptide_properties imported from shared.peptide_utils
 
 
 @dataclass
@@ -144,33 +217,39 @@ class MicrobiomeSafeAMP:
     latent: np.ndarray
 
 
-def compute_peptide_properties(sequence: str) -> dict:
-    """Compute biophysical properties."""
-    total_charge = 0
-    total_hydro = 0
-    valid = 0
-
-    for aa in sequence.upper():
-        if aa in AA_PROPERTIES:
-            total_charge += AA_PROPERTIES[aa]["charge"]
-            total_hydro += AA_PROPERTIES[aa]["hydrophobicity"]
-            valid += 1
-
-    return {
-        "net_charge": total_charge,
-        "hydrophobicity": total_hydro / valid if valid else 0,
-        "length": len(sequence),
-    }
-
-
 def predict_mic(sequence: str, species_info: dict) -> float:
     """Predict MIC for a peptide against a species.
 
-    MIC prediction based on:
+    Uses trained ML models when USE_TRAINED_MODELS is True.
+    Falls back to heuristic prediction based on:
     1. Peptide charge vs membrane charge (electrostatic)
     2. Hydrophobicity (membrane insertion)
     3. Length (coverage)
     """
+    # Try ML model prediction first
+    if USE_TRAINED_MODELS:
+        models = load_trained_models()
+        model = None
+
+        # Select appropriate model based on species
+        species_name = species_info.get("full_name", "").lower()
+        if "staphylococcus" in species_name or "aureus" in species_name:
+            model = models.get("staphylococcus") or models.get("general")
+        else:
+            model = models.get("general")
+
+        if model is not None:
+            try:
+                features = compute_ml_features(sequence).reshape(1, -1)
+                # Model predicts activity score, convert to MIC-like scale
+                prediction = model.predict(features)[0]
+                # Transform to MIC (lower prediction = more active = lower MIC)
+                mic = 16.0 * np.exp(-prediction * 0.5)
+                return max(0.5, min(256, mic))
+            except Exception:
+                pass  # Fall through to heuristic
+
+    # Heuristic fallback
     props = compute_peptide_properties(sequence)
 
     # Base MIC (moderate activity)
@@ -445,6 +524,8 @@ def export_results(candidates: list[MicrobiomeSafeAMP], output_dir: Path) -> Non
 
 def main():
     """Main entry point."""
+    global USE_TRAINED_MODELS
+
     parser = argparse.ArgumentParser(description="Microbiome-Safe AMP Design")
     parser.add_argument(
         "--population", type=int, default=200, help="Population size"
@@ -455,8 +536,19 @@ def main():
     parser.add_argument(
         "--output", type=str, default="results/microbiome_safe", help="Output directory"
     )
+    parser.add_argument(
+        "--use-dramp",
+        action="store_true",
+        help="Use trained ML models from DRAMP data (recommended)",
+    )
 
     args = parser.parse_args()
+
+    # Set global flag for trained models
+    if args.use_dramp:
+        USE_TRAINED_MODELS = True
+        print("Using trained DRAMP activity models")
+        load_trained_models()
 
     candidates = optimize_microbiome_safe_amps(
         population_size=args.population,

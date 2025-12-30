@@ -25,6 +25,9 @@ Usage:
         --sequence patient_sequence.fasta \
         --clinical patient_data.json \
         --output results/la_selection/
+
+    # Use Stanford HIVdb for resistance analysis (recommended):
+    python scripts/H7_la_injectable_selection.py --use-stanford --demo
 """
 
 from __future__ import annotations
@@ -36,6 +39,31 @@ from pathlib import Path
 from typing import Optional
 
 import numpy as np
+
+
+# Global flag for Stanford HIVdb client
+USE_STANFORD_CLIENT = False
+_STANFORD_CLIENT = None
+
+
+def get_stanford_client():
+    """Get or create Stanford HIVdb client instance."""
+    global _STANFORD_CLIENT
+
+    if _STANFORD_CLIENT is not None:
+        return _STANFORD_CLIENT
+
+    try:
+        from stanford_hivdb_client import StanfordHIVdbClient
+        _STANFORD_CLIENT = StanfordHIVdbClient()
+        print("Stanford HIVdb client initialized")
+        return _STANFORD_CLIENT
+    except ImportError:
+        print("Warning: stanford_hivdb_client not found, using local analysis")
+        return None
+    except Exception as e:
+        print(f"Warning: Could not initialize Stanford client: {e}")
+        return None
 
 
 # LA Injectable drugs and resistance mutations
@@ -116,8 +144,37 @@ class LASelectionResult:
     monitoring_plan: list[str]
 
 
-def detect_la_mutations(sequence: str) -> list[dict]:
-    """Detect mutations relevant to LA injectables."""
+def detect_la_mutations_stanford(sequence: str) -> list[dict]:
+    """Detect LA-relevant mutations using Stanford HIVdb."""
+    client = get_stanford_client()
+    if client is None:
+        return detect_la_mutations_local(sequence)
+
+    try:
+        report = client.analyze_sequence(sequence, "LA_PATIENT")
+
+        detected = []
+        for mut in report.mutations:
+            # Check if mutation is relevant to CAB or RPV
+            for drug, info in LA_DRUGS.items():
+                if mut.notation in info["mutations"]:
+                    details = info["mutations"][mut.notation]
+                    detected.append({
+                        "mutation": mut.notation,
+                        "drug": drug,
+                        "fold_change": details["fold_change"],
+                        "level": details["level"],
+                    })
+
+        return detected
+
+    except Exception as e:
+        print(f"Stanford analysis failed: {e}, falling back to local")
+        return detect_la_mutations_local(sequence)
+
+
+def detect_la_mutations_local(sequence: str) -> list[dict]:
+    """Detect mutations relevant to LA injectables (local/demo)."""
     detected = []
 
     # Simulate mutation detection (demo)
@@ -135,6 +192,16 @@ def detect_la_mutations(sequence: str) -> list[dict]:
                 })
 
     return detected
+
+
+def detect_la_mutations(sequence: str) -> list[dict]:
+    """Detect mutations relevant to LA injectables.
+
+    Uses Stanford HIVdb when USE_STANFORD_CLIENT is True.
+    """
+    if USE_STANFORD_CLIENT:
+        return detect_la_mutations_stanford(sequence)
+    return detect_la_mutations_local(sequence)
 
 
 def compute_resistance_risk(
@@ -409,6 +476,8 @@ def export_results(results: list[LASelectionResult], output_dir: Path) -> None:
 
 def main():
     """Main entry point."""
+    global USE_STANFORD_CLIENT
+
     parser = argparse.ArgumentParser(description="LA Injectable Selection Tool")
     parser.add_argument(
         "--demo",
@@ -421,8 +490,19 @@ def main():
         default="results/la_selection",
         help="Output directory",
     )
+    parser.add_argument(
+        "--use-stanford",
+        action="store_true",
+        help="Use Stanford HIVdb API for resistance analysis (recommended)",
+    )
 
     args = parser.parse_args()
+
+    # Set global flag for Stanford client
+    if args.use_stanford:
+        USE_STANFORD_CLIENT = True
+        print("Using Stanford HIVdb for resistance analysis")
+        get_stanford_client()
 
     print("Long-Acting Injectable Selection Tool")
     print("=" * 40)

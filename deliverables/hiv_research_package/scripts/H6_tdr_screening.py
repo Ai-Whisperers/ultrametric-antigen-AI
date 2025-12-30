@@ -11,7 +11,7 @@ Screen treatment-naive HIV patients for transmitted drug resistance to guide
 first-line regimen selection.
 
 Key Features:
-1. Detect known TDR mutations
+1. Detect known TDR mutations (using Stanford HIVdb when available)
 2. Predict drug susceptibility for first-line regimens
 3. Recommend optimal starting regimen
 4. Point-of-care compatible output
@@ -22,6 +22,9 @@ Usage:
     python scripts/H6_tdr_screening.py \
         --sequence patient_sequence.fasta \
         --output results/tdr_screening/
+
+    # Use Stanford HIVdb for analysis (recommended):
+    python scripts/H6_tdr_screening.py --use-stanford --sequence patient_sequence.fasta
 """
 
 from __future__ import annotations
@@ -33,6 +36,31 @@ from pathlib import Path
 from typing import Optional
 
 import numpy as np
+
+
+# Global flag for Stanford HIVdb client
+USE_STANFORD_CLIENT = False
+_STANFORD_CLIENT = None
+
+
+def get_stanford_client():
+    """Get or create Stanford HIVdb client instance."""
+    global _STANFORD_CLIENT
+
+    if _STANFORD_CLIENT is not None:
+        return _STANFORD_CLIENT
+
+    try:
+        from stanford_hivdb_client import StanfordHIVdbClient
+        _STANFORD_CLIENT = StanfordHIVdbClient()
+        print("Stanford HIVdb client initialized")
+        return _STANFORD_CLIENT
+    except ImportError:
+        print("Warning: stanford_hivdb_client not found, using local analysis")
+        return None
+    except Exception as e:
+        print(f"Warning: Could not initialize Stanford client: {e}")
+        return None
 
 
 # WHO-recommended first-line drugs
@@ -271,12 +299,72 @@ def generate_summary(detected_mutations: list[dict]) -> str:
     return "TDR detected - " + "; ".join(lines)
 
 
-def screen_patient(
+def screen_patient_with_stanford(
+    sequence: str,
+    patient_id: str = "PATIENT_001",
+) -> TDRResult:
+    """Screen a patient using Stanford HIVdb API."""
+    client = get_stanford_client()
+    if client is None:
+        return screen_patient_local(sequence, patient_id)
+
+    try:
+        # Get analysis from Stanford
+        report = client.analyze_sequence(sequence, patient_id)
+
+        # Convert Stanford report to TDRResult format
+        detected = []
+        for mut in report.mutations:
+            detected.append({
+                "mutation": mut.notation,
+                "drug_class": mut.gene,
+                "affected_drugs": [],  # Would need to map from Stanford data
+                "resistance_level": "high" if mut.is_major else "moderate",
+                "prevalence": 1.0,
+            })
+
+        # Build susceptibility from drug scores
+        susceptibility = {}
+        for drug, score in report.drug_scores.items():
+            status = "susceptible"
+            if score.level.value >= 3:  # High-level resistance
+                status = "resistant"
+            elif score.level.value >= 2:  # Intermediate
+                status = "possible_resistance"
+
+            susceptibility[drug] = {
+                "status": status,
+                "score": score.score / 100.0,
+                "class": str(score.drug_class),
+            }
+
+        # Use Stanford's recommended regimens
+        primary = report.get_recommended_regimens()[0] if report.get_recommended_regimens() else "TDF/3TC/DTG"
+        alternatives = report.get_recommended_regimens()[1:4] if len(report.get_recommended_regimens()) > 1 else []
+
+        return TDRResult(
+            patient_id=patient_id,
+            sequence_id=None,
+            detected_mutations=detected,
+            drug_susceptibility=susceptibility,
+            tdr_positive=report.has_tdr(),
+            recommended_regimen=primary,
+            alternative_regimens=alternatives,
+            resistance_summary=f"Stanford analysis: {len(report.mutations)} mutations",
+            confidence=0.98,  # Higher confidence with Stanford
+        )
+
+    except Exception as e:
+        print(f"Stanford analysis failed: {e}, falling back to local")
+        return screen_patient_local(sequence, patient_id)
+
+
+def screen_patient_local(
     sequence: str,
     patient_id: str = "PATIENT_001",
     sequence_id: Optional[str] = None,
 ) -> TDRResult:
-    """Screen a patient for TDR."""
+    """Screen a patient for TDR using local analysis."""
     # Parse and validate
     sequence = parse_sequence(sequence)
 
@@ -309,6 +397,20 @@ def screen_patient(
         resistance_summary=summary,
         confidence=confidence,
     )
+
+
+def screen_patient(
+    sequence: str,
+    patient_id: str = "PATIENT_001",
+    sequence_id: Optional[str] = None,
+) -> TDRResult:
+    """Screen a patient for TDR.
+
+    Uses Stanford HIVdb client when USE_STANFORD_CLIENT is True.
+    """
+    if USE_STANFORD_CLIENT:
+        return screen_patient_with_stanford(sequence, patient_id)
+    return screen_patient_local(sequence, patient_id, sequence_id)
 
 
 def generate_demo_sequence() -> str:
@@ -381,6 +483,8 @@ def export_results(results: list[TDRResult], output_dir: Path) -> None:
 
 def main():
     """Main entry point."""
+    global USE_STANFORD_CLIENT
+
     parser = argparse.ArgumentParser(description="TDR Screening Tool")
     parser.add_argument(
         "--sequence",
@@ -405,8 +509,19 @@ def main():
         default="results/tdr_screening",
         help="Output directory",
     )
+    parser.add_argument(
+        "--use-stanford",
+        action="store_true",
+        help="Use Stanford HIVdb API for resistance analysis (recommended)",
+    )
 
     args = parser.parse_args()
+
+    # Set global flag for Stanford client
+    if args.use_stanford:
+        USE_STANFORD_CLIENT = True
+        print("Using Stanford HIVdb for resistance analysis")
+        get_stanford_client()  # Pre-initialize
 
     results = []
 

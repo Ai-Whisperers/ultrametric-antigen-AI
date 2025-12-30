@@ -15,7 +15,7 @@ library covering all major arboviruses circulating in Paraguay:
 - Mayaro virus (MAYV)
 
 Key Features:
-1. Multi-virus sequence processing
+1. Multi-virus sequence processing with REAL NCBI sequences
 2. Cross-reactivity checking (ensure no primer binds multiple viruses)
 3. Serotype-specific primer design for Dengue
 4. Unified scoring with stability and specificity metrics
@@ -27,6 +27,7 @@ Output:
 
 Usage:
     python scripts/A2_pan_arbovirus_primers.py --output_dir results/pan_arbovirus_primers/
+    python scripts/A2_pan_arbovirus_primers.py --use-ncbi  # Use real NCBI sequences
 """
 
 from __future__ import annotations
@@ -34,12 +35,18 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import sys
 from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
 import numpy as np
+
+# Add project paths for shared infrastructure
+project_root = Path(__file__).parent.parent.parent.parent
+sys.path.insert(0, str(project_root))
+sys.path.insert(0, str(project_root / "deliverables"))
 
 # Import from existing primer scanner
 try:
@@ -553,6 +560,31 @@ def build_pan_arbovirus_library(
     return summary
 
 
+def load_ncbi_sequences() -> dict[str, list[str]]:
+    """Load real sequences from NCBI via the arbovirus loader."""
+    try:
+        from ncbi_arbovirus_loader import NCBIArbovirusLoader, ArbovirusDatabase
+
+        loader = NCBIArbovirusLoader()
+        db = loader.load_or_download()
+
+        sequences = {}
+        for virus in ARBOVIRUS_TARGETS.keys():
+            virus_seqs = db.get_sequences(virus)
+            if virus_seqs:
+                sequences[virus] = [s.sequence for s in virus_seqs]
+                print(f"  Loaded {len(sequences[virus])} real sequences for {virus}")
+            else:
+                print(f"  WARNING: No sequences found for {virus}")
+
+        return sequences
+
+    except ImportError as e:
+        print(f"Could not import NCBI loader: {e}")
+        print("Falling back to demo sequences")
+        return None
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Pan-Arbovirus Primer Library Designer")
@@ -563,22 +595,41 @@ def main():
         help="Output directory for primer library",
     )
     parser.add_argument(
+        "--use-ncbi",
+        action="store_true",
+        help="Use real NCBI sequences (requires prior download)",
+    )
+    parser.add_argument(
         "--demo",
         action="store_true",
-        default=True,
-        help="Use demo sequences (default: True)",
+        help="Force demo mode with random sequences",
     )
 
     args = parser.parse_args()
     output_dir = Path(args.output_dir)
 
+    # Load sequences
+    sequences = None
+    if args.use_ncbi and not args.demo:
+        print("\nLoading real NCBI sequences...")
+        sequences = load_ncbi_sequences()
+
+    if sequences is None:
+        print("\nUsing demo sequences (use --use-ncbi for real data)")
+        sequences = generate_demo_sequences()
+
+    # Count total sequences
+    total_seqs = sum(len(v) for v in sequences.values())
+    print(f"\nTotal sequences loaded: {total_seqs}")
+
     # Build library
-    summary = build_pan_arbovirus_library(output_dir)
+    summary = build_pan_arbovirus_library(output_dir, sequences)
 
     print("\n" + "=" * 60)
     print("PAN-ARBOVIRUS PRIMER LIBRARY COMPLETE")
     print("=" * 60)
     print(f"\nOutput directory: {output_dir}")
+    print(f"Data source: {'NCBI' if args.use_ncbi and not args.demo else 'Demo'}")
     print("\nFiles generated:")
     print("  - <VIRUS>_primers.csv   : Ranked primer candidates")
     print("  - <VIRUS>_pairs.csv     : Primer pair combinations")

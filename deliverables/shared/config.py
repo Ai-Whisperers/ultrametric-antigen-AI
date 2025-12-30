@@ -72,9 +72,25 @@ class Config:
         """Find the first available VAE checkpoint."""
         for ckpt_path in self.fallback_checkpoints:
             full_path = self.project_root / ckpt_path
-            if full_path.exists():
+            if full_path.exists() and self._is_valid_checkpoint(full_path):
                 return str(full_path)
         return None
+
+    def _is_valid_checkpoint(self, path: Path) -> bool:
+        """Check if a file is a valid PyTorch checkpoint (not Git LFS pointer)."""
+        try:
+            with open(path, "rb") as f:
+                header = f.read(20)
+                # Git LFS pointer files start with "version https://git-lfs"
+                if header.startswith(b"version https://git"):
+                    if self.verbose:
+                        print(f"Warning: {path.name} is a Git LFS pointer, not actual checkpoint")
+                        print("  Run: git lfs pull")
+                    return False
+                # Valid PyTorch files start with ZIP magic number (PK) or pickle
+                return True
+        except Exception:
+            return False
 
     @property
     def has_vae(self) -> bool:

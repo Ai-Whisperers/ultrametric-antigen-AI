@@ -131,8 +131,13 @@ class VAEService:
                 print(f"VAE Service: Using device {self.device}")
 
         except Exception as e:
+            error_msg = str(e)
             if self.config.verbose:
-                print(f"VAE Service: Could not load model: {e}")
+                if "invalid load key" in error_msg.lower():
+                    print("VAE Service: Checkpoint file appears to be a Git LFS pointer")
+                    print("  To download the actual checkpoint, run: git lfs pull")
+                else:
+                    print(f"VAE Service: Could not load model: {e}")
             self.model = None
 
     @property
