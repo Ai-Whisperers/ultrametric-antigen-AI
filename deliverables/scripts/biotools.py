@@ -6,21 +6,96 @@
 """Unified CLI for Bioinformatics Tools.
 
 This is the main entry point for all partner-specific bioinformatics tools
-in the Ternary VAE project.
+in the Ternary VAE project. It provides a unified interface to access all
+research partner functionalities.
 
-Usage:
-    # List all available tools
+===============================================================================
+AVAILABLE COMMANDS
+===============================================================================
+
+Demo Commands (Quick Showcases):
+--------------------------------
+    demo-all         Run all tool demos sequentially
+    demo-hiv         HIV TDR screening + LA injectable selection
+    demo-amp         Antimicrobial peptide design optimization
+    demo-primers     Arbovirus RT-PCR primer design
+    demo-stability   Rosetta-blind protein stability detection
+
+Showcase Commands (Generate Outputs):
+-------------------------------------
+    showcase         Generate all figures, reports, and demos
+    showcase-figures Generate publication-quality figures only
+
+Partner Tools:
+--------------
+    arbovirus-primers   Design pan-arbovirus primers (DENV, ZIKV, CHIKV, MAYV)
+    pathogen-amp        Design pathogen-specific antimicrobial peptides
+    microbiome-amp      Design microbiome-safe AMPs
+    synthesis-amp       Optimize AMPs for synthesis feasibility
+    rosetta-blind       Detect Rosetta-blind instabilities
+    mutation-effect     Predict mutation effects (DDG)
+    tdr-screening       HIV transmitted drug resistance screening
+    la-selection        HIV long-acting injectable eligibility
+
+Analysis Commands:
+------------------
+    analyze <SEQ>    Analyze peptide properties
+
+Utility Commands:
+-----------------
+    --list           List all available tools with descriptions
+    init --all       Initialize all data (download sequences)
+
+===============================================================================
+USAGE EXAMPLES
+===============================================================================
+
+    # List all tools
     python biotools.py --list
 
-    # Run a specific tool
-    python biotools.py arbovirus-primers --use-ncbi
-    python biotools.py pathogen-amp --use-dramp --pathogen A_baumannii
-    python biotools.py mutation-effect --use-protherm --mutations G45A,A123G
-    python biotools.py tdr-screening --use-stanford --demo
-    python biotools.py la-selection --use-stanford --demo
+    # Run HIV demos
+    python biotools.py demo-hiv
 
-    # Initialize all data (download sequences, train models)
-    python biotools.py init --all
+    # Run all demos
+    python biotools.py demo-all
+
+    # Generate showcase figures
+    python biotools.py showcase
+
+    # Analyze a peptide sequence
+    python biotools.py analyze KLWKKWKKWLK
+
+    # Run specific tools with options
+    python biotools.py tdr-screening --demo
+    python biotools.py pathogen-amp --pathogen S_aureus
+
+===============================================================================
+ARCHITECTURE
+===============================================================================
+
+This CLI integrates the following research packages:
+
+1. HIV Research Package (partners/hiv_research_package/)
+   - TDRScreener: WHO SDRM mutation detection
+   - LASelector: CAB-LA/RPV-LA eligibility assessment
+   - HIVSequenceAligner: HXB2 reference alignment
+
+2. Arbovirus Package (partners/alejandra_rojas/)
+   - NCBIClient: Sequence download from NCBI
+   - PrimerDesigner: RT-PCR primer design
+
+3. AMP Package (partners/carlos_brizuela/)
+   - NSGA-II optimizer for multi-objective peptide design
+   - Pathogen-specific and microbiome-safe design
+
+4. Stability Package (partners/jose_colbes/)
+   - Geometric predictor for mutation effects
+   - Rosetta-blind instability detection
+
+All packages share the VAE service (shared/vae_service.py) for sequence
+encoding and the configuration module (shared/config.py) for path management.
+
+===============================================================================
 """
 
 from __future__ import annotations
@@ -167,6 +242,322 @@ def run_demo_all():
     print("=" * 70)
 
 
+def run_demo_hiv():
+    """Run HIV-specific demos (TDR screening + LA selection).
+
+    This demo showcases the HIV research package capabilities:
+
+    1. Sequence Alignment
+       - Aligns RT sequence to HXB2 reference
+       - Reports identity, coverage, and mutations found
+
+    2. TDR Screening
+       - Screens for WHO-defined surveillance drug resistance mutations
+       - Returns TDR status, confidence, and recommended first-line regimen
+
+    3. LA Injectable Eligibility
+       - Assesses eligibility for CAB-LA/RPV-LA therapy
+       - Considers viral suppression, adherence history, and risk factors
+
+    Output:
+        Prints formatted results to stdout with success/failure banner.
+
+    Raises:
+        ImportError: If HIV package is not available in the path.
+    """
+    print("\n" + "=" * 70)
+    print("  HIV ANALYSIS DEMO")
+    print("=" * 70)
+
+    try:
+        from partners.hiv_research_package.src import (
+            TDRScreener, LASelector, PatientData,
+            HIVSequenceAligner, ClinicalReportGenerator
+        )
+
+        # Demo RT sequence
+        demo_sequence = """PISPIETVPVKLKPGMDGPKVKQWPLTEEKIKALVEICTEMEKEGKISKIGPENPYNTPV
+        FAIKKKDSTKWRKLVDFRELNKRTQDFWEVQLGIPHPAGLKKNKSVTVLDVGDAYFSVPL""".replace("\n", "").replace(" ", "")
+
+        print("\n1. Sequence Alignment")
+        print("-" * 50)
+        aligner = HIVSequenceAligner()
+        alignment = aligner.align(demo_sequence, gene="RT")
+        print(f"   Identity: {alignment.identity:.1%}")
+        print(f"   Coverage: {alignment.coverage:.1%}")
+        print(f"   Mutations: {len(alignment.mutations)}")
+
+        print("\n2. TDR Screening")
+        print("-" * 50)
+        screener = TDRScreener()
+        result = screener.screen_patient(demo_sequence, "DEMO-001")
+        print(f"   TDR Status: {'POSITIVE' if result.tdr_positive else 'NEGATIVE'}")
+        print(f"   Confidence: {result.confidence:.1%}")
+        print(f"   Recommendation: {result.recommended_regimen}")
+
+        print("\n3. LA Injectable Eligibility")
+        print("-" * 50)
+        patient = PatientData(
+            patient_id="DEMO-001", age=35, sex="M", bmi=24.5,
+            viral_load=0, cd4_count=650,
+            prior_regimens=["TDF/FTC/DTG"], adherence_history="excellent"
+        )
+        selector = LASelector()
+        la_result = selector.assess_eligibility(patient, demo_sequence)
+        print(f"   Eligible: {'YES' if la_result.eligible else 'NO'}")
+        print(f"   Success Probability: {la_result.success_probability:.1%}")
+
+        print("\n" + "=" * 70)
+        print("  HIV DEMO COMPLETED SUCCESSFULLY")
+        print("=" * 70)
+
+    except ImportError as e:
+        print(f"Error: HIV package not available: {e}")
+        print("Make sure the partners/hiv_research_package/src module is installed")
+
+
+def run_demo_amp():
+    """Run antimicrobial peptide (AMP) design demo.
+
+    This demo showcases the VAE-based peptide generation:
+
+    1. VAE Service Initialization
+       - Checks if real VAE model or mock mode is being used
+       - Real mode uses trained checkpoint for accurate embeddings
+
+    2. Latent Space Sampling
+       - Samples 20 candidate peptides with cationic bias
+       - Applies charge_bias=0.5 for antimicrobial properties
+       - Applies hydro_bias=0.3 for membrane interaction
+
+    3. Property Calculation
+       - Computes net charge, hydrophobicity for each candidate
+       - Calculates stability score from p-adic valuation
+
+    4. Ranking
+       - Sorts candidates by combined score (charge + stability)
+       - Displays top 10 candidates with properties
+
+    Output:
+        Table of top 10 peptides with sequence, charge, hydrophobicity, stability.
+
+    Note:
+        In mock mode, stability scores may be 0 due to simplified algorithm.
+    """
+    print("\n" + "=" * 70)
+    print("  ANTIMICROBIAL PEPTIDE DESIGN DEMO")
+    print("=" * 70)
+
+    try:
+        from shared.vae_service import get_vae_service
+        from shared.peptide_utils import compute_peptide_properties
+        import numpy as np
+
+        vae = get_vae_service()
+        print(f"\nVAE Status: {'Real model' if vae.is_real else 'Mock mode'}")
+
+        # Sample peptides with cationic bias (antimicrobial)
+        print("\nGenerating candidate peptides...")
+        n_candidates = 20
+        latent_samples = vae.sample_latent(
+            n_samples=n_candidates,
+            charge_bias=0.5,
+            hydro_bias=0.3
+        )
+
+        peptides = []
+        for z in latent_samples:
+            seq = vae.decode_latent(z)
+            props = compute_peptide_properties(seq)
+            peptides.append((seq, props, vae.get_stability_score(z)))
+
+        # Sort by combined score (charge + stability)
+        peptides.sort(key=lambda x: x[1]['net_charge'] + x[2], reverse=True)
+
+        print("\nTop 10 Candidate Peptides:")
+        print("-" * 70)
+        print(f"{'#':<3} {'Sequence':<25} {'Charge':>8} {'Hydro':>8} {'Stability':>10}")
+        print("-" * 70)
+        for i, (seq, props, stab) in enumerate(peptides[:10], 1):
+            print(f"{i:<3} {seq[:22]+'...':<25} {props['net_charge']:>+8.1f} {props['hydrophobicity']:>8.3f} {stab:>10.3f}")
+
+        print("\n" + "=" * 70)
+        print("  AMP DEMO COMPLETED SUCCESSFULLY")
+        print("=" * 70)
+
+    except ImportError as e:
+        print(f"Error: {e}")
+
+
+def run_demo_primers():
+    """Run arbovirus RT-PCR primer design demo.
+
+    This demo showcases the arbovirus surveillance tools:
+
+    1. Target Viruses
+       - Lists supported arbovirus targets (DENV-1-4, ZIKV, CHIKV, MAYV)
+       - Each has NCBI taxonomy ID for sequence retrieval
+
+    2. Primer Constraints
+       - Displays configured primer design constraints
+       - Length: 18-25 bp, GC: 40-60%, Tm: 55-65°C
+
+    3. Primer Design
+       - Designs primer pairs for demo genome sequence
+       - Calculates Tm using nearest-neighbor thermodynamics
+       - Scores primers based on GC content, Tm match, amplicon size
+
+    Output:
+        List of designed primer pairs with forward/reverse sequences,
+        amplicon sizes, and quality scores.
+
+    Note:
+        In demo mode, uses synthetic genome sequence. With --use-ncbi,
+        downloads real sequences from NCBI GenBank.
+    """
+    print("\n" + "=" * 70)
+    print("  ARBOVIRUS PRIMER DESIGN DEMO")
+    print("=" * 70)
+
+    try:
+        from partners.alejandra_rojas.src import PrimerDesigner
+        from partners.alejandra_rojas.src.constants import PRIMER_CONSTRAINTS, ARBOVIRUS_TARGETS
+
+        print("\nTarget Viruses:")
+        for virus in list(ARBOVIRUS_TARGETS.keys())[:4]:
+            print(f"  - {virus}")
+
+        print("\nPrimer Constraints:")
+        print(f"  Length: {PRIMER_CONSTRAINTS['length']['min']}-{PRIMER_CONSTRAINTS['length']['max']} bp")
+        print(f"  GC: {PRIMER_CONSTRAINTS['gc_content']['min']*100:.0f}-{PRIMER_CONSTRAINTS['gc_content']['max']*100:.0f}%")
+        print(f"  Tm: {PRIMER_CONSTRAINTS['tm']['min']}-{PRIMER_CONSTRAINTS['tm']['max']}°C")
+
+        # Demo sequence
+        demo_genome = "ATGAACAACCAACGGAAAAAGACGGGTCGACCGTCTTTCAATATGCTGAAACGCGCGAGAAACCGCGT" * 10
+
+        designer = PrimerDesigner(constraints=PRIMER_CONSTRAINTS)
+        pairs = designer.design_primer_pairs(demo_genome, "DENV-1", n_pairs=5)
+
+        print(f"\nDesigned {len(pairs)} primer pairs:")
+        print("-" * 70)
+        for i, pair in enumerate(pairs[:5], 1):
+            print(f"{i}. Forward: {pair.forward.sequence[:20]}...")
+            print(f"   Reverse: {pair.reverse.sequence[:20]}...")
+            print(f"   Amplicon: {pair.amplicon_size} bp, Score: {pair.score:.1f}")
+
+        print("\n" + "=" * 70)
+        print("  PRIMER DEMO COMPLETED SUCCESSFULLY")
+        print("=" * 70)
+
+    except ImportError as e:
+        print(f"Error: {e}")
+
+
+def run_demo_stability():
+    """Run Rosetta-blind protein stability detection demo.
+
+    This demo showcases the p-adic geometric stability prediction:
+
+    1. VAE Encoding
+       - Encodes mutant amino acid to 16-dimensional latent space
+       - Maps to hyperbolic Poincaré ball representation
+
+    2. P-adic Valuation
+       - Calculates radial position (distance from origin)
+       - Maps radius to p-adic valuation level (0-9)
+
+    3. Stability Scoring
+       - Converts valuation to stability score (0-1)
+       - Higher valuation = closer to center = more stable
+
+    4. Classification
+       - Stabilizing: stability > 0.7
+       - Neutral: 0.3 < stability < 0.7
+       - Destabilizing: stability < 0.3
+
+    Demo Mutations:
+        A1V  - Small hydrophobic change
+        G23D - Glycine to charged (flexibility loss)
+        L45P - Helix breaker (proline)
+        K67R - Conservative positive charge
+        P112A - Proline removal (flexibility gain)
+
+    Output:
+        Table of mutations with descriptions and stability classifications.
+
+    Note:
+        In mock mode, predictions use simplified heuristics.
+        Real mode uses trained VAE for accurate geometric embedding.
+    """
+    print("\n" + "=" * 70)
+    print("  PROTEIN STABILITY ANALYSIS DEMO")
+    print("=" * 70)
+
+    try:
+        from shared.vae_service import get_vae_service
+        import numpy as np
+
+        vae = get_vae_service()
+
+        # Demo mutations
+        mutations = [
+            ("A1V", "Alanine to Valine"),
+            ("G23D", "Glycine to Aspartate"),
+            ("L45P", "Leucine to Proline"),
+            ("K67R", "Lysine to Arginine"),
+            ("P112A", "Proline to Alanine"),
+        ]
+
+        print("\nAnalyzing mutations with p-adic geometric scoring:")
+        print("-" * 60)
+        print(f"{'Mutation':<12} {'Description':<25} {'Stability':>12}")
+        print("-" * 60)
+
+        for mut, desc in mutations:
+            # Encode mutant residue
+            new_aa = mut[-1]
+            z = vae.encode_sequence(new_aa * 10)
+            stability = vae.get_stability_score(z)
+            valuation = vae.get_padic_valuation(z)
+
+            status = "Stable" if stability > 0.5 else "Destabilizing"
+            print(f"{mut:<12} {desc:<25} {stability:>8.3f} ({status})")
+
+        print("\n" + "=" * 70)
+        print("  STABILITY DEMO COMPLETED SUCCESSFULLY")
+        print("=" * 70)
+
+    except ImportError as e:
+        print(f"Error: {e}")
+
+
+def run_showcase():
+    """Generate all showcase outputs (figures + reports)."""
+    print("\n" + "=" * 70)
+    print("  GENERATING SHOWCASE OUTPUTS")
+    print("=" * 70)
+
+    try:
+        from generate_showcase_figures import main as generate_figures
+
+        print("\nGenerating publication figures...")
+        sys.argv = ["generate_showcase_figures"]
+        generate_figures()
+
+        print("\n" + "=" * 70)
+        print("  SHOWCASE GENERATION COMPLETED")
+        print("=" * 70)
+
+    except ImportError as e:
+        print(f"Error importing showcase generator: {e}")
+        print("Make sure generate_showcase_figures.py is in the scripts directory")
+
+
+def run_showcase_figures():
+    """Generate publication figures only."""
+    run_showcase()  # Currently same as showcase
+
+
 def analyze_peptide(sequence: str):
     """Quick peptide analysis."""
     from shared import (
@@ -283,6 +674,18 @@ def main():
         run_init(remaining)
     elif args.command == "demo-all":
         run_demo_all()
+    elif args.command == "demo-hiv":
+        run_demo_hiv()
+    elif args.command == "demo-amp":
+        run_demo_amp()
+    elif args.command == "demo-primers":
+        run_demo_primers()
+    elif args.command == "demo-stability":
+        run_demo_stability()
+    elif args.command == "showcase":
+        run_showcase()
+    elif args.command == "showcase-figures":
+        run_showcase_figures()
     elif args.command == "analyze":
         if remaining:
             analyze_peptide(remaining[0])

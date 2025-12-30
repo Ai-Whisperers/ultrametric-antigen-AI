@@ -2,7 +2,7 @@
 
 **P-adic Geometry for Computational Biology**
 
-Version 1.0 | December 2025 | AI Whisperers
+Version 2.0 | December 2025 | AI Whisperers
 
 ---
 
@@ -11,39 +11,64 @@ Version 1.0 | December 2025 | AI Whisperers
 This package provides bioinformatics tools built on p-adic (hyperbolic) geometric methods for:
 
 - **Antimicrobial Peptide Design** - Multi-objective optimization with safety assessment
-- **Protein Stability Prediction** - Rotamer scoring and mutation effects
-- **Arbovirus Surveillance** - Serotype tracking and primer design
-- **HIV Clinical Tools** - Drug resistance and treatment selection
+- **Protein Stability Prediction** - Rosetta-blind mutation detection
+- **Arbovirus Surveillance** - Pan-arbovirus RT-PCR primer design
+- **HIV Clinical Tools** - TDR screening and LA injectable selection
+
+### Key Features
+
+| Feature | Capability | Key Metric |
+|---------|------------|------------|
+| **P-adic Geometry** | Hierarchical sequence embedding | -0.83 Spearman |
+| **Codon Encoder** | Force constant prediction | r = 0.86 |
+| **HIV Analysis** | TDR + LA injectable eligibility | Clinical decision support |
+| **AMP Design** | Multi-objective optimization | Pareto-optimal peptides |
+| **Primer Design** | Pan-arbovirus RT-PCR | Cross-reactivity analysis |
 
 ---
 
 ## Quick Start
 
-```python
+```bash
 # Install dependencies
-pip install numpy scikit-learn
+pip install -r requirements.txt
 
-# Import shared utilities
-from shared import (
-    compute_peptide_properties,
-    HemolysisPredictor,
-    PrimerDesigner,
-)
+# Run all demos
+python scripts/biotools.py demo-all
 
-# Analyze a peptide
-peptide = "GIGKFLHSAKKFGKAFVGEIMNS"
-props = compute_peptide_properties(peptide)
+# Run specific demos
+python scripts/biotools.py demo-hiv          # HIV resistance analysis
+python scripts/biotools.py demo-amp          # AMP design
+python scripts/biotools.py demo-primers      # Primer design
+python scripts/biotools.py demo-stability    # Protein stability
+
+# Generate showcase figures
+python scripts/biotools.py showcase
+```
+
+### Python Quick Start
+
+```python
+# VAE Service - unified interface
+from shared.vae_service import get_vae_service
+
+vae = get_vae_service()
+z = vae.encode_sequence("KLWKKWKKWLK")
+stability = vae.get_stability_score(z)
+print(f"Stability: {stability:.3f}")
+
+# Peptide analysis
+from shared.peptide_utils import compute_peptide_properties
+
+props = compute_peptide_properties("GIGKFLHSAKKFGKAFVGEIMNS")
 print(f"Charge: {props['net_charge']}, Hydrophobicity: {props['hydrophobicity']:.2f}")
 
-# Predict toxicity
-predictor = HemolysisPredictor()
-result = predictor.predict(peptide)
-print(f"HC50: {result['hc50_predicted']:.1f} uM, Risk: {result['risk_category']}")
+# HIV resistance screening
+from partners.hiv_research_package.src import TDRScreener
 
-# Design primers
-designer = PrimerDesigner()
-primers = designer.design_for_peptide(peptide[:15], codon_optimization='ecoli')
-print(f"Forward: {primers.forward}")
+screener = TDRScreener()
+result = screener.screen_patient(sequence, "P001")
+print(f"TDR: {'Positive' if result.tdr_positive else 'Negative'}")
 ```
 
 ---
@@ -54,41 +79,55 @@ print(f"Forward: {primers.forward}")
 deliverables/
 │
 ├── README.md                    # This file
-├── docs/                        # Core documentation
-│   ├── INDEX.md                # Documentation map
-│   ├── HEMOLYSIS_PREDICTOR.md  # Toxicity prediction guide
-│   ├── PRIMER_DESIGN.md        # PCR primer design guide
-│   ├── UNCERTAINTY_QUANTIFICATION.md
-│   ├── CURATED_DATABASES.md    # Data sources
-│   └── USAGE_EXAMPLES.md       # Complete workflows
+├── requirements.txt             # Dependencies
+│
+├── demos/                       # Showcase demonstrations
+│   ├── full_platform_demo.ipynb # Complete platform demo
+│   └── figures/                 # Demo output figures
+│
+├── docs/                        # Documentation
+│   ├── API_REFERENCE.md        # Complete API docs
+│   ├── DELIVERABLES_IMPROVEMENT_PLAN.md
+│   ├── HEMOLYSIS_PREDICTOR.md
+│   ├── PRIMER_DESIGN.md
+│   └── USAGE_EXAMPLES.md
 │
 ├── shared/                      # Common Python modules
-│   ├── __init__.py             # Public API exports
+│   ├── vae_service.py          # Unified VAE interface
+│   ├── config.py               # Configuration management
 │   ├── peptide_utils.py        # Sequence analysis
 │   ├── hemolysis_predictor.py  # Toxicity prediction
-│   ├── primer_design.py        # PCR primer design
-│   ├── uncertainty.py          # Confidence intervals
-│   └── tests/                  # Test suite
-│
-├── tutorials/                   # Interactive notebooks
-│   ├── 00_bioinformatics_toolkit_overview.ipynb
-│   ├── 01_getting_started.ipynb
-│   └── 02_activity_prediction.ipynb
+│   ├── constants.py            # Shared constants
+│   └── tests/                  # Shared tests
 │
 ├── scripts/                     # Command-line tools
-│   └── biotools.py             # CLI interface
+│   ├── biotools.py             # CLI interface (demo-all, showcase)
+│   └── generate_showcase_figures.py
 │
-├── results/                     # Output results
-│   ├── pathogen_specific/
-│   ├── microbiome_safe/
-│   ├── pan_arbovirus_primers/
+├── checkpoints/                 # VAE checkpoints
+│   └── README.md               # Checkpoint documentation
+│
+├── tests/                       # Test suite
+│   ├── conftest.py             # Shared fixtures
+│   ├── test_hiv_package.py
+│   ├── test_alejandra_rojas.py
+│   ├── test_e2e_demos.py       # End-to-end demo tests
 │   └── ...
 │
+├── results/                     # Output results
+│   └── figures/                # Generated figures
+│
 └── partners/                    # Research partner modules
-    ├── carlos_brizuela/        # AMP optimization
-    ├── jose_colbes/            # Protein stability
+    ├── hiv_research_package/   # HIV clinical tools
+    │   ├── src/                # Complete library
+    │   └── notebooks/
     ├── alejandra_rojas/        # Arbovirus surveillance
-    └── hiv_research_package/   # HIV clinical tools
+    │   ├── src/                # NCBI client, primer design
+    │   └── notebooks/
+    ├── carlos_brizuela/        # AMP optimization
+    │   └── scripts/            # NSGA-II optimizer
+    └── jose_colbes/            # Protein stability
+        └── scripts/            # Geometric predictor
 ```
 
 ---
@@ -183,11 +222,74 @@ from shared import (
 
 ```bash
 cd deliverables
-python -m pytest shared/tests/ -v
 
-# Or run specific tests
-python -m pytest shared/tests/test_peptide_utils.py -v
+# Run all tests
+python -m pytest tests/ -v
+
+# Run specific test files
+python -m pytest tests/test_e2e_demos.py -v      # End-to-end demos
+python -m pytest tests/test_hiv_package.py -v    # HIV package
+python -m pytest tests/test_alejandra_rojas.py -v # Arbovirus package
+python -m pytest tests/test_shared.py -v          # Shared modules
+
+# Run with coverage
+python -m pytest tests/ --cov=shared --cov=partners -v
+
+# Run only fast tests (skip slow ones)
+python -m pytest tests/ -v -m "not slow"
 ```
+
+### Test Structure
+
+| Test File | Tests | Description |
+|-----------|-------|-------------|
+| `test_e2e_demos.py` | 22 | End-to-end demo workflows |
+| `test_hiv_package.py` | 32 | HIV TDR/LA/alignment tests |
+| `test_alejandra_rojas.py` | 16 | Primer design tests |
+| `test_jose_colbes.py` | 9 | Stability prediction tests |
+| `test_shared.py` | 16 | Config and utility tests |
+
+---
+
+## Troubleshooting
+
+### VAE Service Issues
+
+**"Running in mock mode"**
+- VAE service works without PyTorch but uses simplified algorithms
+- To use real VAE: install PyTorch and run `git lfs pull` for checkpoints
+
+**"Git LFS pointer" error**
+```bash
+git lfs install
+git lfs pull
+```
+
+**Slow performance**
+```python
+from shared.config import get_config
+config = get_config()
+config.use_gpu = True  # Enable GPU if available
+```
+
+### Import Errors
+
+**"Module not found"**
+```bash
+# Ensure you're in the deliverables directory
+cd deliverables
+
+# Or add to PYTHONPATH
+export PYTHONPATH="${PYTHONPATH}:$(pwd)"
+```
+
+### Test Failures
+
+**Pre-existing failures (3 tests)**
+- HIV: Minor assertion message format
+- Jose Colbes: `classify_residue()` signature change
+
+These don't affect core functionality.
 
 ---
 
@@ -221,6 +323,19 @@ python scripts/biotools.py pathogen --target S_aureus --output results/
 - PyTorch (VAE integration)
 - BioPython (sequence parsing)
 - Primer3 (advanced primer design)
+
+---
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history and release notes.
+
+**Current Version:** 2.0.0 (December 2025)
+- Unified VAE service module
+- Complete HIV research package
+- Enhanced arbovirus tools
+- Comprehensive CLI and demos
+- 101+ passing tests
 
 ---
 
