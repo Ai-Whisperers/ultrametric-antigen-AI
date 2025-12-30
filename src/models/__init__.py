@@ -33,6 +33,12 @@ PheromoneField = None
 
 from .ternary_vae import (FrozenDecoder, FrozenEncoder, TernaryVAEV5_11,
                           TernaryVAEV5_11_OptionC, TernaryVAEV5_11_PartialFreeze)
+from .improved_components import (
+    ImprovedEncoder,
+    ImprovedDecoder,
+    create_encoder,
+    create_decoder,
+)
 from .base_vae import BaseVAE, HyperbolicBaseVAE, ConditionalBaseVAE, VAEConfig, VAEOutput
 from .hierarchical_vae import HierarchicalVAE, HierarchicalVAEConfig
 from .epistasis_module import (
@@ -98,6 +104,11 @@ __all__ = [
     "TernaryVAEV5_11_OptionC",  # Deprecated alias
     "FrozenEncoder",
     "FrozenDecoder",
+    # Improved components (V5.12.3+)
+    "ImprovedEncoder",
+    "ImprovedDecoder",
+    "create_encoder",
+    "create_decoder",
     # Base VAE abstraction
     "BaseVAE",
     "HyperbolicBaseVAE",

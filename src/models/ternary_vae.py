@@ -88,6 +88,7 @@ from src.utils.checkpoint import load_checkpoint_compat
 
 from .differentiable_controller import DifferentiableController
 from .frozen_components import FrozenDecoder, FrozenEncoder
+from .improved_components import ImprovedEncoder, ImprovedDecoder
 from .hyperbolic_projection import DualHyperbolicProjection, HyperbolicProjection
 
 logger = logging.getLogger(__name__)
@@ -122,6 +123,12 @@ class TernaryVAEV5_11(nn.Module):
         n_projection_layers: int = 1,
         projection_dropout: float = 0.0,
         learnable_curvature: bool = False,
+        encoder_type: str = "frozen",
+        decoder_type: str = "frozen",
+        encoder_dropout: float = 0.1,
+        decoder_dropout: float = 0.1,
+        logvar_min: float = -10.0,
+        logvar_max: float = 2.0,
         **kwargs,
     ):
         """Initialize TernaryVAEV5_11.
@@ -136,6 +143,12 @@ class TernaryVAEV5_11(nn.Module):
             n_projection_layers: Number of hidden layers in projection
             projection_dropout: Dropout rate for projection networks
             learnable_curvature: If True, curvature becomes learnable
+            encoder_type: "frozen" or "improved" (V5.12.4+)
+            decoder_type: "frozen" or "improved" (V5.12.4+)
+            encoder_dropout: Dropout for improved encoder (default 0.1)
+            decoder_dropout: Dropout for improved decoder (default 0.1)
+            logvar_min: Min logvar clamp for improved encoder (default -10)
+            logvar_max: Max logvar clamp for improved encoder (default 2)
 
             # Injected components (optional)
             encoder_A: Injected encoder A (optional)
@@ -159,14 +172,48 @@ class TernaryVAEV5_11(nn.Module):
         self.n_projection_layers = n_projection_layers
         self.projection_dropout = projection_dropout
         self.learnable_curvature = learnable_curvature
+        self.encoder_type = encoder_type
+        self.decoder_type = decoder_type
+        self.encoder_dropout = encoder_dropout
+        self.decoder_dropout = decoder_dropout
+        self.logvar_min = logvar_min
+        self.logvar_max = logvar_max
 
-        # Frozen encoders (will be loaded from checkpoint)
+        # Encoders (frozen or improved based on encoder_type)
         # Injection allows mocks for testing
-        self.encoder_A = kwargs.pop("encoder_A", None) or FrozenEncoder(latent_dim=latent_dim)
-        self.encoder_B = kwargs.pop("encoder_B", None) or FrozenEncoder(latent_dim=latent_dim)
+        self.encoder_A = kwargs.pop("encoder_A", None)
+        self.encoder_B = kwargs.pop("encoder_B", None)
+        if self.encoder_A is None:
+            if encoder_type == "improved":
+                self.encoder_A = ImprovedEncoder(
+                    latent_dim=latent_dim,
+                    dropout=encoder_dropout,
+                    logvar_min=logvar_min,
+                    logvar_max=logvar_max,
+                )
+            else:
+                self.encoder_A = FrozenEncoder(latent_dim=latent_dim)
+        if self.encoder_B is None:
+            if encoder_type == "improved":
+                self.encoder_B = ImprovedEncoder(
+                    latent_dim=latent_dim,
+                    dropout=encoder_dropout,
+                    logvar_min=logvar_min,
+                    logvar_max=logvar_max,
+                )
+            else:
+                self.encoder_B = FrozenEncoder(latent_dim=latent_dim)
 
-        # Frozen decoder (for verification only)
-        self.decoder_A = kwargs.pop("decoder_A", None) or FrozenDecoder(latent_dim=latent_dim)
+        # Decoder (frozen or improved based on decoder_type)
+        self.decoder_A = kwargs.pop("decoder_A", None)
+        if self.decoder_A is None:
+            if decoder_type == "improved":
+                self.decoder_A = ImprovedDecoder(
+                    latent_dim=latent_dim,
+                    dropout=decoder_dropout,
+                )
+            else:
+                self.decoder_A = FrozenDecoder(latent_dim=latent_dim)
 
         # Trainable hyperbolic projection
         self.projection = kwargs.pop("projection", None)
@@ -213,6 +260,10 @@ class TernaryVAEV5_11(nn.Module):
     def load_v5_5_checkpoint(self, checkpoint_path: Path, device: str = "cpu"):
         """Load frozen components from v5.5 checkpoint.
 
+        Supports both FrozenEncoder/Decoder and ImprovedEncoder/Decoder.
+        ImprovedEncoder/Decoder use load_v5_5_weights() which handles
+        the key mapping for LayerNorm insertion.
+
         Args:
             checkpoint_path: Path to v5.5 checkpoint file
             device: Device to load to
@@ -220,31 +271,49 @@ class TernaryVAEV5_11(nn.Module):
         checkpoint = load_checkpoint_compat(checkpoint_path, map_location=device)
         model_state = checkpoint["model"]
 
-        # Load encoder_A
-        enc_A_state = {k.replace("encoder_A.", ""): v for k, v in model_state.items() if k.startswith("encoder_A.")}
-        self.encoder_A.load_state_dict(enc_A_state)
+        # Load encoder_A (improved or frozen)
+        if hasattr(self.encoder_A, "load_v5_5_weights"):
+            # ImprovedEncoder: use special weight loading
+            self.encoder_A.load_v5_5_weights(checkpoint_path, "encoder_A", device)
+            logger.info("  encoder_A: Loaded v5.5 weights into ImprovedEncoder")
+        else:
+            # FrozenEncoder: direct state_dict load
+            enc_A_state = {k.replace("encoder_A.", ""): v for k, v in model_state.items() if k.startswith("encoder_A.")}
+            self.encoder_A.load_state_dict(enc_A_state)
 
-        # Load encoder_B
-        enc_B_state = {k.replace("encoder_B.", ""): v for k, v in model_state.items() if k.startswith("encoder_B.")}
-        self.encoder_B.load_state_dict(enc_B_state)
+        # Load encoder_B (improved or frozen)
+        if hasattr(self.encoder_B, "load_v5_5_weights"):
+            self.encoder_B.load_v5_5_weights(checkpoint_path, "encoder_B", device)
+            logger.info("  encoder_B: Loaded v5.5 weights into ImprovedEncoder")
+        else:
+            enc_B_state = {k.replace("encoder_B.", ""): v for k, v in model_state.items() if k.startswith("encoder_B.")}
+            self.encoder_B.load_state_dict(enc_B_state)
 
-        # Load decoder_A
-        dec_A_state = {k.replace("decoder_A.", ""): v for k, v in model_state.items() if k.startswith("decoder_A.")}
-        self.decoder_A.load_state_dict(dec_A_state)
+        # Load decoder_A (improved or frozen)
+        if hasattr(self.decoder_A, "load_v5_5_weights"):
+            self.decoder_A.load_v5_5_weights(checkpoint_path, "decoder_A", device)
+            logger.info("  decoder_A: Loaded v5.5 weights into ImprovedDecoder")
+        else:
+            dec_A_state = {k.replace("decoder_A.", ""): v for k, v in model_state.items() if k.startswith("decoder_A.")}
+            self.decoder_A.load_state_dict(dec_A_state)
 
         # Move to device
         self.to(device)
 
-        # Ensure frozen components stay frozen
-        for param in self.encoder_A.parameters():
-            param.requires_grad = False
-        for param in self.encoder_B.parameters():
-            param.requires_grad = False
-        for param in self.decoder_A.parameters():
-            param.requires_grad = False
+        # Ensure frozen components stay frozen (unless using improved which may be trainable)
+        if self.encoder_type == "frozen":
+            for param in self.encoder_A.parameters():
+                param.requires_grad = False
+            for param in self.encoder_B.parameters():
+                param.requires_grad = False
+        if self.decoder_type == "frozen":
+            for param in self.decoder_A.parameters():
+                param.requires_grad = False
 
         logger.info(f"Loaded v5.5 checkpoint from {checkpoint_path}")
         logger.info(f"  Epoch: {checkpoint.get('epoch', 'unknown')}")
+        logger.info(f"  Encoder type: {self.encoder_type}")
+        logger.info(f"  Decoder type: {self.decoder_type}")
 
     def reparameterize(self, mu: torch.Tensor, logvar: torch.Tensor) -> torch.Tensor:
         """Reparameterization trick.

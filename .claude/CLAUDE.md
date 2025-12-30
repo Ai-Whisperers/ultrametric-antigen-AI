@@ -1,6 +1,6 @@
 # Ternary VAE Project - Claude Context
 
-**Doc-Type:** Project Configuration · Version 1.2 · Updated 2025-12-29 · AI Whisperers
+**Doc-Type:** Project Configuration · Version 1.5 · Updated 2025-12-30 · AI Whisperers
 
 ---
 
@@ -76,6 +76,8 @@ The TernaryVAEV5_11 architecture uses two complementary encoders:
 - Role: Training orchestrator for freeze/unfreeze decisions
 - Triggers: Based on coverage thresholds and hierarchy plateau detection
 - Q-metric: `Q = dist_corr + 1.5 × |hierarchy|`
+
+**V5.12.4 Improved Encoder/Decoder** - The `ImprovedEncoder` and `ImprovedDecoder` classes (`src/models/improved_components.py`) replace ReLU with SiLU activation for smoother gradients, add LayerNorm for stable training, include Dropout (default 0.1) for regularization, and clamp logvar to [-10, 2] to prevent KL collapse/explosion. These components can load v5.5 checkpoint weights (Linear layers only) with fresh LayerNorm initialization, enabling backwards-compatible upgrades. Enable via `encoder_type: improved` and `decoder_type: improved` in config, or see `configs/v5_12_4.yaml` for full example.
 
 ---
 
@@ -390,6 +392,7 @@ These 190+ usages are intentionally Euclidean:
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2025-12-30 | 1.5 | V5.12.4 ImprovedEncoder/Decoder with SiLU, LayerNorm, Dropout, logvar clamping |
 | 2025-12-29 | 1.4 | V5.12.2 COMPLETE FIX LIST - all 75 files needing fixes documented |
 | 2025-12-29 | 1.3 | V5.12.2 audit COMPLETE - all core files fixed, deprecated geometry_utils.py |
 | 2025-12-29 | 1.2 | V5.12.2 hyperbolic audit warning, fixed Quick Evaluation example |
