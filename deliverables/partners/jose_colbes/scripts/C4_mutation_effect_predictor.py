@@ -28,17 +28,33 @@ Usage:
 
     # Use trained ML model (recommended):
     python scripts/C4_mutation_effect_predictor.py --use-protherm --mutations mutations.csv
+
+Dependencies:
+    - src.core.padic_math: P-adic valuation functions (optional, for extended features)
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
 import numpy as np
+
+# Add project root to path for src imports
+_project_root = Path(__file__).resolve().parents[4]
+if str(_project_root) not in sys.path:
+    sys.path.insert(0, str(_project_root))
+
+# Optional: import p-adic math for extended features
+try:
+    from src.core.padic_math import padic_valuation
+    HAS_PADIC = True
+except ImportError:
+    HAS_PADIC = False
 
 try:
     import joblib

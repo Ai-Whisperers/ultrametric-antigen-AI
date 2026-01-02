@@ -25,17 +25,28 @@ Usage:
     python scripts/C1_rosetta_blind_detection.py \
         --input data/rotamers.pt \
         --output results/rosetta_blind/
+
+Dependencies:
+    - src.core.padic_math: P-adic valuation functions
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
 import numpy as np
+
+# Add project root to path for src imports
+_project_root = Path(__file__).resolve().parents[4]
+if str(_project_root) not in sys.path:
+    sys.path.insert(0, str(_project_root))
+
+from src.core.padic_math import padic_valuation
 
 
 @dataclass
@@ -78,8 +89,14 @@ def normalize_angle(angle: float) -> float:
 def compute_geometric_score(chi_angles: list[float]) -> float:
     """Compute geometric instability score from chi angles.
 
-    Uses hyperbolic distance to standard rotamer centroids.
+    Uses hyperbolic distance to standard rotamer centroids combined with
+    3-adic valuation from src.core.padic_math.
+
     Higher score = more unstable (further from common rotamers).
+
+    The score combines:
+    - Hyperbolic distance in Poincare ball (captures geometric deviation)
+    - P-adic valuation (captures hierarchical structure)
     """
     # Filter valid angles
     valid_chi = [c for c in chi_angles if c is not None and not np.isnan(c)]
@@ -94,21 +111,17 @@ def compute_geometric_score(chi_angles: list[float]) -> float:
     if r >= 1.0:
         r = 0.999
 
-    # Hyperbolic distance from origin
+    # Hyperbolic distance from origin (Poincare ball metric)
     d_hyp = 2 * np.arctanh(r)
 
-    # P-adic valuation contribution
+    # P-adic valuation contribution using core module
+    # Discretize angles into bins and compute combined index
     bins = 36
     indices = [int((normalize_angle(c) + np.pi) / (2 * np.pi) * bins) for c in valid_chi]
     combined = sum(idx * (bins ** i) for i, idx in enumerate(indices[:4]))
 
-    # Simple p-adic valuation (3-adic)
-    v_p = 0
-    if combined > 0:
-        n = combined + 1
-        while n % 3 == 0:
-            v_p += 1
-            n //= 3
+    # Use src.core.padic_math.padic_valuation (3-adic)
+    v_p = padic_valuation(combined + 1, p=3) if combined >= 0 else 0
 
     # Combined geometric score
     # Higher d_hyp = more unstable, higher v_p = more "structured" (stable)
