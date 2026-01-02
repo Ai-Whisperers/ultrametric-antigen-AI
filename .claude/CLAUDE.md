@@ -1,6 +1,6 @@
 # Ternary VAE Project - Claude Context
 
-**Doc-Type:** Project Configuration · Version 1.5 · Updated 2025-12-30 · AI Whisperers
+**Doc-Type:** Project Configuration · Version 1.6 · Updated 2026-01-02 · AI Whisperers
 
 ---
 
@@ -388,10 +388,45 @@ These 190+ usages are intentionally Euclidean:
 
 ---
 
+## Partner Packages (deliverables/partners/)
+
+Consolidated structure for CONACYT and stakeholder deliverables:
+
+| Partner | Focus | Scripts | Results | src.core Integration |
+|---------|-------|---------|---------|---------------------|
+| **jose_colbes** | Protein stability (DDG, Rosetta-blind) | C1-C4 | validation/, rosetta_blind/ | padic_math ✓ |
+| **carlos_brizuela** | AMP design (NSGA-II optimization) | B1, B8, B10 | pareto, microbiome, pathogen | VAE interface |
+| **alejandra_rojas** | Arbovirus (DENV, ZIKV primers) | A2, trajectory, scanner | pan_arbovirus_primers/ | padic_math ✓ |
+| **hiv_research_package** | Drug resistance, LA selection | H6, H7 | tdr_screening/, la_selection/ | Stanford HIVdb |
+
+---
+
+## Remaining Tasks (Next Dev Session)
+
+| Priority | Task | Category | Details |
+|:--------:|------|----------|---------|
+| **1** | Sync stakeholder-portfolio branch | Git | Cherry-pick/merge organized main to stakeholder-portfolio |
+| **2** | Create HIV deep dive document | Docs | Missing from DOCUMENTATION tier 3 (01, 02, 04 gap) |
+| **3** | Fix tier numbering | Docs | Renumber 04 → 03 or add missing 03_HIV_DEEP_DIVE.md |
+| **4** | V5.12.2 research script fixes | Code | ~40 files in src/research/ use Euclidean norm() |
+| **5** | Partner README updates | Docs | Add usage examples, benchmark results to each partner |
+| **6** | Stakeholder portfolio curation | Git | Remove dev artifacts from stakeholder-portfolio branch |
+| **7** | Publication figures organization | Assets | Move deliverables/results/figures/ to appropriate location |
+
+### Completed This Session (2026-01-02)
+
+- Consolidated all partner results to respective folders
+- Refactored Colbes scripts (C1, C4, scoring.py) → src.core.padic_math
+- Refactored Rojas scripts (trajectory, scanner) → src.core.padic_math
+- Pushed 4 commits to main: Colbes, Brizuela, Rojas, HIV consolidation
+
+---
+
 ## Version History
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-01-02 | 1.6 | Added Partner Packages table, Remaining Tasks section, session summary |
 | 2025-12-30 | 1.5 | V5.12.4 ImprovedEncoder/Decoder with SiLU, LayerNorm, Dropout, logvar clamping |
 | 2025-12-29 | 1.4 | V5.12.2 COMPLETE FIX LIST - all 75 files needing fixes documented |
 | 2025-12-29 | 1.3 | V5.12.2 audit COMPLETE - all core files fixed, deprecated geometry_utils.py |
