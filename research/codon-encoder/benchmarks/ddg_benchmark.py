@@ -266,6 +266,16 @@ class PadicEncoder:
             # Fallback to radius-based encoding
             self._use_radius_encoding()
 
+    def _hyperbolic_radius(self, x: np.ndarray) -> float:
+        """Compute hyperbolic distance from origin in Poincaré ball.
+
+        V5.12.2 FIX: Use proper hyperbolic geometry, not Euclidean norm.
+        Formula: d(0, x) = (2 / sqrt(c)) * arctanh(|x|)
+        """
+        euclidean_norm = np.linalg.norm(x)
+        euclidean_norm = np.clip(euclidean_norm, 0, 1 - 1e-7)
+        return (2.0 / math.sqrt(self.curvature)) * math.atanh(euclidean_norm)
+
     def _use_radius_encoding(self):
         """Use the radius levels from the p-adic analysis."""
         # From the analysis output
@@ -330,10 +340,10 @@ class PadicEncoder:
                                     self.aa_embeddings_full[aa] = mean_emb
                                     self.aa_embeddings[aa] = mean_emb[:2]
 
-                            # Compute radius levels
+                            # Compute radius levels (V5.12.2: hyperbolic distance)
                             self.radius_levels = {}
                             for aa, emb in self.aa_embeddings_full.items():
-                                self.radius_levels[aa] = np.linalg.norm(emb)
+                                self.radius_levels[aa] = self._hyperbolic_radius(emb)
 
                             print(f"  Loaded embeddings for {len(self.aa_embeddings)} amino acids")
                             print(f"  Embedding dimension: {len(next(iter(self.aa_embeddings_full.values())))}")
@@ -408,12 +418,16 @@ class PadicEncoder:
         e1 = self.aa_embeddings_full[aa1]
         e2 = self.aa_embeddings_full[aa2]
 
-        # Radial component (valuation difference)
-        radial = abs(np.linalg.norm(e1) - np.linalg.norm(e2))
+        # V5.12.2 FIX: Use hyperbolic radii for radial component
+        r1 = self._hyperbolic_radius(e1)
+        r2 = self._hyperbolic_radius(e2)
+        radial = abs(r1 - r2)
 
-        # Angular component (direction difference)
-        if np.linalg.norm(e1) > 0 and np.linalg.norm(e2) > 0:
-            cos_sim = np.dot(e1, e2) / (np.linalg.norm(e1) * np.linalg.norm(e2))
+        # Angular component (direction difference) - Euclidean is correct for cosine
+        e1_norm = np.linalg.norm(e1)
+        e2_norm = np.linalg.norm(e2)
+        if e1_norm > 0 and e2_norm > 0:
+            cos_sim = np.dot(e1, e2) / (e1_norm * e2_norm)
             angular = 1 - cos_sim  # 0 = same direction, 2 = opposite
         else:
             angular = 1.0

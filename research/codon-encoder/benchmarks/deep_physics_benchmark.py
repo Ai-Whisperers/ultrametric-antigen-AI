@@ -290,56 +290,14 @@ AA_NMR_ORDER = {
 
 
 def load_padic_data() -> Tuple[Dict[str, float], Dict[str, np.ndarray]]:
-    """Load p-adic radii and full embeddings."""
-    import torch
+    """Load p-adic radii and full embeddings.
 
-    mapping_path = GENETIC_CODE_DIR / "codon_mapping_3adic.json"
-    emb_path = GENETIC_CODE_DIR / "v5_11_3_embeddings.pt"
-
-    if not mapping_path.exists() or not emb_path.exists():
+    V5.12.2 FIX: Uses hyperbolic distance from origin, not Euclidean norm.
+    """
+    try:
+        return load_padic_embeddings()
+    except FileNotFoundError:
         return {}, {}
-
-    with open(mapping_path) as f:
-        mapping = json.load(f)
-
-    codon_to_pos = mapping['codon_to_position']
-    emb_data = torch.load(emb_path, map_location='cpu', weights_only=False)
-    z = emb_data['z_B_hyp'].numpy()
-
-    CODON_TO_AA = {
-        'TTT': 'F', 'TTC': 'F', 'TTA': 'L', 'TTG': 'L',
-        'TCT': 'S', 'TCC': 'S', 'TCA': 'S', 'TCG': 'S',
-        'TAT': 'Y', 'TAC': 'Y', 'TGT': 'C', 'TGC': 'C', 'TGG': 'W',
-        'CTT': 'L', 'CTC': 'L', 'CTA': 'L', 'CTG': 'L',
-        'CCT': 'P', 'CCC': 'P', 'CCA': 'P', 'CCG': 'P',
-        'CAT': 'H', 'CAC': 'H', 'CAA': 'Q', 'CAG': 'Q',
-        'CGT': 'R', 'CGC': 'R', 'CGA': 'R', 'CGG': 'R',
-        'ATT': 'I', 'ATC': 'I', 'ATA': 'I', 'ATG': 'M',
-        'ACT': 'T', 'ACC': 'T', 'ACA': 'T', 'ACG': 'T',
-        'AAT': 'N', 'AAC': 'N', 'AAA': 'K', 'AAG': 'K',
-        'AGT': 'S', 'AGC': 'S', 'AGA': 'R', 'AGG': 'R',
-        'GTT': 'V', 'GTC': 'V', 'GTA': 'V', 'GTG': 'V',
-        'GCT': 'A', 'GCC': 'A', 'GCA': 'A', 'GCG': 'A',
-        'GAT': 'D', 'GAC': 'D', 'GAA': 'E', 'GAG': 'E',
-        'GGT': 'G', 'GGC': 'G', 'GGA': 'G', 'GGG': 'G',
-    }
-
-    aa_embs = {}
-    for codon, pos in codon_to_pos.items():
-        aa = CODON_TO_AA.get(codon)
-        if aa:
-            if aa not in aa_embs:
-                aa_embs[aa] = []
-            aa_embs[aa].append(z[pos])
-
-    radii = {}
-    embeddings = {}
-    for aa in aa_embs:
-        mean_emb = np.mean(aa_embs[aa], axis=0)
-        radii[aa] = np.linalg.norm(mean_emb)
-        embeddings[aa] = mean_emb
-
-    return radii, embeddings
 
 
 # ============================================================================

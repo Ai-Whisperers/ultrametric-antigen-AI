@@ -89,8 +89,35 @@ AA_FORCE_CONSTANTS = {
 }
 
 
-def load_padic_embeddings():
-    """Load p-adic embeddings from trained VAE."""
+def poincare_distance_from_origin(x: "np.ndarray", c: float = 1.0) -> float:
+    """Compute hyperbolic distance from origin in Poincaré ball.
+
+    Formula: d(0, x) = (2 / sqrt(c)) * arctanh(|x|)
+
+    Args:
+        x: Point in Poincaré ball (numpy array)
+        c: Curvature parameter (default 1.0)
+
+    Returns:
+        Hyperbolic distance from origin
+    """
+    import numpy as np
+    euclidean_norm = np.linalg.norm(x)
+    # Clamp to avoid numerical issues at boundary
+    euclidean_norm = np.clip(euclidean_norm, 0, 1 - 1e-7)
+    return (2.0 / np.sqrt(c)) * np.arctanh(euclidean_norm)
+
+
+def load_padic_embeddings(curvature: float = 1.0):
+    """Load p-adic embeddings from trained VAE.
+
+    Args:
+        curvature: Poincaré ball curvature (default 1.0)
+
+    Returns:
+        Tuple of (radii dict, embeddings dict) where radii are
+        hyperbolic distances from origin (NOT Euclidean norms).
+    """
     import torch
     import json
     import numpy as np
@@ -115,11 +142,12 @@ def load_padic_embeddings():
             aa_embs[aa].append(z[pos])
 
     # Average embeddings per amino acid
+    # V5.12.2 FIX: Use hyperbolic distance, not Euclidean norm
     radii = {}
     embeddings = {}
     for aa in aa_embs:
         mean_emb = np.mean(aa_embs[aa], axis=0)
-        radii[aa] = np.linalg.norm(mean_emb)
+        radii[aa] = poincare_distance_from_origin(mean_emb, c=curvature)
         embeddings[aa] = mean_emb
 
     return radii, embeddings
