@@ -1,0 +1,114 @@
+{
+  "metadata": {
+    "timestamp": "2026-01-03 17:17:33",
+    "pipeline": "AlphaFold Structural Validation",
+    "version": "1.0",
+    "methodology": "Parallel independent streams, then cross-validation"
+  },
+  "overall": {
+    "n": 91,
+    "spearman": 0.214,
+    "spearman_p": 0.042,
+    "pearson": 0.07,
+    "pearson_p": 0.507,
+    "mae": 3.36
+  },
+  "by_regime": {
+    "hard_hybrid": {
+      "n": 0,
+      "spearman": null,
+      "pearson": null
+    },
+    "soft_hybrid": {
+      "n": 0,
+      "spearman": null,
+      "pearson": null
+    },
+    "uncertain": {
+      "n": 84,
+      "spearman": 0.226,
+      "spearman_p": 0.0385,
+      "pearson": 0.074,
+      "pearson_p": 0.5043,
+      "mae": 3.24
+    },
+    "soft_simple": {
+      "n": 1,
+      "spearman": null,
+      "pearson": null
+    },
+    "hard_simple": {
+      "n": 6,
+      "spearman": -0.203,
+      "spearman_p": 0.6998,
+      "pearson": -0.084,
+      "pearson_p": 0.875,
+      "mae": 4.87
+    }
+  },
+  "by_structure": {
+    "high_plddt": {
+      "n": 31,
+      "spearman": 0.271,
+      "spearman_p": 0.1407,
+      "pearson": -0.056,
+      "pearson_p": 0.7651,
+      "mae": 3.16
+    },
+    "medium_plddt": {
+      "n": 18,
+      "spearman": 0.283,
+      "spearman_p": 0.2553,
+      "pearson": 0.417,
+      "pearson_p": 0.0849,
+      "mae": 3.11
+    },
+    "low_plddt": {
+      "n": 42,
+      "spearman": 0.134,
+      "spearman_p": 0.3962,
+      "pearson": 0.015,
+      "pearson_p": 0.9244,
+      "mae": 3.61
+    }
+  },
+  "by_hydro": {
+    "high_hydro_diff": {
+      "n": 9,
+      "spearman": -0.35,
+      "spearman_p": 0.3558,
+      "pearson": -0.547,
+      "pearson_p": 0.1273,
+      "mae": 3.74
+    },
+    "low_hydro_diff": {
+      "n": 82,
+      "spearman": 0.26,
+      "spearman_p": 0.0181,
+      "pearson": 0.147,
+      "pearson_p": 0.1888,
+      "mae": 3.32
+    }
+  },
+  "discoveries_validation": {
+    "hydro_is_primary_predictor": {
+      "hypothesis": "High hydro_diff mutations should show stronger signal",
+      "high_hydro_spearman": -0.35,
+      "low_hydro_spearman": 0.26,
+      "confirmed": null
+    },
+    "regime_accuracy_matches": {
+      "hypothesis": "Hard regimes should outperform uncertain",
+      "hard_hybrid": null,
+      "hard_simple": -0.203,
+      "uncertain": 0.226,
+      "confirmed": null
+    },
+    "high_plddt_better": {
+      "hypothesis": "High confidence structures should validate better",
+      "high_plddt": 0.271,
+      "low_plddt": 0.134,
+      "confirmed": null
+    }
+  }
+}

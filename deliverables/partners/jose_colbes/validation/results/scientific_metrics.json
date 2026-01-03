@@ -1,0 +1,64 @@
+{
+  "loo_cv": {
+    "overall": {
+      "spearman": -0.016,
+      "ci_lower": -0.336,
+      "ci_upper": 0.309,
+      "se": 0.17,
+      "p_value": 0.9083,
+      "n_bootstrap": 1000,
+      "permutation_p": 0.889,
+      "mae": 1.47,
+      "rmse": 1.8,
+      "n": 52,
+      "pearson": 0.205,
+      "pearson_p": 0.1441
+    },
+    "by_hydro": {
+      "high_hydro_diff": {
+        "n": 0,
+        "threshold": ">1.5",
+        "spearman": null,
+        "ci_lower": null,
+        "ci_upper": null,
+        "p_value": null
+      },
+      "low_hydro_diff": {
+        "n": 52,
+        "threshold": "\u22641.5",
+        "spearman": -0.016,
+        "ci_lower": -0.333,
+        "ci_upper": 0.27,
+        "se": 0.165,
+        "p_value": 0.9083,
+        "n_bootstrap": 500
+      }
+    }
+  },
+  "alphafold": {
+    "high_plddt": {
+      "n": 31,
+      "spearman": 0.271,
+      "spearman_p": 0.1407,
+      "pearson": -0.056,
+      "pearson_p": 0.7651,
+      "mae": 3.16
+    },
+    "medium_plddt": {
+      "n": 18,
+      "spearman": 0.283,
+      "spearman_p": 0.2553,
+      "pearson": 0.417,
+      "pearson_p": 0.0849,
+      "mae": 3.11
+    },
+    "low_plddt": {
+      "n": 42,
+      "spearman": 0.134,
+      "spearman_p": 0.3962,
+      "pearson": 0.015,
+      "pearson_p": 0.9244,
+      "mae": 3.61
+    }
+  }
+}

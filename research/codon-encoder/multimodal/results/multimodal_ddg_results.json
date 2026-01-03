@@ -1,31 +1,35 @@
 {
   "metadata": {
     "version": "multimodal_v1",
-    "mode": "esm_only",
-    "timestamp": "2026-01-03T16:08:24.329199",
+    "mode": "combined",
+    "timestamp": "2026-01-03T17:21:17.229802",
     "validation": "Leave-One-Out (LOO)"
   },
   "results": {
-    "mode": "esm_only",
+    "mode": "combined",
     "n_samples": 52,
-    "n_features": 4,
-    "best_alpha": 10.0,
-    "loo_spearman": 0.4733571420204359,
-    "loo_spearman_p": 0.0003938959029925378,
-    "loo_pearson": 0.4574915466924197,
-    "loo_pearson_p": 0.0006499397743198283,
-    "loo_mae": 0.8620931134623055,
-    "loo_rmse": 1.2684525987158606,
-    "train_spearman": 0.6047701763760871,
-    "train_pearson": 0.5521232076722437,
-    "overfitting_ratio": 1.2776192069158172,
+    "n_features": 8,
+    "best_alpha": 100.0,
+    "loo_spearman": 0.6048905997163766,
+    "loo_spearman_p": 2.0380277001805827e-06,
+    "loo_pearson": 0.6243164600086988,
+    "loo_pearson_p": 7.584996913479067e-07,
+    "loo_mae": 0.8891976893635081,
+    "loo_rmse": 1.1733560008374375,
+    "train_spearman": 0.767994893975238,
+    "train_pearson": 0.7800374827725605,
+    "overfitting_ratio": 1.2696426334536168,
     "coefficients": [
-      0.17913865293385942,
-      -0.18039970659205457,
-      -0.32661973067489464,
-      0.17914105007512532
+      0.062174918944962215,
+      0.20908332558270035,
+      0.06096642565539236,
+      -0.051781228775544676,
+      -0.15624816101869407,
+      0.11588475356318031,
+      -0.19655770119589552,
+      0.17237883704409887
     ],
-    "intercept": 2.7019230769230766
+    "intercept": 2.701923076923077
   },
   "literature_comparison": {
     "Rosetta ddg_monomer": 0.69,
