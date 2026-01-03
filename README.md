@@ -1,5 +1,6 @@
 # Ternary VAE Bioinformatics
 
+[![Version](https://img.shields.io/badge/version-5.12.4-green.svg)](.claude/CLAUDE.md)
 [![License: PolyForm Non‑Commercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Non‑Commercial%201.0.0-lightgrey.svg)](LEGAL_AND_IP/LICENSE)
 [![License: CC‑BY‑4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](LEGAL_AND_IP/RESULTS_LICENSE.md)
 [![Open Medicine Policy](https://img.shields.io/badge/Open%20Medicine-Policy-blue.svg)](LEGAL_AND_IP/OPEN_MEDICINE_POLICY.md)
@@ -153,6 +154,33 @@ print(results["mdr_classification"])  # DS-TB, MDR-TB, pre-XDR-TB, or XDR-TB
 
 See [`src/diseases/README.md`](src/diseases/README.md) for full documentation.
 
+### 🧬 P-adic Codon Encoder Discoveries (NEW - 2026-01-03)
+
+**Physical ground truth validation of p-adic embeddings:**
+
+| Invariant | Finding | Correlation |
+|-----------|---------|-------------|
+| **Dim 13** | "Physics dimension" - encodes mass, volume, force constants | ρ = -0.695 |
+| **Radial structure** | Encodes amino acid mass | ρ = +0.760 |
+| **Force constant** | `k = radius × mass / 100` | **ρ = 0.860** |
+| **Vibrational freq** | `ω = √(k/m)` derivable from embeddings | ρ = 1.000 |
+
+**Key Results by Physics Level:**
+
+| Level | Property | P-adic Performance |
+|-------|----------|-------------------|
+| Level 1 | Mass, Volume | Encoded in radial + Dim 13 |
+| Level 2 | Hydrophobicity | Partially encoded |
+| Level 3 | Force constants | **Strong correlation (ρ=0.86)** |
+| Level 4 | B-factors (dynamics) | Not encoded (requires explicit dynamics) |
+
+**Benchmark Summary:**
+- **Thermodynamics (ΔΔG)**: Mass-based features achieve ρ=0.94
+- **Kinetics (folding rates)**: Property-based features achieve ρ=0.94
+- **DDG Predictor (v5.12.4)**: Spearman 0.58, Pearson 0.79, MAE 0.73
+
+See [`research/codon-encoder/`](research/codon-encoder/) for full analysis scripts and results.
+
 ### 🏗️ Architecture Improvements (NEW - 2025-12-28)
 
 **New capabilities added to the framework:**
@@ -196,6 +224,43 @@ outputs = model(x=seq_embed, structure=alphafold_coords, plddt=confidence)
 ```
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for full details on the architecture improvements.
+
+### 📦 Pretrained Checkpoints
+
+| Version | Checkpoint | Coverage | Hier_B | Q | Status |
+|---------|------------|----------|--------|---|--------|
+| **v5.12.4** | `v5_12_4/best_Q.pt` | 100% | -0.82 | 1.96 | **CURRENT** - FrozenEncoder from v5.5 |
+| **v5.11.8** | `v5_11_homeostasis` | 99.9% | -0.82 | - | Good hierarchy, moderate richness |
+| **homeostatic_rich** | `homeostatic_rich/best.pt` | 100% | -0.8321 | - | Ceiling hierarchy + high richness |
+| **v5.11.3** | `v5_11_structural` | 100% | -0.40 | - | Moderate hierarchy, good richness |
+
+**Checkpoint Location:** `sandbox-training/checkpoints/`
+
+**Key Metrics:**
+- **Coverage**: % of 19,683 ternary operations correctly reconstructed (target: 100%)
+- **Hier_B**: Spearman correlation between 3-adic valuation and radius (target: -0.83 to -1.0)
+- **Q**: Structure quality metric = `dist_corr + 1.5 × |hierarchy|`
+
+> ⚠️ **Warning**: Do not use `v5_11_overnight` - training collapsed during the run. See [`.claude/CLAUDE.md`](.claude/CLAUDE.md) for details.
+
+### 🔧 V5.12.2 Hyperbolic Geometry Audit (Complete)
+
+**Issue**: Many files incorrectly used Euclidean `.norm()` on hyperbolic Poincaré ball embeddings instead of `poincare_distance()`, causing incorrect radial hierarchy computation.
+
+**Fix Pattern:**
+```python
+# WRONG - Euclidean norm on hyperbolic embeddings
+radius = torch.norm(z_hyp, dim=-1)
+
+# CORRECT - Hyperbolic distance from origin
+from src.geometry import poincare_distance
+origin = torch.zeros_like(z_hyp)
+radius = poincare_distance(z_hyp, origin, c=curvature)
+```
+
+**Status**: All core files fixed. ~40 research scripts in `src/research/` pending (lowest priority).
+
+See [`docs/audits/v5.12.2-hyperbolic/`](docs/audits/v5.12.2-hyperbolic/) for full audit documentation.
 
 ---
 
