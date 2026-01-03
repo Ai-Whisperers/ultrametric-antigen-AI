@@ -4,6 +4,55 @@ All notable changes to the Ternary VAE Bioinformatics project.
 
 ---
 
+## [5.12.3] - 2026-01-03
+
+### Changed
+- **Dev Environment Unification** - Consolidated all tool configs to `pyproject.toml`
+  - Deleted duplicate configs: `ruff.toml`, `mypy.ini`, `pytest.ini`, `.coveragerc`, `.flake8`
+  - Single source of truth for ruff, mypy, pytest, coverage settings
+  - Updated `requirements.txt` to Python 3.10+ with synced dependencies
+  - Added `.playwright-mcp/` to `.gitignore`
+
+### Documentation
+- **Root Cleanup** - Organized markdown files
+  - Moved audit reports to `docs/audits/`
+  - Created `docs/audits/v5.12.2-hyperbolic/` for hyperbolic audit files
+  - Root now has only `README.md` and `CHANGELOG.md`
+
+### Status
+- Training in progress (results pending)
+
+---
+
+## [5.12.2] - 2025-12-30
+
+### Fixed
+- **Hyperbolic Audit Complete** - All core files fixed
+  - 258 `.norm()` calls reviewed, all verified correct or intentionally Euclidean
+  - Fixed 39 research scripts with incorrect Euclidean norm on hyperbolic embeddings
+  - Proper pattern: `poincare_distance(z_hyp, origin, c=curvature)` instead of `torch.norm(z_hyp)`
+
+### Deprecated
+- `src/core/geometry_utils.py` - Use `src.geometry` instead (geoopt-backed)
+
+### Documentation
+- Created comprehensive audit reports in `docs/audits/v5.12.2-hyperbolic/`
+
+---
+
+## [5.12.1] - 2025-12-29
+
+### Added
+- **Hyperbolic Audit Initiative** - Identified Euclidean/hyperbolic geometry misuse
+  - AST scanner script: `scripts/audit_hyperbolic_norms.py`
+  - Initial audit of 278 `.norm()` calls across codebase
+
+### Fixed
+- HIGH priority: `src/api/cli/train.py`, `src/encoders/holographic_encoder.py`, `src/losses/consequence_predictor.py`
+- MEDIUM priority: `src/analysis/crispr/embedder.py`, `src/analysis/evolution.py`, `src/geometry/holographic_poincare.py`
+
+---
+
 ## [5.12.0] - 2025-12-27
 
 ### Added - Advanced Modules (Production Ready)
