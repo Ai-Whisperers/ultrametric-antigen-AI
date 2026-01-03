@@ -472,6 +472,12 @@ These 190+ usages are intentionally Euclidean:
 
 ---
 
+## External APIs
+
+**AlphaFold API** - Field names changing, sunset **2026-06-25**. Use `modelEntityId` not `entryId`. See `research/alphafold3/docs/API_CHANGELOG.md`.
+
+---
+
 ## Partner Packages (deliverables/partners/)
 
 Consolidated structure for CONACYT and stakeholder deliverables:
