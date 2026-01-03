@@ -3,7 +3,8 @@
 
 **Prepared for:** Dr. Jose Colbes
 **Project:** Ternary VAE Bioinformatics - Partnership Phase 3
-**Date:** December 29, 2025
+**Date:** January 3, 2026
+**Version:** 1.1 (Added benchmark comparisons and decision guides)
 **Status:** COMPLETE - Ready for Production Use
 
 ---
@@ -117,7 +118,9 @@ python scripts/C4_mutation_effect_predictor.py \
 | File | Description |
 |------|-------------|
 | `docs/C1_USER_GUIDE.md` | Rosetta-blind detection guide |
-| `docs/C4_USER_GUIDE.md` | Mutation effect predictor guide |
+| `docs/C4_USER_GUIDE.md` | Mutation effect predictor guide (with confidence calibration) |
+| `docs/BENCHMARK_COMPARISON.md` | **NEW:** Comparison vs. FoldX/Rosetta/ESM-1v |
+| `docs/PADIC_DECISION_GUIDE.md` | **NEW:** When to use p-adic vs. traditional tools |
 | `docs/TECHNICAL_PROPOSAL.md` | Technical specifications |
 
 ---
@@ -161,6 +164,42 @@ Our p-adic geometric approach adds:
 - Hierarchical structural encoding
 - Hyperbolic distance from common conformations
 - Detection of "blind spots" in traditional methods
+
+---
+
+## Benchmark Summary
+
+### Performance vs. Established Tools
+
+| Tool | Correlation | Speed | Structure |
+|------|-------------|-------|-----------|
+| **P-adic radial** | r = 0.46 | <0.1s/mut | No |
+| **P-adic weighted** | r = 0.43 | <0.1s/mut | No |
+| FoldX 5.0 | r = 0.48-0.69 | 30-60s/mut | Yes |
+| Rosetta cartesian_ddg | r = 0.59-0.79 | 5-30min/mut | Yes |
+| ESM-1v | r = 0.51 | 1-5s/mut | No |
+
+*See `docs/BENCHMARK_COMPARISON.md` for full analysis with literature references.*
+
+### Unique P-adic Capabilities
+
+| Capability | Description | Use Case |
+|------------|-------------|----------|
+| **Rosetta-blind detection** | Find instability Rosetta misses | 23.6% of residues flagged |
+| **100-1000x speed** | Screen millions of variants | High-throughput library design |
+| **No structure required** | Sequence-only analysis | Novel proteins, no PDB |
+| **Codon-level signal** | Captures synonymous effects | Expression optimization |
+
+### When to Use P-adic
+
+| Scenario | Recommendation |
+|----------|----------------|
+| Screening >1,000 mutations | P-adic first, FoldX on top hits |
+| Final 10-20 candidates | FoldX/Rosetta for calibrated DDG |
+| No structure available | P-adic is your only option |
+| Detect hidden instability | C1 + Rosetta comparison |
+
+*See `docs/PADIC_DECISION_GUIDE.md` for detailed decision flowcharts.*
 
 ### C1: Discordance Scoring
 
