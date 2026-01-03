@@ -1,0 +1,75 @@
+{
+  "metadata": {
+    "checkpoint": "v5_12_3",
+    "latent_dim": 16,
+    "n_codons": 64,
+    "source": "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\codon-encoder\\extraction\\results\\codon_embeddings_v5_12_3.json"
+  },
+  "groupoid_analysis": {
+    "n_objects": 20,
+    "n_morphisms": 62,
+    "n_components": 1,
+    "is_connected": true,
+    "n_maximal": 11,
+    "n_minimal": 1,
+    "maximal_indices": [
+      0,
+      1,
+      2,
+      3,
+      6,
+      8,
+      9,
+      12,
+      15,
+      16,
+      19
+    ],
+    "minimal_indices": [
+      11
+    ],
+    "mean_valuation": 2.65,
+    "mean_redundancy": 3.05,
+    "mean_symmetry": 0.5,
+    "mean_morphism_cost": 0
+  },
+  "escape_paths": [
+    {
+      "source": "L",
+      "target": "I",
+      "path_exists": false,
+      "reason": "No valid morphism chain exists"
+    },
+    {
+      "source": "L",
+      "target": "M",
+      "path_exists": false,
+      "reason": "No valid morphism chain exists"
+    },
+    {
+      "source": "K",
+      "target": "R",
+      "path_exists": false,
+      "reason": "No valid morphism chain exists"
+    },
+    {
+      "source": "D",
+      "target": "E",
+      "path_exists": false,
+      "reason": "No valid morphism chain exists"
+    },
+    {
+      "source": "L",
+      "target": "D",
+      "path_exists": false,
+      "reason": "No valid morphism chain exists"
+    }
+  ],
+  "substitution_validation": {
+    "conservative_matches": 1,
+    "conservative_misses": 9,
+    "radical_prevented": 2,
+    "radical_allowed": 2,
+    "accuracy": 0.21428571428571427
+  }
+}

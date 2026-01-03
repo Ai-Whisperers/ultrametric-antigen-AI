@@ -105,6 +105,9 @@ See [`results/clinical_applications/CLINICAL_REPORT.md`](results/clinical_applic
 - **Attention analysis**: 65-70% F1 match with known resistance mutations
 - **Cross-resistance modeling**: Captures TAM cross-resistance (AZT-D4T: +0.97) and M184V resensitization
 
+**Validation Datasets:**
+- [DDG EMB Datasets](https://ddgemb.biocomp.unibo.it/datasets/) - Curated ΔΔG benchmark datasets for thermostability prediction validation
+
 **Quick Start:**
 ```bash
 # Run full validation across 23 drugs
@@ -290,4 +293,4 @@ For general questions, open an issue. For commercial licensing inquiries, email 
 
 ---
 
-_Last updated: 2025-12-28_
+_Last updated: 2026-01-03_
