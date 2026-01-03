@@ -22,7 +22,10 @@ import sys
 
 # Add parent to path for config import
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from config import GENETIC_CODE_DIR, ANALYSIS_RESULTS_DIR, CODON_TO_AA, load_padic_embeddings
+from config import (
+    GENETIC_CODE_DIR, ANALYSIS_RESULTS_DIR, CODON_TO_AA,
+    load_padic_embeddings, poincare_distance_from_origin
+)
 
 # Paths
 RESULTS_DIR = ANALYSIS_RESULTS_DIR / "dynamics_predictor"
@@ -113,42 +116,15 @@ class PadicDynamicsPredictor:
     def __init__(self, embeddings: Optional[Dict[str, np.ndarray]] = None):
         """Initialize with p-adic embeddings."""
         if embeddings is None:
-            embeddings = self._load_padic_embeddings()
+            # V5.12.2 FIX: Use centralized config.load_padic_embeddings()
+            # which correctly computes hyperbolic distances
+            _, embeddings = load_padic_embeddings()
         self.embeddings = embeddings
         self.aa_dynamics: Dict[str, AminoAcidDynamics] = {}
 
-    def _load_padic_embeddings(self) -> Dict[str, np.ndarray]:
-        """Load p-adic embeddings from the trained 3-adic VAE."""
-        mapping_path = GENETIC_CODE_DIR / "codon_mapping_3adic.json"
-        emb_path = GENETIC_CODE_DIR / "v5_11_3_embeddings.pt"
-
-        if not mapping_path.exists() or not emb_path.exists():
-            print(f"ERROR: Missing embedding files at {GENETIC_CODE_DIR}")
-            return {}
-
-        with open(mapping_path) as f:
-            mapping = json.load(f)
-
-        codon_to_pos = mapping['codon_to_position']
-        emb_data = torch.load(emb_path, map_location='cpu', weights_only=False)
-        z = emb_data['z_B_hyp'].numpy()
-
-        # Group by amino acid
-        aa_embs = {}
-        for codon, pos in codon_to_pos.items():
-            aa = self.CODON_TO_AA.get(codon)
-            if aa:
-                if aa not in aa_embs:
-                    aa_embs[aa] = []
-                aa_embs[aa].append(z[pos])
-
-        # Average embeddings per amino acid
-        embeddings = {}
-        for aa in aa_embs:
-            mean_emb = np.mean(aa_embs[aa], axis=0)
-            embeddings[aa] = mean_emb
-
-        return embeddings
+    # V5.12.2 FIX: Removed duplicate _load_padic_embeddings method.
+    # Now uses config.load_padic_embeddings() which computes hyperbolic
+    # distance from origin instead of Euclidean norm.
 
     def compute_dynamics(self) -> Dict[str, AminoAcidDynamics]:
         """Compute full dynamics profile for all amino acids."""
@@ -162,7 +138,8 @@ class PadicDynamicsPredictor:
             k_exp = data['k_exp']
 
             # Radius from embedding
-            radius = np.linalg.norm(emb)
+            # V5.12.2 FIX: Use hyperbolic distance from origin, not Euclidean norm
+            radius = poincare_distance_from_origin(emb)
 
             # Dimension 13 value (physics dimension)
             dim13 = emb[13] if len(emb) > 13 else 0.0

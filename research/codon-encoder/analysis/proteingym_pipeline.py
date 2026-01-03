@@ -31,7 +31,8 @@ warnings.filterwarnings('ignore')
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from config import (
     GENETIC_CODE_DIR, ANALYSIS_RESULTS_DIR, CODON_TO_AA,
-    AA_PROPERTIES, AA_FORCE_CONSTANTS, load_padic_embeddings
+    AA_PROPERTIES, AA_FORCE_CONSTANTS, load_padic_embeddings,
+    poincare_distance_from_origin
 )
 
 # Local paths
@@ -82,58 +83,10 @@ AA_FORCE_CONSTANTS = {
 # ============================================================================
 
 
-def load_padic_embeddings() -> Tuple[Dict[str, float], Dict[str, np.ndarray]]:
-    """Load p-adic radii and full embeddings."""
-    import torch
-
-    mapping_path = GENETIC_CODE_DIR / "codon_mapping_3adic.json"
-    emb_path = GENETIC_CODE_DIR / "v5_11_3_embeddings.pt"
-
-    if not mapping_path.exists() or not emb_path.exists():
-        print(f"ERROR: Missing embedding files at {GENETIC_CODE_DIR}")
-        return {}, {}
-
-    with open(mapping_path) as f:
-        mapping = json.load(f)
-
-    codon_to_pos = mapping['codon_to_position']
-    emb_data = torch.load(emb_path, map_location='cpu', weights_only=False)
-    z = emb_data['z_B_hyp'].numpy()
-
-    CODON_TO_AA = {
-        'TTT': 'F', 'TTC': 'F', 'TTA': 'L', 'TTG': 'L',
-        'TCT': 'S', 'TCC': 'S', 'TCA': 'S', 'TCG': 'S',
-        'TAT': 'Y', 'TAC': 'Y', 'TGT': 'C', 'TGC': 'C', 'TGG': 'W',
-        'CTT': 'L', 'CTC': 'L', 'CTA': 'L', 'CTG': 'L',
-        'CCT': 'P', 'CCC': 'P', 'CCA': 'P', 'CCG': 'P',
-        'CAT': 'H', 'CAC': 'H', 'CAA': 'Q', 'CAG': 'Q',
-        'CGT': 'R', 'CGC': 'R', 'CGA': 'R', 'CGG': 'R',
-        'ATT': 'I', 'ATC': 'I', 'ATA': 'I', 'ATG': 'M',
-        'ACT': 'T', 'ACC': 'T', 'ACA': 'T', 'ACG': 'T',
-        'AAT': 'N', 'AAC': 'N', 'AAA': 'K', 'AAG': 'K',
-        'AGT': 'S', 'AGC': 'S', 'AGA': 'R', 'AGG': 'R',
-        'GTT': 'V', 'GTC': 'V', 'GTA': 'V', 'GTG': 'V',
-        'GCT': 'A', 'GCC': 'A', 'GCA': 'A', 'GCG': 'A',
-        'GAT': 'D', 'GAC': 'D', 'GAA': 'E', 'GAG': 'E',
-        'GGT': 'G', 'GGC': 'G', 'GGA': 'G', 'GGG': 'G',
-    }
-
-    aa_embs = {}
-    for codon, pos in codon_to_pos.items():
-        aa = CODON_TO_AA.get(codon)
-        if aa:
-            if aa not in aa_embs:
-                aa_embs[aa] = []
-            aa_embs[aa].append(z[pos])
-
-    radii = {}
-    embeddings = {}
-    for aa in aa_embs:
-        mean_emb = np.mean(aa_embs[aa], axis=0)
-        radii[aa] = np.linalg.norm(mean_emb)
-        embeddings[aa] = mean_emb
-
-    return radii, embeddings
+# V5.12.2 FIX: Removed duplicate load_padic_embeddings function.
+# Now uses the corrected version from config.py which computes
+# hyperbolic distance from origin instead of Euclidean norm.
+# Import is already at line 34: from config import ... load_padic_embeddings
 
 
 # ============================================================================
@@ -225,7 +178,8 @@ def find_geometric_invariants(embeddings: Dict[str, np.ndarray]) -> Dict:
     results = {}
 
     # 1. Radial structure (already known: mass correlation)
-    radii = np.linalg.norm(emb_matrix, axis=1)
+    # V5.12.2 FIX: Use hyperbolic distance from origin, not Euclidean norm
+    radii = np.array([poincare_distance_from_origin(emb) for emb in emb_matrix])
     masses = [AA_PROPERTIES[aa]['mass'] for aa in aa_list]
     r_mass, p_mass = stats.spearmanr(radii, masses)
     print(f"\n1. RADIAL STRUCTURE")
@@ -267,7 +221,15 @@ def find_geometric_invariants(embeddings: Dict[str, np.ndarray]) -> Dict:
 
     charged_center = charged_embs.mean(axis=0)
     neutral_center = neutral_embs.mean(axis=0)
-    charge_separation = np.linalg.norm(charged_center - neutral_center)
+    # V5.12.2 FIX: Use hyperbolic distance between centroids
+    # For centroid-to-centroid distance, we compute poincare distance
+    from src.geometry import poincare_distance
+    import torch
+    charge_separation = poincare_distance(
+        torch.tensor(charged_center).unsqueeze(0),
+        torch.tensor(neutral_center).unsqueeze(0),
+        c=1.0
+    ).item()
 
     print(f"   Charged vs Neutral separation: {charge_separation:.4f}")
     results['charge_separation'] = float(charge_separation)
@@ -281,7 +243,12 @@ def find_geometric_invariants(embeddings: Dict[str, np.ndarray]) -> Dict:
 
     hydro_center = hydrophobic_embs.mean(axis=0)
     philic_center = hydrophilic_embs.mean(axis=0)
-    hydro_separation = np.linalg.norm(hydro_center - philic_center)
+    # V5.12.2 FIX: Use hyperbolic distance between centroids
+    hydro_separation = poincare_distance(
+        torch.tensor(hydro_center).unsqueeze(0),
+        torch.tensor(philic_center).unsqueeze(0),
+        c=1.0
+    ).item()
 
     print(f"   Hydrophobic vs Hydrophilic separation: {hydro_separation:.4f}")
     results['hydropathy_separation'] = float(hydro_separation)
@@ -355,7 +322,8 @@ def build_dynamics_features(embeddings: Dict[str, np.ndarray]) -> Dict:
         diffusion = 1 / np.sqrt(mass)  # Diffusion proxy
 
         # P-adic derived features
-        radius = np.linalg.norm(emb)
+        # V5.12.2 FIX: Use hyperbolic distance from origin, not Euclidean norm
+        radius = poincare_distance_from_origin(emb)
         # Predicted force constant from embedding (hypothesis: k ∝ r × m)
         k_predicted = radius * mass / 100
 

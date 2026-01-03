@@ -30,7 +30,10 @@ warnings.filterwarnings('ignore')
 
 # Add parent to path for config import
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from config import GENETIC_CODE_DIR, PIPELINE_RESULTS_DIR, CODON_TO_AA, load_padic_embeddings
+from config import (
+    GENETIC_CODE_DIR, PIPELINE_RESULTS_DIR, CODON_TO_AA,
+    load_padic_embeddings, poincare_distance_from_origin
+)
 
 # ============================================================================
 # CONFIGURATION
@@ -312,61 +315,19 @@ AA_LIST = list(AA_PROPERTIES.keys())
 # ============================================================================
 
 
-def load_padic_embeddings() -> Tuple[Dict[str, np.ndarray], Dict[str, float]]:
-    """Load p-adic embeddings for amino acids."""
-    import torch
+# V5.12.2 FIX: Removed duplicate load_padic_embeddings function.
+# Now uses the corrected version from config.py which computes
+# hyperbolic distance from origin instead of Euclidean norm.
+#
+# The config.load_padic_embeddings() returns (radii_dict, embeddings_dict),
+# so we need a wrapper to match the expected interface.
 
-    # Load codon mapping
-    mapping_path = GENETIC_CODE_DIR / "codon_mapping_3adic.json"
-    emb_path = GENETIC_CODE_DIR / "v5_11_3_embeddings.pt"
-
-    if not mapping_path.exists() or not emb_path.exists():
-        print("Warning: Could not load trained embeddings")
-        return {}, {}
-
-    with open(mapping_path) as f:
-        mapping = json.load(f)
-
-    codon_to_pos = mapping['codon_to_position']
-
-    emb_data = torch.load(emb_path, map_location='cpu', weights_only=False)
-    z = emb_data['z_B_hyp'].numpy()  # VAE-B for hierarchy
-
-    # Genetic code
-    CODON_TO_AA = {
-        'TTT': 'F', 'TTC': 'F', 'TTA': 'L', 'TTG': 'L',
-        'TCT': 'S', 'TCC': 'S', 'TCA': 'S', 'TCG': 'S',
-        'TAT': 'Y', 'TAC': 'Y',
-        'TGT': 'C', 'TGC': 'C', 'TGG': 'W',
-        'CTT': 'L', 'CTC': 'L', 'CTA': 'L', 'CTG': 'L',
-        'CCT': 'P', 'CCC': 'P', 'CCA': 'P', 'CCG': 'P',
-        'CAT': 'H', 'CAC': 'H', 'CAA': 'Q', 'CAG': 'Q',
-        'CGT': 'R', 'CGC': 'R', 'CGA': 'R', 'CGG': 'R',
-        'ATT': 'I', 'ATC': 'I', 'ATA': 'I', 'ATG': 'M',
-        'ACT': 'T', 'ACC': 'T', 'ACA': 'T', 'ACG': 'T',
-        'AAT': 'N', 'AAC': 'N', 'AAA': 'K', 'AAG': 'K',
-        'AGT': 'S', 'AGC': 'S', 'AGA': 'R', 'AGG': 'R',
-        'GTT': 'V', 'GTC': 'V', 'GTA': 'V', 'GTG': 'V',
-        'GCT': 'A', 'GCC': 'A', 'GCA': 'A', 'GCG': 'A',
-        'GAT': 'D', 'GAC': 'D', 'GAA': 'E', 'GAG': 'E',
-        'GGT': 'G', 'GGC': 'G', 'GGA': 'G', 'GGG': 'G',
-    }
-
-    # Average over synonymous codons
-    aa_embs = {}
-    for codon, pos in codon_to_pos.items():
-        aa = CODON_TO_AA.get(codon)
-        if aa:
-            if aa not in aa_embs:
-                aa_embs[aa] = []
-            aa_embs[aa].append(z[pos])
-
-    embeddings = {}
-    radii = {}
-    for aa in aa_embs:
-        embeddings[aa] = np.mean(aa_embs[aa], axis=0)
-        radii[aa] = np.linalg.norm(embeddings[aa])
-
+def _load_padic_embeddings_wrapper() -> Tuple[Dict[str, np.ndarray], Dict[str, float]]:
+    """
+    Wrapper to load p-adic embeddings using config's corrected implementation.
+    Returns (embeddings, radii) for backwards compatibility.
+    """
+    radii, embeddings = load_padic_embeddings()
     return embeddings, radii
 
 
@@ -422,7 +383,8 @@ def predict_ptm_embedding(ptm: PTM, aa_embeddings: Dict[str, np.ndarray],
 
         # Predicted embedding: interpolate
         pred_emb = (1 - weight) * base_emb + weight * match_emb
-        pred_radius = np.linalg.norm(pred_emb)
+        # V5.12.2 FIX: Use hyperbolic distance from origin, not Euclidean norm
+        pred_radius = poincare_distance_from_origin(pred_emb)
 
         return pred_emb, pred_radius
 
@@ -615,7 +577,7 @@ def main():
 
     # Load p-adic embeddings
     print("\n1. Loading p-adic embeddings...")
-    aa_embeddings, aa_radii = load_padic_embeddings()
+    aa_embeddings, aa_radii = _load_padic_embeddings_wrapper()
 
     if not aa_radii:
         print("ERROR: Could not load embeddings")
