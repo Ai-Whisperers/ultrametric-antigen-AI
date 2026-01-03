@@ -288,7 +288,40 @@ See [`docs/audits/v5.12.2-hyperbolic/`](docs/audits/v5.12.2-hyperbolic/) for ful
 
 ## 🛠️ Installation & Development
 
-The project uses a standard Python stack. For development, we recommend the following tools:
+### Requirements
+
+| Component | Minimum | Recommended |
+|-----------|---------|-------------|
+| **Python** | 3.10 | 3.11+ |
+| **PyTorch** | 2.0.0 | 2.1+ |
+| **CUDA** | Optional | 11.8+ (for GPU training) |
+| **RAM** | 8GB | 16GB+ |
+| **VRAM** | 4GB | 6GB+ (for full batch training) |
+
+**Core Dependencies:** `torch`, `numpy`, `scipy`, `geoopt` (hyperbolic geometry), `scikit-learn`, `pandas`
+
+**Optional Extras:**
+```bash
+pip install -e ".[viz]"      # matplotlib, seaborn, plotly, tensorboard
+pip install -e ".[bio]"      # biopython, pyarrow
+pip install -e ".[dev]"      # pytest, ruff, mypy, pre-commit
+pip install -e ".[all]"      # Everything
+```
+
+### Training Hardware Reference
+
+All v5.12.x checkpoints were trained on this consumer-grade setup:
+
+| Component | Specification |
+|-----------|---------------|
+| **CPU** | AMD Ryzen 5 4500 (6-core, 3.6GHz) |
+| **RAM** | 16GB DDR4 |
+| **GPU** | NVIDIA RTX 3050 (6GB VRAM, GDDR6) |
+| **OS** | Windows 11 / WSL2 |
+
+> Training time: ~2-4 hours for full 19,683 operation coverage with v5.12.4 architecture.
+
+### Development Tools
 
 - **ruff** – fast Python linter/formatter (configured in `pyproject.toml`).
 - **pytest** – test suite (`tests/`).
