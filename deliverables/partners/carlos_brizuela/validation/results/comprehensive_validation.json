@@ -1,0 +1,236 @@
+{
+  "metadata": {
+    "validation_type": "comprehensive",
+    "n_permutations": 50,
+    "timestamp": "2026-01-03T22:05:17"
+  },
+  "models": [
+    {
+      "model_name": "activity_general",
+      "target": "all",
+      "gram_type": "mixed",
+      "n_samples": 224,
+      "n_unique_sequences": 155,
+      "cv_method": "5-fold",
+      "pearson_r": 0.5387274631518584,
+      "pearson_p": 2.92771175665844e-18,
+      "spearman_r": 0.5407853716995883,
+      "spearman_p": 2.0596837846217294e-18,
+      "rmse": 0.4117968004591515,
+      "mae": 0.3257113355266135,
+      "permutation_p": 0.0196078431372549,
+      "permutation_score": -0.1696485612049274,
+      "n_permutations": 50,
+      "top_features": [
+        {
+          "feature": "length",
+          "importance": 0.12397734760769889
+        },
+        {
+          "feature": "aac_T",
+          "importance": 0.12250728586065646
+        },
+        {
+          "feature": "aac_S",
+          "importance": 0.1048599653912391
+        },
+        {
+          "feature": "charge",
+          "importance": 0.07033877503495432
+        },
+        {
+          "feature": "aac_I",
+          "importance": 0.06899993764681904
+        }
+      ],
+      "primary_predictor": "length",
+      "biological_notes": "Mixed pathogens: heterogeneous mechanisms.",
+      "is_significant": true,
+      "confidence_level": "high",
+      "recommendation": "Model suitable for predictions with uncertainty estimates"
+    },
+    {
+      "model_name": "activity_staphylococcus",
+      "target": "staphylococcus",
+      "gram_type": "positive",
+      "n_samples": 72,
+      "n_unique_sequences": 70,
+      "cv_method": "5-fold",
+      "pearson_r": 0.03612528464178509,
+      "pearson_p": 0.7632110744185511,
+      "spearman_r": 0.036304528166558034,
+      "spearman_p": 0.7620708170193599,
+      "rmse": 0.5038643653865608,
+      "mae": 0.35861454657904607,
+      "permutation_p": 0.17647058823529413,
+      "permutation_score": -0.2549236705202572,
+      "n_permutations": 50,
+      "top_features": [
+        {
+          "feature": "aac_T",
+          "importance": 0.2394119780503285
+        },
+        {
+          "feature": "polar_fraction",
+          "importance": 0.09129698754892537
+        },
+        {
+          "feature": "aac_I",
+          "importance": 0.08423055771638083
+        },
+        {
+          "feature": "aac_L",
+          "importance": 0.0546349615414966
+        },
+        {
+          "feature": "volume",
+          "importance": 0.052387798162972996
+        }
+      ],
+      "primary_predictor": "aac_T",
+      "biological_notes": "Gram-positive: thick peptidoglycan, no outer membrane. Charge-based features less predictive.",
+      "is_significant": false,
+      "confidence_level": "low",
+      "recommendation": "Model not predictive. Use heuristic or general model."
+    },
+    {
+      "model_name": "activity_pseudomonas",
+      "target": "pseudomonas",
+      "gram_type": "negative",
+      "n_samples": 27,
+      "n_unique_sequences": 27,
+      "cv_method": "LOO",
+      "pearson_r": 0.19566995049885932,
+      "pearson_p": 0.3280156212971948,
+      "spearman_r": 0.08486398972441526,
+      "spearman_p": 0.6738566294259829,
+      "rmse": 0.46502089855413703,
+      "mae": 0.36483897121925707,
+      "permutation_p": 0.21568627450980393,
+      "permutation_score": -0.216244436092097,
+      "n_permutations": 50,
+      "top_features": [
+        {
+          "feature": "charge",
+          "importance": 0.1407971689509623
+        },
+        {
+          "feature": "length",
+          "importance": 0.105752709235033
+        },
+        {
+          "feature": "aac_I",
+          "importance": 0.07610103838732765
+        },
+        {
+          "feature": "aac_H",
+          "importance": 0.07484735408010547
+        },
+        {
+          "feature": "positive_fraction",
+          "importance": 0.06474236483086643
+        }
+      ],
+      "primary_predictor": "charge",
+      "biological_notes": "Gram-negative: LPS outer membrane. Cationic AMPs more effective.",
+      "is_significant": false,
+      "confidence_level": "low",
+      "recommendation": "Insufficient data (n=27). Use general model instead."
+    },
+    {
+      "model_name": "activity_escherichia",
+      "target": "escherichia",
+      "gram_type": "negative",
+      "n_samples": 105,
+      "n_unique_sequences": 102,
+      "cv_method": "5-fold",
+      "pearson_r": 0.46808007787672345,
+      "pearson_p": 4.77706451319376e-07,
+      "spearman_r": 0.45131858675052755,
+      "spearman_p": 1.3516083498716393e-06,
+      "rmse": 0.4327753120695777,
+      "mae": 0.33622686333145907,
+      "permutation_p": 0.0196078431372549,
+      "permutation_score": -0.18729447073692035,
+      "n_permutations": 50,
+      "top_features": [
+        {
+          "feature": "charge",
+          "importance": 0.13629525861131112
+        },
+        {
+          "feature": "length",
+          "importance": 0.10936864671574258
+        },
+        {
+          "feature": "positive_fraction",
+          "importance": 0.08832084388157467
+        },
+        {
+          "feature": "aac_S",
+          "importance": 0.0753917461925684
+        },
+        {
+          "feature": "polar_fraction",
+          "importance": 0.04165076220644145
+        }
+      ],
+      "primary_predictor": "charge",
+      "biological_notes": "Gram-negative: LPS outer membrane. Cationic AMPs more effective.",
+      "is_significant": true,
+      "confidence_level": "high",
+      "recommendation": "Model suitable for predictions with uncertainty estimates"
+    },
+    {
+      "model_name": "activity_acinetobacter",
+      "target": "acinetobacter",
+      "gram_type": "negative",
+      "n_samples": 20,
+      "n_unique_sequences": 20,
+      "cv_method": "LOO",
+      "pearson_r": 0.5930272987988473,
+      "pearson_p": 0.005853336470420623,
+      "spearman_r": 0.47264772115345643,
+      "spearman_p": 0.03533552203615996,
+      "rmse": 0.3104432332352349,
+      "mae": 0.24788465995609102,
+      "permutation_p": 0.0196078431372549,
+      "permutation_score": -0.09637500106154648,
+      "n_permutations": 50,
+      "top_features": [
+        {
+          "feature": "polar_fraction",
+          "importance": 0.2793396597632033
+        },
+        {
+          "feature": "aac_I",
+          "importance": 0.17524526683196262
+        },
+        {
+          "feature": "aac_K",
+          "importance": 0.06215078958800647
+        },
+        {
+          "feature": "aac_T",
+          "importance": 0.05627675500417373
+        },
+        {
+          "feature": "aromatic_fraction",
+          "importance": 0.054342297247406385
+        }
+      ],
+      "primary_predictor": "polar_fraction",
+      "biological_notes": "Gram-negative: LPS outer membrane. Cationic AMPs more effective.",
+      "is_significant": true,
+      "confidence_level": "high",
+      "recommendation": "Model suitable for predictions with uncertainty estimates"
+    }
+  ],
+  "summary": {
+    "total_models": 5,
+    "high_confidence": 3,
+    "moderate_confidence": 0,
+    "low_confidence": 2,
+    "significant_models": 3
+  }
+}
