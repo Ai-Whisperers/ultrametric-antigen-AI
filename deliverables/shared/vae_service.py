@@ -164,8 +164,11 @@ class VAEService:
                 z = z.unsqueeze(0)
             z = z.to(self.device)
 
-            # Decode through VAE
-            logits = self.model.decoder(z)  # (batch, 9, 3)
+            # Decode through VAE (use decoder_A for coverage/reconstruction)
+            # TernaryVAEV5_11_PartialFreeze has dual decoders:
+            # - decoder_A: coverage-focused (used for reconstruction)
+            # - decoder_B: hierarchy-focused (used for p-adic ordering)
+            logits = self.model.decoder_A(z)  # (batch, 9, 3)
             ternary_ops = torch.argmax(logits, dim=-1) - 1  # {0,1,2} -> {-1,0,1}
             ternary_ops = ternary_ops.cpu().numpy()
 

@@ -39,8 +39,9 @@ import numpy as np
 import sys
 
 # Add shared module to path
+# scripts/ -> carlos_brizuela/ -> partners/ -> deliverables/
 _script_dir = Path(__file__).parent
-_deliverables_dir = _script_dir.parent.parent
+_deliverables_dir = _script_dir.parent.parent.parent
 sys.path.insert(0, str(_deliverables_dir))
 
 # Import shared utilities

@@ -1,0 +1,110 @@
+{
+  "metadata": {
+    "n_bootstrap": 100,
+    "validation_type": "bootstrap_cross_validation",
+    "timestamp": "2026-01-03T21:35:01"
+  },
+  "models": [
+    {
+      "name": "activity_acinetobacter",
+      "n_samples": 20,
+      "pearson_r": 0.5205390243615718,
+      "pearson_p": 0.018619655978968076,
+      "pearson_ci": [
+        0.10972433259501038,
+        0.7844901108104393
+      ],
+      "spearman_r": 0.5511584348265702,
+      "spearman_p": 0.01177470143261032,
+      "rmse": 0.33589274185358076,
+      "rmse_ci": [
+        0.20947494983694911,
+        0.445282944529577
+      ],
+      "random_baseline": 0.19370129870129874,
+      "improvement_over_random": 0.32683772566027314
+    },
+    {
+      "name": "activity_escherichia",
+      "n_samples": 105,
+      "pearson_r": 0.3891701205363208,
+      "pearson_p": 4.0775938843036396e-05,
+      "pearson_ci": [
+        0.2090918906018547,
+        0.5459346216470866
+      ],
+      "spearman_r": 0.37865433416324595,
+      "spearman_p": 6.805870393962807e-05,
+      "rmse": 0.4693257395037392,
+      "rmse_ci": [
+        0.4003862259143667,
+        0.5333768838293124
+      ],
+      "random_baseline": 0.06959953302312473,
+      "improvement_over_random": 0.31957058751319606
+    },
+    {
+      "name": "activity_general",
+      "n_samples": 224,
+      "pearson_r": 0.30962486532326383,
+      "pearson_p": 2.3041549012568395e-06,
+      "pearson_ci": [
+        0.18127067739582312,
+        0.4581744633278531
+      ],
+      "spearman_r": 0.3416294904264026,
+      "spearman_p": 1.5795645118727627e-07,
+      "rmse": 0.4825131206938525,
+      "rmse_ci": [
+        0.43088841025170255,
+        0.5392634750573381
+      ],
+      "random_baseline": 0.05656312757297078,
+      "improvement_over_random": 0.25306173775029306
+    },
+    {
+      "name": "activity_pseudomonas",
+      "n_samples": 27,
+      "pearson_r": 0.04630314303351579,
+      "pearson_p": 0.8186076791799575,
+      "pearson_ci": [
+        -0.4242264030397198,
+        0.4237072727189531
+      ],
+      "spearman_r": -0.049387622096035595,
+      "spearman_p": 0.8067417933102244,
+      "rmse": 0.5357910213150443,
+      "rmse_ci": [
+        0.4182899193212938,
+        0.704610130510269
+      ],
+      "random_baseline": 0.15624799831341726,
+      "improvement_over_random": -0.10994485527990147
+    },
+    {
+      "name": "activity_staphylococcus",
+      "n_samples": 72,
+      "pearson_r": 0.17215432184650153,
+      "pearson_p": 0.14816801265754845,
+      "pearson_ci": [
+        -0.1401011760144008,
+        0.46586883094773834
+      ],
+      "spearman_r": 0.12548881930512978,
+      "spearman_p": 0.29356593584395096,
+      "rmse": 0.5378947053690355,
+      "rmse_ci": [
+        0.4265210330921901,
+        0.6681192071401475
+      ],
+      "random_baseline": 0.08589184112198658,
+      "improvement_over_random": 0.08626248072451495
+    }
+  ],
+  "summary": {
+    "total_models": 5,
+    "significant_models": 3,
+    "mean_pearson_r": 0.2875582950202348,
+    "mean_rmse": 0.47228346574705043
+  }
+}
