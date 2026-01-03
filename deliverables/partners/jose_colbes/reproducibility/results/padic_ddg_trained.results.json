@@ -1,0 +1,20 @@
+{
+  "training_data": "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\deliverables\\partners\\jose_colbes\\reproducibility\\data\\s669.csv",
+  "embeddings": "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\deliverables\\partners\\jose_colbes\\reproducibility\\data\\aa_embeddings.json",
+  "results": {
+    "n_samples": 52,
+    "pearson_r": 0.7869411339068761,
+    "spearman_r": 0.5821725051429778,
+    "mae": 0.7338906236091738,
+    "rmse": 0.8972928351402074,
+    "weights": {
+      "padic_distance": -0.3111304702494196,
+      "radial_delta": -1.0951579934501985,
+      "delta_volume": -2.1422478609160556,
+      "delta_hydro": -1.1600254710134612,
+      "delta_charge": 1.3115151590232068,
+      "bias": 1.0234839820997526
+    }
+  },
+  "timestamp": "2026-01-03T12:15:47.896542"
+}
