@@ -491,6 +491,63 @@ Consolidated structure for CONACYT and stakeholder deliverables:
 
 ---
 
+## V5 Arrow Flip Validation (2026-01-03)
+
+Experimentally validated WHERE the prediction "arrow flips" from sequence-sufficient to structure-needed.
+
+### Confidence Matrix
+
+| Finding | Confidence | Evidence | Action |
+|---------|:----------:|----------|--------|
+| Hybrid > Simple (r=0.689 vs 0.249) | **95%** | Bootstrap CIs non-overlapping | Use in production |
+| Position modifies threshold | **95%** | p<0.0001 interaction | Use in production |
+| Buried threshold = 3.5 | **85%** | n=194, grid search | Use with monitoring |
+| Surface threshold = 5.5 | **70%** | n=25 only | Validate with AlphaFold RSA |
+| EC1 favors simple predictor | **80%** | n=32, consistent | Validate on oxidoreductases |
+
+### Position-Aware Decision Framework
+
+```python
+def select_prediction_regime(wt: str, mut: str, position_type: str) -> str:
+    hydro_diff = abs(AA_PROPERTIES[wt]['hydrophobicity'] -
+                     AA_PROPERTIES[mut]['hydrophobicity'])
+
+    if position_type == 'buried':  # RSA < 0.25
+        return 'hybrid' if hydro_diff > 3.5 else 'simple'
+
+    elif wt in 'HCDEMY' or mut in 'HCDEMY':  # EC1-relevant
+        return 'simple'  # Clear constraints
+
+    elif position_type == 'surface':  # RSA > 0.5
+        return 'hybrid' if hydro_diff > 5.5 else 'simple'
+
+    else:  # Interface/uncertain
+        return 'hybrid'  # Default for ambiguous
+```
+
+### Key Results
+
+- **Hybrid predictor**: r=0.689 [0.584-0.788] vs Simple: r=0.249 [0.103-0.387]
+- **Buried positions**: +0.565 hybrid advantage (56x more than surface)
+- **EC1 exception**: Metal-binding sites favor simple (clear geometric constraints)
+- **Uncertain zone**: Reduced from 60 to ~25 pairs (58% decrease)
+
+### Files
+
+```
+research/codon-encoder/replacement_calculus/
+├── docs/
+│   ├── V5_SOFT_BOUNDARIES.md
+│   ├── V5_EXPERIMENTAL_VALIDATION.md
+│   └── V5_CONFIDENCE_MATRIX.md
+└── go_validation/
+    ├── arrow_flip_experimental_validation.py
+    ├── arrow_flip_position_stratified.py
+    └── arrow_flip_ec_stratified.py
+```
+
+---
+
 ## Remaining Tasks (Next Dev Session)
 
 **V5.12.5 Implementation Plan:** `docs/plans/V5_12_5_IMPLEMENTATION_PLAN.md` (1,700+ lines) - Framework unification (~1,500 LOC savings) + controller fix + homeostasis enhancements
@@ -518,6 +575,7 @@ Consolidated structure for CONACYT and stakeholder deliverables:
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-01-03 | 2.1 | V5 Arrow Flip Validation complete - confidence matrix, position-aware thresholds |
 | 2026-01-03 | 2.0 | Added V5.12.5 implementation plan reference (docs/plans/) |
 | 2026-01-03 | 1.9 | TrainableCodonEncoder (LOO ρ=0.61), HyperbolicCodonEncoder, overfitting analysis |
 | 2026-01-03 | 1.8 | V5.12.4 training complete, added checkpoint reference, DDG predictor results |
