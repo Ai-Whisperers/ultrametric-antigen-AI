@@ -4,6 +4,32 @@ All notable changes to the Ternary VAE Bioinformatics project.
 
 ---
 
+## [5.12.4] - 2026-01-03
+
+### Added
+- **TernaryVAE v5.12.4 Training** - Improved architecture with FrozenEncoder from v5.5
+  - Coverage: 100%, Hierarchy_B: -0.82, Q: 1.96
+  - Checkpoint: `sandbox-training/checkpoints/v5_12_4/best_Q.pt`
+
+- **Amino Acid Embedding Extraction** - 16-dim hyperbolic embeddings
+  - Script: `extract_embeddings_simple.py`
+  - All 20 amino acids from 19,683 ternary operations
+  - Radius range: [0.80, 1.56] in Poincaré ball
+
+- **Improved DDG Predictor** - Real `poincare_distance()` implementation
+  - Script: `train_padic_ddg_predictor.py`
+  - Trained on S669 benchmark (52 mutations)
+
+### Results
+
+| Metric | Heuristic (V1) | Real Embeddings (V2) | Improvement |
+|--------|----------------|----------------------|-------------|
+| Spearman r | 0.53 | 0.58 | +9.4% |
+| Pearson r | 0.22 | 0.79 | +259% |
+| MAE | 1.91 | 0.73 | -62% |
+
+---
+
 ## [5.12.3] - 2026-01-03
 
 ### Changed
@@ -18,9 +44,6 @@ All notable changes to the Ternary VAE Bioinformatics project.
   - Moved audit reports to `docs/audits/`
   - Created `docs/audits/v5.12.2-hyperbolic/` for hyperbolic audit files
   - Root now has only `README.md` and `CHANGELOG.md`
-
-### Status
-- Training in progress (results pending)
 
 ---
 

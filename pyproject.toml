@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ternary-vae"
-version = "5.12.3"
+version = "5.12.4"
 description = "Dual Neural VAEs for learning 3-adic algebraic structure using hyperbolic geometry"
 readme = "README.md"
 license = {text = "PolyForm-Noncommercial-1.0.0"}

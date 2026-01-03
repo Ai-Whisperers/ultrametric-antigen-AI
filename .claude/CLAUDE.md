@@ -1,6 +1,6 @@
 # Ternary VAE Project - Claude Context
 
-**Doc-Type:** Project Configuration · Version 1.7 · Updated 2026-01-03 · AI Whisperers
+**Doc-Type:** Project Configuration · Version 1.8 · Updated 2026-01-03 · AI Whisperers
 
 ---
 
@@ -8,8 +8,8 @@
 
 This repository implements a Variational Autoencoder for learning 3-adic (p-adic) hierarchical structure over ternary operations. The model embeds 19,683 ternary operations (3^9) into a hyperbolic Poincaré ball where radial position encodes 3-adic valuation.
 
-**Current Version:** 5.12.3
-**Status:** Training in progress (results pending)
+**Current Version:** 5.12.4
+**Status:** Training complete (2026-01-03)
 
 ---
 
@@ -100,7 +100,16 @@ The TernaryVAEV5_11 architecture uses two complementary encoders:
 
 ---
 
-## v5.11 Checkpoint Reference
+## Checkpoint Reference
+
+### Validated Checkpoints
+
+| Version | Checkpoint | Coverage | Hier_B | Q | Status |
+|---------|------------|----------|--------|---|--------|
+| **v5.12.4** | v5_12_4/best_Q.pt | 100% | -0.82 | 1.96 | **CURRENT** - FrozenEncoder from v5.5 |
+| **v5.11.3** | v5_11_structural | 100% | -0.40 | - | Moderate hierarchy, good richness |
+| **v5.11.8** | v5_11_homeostasis | 99.9% | -0.82 | - | Good hierarchy, moderate richness |
+| **homeostatic_rich** | homeostatic_rich | 100% | -0.8321 | - | Ceiling hierarchy + high richness |
 
 ### CRITICAL WARNING: v5_11_overnight
 
@@ -110,22 +119,17 @@ Despite appearing to have good metrics (100% coverage, -0.83 hierarchy), this ch
 - Training collapsed during the run
 - Coverage came purely from frozen checkpoint initialization
 - The hierarchy correlation is an artifact, not learned structure
-- Richness appears high (0.0085) but is not from genuine training
-
----
-
-### Validated Checkpoints
-
-| Version | Checkpoint | Coverage | Hier_B | Richness | Status |
-|---------|------------|----------|--------|----------|--------|
-| **v5.11.3** | v5_11_structural | 100% | -0.40 | 0.00304 | Moderate hierarchy, good richness |
-| **v5.11.8** | v5_11_homeostasis | 99.9% | -0.82 | 0.00136 | Good hierarchy, moderate richness |
-| **homeostatic_rich** | homeostatic_rich | 100% | -0.8321 | 0.00787 | **BEST BALANCE** - ceiling hier + high richness |
-| **v5_11_progressive** | v5_11_progressive | 99.9% | +0.78 (B) | 0.00145 | VAE-B inverted, not usable |
 
 ---
 
 ### Detailed Version Notes
+
+**v5.12.4 (CURRENT)**
+- Architecture: ImprovedEncoder/Decoder with SiLU, LayerNorm, Dropout
+- FrozenEncoder from v5.5 for coverage preservation
+- Metrics: Coverage=100%, Hierarchy_B=-0.82, Q=1.96
+- Checkpoint: `sandbox-training/checkpoints/v5_12_4/best_Q.pt`
+- DDG Predictor: Spearman 0.58, Pearson 0.79, MAE 0.73
 
 **v5.11.3 (v5_11_structural)**
 - Architecture: hidden_dim=128, n_projection_layers=2
@@ -429,6 +433,7 @@ Consolidated structure for CONACYT and stakeholder deliverables:
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-01-03 | 1.8 | V5.12.4 training complete, added checkpoint reference, DDG predictor results |
 | 2026-01-03 | 1.7 | Updated to V5.12.3, audit marked complete, moved audit docs to docs/audits/ |
 | 2026-01-02 | 1.6 | Added Partner Packages table, Remaining Tasks section, session summary |
 | 2025-12-30 | 1.5 | V5.12.4 ImprovedEncoder/Decoder with SiLU, LayerNorm, Dropout, logvar clamping |
