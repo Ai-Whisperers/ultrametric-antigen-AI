@@ -1,0 +1,26 @@
+{
+  "version": "v2",
+  "training_data": "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\deliverables\\partners\\jose_colbes\\reproducibility\\data\\s669.csv",
+  "results": {
+    "n_samples": 52,
+    "pearson_r": 0.804287593227825,
+    "pearson_p": 6.89486008455851e-13,
+    "spearman_r": 0.8060632785910143,
+    "spearman_p": 5.614927444473339e-13,
+    "mae": 0.6702510645623805,
+    "rmse": 0.8497602083783761,
+    "cv_r2_mean": 0.1522471526478729,
+    "cv_r2_std": 0.471170733744732,
+    "weights": {
+      "padic_min": 0.3920359995079733,
+      "padic_mean": 0.3920359995079741,
+      "delta_volume": -1.4165146309788414,
+      "delta_hydro": -0.863963114840176,
+      "delta_charge": 1.0885673968871352,
+      "delta_polarity": 0.29431352286282925,
+      "degeneracy_ratio": -0.4325580090305298,
+      "bias": 0.8594178995031712
+    }
+  },
+  "timestamp": "2026-01-03T12:40:02.878110"
+}

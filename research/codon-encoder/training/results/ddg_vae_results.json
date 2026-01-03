@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "version": "v4_vae_embeddings",
+    "checkpoint": "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\sandbox-training\\checkpoints\\v5_12_3\\best_Q.pt",
+    "data": "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\deliverables\\partners\\jose_colbes\\reproducibility\\data\\s669.csv",
+    "timestamp": "2026-01-03T13:04:16.658239"
+  },
+  "results": {
+    "n_samples": 52,
+    "best_alpha": 0.01,
+    "loo_pearson_r": 0.4107317113023588,
+    "loo_spearman_r": 0.12317418289368597,
+    "loo_mae": 1.0386309200607586,
+    "loo_rmse": 1.3272033528186442,
+    "train_pearson_r": 0.5904427217851973,
+    "train_spearman_r": 0.5155528320653692,
+    "coefficients": {
+      "vae_distance": -0.42647677885767077,
+      "delta_norm": -0.09364494808983363,
+      "delta_hydro": -1.9594622643606994,
+      "delta_charge": 1.2504645474599914
+    },
+    "intercept": 2.78016018920435
+  },
+  "comparison": {
+    "Rosetta_ddg_monomer": 0.69,
+    "FoldX": 0.48,
+    "ELASPIC-2": 0.5,
+    "This_work_LOO": 0.12317418289368597
+  }
+}

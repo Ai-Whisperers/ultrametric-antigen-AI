@@ -53,6 +53,12 @@ Example:
 from .circadian_encoder import (CircadianCycleEncoder, KaiCClockEncoder,
                                 ToroidalEmbedding)
 from .codon_encoder import CodonEncoder
+from .hyperbolic_codon_encoder import (
+    HyperbolicCodonEncoder,
+    compute_codon_padic_valuation,
+    compute_target_radius,
+    extract_codon_embeddings_from_vae,
+)
 from .hybrid_encoder import (
     CrossAttentionFusion,
     GatedFusion,
@@ -138,6 +144,11 @@ from .alphafold_encoder import (
 __all__ = [
     # Codon encoding
     "CodonEncoder",
+    # Hyperbolic codon encoding (p-adic native)
+    "HyperbolicCodonEncoder",
+    "compute_codon_padic_valuation",
+    "compute_target_radius",
+    "extract_codon_embeddings_from_vae",
     # Hybrid encoder (ESM-2 + Codon)
     "HybridCodonEncoder",
     "HybridEncoderConfig",

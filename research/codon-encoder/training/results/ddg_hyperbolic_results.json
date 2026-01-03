@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "version": "v3_hyperbolic_padic",
+    "checkpoint": "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\sandbox-training\\checkpoints\\v5_12_3\\best_Q.pt",
+    "data": "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\codon-encoder\\training\\..\\..\\..\\deliverables\\partners\\jose_colbes\\reproducibility\\data\\s669.csv",
+    "timestamp": "2026-01-03T12:57:47.269529"
+  },
+  "results": {
+    "n_samples": 52,
+    "best_alpha": 0.01,
+    "loo_pearson_r": 0.47099298277572454,
+    "loo_spearman_r": 0.29697813443214,
+    "loo_mae": 1.0452356795321236,
+    "loo_rmse": 1.2721489513534026,
+    "train_pearson_r": 0.6050159207391428,
+    "train_spearman_r": 0.5049058523497696,
+    "coefficients": {
+      "padic_distance": 1.388019906132358,
+      "delta_hydrophobicity": -1.7868526719201423,
+      "delta_charge": 0.8586562051097782
+    },
+    "intercept": 0.8394403558506618
+  },
+  "comparison": {
+    "Rosetta_ddg_monomer": 0.69,
+    "FoldX": 0.48,
+    "ELASPIC-2": 0.5,
+    "This_work_LOO": 0.29697813443214
+  }
+}
