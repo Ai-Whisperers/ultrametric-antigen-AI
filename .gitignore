@@ -146,6 +146,8 @@ sandbox-training/
 # But ignore model subdirectories with checkpoints
 outputs/models/
 outputs/optimal/
+outputs/visualization-*/
+outputs/calabi-yau-viz-report-summary.md
 
 # Keep the directory structure
 !outputs/models/.gitkeep
