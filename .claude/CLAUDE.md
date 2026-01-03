@@ -1,6 +1,6 @@
 # Ternary VAE Project - Claude Context
 
-**Doc-Type:** Project Configuration · Version 1.9 · Updated 2026-01-03 · AI Whisperers
+**Doc-Type:** Project Configuration · Version 2.0 · Updated 2026-01-03 · AI Whisperers
 
 ---
 
@@ -97,6 +97,49 @@ The TernaryVAEV5_11 architecture uses two complementary encoders:
 - Measures geometric diversity beyond ordering
 - Higher = more meaningful structure preserved
 - Zero = collapsed to trivial shells (bad)
+
+---
+
+## Contact Prediction Discovery (2026-01-03)
+
+**Finding:** Pairwise hyperbolic distances between codon embeddings predict residue-residue 3D contacts.
+
+### Validation Results (Insulin B-chain, 30 residues)
+
+| Checkpoint | Richness | AUC-ROC | Cohen's d | Interpretation |
+|------------|----------|---------|-----------|----------------|
+| **v5_11_structural** | ~0.003 | **0.6737** | **-0.474** | BEST for contacts |
+| homeostatic_rich | 0.00662 | 0.5865 | -0.247 | Moderate |
+| final_rich_lr5e5 | 0.00858 | 0.5850 | -0.248 | Moderate |
+
+### Critical Tradeoff: Richness vs Contact Prediction
+
+**You cannot optimize for both simultaneously:**
+
+| Task | Needs | Best Checkpoint |
+|------|-------|-----------------|
+| ΔΔG prediction | High richness (geometric diversity) | `homeostatic_rich` or `final_rich_lr5e5` |
+| Contact prediction | Low richness (collapsed shells) | `v5_11_structural` |
+| Force constants | Any (radial structure) | Any 100% coverage checkpoint |
+
+**Why:** Collapsed radial shells give consistent AA-level distances, enabling pairwise contact discrimination. High richness adds codon-level variance that helps ΔΔG but adds noise for contacts.
+
+### Checkpoints for Contact Prediction
+
+```
+research/contact-prediction/
+├── checkpoints/
+│   ├── v5_11_structural_best.pt    # BEST: AUC=0.67 (1.4M)
+│   ├── homeostatic_rich_best.pt    # Balanced (421K)
+│   └── final_rich_lr5e5_best.pt    # High richness (413K)
+├── embeddings/
+│   ├── v5_11_3_embeddings.pt       # Pre-extracted (6.0M)
+│   └── codon_mapping_3adic.json    # Codon→position
+└── scripts/
+    ├── 00_validate_signal.py       # AA-level test
+    ├── 01_test_real_protein.py     # Real protein test
+    └── 02_compare_checkpoints.py   # Checkpoint comparison
+```
 
 ---
 

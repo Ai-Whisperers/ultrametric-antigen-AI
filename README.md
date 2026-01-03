@@ -181,6 +181,28 @@ See [`src/diseases/README.md`](src/diseases/README.md) for full documentation.
 
 See [`research/codon-encoder/`](research/codon-encoder/) for full analysis scripts and results.
 
+### 🔮 Contact Prediction from Codon Embeddings (NEW - 2026-01-03)
+
+**Discovery:** Pairwise hyperbolic distances between codon embeddings predict residue-residue 3D contacts.
+
+| Checkpoint | Richness | AUC-ROC | Cohen's d | Best For |
+|------------|----------|---------|-----------|----------|
+| **v5_11_structural** | 0.003 | **0.6737** | **-0.474** | Contact prediction |
+| homeostatic_rich | 0.007 | 0.5865 | -0.247 | ΔΔG prediction |
+| final_rich_lr5e5 | 0.009 | 0.5850 | -0.248 | ΔΔG prediction |
+
+**Critical Tradeoff:** High richness improves ΔΔG prediction but hurts contact prediction. Collapsed radial shells (low richness) give consistent AA-level distances needed for pairwise contact discrimination.
+
+**Checkpoints:**
+```
+research/contact-prediction/checkpoints/
+├── v5_11_structural_best.pt    # BEST for contacts (AUC=0.67)
+├── homeostatic_rich_best.pt    # Best balance
+└── final_rich_lr5e5_best.pt    # Best for ΔΔG
+```
+
+See [`research/contact-prediction/`](research/contact-prediction/) for validation scripts and experimental design.
+
 ### 🏗️ Architecture Improvements (NEW - 2025-12-28)
 
 **New capabilities added to the framework:**
