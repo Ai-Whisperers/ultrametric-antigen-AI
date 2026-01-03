@@ -1,6 +1,6 @@
 # Ternary VAE Project - Claude Context
 
-**Doc-Type:** Project Configuration · Version 1.8 · Updated 2026-01-03 · AI Whisperers
+**Doc-Type:** Project Configuration · Version 1.9 · Updated 2026-01-03 · AI Whisperers
 
 ---
 
@@ -220,6 +220,44 @@ NOT mutually exclusive. homeostatic_rich proved:
 
 Research scripts validating p-adic embeddings against physical ground truth are in `research/codon-encoder/`.
 
+### TrainableCodonEncoder (NEW - 2026-01-03)
+
+**Key Achievement:** LOO Spearman **0.61** on DDG prediction (S669), +105% over baseline.
+
+| Method | LOO Spearman | Type |
+|--------|--------------|------|
+| Rosetta ddg_monomer | 0.69 | Structure |
+| **TrainableCodonEncoder** | **0.61** | **Sequence** |
+| ELASPIC-2 (2024) | 0.50 | Sequence |
+| FoldX | 0.48 | Structure |
+| Baseline (p-adic) | 0.30 | Sequence |
+
+**Architecture:**
+- Input: 12-dim one-hot (4 bases × 3 positions) - no information loss
+- Encoder: MLP (12→64→64→16) with LayerNorm, SiLU, Dropout
+- Output: 16-dim embeddings on Poincaré ball
+
+**Usage:**
+```python
+from src.encoders import TrainableCodonEncoder
+import torch
+
+encoder = TrainableCodonEncoder(latent_dim=16, hidden_dim=64)
+ckpt = torch.load('research/codon-encoder/training/results/trained_codon_encoder.pt')
+encoder.load_state_dict(ckpt['model_state_dict'])
+encoder.eval()
+
+# Get embeddings
+z_hyp = encoder.encode_all()  # (64, 16) all codons
+aa_embs = encoder.get_all_amino_acid_embeddings()  # dict of 20 AAs
+dist = encoder.compute_aa_distance('A', 'V')  # hyperbolic distance
+```
+
+**Training:**
+```bash
+python research/codon-encoder/training/train_codon_encoder.py --epochs 500
+```
+
 ### Key Discoveries
 
 | Invariant | Finding | Correlation |
@@ -234,14 +272,18 @@ Research scripts validating p-adic embeddings against physical ground truth are 
 ```
 research/codon-encoder/
 ├── config.py           # Centralized paths and shared data
+├── extraction/         # Embedding extraction (NEW)
+│   ├── ANALYSIS_SUMMARY.md
+│   └── extract_hyperbolic_embeddings.py
+├── training/           # Model training
+│   ├── train_codon_encoder.py         # TrainableCodonEncoder (NEW)
+│   ├── ddg_predictor_training.py      # sklearn
+│   └── ddg_pytorch_training.py        # PyTorch hyperparameter search
 ├── benchmarks/         # Validation benchmarks
 │   ├── mass_vs_property_benchmark.py
 │   ├── kinetics_benchmark.py
 │   ├── deep_physics_benchmark.py
 │   └── ddg_benchmark.py
-├── training/           # Model training
-│   ├── ddg_predictor_training.py      # sklearn
-│   └── ddg_pytorch_training.py        # PyTorch hyperparameter search
 ├── analysis/           # Embedding analysis
 │   ├── proteingym_pipeline.py         # Dimension correlations
 │   └── padic_dynamics_predictor.py    # Force constant prediction
@@ -252,17 +294,9 @@ research/codon-encoder/
 └── results/            # Output directories
 ```
 
-### Usage
-
-```bash
-cd research/codon-encoder
-python benchmarks/deep_physics_benchmark.py
-python training/ddg_pytorch_training.py
-python analysis/proteingym_pipeline.py
-```
-
 ### Key Results
 
+- **TrainableCodonEncoder**: LOO Spearman 0.61 (sequence-only, +105% over baseline)
 - **Thermodynamics (ΔΔG)**: Mass-based features win (padic_mass ρ=0.94)
 - **Kinetics (folding)**: Property-based features win (property ρ=0.94)
 - **Physics Levels**: P-adic encodes force constants (Level 3) but NOT B-factors (Level 4)
@@ -433,6 +467,7 @@ Consolidated structure for CONACYT and stakeholder deliverables:
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-01-03 | 1.9 | TrainableCodonEncoder (LOO ρ=0.61), HyperbolicCodonEncoder, overfitting analysis |
 | 2026-01-03 | 1.8 | V5.12.4 training complete, added checkpoint reference, DDG predictor results |
 | 2026-01-03 | 1.7 | Updated to V5.12.3, audit marked complete, moved audit docs to docs/audits/ |
 | 2026-01-02 | 1.6 | Added Partner Packages table, Remaining Tasks section, session summary |
