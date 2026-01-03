@@ -487,6 +487,8 @@ Consolidated structure for CONACYT and stakeholder deliverables:
 
 ## Remaining Tasks (Next Dev Session)
 
+**V5.12.5 Implementation Plan:** `docs/plans/V5_12_5_IMPLEMENTATION_PLAN.md` (1,700+ lines) - Framework unification (~1,500 LOC savings) + controller fix + homeostasis enhancements
+
 | Priority | Task | Category | Details |
 |:--------:|------|----------|---------|
 | **1** | Sync stakeholder-portfolio branch | Git | Cherry-pick/merge organized main to stakeholder-portfolio |
@@ -510,6 +512,7 @@ Consolidated structure for CONACYT and stakeholder deliverables:
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-01-03 | 2.0 | Added V5.12.5 implementation plan reference (docs/plans/) |
 | 2026-01-03 | 1.9 | TrainableCodonEncoder (LOO ρ=0.61), HyperbolicCodonEncoder, overfitting analysis |
 | 2026-01-03 | 1.8 | V5.12.4 training complete, added checkpoint reference, DDG predictor results |
 | 2026-01-03 | 1.7 | Updated to V5.12.3, audit marked complete, moved audit docs to docs/audits/ |
