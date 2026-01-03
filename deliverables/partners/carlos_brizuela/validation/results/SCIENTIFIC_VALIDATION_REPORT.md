@@ -1,28 +1,28 @@
 # Scientific Validation Report: AMP Activity Prediction Models
 
-**Doc-Type:** Validation Report | Version 2.0 | Updated 2026-01-03 | Carlos Brizuela Package
+**Doc-Type:** Validation Report | Version 3.0 | Updated 2026-01-03 | Carlos Brizuela Package
 
 ---
 
 ## Executive Summary
 
-This report presents comprehensive validation of antimicrobial peptide (AMP) activity prediction models trained on curated DRAMP database entries. The models were evaluated using cross-validation, permutation tests, and feature importance analysis.
+This report presents comprehensive validation of antimicrobial peptide (AMP) activity prediction models trained on curated literature data. The models were evaluated using cross-validation, permutation tests, and feature importance analysis.
 
 **Key Findings:**
-- 4/5 models achieve statistical significance (permutation p < 0.05)
+- **5/5 models achieve statistical significance** (permutation p < 0.05)
 - General model: Pearson r = 0.56 (p < 0.001)
-- Gram-negative pathogens: Strong predictability (E. coli r=0.42, A. baumannii r=0.58)
-- Gram-positive pathogens: Improved with amphipathicity features (S. aureus r=0.22, perm-p=0.039)
+- Gram-negative pathogens: Strong predictability (E. coli r=0.42, P. aeruginosa r=0.44, A. baumannii r=0.58)
+- Gram-positive pathogens: Moderate with amphipathicity features (S. aureus r=0.22, perm-p=0.039)
 
 ---
 
 ## Validation Methodology
 
 ### Data Source
-- **Database:** Curated subset of DRAMP (Data Repository of Antimicrobial Peptides)
-- **Total records:** 224 peptide-pathogen pairs
-- **Unique sequences:** 155 distinct peptides
-- **Target pathogens:** E. coli, S. aureus, P. aeruginosa, A. baumannii
+- **Database:** Curated from DRAMP, APD3, and peer-reviewed literature (2020-2024)
+- **Total records:** 272 peptide-pathogen pairs
+- **Unique sequences:** 178 distinct peptides
+- **Target pathogens:** E. coli (105), P. aeruginosa (75), S. aureus (72), A. baumannii (20)
 
 ### Cross-Validation Protocol
 - **Large datasets (n >= 30):** 5-fold stratified CV
@@ -117,17 +117,18 @@ This report presents comprehensive validation of antimicrobial peptide (AMP) act
 
 | Metric | Value |
 |--------|-------|
-| N samples | 27 |
-| CV method | LOO |
-| Pearson r | 0.196 |
-| Spearman ρ | 0.085 |
-| Permutation p | 0.216 |
-| RMSE | 0.465 |
-| Confidence | **LOW** |
+| N samples | 75 |
+| CV method | 5-fold |
+| Pearson r | **0.435*** |
+| Spearman ρ | 0.407*** |
+| Permutation p | **0.020** |
+| RMSE | 0.339 |
+| Confidence | **HIGH** |
 
 **Primary predictor:** Net charge
-**Biology:** Gram-negative but insufficient training data.
-**Recommendation:** Use general model until more data available
+**Biology:** Gram-negative, LPS outer membrane. Cationic AMPs effective via electrostatic interaction.
+**Key Improvement:** Expanded dataset from 27 to 75 samples with literature-curated peptides.
+**Recommendation:** Suitable for predictions with uncertainty estimates
 
 ---
 
@@ -182,6 +183,7 @@ Both packages achieve similar predictive performance with rigorous validation.
 | Target | Model | Action |
 |--------|-------|--------|
 | E. coli | activity_escherichia | Direct prediction |
+| P. aeruginosa | activity_pseudomonas | Direct prediction |
 | A. baumannii | activity_acinetobacter | Direct prediction |
 | Mixed/unknown | activity_general | Default choice |
 
@@ -193,9 +195,7 @@ Both packages achieve similar predictive performance with rigorous validation.
 
 ### Low Confidence - Use General Model Instead
 
-| Target | Model | Alternative |
-|--------|-------|-------------|
-| P. aeruginosa | activity_pseudomonas | Use general model (insufficient data n=27) |
+None - all models validated successfully.
 
 ---
 
@@ -226,4 +226,5 @@ The AMP activity prediction package provides scientifically validated models for
 **Significance threshold:** p < 0.05 (permutation or parametric)
 **Permutation tests:** 50 iterations
 **Feature engineering:** Amphipathicity added for Gram+ prediction
-**Version:** 2.0 (post-feature engineering improvements)
+**Data expansion:** P. aeruginosa expanded from 27 to 75 samples (literature curation)
+**Version:** 3.0 (all 5 models validated)

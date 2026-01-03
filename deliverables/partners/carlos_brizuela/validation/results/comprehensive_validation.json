@@ -2,45 +2,45 @@
   "metadata": {
     "validation_type": "comprehensive",
     "n_permutations": 50,
-    "timestamp": "2026-01-03T22:24:23"
+    "timestamp": "2026-01-03T23:50:31"
   },
   "models": [
     {
       "model_name": "activity_general",
       "target": "all",
       "gram_type": "mixed",
-      "n_samples": 224,
-      "n_unique_sequences": 155,
+      "n_samples": 272,
+      "n_unique_sequences": 178,
       "cv_method": "5-fold",
-      "pearson_r": 0.5601779133012088,
-      "pearson_p": 6.635680148165958e-20,
-      "spearman_r": 0.5553325358958383,
-      "spearman_p": 1.5987552368262334e-19,
-      "rmse": 0.40498823943031875,
-      "mae": 0.3174457590730842,
+      "pearson_r": 0.5628148733069214,
+      "pearson_p": 3.976080583839598e-24,
+      "spearman_r": 0.609400403754199,
+      "spearman_p": 4.805482494985929e-29,
+      "rmse": 0.38002672120499714,
+      "mae": 0.28840634289468975,
       "permutation_p": 0.0196078431372549,
-      "permutation_score": -0.16412917514700154,
+      "permutation_score": -0.1445034994907234,
       "n_permutations": 50,
       "top_features": [
         {
           "feature": "length",
-          "importance": 0.11832876672614778
-        },
-        {
-          "feature": "aac_W",
-          "importance": 0.11097741434865437
+          "importance": 0.11462307548220618
         },
         {
           "feature": "aac_V",
-          "importance": 0.10425090785855458
+          "importance": 0.09315607098881064
+        },
+        {
+          "feature": "aac_W",
+          "importance": 0.08165598115956396
         },
         {
           "feature": "charge",
-          "importance": 0.06600840093100978
+          "importance": 0.0739344442883154
         },
         {
           "feature": "aac_L",
-          "importance": 0.05592832357903161
+          "importance": 0.06566130279786585
         }
       ],
       "primary_predictor": "length",
@@ -97,45 +97,45 @@
       "model_name": "activity_pseudomonas",
       "target": "pseudomonas",
       "gram_type": "negative",
-      "n_samples": 27,
-      "n_unique_sequences": 27,
-      "cv_method": "LOO",
-      "pearson_r": 0.19027359324162357,
-      "pearson_p": 0.34179196212176527,
-      "spearman_r": 0.02997055399189387,
-      "spearman_p": 0.8820306115042518,
-      "rmse": 0.46196953375383454,
-      "mae": 0.37268771249163457,
-      "permutation_p": 0.17647058823529413,
-      "permutation_score": -0.21341585011673528,
+      "n_samples": 75,
+      "n_unique_sequences": 72,
+      "cv_method": "5-fold",
+      "pearson_r": 0.4346316027950554,
+      "pearson_p": 9.765625978207899e-05,
+      "spearman_r": 0.40713702303809973,
+      "spearman_p": 0.000288872113874667,
+      "rmse": 0.3392544571052618,
+      "mae": 0.27701169553185945,
+      "permutation_p": 0.0196078431372549,
+      "permutation_score": -0.11509358666578595,
       "n_permutations": 50,
       "top_features": [
         {
           "feature": "charge",
-          "importance": 0.14763555837145836
-        },
-        {
-          "feature": "hydrophobic_moment",
-          "importance": 0.11742393119344484
+          "importance": 0.1543708441268793
         },
         {
           "feature": "length",
-          "importance": 0.11220371992380745
+          "importance": 0.08769041694680677
         },
         {
-          "feature": "aac_K",
-          "importance": 0.06316622465934751
+          "feature": "aac_L",
+          "importance": 0.08134433211417098
         },
         {
-          "feature": "positive_fraction",
-          "importance": 0.05243796222141603
+          "feature": "aac_N",
+          "importance": 0.07430948309079911
+        },
+        {
+          "feature": "volume",
+          "importance": 0.061264628989290124
         }
       ],
       "primary_predictor": "charge",
       "biological_notes": "Gram-negative: LPS outer membrane. Cationic AMPs more effective.",
-      "is_significant": false,
-      "confidence_level": "low",
-      "recommendation": "Insufficient data (n=27). Use general model instead."
+      "is_significant": true,
+      "confidence_level": "high",
+      "recommendation": "Model suitable for predictions with uncertainty estimates"
     },
     {
       "model_name": "activity_escherichia",
@@ -228,9 +228,9 @@
   ],
   "summary": {
     "total_models": 5,
-    "high_confidence": 3,
+    "high_confidence": 4,
     "moderate_confidence": 1,
-    "low_confidence": 1,
-    "significant_models": 4
+    "low_confidence": 0,
+    "significant_models": 5
   }
 }

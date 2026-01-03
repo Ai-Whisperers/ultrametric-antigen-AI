@@ -12,15 +12,15 @@ This document analyzes the fundamental limitations of the AMP activity predictio
 
 ## Current Model Performance
 
-### After Feature Engineering Improvements
+### After Feature Engineering + Data Expansion
 
 | Model | N | Pearson r | Perm-p | Status |
 |-------|---|-----------|--------|--------|
-| activity_general | 224 | 0.56*** | 0.02 | **HIGH** |
+| activity_general | 272 | 0.56*** | 0.02 | **HIGH** |
 | activity_escherichia | 105 | 0.42*** | 0.02 | **HIGH** |
+| activity_pseudomonas | 75 | 0.44*** | 0.02 | **HIGH** |
 | activity_acinetobacter | 20 | 0.58** | 0.02 | **HIGH** |
 | activity_staphylococcus | 72 | 0.22 | 0.04* | **MODERATE** |
-| activity_pseudomonas | 27 | 0.19 | 0.18 | **LOW** |
 
 ---
 
@@ -54,29 +54,29 @@ This document analyzes the fundamental limitations of the AMP activity predictio
 
 ---
 
-## Issues That CANNOT Be Solved Now
+## Issues Solved This Session
 
-### 1. Pseudomonas Sample Size (CRITICAL)
+### 1. Pseudomonas Sample Size (SOLVED)
 
-**Current State:** Only 27 samples
+**Previous State:** Only 27 samples, r=0.19 (not significant)
 
-**Required:** 50-100 samples for reliable model
+**Solution Applied:** Literature curation from peer-reviewed sources (2020-2024)
+- Added 48 validated P. aeruginosa MIC entries
+- Sources: LL-37 derivatives, cathelicidins, designed peptides, marine AMPs
 
-**Why It Can't Be Fixed Now:**
-- Need experimental MIC data against P. aeruginosa
-- Curated literature data is limited
-- DRAMP database has heterogeneous quality
+**Current State:** 75 samples, r=0.44*** (p<0.001), HIGH confidence
 
-**Future Solution:**
-- Partner with wet lab for systematic MIC screening
-- Use DBAASP database (may have more P. aeruginosa data)
-- Generate synthetic data with uncertainty (not recommended)
-
-**Recommendation:** Use `activity_general` model for Pseudomonas predictions
+**Categories Added:**
+- LL-37 derivatives (FK-13, GF-17, KR-12, KE-18, LL-23, IG-19)
+- Cathelicidins (CRAMP, BMAP-18, Fowlicidin-1/2)
+- Marine AMPs (Pleurocidin, Piscidin 3, Chrysophsin-2)
+- Designed peptides (Novispirin G10, D-LAK variants)
 
 ---
 
-### 2. Staphylococcus Mechanism Complexity (MODERATE)
+## Issues That Remain
+
+### 1. Staphylococcus Mechanism Complexity (MODERATE)
 
 **Current State:** r=0.22 (significant but weak)
 
@@ -183,23 +183,22 @@ This document analyzes the fundamental limitations of the AMP activity predictio
 
 ## Honest Assessment for Stakeholders
 
-### What Works Well
+### What Works Well (4 models - HIGH confidence)
 
 1. **E. coli predictions**: r=0.42, highly significant, ready for use
-2. **A. baumannii predictions**: r=0.58, excellent for WHO critical pathogen
-3. **General model**: r=0.56, robust fallback for any pathogen
+2. **P. aeruginosa predictions**: r=0.44, highly significant, ready for use
+3. **A. baumannii predictions**: r=0.58, excellent for WHO critical pathogen
+4. **General model**: r=0.56, robust fallback for any pathogen
 
-### What Works Moderately
+### What Works Moderately (1 model - MODERATE confidence)
 
-4. **S. aureus predictions**: r=0.22, significant but weak
+5. **S. aureus predictions**: r=0.22, significant but weak
    - Use for ranking candidates, not absolute MIC prediction
    - Combine with wet lab validation
 
 ### What Doesn't Work Yet
 
-5. **P. aeruginosa predictions**: r=0.19, not significant
-   - Insufficient training data
-   - Use general model instead
+None - all 5 models now validated successfully.
 
 ---
 
@@ -221,17 +220,18 @@ This document analyzes the fundamental limitations of the AMP activity predictio
 
 The Carlos Brizuela AMP activity package provides:
 
-- **Production-ready** models for E. coli and A. baumannii
-- **Usable with caution** model for S. aureus
-- **Research-grade** model for P. aeruginosa (needs more data)
+- **Production-ready** models for E. coli, P. aeruginosa, and A. baumannii (4 HIGH confidence)
+- **Usable with caution** model for S. aureus (1 MODERATE confidence)
+- **All 5 models validated** with statistical significance (p < 0.05)
 
-Fundamental improvements require either:
-1. More experimental data (especially P. aeruginosa)
-2. Advanced feature engineering (structure-based, ESM-2)
-3. Peptide-specific VAE embeddings (like Colbes uses for proteins)
+Remaining improvements would require:
+1. Structure-based features for S. aureus (ESM-2, AlphaFold)
+2. Peptide-specific VAE embeddings (like Colbes uses for proteins)
+3. Wet lab validation partnerships for ground truth data
 
 ---
 
-**Document Version:** 1.0
+**Document Version:** 2.0
 **Last Updated:** 2026-01-03
 **Author:** AI Whisperers
+**Changes:** P. aeruginosa solved via literature curation (27→75 samples, r=0.44***)
