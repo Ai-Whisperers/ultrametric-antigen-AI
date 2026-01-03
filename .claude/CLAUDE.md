@@ -1,6 +1,6 @@
 # Ternary VAE Project - Claude Context
 
-**Doc-Type:** Project Configuration · Version 1.6 · Updated 2026-01-02 · AI Whisperers
+**Doc-Type:** Project Configuration · Version 1.7 · Updated 2026-01-03 · AI Whisperers
 
 ---
 
@@ -8,18 +8,21 @@
 
 This repository implements a Variational Autoencoder for learning 3-adic (p-adic) hierarchical structure over ternary operations. The model embeds 19,683 ternary operations (3^9) into a hyperbolic Poincaré ball where radial position encodes 3-adic valuation.
 
+**Current Version:** 5.12.3
+**Status:** Training in progress (results pending)
+
 ---
 
-## V5.12.2 HYPERBOLIC AUDIT - NOT PRODUCTION READY
+## V5.12.2 HYPERBOLIC AUDIT - COMPLETE
 
-**Status:** Architecture migration in progress. Do NOT use for production training.
+**Status:** Audit complete. All core files fixed.
 
 **Issue:** Many files in `src/`, `configs/`, and `scripts/` incorrectly use Euclidean `.norm()` on hyperbolic Poincaré ball embeddings instead of `poincare_distance()`. This causes:
 - Incorrect radial hierarchy computation (coverage stuck at ~20%)
 - Metric correlations computed in wrong geometry
 - Training scripts producing misleading results
 
-**Audit Document:** `DOCUMENTATION/01_PROJECT_KNOWLEDGE_BASE/V5_12_2_HYPERBOLIC_AUDIT.md`
+**Audit Document:** `docs/audits/v5.12.2-hyperbolic/`
 
 **Correct Pattern:**
 ```python
@@ -426,6 +429,7 @@ Consolidated structure for CONACYT and stakeholder deliverables:
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-01-03 | 1.7 | Updated to V5.12.3, audit marked complete, moved audit docs to docs/audits/ |
 | 2026-01-02 | 1.6 | Added Partner Packages table, Remaining Tasks section, session summary |
 | 2025-12-30 | 1.5 | V5.12.4 ImprovedEncoder/Decoder with SiLU, LayerNorm, Dropout, logvar clamping |
 | 2025-12-29 | 1.4 | V5.12.2 COMPLETE FIX LIST - all 75 files needing fixes documented |

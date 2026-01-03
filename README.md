@@ -200,7 +200,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for full details on the architecture impr
 
 The project uses a standard Python stack. For development, we recommend the following tools:
 
-- **ruff** – fast Python linter/formatter (`ruff.toml` is already configured).
+- **ruff** – fast Python linter/formatter (configured in `pyproject.toml`).
 - **pytest** – test suite (`tests/`).
 - **pre‑commit** – hooks for linting and SPDX header checks.
 - **GitHub Actions** – CI pipelines for linting, testing, and code‑health dashboards.
