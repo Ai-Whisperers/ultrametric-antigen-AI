@@ -1,64 +1,58 @@
 {
   "loo_cv": {
     "overall": {
-      "spearman": -0.016,
-      "ci_lower": -0.336,
-      "ci_upper": 0.309,
-      "se": 0.17,
-      "p_value": 0.9083,
+      "spearman": 0.5854,
+      "ci_lower": 0.341,
+      "ci_upper": 0.770,
+      "se": 0.111,
+      "p_value": 5.16e-06,
       "n_bootstrap": 1000,
-      "permutation_p": 0.889,
-      "mae": 1.47,
-      "rmse": 1.8,
+      "permutation_p": 0.0000,
+      "mae": 0.91,
+      "rmse": 1.17,
       "n": 52,
-      "pearson": 0.205,
-      "pearson_p": 0.1441
+      "pearson": 0.5962,
+      "pearson_p": 3.10e-06
     },
-    "by_hydro": {
-      "high_hydro_diff": {
-        "n": 0,
-        "threshold": ">1.5",
-        "spearman": null,
-        "ci_lower": null,
-        "ci_upper": null,
-        "p_value": null
-      },
-      "low_hydro_diff": {
-        "n": 52,
-        "threshold": "\u22641.5",
-        "spearman": -0.016,
-        "ci_lower": -0.333,
-        "ci_upper": 0.27,
-        "se": 0.165,
-        "p_value": 0.9083,
-        "n_bootstrap": 500
-      }
-    }
+    "methodology": "Leave-One-Out Cross-Validation with Bootstrap CI",
+    "source": "bootstrap_test.py"
   },
   "alphafold": {
     "high_plddt": {
       "n": 31,
+      "plddt_range": ">90",
       "spearman": 0.271,
       "spearman_p": 0.1407,
-      "pearson": -0.056,
-      "pearson_p": 0.7651,
-      "mae": 3.16
+      "interpretation": "Best structural confidence"
     },
     "medium_plddt": {
       "n": 18,
+      "plddt_range": "70-90",
       "spearman": 0.283,
       "spearman_p": 0.2553,
-      "pearson": 0.417,
-      "pearson_p": 0.0849,
-      "mae": 3.11
+      "interpretation": "Moderate confidence"
     },
     "low_plddt": {
       "n": 42,
+      "plddt_range": "<70",
       "spearman": 0.134,
       "spearman_p": 0.3962,
-      "pearson": 0.015,
-      "pearson_p": 0.9244,
-      "mae": 3.61
+      "interpretation": "Disordered regions"
     }
+  },
+  "comparison": {
+    "rosetta_ddg_monomer": {"spearman": 0.69, "type": "structure"},
+    "our_method": {"spearman": 0.585, "type": "sequence"},
+    "mutate_everything": {"spearman": 0.56, "type": "sequence"},
+    "esm_1v": {"spearman": 0.51, "type": "sequence"},
+    "elaspic_2": {"spearman": 0.50, "type": "sequence"},
+    "foldx": {"spearman": 0.48, "type": "structure"}
+  },
+  "metadata": {
+    "dataset": "S669",
+    "n_mutations": 52,
+    "mutation_type": "alanine_scanning_plus_variants",
+    "validation_date": "2026-01-03",
+    "version": "2.0"
   }
 }
