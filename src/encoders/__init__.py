@@ -59,6 +59,12 @@ from .hyperbolic_codon_encoder import (
     compute_target_radius,
     extract_codon_embeddings_from_vae,
 )
+from .trainable_codon_encoder import (
+    TrainableCodonEncoder,
+    train_codon_encoder,
+    codon_to_onehot_12dim,
+    compute_codon_hierarchy_level,
+)
 from .hybrid_encoder import (
     CrossAttentionFusion,
     GatedFusion,
@@ -149,6 +155,11 @@ __all__ = [
     "compute_codon_padic_valuation",
     "compute_target_radius",
     "extract_codon_embeddings_from_vae",
+    # Trainable codon encoder (12-dim input)
+    "TrainableCodonEncoder",
+    "train_codon_encoder",
+    "codon_to_onehot_12dim",
+    "compute_codon_hierarchy_level",
     # Hybrid encoder (ESM-2 + Codon)
     "HybridCodonEncoder",
     "HybridEncoderConfig",

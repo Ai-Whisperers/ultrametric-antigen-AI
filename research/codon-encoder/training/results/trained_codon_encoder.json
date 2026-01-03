@@ -1,0 +1,71 @@
+{
+  "metadata": {
+    "version": "v1_12dim_trainable",
+    "timestamp": "2026-01-03T15:09:15.262709",
+    "architecture": {
+      "input_dim": 12,
+      "hidden_dim": 64,
+      "latent_dim": 16
+    },
+    "training": {
+      "epochs": 500,
+      "lr": 0.001
+    }
+  },
+  "embedding_analysis": {
+    "radius_range": [
+      2.9444375038146973,
+      2.9444398880004883
+    ],
+    "radius_mean": 2.9444384574890137,
+    "radius_std": 5.479090532389819e-07,
+    "hierarchy_radius_corr": -0.012713702837552436,
+    "padic_distance_corr": 0.742088405108047,
+    "aa_radii": {
+      "S": 2.837,
+      "R": 2.8383,
+      "L": 2.8409,
+      "I": 2.944,
+      "T": 2.944,
+      "P": 2.944,
+      "C": 2.944,
+      "Q": 2.9441,
+      "F": 2.9441,
+      "G": 2.9441,
+      "N": 2.9441,
+      "H": 2.9441,
+      "D": 2.9441,
+      "A": 2.9442,
+      "K": 2.9442,
+      "V": 2.9442,
+      "E": 2.9442,
+      "Y": 2.9442,
+      "M": 2.9444,
+      "W": 2.9444
+    }
+  },
+  "ddg_evaluation": {
+    "n_samples": 52,
+    "best_alpha": 0.01,
+    "loo_pearson_r": 0.6360547465356172,
+    "loo_spearman_r": 0.614359599880637,
+    "loo_mae": 0.8076076822671487,
+    "loo_rmse": 1.109236081630854,
+    "train_pearson_r": 0.7575020536288674,
+    "train_spearman_r": 0.7613025067254325,
+    "coefficients": {
+      "hyp_distance": 0.2595383686380603,
+      "delta_norm": 12.150235744063016,
+      "delta_hydro": -1.6679973437627849,
+      "delta_charge": 1.048594200548624
+    },
+    "intercept": 1.1868662756664268
+  },
+  "comparison": {
+    "Rosetta_ddg_monomer": 0.69,
+    "FoldX": 0.48,
+    "ELASPIC-2": 0.5,
+    "Baseline_padic": 0.3,
+    "This_work_LOO": 0.614359599880637
+  }
+}
