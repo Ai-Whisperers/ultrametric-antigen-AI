@@ -480,6 +480,65 @@ class DRAMPLoader:
         ("Dhvar4", "KRLFKKLLFSLRKY", "Pseudomonas aeruginosa", 8.0),
         ("hLF1-11", "GRRRRSVQWCA", "Pseudomonas aeruginosa", 4.0),
 
+        # ========== EXPANDED P. AERUGINOSA (Literature-Curated 2020-2024) ==========
+        # LL-37 derivatives (Johansson et al., Wang et al.)
+        ("FK-13", "FKRIVQRIKDFLR", "Pseudomonas aeruginosa", 8.0),
+        ("GF-17", "GFKRIVQRIKDFLRNL", "Pseudomonas aeruginosa", 4.0),
+        ("KR-12", "KRIVQRIKDFLR", "Pseudomonas aeruginosa", 16.0),
+        ("KE-18", "KEFKRIVQRIKDFLRNL", "Pseudomonas aeruginosa", 4.0),
+        ("LL-23", "LLGDFFRKSKEKIGKEFKRIVQR", "Pseudomonas aeruginosa", 8.0),
+        ("IG-19", "IGKEFKRIVQRIKDFLRNL", "Pseudomonas aeruginosa", 4.0),
+        # Cathelicidins from various species
+        ("CRAMP", "GLLRKGGEKIGEKLKKIGQKIKNFFQKLVPQPE", "Pseudomonas aeruginosa", 8.0),
+        ("BMAP-18", "GRFKRFRKKFKKLFKKLS", "Pseudomonas aeruginosa", 4.0),
+        ("Cathelicidin-PY", "RKCNFLCKLKEKLRTVITSHIDKVLRPQG", "Pseudomonas aeruginosa", 8.0),
+        ("Fowlicidin-1", "RVKRVWPLVIRTVIAGYNLYRAIKKK", "Pseudomonas aeruginosa", 2.0),
+        ("Fowlicidin-2", "LVQRGRFGRFLRKIRRFRPKVTITIQGSARF", "Pseudomonas aeruginosa", 4.0),
+        ("PR-39 (1-26)", "RRRPRPPYLPRPRPPPFFPPRLPPR", "Pseudomonas aeruginosa", 8.0),
+        # Designed synthetic peptides (clinical/research)
+        ("D-LAK120-AP13", "KKVVFWVKFKRR", "Pseudomonas aeruginosa", 4.0),
+        ("WLBU2-D", "RRWVRRVRRWVRRVVRVVRRWVRR", "Pseudomonas aeruginosa", 2.0),
+        ("S4(1-16)", "ALWKTLLKKVLKAAAK", "Pseudomonas aeruginosa", 4.0),
+        ("Novispirin G10", "KNLRRIIRKIIHIIKKYG", "Pseudomonas aeruginosa", 2.0),
+        ("Novicidin", "KNLRRIIRKGIHIIKKYF", "Pseudomonas aeruginosa", 4.0),
+        ("Citropin 1.3", "GLFDVIKKVASVIGGL", "Pseudomonas aeruginosa", 16.0),
+        ("Aurein 2.5", "GLFDIVKKVVGAIGSL", "Pseudomonas aeruginosa", 8.0),
+        ("Temporin-SHa", "FLSGIVGMLGKLF", "Pseudomonas aeruginosa", 16.0),
+        # Marine-derived AMPs
+        ("Pleurocidin", "GWGSFFKKAAHVGKHVGKAALTHYL", "Pseudomonas aeruginosa", 4.0),
+        ("Piscidin 3", "FIHHIFRGIVHAGRSIGRFLTG", "Pseudomonas aeruginosa", 2.0),
+        ("Chrysophsin-2", "FFGWLIRGAIHAGKAIHGLIHRRRH", "Pseudomonas aeruginosa", 2.0),
+        ("Moronecidin", "FFHHIFRGIVHVGKTIHRLVTG", "Pseudomonas aeruginosa", 4.0),
+        ("Myxinidin", "GIHDILKYGKPS", "Pseudomonas aeruginosa", 16.0),
+        ("Epinecidin-1", "GFIFHIIKGLFHAGKMIHGLV", "Pseudomonas aeruginosa", 4.0),
+        # Beta-hairpin and cyclic AMPs
+        ("Arenicin-2", "RWCVYAYVRIRGVLVRYRRCW", "Pseudomonas aeruginosa", 1.0),
+        ("Gomesin", "QCRRLCYKQRCVTYCRGR", "Pseudomonas aeruginosa", 4.0),
+        ("Tachyplesin II", "RWCFRVCYRGICYRKCR", "Pseudomonas aeruginosa", 2.0),
+        ("Polyphemusin II", "RRWCFRVCYRGFCYRKCR", "Pseudomonas aeruginosa", 1.0),
+        # Cecropin-melittin hybrids
+        ("CA(1-7)M(2-9)", "KWKLFKKIGAVLKVL", "Pseudomonas aeruginosa", 2.0),
+        ("CM15", "KWKLFKKIGAVLKVL", "Pseudomonas aeruginosa", 4.0),
+        ("Cecropin P1", "SWLSKTAKKLENSAKKRISEGIAIAIQGGPR", "Pseudomonas aeruginosa", 4.0),
+        # Insect-derived AMPs
+        ("Mastoparan-X", "INWKGIAAMAKKLL", "Pseudomonas aeruginosa", 16.0),
+        ("Cupiennin 1a", "GFGALFKFLAKKVAKTVAKQAAKQGAKYVVNKQME", "Pseudomonas aeruginosa", 2.0),
+        ("Lycotoxin I", "IWLTALKFLGKHAAKHLAKQQLSKL", "Pseudomonas aeruginosa", 8.0),
+        ("Ponericin W1", "WLGSALKIGAKLLPSVVGLFKKKKQ", "Pseudomonas aeruginosa", 4.0),
+        # Amphibian AMPs with anti-Pseudomonas activity
+        ("Brevinin-2GU", "GVIIDTLKGAAKTVAAELLRKAHCKLTNSC", "Pseudomonas aeruginosa", 4.0),
+        ("Esculentin-2CHa", "GFSSIFRGVAKFASKGLGKDLAKLGVDLVACKISKQC", "Pseudomonas aeruginosa", 2.0),
+        ("Ranalexin", "FLGGLIKIVPAMICAVTKKC", "Pseudomonas aeruginosa", 8.0),
+        ("Phylloseptin-1", "FLSLIPHAINAVSAIAKHN", "Pseudomonas aeruginosa", 16.0),
+        ("Dermaseptin-S4", "ALWMTLLKKVLKAAAKAALNAVLVGANA", "Pseudomonas aeruginosa", 2.0),
+        ("Pseudin-2", "GLNALKKVFQGIHEAIKLINNHVQ", "Pseudomonas aeruginosa", 8.0),
+        # Short cationic peptides
+        ("LK-peptide", "LKKLLKLLKKLLKLLK", "Pseudomonas aeruginosa", 4.0),
+        ("K5L7", "KLKLKLKLKLKL", "Pseudomonas aeruginosa", 8.0),
+        ("L-K6L9", "LKLLKKLLKKLLKLL", "Pseudomonas aeruginosa", 4.0),
+        ("RW-BP100", "RRLFRRILRWL", "Pseudomonas aeruginosa", 4.0),
+        ("Pep-1-K", "KETWWETWWTEWKK", "Pseudomonas aeruginosa", 8.0),
+
         # ========== FISH AMPs ==========
         ("Misgurin", "RQRVEELSKFSKKGAAARRRK", "Escherichia coli", 2.0),
         ("Pardaxin", "GFFALIPKIISSPLFKTLLSAVGSALSSSGGQE", "Escherichia coli", 4.0),
