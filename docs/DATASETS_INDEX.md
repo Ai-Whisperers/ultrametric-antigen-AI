@@ -18,17 +18,17 @@ This document provides a **single source of truth** for all external datasets, d
 
 ### VALIDATED
 
-| Dataset | URL | Description | Usage |
-|---------|-----|-------------|-------|
-| **ProThermDB** | https://web.iitm.ac.in/bioinfo2/prothermdb/ | Thermodynamic database, 219 curated mutations | `jose_colbes/` DDG training |
+| Dataset | URL | Description | Usage | Status |
+|---------|-----|-------------|-------|--------|
+| **ProThermDB** | https://web.iitm.ac.in/bioinfo2/prothermdb/ | 32,000+ thermodynamic entries (Tm, ΔG, ΔΔG) | `jose_colbes/` DDG training | ✅ Online |
 
 ### PLANNED
 
-| Dataset | URL | Description | Priority |
-|---------|-----|-------------|----------|
-| **DDG EMB Datasets** | https://ddgemb.biocomp.unibo.it/datasets/ | Curated ΔΔG benchmarks (S669, S2648, etc.) | HIGH |
-| **ThermoMutDB** | https://biosig.lab.uq.edu.au/thermomutdb/ | Curated mutation effects | MEDIUM |
-| **FireProtDB** | https://loschmidt.chemi.muni.cz/fireprotdb/ | Protein stability engineering | LOW |
+| Dataset | URL | Description | Priority | Status |
+|---------|-----|-------------|----------|--------|
+| **DDG EMB** | https://ddgemb.biocomp.unibo.it/datasets/ | S2450 (2450 mutations), S669 (669 mutations), ptMUL-NR (82 multi-point) | HIGH | ✅ Online |
+| **ThermoMutDB** | https://biosig.lab.uq.edu.au/thermomutdb/ | Curated mutation effects | MEDIUM | Unverified |
+| **FireProtDB** | https://loschmidt.chemi.muni.cz/fireprotdb/ | Protein stability engineering | LOW | Unverified |
 
 ---
 
@@ -36,11 +36,11 @@ This document provides a **single source of truth** for all external datasets, d
 
 ### PLANNED
 
-| Dataset | URL | Description | Priority |
-|---------|-----|-------------|----------|
-| **PSICOV Benchmark** | http://bioinfadmin.cs.ucl.ac.uk/downloads/PSICOV/ | 150 proteins with contact maps (.aln, .contacts) | HIGH |
-| **PconsC4** | https://github.com/ElofssonLab/PconsC4 | Contact prediction benchmark (CASP/CAMEO domains) | HIGH |
-| **AlphaFold Database** | https://alphafold.ebi.ac.uk/download | Complete protein structures | MEDIUM |
+| Dataset | URL | Description | Priority | Status |
+|---------|-----|-------------|----------|--------|
+| **PSICOV Benchmark** | http://bioinfadmin.cs.ucl.ac.uk/downloads/PSICOV/ | 150 proteins with contact maps (.aln, .contacts) | HIGH | ⚠️ SSL issues |
+| **PconsC4** | https://github.com/ElofssonLab/PconsC4 | Contact prediction tool (requires external benchmarks) | HIGH | ✅ Online |
+| **AlphaFold Database** | https://alphafold.ebi.ac.uk/download | 214M protein structures, CC-BY-4.0 | MEDIUM | ✅ Online |
 
 ---
 
@@ -48,11 +48,13 @@ This document provides a **single source of truth** for all external datasets, d
 
 ### PLANNED
 
-| Dataset | URL | Description | Priority |
-|---------|-----|-------------|----------|
-| **CoDNaS** | http://ufq.unq.edu.ar/codnas/ | Curated CDS-structure pairs (actual codons) | HIGH |
-| **UniProt CDS** | https://www.uniprot.org/downloads | Complete proteomes with EMBL/GenBank CDS | MEDIUM |
-| **NCBI CDS** | https://www.ncbi.nlm.nih.gov/datasets/ | Coding sequences via datasets API | MEDIUM |
+| Dataset | URL | Description | Priority | Status |
+|---------|-----|-------------|----------|--------|
+| **CoDNaS** | http://ufq.unq.edu.ar/codnas/ | Curated CDS-structure pairs (actual codons) | HIGH | ❌ Offline |
+| **UniProt CDS** | https://www.uniprot.org/downloads | Complete proteomes with EMBL/GenBank CDS | MEDIUM | ✅ Online |
+| **NCBI CDS** | https://www.ncbi.nlm.nih.gov/datasets/ | Coding sequences via datasets API | MEDIUM | ✅ Online |
+
+> ⚠️ **CoDNaS Alternative**: If CoDNaS remains offline, use UniProt → EMBL cross-references to obtain CDS sequences.
 
 ---
 
@@ -60,18 +62,18 @@ This document provides a **single source of truth** for all external datasets, d
 
 ### VALIDATED
 
-| Dataset | URL | Description | Usage |
-|---------|-----|-------------|-------|
-| **APD3** | https://aps.unmc.edu/ | >3,000 validated AMPs | `carlos_brizuela/` training |
-| **DRAMP** | http://dramp.cpu-bioinfor.org/ | Comprehensive activity data | `carlos_brizuela/` training |
-| **DBAASP** | https://dbaasp.org/ | Structure-activity relationships | Hemolysis data |
+| Dataset | URL | Description | Usage | Status |
+|---------|-----|-------------|-------|--------|
+| **APD3** | https://aps.unmc.edu/ | >3,000 validated AMPs | `carlos_brizuela/` training | ⚠️ SSL issues |
+| **DRAMP** | http://dramp.cpu-bioinfor.org/ | 30,260 AMPs (v4.0, Apr 2024), activity + clinical data | `carlos_brizuela/` training | ✅ Online |
+| **DBAASP** | https://dbaasp.org/ | AMP activity, structure, hemolysis, synergy data | Hemolysis data | ✅ Online |
 
 ### REFERENCE
 
-| Dataset | URL | Description |
-|---------|-----|-------------|
-| **HemoPI** | https://webs.iiitd.edu.in/raghava/hemopi/ | Hemolytic peptide database |
-| **CAMPR3** | http://www.camp.bicnirrh.res.in/ | Collection of AMPs |
+| Dataset | URL | Description | Status |
+|---------|-----|-------------|--------|
+| **HemoPI** | https://webs.iiitd.edu.in/raghava/hemopi/ | Hemolytic peptide database | Unverified |
+| **CAMPR3** | http://www.camp.bicnirrh.res.in/ | Collection of AMPs | Unverified |
 
 ---
 
@@ -79,25 +81,25 @@ This document provides a **single source of truth** for all external datasets, d
 
 ### VALIDATED
 
-| Dataset | URL | Description | Usage |
-|---------|-----|-------------|-------|
-| **Stanford HIVdb** | https://hivdb.stanford.edu/ | Drug resistance scores, mutation comments | `hiv_research_package/` |
-| **Los Alamos HIV** | https://www.hiv.lanl.gov/ | Sequences, epitopes, alignments | Vaccine targets |
+| Dataset | URL | Description | Usage | Status |
+|---------|-----|-------------|-------|--------|
+| **Stanford HIVdb** | https://hivdb.stanford.edu/ | Drug resistance scores, mutation comments, GraphQL API | `hiv_research_package/` | ✅ Online (JS required) |
+| **Los Alamos HIV** | https://www.hiv.lanl.gov/ | Sequences, epitopes, alignments, neutralization | Vaccine targets | ⚠️ SSL issues |
 
 ### VALIDATED (Downloaded)
 
-| Source | Repository/URL | Local Path |
-|--------|----------------|------------|
-| **HuggingFace** | `damlab/human_hiv_ppi` | `data/external/huggingface/human_hiv_ppi/` |
-| **HuggingFace** | `damlab/HIV_V3_coreceptor` | `data/external/huggingface/HIV_V3_coreceptor/` |
-| **GitHub** | `lucblassel/HIV-DRM-machine-learning` | Drug resistance ML data |
+| Source | Repository/URL | Local Path | Status |
+|--------|----------------|------------|--------|
+| **HuggingFace** | `damlab/human_hiv_ppi` | `data/external/huggingface/human_hiv_ppi/` | ✅ Downloaded |
+| **HuggingFace** | `damlab/HIV_V3_coreceptor` | `data/external/huggingface/HIV_V3_coreceptor/` | ✅ Downloaded |
+| **GitHub** | `lucblassel/HIV-DRM-machine-learning` | Drug resistance ML data (African & UK) | ✅ Available |
 
 ### PLANNED
 
-| Dataset | URL | Description | Priority |
-|---------|-----|-------------|----------|
-| **Kaggle HIV-1/2** | https://www.kaggle.com/datasets/protobioengineering/hiv-1-and-hiv-2-rna-sequences | RNA sequences | LOW |
-| **Zenodo Tropism** | https://zenodo.org/record/6475667 | CCR5/CXCR4 sequences | MEDIUM |
+| Dataset | URL | Description | Priority | Status |
+|---------|-----|-------------|----------|--------|
+| **Kaggle HIV-1/2** | https://www.kaggle.com/datasets/protobioengineering/hiv-1-and-hiv-2-rna-sequences | RNA sequences (FASTA/GenBank) | LOW | Unverified |
+| **Zenodo Tropism** | https://zenodo.org/record/6475667 | CCR5/CXCR4 sequences | MEDIUM | Unverified |
 
 See [`data/external/HIV_DATASETS_DOWNLOAD_GUIDE.md`](../data/external/HIV_DATASETS_DOWNLOAD_GUIDE.md) for complete HIV dataset guide.
 
@@ -161,11 +163,18 @@ research/
 
 ## Validation Status Legend
 
-| Status | Meaning |
-|--------|---------|
+| Category | Meaning |
+|----------|---------|
 | **VALIDATED** | Downloaded, tested, integrated into pipeline |
 | **PLANNED** | Identified for future use, not yet downloaded |
 | **REFERENCE** | External resource for context, not direct input |
+
+| URL Status | Meaning |
+|------------|---------|
+| ✅ Online | URL verified working (Jan 2026) |
+| ⚠️ SSL issues | Works in browser, certificate warnings |
+| ❌ Offline | Connection refused, site may be down |
+| Unverified | Not yet tested |
 
 ---
 
@@ -193,4 +202,5 @@ When adding a new dataset:
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-01-03 | 1.1 | Added URL verification status, detailed dataset descriptions |
 | 2026-01-03 | 1.0 | Initial centralized index with 8 categories |

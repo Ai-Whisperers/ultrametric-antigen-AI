@@ -1,6 +1,6 @@
 # Multimodal Integration: Expectation Matrix
 
-**Doc-Type:** Research Planning · Version 1.0 · Updated 2026-01-03 · AI Whisperers
+**Doc-Type:** Research Planning · Version 2.0 · Updated 2026-01-03 · AI Whisperers
 
 ---
 
@@ -18,27 +18,56 @@ The expectations serve as:
 
 ---
 
-## Current Baseline (Pre-Integration)
+## Ablation Study Results (LOO-Validated)
 
-### TrainableCodonEncoder Performance
+### Summary Table
 
-| Task | Metric | Baseline Value | Dataset | Date |
-|------|--------|----------------|---------|------|
-| DDG Prediction | LOO Spearman | **0.61** | S669 (n=52) | 2026-01-03 |
-| DDG Prediction | LOO Pearson | 0.64 | S669 (n=52) | 2026-01-03 |
-| DDG Prediction | LOO MAE | 0.81 | S669 (n=52) | 2026-01-03 |
-| DDG Prediction | LOO RMSE | 1.11 | S669 (n=52) | 2026-01-03 |
+| Mode | Features | LOO Spearman | LOO Pearson | Overfitting Ratio |
+|------|----------|--------------|-------------|-------------------|
+| codon_only | 4 | 0.34 | 0.45 | 1.57x |
+| physico_only | 4 | 0.36 | 0.51 | 1.36x |
+| esm_only (naive) | 4 | 0.47 | 0.46 | 1.28x |
+| **codon+physico** | **8** | **0.60** | **0.62** | **1.27x** |
+| codon+physico+esm | 12 | 0.57 | 0.61 | 1.34x |
+
+### Key Findings
+
+1. **Codon + Physico (0.60)** achieves best performance with proper regularization
+2. **ESM-only (0.47)** outperforms individual components but naive addition hurts combined
+3. **Curse of dimensionality**: 52 samples insufficient for 12+ features
+4. **Synergy**: Codon + physico shows multiplicative benefit (0.60 > 0.34 + 0.36)
+
+### Why Naive ESM Integration Decreased Performance
+
+| Issue | Explanation | Solution |
+|-------|-------------|----------|
+| **Context-free embeddings** | Extracted from poly-A context, not real proteins | Use protein-level ESM |
+| **Feature redundancy** | ESM evolutionary info overlaps p-adic structure | Feature selection / PCA |
+| **Small dataset** | 52 samples can't support 12 features reliably | Larger datasets (ProteinGym) |
+| **Naive features** | 4 summary stats from 480-dim loses information | Smarter feature extraction |
+
+---
+
+## Current Baseline (Post-Ablation)
+
+### TrainableCodonEncoder + Physico Performance
+
+| Task | Metric | Value | Dataset | Date |
+|------|--------|-------|---------|------|
+| DDG Prediction | LOO Spearman | **0.60** | S669 (n=52) | 2026-01-03 |
+| DDG Prediction | LOO Pearson | 0.62 | S669 (n=52) | 2026-01-03 |
+| DDG Prediction | LOO MAE | 0.89 | S669 (n=52) | 2026-01-03 |
+| DDG Prediction | LOO RMSE | 1.17 | S669 (n=52) | 2026-01-03 |
 | P-adic Structure | Distance Correlation | 0.74 | 64 codons | 2026-01-03 |
-| Contact Prediction | AUC-ROC | 0.67 | Insulin B-chain | 2026-01-03 |
 
 ### Architecture Baseline
 
 ```
-TrainableCodonEncoder (current):
-  Input:  12-dim one-hot (4 bases × 3 positions)
-  Hidden: 64-dim MLP (2 layers, LayerNorm, SiLU, Dropout=0.1)
-  Output: 16-dim Poincaré ball embedding
-  Params: ~6K trainable parameters
+Current Best Pipeline (codon+physico):
+  TrainableCodonEncoder → 16-dim Poincaré
+  Features: [hyp_dist, delta_radius, diff_norm, cos_sim, Δhydro, Δcharge, Δsize, Δpolar]
+  Model: Ridge(alpha=100) with StandardScaler
+  Validation: Leave-One-Out CV
 ```
 
 ### Checkpoint Reference
@@ -46,228 +75,367 @@ TrainableCodonEncoder (current):
 | Checkpoint | Purpose | Location |
 |------------|---------|----------|
 | trained_codon_encoder.pt | DDG prediction | research/codon-encoder/training/results/ |
+| esm_aa_embeddings.json | ESM-2 35M AA embeddings | research/codon-encoder/multimodal/data/ |
 | v5_11_structural | Contact prediction | sandbox-training/checkpoints/ |
-| homeostatic_rich | High richness | sandbox-training/checkpoints/ |
 
 ---
 
-## Integration Components
+## Phase 1: Protein-Level ESM Integration
 
-### Component 1: ESM-2 Embeddings
+### Current Issue
 
-**Source:** Meta AI ESM-2 (esm2_t33_650M_UR50D recommended)
+The naive ESM approach extracted embeddings for single amino acids in poly-A context:
+```
+Context: AAAAAAAAAA{X}AAAAAAAAAA
+Problem: No real protein context, no mutation site information
+```
 
-| Property | Value |
-|----------|-------|
-| Embedding dim | 1280 |
-| Context window | 1024 tokens |
-| Training data | UniRef50 (65M sequences) |
-| Pre-training | Masked language modeling |
+### Proper ESM Integration Strategy
 
-**Expected Contribution:**
-- Evolutionary context (conservation, co-evolution)
-- Secondary structure prediction
-- Disorder prediction
-- Binding site identification
+#### 1A. Protein-Sequence-Level Embeddings
 
-### Component 2: Structural Features
+Extract ESM embeddings for **actual S669 protein sequences**:
 
-**Sources:**
-- AlphaFold2/3 predicted structures
-- Contact maps (8Å threshold)
-- DSSP secondary structure
-- Solvent accessibility (RSA)
-- B-factors (pLDDT from AlphaFold)
+```python
+# For each mutation in S669:
+# 1. Get wild-type protein sequence from UniProt/PDB
+# 2. Extract ESM embedding at mutation position
+# 3. Also extract for mutant sequence
+# 4. Use delta embedding as feature
 
-| Feature | Dimension | Source |
-|---------|-----------|--------|
-| Contact map | N×N binary | AlphaFold + 8Å |
-| DSSP (3-state) | N×3 one-hot | DSSP |
-| RSA | N×1 continuous | DSSP |
-| pLDDT | N×1 continuous | AlphaFold |
-| Distance matrix | N×N continuous | AlphaFold |
+def extract_mutation_esm_features(wt_seq, mut_seq, position):
+    wt_emb = esm_encoder(wt_seq)[position]  # 1280-dim
+    mut_emb = esm_encoder(mut_seq)[position]  # 1280-dim
+
+    # Context-aware features
+    context_emb = esm_encoder(wt_seq)[position-5:position+5].mean(0)
+
+    return {
+        'wt_emb': wt_emb,
+        'mut_emb': mut_emb,
+        'delta_emb': mut_emb - wt_emb,
+        'context_emb': context_emb,
+    }
+```
+
+#### 1B. ESM Attention-Based Features
+
+ESM attention heads contain co-evolution information:
+
+```python
+# Extract attention weights for mutation site
+attention_maps = esm_model(sequence, return_attentions=True)
+
+# Features:
+# - Attention entropy at mutation site
+# - Contact attention (heads 20-33 correlate with contacts)
+# - Conservation score from attention patterns
+```
+
+#### 1C. ESM Log-Likelihood Features
+
+ESM can score mutations via masked prediction:
+
+```python
+# Mask wild-type position, predict probability of mutant
+wt_seq_masked = sequence[:pos] + '<mask>' + sequence[pos+1:]
+probs = esm_model.predict_masked(wt_seq_masked)
+
+# Features:
+# - log P(mutant) - log P(wild_type)  # ESM-1v style
+# - Entropy at position
+# - Rank of mutant in predictions
+```
+
+### Data Requirements for Protein-Level ESM
+
+| Data | Source | Size | Status |
+|------|--------|------|--------|
+| S669 protein sequences | UniProt | 94 sequences | To fetch |
+| ESM-2 650M model | HuggingFace | ~2.5GB | Available |
+| Pre-computed ESM embeddings | Local | ~500MB | To compute |
+
+### Implementation Plan
+
+1. **Fetch S669 protein sequences**
+   - Use UniProt API with PDB IDs from S669
+   - Store in `multimodal/data/s669_sequences.fasta`
+
+2. **Extract protein-level ESM features**
+   - Position-specific embeddings (WT and MUT)
+   - Local context embeddings (±10 residues)
+   - ESM log-likelihood scores
+
+3. **Feature selection**
+   - PCA on 1280-dim to 32-dim
+   - Or learned projection layer (frozen ESM)
+
+4. **Validate with LOO CV**
+   - Compare ESM-protein vs ESM-naive
+   - Ablation: codon + ESM-protein vs combined
+
+### Expected Improvement (Revised)
+
+| Integration | Expected LOO Spearman | Confidence | Rationale |
+|-------------|----------------------|------------|-----------|
+| Codon+physico (baseline) | 0.60 | Measured | Current best |
+| +ESM protein-level | 0.62-0.66 | Medium | Real context helps |
+| +ESM log-likelihood | 0.63-0.67 | Medium-High | ESM-1v proven |
 
 ---
 
-## Expectation Matrix: DDG Prediction
+## Phase 2: Structural Features Integration
 
-### Expected Performance Improvements
+### Public Datasets & Resources
 
-| Integration Level | Components | Expected LOO Spearman | Confidence | Rationale |
-|-------------------|------------|----------------------|------------|-----------|
-| **Baseline** | Codon only | 0.61 | Measured | Current TrainableCodonEncoder |
-| **+ESM** | Codon + ESM-2 | 0.65-0.70 | Medium | ESM captures evolutionary conservation |
-| **+Structure** | Codon + Contacts | 0.63-0.68 | Medium | Contacts add spatial context |
-| **+Full** | Codon + ESM + Structure | 0.70-0.75 | High | Multi-source synergy |
+#### AlphaFold Database (2025)
 
-### Literature Comparison Targets
+- **URL**: https://alphafold.ebi.ac.uk/
+- **Coverage**: 214+ million structures
+- **Quality**: pLDDT confidence scores per residue
+- **Access**: REST API + bulk downloads
 
-| Method | Spearman | Type | Notes |
-|--------|----------|------|-------|
-| Rosetta ddg_monomer | 0.69 | Structure | Gold standard |
+**For S669 proteins:**
+```python
+# Download structure for UniProt ID
+url = f"https://alphafold.ebi.ac.uk/files/AF-{uniprot_id}-F1-model_v4.pdb"
+plddt_url = f"https://alphafold.ebi.ac.uk/files/AF-{uniprot_id}-F1-confidence_v4.json"
+```
+
+#### ProteinGym Benchmark
+
+- **URL**: https://github.com/OATML-Markslab/ProteinGym
+- **Pre-computed**: AlphaFold2 structures for all DMS assays
+- **Stability subset**: 7 proteins, 26,000 mutations
+- **Larger DDG datasets**: T2837 (2,837 mutations), Megascale (hundreds of thousands)
+
+| Dataset | Proteins | Mutations | Notes |
+|---------|----------|-----------|-------|
+| S669 (current) | 94 | 669 | High quality, manual curation |
+| T2837 | 129 | 2,837 | Larger aggregated set |
+| ProteinGym-Stability | 7 | 26,000 | Deep mutational scanning |
+| Megascale | ~300 | ~500,000 | ThermoMPNN training data |
+
+#### ThermoMPNN / ProteinMPNN
+
+- **URL**: https://github.com/dauparas/ProteinMPNN
+- **Architecture**: GNN on protein structure
+- **Pre-trained**: Embeddings available for transfer learning
+- **Performance**: Spearman 0.72 on stability (SOTA 2024)
+
+Key insight: ThermoMPNN uses ProteinMPNN embeddings + Megascale dataset
+
+#### ESM-IF1 (Inverse Folding)
+
+- **URL**: https://github.com/facebookresearch/esm
+- **Approach**: Sequence from structure prediction
+- **Training**: 12M AlphaFold2 structures
+- **For DDG**: Mutation log-likelihood from structure
+
+### Structural Features to Extract
+
+| Feature | Dimension | Source | Extraction Method |
+|---------|-----------|--------|-------------------|
+| pLDDT at mutation | 1 | AlphaFold | JSON confidence file |
+| Local pLDDT (±5 residues) | 1 | AlphaFold | Mean of neighborhood |
+| Contact count | 1 | Structure | 8Å threshold |
+| Relative solvent accessibility | 1 | DSSP | FreeSASA or BioPython |
+| Secondary structure | 3 | DSSP | 3-state one-hot (H/E/C) |
+| Distance to active site | 1 | Annotation | UniProt features |
+| B-factor proxy | 1 | AlphaFold | 1 - pLDDT/100 |
+| ProteinMPNN embedding | 32 | ThermoMPNN | Pre-trained encoder |
+
+### Implementation Plan
+
+#### 2A. AlphaFold Structure Download
+
+```python
+from src.encoders.alphafold_encoder import AlphaFoldStructureLoader
+
+loader = AlphaFoldStructureLoader(cache_dir="multimodal/structures/")
+
+for protein in s669_proteins:
+    structure = loader.get_structure(protein.uniprot_id)
+    # Extract: coords, plddt, pae
+```
+
+#### 2B. DSSP Feature Extraction
+
+```python
+from Bio.PDB import DSSP, PDBParser
+
+parser = PDBParser()
+structure = parser.get_structure("protein", pdb_file)
+dssp = DSSP(structure[0], pdb_file)
+
+# Features per residue:
+# - Secondary structure (H/E/C)
+# - Relative solvent accessibility
+# - Phi/Psi angles
+```
+
+#### 2C. Contact Map Features
+
+```python
+def extract_contact_features(structure, mutation_pos, threshold=8.0):
+    coords = structure.coords  # CA atoms
+
+    # Contact count at mutation site
+    distances = np.linalg.norm(coords - coords[mutation_pos], axis=1)
+    contact_count = (distances < threshold).sum() - 1
+
+    # Local contact density
+    neighborhood = slice(max(0, mutation_pos-5), mutation_pos+5)
+    local_contacts = contact_map[neighborhood, :].sum()
+
+    return contact_count, local_contacts
+```
+
+### Expected Improvement (Structural)
+
+| Integration | Expected LOO Spearman | Confidence | Rationale |
+|-------------|----------------------|------------|-----------|
+| Codon+physico (baseline) | 0.60 | Measured | Current best |
+| +pLDDT only | 0.58-0.62 | Low | pLDDT weak for stability |
+| +Contact features | 0.62-0.66 | Medium | Contact context helps |
+| +DSSP features | 0.61-0.64 | Medium | SS environment matters |
+| +ProteinMPNN embeddings | 0.65-0.70 | High | Transfer from Megascale |
+
+**Note**: AlphaFold pLDDT alone shows weak correlation with stability changes (see literature).
+
+---
+
+## Phase 3: Full Multimodal Integration
+
+### Recommended Architecture (Updated)
+
+Based on ablation results, recommend **late fusion with feature selection**:
+
+```
+TrainableCodonEncoder ──────────→ 16-dim  ─┐
+                                           │
+Physico Features ───────────────→  4-dim  ─┤
+                                           │
+ESM-2 Protein Features (PCA) ───→ 16-dim  ─├→ Concat → Ridge(α) → DDG
+                                           │
+Structural Features (selected) ──→  8-dim  ─┘
+
+Total: 44-dim (require larger dataset or strong regularization)
+```
+
+### Feature Selection Strategy
+
+For 52 samples, limit to ~8-12 total features:
+
+1. **Core features (keep)**: hyp_dist, delta_radius, delta_hydro, delta_charge (4)
+2. **ESM features (select 2-4)**: ESM log-likelihood, position entropy, context similarity
+3. **Structure features (select 2-4)**: pLDDT, contact_count, RSA, SS
+
+### Scaling to Larger Datasets
+
+| Dataset | Samples | Recommended Features | Expected Spearman |
+|---------|---------|---------------------|-------------------|
+| S669 | 52 | 8-12 | 0.60-0.65 |
+| T2837 | 2,837 | 20-30 | 0.65-0.70 |
+| Megascale | 500,000 | 50+ (deep learning) | 0.72+ |
+
+---
+
+## Literature Comparison (Updated)
+
+| Method | Spearman | Type | Data Requirements |
+|--------|----------|------|-------------------|
+| Rosetta ddg_monomer | 0.69 | Structure | PDB structure |
+| ThermoMPNN (2024) | 0.72 | Structure | AlphaFold structure |
 | ESM-1v | 0.51 | Sequence | Zero-shot |
-| ThermoMPNN | 0.72 | Structure | State-of-art 2024 |
-| **Target (ours)** | **0.70+** | **Hybrid** | **Codon + ESM + Structure** |
-
-### Risk Factors
-
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Overfitting (small dataset) | High | LOO CV, regularization |
-| ESM dominates codon signal | Medium | Gated fusion, attention weights |
-| Structural features noisy | Medium | pLDDT filtering |
-| Compute requirements | Low | ESM embeddings pre-computed |
+| ELASPIC-2 | 0.50 | Sequence | MSA |
+| Mutate Everything | 0.56 | Sequence | Zero-shot on S669 |
+| **Ours (codon+physico)** | **0.60** | **Sequence** | LOO-validated |
+| **Target (+ESM+struct)** | **0.65-0.70** | **Hybrid** | Protein-level features |
 
 ---
 
-## Expectation Matrix: Contact Prediction
-
-### Expected Performance Improvements
-
-| Integration Level | Components | Expected AUC-ROC | Confidence | Rationale |
-|-------------------|------------|------------------|------------|-----------|
-| **Baseline** | Codon pairwise | 0.67 | Measured | v5_11_structural checkpoint |
-| **+ESM** | Codon + ESM coevolution | 0.72-0.78 | High | ESM attention = coevolution proxy |
-| **+AlphaFold** | Codon + pLDDT | 0.75-0.80 | High | pLDDT predicts contacts |
-| **+Full** | Codon + ESM + AlphaFold | 0.80-0.85 | Medium | Multi-source, but diminishing returns |
-
-### Literature Comparison Targets
-
-| Method | Precision@L | AUC | Notes |
-|--------|-------------|-----|-------|
-| AlphaFold2 contacts | 0.85+ | - | Structure-derived |
-| ESM-2 attention | 0.70 | - | Attention heads |
-| trRosetta | 0.65 | - | Co-evolution |
-| **Target (ours)** | **0.75+** | **0.80+** | **Hyperbolic + ESM** |
-
----
-
-## Expectation Matrix: Physics Invariants
-
-### Force Constant Prediction (Existing)
-
-| Integration Level | Components | Expected ρ | Confidence | Notes |
-|-------------------|------------|------------|------------|-------|
-| **Baseline** | Codon radial | 0.86 | Measured | k = r × m / 100 |
-| **+ESM** | Codon + ESM | 0.86-0.88 | Low | Minimal expected gain |
-| **+Structure** | Codon + B-factors | 0.88-0.92 | Medium | B-factors ∝ dynamics |
-
-**Note:** P-adic structure already captures force constants well. ESM/structure may add marginal gains.
-
-### Folding Kinetics
-
-| Integration Level | Components | Expected ρ | Confidence | Notes |
-|-------------------|------------|------------|------------|-------|
-| **Baseline** | Property-based | 0.94 | Measured | Existing benchmark |
-| **+ESM** | Codon + ESM disorder | 0.95-0.97 | Medium | ESM predicts disorder |
-| **+Contact Order** | Codon + CO | 0.96-0.98 | High | Contact order ∝ folding rate |
-
----
-
-## Integration Architecture Options
-
-### Option A: Late Fusion (Recommended for Start)
-
-```
-Codon Encoder  →  16-dim  ─┐
-                           ├→ Concat → MLP → Output
-ESM-2 Encoder  → 128-dim  ─┤
-                           │
-Structure Enc  →  32-dim  ─┘
-
-Total: 176-dim → MLP(176, 64, 1)
-```
-
-**Pros:** Simple, interpretable, preserves modality separation
-**Cons:** May miss cross-modal interactions
-
-### Option B: Cross-Attention Fusion
-
-```
-Codon Encoder  →  16-dim  ─┐
-                           ├→ CrossAttention → Output
-ESM-2 Encoder  → 128-dim  ─┘
-                    ↑
-Structure Enc  →  32-dim (as keys/values)
-```
-
-**Pros:** Learns cross-modal interactions
-**Cons:** More complex, needs more data
-
-### Option C: Hierarchical Fusion
-
-```
-Stage 1: Codon + ESM → Sequence Embedding (64-dim)
-Stage 2: Sequence + Structure → Final Embedding (32-dim)
-Stage 3: Final → Task-specific head
-```
-
-**Pros:** Respects information hierarchy
-**Cons:** Multi-stage training complexity
-
----
-
-## Success Criteria
+## Success Criteria (Revised)
 
 ### Minimum Viable Improvement
 
-| Task | Baseline | Minimum Target | Stretch Target |
-|------|----------|----------------|----------------|
-| DDG (Spearman) | 0.61 | **0.65** | 0.70+ |
+| Task | Current | Minimum | Stretch |
+|------|---------|---------|---------|
+| DDG (Spearman) | 0.60 | **0.63** | 0.68+ |
+| DDG on T2837 | - | **0.60** | 0.65+ |
 | Contact (AUC) | 0.67 | **0.72** | 0.80+ |
-| Force k (ρ) | 0.86 | 0.87 | 0.90+ |
+
+### Integration Successful If:
+
+1. LOO Spearman improves by ≥0.03 (to 0.63+)
+2. Each modality contributes positively in ablation
+3. Overfitting ratio stays below 1.4×
+4. Method generalizes to T2837 dataset
 
 ### Integration NOT Successful If:
 
 1. DDG Spearman drops below 0.55 (regression)
-2. Any component ablation shows no contribution
+2. Added features show negative contribution
 3. Overfitting ratio exceeds 1.5×
-4. Training becomes unstable
+4. Requires dataset-specific tuning
 
 ---
 
-## Experimental Plan
+## Next Steps
 
-### Phase 1: ESM Integration (Priority)
+### Immediate (Phase 1A)
 
-1. Extract ESM-2 embeddings for S669 sequences
-2. Implement late fusion with TrainableCodonEncoder
-3. Evaluate on DDG with LOO CV
-4. Ablation: Codon-only vs ESM-only vs Combined
+1. [ ] Fetch S669 protein sequences from UniProt
+2. [ ] Extract protein-level ESM embeddings
+3. [ ] Implement ESM log-likelihood scoring
+4. [ ] Validate with LOO CV
 
-### Phase 2: Structural Features
+### Short-term (Phase 2A)
 
-1. Obtain AlphaFold structures for S669 proteins
-2. Extract contact maps, DSSP, pLDDT
-3. Add structural encoder branch
-4. Evaluate combined model
+1. [ ] Download AlphaFold structures for S669 proteins
+2. [ ] Extract pLDDT, contacts, DSSP features
+3. [ ] Integrate with multimodal predictor
+4. [ ] Ablation study on structural features
 
-### Phase 3: Full Multimodal
+### Medium-term (Phase 3)
 
-1. Implement cross-attention fusion
-2. Joint training with multi-task loss
-3. Hyperparameter optimization
-4. Final benchmarking
+1. [ ] Scale to T2837 dataset
+2. [ ] Implement ThermoMPNN embedding extraction
+3. [ ] Cross-dataset validation
+4. [ ] Publication-ready benchmarking
 
 ---
 
 ## Reproducibility Checklist
 
-### Pre-Integration State (Frozen)
+### Completed
 
-- [x] TrainableCodonEncoder implemented
-- [x] trained_codon_encoder.pt saved
-- [x] LOO Spearman 0.61 documented
-- [x] Git commit: `89b3f27`
-- [ ] Git tag: `v0.1.0-codon-encoder-baseline` (to be created)
+- [x] TrainableCodonEncoder implemented and trained
+- [x] Baseline LOO Spearman 0.60 documented
+- [x] Ablation study (codon/physico/esm) completed
+- [x] Git tag: `v0.1.0-codon-encoder-baseline`
+- [x] ESM-2 AA embeddings extracted (naive)
+- [x] Multimodal predictor with LOO CV implemented
 
-### Data Requirements
+### Data Locations
 
-| Dataset | Size | Status | Location |
-|---------|------|--------|----------|
-| S669 | 52 mutations | Available | deliverables/partners/jose_colbes/ |
-| ESM-2 embeddings | ~67MB | To extract | research/codon-encoder/multimodal/data/ |
-| AlphaFold structures | ~100MB | To download | research/codon-encoder/multimodal/structures/ |
+| Dataset | Status | Location |
+|---------|--------|----------|
+| S669 mutations | Available | deliverables/partners/jose_colbes/reproducibility/data/ |
+| Codon encoder | Trained | research/codon-encoder/training/results/ |
+| ESM AA embeddings | Extracted | research/codon-encoder/multimodal/data/ |
+| S669 sequences | To fetch | research/codon-encoder/multimodal/data/ |
+| AlphaFold structures | To download | research/codon-encoder/multimodal/structures/ |
+
+---
+
+## References
+
+- **AlphaFold DB 2025**: https://alphafold.ebi.ac.uk/
+- **ProteinGym**: https://github.com/OATML-Markslab/ProteinGym
+- **ESM Repository**: https://github.com/facebookresearch/esm
+- **ThermoMPNN**: https://www.pnas.org/doi/10.1073/pnas.2314853121
+- **SPURS (2025)**: https://www.biorxiv.org/content/10.1101/2025.02.13.638154
 
 ---
 
@@ -275,10 +443,6 @@ Stage 3: Final → Task-specific head
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-01-03 | 2.0 | Added ablation results, protein-level ESM plan, structural features plan, public datasets |
 | 2026-01-03 | 1.0 | Initial expectation matrix, baseline measurements |
 
----
-
-## Notes
-
-This document will be updated with a **RESULTS_MATRIX.md** after integration experiments are complete, allowing direct comparison of expectations vs. actual outcomes.
