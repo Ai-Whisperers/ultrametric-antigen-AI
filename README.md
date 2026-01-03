@@ -339,6 +339,29 @@ pre-commit install
 
 ---
 
+## 🤝 Research Partner Packages
+
+Specialized bioinformatics tools developed for CONACYT research partners in [`deliverables/partners/`](deliverables/partners/):
+
+| Partner | Focus | Key Scripts | Results |
+|---------|-------|-------------|---------|
+| **Jose Colbes** | Protein stability (ΔΔG, Rosetta-blind) | `C1_rosetta_blind_detection.py`, `C4_mutation_effect_predictor.py` | LOO ρ=0.61 |
+| **Carlos Brizuela** | AMP design (NSGA-II) | `B1_pathogen_specific_design.py`, `B8_microbiome_safe_amps.py` | Pareto-optimal peptides |
+| **Alejandra Rojas** | Arbovirus (DENV, ZIKV) | `A2_pan_arbovirus_primers.py`, `arbovirus_hyperbolic_trajectory.py` | Pan-arbovirus primers |
+| **HIV Research** | TDR screening, LA selection | `H6_tdr_screening.py`, `H7_la_injectable_selection.py` | Clinical decision support |
+
+**Quick Start:**
+```bash
+cd deliverables
+python scripts/biotools.py demo-all       # Run all demos
+python scripts/biotools.py demo-hiv       # HIV resistance analysis
+python scripts/biotools.py demo-stability # Protein stability
+```
+
+See [`deliverables/README.md`](deliverables/README.md) for full documentation.
+
+---
+
 ## 📦 License & Legal
 
 ### Software (Code)
