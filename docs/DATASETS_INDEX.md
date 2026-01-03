@@ -41,6 +41,7 @@ This document provides a **single source of truth** for all external datasets, d
 | **PSICOV Benchmark** | http://bioinfadmin.cs.ucl.ac.uk/downloads/PSICOV/ | 150 proteins with contact maps (.aln, .contacts) | HIGH | ⚠️ SSL issues |
 | **PconsC4** | https://github.com/ElofssonLab/PconsC4 | Contact prediction tool (requires external benchmarks) | HIGH | ✅ Online |
 | **AlphaFold Database** | https://alphafold.ebi.ac.uk/download | 214M protein structures, CC-BY-4.0 | MEDIUM | ✅ Online |
+| **AlphaFold API** | https://alphafold.ebi.ac.uk/api-docs | REST API for programmatic access | HIGH | ✅ Online |
 
 ---
 
