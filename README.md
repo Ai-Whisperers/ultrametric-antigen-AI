@@ -316,8 +316,10 @@ All v5.12.x checkpoints were trained on this consumer-grade setup:
 |-----------|---------------|
 | **CPU** | AMD Ryzen 5 4500 (6-core, 3.6GHz) |
 | **RAM** | 16GB DDR4 |
-| **GPU** | NVIDIA RTX 3050 (6GB VRAM, GDDR6) |
+| **GPU** | NVIDIA RTX 3050 (8GB VRAM, GDDR6) |
 | **OS** | Windows 11 / WSL2 |
+
+> **Note:** VRAM is the primary bottleneck for training larger models or batch sizes.
 
 > Training time: ~2-4 hours for full 19,683 operation coverage with v5.12.4 architecture.
 
