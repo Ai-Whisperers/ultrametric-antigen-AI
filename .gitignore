@@ -58,6 +58,7 @@ env/
 .claude/*
 !.claude/CLAUDE.md
 !.claude/commands/
+.playwright-mcp/
 conductor/
 
 # Build artifacts and analysis outputs (root level)

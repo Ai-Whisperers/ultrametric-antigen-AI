@@ -1,5 +1,6 @@
-# Ternary VAE v5.5 - Production Requirements
-# Python 3.8+
+# Ternary VAE v5.11 - Production Requirements
+# Python >= 3.10 (matches pyproject.toml)
+# For full dev dependencies, use: pip install -e ".[all]"
 
 # Core Dependencies
 torch>=2.0.0
@@ -12,7 +13,7 @@ geoopt>=0.5.0
 # Configuration
 pyyaml>=6.0
 
-# Visualization (optional)
+# Visualization
 matplotlib>=3.7.0
 seaborn>=0.12.0
 plotly>=5.14.0
@@ -24,18 +25,17 @@ pandas>=2.0.0
 # Progress Bars
 tqdm>=4.65.0
 
-# Testing
-pytest>=7.3.0
-pytest-cov>=4.1.0
-
-# Documentation
-sphinx>=6.2.0
-sphinx-rtd-theme>=1.2.0
+# CLI
+typer>=0.9.0
+rich>=13.0.0
 
 # Utilities
-colorama>=0.4.6  # Colored terminal output
-tabulate>=0.9.0  # Pretty table printing
+colorama>=0.4.6
+tabulate>=0.9.0
 
 # Visualization and Monitoring
 tensorboard>=2.13.0
-# wandb>=0.15.0  # Optional: cloud-based (IP concerns)
+
+# Testing (for CI, full dev deps in pyproject.toml)
+pytest>=7.3.0
+pytest-cov>=4.1.0
