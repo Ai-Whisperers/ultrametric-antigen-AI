@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-01-03 17:17:33",
+    "timestamp": "2026-01-03 18:02:29",
     "pipeline": "AlphaFold Structural Validation",
     "version": "1.0",
     "methodology": "Parallel independent streams, then cross-validation"
@@ -48,28 +48,28 @@
   },
   "by_structure": {
     "high_plddt": {
-      "n": 31,
-      "spearman": 0.271,
-      "spearman_p": 0.1407,
-      "pearson": -0.056,
-      "pearson_p": 0.7651,
-      "mae": 3.16
+      "n": 41,
+      "spearman": 0.27,
+      "spearman_p": 0.0884,
+      "pearson": 0.008,
+      "pearson_p": 0.9589,
+      "mae": 3.07
     },
     "medium_plddt": {
-      "n": 18,
-      "spearman": 0.283,
-      "spearman_p": 0.2553,
-      "pearson": 0.417,
-      "pearson_p": 0.0849,
-      "mae": 3.11
+      "n": 16,
+      "spearman": 0.34,
+      "spearman_p": 0.1976,
+      "pearson": 0.478,
+      "pearson_p": 0.0608,
+      "mae": 3.19
     },
     "low_plddt": {
-      "n": 42,
-      "spearman": 0.134,
-      "spearman_p": 0.3962,
-      "pearson": 0.015,
-      "pearson_p": 0.9244,
-      "mae": 3.61
+      "n": 34,
+      "spearman": 0.04,
+      "spearman_p": 0.8221,
+      "pearson": -0.035,
+      "pearson_p": 0.8444,
+      "mae": 3.79
     }
   },
   "by_hydro": {
@@ -106,8 +106,8 @@
     },
     "high_plddt_better": {
       "hypothesis": "High confidence structures should validate better",
-      "high_plddt": 0.271,
-      "low_plddt": 0.134,
+      "high_plddt": 0.27,
+      "low_plddt": 0.04,
       "confirmed": null
     }
   }
