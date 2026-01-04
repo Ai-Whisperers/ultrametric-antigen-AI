@@ -1,0 +1,316 @@
+{
+  "timestamp": "2026-01-04T05:54:13.981848",
+  "parameters": {
+    "encoder_checkpoint": "C:\\Users\\Gestalt\\Desktop\\ternary\\repos\\ternary-vaes\\research\\codon-encoder\\training\\results\\trained_codon_encoder.pt",
+    "latent_dim": 16,
+    "n_sequences": 270
+  },
+  "region_analysis": [
+    {
+      "region": "NS5_conserved",
+      "start": 9908,
+      "end": 9933,
+      "n_sequences": 270,
+      "hyperbolic_cross_seq_variance": 0.07176338136196136,
+      "mean_within_seq_variance": 1.496418254463761,
+      "mean_radius": 2.9444384548399185,
+      "radius_std": 1.8522841248420438e-07,
+      "centroid_norm": 0.8787408471107483
+    },
+    {
+      "region": "PANFLAVI_FU1",
+      "start": 9007,
+      "end": 9033,
+      "n_sequences": 270,
+      "hyperbolic_cross_seq_variance": 0.050325654447078705,
+      "mean_within_seq_variance": 1.579418886590887,
+      "mean_radius": 2.944438503406666,
+      "radius_std": 1.0660940292348912e-07,
+      "centroid_norm": 0.8789345622062683
+    },
+    {
+      "region": "PANFLAVI_cFD2",
+      "start": 9196,
+      "end": 9222,
+      "n_sequences": 270,
+      "hyperbolic_cross_seq_variance": 0.06803728640079498,
+      "mean_within_seq_variance": 1.5554435116273386,
+      "mean_radius": 2.9444385714001124,
+      "radius_std": 1.7733116119363109e-07,
+      "centroid_norm": 0.8784432411193848
+    },
+    {
+      "region": "NS5_5prime",
+      "start": 9000,
+      "end": 9100,
+      "n_sequences": 270,
+      "hyperbolic_cross_seq_variance": 0.0237723421305418,
+      "mean_within_seq_variance": 1.6360201923935502,
+      "mean_radius": 2.94443876919923,
+      "radius_std": 1.174166656519054e-07,
+      "centroid_norm": 0.8790085911750793
+    },
+    {
+      "region": "NS5_middle",
+      "start": 9500,
+      "end": 9600,
+      "n_sequences": 270,
+      "hyperbolic_cross_seq_variance": 0.028244389221072197,
+      "mean_within_seq_variance": 1.6391329509240609,
+      "mean_radius": 2.9444388769291066,
+      "radius_std": 1.0397675709099205e-07,
+      "centroid_norm": 0.8788631558418274
+    },
+    {
+      "region": "NS5_3prime",
+      "start": 10000,
+      "end": 10100,
+      "n_sequences": 270,
+      "hyperbolic_cross_seq_variance": 0.022146789357066154,
+      "mean_within_seq_variance": 1.6592710534731547,
+      "mean_radius": 2.9444388107017234,
+      "radius_std": 1.2088185740327905e-07,
+      "centroid_norm": 0.8784223198890686
+    }
+  ],
+  "genome_scan_summary": {
+    "n_windows": 36,
+    "variance_min": 0.01832796260714531,
+    "variance_max": 0.05725536122918129,
+    "variance_mean": 0.03467897568932838
+  },
+  "top_primer_candidates": [
+    {
+      "rank": 1,
+      "position": 2400,
+      "hyperbolic_variance": 0.01832796260714531
+    },
+    {
+      "rank": 2,
+      "position": 3000,
+      "hyperbolic_variance": 0.02072189375758171
+    },
+    {
+      "rank": 3,
+      "position": 9600,
+      "hyperbolic_variance": 0.022217366844415665
+    },
+    {
+      "rank": 4,
+      "position": 600,
+      "hyperbolic_variance": 0.023485319688916206
+    },
+    {
+      "rank": 5,
+      "position": 0,
+      "hyperbolic_variance": 0.025235839188098907
+    },
+    {
+      "rank": 6,
+      "position": 7800,
+      "hyperbolic_variance": 0.025304095819592476
+    },
+    {
+      "rank": 7,
+      "position": 2700,
+      "hyperbolic_variance": 0.02601633407175541
+    },
+    {
+      "rank": 8,
+      "position": 9000,
+      "hyperbolic_variance": 0.02714747190475464
+    },
+    {
+      "rank": 9,
+      "position": 8700,
+      "hyperbolic_variance": 0.027231944724917412
+    },
+    {
+      "rank": 10,
+      "position": 1200,
+      "hyperbolic_variance": 0.02724071405827999
+    }
+  ],
+  "genome_scan": [
+    {
+      "position": 0,
+      "variance": 0.025235839188098907,
+      "n_sequences": 270
+    },
+    {
+      "position": 300,
+      "variance": 0.04291604831814766,
+      "n_sequences": 270
+    },
+    {
+      "position": 600,
+      "variance": 0.023485319688916206,
+      "n_sequences": 270
+    },
+    {
+      "position": 900,
+      "variance": 0.04545493796467781,
+      "n_sequences": 270
+    },
+    {
+      "position": 1200,
+      "variance": 0.02724071405827999,
+      "n_sequences": 270
+    },
+    {
+      "position": 1500,
+      "variance": 0.036314643919467926,
+      "n_sequences": 270
+    },
+    {
+      "position": 1800,
+      "variance": 0.031246474012732506,
+      "n_sequences": 270
+    },
+    {
+      "position": 2100,
+      "variance": 0.028716815635561943,
+      "n_sequences": 270
+    },
+    {
+      "position": 2400,
+      "variance": 0.01832796260714531,
+      "n_sequences": 270
+    },
+    {
+      "position": 2700,
+      "variance": 0.02601633407175541,
+      "n_sequences": 270
+    },
+    {
+      "position": 3000,
+      "variance": 0.02072189375758171,
+      "n_sequences": 270
+    },
+    {
+      "position": 3300,
+      "variance": 0.04104706645011902,
+      "n_sequences": 270
+    },
+    {
+      "position": 3600,
+      "variance": 0.043240051716566086,
+      "n_sequences": 270
+    },
+    {
+      "position": 3900,
+      "variance": 0.05130087584257126,
+      "n_sequences": 270
+    },
+    {
+      "position": 4200,
+      "variance": 0.037648577243089676,
+      "n_sequences": 270
+    },
+    {
+      "position": 4500,
+      "variance": 0.033127713948488235,
+      "n_sequences": 270
+    },
+    {
+      "position": 4800,
+      "variance": 0.03909728676080704,
+      "n_sequences": 270
+    },
+    {
+      "position": 5100,
+      "variance": 0.03830881789326668,
+      "n_sequences": 270
+    },
+    {
+      "position": 5400,
+      "variance": 0.05725536122918129,
+      "n_sequences": 270
+    },
+    {
+      "position": 5700,
+      "variance": 0.041289448738098145,
+      "n_sequences": 270
+    },
+    {
+      "position": 6000,
+      "variance": 0.0292704738676548,
+      "n_sequences": 270
+    },
+    {
+      "position": 6300,
+      "variance": 0.030570661649107933,
+      "n_sequences": 270
+    },
+    {
+      "position": 6600,
+      "variance": 0.04142967611551285,
+      "n_sequences": 270
+    },
+    {
+      "position": 6900,
+      "variance": 0.04648780822753906,
+      "n_sequences": 270
+    },
+    {
+      "position": 7200,
+      "variance": 0.04877844080328941,
+      "n_sequences": 270
+    },
+    {
+      "position": 7500,
+      "variance": 0.03759975731372833,
+      "n_sequences": 270
+    },
+    {
+      "position": 7800,
+      "variance": 0.025304095819592476,
+      "n_sequences": 270
+    },
+    {
+      "position": 8100,
+      "variance": 0.03668995574116707,
+      "n_sequences": 270
+    },
+    {
+      "position": 8400,
+      "variance": 0.043726108968257904,
+      "n_sequences": 270
+    },
+    {
+      "position": 8700,
+      "variance": 0.027231944724917412,
+      "n_sequences": 270
+    },
+    {
+      "position": 9000,
+      "variance": 0.02714747190475464,
+      "n_sequences": 270
+    },
+    {
+      "position": 9300,
+      "variance": 0.0306820347905159,
+      "n_sequences": 270
+    },
+    {
+      "position": 9600,
+      "variance": 0.022217366844415665,
+      "n_sequences": 270
+    },
+    {
+      "position": 9900,
+      "variance": 0.028695717453956604,
+      "n_sequences": 270
+    },
+    {
+      "position": 10200,
+      "variance": 0.028109339997172356,
+      "n_sequences": 270
+    },
+    {
+      "position": 10500,
+      "variance": 0.03651008754968643,
+      "n_sequences": 248
+    }
+  ]
+}
