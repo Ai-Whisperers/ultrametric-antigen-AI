@@ -1,0 +1,81 @@
+{
+  "timestamp": "2026-01-04T03:24:09.958778",
+  "hypotheses_tested": 4,
+  "falsified": 2,
+  "supported": 2,
+  "interpretation": "MULTIPLE MECHANISMS: Polymerase fidelity, Neutral evolution (dN/dS proxy)",
+  "results": [
+    {
+      "hypothesis": "Serotype competition",
+      "prediction": "DENV-4 <15% in co-endemic regions",
+      "observation": "DENV-4 mean=45.2%, max=75.0% in co-endemic regions",
+      "falsified": true,
+      "evidence": "FALSIFIED: DENV-4 reaches 75.0% in some regions (can compete)",
+      "statistics": {
+        "co_endemic_countries": 9,
+        "denv4_proportions": [
+          0.2631578947368421,
+          0.25,
+          0.5,
+          0.5,
+          0.75,
+          0.4,
+          0.5
+        ],
+        "mean_proportion": 0.45187969924812027
+      }
+    },
+    {
+      "hypothesis": "Polymerase fidelity",
+      "prediction": "DENV-4 NS5 should be >2x more variable",
+      "observation": "DENV-4 NS5 entropy=0.8111, others=0.0480 (ratio=16.90x)",
+      "falsified": false,
+      "evidence": "SUPPORTED: NS5 shows 16.90x higher entropy in DENV-4",
+      "statistics": {
+        "serotype_entropies": {
+          "DENV-1": 0.052581008634760194,
+          "DENV-2": 0.045611043133768736,
+          "DENV-3": 0.04577261364595684,
+          "DENV-4": 0.8111488121362908
+        },
+        "entropy_ratio": 16.903081248463195,
+        "denv4_variable_positions": 2095
+      }
+    },
+    {
+      "hypothesis": "Immune evasion trade-off",
+      "prediction": "DENV-4 E/NS5 ratio should be >1.5x elevated",
+      "observation": "DENV-4 E/NS5 ratio=1.02, others mean=0.96 (meta-ratio=1.07x)",
+      "falsified": true,
+      "evidence": "FALSIFIED: E protein variability proportional to overall (meta-ratio=1.07x <1.5x)",
+      "statistics": {
+        "serotype_ratios": {
+          "DENV-1": 1.0192565810814274,
+          "DENV-2": 0.8987736813055726,
+          "DENV-3": 0.9570867819025753,
+          "DENV-4": 1.0233626961332778
+        },
+        "meta_ratio": 1.0678132545934087,
+        "denv4_e_entropy": 0.8300994353531002,
+        "denv4_ns5_entropy": 0.8111488121362908
+      }
+    },
+    {
+      "hypothesis": "Neutral evolution (dN/dS proxy)",
+      "prediction": "DENV-4 codon position ratio should be closer to 1.0",
+      "observation": "DENV-4 pos3/pos12=1.18 (dist from neutral: 0.18), others=0.24 (dist: 0.76)",
+      "falsified": false,
+      "evidence": "SUPPORTED: DENV-4 shows more neutral evolution (closer to dN/dS=1)",
+      "statistics": {
+        "serotype_ratios": {
+          "DENV-1": 0.4263051358917914,
+          "DENV-2": 0.04463973360004438,
+          "DENV-3": 0.24394272436159894,
+          "DENV-4": 1.1844895535157691
+        },
+        "denv4_neutrality_distance": 0.18448955351576912,
+        "other_neutrality_distance": 0.7617041353821884
+      }
+    }
+  ]
+}
