@@ -548,6 +548,26 @@ research/codon-encoder/replacement_calculus/
 
 ---
 
+## Future Research: SwissProt Structure Dataset
+
+**Asset:** `research/big_data/swissprot_cif_v6.tar` (38GB, AlphaFold3 predicted structures)
+
+### Potential Applications
+
+| Direction | Description | Impact |
+|-----------|-------------|--------|
+| **Contact Prediction Scale-Up** | Validate Small Protein Conjecture (AUC=0.586) across 200k+ proteins; identify fast-folder domains in large proteins for groupoid decomposition | High |
+| **DDG Predictor Enhancement** | Extract structural features (RSA, secondary structure, pLDDT, contact number) to close gap between TrainableCodonEncoder (0.60) and Rosetta (0.69) | High |
+| **Codon-Structure Mining** | Test whether p-adic valuation correlates with structural features (disorder, surface exposure) across the proteome | Medium |
+
+### Technical Notes
+
+- CIF format contains per-residue coordinates + pLDDT confidence scores
+- Uncompressed size ~38GB (tar has no compression)
+- Enables structure-aware features without running AlphaFold
+
+---
+
 ## Remaining Tasks (Next Dev Session)
 
 **V5.12.5 Implementation Plan:** `docs/plans/V5_12_5_IMPLEMENTATION_PLAN.md` (1,700+ lines) - Framework unification (~1,500 LOC savings) + controller fix + homeostasis enhancements
@@ -575,6 +595,7 @@ research/codon-encoder/replacement_calculus/
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-01-03 | 2.2 | Added SwissProt CIF dataset (38GB) future research directions |
 | 2026-01-03 | 2.1 | V5 Arrow Flip Validation complete - confidence matrix, position-aware thresholds |
 | 2026-01-03 | 2.0 | Added V5.12.5 implementation plan reference (docs/plans/) |
 | 2026-01-03 | 1.9 | TrainableCodonEncoder (LOO ρ=0.61), HyperbolicCodonEncoder, overfitting analysis |
