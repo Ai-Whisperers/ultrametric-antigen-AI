@@ -6,10 +6,17 @@
 """Constants for arbovirus surveillance and primer design.
 
 This module contains virus definitions, NCBI taxonomy IDs,
-primer design constraints, and conserved region definitions.
+primer design constraints, conserved region definitions,
+and reference data for validation.
+
+Updated 2026-01-03: Added RefSeq accessions, phylogenetic identity matrix,
+and validated primer sequences for Phase 1 validation framework.
 """
 
 from __future__ import annotations
+
+from dataclasses import dataclass, field
+from typing import Optional
 
 # NCBI Taxonomy IDs for arboviruses
 ARBOVIRUS_TAXIDS: dict[str, int] = {
@@ -237,3 +244,184 @@ IUPAC_CODES: dict[str, set[str]] = {
     "V": {"A", "C", "G"},
     "N": {"A", "C", "G", "T"},
 }
+
+# ============================================================================
+# REFERENCE SEQUENCES (NCBI RefSeq)
+# ============================================================================
+
+REFSEQ_ACCESSIONS: dict[str, str] = {
+    "DENV-1": "NC_001477",
+    "DENV-2": "NC_001474",
+    "DENV-3": "NC_001475",
+    "DENV-4": "NC_002640",
+    "ZIKV": "NC_012532",
+    "CHIKV": "NC_004162",
+    "MAYV": "NC_003417",
+}
+
+# ============================================================================
+# PHYLOGENETIC IDENTITY MATRIX (amino acid level)
+# Based on polyprotein alignments from published studies
+# ============================================================================
+
+PHYLOGENETIC_IDENTITY: dict[tuple[str, str], float] = {
+    # Intra-Dengue (serotype to serotype)
+    ("DENV-1", "DENV-2"): 0.65,
+    ("DENV-1", "DENV-3"): 0.63,
+    ("DENV-1", "DENV-4"): 0.62,
+    ("DENV-2", "DENV-3"): 0.66,
+    ("DENV-2", "DENV-4"): 0.64,
+    ("DENV-3", "DENV-4"): 0.63,
+    # Dengue to other Flavivirus
+    ("DENV-1", "ZIKV"): 0.45,
+    ("DENV-2", "ZIKV"): 0.46,
+    ("DENV-3", "ZIKV"): 0.44,
+    ("DENV-4", "ZIKV"): 0.43,
+    # Flavivirus to Alphavirus (different families)
+    ("DENV-1", "CHIKV"): 0.22,
+    ("DENV-2", "CHIKV"): 0.21,
+    ("DENV-3", "CHIKV"): 0.22,
+    ("DENV-4", "CHIKV"): 0.20,
+    ("DENV-1", "MAYV"): 0.24,
+    ("DENV-2", "MAYV"): 0.23,
+    ("DENV-3", "MAYV"): 0.24,
+    ("DENV-4", "MAYV"): 0.22,
+    ("ZIKV", "CHIKV"): 0.18,
+    ("ZIKV", "MAYV"): 0.19,
+    # Intra-Alphavirus
+    ("CHIKV", "MAYV"): 0.62,
+}
+
+
+def get_phylogenetic_identity(virus1: str, virus2: str) -> float:
+    """Get amino acid identity between two viruses.
+
+    Args:
+        virus1: First virus name
+        virus2: Second virus name
+
+    Returns:
+        Identity fraction (0.0 to 1.0)
+    """
+    if virus1 == virus2:
+        return 1.0
+
+    key = (virus1, virus2)
+    if key in PHYLOGENETIC_IDENTITY:
+        return PHYLOGENETIC_IDENTITY[key]
+
+    # Try reverse order
+    key = (virus2, virus1)
+    if key in PHYLOGENETIC_IDENTITY:
+        return PHYLOGENETIC_IDENTITY[key]
+
+    # Unknown pair - assume distant
+    return 0.15
+
+
+# ============================================================================
+# VALIDATED PRIMER SEQUENCES (Ground Truth from CDC/PAHO)
+# ============================================================================
+
+@dataclass
+class ValidatedPrimer:
+    """A validated primer from published sources."""
+    name: str
+    target_virus: str
+    target_gene: str
+    forward: str
+    reverse: str
+    probe: Optional[str] = None
+    amplicon_size: int = 0
+    citation: str = ""
+    validated: bool = True
+    specificity: list[str] = field(default_factory=list)
+    cross_reactive: list[str] = field(default_factory=list)
+
+
+# CDC validated primers (Lanciotti et al., 2008)
+CDC_PRIMERS: list[ValidatedPrimer] = [
+    ValidatedPrimer(
+        name="CDC_DENV1",
+        target_virus="DENV-1",
+        target_gene="3'UTR",
+        forward="CAAAAGGAAGTCGTGCAATA",
+        reverse="CTGAGTGAATTCTCTCTACTGAACC",
+        amplicon_size=124,
+        citation="Lanciotti 2008",
+        specificity=["DENV-1"],
+    ),
+    ValidatedPrimer(
+        name="CDC_DENV2",
+        target_virus="DENV-2",
+        target_gene="3'UTR",
+        forward="CGAAAACGCGAGAGAAACCG",
+        reverse="CTTCAACATCCTGCCAGCTC",
+        amplicon_size=119,
+        citation="Lanciotti 2008",
+        specificity=["DENV-2"],
+    ),
+    ValidatedPrimer(
+        name="CDC_DENV3",
+        target_virus="DENV-3",
+        target_gene="3'UTR",
+        forward="GGATGATCTCAACAAAGAGGTG",
+        reverse="CCCAACATCAATTCCTACTCAA",
+        amplicon_size=123,
+        citation="Lanciotti 2008",
+        specificity=["DENV-3"],
+    ),
+    ValidatedPrimer(
+        name="CDC_DENV4",
+        target_virus="DENV-4",
+        target_gene="3'UTR",
+        forward="TTGTCCTAATGATGCTGGTCG",
+        reverse="TCCACCTGAGACTCCTTCCA",
+        amplicon_size=119,
+        citation="Lanciotti 2008",
+        specificity=["DENV-4"],
+    ),
+    ValidatedPrimer(
+        name="Lanciotti_ZIKV",
+        target_virus="ZIKV",
+        target_gene="Envelope",
+        forward="AARTACACATACCARAACAAAGTGGT",  # Degenerate
+        reverse="TCCRCTCCCYCTYTGGTCTTG",  # Degenerate
+        amplicon_size=117,
+        citation="Lanciotti 2017",
+        specificity=["ZIKV"],
+    ),
+]
+
+# Pan-flavivirus primers (intentionally cross-reactive, for negative control)
+PANFLAVIVIRUS_PRIMERS: list[ValidatedPrimer] = [
+    ValidatedPrimer(
+        name="Pan_Flavi_NS5",
+        target_virus="Flavivirus",
+        target_gene="NS5",
+        forward="TACAACATGATGGGAAAGAGAGAGAA",
+        reverse="GTGTCCCAGCCGGCGGTGTCATCAGC",
+        amplicon_size=220,
+        citation="Kuno 1998",
+        validated=True,
+        specificity=[],
+        cross_reactive=["DENV-1", "DENV-2", "DENV-3", "DENV-4", "ZIKV", "YFV", "JEV", "WNV"],
+    ),
+]
+
+
+def get_validated_primers(virus: str = None) -> list[ValidatedPrimer]:
+    """Get validated primers, optionally filtered by virus.
+
+    Args:
+        virus: Filter by target virus (optional)
+
+    Returns:
+        List of ValidatedPrimer objects
+    """
+    all_primers = CDC_PRIMERS + PANFLAVIVIRUS_PRIMERS
+
+    if virus is None:
+        return all_primers
+
+    return [p for p in all_primers if p.target_virus == virus or virus in p.specificity]

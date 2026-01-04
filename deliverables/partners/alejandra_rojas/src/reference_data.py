@@ -3,290 +3,55 @@
 # Licensed under the PolyForm Noncommercial License 1.0.0
 # See LICENSE file in the repository root for full license text.
 
-"""Reference data for arbovirus validation.
+"""Reference data and phylogenetic sequence generation for arbovirus validation.
 
-Contains:
-- NCBI RefSeq accessions for reference genomes
-- Phylogenetic identity matrix from published studies
-- Validated CDC/PAHO primer sequences
-- Conserved region coordinates
+This module provides:
+- Phylogenetically-informed sequence generation
+- Sequence identity computation
+- Ground truth validation utilities
 
-This data enables scientifically rigorous validation of the primer design
-pipeline against known ground truth.
+The core constants (REFSEQ_ACCESSIONS, PHYLOGENETIC_IDENTITY, ValidatedPrimer)
+are defined in constants.py to maintain a single source of truth.
+
+Example:
+    >>> from .reference_data import generate_phylogenetic_sequence
+    >>> mutated = generate_phylogenetic_sequence(ref_seq, target_identity=0.65)
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+import random
 from typing import Optional
 
-# ============================================================================
-# NCBI Reference Sequences
-# ============================================================================
+# Import core constants from constants.py (single source of truth)
+from .constants import (
+    REFSEQ_ACCESSIONS,
+    PHYLOGENETIC_IDENTITY,
+    ARBOVIRUS_TARGETS,
+    get_phylogenetic_identity,
+    get_validated_primers,
+    ValidatedPrimer,
+    CDC_PRIMERS,
+    PANFLAVIVIRUS_PRIMERS,
+)
 
-REFSEQ_ACCESSIONS = {
-    "DENV-1": "NC_001477",
-    "DENV-2": "NC_001474",
-    "DENV-3": "NC_001475",
-    "DENV-4": "NC_002640",
-    "ZIKV": "NC_012532",
-    "CHIKV": "NC_004162",
-    "MAYV": "NC_003417",
-}
-
-GENOME_LENGTHS = {
-    "DENV-1": 10735,
-    "DENV-2": 10723,
-    "DENV-3": 10707,
-    "DENV-4": 10649,
-    "ZIKV": 10794,
-    "CHIKV": 11826,
-    "MAYV": 11429,
-}
-
-# ============================================================================
-# Phylogenetic Identity Matrix (amino acid level)
-# Based on polyprotein alignments from published studies
-# ============================================================================
-
-AMINO_ACID_IDENTITY = {
-    # Intra-Dengue (serotype to serotype)
-    ("DENV-1", "DENV-2"): 0.65,
-    ("DENV-1", "DENV-3"): 0.63,
-    ("DENV-1", "DENV-4"): 0.62,
-    ("DENV-2", "DENV-3"): 0.66,
-    ("DENV-2", "DENV-4"): 0.64,
-    ("DENV-3", "DENV-4"): 0.63,
-    # Dengue to other Flavivirus
-    ("DENV-1", "ZIKV"): 0.45,
-    ("DENV-2", "ZIKV"): 0.46,
-    ("DENV-3", "ZIKV"): 0.44,
-    ("DENV-4", "ZIKV"): 0.43,
-    # Flavivirus to Alphavirus (different families)
-    ("DENV-1", "CHIKV"): 0.22,
-    ("DENV-2", "CHIKV"): 0.21,
-    ("DENV-3", "CHIKV"): 0.22,
-    ("DENV-4", "CHIKV"): 0.20,
-    ("DENV-1", "MAYV"): 0.24,
-    ("DENV-2", "MAYV"): 0.23,
-    ("DENV-3", "MAYV"): 0.24,
-    ("DENV-4", "MAYV"): 0.22,
-    ("ZIKV", "CHIKV"): 0.18,
-    ("ZIKV", "MAYV"): 0.19,
-    # Intra-Alphavirus
-    ("CHIKV", "MAYV"): 0.62,
-}
-
-
-def get_identity(virus1: str, virus2: str) -> float:
-    """Get amino acid identity between two viruses.
-
-    Args:
-        virus1: First virus name
-        virus2: Second virus name
-
-    Returns:
-        Identity fraction (0.0 to 1.0)
-    """
-    if virus1 == virus2:
-        return 1.0
-
-    key = (virus1, virus2)
-    if key in AMINO_ACID_IDENTITY:
-        return AMINO_ACID_IDENTITY[key]
-
-    # Try reverse order
-    key = (virus2, virus1)
-    if key in AMINO_ACID_IDENTITY:
-        return AMINO_ACID_IDENTITY[key]
-
-    # Unknown pair - assume distant
-    return 0.15
-
-
-# ============================================================================
-# Validated Primer Sequences (Ground Truth)
-# From CDC, PAHO, and peer-reviewed publications
-# ============================================================================
-
-@dataclass
-class ValidatedPrimer:
-    """A validated primer from published sources."""
-    name: str
-    target_virus: str
-    target_gene: str
-    forward: str
-    reverse: str
-    probe: Optional[str] = None
-    amplicon_size: int = 0
-    citation: str = ""
-    validated: bool = True
-    specificity: list[str] = field(default_factory=list)
-    cross_reactive: list[str] = field(default_factory=list)
-
-
-# CDC validated primers
-CDC_PRIMERS = [
-    ValidatedPrimer(
-        name="CDC_DENV1",
-        target_virus="DENV-1",
-        target_gene="3'UTR",
-        forward="CAAAAGGAAGTCGTGCAATA",
-        reverse="CTGAGTGAATTCTCTCTACTGAACC",
-        amplicon_size=124,
-        citation="Lanciotti 2008",
-        specificity=["DENV-1"],
-        cross_reactive=[],
-    ),
-    ValidatedPrimer(
-        name="CDC_DENV2",
-        target_virus="DENV-2",
-        target_gene="3'UTR",
-        forward="CGAAAACGCGAGAGAAACCG",
-        reverse="CTTCAACATCCTGCCAGCTC",
-        amplicon_size=119,
-        citation="Lanciotti 2008",
-        specificity=["DENV-2"],
-        cross_reactive=[],
-    ),
-    ValidatedPrimer(
-        name="CDC_DENV3",
-        target_virus="DENV-3",
-        target_gene="3'UTR",
-        forward="GGATGATCTCAACAAAGAGGTG",
-        reverse="CCCAACATCAATTCCTACTCAA",
-        amplicon_size=123,
-        citation="Lanciotti 2008",
-        specificity=["DENV-3"],
-        cross_reactive=[],
-    ),
-    ValidatedPrimer(
-        name="CDC_DENV4",
-        target_virus="DENV-4",
-        target_gene="3'UTR",
-        forward="TTGTCCTAATGATGCTGGTCG",
-        reverse="TCCACCTGAGACTCCTTCCA",
-        amplicon_size=119,
-        citation="Lanciotti 2008",
-        specificity=["DENV-4"],
-        cross_reactive=[],
-    ),
-    ValidatedPrimer(
-        name="Lanciotti_ZIKV",
-        target_virus="ZIKV",
-        target_gene="Envelope",
-        forward="AARTACACATACCARAACAAAGTGGT",  # Degenerate
-        reverse="TCCRCTCCCYCTYTGGTCTTG",  # Degenerate
-        amplicon_size=117,
-        citation="Lanciotti 2017",
-        specificity=["ZIKV"],
-        cross_reactive=[],
-    ),
+# Re-export for backwards compatibility
+__all__ = [
+    # From constants
+    "REFSEQ_ACCESSIONS",
+    "PHYLOGENETIC_IDENTITY",
+    "get_phylogenetic_identity",
+    "get_validated_primers",
+    "ValidatedPrimer",
+    "CDC_PRIMERS",
+    "PANFLAVIVIRUS_PRIMERS",
+    # Local functions
+    "generate_phylogenetic_sequence",
+    "generate_realistic_demo_sequences",
+    "compute_sequence_identity",
+    "validate_primer_against_ground_truth",
 ]
 
-# Pan-flavivirus primers (intentionally cross-reactive)
-PANFLAVIVIRUS_PRIMERS = [
-    ValidatedPrimer(
-        name="Pan_Flavi_NS5",
-        target_virus="Flavivirus",
-        target_gene="NS5",
-        forward="TACAACATGATGGGAAAGAGAGAGAA",
-        reverse="GTGTCCCAGCCGGCGGTGTCATCAGC",
-        amplicon_size=220,
-        citation="Kuno 1998",
-        validated=True,
-        specificity=[],
-        cross_reactive=["DENV-1", "DENV-2", "DENV-3", "DENV-4", "ZIKV", "YFV", "JEV", "WNV"],
-    ),
-]
-
-
-def get_validated_primers(virus: str = None) -> list[ValidatedPrimer]:
-    """Get validated primers, optionally filtered by virus.
-
-    Args:
-        virus: Filter by target virus (optional)
-
-    Returns:
-        List of ValidatedPrimer objects
-    """
-    all_primers = CDC_PRIMERS + PANFLAVIVIRUS_PRIMERS
-
-    if virus is None:
-        return all_primers
-
-    return [p for p in all_primers if p.target_virus == virus or virus in p.specificity]
-
-
-# ============================================================================
-# Conserved Regions (coordinates on reference genomes)
-# ============================================================================
-
-CONSERVED_REGIONS = {
-    # Dengue conserved regions (shared across serotypes)
-    "DENV": {
-        "5UTR": (1, 100),           # 5' untranslated region
-        "Capsid": (101, 500),       # Capsid protein
-        "prM": (501, 1000),         # Pre-membrane
-        "Envelope": (1001, 2500),   # Envelope glycoprotein
-        "NS1": (2501, 3550),        # Non-structural 1
-        "NS2A": (3551, 4200),       # Non-structural 2A
-        "NS2B": (4201, 4600),       # Non-structural 2B
-        "NS3": (4601, 6450),        # NS3 protease/helicase
-        "NS4A": (6451, 6900),       # Non-structural 4A
-        "NS4B": (6901, 7650),       # Non-structural 4B
-        "NS5_MTase": (7651, 8400),  # NS5 methyltransferase
-        "NS5_RdRp": (8401, 10350),  # NS5 RNA-dependent RNA polymerase
-        "3UTR": (10351, 10700),     # 3' untranslated region
-    },
-    # Zika conserved regions
-    "ZIKV": {
-        "5UTR": (1, 107),
-        "Capsid": (108, 470),
-        "prM": (471, 976),
-        "Envelope": (977, 2489),
-        "NS1": (2490, 3545),
-        "NS3": (4600, 6450),
-        "NS5": (7650, 10380),
-        "3UTR": (10381, 10794),
-    },
-    # Chikungunya conserved regions
-    "CHIKV": {
-        "nsP1": (77, 1696),
-        "nsP2": (1697, 4079),
-        "nsP3": (4080, 5627),
-        "nsP4": (5628, 7502),
-        "Capsid": (7567, 8355),
-        "E3": (8356, 8544),
-        "E2": (8545, 9810),
-        "E1": (9951, 11253),
-    },
-}
-
-
-def get_conserved_region(virus: str, region: str) -> Optional[tuple[int, int]]:
-    """Get coordinates for a conserved region.
-
-    Args:
-        virus: Virus name (DENV, ZIKV, CHIKV, etc.)
-        region: Region name (NS5, Envelope, etc.)
-
-    Returns:
-        Tuple of (start, end) coordinates or None
-    """
-    # Normalize virus name
-    if virus.startswith("DENV"):
-        virus = "DENV"
-
-    if virus not in CONSERVED_REGIONS:
-        return None
-
-    return CONSERVED_REGIONS[virus].get(region)
-
-
-# ============================================================================
-# Phylogenetically-Informed Sequence Generation
-# ============================================================================
 
 def generate_phylogenetic_sequence(
     reference: str,
@@ -297,6 +62,7 @@ def generate_phylogenetic_sequence(
     """Generate sequence with target identity to reference.
 
     Uses codon-aware mutation to maintain realistic sequence properties.
+    Preserves specified regions (e.g., UTRs, conserved domains) unchanged.
 
     Args:
         reference: Reference sequence
@@ -306,8 +72,13 @@ def generate_phylogenetic_sequence(
 
     Returns:
         Mutated sequence with approximately target identity
+
+    Example:
+        >>> ref = "ATGCGATCGATCGATCGATC" * 100
+        >>> mutated = generate_phylogenetic_sequence(ref, 0.65, seed=42)
+        >>> identity = compute_sequence_identity(ref, mutated)
+        >>> assert 0.60 <= identity <= 0.70
     """
-    import random
     random.seed(seed)
 
     if preserve_regions is None:
@@ -329,7 +100,7 @@ def generate_phylogenetic_sequence(
     mutable_positions = list(mutable_positions)
 
     # Perform mutations
-    if len(mutable_positions) > 0:
+    if len(mutable_positions) > 0 and mutations_needed > 0:
         positions_to_mutate = random.sample(
             mutable_positions,
             min(mutations_needed, len(mutable_positions))
@@ -338,48 +109,94 @@ def generate_phylogenetic_sequence(
         bases = "ACGT"
         for pos in positions_to_mutate:
             original = seq_list[pos]
-            alternatives = [b for b in bases if b != original]
-            seq_list[pos] = random.choice(alternatives)
+            if original in bases:
+                alternatives = [b for b in bases if b != original]
+                seq_list[pos] = random.choice(alternatives)
 
     return "".join(seq_list)
 
 
 def generate_realistic_demo_sequences(
-    base_sequence: str,
-    viruses: list[str],
+    base_virus: str = "DENV-1",
     seed: int = 42,
 ) -> dict[str, str]:
-    """Generate demo sequences for all viruses with realistic identities.
+    """Generate demo sequences for all viruses with realistic phylogenetic identities.
+
+    Uses DENV-1 as reference and mutates to target identities based on
+    the PHYLOGENETIC_IDENTITY matrix.
 
     Args:
-        base_sequence: Reference sequence (typically DENV-1)
-        viruses: List of virus names to generate
-        seed: Random seed
+        base_virus: Reference virus (default DENV-1)
+        seed: Random seed for reproducibility
 
     Returns:
         Dict mapping virus name to sequence
+
+    Example:
+        >>> seqs = generate_realistic_demo_sequences()
+        >>> # DENV-2 should be ~65% identical to DENV-1
+        >>> identity = compute_sequence_identity(seqs["DENV-1"], seqs["DENV-2"])
+        >>> assert 0.60 <= identity <= 0.70
     """
-    result = {}
+    # Get genome size for base virus
+    base_target = ARBOVIRUS_TARGETS.get(base_virus, {})
+    base_size = base_target.get("genome_size", 10700)
+    conserved = base_target.get("conserved_regions", [])
 
+    # Generate base sequence (random but reproducible)
+    random.seed(seed)
+    base_sequence = "".join(random.choices("ACGT", k=base_size))
+
+    # Insert conserved motifs at known positions
+    seq_list = list(base_sequence)
+    for i, (start, end) in enumerate(conserved):
+        # Use deterministic conserved motif
+        motif_seed = seed + i * 1000
+        random.seed(motif_seed)
+        motif = "".join(random.choices("ACGT", k=min(100, end - start)))
+        for j, nt in enumerate(motif):
+            if start + j < len(seq_list):
+                seq_list[start + j] = nt
+
+    base_sequence = "".join(seq_list)
+
+    # Generate sequences for all viruses
+    result = {base_virus: base_sequence}
+
+    viruses = list(ARBOVIRUS_TARGETS.keys())
     for i, virus in enumerate(viruses):
-        target_identity = get_identity("DENV-1", virus)
+        if virus == base_virus:
+            continue
 
-        # Preserve UTR regions for all
-        preserve = [(0, 100), (len(base_sequence) - 400, len(base_sequence))]
+        target_identity = get_phylogenetic_identity(base_virus, virus)
+
+        # Get conserved regions for this virus
+        virus_target = ARBOVIRUS_TARGETS.get(virus, {})
+        virus_conserved = virus_target.get("conserved_regions", conserved)
+
+        # Adjust sequence length if needed
+        virus_size = virus_target.get("genome_size", base_size)
+        if virus_size != base_size:
+            # Truncate or extend
+            if virus_size < base_size:
+                ref_for_virus = base_sequence[:virus_size]
+            else:
+                # Extend with random bases
+                random.seed(seed + i * 10000)
+                extension = "".join(random.choices("ACGT", k=virus_size - base_size))
+                ref_for_virus = base_sequence + extension
+        else:
+            ref_for_virus = base_sequence
 
         result[virus] = generate_phylogenetic_sequence(
-            reference=base_sequence,
+            reference=ref_for_virus,
             target_identity=target_identity,
-            seed=seed + i,
-            preserve_regions=preserve,
+            seed=seed + i + 1,
+            preserve_regions=virus_conserved,
         )
 
     return result
 
-
-# ============================================================================
-# Validation Utilities
-# ============================================================================
 
 def compute_sequence_identity(seq1: str, seq2: str) -> float:
     """Compute sequence identity between two sequences.
@@ -407,45 +224,82 @@ def compute_sequence_identity(seq1: str, seq2: str) -> float:
 
 def validate_primer_against_ground_truth(
     designed_primers: list,
-    virus: str,
+    target_virus: str,
+    identity_threshold: float = 0.9,
 ) -> dict:
-    """Validate designed primers against ground truth.
+    """Validate designed primers against CDC/PAHO ground truth.
 
     Args:
-        designed_primers: List of PrimerCandidate objects from our algorithm
-        virus: Target virus
+        designed_primers: List of PrimerCandidate or PrimerPair objects
+        target_virus: Target virus name
+        identity_threshold: Minimum identity to consider a match
 
     Returns:
-        Validation results dict
+        Validation results dict with:
+        - ground_truth_count: Number of known primers for this virus
+        - designed_count: Number of primers designed
+        - recovered: List of ground truth primers that were recovered
+        - missed: List of ground truth primers that were missed
+        - recovery_rate: Fraction of ground truth recovered
     """
-    ground_truth = get_validated_primers(virus)
+    ground_truth = get_validated_primers(target_virus)
 
     results = {
         "ground_truth_count": len(ground_truth),
         "designed_count": len(designed_primers),
         "recovered": [],
         "missed": [],
-        "novel": [],
+        "novel": 0,
     }
+
+    # Extract sequences from designed primers
+    designed_seqs = []
+    for dp in designed_primers:
+        if hasattr(dp, "sequence"):
+            designed_seqs.append(dp.sequence)
+        elif hasattr(dp, "forward"):
+            designed_seqs.append(dp.forward.sequence if hasattr(dp.forward, "sequence") else dp.forward)
+            if hasattr(dp, "reverse"):
+                designed_seqs.append(dp.reverse.sequence if hasattr(dp.reverse, "sequence") else dp.reverse)
 
     # Check which ground truth primers were recovered
     for gt in ground_truth:
         found = False
-        for dp in designed_primers:
-            # Check if forward primer matches (allowing 2 mismatches)
-            fwd_identity = compute_sequence_identity(gt.forward, dp.sequence)
-            if fwd_identity > 0.9:
+        for designed_seq in designed_seqs:
+            # Check forward primer
+            fwd_identity = compute_sequence_identity(gt.forward, designed_seq)
+            if fwd_identity >= identity_threshold:
                 found = True
                 results["recovered"].append({
                     "name": gt.name,
+                    "matched_seq": designed_seq,
                     "identity": fwd_identity,
+                    "match_type": "forward",
+                })
+                break
+
+            # Check reverse primer
+            rev_identity = compute_sequence_identity(gt.reverse, designed_seq)
+            if rev_identity >= identity_threshold:
+                found = True
+                results["recovered"].append({
+                    "name": gt.name,
+                    "matched_seq": designed_seq,
+                    "identity": rev_identity,
+                    "match_type": "reverse",
                 })
                 break
 
         if not found:
             results["missed"].append(gt.name)
 
-    # Novel primers not in ground truth
-    results["novel_count"] = len(designed_primers) - len(results["recovered"])
+    # Count novel primers (not matching any ground truth)
+    results["novel"] = len(designed_primers) - len(results["recovered"])
+
+    # Compute recovery rate
+    if results["ground_truth_count"] > 0:
+        results["recovery_rate"] = len(results["recovered"]) / results["ground_truth_count"]
+    else:
+        results["recovery_rate"] = 0.0
 
     return results

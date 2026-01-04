@@ -48,6 +48,15 @@ project_root = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "deliverables"))
 
+# Import centralized constants (single source of truth)
+from deliverables.partners.alejandra_rojas.src.constants import (
+    ARBOVIRUS_TARGETS,
+    PRIMER_CONSTRAINTS,
+)
+
+# Import NCBI client for phylogenetic sequence generation
+from deliverables.partners.alejandra_rojas.src.ncbi_client import NCBIClient
+
 # Import from existing primer scanner
 try:
     from primer_stability_scanner import (
@@ -74,53 +83,6 @@ except ImportError:
             return 2 * (a + t) + 4 * (g + c)
         else:
             return 64.9 + 41 * (g + c - 16.4) / (a + t + g + c)
-
-
-# Virus target definitions
-ARBOVIRUS_TARGETS = {
-    "DENV-1": {
-        "full_name": "Dengue virus serotype 1",
-        "genome_size": 10700,
-        "conserved_regions": [(200, 500), (4000, 4500), (9500, 10000)],  # NS5, E protein regions
-        "ncbi_query": "Dengue virus 1[Organism] AND Paraguay[Country]",
-    },
-    "DENV-2": {
-        "full_name": "Dengue virus serotype 2",
-        "genome_size": 10700,
-        "conserved_regions": [(200, 500), (4000, 4500), (9500, 10000)],
-        "ncbi_query": "Dengue virus 2[Organism] AND Paraguay[Country]",
-    },
-    "DENV-3": {
-        "full_name": "Dengue virus serotype 3",
-        "genome_size": 10700,
-        "conserved_regions": [(200, 500), (4000, 4500), (9500, 10000)],
-        "ncbi_query": "Dengue virus 3[Organism] AND Paraguay[Country]",
-    },
-    "DENV-4": {
-        "full_name": "Dengue virus serotype 4",
-        "genome_size": 10700,
-        "conserved_regions": [(200, 500), (4000, 4500), (9500, 10000)],
-        "ncbi_query": "Dengue virus 4[Organism] AND Paraguay[Country]",
-    },
-    "ZIKV": {
-        "full_name": "Zika virus",
-        "genome_size": 10800,
-        "conserved_regions": [(500, 900), (3000, 3500), (9000, 9500)],
-        "ncbi_query": "Zika virus[Organism] AND South America[Country]",
-    },
-    "CHIKV": {
-        "full_name": "Chikungunya virus",
-        "genome_size": 11800,
-        "conserved_regions": [(200, 600), (5000, 5500), (10000, 10500)],
-        "ncbi_query": "Chikungunya virus[Organism] AND South America[Country]",
-    },
-    "MAYV": {
-        "full_name": "Mayaro virus",
-        "genome_size": 11400,
-        "conserved_regions": [(200, 600), (4500, 5000), (9500, 10000)],
-        "ncbi_query": "Mayaro virus[Organism]",
-    },
-}
 
 
 @dataclass
@@ -203,21 +165,26 @@ def check_cross_reactivity(
     return cross_reactivity
 
 
-def generate_demo_sequences(n_per_virus: int = 5) -> dict[str, list[str]]:
-    """Generate demo sequences for testing (replace with real NCBI data)."""
-    np.random.seed(42)
+def generate_demo_sequences(n_per_virus: int = 5, seed: int = 42) -> dict[str, list[str]]:
+    """Generate phylogenetically-realistic demo sequences.
+
+    Uses NCBIClient.generate_all_demo_sequences() which creates sequences
+    with realistic inter-virus identities based on PHYLOGENETIC_IDENTITY matrix:
+    - DENV-1 vs DENV-2: ~65% identity
+    - DENV-1 vs ZIKV: ~45% identity
+    - DENV-1 vs CHIKV: ~22% identity
+
+    This enables proper cross-reactivity testing where primers should be
+    specific to their target virus while not binding related viruses.
+    """
+    client = NCBIClient()
+    db = client.generate_all_demo_sequences(n_per_virus=n_per_virus, seed=seed)
+
+    # Convert ArbovirusDatabase to plain sequences dict
     sequences = {}
-
-    for virus, info in ARBOVIRUS_TARGETS.items():
-        genome_size = info["genome_size"]
-        virus_seqs = []
-
-        for _ in range(n_per_virus):
-            # Generate random sequence with some conservation
-            seq = "".join(np.random.choice(list("ATGC"), size=genome_size))
-            virus_seqs.append(seq)
-
-        sequences[virus] = virus_seqs
+    for virus in db.get_viruses():
+        virus_seqs = db.get_sequences(virus)
+        sequences[virus] = [vs.sequence for vs in virus_seqs]
 
     return sequences
 
@@ -561,12 +528,16 @@ def build_pan_arbovirus_library(
 
 
 def load_ncbi_sequences() -> dict[str, list[str]]:
-    """Load real sequences from NCBI via the arbovirus loader."""
-    try:
-        from ncbi_arbovirus_loader import NCBIArbovirusLoader, ArbovirusDatabase
+    """Load real sequences from NCBI via NCBIClient.
 
-        loader = NCBIArbovirusLoader()
-        db = loader.load_or_download()
+    Uses the centralized NCBIClient from src/ncbi_client.py which:
+    - Downloads sequences from NCBI (if BioPython available)
+    - Falls back to phylogenetically-realistic demo sequences
+    - Caches results for performance
+    """
+    try:
+        client = NCBIClient()
+        db = client.load_or_download()
 
         sequences = {}
         for virus in ARBOVIRUS_TARGETS.keys():
@@ -579,9 +550,9 @@ def load_ncbi_sequences() -> dict[str, list[str]]:
 
         return sequences
 
-    except ImportError as e:
-        print(f"Could not import NCBI loader: {e}")
-        print("Falling back to demo sequences")
+    except Exception as e:
+        print(f"Could not load NCBI sequences: {e}")
+        print("Falling back to phylogenetic demo sequences")
         return None
 
 

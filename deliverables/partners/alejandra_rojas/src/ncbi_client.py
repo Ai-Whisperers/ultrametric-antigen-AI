@@ -29,7 +29,8 @@ from pathlib import Path
 from typing import Optional, Iterator
 import threading
 
-from .constants import ARBOVIRUS_TARGETS
+from .constants import ARBOVIRUS_TARGETS, get_phylogenetic_identity
+from .reference_data import generate_phylogenetic_sequence
 
 # Try to import BioPython
 try:
@@ -439,42 +440,168 @@ class NCBIClient:
         virus: str,
         n: int,
     ) -> list[VirusSequence]:
-        """Generate realistic demo sequences."""
+        """Generate phylogenetically-realistic demo sequences.
+
+        Uses the PHYLOGENETIC_IDENTITY matrix to generate sequences with
+        realistic divergence from the DENV-1 reference, ensuring that
+        cross-reactivity testing produces meaningful results.
+
+        Args:
+            virus: Target virus identifier
+            n: Number of sequences to generate
+
+        Returns:
+            List of VirusSequence objects with realistic identity profiles
+        """
         import random
-        random.seed(hash(virus) % (2**31))
 
         target = ARBOVIRUS_TARGETS.get(virus, {})
         size = target.get("genome_size", 11000)
+        conserved = target.get("conserved_regions", [])
 
+        # Generate a single base sequence for this virus (reference)
+        base_seed = hash(virus) % (2**31)
+        random.seed(base_seed)
+        base_seq = "".join(random.choices("ACGT", k=size))
+
+        # Insert conserved motifs
+        seq_list = list(base_seq)
+        for i, (start, end) in enumerate(conserved):
+            random.seed(base_seed + i * 1000)
+            motif = "".join(random.choices("ACGT", k=min(100, end - start)))
+            for j, nt in enumerate(motif):
+                if start + j < len(seq_list):
+                    seq_list[start + j] = nt
+
+        base_seq = "".join(seq_list)
+
+        # Generate n sequences with intra-species variation (~95-99% identity)
         sequences = []
         for i in range(n):
-            # Generate base sequence
-            seq = "".join(random.choices("ACGT", k=size))
+            # Intra-species variation: 95-99% identity (small mutations)
+            intra_identity = 0.97 + random.random() * 0.02  # 97-99%
 
-            # Add conserved regions
-            conserved = target.get("conserved_regions", [])
-            seq_list = list(seq)
-
-            for start, end in conserved:
-                if end < len(seq_list):
-                    # Insert conserved motif
-                    motif = "".join(random.choices("ACGT", k=min(20, end - start)))
-                    for j, nt in enumerate(motif):
-                        if start + j < len(seq_list):
-                            seq_list[start + j] = nt
+            seq = generate_phylogenetic_sequence(
+                reference=base_seq,
+                target_identity=intra_identity,
+                seed=base_seed + i + 1,
+                preserve_regions=conserved,
+            )
 
             sequences.append(VirusSequence(
                 accession=f"{virus}_DEMO_{i + 1:03d}",
                 virus=virus,
                 description=f"Demo {virus} complete genome isolate {i + 1}",
-                sequence="".join(seq_list),
-                length=size,
+                sequence=seq,
+                length=len(seq),
                 country=random.choice(["Paraguay", "Brazil", "Argentina"]),
                 collection_date=f"202{random.randint(0, 4)}",
                 strain=f"Demo-{i + 1}",
             ))
 
         return sequences
+
+    def generate_all_demo_sequences(
+        self,
+        n_per_virus: int = 10,
+        seed: int = 42,
+    ) -> ArbovirusDatabase:
+        """Generate demo sequences for all viruses with realistic phylogeny.
+
+        This method ensures that inter-virus identity matches the
+        PHYLOGENETIC_IDENTITY matrix, enabling meaningful cross-reactivity
+        testing.
+
+        Args:
+            n_per_virus: Sequences per virus
+            seed: Random seed for reproducibility
+
+        Returns:
+            ArbovirusDatabase with phylogenetically-realistic sequences
+        """
+        import random
+
+        db = ArbovirusDatabase(
+            metadata={
+                "download_date": datetime.now().isoformat(),
+                "source": "PhylogeneticDemo",
+                "n_per_virus": n_per_virus,
+                "seed": seed,
+            },
+            cache_path=self.cache_dir / "demo_phylogenetic_db.json",
+        )
+
+        # Generate base DENV-1 sequence
+        denv1_target = ARBOVIRUS_TARGETS.get("DENV-1", {})
+        denv1_size = denv1_target.get("genome_size", 10700)
+        denv1_conserved = denv1_target.get("conserved_regions", [])
+
+        random.seed(seed)
+        denv1_base = "".join(random.choices("ACGT", k=denv1_size))
+
+        # Insert conserved motifs into DENV-1
+        seq_list = list(denv1_base)
+        for i, (start, end) in enumerate(denv1_conserved):
+            random.seed(seed + i * 1000)
+            motif = "".join(random.choices("ACGT", k=min(100, end - start)))
+            for j, nt in enumerate(motif):
+                if start + j < len(seq_list):
+                    seq_list[start + j] = nt
+        denv1_base = "".join(seq_list)
+
+        # Generate sequences for all viruses
+        for virus_idx, virus in enumerate(ARBOVIRUS_TARGETS.keys()):
+            target = ARBOVIRUS_TARGETS.get(virus, {})
+            size = target.get("genome_size", 11000)
+            conserved = target.get("conserved_regions", denv1_conserved)
+
+            # Get target identity relative to DENV-1
+            inter_identity = get_phylogenetic_identity("DENV-1", virus)
+
+            # Generate base sequence for this virus
+            if virus == "DENV-1":
+                virus_base = denv1_base
+            else:
+                # Adjust length if needed
+                if size < len(denv1_base):
+                    ref_seq = denv1_base[:size]
+                elif size > len(denv1_base):
+                    random.seed(seed + virus_idx * 10000)
+                    extension = "".join(random.choices("ACGT", k=size - len(denv1_base)))
+                    ref_seq = denv1_base + extension
+                else:
+                    ref_seq = denv1_base
+
+                virus_base = generate_phylogenetic_sequence(
+                    reference=ref_seq,
+                    target_identity=inter_identity,
+                    seed=seed + virus_idx * 100,
+                    preserve_regions=conserved,
+                )
+
+            # Generate intra-species variants
+            for i in range(n_per_virus):
+                intra_identity = 0.97 + random.random() * 0.02
+
+                seq = generate_phylogenetic_sequence(
+                    reference=virus_base,
+                    target_identity=intra_identity,
+                    seed=seed + virus_idx * 1000 + i,
+                    preserve_regions=conserved,
+                )
+
+                db.add_sequence(virus, VirusSequence(
+                    accession=f"{virus}_PHYLO_{i + 1:03d}",
+                    virus=virus,
+                    description=f"Phylogenetic demo {virus} isolate {i + 1}",
+                    sequence=seq,
+                    length=len(seq),
+                    country=random.choice(["Paraguay", "Brazil", "Argentina"]),
+                    collection_date=f"202{random.randint(0, 4)}",
+                    strain=f"Phylo-{i + 1}",
+                ))
+
+        return db
 
     def download_all(
         self,
