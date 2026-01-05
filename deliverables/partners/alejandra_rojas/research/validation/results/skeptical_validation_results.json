@@ -1,0 +1,251 @@
+{
+  "_metadata": {
+    "analysis_type": "skeptical_validation",
+    "description": "Rigorous validation of Rojas package core claims",
+    "created": "2026-01-05T22:09:22.969890+00:00",
+    "n_sequences": 270
+  },
+  "claims": {
+    "orthogonality": {
+      "raw": {
+        "spearman_rho": -0.11212419198307058,
+        "spearman_p": 2.5396654292729048e-30,
+        "pearson_r": -0.20999992337212264,
+        "pearson_p": 1.5706717965665912e-103,
+        "n_positions": 10353
+      },
+      "windowed": {
+        "1": {
+          "spearman_rho": -0.11212419198307058,
+          "p_value": 2.5396654292729048e-30,
+          "n_samples": 10353
+        },
+        "25": {
+          "spearman_rho": -0.3761582257853964,
+          "p_value": 2.1489470209281853e-30,
+          "n_samples": 863
+        },
+        "75": {
+          "spearman_rho": -0.47586467028551743,
+          "p_value": 3.140527918872325e-17,
+          "n_samples": 280
+        },
+        "150": {
+          "spearman_rho": -0.5020286876089189,
+          "p_value": 3.049187012015608e-10,
+          "n_samples": 139
+        }
+      },
+      "interpretation": "PARTIALLY CONFIRMED: Weak correlation exists",
+      "is_orthogonal": false
+    },
+    "metric_decoupling": {
+      "discordant_regions": {
+        "high_shannon_low_hyperbolic": 2241,
+        "low_shannon_high_hyperbolic": 64,
+        "concordant_both_low": 128,
+        "concordant_both_high": 0
+      },
+      "codon_position_analysis": {
+        "pos1_mean_entropy": 1.5549213769675805,
+        "pos2_mean_entropy": 1.6156484809488283,
+        "pos3_mean_entropy": 1.5683044965253627,
+        "pos1_correlation_with_hyp_var": -0.12189226185858851,
+        "pos2_correlation_with_hyp_var": -0.12756269743616544,
+        "pos3_correlation_with_hyp_var": -0.08632663112539246
+      },
+      "mechanistic_hypothesis": [
+        "wobble_independence"
+      ]
+    },
+    "kmer_classification": {
+      "clade_distribution": {
+        "Clade_E": 211,
+        "Clade_D": 52,
+        "Clade_A": 2,
+        "Clade_B": 3,
+        "Clade_C": 2
+      },
+      "kmer_uniqueness": {
+        "Clade_E": 33,
+        "Clade_D": 9,
+        "Clade_A": 2,
+        "Clade_B": 1,
+        "Clade_C": 0
+      },
+      "jaccard_similarity": {
+        "Clade_A_vs_Clade_B": 0.7458905955268121,
+        "Clade_A_vs_Clade_C": 0.737392703862661,
+        "Clade_A_vs_Clade_D": 0.7854671280276817,
+        "Clade_A_vs_Clade_E": 0.7838036809815951,
+        "Clade_B_vs_Clade_C": 0.7753662506782419,
+        "Clade_B_vs_Clade_D": 0.8105289297243605,
+        "Clade_B_vs_Clade_E": 0.8028999754239371,
+        "Clade_C_vs_Clade_D": 0.810032282095853,
+        "Clade_C_vs_Clade_E": 0.8032948119006639,
+        "Clade_D_vs_Clade_E": 0.9772449229263519
+      },
+      "explanation": "Average Jaccard similarity: 0.803\nHigh similarity suggests clades share most k-mers.\nClassification may rely on rare differentiating k-mers.",
+      "avg_jaccard": 0.803192128114816
+    },
+    "pan_denv4_feasibility": {
+      "5'UTR": {
+        "position": 50,
+        "unique_primers": 50,
+        "total_sequences": 270,
+        "per_position_degeneracy": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "total_degeneracy": 1099511627776,
+        "consensus": "CTTAACACAGTTCTAACAGT",
+        "consensus_coverage": 0.5185185185185185
+      },
+      "E gene (best hyperbolic)": {
+        "position": 2400,
+        "unique_primers": 76,
+        "total_sequences": 269,
+        "per_position_degeneracy": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "total_degeneracy": 1099511627776,
+        "consensus": "TTTTGGGGTTTACGGTTCAA",
+        "consensus_coverage": 0.0
+      },
+      "NS5 (PANFLAVI_FU1)": {
+        "position": 9007,
+        "unique_primers": 64,
+        "total_sequences": 270,
+        "per_position_degeneracy": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "total_degeneracy": 1099511627776,
+        "consensus": "GTTTCTTGAATTTGAAGCCC",
+        "consensus_coverage": 0.0
+      },
+      "NS5 (best alternative)": {
+        "position": 9600,
+        "unique_primers": 62,
+        "total_sequences": 270,
+        "per_position_degeneracy": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "total_degeneracy": 1099511627776,
+        "consensus": "TCTTCTTGAAAGACATGGGA",
+        "consensus_coverage": 0.0
+      },
+      "NS5 (conserved)": {
+        "position": 9908,
+        "unique_primers": 69,
+        "total_sequences": 270,
+        "per_position_degeneracy": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "total_degeneracy": 1099511627776,
+        "consensus": "GCAATTCCAACGAAAAGGTT",
+        "consensus_coverage": 0.0
+      },
+      "feasibility": "INFEASIBLE",
+      "conclusion": "NO regions have degeneracy \u2264 4096.\nCONFIRMED: Pan-DENV-4 consensus primers are INFEASIBLE.\nRecommendation: Use clade-specific primer cocktail."
+    }
+  },
+  "summary": [
+    "\u2717 Claim 1 (Orthogonality): NEEDS CLARIFICATION",
+    "\u2713 Claim 2 (Infeasibility): CONFIRMED",
+    "\u2713 Claim 3 (K-mer Classification): MECHANISTICALLY EXPLAINED"
+  ]
+}
