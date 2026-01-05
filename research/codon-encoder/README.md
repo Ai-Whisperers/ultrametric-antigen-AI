@@ -90,6 +90,18 @@ codon-encoder/
 │   ├── deep_physics_benchmark.py
 │   └── ddg_benchmark.py
 │
+├── padic_aa_validation/    # P-adic AA encoder validation (NEW)
+│   ├── README.md                    # Validation suite documentation
+│   ├── scripts/
+│   │   ├── 01_baseline_benchmark.py     # Physico vs p-adic
+│   │   ├── 02_ordered_indices.py        # AA ordering experiments
+│   │   ├── 03_feature_combinations.py   # Feature combination tests
+│   │   ├── 04_statistical_validation.py # Bootstrap CI, permutation
+│   │   └── 05_feature_optimization.py   # Greedy selection
+│   ├── results/                     # All validation results (JSON)
+│   └── docs/
+│       └── PADIC_ENCODER_FINDINGS.md    # Comprehensive findings
+│
 ├── analysis/               # Embedding space analysis
 │   ├── proteingym_pipeline.py
 │   └── padic_dynamics_predictor.py
@@ -260,7 +272,9 @@ python benchmarks/ddg_benchmark.py
 1. **ESM Integration**: Combine with ESM-2 contextual embeddings
 2. **Structural Features**: AlphaFold-derived contact maps, DSSP
 3. **Multi-task Learning**: Joint DDG + folding kinetics + solubility
-4. **Larger Datasets**: ProteinGym, Mega-scale mutational scans
+4. **Larger Datasets**: ProteinGym (OPTIONAL), Mega-scale mutational scans
+
+**Note on ProteinGym:** The S669 dataset (43 MB, 2,800 mutations) is sufficient for current DDG validation (LOO Spearman 0.61). ProteinGym (~500 MB) is an optional future enhancement for extended protein family validation. See `data/proteingym/README.md` for details.
 
 ---
 
@@ -277,10 +291,27 @@ python benchmarks/ddg_benchmark.py
 
 ---
 
+## P-adic Amino Acid Validation (NEW)
+
+When codon information is unavailable (proteomics-only), can we use p-adic structure on amino acids?
+
+**Summary:** +7-9% improvement over baseline, but context-dependent.
+
+| Mutation Type | P-adic Benefit |
+|---------------|----------------|
+| neutral→charged | **+159%** |
+| small DDG (<1) | **+23%** |
+| charge reversal | **-737%** (harmful) |
+
+**See:** `padic_aa_validation/README.md` for full validation suite.
+
+---
+
 ## Changelog
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-01-05 | 2.1 | P-adic AA validation suite with 5-stage pipeline |
 | 2026-01-03 | 2.0 | TrainableCodonEncoder (LOO ρ=0.61), full documentation |
 | 2026-01-03 | 1.5 | HyperbolicCodonEncoder, overfitting analysis |
 | 2025-12-28 | 1.0 | Initial physics benchmarks, dimension analysis |
