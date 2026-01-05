@@ -548,6 +548,56 @@ research/codon-encoder/replacement_calculus/
 
 ---
 
+## Foundation Encoder Research Roadmap
+
+**Goal:** Unified encoder with multi-task heads for DDG, AMP fitness, clade classification, and resistance prediction.
+
+**Hardware Constraints:** 3-4GB VRAM, 8-10GB RAM (all training must fit within these limits)
+
+### Data Inventory: Have vs Need
+
+| Category | Data We HAVE (Validated) | Data We NEED (Collect/Falsify) |
+|----------|--------------------------|--------------------------------|
+| DDG/Stability | S669 n=52 (ρ=0.60), ProTherm 219 | ProteinGym DMS (~10K), S2648 |
+| AMP Fitness | 272 MIC samples, 5 models (r=0.56) | PeptideVAE checkpoint (1hr training) |
+| Position Context | SS-inferred RSA, 5 zones | AlphaFold RSA, pLDDT |
+| Arbovirus Phylogeny | 270 genomes, 5 clades, entropy | In silico PCR, primer pairs |
+| HIV Resistance | WHO SDRM (50+ mutations) | Stanford validation, real sequences |
+| Enzyme Classes | EC propensities (6 classes) | Active site annotations |
+
+### Partner Readiness for Foundation Encoder
+
+| Partner | Readiness | Blocking Item | Use Now? |
+|---------|:---------:|---------------|:--------:|
+| jose_colbes | 7/10 | Large-scale validation | YES (ensemble) |
+| carlos_brizuela | 88% | PeptideVAE training (~1hr) | YES (after training) |
+| alejandra_rojas | 6.5/10 | Primer validation | PARTIAL (features only) |
+| hiv_research_package | 30% | Stanford + real sequences | NO (reference only) |
+
+### Training Sequence
+
+```
+IMMEDIATE: Train PeptideVAE checkpoint (~1hr, <4GB VRAM)
+    ↓
+PHASE 1: Train DDG + Clade heads on ready data
+    ↓
+PHASE 2: Expand validation, integrate AMP head
+    ↓
+PHASE 3: Future - Resistance head (needs real sequences)
+```
+
+### Deferred to Future Versions
+
+| Component | Reason | Prerequisites |
+|-----------|--------|---------------|
+| Primer prediction | 0 validated primers | In silico PCR, wet-lab |
+| Clinical resistance | 0 real patient sequences | 500+ HIV sequences |
+| Multi-mutation epistasis | Single-mutation only | 500+ double mutants |
+
+**Full Roadmap:** `research/codon-encoder/docs/FOUNDATION_ENCODER_ROADMAP.md`
+
+---
+
 ## Future Research: SwissProt Structure Dataset
 
 **Asset:** `research/big_data/swissprot_cif_v6.tar` (38GB, AlphaFold3 predicted structures)
@@ -595,6 +645,7 @@ research/codon-encoder/replacement_calculus/
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-01-05 | 2.3 | Foundation Encoder Research Roadmap - partner readiness assessment, data inventory |
 | 2026-01-03 | 2.2 | Added SwissProt CIF dataset (38GB) future research directions |
 | 2026-01-03 | 2.1 | V5 Arrow Flip Validation complete - confidence matrix, position-aware thresholds |
 | 2026-01-03 | 2.0 | Added V5.12.5 implementation plan reference (docs/plans/) |
