@@ -1,0 +1,435 @@
+{
+  "_metadata": {
+    "schema_version": "1.0",
+    "file_type": "analysis_results",
+    "analysis_type": "degenerate_primer_results",
+    "description": "Degenerate primer design results (NOTE: 0 usable primers)",
+    "updated": "2026-01-05T17:32:23.004159+00:00",
+    "source_directory": "phylogenetic",
+    "field_definitions": "See original schema (auto-migrated)",
+    "related_files": [
+      "denv4_genome_metadata.json",
+      "padic_integration_results.json"
+    ]
+  },
+  "data": {
+    "timestamp": "2026-01-04T04:25:25.850191",
+    "n_sequences": 0,
+    "candidate_windows": [
+      {
+        "start": 6250,
+        "end": 6270,
+        "gene": "NS3",
+        "consensus": "NHDDRRRRDDDRDRDNNDRR",
+        "degeneracy": 322486272,
+        "log_degeneracy": 28.264662506490406
+      },
+      {
+        "start": 6240,
+        "end": 6260,
+        "gene": "NS3",
+        "consensus": "DDDDDDRVDVNHDDRRRRDD",
+        "degeneracy": 612220032,
+        "log_degeneracy": 29.189475010096185
+      },
+      {
+        "start": 7620,
+        "end": 7640,
+        "gene": "NS5",
+        "consensus": "NDDRNHRDRRRDRDDDDDND",
+        "degeneracy": 725594112,
+        "log_degeneracy": 29.43458750793272
+      },
+      {
+        "start": 7550,
+        "end": 7570,
+        "gene": "NS4B",
+        "consensus": "VMHNVNNRRRRVRVNVNNDR",
+        "degeneracy": 1146617856,
+        "log_degeneracy": 30.094737505048094
+      },
+      {
+        "start": 9470,
+        "end": 9490,
+        "gene": "NS5",
+        "consensus": "NNNRRRRDDNNKNDDDRRVD",
+        "degeneracy": 1146617856,
+        "log_degeneracy": 30.094737505048094
+      },
+      {
+        "start": 5120,
+        "end": 5140,
+        "gene": "NS3",
+        "consensus": "VNHDWDARRRDNBNBNNNDH",
+        "degeneracy": 1289945088,
+        "log_degeneracy": 30.264662506490406
+      },
+      {
+        "start": 7560,
+        "end": 7580,
+        "gene": "NS5",
+        "consensus": "RVRVNVNNDRRRVVVNVDVD",
+        "degeneracy": 1451188224,
+        "log_degeneracy": 30.43458750793272
+      },
+      {
+        "start": 7590,
+        "end": 7610,
+        "gene": "NS5",
+        "consensus": "DRVDVDNDDKDNDNRRRVND",
+        "degeneracy": 1451188224,
+        "log_degeneracy": 30.43458750793272
+      },
+      {
+        "start": 9480,
+        "end": 9500,
+        "gene": "NS5",
+        "consensus": "NKNDDDRRVDRDDDNDDVDV",
+        "degeneracy": 1632586752,
+        "log_degeneracy": 30.60451250937503
+      },
+      {
+        "start": 5110,
+        "end": 5130,
+        "gene": "NS3",
+        "consensus": "DNNNNNVDVNVNHDWDARRR",
+        "degeneracy": 1719926784,
+        "log_degeneracy": 30.67970000576925
+      },
+      {
+        "start": 7540,
+        "end": 7560,
+        "gene": "NS4B",
+        "consensus": "VVRNDVNVVVVMHNVNNRRR",
+        "degeneracy": 1934917632,
+        "log_degeneracy": 30.84962500721156
+      },
+      {
+        "start": 7630,
+        "end": 7650,
+        "gene": "NS5",
+        "consensus": "RDRDDDDDNDVDRDDNNDVV",
+        "degeneracy": 2448880128,
+        "log_degeneracy": 31.189475010096185
+      },
+      {
+        "start": 6260,
+        "end": 6280,
+        "gene": "NS3",
+        "consensus": "DRDRDNNDRRNNNDDRNVVV",
+        "degeneracy": 2579890176,
+        "log_degeneracy": 31.264662506490406
+      },
+      {
+        "start": 7760,
+        "end": 7780,
+        "gene": "NS5",
+        "consensus": "DDDDDDDRDDDKDDDDVDNN",
+        "degeneracy": 2754990144,
+        "log_degeneracy": 31.359400011538497
+      },
+      {
+        "start": 8890,
+        "end": 8910,
+        "gene": "NS5",
+        "consensus": "DVDVDRDVHNDDDDDRDNVD",
+        "degeneracy": 2754990144,
+        "log_degeneracy": 31.359400011538497
+      },
+      {
+        "start": 9930,
+        "end": 9950,
+        "gene": "NS5",
+        "consensus": "MHMHMNNNNNDNHHMMHNNR",
+        "degeneracy": 3057647616,
+        "log_degeneracy": 31.509775004326936
+      },
+      {
+        "start": 5040,
+        "end": 5060,
+        "gene": "NS3",
+        "consensus": "DRVVNDDNWNDNRVDDDDDD",
+        "degeneracy": 3265173504,
+        "log_degeneracy": 31.60451250937503
+      },
+      {
+        "start": 7750,
+        "end": 7770,
+        "gene": "NS5",
+        "consensus": "DDDRRNNNNDDDDDDDDRDD",
+        "degeneracy": 3265173504,
+        "log_degeneracy": 31.60451250937503
+      },
+      {
+        "start": 4570,
+        "end": 4590,
+        "gene": "NS2B",
+        "consensus": "VVVNNNNDHNNDRRRRRDDN",
+        "degeneracy": 3439853568,
+        "log_degeneracy": 31.67970000576925
+      },
+      {
+        "start": 4580,
+        "end": 4600,
+        "gene": "NS3",
+        "consensus": "NDRRRRRDDNHNNDNDDNND",
+        "degeneracy": 3439853568,
+        "log_degeneracy": 31.67970000576925
+      },
+      {
+        "start": 7170,
+        "end": 7190,
+        "gene": "NS4B",
+        "consensus": "NNNVVVNDRDNVVNNMVRRR",
+        "degeneracy": 3439853568,
+        "log_degeneracy": 31.67970000576925
+      },
+      {
+        "start": 7270,
+        "end": 7290,
+        "gene": "NS4B",
+        "consensus": "MNNNDDWNVHHNWRDWHNND",
+        "degeneracy": 3439853568,
+        "log_degeneracy": 31.67970000576925
+      },
+      {
+        "start": 9070,
+        "end": 9090,
+        "gene": "NS5",
+        "consensus": "NDNKVNDNRNNBDDDRRDRN",
+        "degeneracy": 3439853568,
+        "log_degeneracy": 31.67970000576925
+      },
+      {
+        "start": 350,
+        "end": 370,
+        "gene": "C",
+        "consensus": "VDRVRNVDNDWDVRNNVNND",
+        "degeneracy": 3869835264,
+        "log_degeneracy": 31.84962500721156
+      },
+      {
+        "start": 740,
+        "end": 760,
+        "gene": "prM",
+        "consensus": "DNNRNVDDDRDVDNNDVRRN",
+        "degeneracy": 3869835264,
+        "log_degeneracy": 31.84962500721156
+      },
+      {
+        "start": 9460,
+        "end": 9480,
+        "gene": "NS5",
+        "consensus": "NVDDVVDDDNNNNRRRRDDN",
+        "degeneracy": 3869835264,
+        "log_degeneracy": 31.84962500721156
+      },
+      {
+        "start": 1890,
+        "end": 1910,
+        "gene": "E",
+        "consensus": "DRDVNDVVDKNDNDDRNNBH",
+        "degeneracy": 4353564672,
+        "log_degeneracy": 32.01955000865387
+      },
+      {
+        "start": 6750,
+        "end": 6770,
+        "gene": "NS4A",
+        "consensus": "MHMHWDDDNHHHNHNHHNNH",
+        "degeneracy": 4353564672,
+        "log_degeneracy": 32.01955000865387
+      },
+      {
+        "start": 7210,
+        "end": 7230,
+        "gene": "NS4B",
+        "consensus": "NDVDDVNHHNVDDRRRNVNV",
+        "degeneracy": 4353564672,
+        "log_degeneracy": 32.01955000865387
+      },
+      {
+        "start": 7570,
+        "end": 7590,
+        "gene": "NS5",
+        "consensus": "RRVVVNVDVDVRNVNNVNDV",
+        "degeneracy": 4353564672,
+        "log_degeneracy": 32.01955000865387
+      },
+      {
+        "start": 7580,
+        "end": 7600,
+        "gene": "NS5",
+        "consensus": "VRNVNNVNDVDRVDVDNDDK",
+        "degeneracy": 4353564672,
+        "log_degeneracy": 32.01955000865387
+      },
+      {
+        "start": 8120,
+        "end": 8140,
+        "gene": "NS5",
+        "consensus": "VNDVMVDMHNNNNDDDRVVV",
+        "degeneracy": 4353564672,
+        "log_degeneracy": 32.01955000865387
+      },
+      {
+        "start": 8380,
+        "end": 8400,
+        "gene": "NS5",
+        "consensus": "NNNDVVVVNNNHNNRRRRVR",
+        "degeneracy": 4586471424,
+        "log_degeneracy": 32.094737505048094
+      },
+      {
+        "start": 8390,
+        "end": 8410,
+        "gene": "NS5",
+        "consensus": "NHNNRRRRVRNVVHHNNDNN",
+        "degeneracy": 4586471424,
+        "log_degeneracy": 32.094737505048094
+      },
+      {
+        "start": 1880,
+        "end": 1900,
+        "gene": "E",
+        "consensus": "DNVVVDVNNDDRDVNDVVDK",
+        "degeneracy": 4897760256,
+        "log_degeneracy": 32.18947501009619
+      },
+      {
+        "start": 5890,
+        "end": 5910,
+        "gene": "NS3",
+        "consensus": "RVVVVVVVVVNVRVDDNDNN",
+        "degeneracy": 4897760256,
+        "log_degeneracy": 32.18947501009619
+      },
+      {
+        "start": 7770,
+        "end": 7790,
+        "gene": "NS5",
+        "consensus": "DKDDDDVDNNNVDNDDDRDD",
+        "degeneracy": 4897760256,
+        "log_degeneracy": 32.18947501009619
+      },
+      {
+        "start": 9450,
+        "end": 9470,
+        "gene": "NS5",
+        "consensus": "VVVVRRDNNDNVDDVVDDDN",
+        "degeneracy": 4897760256,
+        "log_degeneracy": 32.18947501009619
+      },
+      {
+        "start": 70,
+        "end": 90,
+        "gene": "5UTR",
+        "consensus": "HHVNNNDRRWDDRVVNNNDN",
+        "degeneracy": 5159780352,
+        "log_degeneracy": 32.2646625064904
+      },
+      {
+        "start": 3840,
+        "end": 3860,
+        "gene": "NS2A",
+        "consensus": "DDNNHNWWDDWNNNMHHDHN",
+        "degeneracy": 5159780352,
+        "log_degeneracy": 32.2646625064904
+      },
+      {
+        "start": 7610,
+        "end": 7630,
+        "gene": "NS5",
+        "consensus": "NHDDDNNNVNNDDRNHRDRR",
+        "degeneracy": 5159780352,
+        "log_degeneracy": 32.2646625064904
+      },
+      {
+        "start": 8130,
+        "end": 8150,
+        "gene": "NS5",
+        "consensus": "NNNDDDRVVVNNNDBRNRRV",
+        "degeneracy": 5159780352,
+        "log_degeneracy": 32.2646625064904
+      },
+      {
+        "start": 9280,
+        "end": 9300,
+        "gene": "NS5",
+        "consensus": "HNNVRVNNVVRBNNNDRRDD",
+        "degeneracy": 5159780352,
+        "log_degeneracy": 32.2646625064904
+      },
+      {
+        "start": 280,
+        "end": 300,
+        "gene": "C",
+        "consensus": "NDVVRVHNDDDDNNNNVRRD",
+        "degeneracy": 5804752896,
+        "log_degeneracy": 32.43458750793272
+      },
+      {
+        "start": 940,
+        "end": 960,
+        "gene": "prM",
+        "consensus": "NVVRNDBNDNNDDRDDDRNV",
+        "degeneracy": 5804752896,
+        "log_degeneracy": 32.43458750793272
+      },
+      {
+        "start": 6210,
+        "end": 6230,
+        "gene": "NS3",
+        "consensus": "NVNDNHNNDDRRDDDDDNWH",
+        "degeneracy": 5804752896,
+        "log_degeneracy": 32.43458750793272
+      },
+      {
+        "start": 6220,
+        "end": 6240,
+        "gene": "NS3",
+        "consensus": "RRDDDDDNWHDDNNNNDDND",
+        "degeneracy": 5804752896,
+        "log_degeneracy": 32.43458750793272
+      },
+      {
+        "start": 6270,
+        "end": 6290,
+        "gene": "NS3",
+        "consensus": "NNNDDRNVVVVRNVDNDDDR",
+        "degeneracy": 5804752896,
+        "log_degeneracy": 32.43458750793272
+      },
+      {
+        "start": 6840,
+        "end": 6860,
+        "gene": "NS4B",
+        "consensus": "HNNDDDDDWWHNVVVRNNHN",
+        "degeneracy": 5804752896,
+        "log_degeneracy": 32.43458750793272
+      },
+      {
+        "start": 2440,
+        "end": 2460,
+        "gene": "E",
+        "consensus": "DDNNDDKDDDNKBDDDDNDN",
+        "degeneracy": 6530347008,
+        "log_degeneracy": 32.60451250937503
+      }
+    ],
+    "designed_primers": [],
+    "validation": {
+      "n_primers_used": 0,
+      "total_sequences": 270,
+      "covered": 0,
+      "coverage_pct": 0.0,
+      "uncovered": 270
+    },
+    "multiplex_cocktail": {
+      "n_primers": 0,
+      "total_coverage_pct": 0,
+      "primers": [],
+      "error": "No primers with acceptable degeneracy found"
+    }
+  }
+}

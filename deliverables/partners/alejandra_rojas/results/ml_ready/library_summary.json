@@ -1,0 +1,80 @@
+{
+  "_metadata": {
+    "schema_version": "1.0",
+    "file_type": "analysis_results",
+    "analysis_type": "library_summary",
+    "description": "Pan-arbovirus primer library (NOTE: 0 specific primers)",
+    "updated": "2026-01-05T17:32:23.015657+00:00",
+    "source_directory": "pan_arbovirus_primers",
+    "field_definitions": "See original schema (auto-migrated)",
+    "related_files": [
+      "denv4_genome_metadata.json",
+      "padic_integration_results.json"
+    ]
+  },
+  "data": {
+    "targets": [
+      "DENV-1",
+      "DENV-2",
+      "DENV-3",
+      "DENV-4",
+      "ZIKV",
+      "CHIKV",
+      "MAYV"
+    ],
+    "statistics": {
+      "DENV-1": {
+        "total_primers": 10,
+        "specific_primers": 0,
+        "primer_pairs": 0
+      },
+      "DENV-2": {
+        "total_primers": 10,
+        "specific_primers": 0,
+        "primer_pairs": 0
+      },
+      "DENV-3": {
+        "total_primers": 10,
+        "specific_primers": 0,
+        "primer_pairs": 0
+      },
+      "DENV-4": {
+        "total_primers": 10,
+        "specific_primers": 0,
+        "primer_pairs": 0
+      },
+      "ZIKV": {
+        "total_primers": 10,
+        "specific_primers": 0,
+        "primer_pairs": 0
+      },
+      "CHIKV": {
+        "total_primers": 10,
+        "specific_primers": 0,
+        "primer_pairs": 0
+      },
+      "MAYV": {
+        "total_primers": 10,
+        "specific_primers": 0,
+        "primer_pairs": 0
+      }
+    },
+    "cross_reactivity_matrix": {},
+    "design_parameters": {
+      "primer_length": 20,
+      "gc_range": [
+        0.4,
+        0.6
+      ],
+      "tm_range": [
+        55.0,
+        65.0
+      ],
+      "max_cross_reactivity": 0.7,
+      "amplicon_range": [
+        100,
+        300
+      ]
+    }
+  }
+}

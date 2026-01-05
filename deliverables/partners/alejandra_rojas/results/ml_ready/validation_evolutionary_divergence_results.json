@@ -1,0 +1,147 @@
+{
+  "_metadata": {
+    "schema_version": "1.0",
+    "file_type": "validation_results",
+    "analysis_type": "evolutionary_divergence_results",
+    "description": "Validation: evolutionary divergence results",
+    "updated": "2026-01-05T17:32:32.162430+00:00",
+    "related_files": [
+      "padic_integration_results.json",
+      "denv4_genome_metadata.json"
+    ]
+  },
+  "data": {
+    "timestamp": "2026-01-04T03:32:10.413182",
+    "within_serotype_divergence": {
+      "DENV-1": {
+        "mean_identity": 0.977414997671169,
+        "min_identity": 0.9678621332091291,
+        "max_identity": 0.9988821611551001,
+        "std_identity": 0.008729550584102692,
+        "n_pairs": 100
+      },
+      "DENV-2": {
+        "mean_identity": 0.982701669308962,
+        "min_identity": 0.9698778326960739,
+        "max_identity": 0.9990674251608691,
+        "std_identity": 0.0063967359874920115,
+        "n_pairs": 100
+      },
+      "DENV-3": {
+        "mean_identity": 0.9798813860091529,
+        "min_identity": 0.9694592322779491,
+        "max_identity": 0.9951433641542916,
+        "std_identity": 0.006668261144000938,
+        "n_pairs": 100
+      },
+      "DENV-4": {
+        "mean_identity": 0.7168270172259043,
+        "min_identity": 0.2821861207625129,
+        "max_identity": 0.9968072119447835,
+        "std_identity": 0.3234386808058211,
+        "n_pairs": 100
+      }
+    },
+    "between_serotype_divergence": {
+      "DENV-1_vs_DENV-2": {
+        "mean_identity": 0.2636827380397277,
+        "min_identity": 0.259722092697939,
+        "max_identity": 0.2667164039914203,
+        "std_identity": 0.001555875005379668,
+        "n_pairs": 400
+      },
+      "DENV-1_vs_DENV-3": {
+        "mean_identity": 0.332184552162137,
+        "min_identity": 0.328756888017185,
+        "max_identity": 0.3348276828243205,
+        "std_identity": 0.0008745705530529171,
+        "n_pairs": 400
+      },
+      "DENV-1_vs_DENV-4": {
+        "mean_identity": 0.26859851229925125,
+        "min_identity": 0.2575501782029638,
+        "max_identity": 0.3468256949661908,
+        "std_identity": 0.017838380420281075,
+        "n_pairs": 400
+      },
+      "DENV-2_vs_DENV-3": {
+        "mean_identity": 0.25950919958905394,
+        "min_identity": 0.2575884935089194,
+        "max_identity": 0.2612309703932007,
+        "std_identity": 0.0007019428314837044,
+        "n_pairs": 400
+      },
+      "DENV-2_vs_DENV-4": {
+        "mean_identity": 0.2672504999034729,
+        "min_identity": 0.2625598647760353,
+        "max_identity": 0.27516904583020285,
+        "std_identity": 0.0031578297994025034,
+        "n_pairs": 400
+      },
+      "DENV-3_vs_DENV-4": {
+        "mean_identity": 0.2655591109007147,
+        "min_identity": 0.24948414931532545,
+        "max_identity": 0.35706235912847484,
+        "std_identity": 0.021035326938186237,
+        "n_pairs": 400
+      }
+    },
+    "geographic_structure": {
+      "DENV-1": {
+        "n_countries": 11,
+        "geographic_entropy": 3.4594316186372973,
+        "countries": [
+          "China",
+          "India",
+          "Malaysia",
+          "Thailand",
+          "Mexico",
+          "Haiti",
+          "Indonesia",
+          "Usa",
+          "Laos",
+          "Philippines"
+        ]
+      },
+      "DENV-2": {
+        "n_countries": 3,
+        "geographic_entropy": 1.584962500721156,
+        "countries": [
+          "Bangladesh",
+          "Malaysia",
+          "Thailand"
+        ]
+      },
+      "DENV-3": {
+        "n_countries": 6,
+        "geographic_entropy": 2.584962500721156,
+        "countries": [
+          "India",
+          "Bangladesh",
+          "Malaysia",
+          "Thailand",
+          "Nicaragua",
+          "Vietnam"
+        ]
+      },
+      "DENV-4": {
+        "n_countries": 9,
+        "geographic_entropy": 3.169925001442312,
+        "countries": [
+          "China",
+          "India",
+          "Pakistan",
+          "Malaysia",
+          "Haiti",
+          "Indonesia",
+          "Usa",
+          "Philippines",
+          "Singapore"
+        ]
+      }
+    },
+    "inferred_mechanism": "high_mutation_rate",
+    "denv4_within_identity": 0.7168270172259043,
+    "other_within_identity_mean": 0.9799993509964279
+  }
+}

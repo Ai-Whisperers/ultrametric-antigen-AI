@@ -1,0 +1,20 @@
+{
+  "_metadata": {
+    "schema_version": "1.0",
+    "file_type": "analysis_results",
+    "analysis_type": "geographic_distribution",
+    "description": "Geographic distribution per clade",
+    "updated": "2026-01-05T17:32:23.010253+00:00",
+    "source_directory": "phylogenetic",
+    "field_definitions": "See original schema (auto-migrated)",
+    "related_files": [
+      "denv4_genome_metadata.json",
+      "padic_integration_results.json"
+    ]
+  },
+  "data": {
+    "overall_distribution": {},
+    "clade_distribution": {},
+    "geographic_signal": {}
+  }
+}
