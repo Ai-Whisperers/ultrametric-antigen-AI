@@ -1,0 +1,193 @@
+{
+  "_metadata": {
+    "schema_version": "1.0",
+    "file_type": "conjecture_results",
+    "analysis_type": "codon_pair_conjecture",
+    "description": "Hypothesis test: hyperbolic variance vs codon pair bias",
+    "created": "2026-01-05T10:48:05.244277",
+    "updated": "2026-01-05T17:31:02.869189+00:00",
+    "key_finding": "Hypothesis REJECTED: See data",
+    "correlations": {
+      "hyp_var_vs_mean_cpb": {
+        "spearman_rho": -0.13590733590733592,
+        "p_value": 0.4293275371427745,
+        "confirmed": false
+      },
+      "hyp_var_vs_pair_entropy": {
+        "spearman_rho": 0.08622908622908623,
+        "p_value": 0.6170408845896129,
+        "confirmed": false
+      },
+      "hyp_var_vs_consistency": {
+        "spearman_rho": -0.14388674388674388,
+        "p_value": 0.4024679511297866,
+        "confirmed": false
+      }
+    },
+    "field_definitions": {
+      "predictions": "List of testable predictions from hypothesis",
+      "correlations": "Statistical test results (Spearman correlation)",
+      "summary": "Overall hypothesis status and interpretation"
+    },
+    "related_files": [
+      "padic_integration_results.json - Source hyperbolic variance data",
+      "CONSOLIDATED_FINDINGS.md - All conjectures summary"
+    ]
+  },
+  "data": {
+    "n_sequences": 270,
+    "predictions": {},
+    "correlations": {
+      "hyp_var_vs_mean_cpb": {
+        "spearman_rho": -0.13590733590733592,
+        "p_value": 0.4293275371427745,
+        "confirmed": false
+      },
+      "hyp_var_vs_pair_entropy": {
+        "spearman_rho": 0.08622908622908623,
+        "p_value": 0.6170408845896129,
+        "confirmed": false
+      },
+      "hyp_var_vs_consistency": {
+        "spearman_rho": -0.14388674388674388,
+        "p_value": 0.4024679511297866,
+        "confirmed": false
+      }
+    },
+    "gene_stats": {
+      "E": {
+        "mean_hyp_var": 0.028369322046637536,
+        "mean_cpb": 0.33066413168163433,
+        "mean_pair_entropy": 3.798314316056191,
+        "mean_consistency": 0.2734017541372033,
+        "n_windows": 5
+      },
+      "NS1": {
+        "mean_hyp_var": 0.029261764759818714,
+        "mean_cpb": 0.3095970331162619,
+        "mean_pair_entropy": 3.7968364776565244,
+        "mean_consistency": 0.2841221487906742,
+        "n_windows": 3
+      },
+      "NS3": {
+        "mean_hyp_var": 0.039298675023019314,
+        "mean_cpb": 0.33570513460578244,
+        "mean_pair_entropy": 3.794680481340547,
+        "mean_consistency": 0.2816218240253861,
+        "n_windows": 6
+      },
+      "NS5": {
+        "mean_hyp_var": 0.029978226249416668,
+        "mean_cpb": 0.3266914930483427,
+        "mean_pair_entropy": 3.7860167617020224,
+        "mean_consistency": 0.283367924695759,
+        "n_windows": 9
+      }
+    },
+    "summary": {
+      "predictions_confirmed": 0.0,
+      "conjecture_supported": false,
+      "conjecture_status": "REJECTED"
+    },
+    "cpb_table_size": 4052,
+    "primer_recommendations": {
+      "top_candidates": [
+        {
+          "rank": 1,
+          "position": 2400,
+          "gene": "E",
+          "hyp_variance": 0.01832796260714531,
+          "primer_score": -0.01832796260714531,
+          "mean_cpb": 0.4187808129959268,
+          "consistency": 0.25163994840611753
+        },
+        {
+          "rank": 2,
+          "position": 3000,
+          "gene": "NS1",
+          "hyp_variance": 0.02072189375758171,
+          "primer_score": -0.02072189375758171,
+          "mean_cpb": 0.3253131165152391,
+          "consistency": 0.3
+        },
+        {
+          "rank": 3,
+          "position": 9600,
+          "gene": "NS5",
+          "hyp_variance": 0.022217366844415665,
+          "primer_score": -0.022217366844415665,
+          "mean_cpb": 0.43105841815108253,
+          "consistency": 0.31208866859424483
+        },
+        {
+          "rank": 4,
+          "position": 600,
+          "gene": "prM",
+          "hyp_variance": 0.023485319688916206,
+          "primer_score": -0.023485319688916206,
+          "mean_cpb": 0.3381898621029015,
+          "consistency": 0.28117283950617283
+        },
+        {
+          "rank": 5,
+          "position": 0,
+          "gene": "5UTR",
+          "hyp_variance": 0.025235839188098907,
+          "primer_score": -0.025235839188098907,
+          "mean_cpb": 0.42216652978710606,
+          "consistency": 0.5158021249254211
+        },
+        {
+          "rank": 6,
+          "position": 7800,
+          "gene": "NS5",
+          "hyp_variance": 0.025304095819592476,
+          "primer_score": -0.025304095819592476,
+          "mean_cpb": 0.16888975832488018,
+          "consistency": 0.27195832759649363
+        },
+        {
+          "rank": 7,
+          "position": 2700,
+          "gene": "NS1",
+          "hyp_variance": 0.02601633407175541,
+          "primer_score": -0.02601633407175541,
+          "mean_cpb": 0.17182879227037823,
+          "consistency": 0.2670269401991831
+        },
+        {
+          "rank": 8,
+          "position": 9000,
+          "gene": "NS5",
+          "hyp_variance": 0.02714747190475464,
+          "primer_score": -0.02714747190475464,
+          "mean_cpb": 0.4194757401826122,
+          "consistency": 0.29259259259259257
+        },
+        {
+          "rank": 9,
+          "position": 8700,
+          "gene": "NS5",
+          "hyp_variance": 0.027231944724917412,
+          "primer_score": -0.027231944724917412,
+          "mean_cpb": 0.29701213334652266,
+          "consistency": 0.27037037037037037
+        },
+        {
+          "rank": 10,
+          "position": 1200,
+          "gene": "E",
+          "hyp_variance": 0.02724071405827999,
+          "primer_score": -0.02724071405827999,
+          "mean_cpb": 0.41667236344304115,
+          "consistency": 0.2742362553883481
+        }
+      ],
+      "recommendations": [
+        "STRUCTURAL PROTEINS: Position 2400 (E gene) and 3000 (NS1) rank in top 5 - these regions may be under stronger evolutionary constraint than NS5, offering better pan-DENV-4 targeting.",
+        "NS5 ALTERNATIVE: Within NS5, position 9600 has lower hyperbolic variance (0.0222) than the current target at 9908. Consider this as alternative if NS5 targeting is required."
+      ],
+      "conjecture_status": "REJECTED"
+    }
+  }
+}

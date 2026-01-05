@@ -1,0 +1,254 @@
+{
+  "_metadata": {
+    "schema_version": "1.0",
+    "file_type": "serotype_statistics",
+    "description": "Summary statistics for all 4 Dengue virus serotypes",
+    "created": "2026-01-04T00:00:00Z",
+    "updated": "2026-01-05T17:29:13.828004+00:00",
+    "source": {
+      "database": "NCBI Nucleotide",
+      "scope": "Pan-dengue surveillance overview"
+    },
+    "counts": {
+      "serotypes": 4,
+      "total_genomes": 5127
+    },
+    "field_definitions": {
+      "serotype": "Dengue serotype identifier (DENV-1 through DENV-4)",
+      "total_genomes": "Count of complete genomes available in NCBI",
+      "countries": "List of countries with sequences",
+      "country_counts": "Per-country sequence counts",
+      "years": "Collection years represented",
+      "year_counts": "Per-year sequence counts",
+      "genotypes": "Recognized genotypes for this serotype",
+      "genotype_counts": "Per-genotype sequence counts",
+      "mean_identity": "Mean within-serotype sequence identity"
+    },
+    "related_files": [
+      "refseq_genomes.json - Reference genome per serotype",
+      "dengue_strains.json - Full strain sequences (large)"
+    ],
+    "ml_usage": {
+      "index_by": "serotype",
+      "purpose": "Comparative analysis, sampling strategy, geographic/temporal coverage assessment"
+    }
+  },
+  "data": {
+    "DENV-1": {
+      "serotype": "DENV-1",
+      "total_genomes": 1990,
+      "countries": [
+        "China",
+        "Malaysia",
+        "Usa",
+        "Philippines",
+        "Thailand",
+        "Laos",
+        "Mexico",
+        "Haiti",
+        "Myanmar",
+        "India",
+        "Indonesia"
+      ],
+      "country_counts": {
+        "Usa": 1,
+        "Thailand": 3,
+        "Indonesia": 1,
+        "India": 1,
+        "Myanmar": 1,
+        "Mexico": 1,
+        "Philippines": 1,
+        "Malaysia": 1,
+        "China": 14,
+        "Haiti": 1,
+        "Laos": 1
+      },
+      "years": [
+        1997,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "year_counts": {
+        "2025": 82,
+        "2024": 13,
+        "2023": 2,
+        "2019": 22,
+        "2018": 45,
+        "2022": 48,
+        "2020": 64,
+        "2021": 23,
+        "1997": 1
+      },
+      "geographic_entropy": 2.4674452407960943,
+      "temporal_span": 28,
+      "mean_year": 2021.5066666666667
+    },
+    "DENV-2": {
+      "serotype": "DENV-2",
+      "total_genomes": 1726,
+      "countries": [
+        "Thailand",
+        "Bangladesh",
+        "Malaysia"
+      ],
+      "country_counts": {
+        "Thailand": 1,
+        "Bangladesh": 1,
+        "Malaysia": 1
+      },
+      "years": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "year_counts": {
+        "2025": 91,
+        "2024": 12,
+        "2023": 28,
+        "2019": 1,
+        "2018": 6,
+        "2022": 16,
+        "2020": 7,
+        "2021": 139
+      },
+      "geographic_entropy": 1.584962500721156,
+      "temporal_span": 7,
+      "mean_year": 2022.4833333333333
+    },
+    "DENV-3": {
+      "serotype": "DENV-3",
+      "total_genomes": 1141,
+      "countries": [
+        "Vietnam",
+        "Malaysia",
+        "Bangladesh",
+        "Thailand",
+        "India",
+        "Nicaragua"
+      ],
+      "country_counts": {
+        "Malaysia": 1,
+        "Thailand": 1,
+        "India": 2,
+        "Nicaragua": 1,
+        "Bangladesh": 2,
+        "Vietnam": 1
+      },
+      "years": [
+        1993,
+        2005,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "year_counts": {
+        "2025": 133,
+        "2024": 50,
+        "2022": 37,
+        "2023": 4,
+        "2020": 28,
+        "2021": 2,
+        "2019": 12,
+        "1993": 1,
+        "2018": 11,
+        "2017": 14,
+        "2005": 8
+      },
+      "geographic_entropy": 2.5,
+      "temporal_span": 32,
+      "mean_year": 2022.4333333333334
+    },
+    "DENV-4": {
+      "serotype": "DENV-4",
+      "total_genomes": 270,
+      "countries": [
+        "China",
+        "Malaysia",
+        "Usa",
+        "Philippines",
+        "Pakistan",
+        "Haiti",
+        "India",
+        "Indonesia",
+        "Singapore"
+      ],
+      "country_counts": {
+        "Indonesia": 1,
+        "Malaysia": 1,
+        "Usa": 1,
+        "Haiti": 3,
+        "China": 5,
+        "Philippines": 1,
+        "India": 2,
+        "Pakistan": 1,
+        "Singapore": 1
+      },
+      "years": [
+        2001,
+        2004,
+        2005,
+        2007,
+        2008,
+        2009,
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2024,
+        2025
+      ],
+      "year_counts": {
+        "2025": 20,
+        "2024": 4,
+        "2022": 26,
+        "2021": 3,
+        "2020": 11,
+        "2015": 37,
+        "2019": 10,
+        "2001": 3,
+        "2018": 7,
+        "2017": 6,
+        "2016": 17,
+        "2014": 2,
+        "2013": 10,
+        "2012": 29,
+        "2011": 4,
+        "2009": 60,
+        "2008": 11,
+        "2005": 7,
+        "2010": 1,
+        "2007": 1,
+        "2004": 1
+      },
+      "geographic_entropy": 2.852217001462482,
+      "temporal_span": 24,
+      "mean_year": 2014.5666666666666
+    }
+  }
+}
