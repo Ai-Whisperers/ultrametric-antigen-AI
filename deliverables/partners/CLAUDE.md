@@ -12,7 +12,7 @@
 
 | Package | Delivery Status | Model Validated | Inference Tested | Last Verified |
 |---------|:---------------:|:---------------:|:----------------:|---------------|
-| jose_colbes | 95% | PENDING | PENDING | - |
+| jose_colbes | 95% | PASS (LOO ρ=0.585) | PENDING | 2026-01-08 |
 | alejandra_rojas | 85% | PENDING | PENDING | - |
 | carlos_brizuela | 70% | PENDING | PENDING | - |
 | hiv_research_package | Complete | N/A (API) | PENDING | - |
@@ -29,24 +29,36 @@
 
 ### Claimed Status: 95% Ready
 
-### Validation Evidence (TO VERIFY)
+### Validation Evidence (VERIFIED FROM FILES)
 | Metric | Claimed | Verified | Source |
 |--------|---------|----------|--------|
-| LOO CV Spearman | 0.585 | PENDING | validation/results/ |
-| p-value | <0.001 | PENDING | validation/results/ |
-| 95% CI | [0.341, 0.770] | PENDING | bootstrap |
-| Rosetta-blind detection | Working | PENDING | C1 script |
+| LOO CV Spearman | 0.585 | 0.5854 | `validation/results/scientific_metrics.json` |
+| p-value | <0.001 | 5.16e-06 | `validation/results/scientific_metrics.json` |
+| 95% CI | [0.341, 0.770] | [0.341, 0.770] | bootstrap n=1000 |
+| Permutation p | <0.001 | 0.0000 | 1000 permutations |
+| N mutations | 52 | 52 | S669 curated subset |
+| MAE | 0.91 kcal/mol | 0.91 | LOO validation |
 
-### Model Checkpoint
-- **Path:** `jose_colbes/models/` or `research/codon-encoder/`
-- **Type:** TrainableCodonEncoder or sklearn ensemble
-- **Inference command:** PENDING
+### Statistical Validation Artifacts (EXIST)
+- `validation/results/scientific_metrics.json` - Complete bootstrap results
+- `validation/results/SCIENTIFIC_VALIDATION_REPORT.md` - Detailed report
+- `VALIDATION_SUMMARY.md` - Executive summary with citations
+
+### Model Architecture
+- **Type:** TrainableCodonEncoder (hyperbolic embeddings) + Ridge Regression
+- **Features:** 8 (4 hyperbolic + 4 physicochemical)
+- **Predictor class:** `ValidatedDDGPredictor` in `src/validated_ddg_predictor.py`
+
+### Inference Command
+```bash
+python scripts/C4_mutation_effect_predictor.py --mutations mutations.csv
+```
 
 ### Last Inference Test
-- **Date:** PENDING
+- **Date:** PENDING RUNTIME VERIFICATION
 - **Command:** PENDING
 - **Output:** PENDING
-- **Status:** PENDING
+- **Status:** Documentation verified, inference test pending
 
 ---
 
@@ -173,6 +185,7 @@ python deliverables/partners/hiv_research_package/scripts/H6_tdr_screening.py --
 
 | Date | Package | Action | Result |
 |------|---------|--------|--------|
+| 2026-01-08 | jose_colbes | Verified validation artifacts | PASS - metrics match documentation |
 | 2026-01-08 | ALL | Initial draft created | PENDING verification |
 
 ---
