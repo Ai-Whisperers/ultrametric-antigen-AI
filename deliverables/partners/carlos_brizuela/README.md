@@ -348,6 +348,161 @@ This provides implicit regularization toward stable, "natural-like" peptides.
 
 ---
 
+## NEW: REST API for Mechanism-Based Design
+
+### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+### !! DISCLAIMER: PREMATURE MOCK - NOT PRODUCTION READY            !!
+### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+**WARNING**: This API was created BEFORE completing critical validation steps:
+
+| Validation Step | Status | Impact |
+|-----------------|--------|--------|
+| C5 hold-out generalization | **NOT RUN** | R2 constraint violated |
+| PeptideVAE checkpoint | **NOT TRAINED** | Blocking item |
+
+**DO NOT USE FOR:**
+- Production deployment
+- Clinical decision support
+- Publication claims
+
+**REQUIRED BEFORE PRODUCTION:**
+1. Run C5 hold-out generalization test
+2. Train PeptideVAE checkpoint
+3. Remove disclaimers after validation passes
+
+---
+
+### Overview
+
+The `api/` module exposes PARTIALLY-validated findings from P1 investigation as classical REST endpoints. This allows external tools, classical ML pipelines, and non-Python systems to leverage mechanism-based design rules.
+
+### Key Findings Exposed
+
+| Finding | Source | Status |
+|---------|--------|--------|
+| Arrow-flip threshold | hydrophobicity > 0.107 | PARTIALLY VALIDATED |
+| Signal clusters | Clusters 1, 3, 4 show pathogen patterns | PARTIALLY VALIDATED |
+| Mechanism-pathogen map | detergent, barrel_stave | PARTIALLY VALIDATED |
+| N-terminal cationic dipeptide | KK/RK at N-terminus | FALSIFIED |
+| Enterobacteriaceae gap | Both mechanisms fail | CONFIRMED |
+| **Generalization to unseen pathogens** | C5 hold-out test | **NOT TESTED** |
+
+### Running the API
+
+```bash
+# Start the API server
+cd deliverables/partners/carlos_brizuela
+uvicorn api.amp_design_api:app --host 0.0.0.0 --port 8080
+
+# API docs at: http://localhost:8080/docs
+```
+
+### API Endpoints
+
+#### POST /classify/mechanism
+Classify AMP killing mechanism from peptide properties.
+
+```bash
+curl -X POST "http://localhost:8080/classify/mechanism" \
+  -H "Content-Type: application/json" \
+  -d '{"length": 14, "hydrophobicity": 0.29, "net_charge": 1.6}'
+```
+
+Response:
+```json
+{
+  "mechanism": "detergent",
+  "confidence": 1.0,
+  "description": "Micelle-like disruption, short peptides",
+  "cluster_id": 3,
+  "has_pathogen_signal": true
+}
+```
+
+#### POST /route/regime
+Determine prediction regime based on arrow-flip threshold.
+
+```bash
+curl -X POST "http://localhost:8080/route/regime" \
+  -H "Content-Type: application/json" \
+  -d '{"hydrophobicity": 0.15}'
+```
+
+#### POST /design/rules
+Get actionable design rules for a target pathogen.
+
+```bash
+curl -X POST "http://localhost:8080/design/rules" \
+  -H "Content-Type: application/json" \
+  -d '{"target_pathogen": "P_aeruginosa"}'
+```
+
+Response:
+```json
+{
+  "target_pathogen": "P_aeruginosa",
+  "recommended_length": "14-18 AA",
+  "recommended_mechanism": ["detergent", "barrel_stave"],
+  "sequence_rules": {
+    "cationic_fraction": ">17%",
+    "hydrophobicity": ">0.107 (arrow-flip threshold)"
+  },
+  "confidence": "HIGH"
+}
+```
+
+#### POST /predict/pathogen-rank
+Rank pathogens by predicted efficacy for a sequence.
+
+```bash
+curl -X POST "http://localhost:8080/predict/pathogen-rank" \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "GIGKFLHSAKKFGKAFVGEIMNS"}'
+```
+
+#### GET /thresholds
+Get all validated arrow-flip thresholds.
+
+#### GET /metrics/fingerprint
+Export full mechanism fingerprint data.
+
+### Python Integration
+
+```python
+from deliverables.partners.carlos_brizuela.src.peptide_encoder_service import (
+    get_peptide_encoder_service
+)
+
+service = get_peptide_encoder_service()
+
+# Mechanism-aware methods
+mech = service.get_mechanism("KKLFKKILKYL")
+print(f"Mechanism: {mech['mechanism']}")
+
+ranking = service.get_pathogen_ranking("KKLFKKILKYL")
+for r in ranking:
+    print(f"  {r['pathogen']}: {r['relative_efficacy']:.2f}")
+
+rules = service.get_design_rules("P_aeruginosa")
+print(f"Length: {rules['recommended_length']}")
+
+regime = service.route_regime("KKLFKKILKYL")
+print(f"Regime: {regime['regime']}")
+```
+
+### API Files
+
+| File | Description |
+|------|-------------|
+| `api/__init__.py` | Package exports |
+| `api/amp_design_api.py` | FastAPI endpoints |
+| `api/mechanism_service.py` | Business logic |
+| `api/models.py` | Pydantic request/response models |
+| `api/test_api.py` | Test script |
+
+---
+
 ## Questions?
 
 - See docstrings in each script for implementation details
