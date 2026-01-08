@@ -4,10 +4,17 @@
 This module provides a validated DDG (protein stability change) predictor
 using the TrainableCodonEncoder with hyperbolic embeddings.
 
-VALIDATION:
-- Leave-One-Out Cross-Validation on S669 dataset
-- LOO Spearman: 0.60 (beats Mutate Everything 0.56, ESM-1v 0.51, ELASPIC-2 0.50)
+VALIDATION (IMPORTANT - READ CAREFULLY):
+- LOO Spearman: 0.60 on N=52 SUBSET (small proteins, mostly Ala-scanning)
+- Full S669 (N=669): 0.37-0.40 with combined features
 - Overfitting ratio: 1.27x (acceptable)
+
+COMPARISON NOTE:
+Literature methods (ESM-1v 0.51, FoldX 0.48, etc.) are benchmarked on N=669.
+Our N=52 result is NOT directly comparable. On full N=669, we achieve
+ρ=0.37-0.40, which does NOT outperform these methods.
+
+See: ../VALIDATION_SUMMARY.md for complete validation details.
 
 The predictor uses:
 1. TrainableCodonEncoder: 16-dim hyperbolic embeddings on Poincaré ball
@@ -27,6 +34,7 @@ Usage:
 References:
 - TrainableCodonEncoder: research/codon-encoder/training/
 - Validation: research/codon-encoder/multimodal/multimodal_ddg_predictor.py
+- Full findings: research/codon-encoder/results/PADIC_ENCODER_FINDINGS.md
 """
 
 from __future__ import annotations
@@ -92,12 +100,21 @@ class DDGPrediction:
 class ValidatedDDGPredictor:
     """Validated DDG predictor using TrainableCodonEncoder.
 
-    This predictor achieves LOO Spearman 0.60 on the S669 benchmark,
-    outperforming:
-    - Mutate Everything (0.56)
-    - ESM-1v (0.51)
-    - ELASPIC-2 (0.50)
-    - FoldX (0.48)
+    PERFORMANCE:
+    - N=52 subset: LOO Spearman 0.60 (small proteins, Ala-scanning)
+    - N=669 full: Spearman 0.37-0.40 (combined with physicochemical)
+
+    IMPORTANT: The N=52 result does NOT directly compare to literature
+    benchmarks which use N=669. See VALIDATION_SUMMARY.md for details.
+
+    Best use cases:
+    - Ala-scanning on small proteins (N=52 validation applies)
+    - Neutral→charged mutations (+159% p-adic advantage)
+    - Pre-filtering before FoldX/Rosetta (speed advantage)
+
+    NOT recommended for:
+    - Charge reversal mutations (p-adic hurts: -737%)
+    - Claiming to beat FoldX/ESM-1v (we don't on N=669)
 
     The model combines:
     - Hyperbolic codon embeddings (learned p-adic structure)

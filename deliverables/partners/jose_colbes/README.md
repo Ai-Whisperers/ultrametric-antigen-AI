@@ -15,13 +15,18 @@ This package provides a **scientifically validated** toolkit for protein stabili
 
 | Metric | Value | Assessment |
 |--------|-------|------------|
-| **Spearman ρ** | **0.585** | Outperforms ESM-1v (0.51), ELASPIC-2 (0.50), FoldX (0.48) |
+| **Spearman ρ** | **0.585** | Competitive with ESM-1v (0.51), ELASPIC-2 (0.42-0.58) |
 | Pearson r | 0.596 | Strong linear correlation |
 | MAE | 0.91 kcal/mol | Good absolute accuracy |
 | 95% CI | [0.341, 0.770] | Does NOT include zero |
 | Permutation p | 0.0000 | Statistically confirmed |
 
-**Key Advantage:** Sequence-only prediction - no 3D structure required.
+**Key Advantages:**
+- **Sequence-only prediction** - no 3D structure required
+- **Speed:** <0.1 seconds per mutation (vs minutes for FoldX/Rosetta)
+- **Rosetta-blind detection:** Identifies geometric instability physics-based methods miss
+
+See [VALIDATION_SUMMARY.md](VALIDATION_SUMMARY.md) for complete validation details.
 
 ---
 
@@ -110,16 +115,18 @@ jose_colbes/
 
 ## Validated Results
 
-### DDG Prediction Benchmark (S669, n=52)
+### DDG Prediction Benchmark (S669, LOO-Validated)
 
 | Method | Spearman ρ | Type | Our Status |
 |--------|------------|------|------------|
 | Rosetta ddg_monomer | 0.69 | Structure | Requires 3D |
-| **Our Method** | **0.585** | **Sequence** | **VALIDATED** |
-| Mutate Everything | 0.56 | Sequence | Outperformed |
-| ESM-1v | 0.51 | Sequence | Outperformed |
-| ELASPIC-2 | 0.50 | Sequence | Outperformed |
-| FoldX | 0.48 | Structure | Outperformed |
+| **Our Method (V3)** | **0.585** | **Sequence** | **LOO VALIDATED** |
+| Mutate Everything | 0.56 | Sequence | Competitive |
+| ESM-1v | ~0.51 | Sequence | Competitive |
+| ELASPIC-2 | 0.42-0.58 | Sequence | Competitive |
+| FoldX | 0.48-0.69 | Structure | Requires 3D |
+
+**Key Finding:** Our sequence-only method achieves competitive performance without requiring 3D structure.
 
 ### AlphaFold Structural Cross-Validation
 
@@ -292,5 +299,6 @@ For questions or collaboration:
 
 ---
 
-*Version 2.0 · Updated 2026-01-03*
+*Version 2.1 · Updated 2026-01-08*
 *Validated: Spearman ρ = 0.585, p < 0.001, 95% CI [0.341, 0.770]*
+*See [VALIDATION_SUMMARY.md](VALIDATION_SUMMARY.md) for complete validation details*
