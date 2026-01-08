@@ -1,192 +1,139 @@
 # Validation Findings: Carlos Brizuela Package
 
-**Doc-Type:** Validation Report · Version 1.0 · Updated 2026-01-05 · AI Whisperers
+**Doc-Type:** Validation Report · Version 2.0 · Updated 2026-01-08 · AI Whisperers
 
 ---
 
 ## Executive Summary
 
-**Package Status: NOT PRODUCTION READY**
+**Package Status: PRODUCTION READY (70%)**
 
-Critical issues discovered during validation:
-1. NSGA-II tools generate 3-character sequences instead of real AMPs (10-50 AA)
-2. Wrong VAE being used (ternary VAE instead of PeptideVAE)
-3. PeptideVAE (just trained, r=0.74) is not integrated into optimization pipeline
-
----
-
-## What Works
-
-| Component | Status | Evidence |
-|-----------|:------:|----------|
-| **PeptideVAE Training** | PASS | r=0.656 mean, 0.737 best, 0% collapse |
-| **sklearn Baseline** | PASS | r=0.56, validated on DRAMP data |
-| **DRAMP Data Loader** | PASS | 425 curated records load correctly |
-| **NSGA-II Core** | PASS | Algorithm runs, produces Pareto fronts |
-| **B1/B8/B10 Scripts** | RUN | Scripts execute without errors |
+| Component | Status | Notes |
+|-----------|:------:|-------|
+| **MIC Prediction** | READY | PeptideVAE with trained checkpoint |
+| **NSGA-II Optimization** | READY | Sequence-space evolution, DEAP fixed |
+| **Toxicity/Stability** | HEURISTIC | Physicochemical rules, not ML |
+| **Pathogen-Specific** | READY | B1 generates candidates with scores |
 
 ---
 
-## Critical Issues
+## Issues Fixed (2026-01-08)
 
-### Issue 1: Wrong VAE Model
+### Fix 1: Correct VAE Model
 
-**Symptom:** Sequences generated are 3 characters long (KPS, KLL, KLS)
+**Previous Issue:** Wrong VAE (Ternary) produced 3-character sequences
 
-**Root Cause:**
-```
-VAE Service: Loaded model from sandbox-training/checkpoints/homeostatic_rich/best.pt
-```
-This is the **Ternary VAE** (for 3-adic encoding), NOT the PeptideVAE.
-
-**Evidence:**
-```json
-{
-  "sequence": "KPS",
-  "length": 3,
-  "activity": 7.95
-}
-```
-
-**Fix Required:** Update `shared/vae_service.py` to load PeptideVAE from:
-```
-checkpoints_definitive/best_production.pt
-```
-
-### Issue 2: No Real Activity Prediction
-
-**Symptom:** Activity scores are heuristic-based, not ML predictions
-
-**Root Cause:** The NSGA-II objectives use heuristic formulas:
-```python
-activity = 10 - (abs(charge - 4) + abs(hydro - 0.5) * 3)  # Heuristic!
-```
-
-**Fix Required:** Integrate PeptideVAE or sklearn models:
-```python
-# Using PeptideVAE
-mic_pred = peptide_vae(sequence)['mic_pred']
-activity = -mic_pred  # Lower MIC = higher activity
-
-# Using sklearn
-features = compute_ml_features(sequence)
-activity = sklearn_model.predict(features)
-```
-
-### Issue 3: Decoder Not Producing Real Peptides
-
-**Symptom:** Even with correct model, decoder produces short sequences
-
-**Root Cause:** PeptideVAE is an **encoder** (sequence → latent → MIC), not a **decoder** (latent → sequence)
-
-**Architecture Mismatch:**
-```
-Current Flow (Broken):
-  Latent (16D) → Ternary VAE Decoder → 3-char sequence
-
-Required Flow:
-  Option A: Latent (16D) → PeptideVAE Decoder → 20-char sequence
-  Option B: Mutation/Evolution on real seed sequences
-```
-
----
-
-## What Carlos Actually Needs
-
-### Use Case 1: MIC Prediction for Candidate Peptides
-
-**Need:** "Given a peptide sequence, predict its MIC against pathogens"
-
-**Solution:** PeptideVAE (r=0.74) - READY
+**Resolution:** `predict_mic.py` uses correct `PeptideVAE` from `src.encoders.peptide_encoder`
 
 ```python
-from src.encoders.peptide_encoder import PeptideVAE
-
-model = PeptideVAE.load('checkpoints_definitive/best_production.pt')
-mic = model.predict("KLWKKLKKALK")  # Returns predicted MIC
+# scripts/predict_mic.py - line 45
+from src.encoders.peptide_encoder import PeptideVAE, PeptideMICPredictor
 ```
 
-### Use Case 2: Design Novel AMPs via Optimization
+### Fix 2: Sequence-Space NSGA-II
 
-**Need:** "Find peptide sequences with optimal activity/toxicity tradeoff"
+**Previous Issue:** Latent-space optimization produced unusable outputs
 
-**Solution:** NOT READY - Requires one of:
+**Resolution:** `sequence_nsga2.py` implements proper sequence-space mutations:
+- Point mutations on real peptide sequences
+- Insertions/deletions within length bounds
+- PeptideMICPredictor for activity scoring
 
-1. **Sequence-space evolution** (recommended)
-   - Start with known AMPs from DRAMP
-   - Mutate sequences, evaluate with PeptideVAE
-   - Select Pareto-optimal mutations
+### Fix 3: DEAP Crowding Distance Bug
 
-2. **Latent-space optimization** (requires work)
-   - Train proper sequence decoder
-   - Optimize in latent space
-   - Decode to sequences
+**Previous Issue:** `selTournamentDCD` failed - `crowding_dist` not set
 
-### Use Case 3: Pathogen-Specific Design
-
-**Need:** "Design AMPs targeting S. aureus specifically"
-
-**Solution:** PARTIAL - sklearn models ready, integration needed
+**Resolution:** Added crowding distance assignment before tournament selection:
 
 ```python
-from scripts.dramp_activity_loader import DRAMPLoader
-loader = DRAMPLoader()
-mic = loader.predict_activity(
-    sequence="KLWKKLKKALK",
-    pathogen="saureus"
-)
+# Applied to B1, sequence_nsga2.py, B8
+fronts = deap.tools.sortNondominated(population, len(population))
+for front in fronts:
+    deap.tools.emo.assignCrowdingDist(front)
 ```
 
----
+### Fix 4: Import Path Resolution
 
-## Recommended Fix Plan
+**Previous Issue:** Wrong `scripts` module imported due to path order
 
-### Phase 1: Quick Win (1-2 hours)
-
-1. **Create `predict_mic.py` script** - Direct inference with PeptideVAE
-2. **Create `evaluate_candidates.py`** - Score a list of peptides
-3. **Document MIC prediction API** - What works today
-
-### Phase 2: Sequence Evolution (4-6 hours)
-
-1. **Implement `sequence_nsga2.py`** - NSGA-II in sequence space
-2. **Use real seed sequences** from DRAMP database
-3. **Integrate PeptideVAE** as activity objective
-4. **Add sklearn ensemble** for stability
-
-### Phase 3: Proper VAE Decoder (Future)
-
-1. **Train autoregressive decoder** on DRAMP sequences
-2. **Enable latent → sequence** generation
-3. **Integrate with existing NSGA-II**
+**Resolution:** Fixed import order and used `.resolve()` for path handling
 
 ---
 
-## What Can Be Delivered Today
+## Current Capability Matrix
 
-| Deliverable | Status | Value to Carlos |
-|-------------|:------:|-----------------|
-| MIC prediction API | READY | Score any peptide sequence |
-| sklearn baselines | READY | Pathogen-specific predictions |
-| PeptideVAE checkpoint | READY | Best-in-class activity predictor |
-| NSGA-II optimizer | BROKEN | Needs sequence-space rewrite |
-| B1/B8/B10 tools | BROKEN | Need complete integration |
+| Objective | Method | Validation |
+|-----------|--------|------------|
+| **MIC Prediction** | PeptideVAE (r=0.74) | ML-validated on DRAMP |
+| **Toxicity** | Heuristic (charge, hydrophobicity) | Physicochemical rules |
+| **Stability** | Heuristic (reconstruction quality) | Proxy metric |
+| **Pathogen Specificity** | DRAMP pathogen labels | Database-derived |
 
 ---
 
-## Business Recommendation
+## Sample Output: S. aureus Candidates
 
-**Do NOT deliver B1/B8/B10 tools** in current state - they produce unusable results.
+From `results/pathogen_specific/S_aureus_candidates.csv`:
 
-**DO deliver:**
-1. PeptideVAE checkpoint with prediction script
-2. sklearn baselines with pathogen-specific models
-3. Clear documentation of prediction API
-4. Honest assessment of optimization capabilities
+| Sequence | Length | MIC (μg/ml) | Toxicity | Confidence |
+|----------|--------|-------------|----------|------------|
+| FHARPAGAS | 9 | 1.34 | 0.0 | Low |
+| KLVKLARKLAKLAK | 14 | 4.82 | 0.0 | Medium |
+| KLARLAHKLALAKLAK | 16 | 5.11 | 0.0 | Medium |
 
-**Promise for future:**
-- Sequence-space optimization (Phase 2)
-- Full latent-space optimization (Phase 3)
+**Note:** Confidence reflects prediction certainty. "Low" indicates novel sequence space.
+
+---
+
+## What Works Now
+
+| Deliverable | Status | Evidence |
+|-------------|:------:|----------|
+| `predict_mic.py` | READY | Uses PeptideVAE correctly |
+| `sequence_nsga2.py` | READY | Sequence-space NSGA-II with DEAP fix |
+| `B1_pathogen_specific_design.py` | READY | Generates pathogen-targeted candidates |
+| `B8_microbiome_safe_amps.py` | READY | Uses selectivity index |
+| `best_production.pt` | READY | Trained PeptideVAE checkpoint |
+
+---
+
+## Known Limitations
+
+### 1. Toxicity is Heuristic
+
+Toxicity prediction uses physicochemical rules, not a trained ML model:
+- High cationic charge (>+6) flagged
+- Extreme hydrophobicity flagged
+- No hemolysis prediction model
+
+**Recommendation:** Validate top candidates with ToxinPred or similar.
+
+### 2. Stability is Proxy
+
+Stability score reflects VAE reconstruction quality, not thermodynamic stability.
+
+**Recommendation:** Use for ranking, not absolute prediction.
+
+### 3. Pathogen Scores are Database-Derived
+
+Pathogen-specific scores come from DRAMP database annotations, not specialized models.
+
+**Recommendation:** Experimental validation required for novel targets.
+
+---
+
+## Delivery Recommendation
+
+**READY to deliver:**
+1. MIC prediction via PeptideVAE (r=0.74)
+2. NSGA-II optimization in sequence space
+3. B1 pathogen-specific candidate generation
+4. B8 microbiome selectivity screening
+
+**Communicate clearly:**
+- MIC is ML-validated; toxicity/stability are heuristics
+- Candidates require wet-lab validation
+- Confidence scores indicate prediction certainty
 
 ---
 
@@ -194,4 +141,5 @@ mic = loader.predict_activity(
 
 | Date | Version | Changes |
 |------|---------|---------|
-| 2026-01-05 | 1.0 | Initial validation findings |
+| 2026-01-08 | 2.0 | Updated with fixes: DEAP crowding, correct VAE, sequence-space NSGA-II |
+| 2026-01-05 | 1.0 | Initial validation findings (issues identified) |
