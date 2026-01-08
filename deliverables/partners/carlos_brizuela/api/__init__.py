@@ -1,8 +1,8 @@
 """AMP Design API - Classical endpoints for mechanism-based design.
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!! DISCLAIMER: PREMATURE MOCK - NOT PRODUCTION READY                 !!
-!! C5 hold-out generalization test NOT RUN. R2 constraint violated.  !!
+!! C5 FALSIFIED - PATHOGEN METADATA PROVIDES NO IMPROVEMENT          !!
+!! Endpoints /design/rules and /predict/pathogen-rank are MISLEADING !!
 !! See amp_design_api.py for full disclaimer.                        !!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 """

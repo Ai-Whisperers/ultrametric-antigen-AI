@@ -1,31 +1,31 @@
 """AMP Mechanism-Based Design API - FastAPI REST endpoints.
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!! DISCLAIMER: PREMATURE MOCK - NOT PRODUCTION READY                 !!
+!! DISCLAIMER: C5 FALSIFIED - PATHOGEN-SPECIFIC ENDPOINTS MISLEADING !!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!                                                                   !!
-!! This API was created BEFORE completing critical validation steps: !!
+!! C5 HOLD-OUT TEST RESULT: FALSIFIED                                !!
+!! Pathogen metadata provides NO predictive improvement.             !!
+!! Average improvement: -0.109 (NEGATIVE = metadata HURTS)           !!
+!! Peptide-only model: r=0.88-0.94 on held-out pathogens             !!
 !!                                                                   !!
-!! MISSING VALIDATION:                                               !!
-!! - C5 hold-out generalization test NOT RUN                         !!
-!! - Signal may not generalize to unseen pathogens                   !!
-!! - R2 constraint (hold-out testing) not satisfied                  !!
+!! ENDPOINT STATUS:                                                  !!
+!! VALID:                                                            !!
+!! - /classify/mechanism   (peptide features only)                   !!
+!! - /route/regime         (hydrophobicity threshold)                !!
+!! - /thresholds           (static data)                             !!
+!! - /metrics/fingerprint  (data export)                             !!
 !!                                                                   !!
-!! CURRENT STATUS:                                                   !!
-!! - C3 signal survived seed-artifact falsification                  !!
-!! - C5 script exists but was NEVER EXECUTED                         !!
-!! - Findings are PARTIALLY VALIDATED, not fully validated           !!
+!! MISLEADING (use pathogen metadata that doesn't help):             !!
+!! - /design/rules         (pathogen-specific recommendations)       !!
+!! - /predict/pathogen-rank (pathogen rankings)                      !!
 !!                                                                   !!
-!! DO NOT USE FOR:                                                   !!
-!! - Production deployment                                           !!
-!! - Clinical decision support                                       !!
-!! - Publication claims                                              !!
+!! SCIENTIFIC OUTCOME:                                               !!
+!! The signal is in the PEPTIDE, not the PATHOGEN.                   !!
+!! MIC prediction generalizes using only peptide features.           !!
 !!                                                                   !!
-!! NEXT STEPS REQUIRED:                                              !!
-!! 1. Run C5 hold-out generalization test                            !!
-!! 2. Train PeptideVAE checkpoint (blocking item)                    !!
-!! 3. Connect to Foundation Encoder pipeline                         !!
-!! 4. Remove this disclaimer only after full validation              !!
+!! STILL BLOCKED:                                                    !!
+!! - PeptideVAE checkpoint NOT TRAINED                               !!
 !!                                                                   !!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -71,14 +71,19 @@ from .models import (
 API_VERSION = "1.0.0"
 API_TITLE = "AMP Mechanism-Based Design API"
 API_DESCRIPTION = """
-## !! PREMATURE MOCK - NOT PRODUCTION READY !!
+## !! C5 FALSIFIED - PATHOGEN-SPECIFIC ENDPOINTS MISLEADING !!
 
-**WARNING**: This API was created BEFORE completing C5 hold-out generalization testing.
-Findings are PARTIALLY VALIDATED. Do not use for production, clinical decisions, or publication claims.
+**C5 HOLD-OUT TEST RESULT**: Pathogen metadata provides NO predictive improvement.
+- Average improvement: -0.109 (NEGATIVE = metadata actually HURTS)
+- Peptide-only model generalizes with r=0.88-0.94 on held-out pathogens
+
+**VALID ENDPOINTS**: /classify/mechanism, /route/regime, /thresholds, /metrics/fingerprint
+
+**MISLEADING ENDPOINTS**: /design/rules, /predict/pathogen-rank (use pathogen metadata that doesn't help)
 
 ---
 
-Classical REST API exposing PARTIALLY-validated mechanism-based AMP design findings.
+Classical REST API exposing mechanism-based AMP design findings.
 
 ## Key Features
 

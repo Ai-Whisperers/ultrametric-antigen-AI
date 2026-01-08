@@ -1,14 +1,18 @@
 """Mechanism Design Service - Business logic for AMP mechanism-based design.
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!! DISCLAIMER: PREMATURE MOCK - NOT PRODUCTION READY                 !!
+!! C5 FALSIFIED - PATHOGEN METADATA PROVIDES NO IMPROVEMENT          !!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!                                                                   !!
-!! C5 hold-out generalization test was NEVER EXECUTED.               !!
-!! R2 constraint (hold-out testing) NOT SATISFIED.                   !!
-!! Findings are PARTIALLY VALIDATED - use with extreme caution.      !!
+!! C5 hold-out test EXECUTED. Result: FALSIFIED                      !!
+!! - Pathogen metadata provides NO predictive improvement            !!
+!! - Average improvement: -0.109 (negative = hurts)                  !!
+!! - Peptide-only model: r=0.88-0.94 on held-out pathogens           !!
 !!                                                                   !!
-!! See amp_design_api.py for full disclaimer and required next steps.!!
+!! VALID: classify_mechanism, route_regime, get_thresholds           !!
+!! MISLEADING: get_design_rules, rank_pathogens                      !!
+!!                                                                   !!
+!! See amp_design_api.py for full disclaimer.                        !!
 !!                                                                   !!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
