@@ -1,0 +1,13 @@
+{
+  "attempt": "prediction_attempt_01",
+  "timestamp": "2026-01-08T07:39:29.725987",
+  "config": {
+    "latent_dim": 16,
+    "hidden_dim": 128,
+    "n_epochs": 100
+  },
+  "results": {
+    "reconstruction_accuracy": 1.0,
+    "final_val_loss": 2.1197256247202554,
+    "physicochemical_r": {
+      "length": 

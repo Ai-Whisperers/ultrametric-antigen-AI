@@ -1,0 +1,17 @@
+{
+  "attempt": "prediction_attempt_02",
+  "fixes": [
+    "3x hydrophobicity weight",
+    "z-score normalization",
+    "dedicated hydro branch"
+  ],
+  "timestamp": "2026-01-08T07:42:07.759210",
+  "results": {
+    "reconstruction_accuracy": 1.0,
+    "physicochemical_r": {
+      "length": 0.982322777037722,
+      "hydrophobicity": 0.9892119452260426,
+      "charge": 0.9833470405676551
+    }
+  }
+}
