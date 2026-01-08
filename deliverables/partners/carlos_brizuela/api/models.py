@@ -1,8 +1,8 @@
 """Pydantic models for AMP Design API request/response validation.
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!! DISCLAIMER: PREMATURE MOCK - NOT PRODUCTION READY                 !!
-!! C5 hold-out generalization test NOT RUN. R2 constraint violated.  !!
+!! C5 FALSIFIED - PATHOGEN METADATA PROVIDES NO IMPROVEMENT          !!
+!! Models for /design/rules and /predict/pathogen-rank are MISLEADING!!
 !! See amp_design_api.py for full disclaimer.                        !!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 """

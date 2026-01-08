@@ -351,25 +351,31 @@ This provides implicit regularization toward stable, "natural-like" peptides.
 ## NEW: REST API for Mechanism-Based Design
 
 ### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-### !! DISCLAIMER: PREMATURE MOCK - NOT PRODUCTION READY            !!
+### !! C5 FALSIFIED - PATHOGEN-SPECIFIC ENDPOINTS ARE MISLEADING    !!
 ### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-**WARNING**: This API was created BEFORE completing critical validation steps:
+**C5 HOLD-OUT TEST RESULT: FALSIFIED**
 
-| Validation Step | Status | Impact |
-|-----------------|--------|--------|
-| C5 hold-out generalization | **NOT RUN** | R2 constraint violated |
-| PeptideVAE checkpoint | **NOT TRAINED** | Blocking item |
+| Metric | Value | Meaning |
+|--------|-------|---------|
+| Pathogen metadata improvement | **-0.109** | Negative = HURTS predictions |
+| Peptide-only test correlation | r=0.88-0.94 | Generalizes across pathogens |
+| Metadata helps on test set | 0/3 splits | Never helps |
 
-**DO NOT USE FOR:**
-- Production deployment
-- Clinical decision support
-- Publication claims
+**SCIENTIFIC CONCLUSION:** The signal is in the PEPTIDE, not the PATHOGEN.
 
-**REQUIRED BEFORE PRODUCTION:**
-1. Run C5 hold-out generalization test
-2. Train PeptideVAE checkpoint
-3. Remove disclaimers after validation passes
+**VALID ENDPOINTS:**
+- `/classify/mechanism` - uses peptide features only
+- `/route/regime` - uses hydrophobicity threshold
+- `/thresholds` - static data export
+- `/metrics/fingerprint` - data export
+
+**MISLEADING ENDPOINTS (use pathogen metadata that doesn't help):**
+- `/design/rules` - pathogen-specific recommendations
+- `/predict/pathogen-rank` - pathogen rankings
+
+**STILL BLOCKED:**
+- PeptideVAE checkpoint NOT TRAINED
 
 ---
 
@@ -381,12 +387,13 @@ The `api/` module exposes PARTIALLY-validated findings from P1 investigation as 
 
 | Finding | Source | Status |
 |---------|--------|--------|
-| Arrow-flip threshold | hydrophobicity > 0.107 | PARTIALLY VALIDATED |
-| Signal clusters | Clusters 1, 3, 4 show pathogen patterns | PARTIALLY VALIDATED |
-| Mechanism-pathogen map | detergent, barrel_stave | PARTIALLY VALIDATED |
+| Arrow-flip threshold | hydrophobicity > 0.107 | VALID (peptide feature) |
+| Signal clusters | Clusters 1, 3, 4 show patterns | VALID (peptide clustering) |
+| Mechanism classification | detergent, barrel_stave | VALID (peptide features) |
 | N-terminal cationic dipeptide | KK/RK at N-terminus | FALSIFIED |
 | Enterobacteriaceae gap | Both mechanisms fail | CONFIRMED |
-| **Generalization to unseen pathogens** | C5 hold-out test | **NOT TESTED** |
+| **Pathogen metadata improves prediction** | C5 hold-out test | **FALSIFIED** |
+| **Peptide features generalize** | C5 hold-out test | **CONFIRMED (r=0.88-0.94)** |
 
 ### Running the API
 

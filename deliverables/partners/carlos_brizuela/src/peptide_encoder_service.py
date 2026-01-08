@@ -402,9 +402,13 @@ class PeptideEncoderService:
     # Mechanism-Aware Methods (via MechanismDesignService integration)
     # =========================================================================
     #
-    # !! DISCLAIMER: PREMATURE MOCK - NOT PRODUCTION READY !!
-    # C5 hold-out generalization test NOT RUN. R2 constraint violated.
-    # These methods expose PARTIALLY-validated findings.
+    # !! C5 FALSIFIED - PATHOGEN METADATA PROVIDES NO IMPROVEMENT !!
+    # - Peptide-only model: r=0.88-0.94 on held-out pathogens
+    # - Adding pathogen metadata: -0.109 average improvement (hurts!)
+    #
+    # VALID: get_mechanism(), route_regime()
+    # MISLEADING: get_pathogen_ranking(), get_design_rules()
+    #
     # See api/amp_design_api.py for full disclaimer.
     #
     # =========================================================================

@@ -1,0 +1,154 @@
+{
+  "conjecture": "C5: Pathogen specificity requires NON-AMP information",
+  "n_splits": 3,
+  "n_metadata_helps": 0,
+  "n_generalizes": 3,
+  "avg_improvement": -0.10923697941927035,
+  "avg_generalization_ratio": 0.8760210320637185,
+  "verdict": "FALSIFIED",
+  "interpretation": "Pathogen metadata provides NO predictive improvement. Non-AMP information does not help.",
+  "r3_classification": "Research-Only (no useful signal)",
+  "split_results": [
+    {
+      "train_pathogens": [
+        "A_baumannii",
+        "P_aeruginosa",
+        "Enterobacteriaceae"
+      ],
+      "test_pathogens": [
+        "S_aureus",
+        "H_pylori"
+      ],
+      "train_n": 240,
+      "test_n": 159,
+      "peptide_only": {
+        "train": {
+          "mse": 0.00023101426093830748,
+          "rmse": 0.015199153296756616,
+          "spearman_r": 0.9281540739889457,
+          "p_value": 3.8815631327009767e-104
+        },
+        "test": {
+          "mse": 0.00013514357753150545,
+          "rmse": 0.011625126989908774,
+          "spearman_r": 0.8836854401767588,
+          "p_value": 1.2493129163367249e-53
+        }
+      },
+      "peptide_plus_metadata": {
+        "train": {
+          "mse": 0.0001727018550525447,
+          "rmse": 0.013141607780349583,
+          "spearman_r": 0.9566140975215252,
+          "p_value": 1.8445684876863775e-129
+        },
+        "test": {
+          "mse": 0.004910491634470588,
+          "rmse": 0.07007490017453175,
+          "spearman_r": 0.5544868926245392,
+          "p_value": 3.377449945431172e-14
+        }
+      },
+      "analysis": {
+        "metadata_improves_test": "False",
+        "metadata_improvement": -0.32919854755221956,
+        "combined_generalizes": "True",
+        "generalization_ratio": 0.5796348747746345
+      }
+    },
+    {
+      "train_pathogens": [
+        "S_aureus",
+        "H_pylori",
+        "A_baumannii"
+      ],
+      "test_pathogens": [
+        "P_aeruginosa",
+        "Enterobacteriaceae"
+      ],
+      "train_n": 239,
+      "test_n": 160,
+      "peptide_only": {
+        "train": {
+          "mse": 0.00015091362922147047,
+          "rmse": 0.012284690847614785,
+          "spearman_r": 0.9006052396749986,
+          "p_value": 9.89503962073094e-88
+        },
+        "test": {
+          "mse": 0.00025587412822391685,
+          "rmse": 0.015996066023367023,
+          "spearman_r": 0.9090188572845957,
+          "p_value": 6.080644314709077e-62
+        }
+      },
+      "peptide_plus_metadata": {
+        "train": {
+          "mse": 0.00014525389426671762,
+          "rmse": 0.012052132353518095,
+          "spearman_r": 0.8974504714099154,
+          "p_value": 3.307479847723101e-86
+        },
+        "test": {
+          "mse": 0.00025754596246352964,
+          "rmse": 0.016048238609377968,
+          "spearman_r": 0.9021523282780576,
+          "p_value": 1.445084597455099e-59
+        }
+      },
+      "analysis": {
+        "metadata_improves_test": "False",
+        "metadata_improvement": -0.006866529006538169,
+        "combined_generalizes": "True",
+        "generalization_ratio": 1.0052391268576142
+      }
+    },
+    {
+      "train_pathogens": [
+        "S_aureus",
+        "H_pylori",
+        "Enterobacteriaceae"
+      ],
+      "test_pathogens": [
+        "A_baumannii",
+        "P_aeruginosa"
+      ],
+      "train_n": 239,
+      "test_n": 160,
+      "peptide_only": {
+        "train": {
+          "mse": 0.00015511736139567665,
+          "rmse": 0.012454612053198472,
+          "spearman_r": 0.8832263560007011,
+          "p_value": 6.665561143339765e-80
+        },
+        "test": {
+          "mse": 0.00030236969231528277,
+          "rmse": 0.01738878064486647,
+          "spearman_r": 0.9387678565816502,
+          "p_value": 5.187018674233491e-75
+        }
+      },
+      "peptide_plus_metadata": {
+        "train": {
+          "mse": 0.00013050243765591862,
+          "rmse": 0.011423766351598698,
+          "spearman_r": 0.9079101764221085,
+          "p_value": 1.8233578988005464e-91
+        },
+        "test": {
+          "mse": 0.000461001252499659,
+          "rmse": 0.021470939720926493,
+          "spearman_r": 0.9471219948825969,
+          "p_value": 6.698803178942462e-80
+        }
+      },
+      "analysis": {
+        "metadata_improves_test": "False",
+        "metadata_improvement": 0.008354138300946667,
+        "combined_generalizes": "True",
+        "generalization_ratio": 1.043189094558907
+      }
+    }
+  ]
+}
