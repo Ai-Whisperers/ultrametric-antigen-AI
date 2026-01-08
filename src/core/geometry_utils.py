@@ -62,10 +62,21 @@ References:
 
 from __future__ import annotations
 
+import warnings
 from typing import Optional, Tuple
 
 import torch
 import torch.nn.functional as F
+
+# Emit deprecation warning on import
+warnings.warn(
+    "src.core.geometry_utils is deprecated as of V5.12.2. "
+    "Use src.geometry instead:\n"
+    "  from src.geometry import poincare_distance, exp_map_zero, log_map_zero\n"
+    "This module will be archived in a future release.",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 from src.config.constants import (
     EPSILON,

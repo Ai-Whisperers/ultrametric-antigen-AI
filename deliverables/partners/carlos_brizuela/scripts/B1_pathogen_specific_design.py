@@ -47,17 +47,16 @@ from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
-# Add paths
-SCRIPT_DIR = Path(__file__).parent
+# Add paths - PACKAGE_DIR must be first to shadow project-level scripts/
+SCRIPT_DIR = Path(__file__).resolve().parent
 PACKAGE_DIR = SCRIPT_DIR.parent
 PROJECT_ROOT = PACKAGE_DIR.parent.parent.parent
+# Insert in reverse priority order so PACKAGE_DIR ends up at position 0
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(PROJECT_ROOT / "deliverables"))
+sys.path.insert(0, str(PACKAGE_DIR))  # Must be first for scripts.* imports
 
-# Import shared utilities
-from shared.constants import AMINO_ACIDS, CHARGES, HYDROPHOBICITY
-
-# Import from sequence optimizer
+# CRITICAL: Import scripts.* BEFORE shared - shared's import chain clobbers 'scripts' module
 from scripts.sequence_nsga2 import (
     SequenceNSGA2,
     MutationOperators,
@@ -67,6 +66,9 @@ from scripts.sequence_nsga2 import (
     MIN_PEPTIDE_LENGTH,
     MAX_PEPTIDE_LENGTH,
 )
+
+# Import shared utilities (after scripts to avoid module clobbering)
+from shared.constants import AMINO_ACIDS, CHARGES, HYDROPHOBICITY
 
 # Try to import predictor
 try:
