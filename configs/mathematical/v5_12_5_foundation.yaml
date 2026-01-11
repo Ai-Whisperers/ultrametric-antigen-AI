@@ -1,0 +1,220 @@
+# TernaryVAE v5.12.5 Mathematical Foundation Configuration
+#
+# Unified mathematical foundation building on:
+# - V5.12.4 improved components (SiLU, LayerNorm, Dropout)
+# - Homeostatic_rich proven balance (coverage + hierarchy + richness)
+# - Enhanced controller with mathematical precision
+# - Hyperbolic geometry as default
+#
+# Expected outcomes:
+# - Coverage: ≥ 99.99% (perfect reconstruction)
+# - Hierarchy_B: ≤ -0.832 (approaching mathematical ceiling)
+# - Richness: ≥ 0.006 (geometric diversity preserved)
+# - Q_enhanced: ≥ 2.0 (extended stability metric)
+
+mathematical_foundation:
+  version: "5.12.5"
+  type: "mathematical_foundation"
+  description: "Unified mathematical foundation for TernaryVAE"
+  hyperbolic_default: true
+
+# Device and Performance
+device:
+  name: "v5_12_5_mathematical_foundation"
+  cuda_device: 0
+  use_amp: false
+  pin_memory: true
+  num_workers: 4
+  mathematical_precision: true
+
+# Model Architecture (Enhanced V5.12.4)
+model:
+  name: TernaryVAEV5_11_PartialFreeze
+  latent_dim: 16
+  hidden_dim: 64
+  max_radius: 0.95
+  curvature: 1.0  # Hyperbolic default
+
+  use_controller: true
+  use_dual_projection: true
+  learnable_curvature: true
+  manifold_aware: true
+
+  # V5.12.5: Enhanced mathematical components
+  encoder_type: improved          # SiLU + LayerNorm + Dropout
+  decoder_type: improved
+  enhanced_controller: true       # 12-dim input vs 8-dim
+  adaptive_projection: true       # Learnable curvature constraints
+  mathematical_precision: true    # Numerical stability monitoring
+
+  # Mathematical precision settings
+  encoder_dropout: 0.1
+  decoder_dropout: 0.1
+  projection_dropout: 0.1
+  logvar_min: -10.0
+  logvar_max: 2.0
+
+  # Enhanced controller settings
+  controller_input_dim: 12        # Expanded metrics
+  controller_hidden_dim: 64
+  controller_output_dim: 8
+
+# Mathematical Training Profile
+training_profile: "mathematical_foundation"
+
+# Option C: Partial Freeze (Enhanced)
+option_c:
+  enabled: true
+  freeze_encoder_a: true
+  freeze_encoder_b: false
+  encoder_a_lr_scale: 0.0         # Completely frozen
+  encoder_b_lr_scale: 0.1         # Slow adaptation
+  unfreeze_epoch: never           # Keep A frozen throughout
+
+# Frozen Components (V5.5 Base)
+frozen_checkpoint:
+  path: "sandbox-training/checkpoints/v5_5/latest.pt"
+  encoder_to_load: both
+  decoder_to_load: decoder_A
+  strict_loading: false           # Allow architectural differences
+
+# Enhanced Homeostasis
+homeostasis:
+  enabled: true
+  mathematical_precision: true
+  enhanced_metrics: true
+
+  # Precision thresholds
+  coverage_precision_threshold: 0.9995
+  hierarchy_precision_threshold: 0.0005
+  richness_precision_threshold: 0.0001
+
+  # Q-metric settings (enhanced)
+  Q_target: 2.0
+  Q_tolerance: 0.1
+  Q_history_length: 10
+
+  # Freeze management
+  coverage_freeze_threshold: 0.995
+  enable_annealing: true
+  annealing_step: 0.003
+  annealing_patience: 5
+
+# Mathematical Loss Configuration
+loss:
+  enhanced_mathematical:
+    enabled: true
+    precision_mode: true
+
+    # Proven homeostatic_rich weights
+    coverage_weight: 1.0
+    hierarchy_weight: 5.0
+    richness_weight: 2.5
+    separation_weight: 3.0
+
+  # Mathematical targets (proven achievable)
+  targets:
+    coverage: 1.0               # Perfect reconstruction
+    hierarchy_B: -0.8321        # Mathematical ceiling
+    richness: 0.006             # Proven homeostatic_rich level
+    r_v0: 0.89                  # Outer radius (v=0)
+    r_v9: 0.19                  # Inner radius (v=9)
+    Q_enhanced: 2.0             # Extended stability
+
+  # Loss components
+  rich_hierarchy:
+    hierarchy_weight: 5.0
+    coverage_weight: 1.0
+    richness_weight: 2.5
+    separation_weight: 3.0
+    precision_mode: true
+
+  radial:
+    inner_radius: 0.19          # Proven from homeostatic_rich
+    outer_radius: 0.89
+    weight: 1.0
+    smooth_targets: true
+
+  geodesic:
+    enabled: true
+    phase_start_epoch: 30
+    weight: 0.3
+    precision_mode: true
+
+# Riemannian Optimization (Enhanced)
+riemannian:
+  enabled: true
+  optimizer: "enhanced_adam"
+  precision_mode: true
+  curvature_aware: true
+
+# Training Configuration
+training:
+  epochs: 120
+  batch_size: 512
+  lr: 8.0e-4                    # Slightly lower for precision
+  weight_decay: 5.0e-5
+  max_grad_norm: 0.8
+
+  use_stratified: true
+  use_adaptive: true
+  mathematical_precision: true
+
+  scheduler:
+    type: "mathematical_cosine"
+    T_0: 25
+    T_mult: 1.5
+    eta_min: 1.0e-6
+    warmup_epochs: 5
+
+# Mathematical Success Criteria
+targets:
+  tier_1_mathematical_foundation:
+    coverage: 1.0
+    hierarchy_B: -0.8321
+    richness: 0.006
+    Q_enhanced: 2.0
+    mathematical_stability: true
+    numerical_stability: true
+
+  tier_2_production_ready:
+    coverage: 0.9995
+    hierarchy_B: -0.82
+    richness: 0.004
+    training_efficiency: "<4h/100epochs"
+    memory_usage: "<8GB"
+
+# Validation Configuration
+validation:
+  mathematical_precision: true
+  run_every_n_epochs: 10
+  comprehensive_metrics: true
+
+  # Mathematical property tests
+  tests:
+    coverage_precision: true
+    hierarchy_ceiling: true
+    richness_preservation: true
+    numerical_stability: true
+    p_adic_structure: true
+    hyperbolic_geometry: true
+
+# Checkpoint Management
+checkpointing:
+  save_every_n_epochs: 20
+  keep_best_n: 3
+  mathematical_validation: true
+
+  # Checkpoint naming
+  format: "v5_12_5_{metric}_{value:.4f}_epoch_{epoch:03d}.pt"
+  best_metrics: ["Q_enhanced", "hierarchy_B", "richness"]
+
+# Monitoring and Logging
+monitoring:
+  tensorboard: true
+  mathematical_metrics: true
+  precision_tracking: true
+  stability_alerts: true
+
+  log_every_n_steps: 100
+  detailed_metrics_every_n_epochs: 5
