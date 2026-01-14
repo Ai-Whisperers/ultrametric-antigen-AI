@@ -7,23 +7,21 @@
 
 ---
 
-## Mission Statement
+## Mission: STAGE AND PUSH PURE ML FILES TO "training-opt" branch. Bioinformatics stays on main, mixed with pure ML
 
-**Goal:** Extract pure mathematical ML pipeline scripts that are completely agnostic to bioinformatics applications. The resulting scripts should contain only mathematical foundations (p-adic theory, hyperbolic geometry, category theory, Riemannian optimization), general-purpose ML infrastructure, and domain-agnostic training/evaluation pipelines.
+**Goal:** Extract pure mathematical ML pipeline scripts that are completely agnostic to bioinformatics applications. The resulting scripts should contain only mathematical foundations (p-adic theory, hyperbolic geometry, category theory, Riemannian optimization), general-purpose ML infrastructure, and domain-agnostic training/evaluation pipelines. Afterwards stage those ML files (without the bioinformatics ones) and push them to the "training-opt" branch.
 
 **Success Criteria:**
-- ✅ Zero biological domain dependencies in kept scripts
+- ✅ Zero biological domain dependencies in training-opt branch scripts
 - ✅ Pure mathematical foundations and general ML infrastructure only
 - ✅ Self-contained and domain-agnostic training pipelines
 - ✅ Reusable for any domain requiring advanced geometric ML
 
----
-
 ## Separation Checklist
 
-### ❌ **REMOVE - Bioinformatics & Domain-Specific Scripts**
+### ❌DO NOT PUSH THESE TO "training-opt" BRANCH❌ **Bioinformatics & Domain-Specific Scripts**
 
-#### 🧬 **Analysis Scripts - Biological Focus (Remove 7 files)**
+#### 🧬 **Analysis Scripts - Biological Focus (7 files)**
 - [ ] `analysis/arbovirus_hyperbolic_trajectory.py` - Arbovirus sequence analysis
 - [ ] `analysis/validate_codon_classification.py` - Genetic code validation
 - [ ] `api_integration/esm2_embedder.py` - ESM2 protein language model integration
@@ -34,7 +32,7 @@
 - [ ] `ingest/ingest_pdb_rotamers.py` - Protein structure data ingestion
 - [ ] `ingest/ingest_starpep.py` - Peptide database ingestion
 
-#### 🧬 **Experiments - HIV Research (Remove Entire Directory: 5 files)**
+#### 🧬 **Experiments - HIV Research (Entire Directory: 5 files)**
 - [ ] `experiments/hiv/__init__.py`
 - [ ] `experiments/hiv/download_hiv_datasets.py` - HIV data acquisition
 - [ ] `experiments/hiv/run_full_hiv_pipeline.py` - HIV analysis pipeline
@@ -42,7 +40,7 @@
 - [ ] `experiments/hiv/train_codon_vae_hiv.py` - HIV-focused VAE training
 - [ ] `experiments/hiv/validate_hiv_setup.py` - HIV environment validation
 
-#### 🧬 **Experiments - Biological Applications (Remove 15+ files)**
+#### 🧬 **Experiments - Biological Applications (15+ files)**
 - [ ] `experiments/run_aa_encoding_experiments.py` - Amino acid encoding
 - [ ] `experiments/run_cross_disease.py` - Cross-disease analysis
 - [ ] `experiments/run_cross_resistance_test.py` - Drug resistance modeling
@@ -53,35 +51,35 @@
 - [ ] `experiments/run_on_real_data.py` - Real biological data experiments
 - [ ] `experiments/run_physics_validation.py` - Protein physics validation
 
-#### 🧬 **Examples - Biological Workflows (Remove 3 files)**
+#### 🧬 **Examples - Biological Workflows (3 files)**
 - [ ] `examples/diffusion_sequence_design.py` - Biological sequence generation
 - [ ] `examples/protein_design_workflow.py` - Complete protein design pipeline
 - [ ] `examples/protein_family_classification.py` - Protein classification
 
-#### 🧬 **Training Scripts - Biological Focus (Remove 5 files)**
+#### 🧬 **Training Scripts - Biological Focus (5 files)**
 - [ ] `training/train_diffusion_codon.py` - Codon-specific diffusion models
 - [ ] `training/train_multitask_disease.py` - Disease-specific multi-task learning
 - [ ] `training/train_toxicity_regressor.py` - Biological toxicity prediction
 - [ ] `training/train_unified_pipeline.py` - Unified biological pipeline
 - [ ] `training/train_universal_vae.py` - Universal biological VAE
 
-#### 🧬 **Archive - Deprecated Biological Components (Remove Entire Subdirectories)**
+#### 🧬 **Archive - Deprecated Biological Components (Entire Subdirectories)**
 - [ ] `ARCHIVE/deprecated_peptide_vae/` - Peptide-specific VAE implementations (3 files)
   - [ ] `prediction_attempt_01.py` - Peptide activity prediction
   - [ ] `prediction_attempt_02.py` - Enhanced peptide prediction
   - [ ] `validate_ddg_phase4.py` - Protein stability (ΔΔG) validation
 
-#### 🧬 **Utilities - Biological Setup (Remove 1 file)**
+#### 🧬 **Utilities - Biological Setup (1 file)**
 - [ ] `utils/setup/setup_hiv_analysis.py` - HIV analysis environment setup
 
-#### 🧬 **Non-Python Files - Biological Focus (Remove 3 files)**
+#### 🧬 **Non-Python Files - Biological Focus (3 files)**
 - [ ] `download_hiv_data.ps1` - PowerShell script for HIV dataset downloading
 - [ ] `ARCHIVE/deprecated_peptide_vae/checkpoints/peptide_vae_attempt_01.pt` - Peptide VAE checkpoint
 - [ ] `ARCHIVE/deprecated_peptide_vae/checkpoints/peptide_vae_attempt_02.pt` - Peptide VAE checkpoint
 
 ---
 
-### ✅ **KEEP - Pure Mathematical ML Infrastructure**
+### ✅ **STAGE AND PUSH - Pure Mathematical ML Infrastructure**
 
 #### 🧮 **Core Training Infrastructure (Keep 8 files)**
 - [x] `train.py` - **CORE**: Canonical V5.11 ternary VAE training with frozen/trainable encoders
@@ -261,44 +259,7 @@
 
 ---
 
-## Implementation Checklist
-
-### Phase 1: Remove Bioinformatics Scripts (Target: ~43 files total)
-- [ ] Remove HIV research directory entirely (`experiments/hiv/` - 5 files)
-- [ ] Remove biological examples (3 files)
-- [ ] Remove biological experiments (15+ files)
-- [ ] Remove peptide VAE archive (3 Python + 2 checkpoint files)
-- [ ] Remove biological training scripts (5 files)
-- [ ] Remove biological analysis scripts (7 files)
-- [ ] Remove biological ingestion scripts (5 files)
-- [ ] Remove biological utilities (1 file)
-- [ ] Remove biological PowerShell scripts (1 file: `download_hiv_data.ps1`)
-
-### Phase 2: Verify Mathematical Purity
-- [ ] Ensure remaining scripts have no biological imports
-- [ ] Verify all mathematical abstractions are domain-agnostic
-- [ ] Test that core training works with synthetic data only
-- [ ] Validate geometric operations on mathematical objects only
-
-### Phase 3: Clean Infrastructure
-- [ ] Ensure training infrastructure works without biological data
-- [ ] Verify evaluation scripts work with mathematical metrics only
-- [ ] Test visualization with mathematical manifolds only
-- [ ] Confirm all utilities are domain-agnostic
-
-### Phase 4: Documentation & Testing
-- [ ] Update all docstrings to remove biological references
-- [ ] Create mathematical-only example workflows
-- [ ] Add unit tests for mathematical operations
-- [ ] Document pure ML pipeline usage patterns
-
----
-
 ## Expected Results
-
-**Before:** 199 total files (189 Python + 10 non-Python: mixed mathematical + bioinformatics + infrastructure)
-**After:** ~156 total files (~150 Python + 7 non-Python infrastructure: pure mathematical + infrastructure only)
-**Reduction:** ~22% fewer files (removing ~43 bioinformatics-focused files)
 
 **Resulting Script Categories:**
 1. **Core Training** (8 files) - Ternary VAE training with p-adic/hyperbolic geometry
@@ -329,16 +290,10 @@
 - ✅ Comprehensive experimentation and ablation frameworks
 - ✅ Mathematical visualization and analysis tools
 
----
-
-## Deep Dive Verification Summary
-
-**Verification Process Completed:** 2026-01-14
-
-### Additional Files Discovered
+## Additional Files Discovered!
 During deep dive analysis, discovered **10 additional non-Python files** beyond the 189 Python files:
 
-**Biological Files to Remove (3 files):**
+**Biological Files to Avoid Pushing (3 files):**
 - `download_hiv_data.ps1` - PowerShell script for HIV dataset acquisition
 - 2x `.pt` checkpoint files in deprecated peptide VAE archive
 
@@ -375,7 +330,7 @@ During deep dive analysis, discovered **10 additional non-Python files** beyond 
 ## References
 
 - **Source Analysis:** `src/index.md` - Source code separation index
-- **Training-Opt Branch:** Contains mathematical-only source code
+- **Training-Opt Branch:** Contains mathematical-only and non-bioinformatics source code
 - **Complete Enumeration:** All 189 script files systematically categorized
 
 **Note:** This index provides both comprehensive documentation and actionable separation guidance for extracting a pure mathematical ML pipeline from the scripts directory, eliminating all biological domain coupling while preserving the complete mathematical and infrastructural capabilities.
