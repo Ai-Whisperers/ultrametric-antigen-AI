@@ -34,7 +34,7 @@ from datetime import datetime
 from pathlib import Path
 
 import numpy as np
-import torch
+import torch as torch_lib
 import yaml
 from scipy.stats import spearmanr
 from torch.utils.tensorboard import SummaryWriter
@@ -55,8 +55,13 @@ from src.losses import (
     RadialHierarchyLoss,
     RichHierarchyLoss,
 )
+from src.losses.adaptive_rich_hierarchy import AdaptiveRichHierarchyLoss, create_adaptive_rich_hierarchy_loss
 from src.models import HomeostasisController, TernaryVAEV5_11_PartialFreeze
 from src.models.homeostasis import compute_Q
+from src.training.optimizations import MixedPrecisionTrainer, MixedPrecisionConfig
+from src.training.grokking_detector import GrokDetector, EpochMetrics, TrainingPhase, GrokDetectorConfig
+from src.training.gradient_checkpointing import apply_gradient_checkpointing, create_checkpoint_config
+from src.training.adaptive_lr_scheduler import AdaptiveLRScheduler, ValidationMetrics, create_adaptive_lr_scheduler
 from src.utils.checkpoint import get_model_state_dict, load_checkpoint_compat
 
 
@@ -116,26 +121,26 @@ def validate_config(config: dict) -> None:
 
 def check_cuda():
     """Verify CUDA is available and print device info."""
-    if not torch.cuda.is_available():
+    if not torch_lib.cuda.is_available():
         print("ERROR: CUDA not available. Please install PyTorch with CUDA support:")
-        print("  pip install torch --index-url https://download.pytorch.org/whl/cu126")
+        print("  pip install torch_lib --index-url https://download.pytorch_lib.org/whl/cu126")
         sys.exit(1)
 
-    device = torch.device("cuda:0")
-    props = torch.cuda.get_device_properties(0)
+    device = torch_lib.device("cuda:0")
+    props = torch_lib.cuda.get_device_properties(0)
     print(f"\n{'='*60}")
     print("V5.12 DEVICE CONFIGURATION")
     print(f"{'='*60}")
     print(f"  Device: {props.name}")
     print(f"  VRAM: {props.total_memory / 1024**3:.1f} GB")
     print(f"  Compute Capability: {props.major}.{props.minor}")
-    print(f"  PyTorch: {torch.__version__}")
-    print(f"  CUDA: {torch.version.cuda}")
+    print(f"  PyTorch: {torch_lib.__version__}")
+    print(f"  CUDA: {torch_lib.version.cuda}")
     print(f"{'='*60}\n")
     return device
 
 
-def create_stratified_indices(indices: torch.Tensor, batch_size: int, device: str, high_v_ratio: float = 0.25):
+def create_stratified_indices(indices: torch_lib.Tensor, batch_size: int, device: str, high_v_ratio: float = 0.25):
     """Create stratified batch indices with enhanced high-valuation sampling.
 
     V5.12: Increased high-v budget to 25% (from 20%) for better r_v9 learning.
@@ -162,7 +167,7 @@ def create_stratified_indices(indices: torch.Tensor, batch_size: int, device: st
 
     # Convert to tensors
     for v in valuation_groups:
-        valuation_groups[v] = torch.tensor(valuation_groups[v], device=device)
+        valuation_groups[v] = torch_lib.tensor(valuation_groups[v], device=device)
 
     # V5.12: 25% for high-v (v>=4)
     high_v_budget = int(batch_size * high_v_ratio)
@@ -182,7 +187,7 @@ def create_stratified_indices(indices: torch.Tensor, batch_size: int, device: st
             per_high_v = max(1, high_v_budget // len(high_v_levels))
             for v in high_v_levels:
                 group = valuation_groups[v]
-                sample_idx = torch.randint(0, len(group), (per_high_v,), device=device)
+                sample_idx = torch_lib.randint(0, len(group), (per_high_v,), device=device)
                 batch_indices.append(group[sample_idx])
 
         # Sample from low-valuation levels (proportional)
@@ -191,16 +196,16 @@ def create_stratified_indices(indices: torch.Tensor, batch_size: int, device: st
             for v in low_v_levels:
                 group = valuation_groups[v]
                 n_to_sample = max(1, int(low_v_budget * len(group) / total_low))
-                sample_idx = torch.randint(0, len(group), (n_to_sample,), device=device)
+                sample_idx = torch_lib.randint(0, len(group), (n_to_sample,), device=device)
                 batch_indices.append(group[sample_idx])
 
         # Combine and trim to exact batch size
-        batch = torch.cat(batch_indices)
+        batch = torch_lib.cat(batch_indices)
         if len(batch) > batch_size:
-            batch = batch[torch.randperm(len(batch), device=device)[:batch_size]]
+            batch = batch[torch_lib.randperm(len(batch), device=device)[:batch_size]]
         elif len(batch) < batch_size:
-            extra = torch.randint(0, n_samples, (batch_size - len(batch),), device=device)
-            batch = torch.cat([batch, extra])
+            extra = torch_lib.randint(0, n_samples, (batch_size - len(batch),), device=device)
+            batch = torch_lib.cat([batch, extra])
 
         batches.append(batch)
 
@@ -216,7 +221,7 @@ def compute_quick_metrics(model, all_ops, indices, device):
     all_radii_B = []
     all_correct = []
 
-    with torch.no_grad():
+    with torch_lib.no_grad():
         for i in range(0, len(all_ops), batch_size):
             batch_ops = all_ops[i:i+batch_size].to(device)
 
@@ -229,7 +234,7 @@ def compute_quick_metrics(model, all_ops, indices, device):
 
             # Coverage check
             logits = model.decoder_A(out['mu_A'])
-            preds = torch.argmax(logits, dim=-1) - 1
+            preds = torch_lib.argmax(logits, dim=-1) - 1
             correct = (preds == batch_ops.long()).float().mean(dim=1).cpu().numpy()
             all_correct.append(correct)
 
@@ -291,6 +296,7 @@ def train_epoch_v512(
     config,
     epoch,
     device,
+    mp_trainer=None,
 ):
     """Train one epoch with V5.12 two-phase strategy.
 
@@ -341,55 +347,105 @@ def train_epoch_v512(
 
         optimizer.zero_grad()
 
-        # Forward pass
-        out = model(x_batch, compute_control=False)
-        z_A = out['z_A_hyp']
-        z_B = out['z_B_hyp']
-        logits = out['logits_A']  # Already computed in forward pass
+        # Mixed precision forward pass and loss computation (Phase 1.2)
+        if mp_trainer is not None:
+            with mp_trainer.autocast():
+                # Forward pass
+                out = model(x_batch, compute_control=False)
+                z_A = out['z_A_hyp']
+                z_B = out['z_B_hyp']
+                logits = out['logits_A']  # Already computed in forward pass
 
-        # === PRIMARY: RichHierarchyLoss (preserves richness) ===
-        rich_losses = rich_hierarchy_loss(z_B, idx_batch, logits, x_batch, orig_radii_batch)
-        rich_loss = rich_losses['total']
+                # === PRIMARY: RichHierarchyLoss (preserves richness) ===
+                rich_losses = rich_hierarchy_loss(z_B, idx_batch, logits, x_batch, orig_radii_batch)
+                rich_loss = rich_losses['total']
 
-        # === AUXILIARY: RadialHierarchyLoss ===
-        rad_loss_A, _ = radial_loss_fn(z_A, idx_batch)
-        rad_loss_B, _ = radial_loss_fn(z_B, idx_batch)
-        rad_loss = rad_loss_A + rad_loss_B
+                # === AUXILIARY: RadialHierarchyLoss ===
+                rad_loss_A, _ = radial_loss_fn(z_A, idx_batch)
+                rad_loss_B, _ = radial_loss_fn(z_B, idx_batch)
+                rad_loss = rad_loss_A + rad_loss_B
 
-        # === STRUCTURAL: GlobalRankLoss ===
-        rank_loss = torch.tensor(0.0, device=device)
-        if rank_loss_fn is not None:
-            rank_loss_A, _ = rank_loss_fn(z_A, idx_batch)
-            rank_loss_B, _ = rank_loss_fn(z_B, idx_batch)
-            rank_loss = rank_loss_A + rank_loss_B
+                # === STRUCTURAL: GlobalRankLoss ===
+                rank_loss = torch_lib.tensor(0.0, device=device)
+                if rank_loss_fn is not None:
+                    rank_loss_A, _ = rank_loss_fn(z_A, idx_batch)
+                    rank_loss_B, _ = rank_loss_fn(z_B, idx_batch)
+                    rank_loss = rank_loss_A + rank_loss_B
 
-        # === Zero-structure loss ===
-        zero_loss = torch.tensor(0.0, device=device)
-        if zero_structure_loss_fn is not None:
-            zero_loss_A = zero_structure_loss_fn(z_A, x_batch)
-            zero_loss_B = zero_structure_loss_fn(z_B, x_batch)
-            zero_loss = zero_loss_A + zero_loss_B
+                # === Zero-structure loss ===
+                zero_loss = torch_lib.tensor(0.0, device=device)
+                if zero_structure_loss_fn is not None:
+                    zero_loss_A = zero_structure_loss_fn(z_A, x_batch)
+                    zero_loss_B = zero_structure_loss_fn(z_B, x_batch)
+                    zero_loss = zero_loss_A + zero_loss_B
 
-        # === PHASE 2: Geodesic refinement ===
-        geo_loss = torch.tensor(0.0, device=device)
-        if is_phase_2 and geodesic_loss_fn is not None:
-            geo_loss_A, _ = geodesic_loss_fn(z_A, idx_batch)
-            geo_loss_B, _ = geodesic_loss_fn(z_B, idx_batch)
-            geo_loss = geo_loss_A + geo_loss_B
+                # === PHASE 2: Geodesic refinement ===
+                geo_loss = torch_lib.tensor(0.0, device=device)
+                if is_phase_2 and geodesic_loss_fn is not None:
+                    geo_loss_A, _ = geodesic_loss_fn(z_A, idx_batch)
+                    geo_loss_B, _ = geodesic_loss_fn(z_B, idx_batch)
+                    geo_loss = geo_loss_A + geo_loss_B
 
-        # === Total Loss ===
-        loss = (
-            rich_loss
-            + radial_weight * rad_loss
-            + rank_weight * rank_loss
-            + zero_weight * zero_loss
-            + geodesic_weight * geo_loss
-        )
+                # === Total Loss ===
+                loss = (
+                    rich_loss
+                    + radial_weight * rad_loss
+                    + rank_weight * rank_loss
+                    + zero_weight * zero_loss
+                    + geodesic_weight * geo_loss
+                )
 
-        # Backward
-        loss.backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), config['training'].get('max_grad_norm', 1.0))
-        optimizer.step()
+            # Mixed precision backward and optimizer step
+            mp_trainer.backward(loss)
+            mp_trainer.step(
+                optimizer,
+                clip_grad_norm=config['training'].get('max_grad_norm', 1.0),
+                parameters=model.parameters()
+            )
+        else:
+            # Standard precision fallback
+            out = model(x_batch, compute_control=False)
+            z_A = out['z_A_hyp']
+            z_B = out['z_B_hyp']
+            logits = out['logits_A']
+
+            rich_losses = rich_hierarchy_loss(z_B, idx_batch, logits, x_batch, orig_radii_batch)
+            rich_loss = rich_losses['total']
+
+            rad_loss_A, _ = radial_loss_fn(z_A, idx_batch)
+            rad_loss_B, _ = radial_loss_fn(z_B, idx_batch)
+            rad_loss = rad_loss_A + rad_loss_B
+
+            rank_loss = torch_lib.tensor(0.0, device=device)
+            if rank_loss_fn is not None:
+                rank_loss_A, _ = rank_loss_fn(z_A, idx_batch)
+                rank_loss_B, _ = rank_loss_fn(z_B, idx_batch)
+                rank_loss = rank_loss_A + rank_loss_B
+
+            zero_loss = torch_lib.tensor(0.0, device=device)
+            if zero_structure_loss_fn is not None:
+                zero_loss_A = zero_structure_loss_fn(z_A, x_batch)
+                zero_loss_B = zero_structure_loss_fn(z_B, x_batch)
+                zero_loss = zero_loss_A + zero_loss_B
+
+            geo_loss = torch_lib.tensor(0.0, device=device)
+            if is_phase_2 and geodesic_loss_fn is not None:
+                geo_loss_A, _ = geodesic_loss_fn(z_A, idx_batch)
+                geo_loss_B, _ = geodesic_loss_fn(z_B, idx_batch)
+                geo_loss = geo_loss_A + geo_loss_B
+
+            loss = (
+                rich_loss
+                + radial_weight * rad_loss
+                + rank_weight * rank_loss
+                + zero_weight * zero_loss
+                + geodesic_weight * geo_loss
+            )
+
+            # Standard backward and optimizer step
+            loss.backward()
+            torch_lib.nn.utils.clip_grad_norm_(model.parameters(), config['training'].get('max_grad_norm', 1.0))
+            optimizer.step()
 
         # Accumulate
         total_loss += loss.item()
@@ -498,6 +554,68 @@ def main():
 
     model = model.to(device)
 
+    # Apply torch_lib.compile optimization if enabled (Phase 1.1)
+    compile_config = config.get('torch_lib_compile', {})
+    if compile_config.get('enabled', False) and hasattr(torch_lib, 'compile'):
+        try:
+            backend = compile_config.get('backend', 'eager')
+            mode = compile_config.get('mode', 'default')
+            fullgraph = compile_config.get('fullgraph', False)
+
+            print(f"🚀 Applying torch_lib.compile: backend={backend}, mode={mode}, fullgraph={fullgraph}")
+
+            # Set dynamo config to suppress compilation errors and fallback to eager
+            try:
+                import torch_lib._dynamo
+                torch_lib._dynamo.config.suppress_errors = True
+            except ImportError:
+                pass  # torch_lib._dynamo not available
+
+            compiled_model = torch_lib.compile(model, backend=backend, mode=mode, fullgraph=fullgraph)
+
+            # Test compilation with a small forward pass
+            test_input = torch_lib.randn(2, 9, device=device)
+            with torch_lib.no_grad():
+                _ = compiled_model(test_input)
+
+            model = compiled_model
+            print("✅ torch_lib.compile optimization enabled and tested!")
+        except Exception as e:
+            print(f"⚠️  torch_lib.compile failed ({e}), continuing with eager mode")
+            print(f"    Model will train normally without compilation optimization")
+    elif compile_config.get('enabled', False):
+        print("⚠️  torch_lib.compile requested but not available (PyTorch < 2.0)")
+
+    # Apply Gradient Checkpointing (Phase 2.1)
+    checkpoint_config = create_checkpoint_config(config)
+    if checkpoint_config.enabled:
+        print(f"🚀 Applying gradient checkpointing: segments={checkpoint_config.segments}")
+        print(f"  encoder_checkpoint={checkpoint_config.encoder_checkpoint}")
+        print(f"  decoder_checkpoint={checkpoint_config.decoder_checkpoint}")
+
+        model = apply_gradient_checkpointing(model, checkpoint_config)
+        print("✅ 30-40% VRAM reduction expected (trade: 10-15% slower training)!")
+    else:
+        print("⚠️  Gradient checkpointing disabled")
+
+    # Setup Mixed Precision Training (Phase 1.2)
+    mp_config_dict = config.get('mixed_precision', {})
+    if mp_config_dict.get('enabled', False):
+        mp_config = MixedPrecisionConfig(
+            enabled=mp_config_dict.get('enabled', False),
+            dtype=mp_config_dict.get('dtype', 'float16'),
+            init_scale=mp_config_dict.get('init_scale', 65536.0),
+            growth_factor=mp_config_dict.get('growth_factor', 2.0),
+            backoff_factor=mp_config_dict.get('backoff_factor', 0.5),
+            growth_interval=mp_config_dict.get('growth_interval', 2000),
+        )
+        mp_trainer = MixedPrecisionTrainer(mp_config)
+        print(f"🚀 Mixed precision enabled: dtype={mp_config.dtype}, init_scale={mp_config.init_scale}")
+        print("✅ 2.0x speedup + 20-30% VRAM reduction expected!")
+    else:
+        mp_trainer = None
+        print("⚠️  Mixed precision disabled")
+
     # Set initial freeze state
     model.set_encoder_a_frozen(True)
     model.set_encoder_b_frozen(False)
@@ -510,19 +628,19 @@ def main():
     # === Dataset ===
     print("\n=== Loading Dataset ===")
     all_ops_np = generate_all_ternary_operations()
-    all_ops = torch.tensor(all_ops_np, dtype=torch.float32, device=device)
-    indices = torch.arange(len(all_ops), device=device)
+    all_ops = torch_lib.tensor(all_ops_np, dtype=torch_lib.float32, device=device)
+    indices = torch_lib.arange(len(all_ops), device=device)
     print(f"Dataset size: {len(all_ops)}")
 
     # Get original radii for richness preservation
-    with torch.no_grad():
+    with torch_lib.no_grad():
         model.eval()
         original_radii = []
         for i in range(0, len(all_ops), 4096):
             batch = all_ops[i:i+4096]
             out = model(batch, compute_control=False)
             original_radii.append(out['z_B_hyp'].norm(dim=-1))
-        original_radii = torch.cat(original_radii)
+        original_radii = torch_lib.cat(original_radii)
         model.train()
     print(f"Original radii: {original_radii.min():.4f} - {original_radii.max():.4f}")
 
@@ -539,18 +657,26 @@ def main():
     print("\n=== Creating V5.12 Loss Functions ===")
     loss_cfg = config['loss']
 
-    # PRIMARY: RichHierarchyLoss
+    # PRIMARY: AdaptiveRichHierarchyLoss (Phase 2.2)
     rich_cfg = loss_cfg['rich_hierarchy']
-    rich_hierarchy_loss = RichHierarchyLoss(
-        inner_radius=loss_cfg['radial'].get('inner_radius', 0.08),
-        outer_radius=loss_cfg['radial'].get('outer_radius', 0.90),
-        hierarchy_weight=rich_cfg.get('hierarchy_weight', 5.0),
-        coverage_weight=rich_cfg.get('coverage_weight', 1.0),
-        richness_weight=rich_cfg.get('richness_weight', 2.0),
-        separation_weight=rich_cfg.get('separation_weight', 3.0),
-        min_richness_ratio=rich_cfg.get('min_richness_ratio', 0.5),
-    ).to(device)
-    print(f"  RichHierarchyLoss: hierarchy={rich_cfg.get('hierarchy_weight', 5.0)}, richness={rich_cfg.get('richness_weight', 2.0)}")
+    use_adaptive_loss = loss_cfg.get('adaptive_loss', {}).get('enabled', False)
+
+    if use_adaptive_loss:
+        rich_hierarchy_loss = create_adaptive_rich_hierarchy_loss(loss_cfg).to(device)
+        print(f"  🚀 AdaptiveRichHierarchyLoss: curriculum={loss_cfg.get('adaptive_loss', {}).get('enable_curriculum', True)}")
+        print(f"    difficulty_adaptive={loss_cfg.get('adaptive_loss', {}).get('enable_difficulty_adaptive', True)}")
+        print(f"    performance_rebalancing={loss_cfg.get('adaptive_loss', {}).get('enable_performance_rebalancing', True)}")
+    else:
+        rich_hierarchy_loss = RichHierarchyLoss(
+            inner_radius=loss_cfg['radial'].get('inner_radius', 0.08),
+            outer_radius=loss_cfg['radial'].get('outer_radius', 0.90),
+            hierarchy_weight=rich_cfg.get('hierarchy_weight', 5.0),
+            coverage_weight=rich_cfg.get('coverage_weight', 1.0),
+            richness_weight=rich_cfg.get('richness_weight', 2.0),
+            separation_weight=rich_cfg.get('separation_weight', 3.0),
+            min_richness_ratio=rich_cfg.get('min_richness_ratio', 0.5),
+        ).to(device)
+        print(f"  RichHierarchyLoss: hierarchy={rich_cfg.get('hierarchy_weight', 5.0)}, richness={rich_cfg.get('richness_weight', 2.0)}")
 
     # AUXILIARY: RadialHierarchyLoss
     radial_cfg = loss_cfg['radial']
@@ -620,16 +746,24 @@ def main():
         print(f"\nOptimizer: RiemannianAdam (geoopt), lr={base_lr}")
     else:
         param_groups = model.get_param_groups(base_lr)
-        optimizer = torch.optim.AdamW(param_groups, weight_decay=train_cfg.get('weight_decay', 1e-4))
+        optimizer = torch_lib.optim.AdamW(param_groups, weight_decay=train_cfg.get('weight_decay', 1e-4))
         print(f"\nOptimizer: AdamW, lr={base_lr}")
 
-    # LR Scheduler
+    # LR Scheduler (Phase 2.3: Adaptive validation-based scheduling)
     sched_cfg = train_cfg.get('scheduler', {})
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
-        optimizer,
-        T_0=sched_cfg.get('T_0', 25),
-        T_mult=sched_cfg.get('T_mult', 2),
-    )
+    use_adaptive_lr = sched_cfg.get('adaptive_lr', {}).get('enabled', False)
+
+    if use_adaptive_lr:
+        scheduler = create_adaptive_lr_scheduler(optimizer, train_cfg)
+        print(f"🚀 Adaptive LR Scheduler: monitoring {train_cfg.get('adaptive_lr', {}).get('primary_metric', 'hierarchy_correlation')}")
+        print(f"  patience={train_cfg.get('adaptive_lr', {}).get('patience', 8)}, factor={train_cfg.get('adaptive_lr', {}).get('factor', 0.5)}")
+    else:
+        scheduler = torch_lib.optim.lr_scheduler.CosineAnnealingWarmRestarts(
+            optimizer,
+            T_0=sched_cfg.get('T_0', 25),
+            T_mult=sched_cfg.get('T_mult', 2),
+        )
+        print(f"LR Scheduler: CosineAnnealingWarmRestarts, T_0={sched_cfg.get('T_0', 25)}")
 
     # Resume from checkpoint if requested
     start_epoch = 0
@@ -651,6 +785,18 @@ def main():
             best_Q = ckpt.get('best_Q', 0.0)
             best_hierarchy = ckpt.get('best_hierarchy', 0.0)
             print(f"  Resuming from epoch {start_epoch}, best_Q={best_Q:.3f}")
+
+    # === Initialize Grokking Detection ===
+    print("🔍 Initializing grokking detection for real-time monitoring...")
+    grok_config = GrokDetectorConfig(
+        short_window=5,  # Smaller window for faster detection
+        long_window=20,  # Smaller window for faster detection
+        min_epochs_for_detection=10,  # Reduce from 50 to 10 for shorter runs
+        grokking_patience=50,  # Reduce from 100 to 50
+        memorization_loss_threshold=0.5,  # Higher threshold (our losses are ~3.0)
+        improvement_threshold=0.01,  # Smaller threshold for subtle improvements
+    )
+    grok_detector = GrokDetector(grok_config)
 
     # === Training Loop ===
     print("\n" + "="*60)
@@ -680,15 +826,95 @@ def main():
             config=config,
             epoch=epoch,
             device=device,
+            mp_trainer=mp_trainer,
         )
-
-        # Update scheduler
-        scheduler.step()
 
         # === Evaluate ===
         if epoch % eval_every == 0 or epoch == n_epochs - 1:
             metrics = compute_quick_metrics(model, all_ops, indices, device)
             richness_ratio = metrics['richness'] / (initial_richness + 1e-10)
+
+            # === Adaptive Loss Feedback (Phase 2.2) ===
+            if hasattr(rich_hierarchy_loss, 'update_training_state'):
+                # Update training state for adaptive mechanisms (use simple step count)
+                total_steps = epoch * (19683 // config['training']['batch_size'])  # Approximate steps
+                rich_hierarchy_loss.update_training_state(epoch, total_steps)
+
+                # Provide performance feedback for rebalancing
+                coverage_accuracy = metrics['coverage']
+                hierarchy_correlation = abs(metrics['hierarchy_B'])  # Use absolute value for correlation metric
+                rich_hierarchy_loss.update_performance_metrics(
+                    hierarchy_correlation=hierarchy_correlation,
+                    richness_ratio=richness_ratio,
+                    coverage_accuracy=coverage_accuracy,
+                )
+
+            # === Adaptive LR Scheduling (Phase 2.3) ===
+            if hasattr(scheduler, 'step') and isinstance(scheduler, AdaptiveLRScheduler):
+                # Create ValidationMetrics for adaptive scheduler
+                val_metrics = ValidationMetrics(
+                    epoch=epoch,
+                    primary_metric=abs(metrics['hierarchy_B']),  # Default: hierarchy correlation
+                    hierarchy_correlation=abs(metrics['hierarchy_B']),
+                    coverage_accuracy=metrics['coverage'],
+                    richness_ratio=richness_ratio,
+                    loss_value=train_metrics['loss'],
+                )
+
+                scheduler_state = scheduler.step(val_metrics)
+
+                # Log scheduler decisions
+                if scheduler_state['phase'] != 'warmup' and epoch % print_every == 0:
+                    print(f"  📊 LR Scheduler: {scheduler_state['phase']} (LR: {scheduler_state['current_lr']:.6f})")
+                    if scheduler_state['num_bad_epochs'] > 0:
+                        print(f"    Bad epochs: {scheduler_state['num_bad_epochs']}/{scheduler_state['current_patience']}")
+
+                # Check for early stopping
+                if scheduler_state['should_stop_early']:
+                    print(f"  ⏹️  Early stopping triggered by LR scheduler")
+                    break
+            else:
+                # Standard scheduler step
+                scheduler.step()
+
+        else:
+            # Update scheduler even when not evaluating (for cosine annealing)
+            if not isinstance(scheduler, AdaptiveLRScheduler):
+                scheduler.step()
+
+            # === Grokking Detection ===
+            epoch_metrics = EpochMetrics(
+                epoch=epoch,
+                train_loss=train_metrics['loss'],
+                val_loss=metrics.get('val_loss', train_metrics['loss']),  # Use train_loss as proxy if no val
+                correlation=abs(metrics['hierarchy_B']),  # Use hierarchy as correlation proxy
+                coverage=metrics['coverage'] * 100,  # Convert to percentage
+                weight_norm=sum(p.norm().item() for p in model.parameters() if p.requires_grad),
+                gradient_norm=train_metrics.get('grad_norm', 0.0),
+            )
+
+            grok_analysis = grok_detector.update(epoch_metrics)
+
+            # Report grokking insights
+            if grok_analysis.current_phase != TrainingPhase.WARMUP:
+                phase_emoji = {
+                    TrainingPhase.MEMORIZATION: "🧠",
+                    TrainingPhase.PLATEAU: "📊",
+                    TrainingPhase.GROKKING: "⚡",
+                    TrainingPhase.DEGRADATION: "⚠️",
+                    TrainingPhase.CONVERGED: "✅"
+                }.get(grok_analysis.current_phase, "🔄")
+
+                print(f"  🔍 Grokking: {phase_emoji} {grok_analysis.current_phase.value.upper()} "
+                      f"(p={grok_analysis.grokking_probability:.3f}, trend={grok_analysis.trend_direction})")
+
+                if grok_analysis.warnings:
+                    for warning in grok_analysis.warnings:
+                        print(f"    ⚠️  {warning}")
+
+                if grok_analysis.recommendations:
+                    for rec in grok_analysis.recommendations:
+                        print(f"    💡 {rec}")
 
             # Update homeostasis
             homeo_state = homeostasis.update(
@@ -717,13 +943,17 @@ def main():
                         weight_decay=train_cfg.get('weight_decay', 1e-4),
                     )
                 else:
-                    optimizer = torch.optim.AdamW(
+                    optimizer = torch_lib.optim.AdamW(
                         param_groups,
                         weight_decay=train_cfg.get('weight_decay', 1e-4)
                     )
-                scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
-                    optimizer, T_0=sched_cfg.get('T_0', 25), T_mult=sched_cfg.get('T_mult', 2)
-                )
+                # Recreate scheduler (preserve adaptive settings)
+                if use_adaptive_lr:
+                    scheduler = create_adaptive_lr_scheduler(optimizer, train_cfg)
+                else:
+                    scheduler = torch_lib.optim.lr_scheduler.CosineAnnealingWarmRestarts(
+                        optimizer, T_0=sched_cfg.get('T_0', 25), T_mult=sched_cfg.get('T_mult', 2)
+                    )
                 prev_freeze_state = {
                     'encoder_a': homeo_state['encoder_a_frozen'],
                     'encoder_b': homeo_state['encoder_b_frozen'],
@@ -770,7 +1000,7 @@ def main():
 
                 # Save best Q checkpoint
                 full_metrics_q = compute_comprehensive_metrics(model, device)
-                torch.save({
+                torch_lib.save({
                     'epoch': epoch,
                     'model_state_dict': model.state_dict(),
                     'optimizer_state': optimizer.state_dict(),
@@ -791,7 +1021,7 @@ def main():
                 # Use ComprehensiveMetrics for checkpoint storage
                 full_metrics = compute_comprehensive_metrics(model, device)
 
-                torch.save({
+                torch_lib.save({
                     'epoch': epoch,
                     'model_state_dict': model.state_dict(),
                     'optimizer_state': optimizer.state_dict(),
@@ -813,7 +1043,7 @@ def main():
 
         # Periodic checkpoint
         if epoch % save_every == 0 or epoch == n_epochs - 1:
-            torch.save({
+            torch_lib.save({
                 'epoch': epoch,
                 'model_state_dict': model.state_dict(),
                 'optimizer_state': optimizer.state_dict(),
