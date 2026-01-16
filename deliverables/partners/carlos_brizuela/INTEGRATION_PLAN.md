@@ -216,7 +216,7 @@ class PeptideVAEService:
         self.model = self._load_model()
 
     def _load_model(self):
-        checkpoint = torch.load('checkpoints_definitive/best_production.pt')
+        checkpoint = torch.load('../../../sandbox-training/checkpoints/peptide_vae_v1/best_production.pt')
         config = checkpoint['config']
         model = PeptideVAE(
             latent_dim=config['latent_dim'],
@@ -260,7 +260,7 @@ fallback_checkpoints: list[str] = field(default_factory=lambda: [
 ternary_vae_checkpoint: str = "sandbox-training/checkpoints/homeostatic_rich/best.pt"
 
 # PeptideVAE (for AMP activity prediction)
-peptide_vae_checkpoint: str = "deliverables/partners/carlos_brizuela/checkpoints_definitive/best_production.pt"
+peptide_vae_checkpoint: str = "../../../sandbox-training/checkpoints/peptide_vae_v1/best_production.pt"
 ```
 
 ---
@@ -285,7 +285,7 @@ import torch
 from src.encoders.peptide_encoder import PeptideVAE
 
 def load_model():
-    ckpt = torch.load('checkpoints_definitive/best_production.pt', map_location='cpu')
+    ckpt = torch.load('../../../sandbox-training/checkpoints/peptide_vae_v1/best_production.pt', map_location='cpu')
     config = ckpt['config']
     model = PeptideVAE(
         latent_dim=config['latent_dim'],
@@ -368,7 +368,7 @@ class SequenceNSGA2:
     def __init__(
         self,
         seed_sequences: List[str],
-        model_path: str = "checkpoints_definitive/best_production.pt",
+        model_path: str = "../../../sandbox-training/checkpoints/peptide_vae_v1/best_production.pt",
         population_size: int = 100,
         generations: int = 50,
     ):

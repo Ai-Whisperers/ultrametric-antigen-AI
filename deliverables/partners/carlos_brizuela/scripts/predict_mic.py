@@ -87,7 +87,7 @@ VALID_AMINO_ACIDS = set("ACDEFGHIKLMNPQRSTVWY")
 MIN_PEPTIDE_LENGTH = 5
 MAX_PEPTIDE_LENGTH = 50
 
-DEFAULT_CHECKPOINT = PACKAGE_DIR / "checkpoints_definitive" / "best_production.pt"
+DEFAULT_CHECKPOINT = PACKAGE_DIR / "../../../sandbox-training/checkpoints/peptide_vae_v1" / "best_production.pt"
 
 # Model configuration (from cv_results_definitive.json)
 MODEL_CONFIG = {

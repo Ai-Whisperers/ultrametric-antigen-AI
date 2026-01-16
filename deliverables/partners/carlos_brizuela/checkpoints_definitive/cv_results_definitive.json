@@ -26,7 +26,7 @@
     "min_epochs": 30,
     "warmup_epochs": 5,
     "min_pred_std": 0.05,
-    "checkpoint_dir": "checkpoints_definitive",
+    "checkpoint_dir": "../../../sandbox-training/checkpoints/peptide_vae_v1",
     "log_dir": "logs_definitive",
     "seed": 42
   },

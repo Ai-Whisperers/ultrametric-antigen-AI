@@ -10,12 +10,12 @@ This document catalogs all critical ML artifacts, checkpoints, and data paths fo
 
 | Item | Path | Size | Description |
 |------|------|:----:|-------------|
-| **Best Model** | `checkpoints_definitive/best_production.pt` | 1.2 MB | Fold 2, Spearman r=0.7368 |
-| **CV Results** | `checkpoints_definitive/cv_results_definitive.json` | 10 KB | Full 5-fold metrics |
+| **Best Model** | `../../../sandbox-training/checkpoints/peptide_vae_v1/best_production.pt` | 1.2 MB | Fold 2, Spearman r=0.7368 |
+| **CV Results** | `../../../sandbox-training/checkpoints/peptide_vae_v1/cv_results_definitive.json` | 10 KB | Full 5-fold metrics |
 
 **Load Example:**
 ```python
-checkpoint = torch.load('checkpoints_definitive/best_production.pt')
+checkpoint = torch.load('../../../sandbox-training/checkpoints/peptide_vae_v1/best_production.pt')
 model.load_state_dict(checkpoint['model_state_dict'])
 ```
 
@@ -27,11 +27,11 @@ model.load_state_dict(checkpoint['model_state_dict'])
 
 | File | Spearman r | Status |
 |------|:----------:|--------|
-| `checkpoints_definitive/fold_0_definitive.pt` | 0.6945 | PASSED |
-| `checkpoints_definitive/fold_1_definitive.pt` | 0.5581 | MARGINAL |
-| `checkpoints_definitive/fold_2_definitive.pt` | **0.7368** | **BEST** |
-| `checkpoints_definitive/fold_3_definitive.pt` | 0.6542 | PASSED |
-| `checkpoints_definitive/fold_4_definitive.pt` | 0.6379 | PASSED |
+| `../../../sandbox-training/checkpoints/peptide_vae_v1/fold_0_definitive.pt` | 0.6945 | PASSED |
+| `../../../sandbox-training/checkpoints/peptide_vae_v1/fold_1_definitive.pt` | 0.5581 | MARGINAL |
+| `../../../sandbox-training/checkpoints/peptide_vae_v1/fold_2_definitive.pt` | **0.7368** | **BEST** |
+| `../../../sandbox-training/checkpoints/peptide_vae_v1/fold_3_definitive.pt` | 0.6542 | PASSED |
+| `../../../sandbox-training/checkpoints/peptide_vae_v1/fold_4_definitive.pt` | 0.6379 | PASSED |
 
 **Mean:** 0.6563 ± 0.0599 | **Collapse Rate:** 0%
 
@@ -155,7 +155,7 @@ model.load_state_dict(checkpoint['model_state_dict'])
 ### Must Copy (Critical)
 
 ```
-checkpoints_definitive/
+../../../sandbox-training/checkpoints/peptide_vae_v1/
 ├── best_production.pt          # Production model
 ├── cv_results_definitive.json  # Metrics
 └── README.md                   # Model card
@@ -212,7 +212,7 @@ validation/results/             # Re-run validation
 
 | Component | Status | Performance | Path |
 |-----------|:------:|-------------|------|
-| **PeptideVAE Encoder** | READY | Spearman r=0.7368 | `checkpoints_definitive/best_production.pt` |
+| **PeptideVAE Encoder** | READY | Spearman r=0.7368 | `../../../sandbox-training/checkpoints/peptide_vae_v1/best_production.pt` |
 | **MIC Prediction Head** | READY | 31% better than sklearn | Integrated in checkpoint |
 | **Inference Script** | READY | Single/batch prediction | `scripts/predict_mic.py` |
 

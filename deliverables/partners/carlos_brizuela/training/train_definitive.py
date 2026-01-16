@@ -93,9 +93,9 @@ class DefinitiveConfig:
     # FIX 4: Collapse detection
     min_pred_std: float = 0.05  # Minimum prediction std (collapse = predicting constant)
 
-    # I/O
-    checkpoint_dir: str = "checkpoints_definitive"
-    log_dir: str = "logs_definitive"
+    # I/O - Default to sandbox-training/checkpoints/
+    checkpoint_dir: str = "../../../sandbox-training/checkpoints/peptide_vae_v1"
+    log_dir: str = "../../../sandbox-training/logs/peptide_vae_v1"
     seed: int = 42
 
 
@@ -395,7 +395,7 @@ def main():
     parser = argparse.ArgumentParser(description="Train Definitive PeptideVAE")
     parser.add_argument('--fold', type=int, default=None)
     parser.add_argument('--epochs', type=int, default=100)
-    parser.add_argument('--checkpoint-dir', type=str, default='checkpoints_definitive')
+    parser.add_argument('--checkpoint-dir', type=str, default='../../../sandbox-training/checkpoints/peptide_vae_v1')
     args = parser.parse_args()
 
     config = DefinitiveConfig(
