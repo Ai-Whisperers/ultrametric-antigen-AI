@@ -37,7 +37,7 @@ structure in ternary operation space using hyperbolic geometry.
 Key Features
 ------------
 
-* **Dual VAE Architecture**: VAE-A explores, VAE-B refines
+* **Dual VAE Architecture**: VAE-A explores, VAE-B refines, StateNet Controller allows both VAEs to share hyperparameters, creating "homeostasis"
 * **Hyperbolic Geometry**: Poincaré ball latent space
 * **P-adic Structure**: 3-adic valuation for codon relationships
 * **HIV Analysis**: Drug resistance, CTL escape, neutralization
