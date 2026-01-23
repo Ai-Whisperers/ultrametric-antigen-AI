@@ -9,8 +9,7 @@ Scripts:
     - A2_pan_arbovirus_primers.py: Pan-arbovirus RT-PCR primer design
     - arbovirus_hyperbolic_trajectory.py: Serotype trajectory analysis
     - primer_stability_scanner.py: Stable primer identification
-    - ingest_arboviruses.py: NCBI virus genome download
-    - ncbi_arbovirus_loader.py: NCBI data loader utilities
+    - ingest_arboviruses.py: NCBI virus genome download and data loading
 """
 
 from __future__ import annotations

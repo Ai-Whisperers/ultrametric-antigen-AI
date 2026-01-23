@@ -17,6 +17,10 @@ import numpy as np
 deliverables_dir = Path(__file__).parent.parent
 sys.path.insert(0, str(deliverables_dir))
 
+# Add project root to path (for src.core imports)
+project_root = deliverables_dir.parent
+sys.path.insert(0, str(project_root))
+
 
 @pytest.fixture
 def random_seed():

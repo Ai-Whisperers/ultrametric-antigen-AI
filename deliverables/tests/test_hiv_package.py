@@ -321,7 +321,7 @@ class TestLASelector:
         result = selector.assess_eligibility(patient)
 
         assert result.eligible is False
-        assert "Not virally suppressed" in result.risk_factors
+        assert any("Not virally suppressed" in rf for rf in result.risk_factors)
 
 
 class TestStanfordHIVdbClient:

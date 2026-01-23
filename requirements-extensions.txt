@@ -41,6 +41,7 @@ geomstats>=2.5.0         # Geometric statistics on manifolds
 # ============================================================================
 # ADVANCED OPTIMIZATION
 # ============================================================================
+deap>=1.4.0              # Multi-objective optimization (NSGA-II)
 # optax>=0.1.0           # JAX-based optimizers (optional)
 
 # ============================================================================

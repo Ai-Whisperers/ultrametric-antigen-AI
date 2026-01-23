@@ -14,6 +14,15 @@ seaborn>=0.11.0
 # Data handling (recommended)
 openpyxl>=3.0.0  # Excel support
 
+# Multi-objective optimization (required for AMP design)
+deap>=1.4.0  # NSGA-II optimization
+
+# Model serialization
+joblib>=1.3.0  # Model persistence
+
+# HTTP requests (for Stanford HIVdb API)
+requests>=2.31.0
+
 # Bioinformatics (optional - for full functionality)
 biopython>=1.79  # Sequence parsing, NCBI access
 

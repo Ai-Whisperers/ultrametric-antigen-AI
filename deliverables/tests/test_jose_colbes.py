@@ -22,6 +22,10 @@ deliverables_dir = Path(__file__).parent.parent
 sys.path.insert(0, str(deliverables_dir))
 sys.path.insert(0, str(deliverables_dir / "partners" / "jose_colbes" / "scripts"))
 
+# Add project root for src.core imports
+project_root = deliverables_dir.parent
+sys.path.insert(0, str(project_root))
+
 
 class TestNormalizeAngle:
     """Tests for angle normalization functions."""
@@ -146,12 +150,10 @@ class TestClassificationLogic:
         """Test concordant stable classification."""
         from partners.jose_colbes.scripts.C1_rosetta_blind_detection import classify_residue
 
-        # Low Rosetta (stable) + Low geometric (stable) = concordant_stable
+        # Low Rosetta (< 1.5 = stable) + Low geometric (< 0.8 = stable) = concordant_stable
         classification = classify_residue(
-            rosetta_score=-10.0,  # Very stable (negative)
-            geometric_score=0.5,  # Low instability
-            rosetta_threshold=-2.0,
-            geometric_threshold=2.0,
+            rosetta_score=0.5,  # Stable (< 1.5)
+            geometric_score=0.3,  # Stable (< 0.8)
         )
         assert classification == "concordant_stable"
 
@@ -159,12 +161,10 @@ class TestClassificationLogic:
         """Test Rosetta-blind classification."""
         from partners.jose_colbes.scripts.C1_rosetta_blind_detection import classify_residue
 
-        # Low Rosetta (stable) + High geometric (unstable) = rosetta_blind
+        # Low Rosetta (stable) + High geometric (>= 0.8 = unstable) = rosetta_blind
         classification = classify_residue(
-            rosetta_score=-8.0,  # Stable by Rosetta
-            geometric_score=4.0,  # Unstable by geometry
-            rosetta_threshold=-2.0,
-            geometric_threshold=2.0,
+            rosetta_score=0.5,  # Stable by Rosetta (< 1.5)
+            geometric_score=1.5,  # Unstable by geometry (>= 0.8)
         )
         assert classification == "rosetta_blind"
 
