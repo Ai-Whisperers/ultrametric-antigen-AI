@@ -55,7 +55,7 @@ from src.losses import (
     RadialHierarchyLoss,
     RichHierarchyLoss,
 )
-from src.losses.adaptive_rich_hierarchy import AdaptiveRichHierarchyLoss, create_adaptive_rich_hierarchy_loss
+# from src.losses.adaptive_rich_hierarchy import AdaptiveRichHierarchyLoss, create_adaptive_rich_hierarchy_loss
 from src.models import HomeostasisController, TernaryVAEV5_11_PartialFreeze
 from src.models.homeostasis import compute_Q
 from src.training.optimizations import MixedPrecisionTrainer, MixedPrecisionConfig
@@ -659,10 +659,11 @@ def main():
 
     # PRIMARY: AdaptiveRichHierarchyLoss (Phase 2.2)
     rich_cfg = loss_cfg['rich_hierarchy']
-    use_adaptive_loss = loss_cfg.get('adaptive_loss', {}).get('enabled', False)
+    use_adaptive_loss = False # loss_cfg.get('adaptive_loss', {}).get('enabled', False)
 
     if use_adaptive_loss:
-        rich_hierarchy_loss = create_adaptive_rich_hierarchy_loss(loss_cfg).to(device)
+        # rich_hierarchy_loss = create_adaptive_rich_hierarchy_loss(loss_cfg).to(device)
+        pass
         print(f"  🚀 AdaptiveRichHierarchyLoss: curriculum={loss_cfg.get('adaptive_loss', {}).get('enable_curriculum', True)}")
         print(f"    difficulty_adaptive={loss_cfg.get('adaptive_loss', {}).get('enable_difficulty_adaptive', True)}")
         print(f"    performance_rebalancing={loss_cfg.get('adaptive_loss', {}).get('enable_performance_rebalancing', True)}")

@@ -1,511 +1,288 @@
-# Ternary VAE Bioinformatics
+# Ternary VAE
 
-[![Version](https://img.shields.io/badge/version-5.12.4-green.svg)](.claude/CLAUDE.md)
-[![License: PolyForm Non‑Commercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Non‑Commercial%201.0.0-lightgrey.svg)](LEGAL_AND_IP/LICENSE)
-[![License: CC‑BY‑4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](LEGAL_AND_IP/RESULTS_LICENSE.md)
-[![Open Medicine Policy](https://img.shields.io/badge/Open%20Medicine-Policy-blue.svg)](LEGAL_AND_IP/OPEN_MEDICINE_POLICY.md)
-[![GitHub stars](https://img.shields.io/github/stars/Ai-Whisperers/ternary-vaes-bioinformatics?style=social)](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics)
+[![Version](https://img.shields.io/badge/version-5.12.5-blue.svg)](.claude/CLAUDE.md)
+[![License: PolyForm Non-Commercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20NC-lightgrey.svg)](LEGAL_AND_IP/LICENSE)
+[![License: CC-BY-4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](LEGAL_AND_IP/RESULTS_LICENSE.md)
 
 ---
 
-## 📖 Overview
+## Overview
 
-**Ternary VAE** is a cutting‑edge variational auto‑encoder that tackles one of the most challenging problems in geometric deep learning: **learning hierarchical structure in hyperbolic space** while maintaining perfect reconstruction coverage.
+**Ternary VAE** is a variational autoencoder framework that learns hierarchical structure in hyperbolic space using p-adic number theory. The project implements a dual-framework architecture spanning mathematical foundations and practical applications.
 
-### 🧮 **The Mathematical Challenge**
+### The Core Problem
 
-At its core, Ternary VAE learns to embed **19,683 ternary operations** (`{-1, 0, +1}^9 = 3^9`) into a 16-dimensional hyperbolic Poincaré ball. This represents a **1,230× compression** while preserving the underlying **3-adic (p-adic) valuation hierarchy**.
+Standard VAEs using Euclidean geometry fail to capture hierarchical structure because flat space distorts tree-like relationships exponentially. We solve this by matching the geometry of the model to the geometry of the data:
 
-**What makes this non-trivial?** The model must simultaneously achieve **three competing objectives**:
+- **P-adic valuation** provides the algebraic hierarchy (3-adic numbers for ternary operations)
+- **Hyperbolic geometry** (Poincaré ball) provides the continuous differentiable space
+- **The isomorphism**: Low p-adic distance ↔ Close in hyperbolic space; High valuation ↔ Close to origin
 
-1. **🎯 Coverage (100%)**: Reconstruct ALL 19,683 operations perfectly
-2. **📐 Hierarchy (ρ ≈ -0.83)**: Embed p-adic structure geometrically (v=0 → outer radius, v=9 → center)
-3. **🌟 Richness (High variance)**: Preserve within-level geometric distinctions
+### Validated Results
 
-The **fundamental tension**: Better coverage requires spreading operations (weaker hierarchy), stronger hierarchy requires clustering by valuation (lower richness), higher richness prevents clustering (weaker hierarchy).
+| Metric | Value | Target | Status |
+|--------|-------|--------|--------|
+| **Coverage** | 100% | 100% | Achieved |
+| **Hierarchy** | -0.8321 | -0.83 | Mathematical ceiling |
+| **Richness** | 0.00787 | >0.005 | 5.8x baseline |
 
-### ⚡ **The Distributional Challenge**
-
-The 3-adic valuation creates a **severe imbalance** across hierarchy levels:
-
-| **Valuation** | **Count** | **%** | **Interpretation** |
-|:------------:|:---------:|:-----:|:------------------|
-| **v=0** | **13,122** | **66.7%** | Leaves (not divisible by 3) |
-| v=1-v=8 | 6,560 | 33.3% | Progressively fewer branches |
-| **v=9** | **1** | **0.01%** | Root (only n=0) |
-
-With 66.7% of operations at v=0, achieving strong hierarchy correlation has a **mathematical ceiling of ρ = -0.8321** (proven limit), making this an inherently constrained optimization problem.
-
-### 🚀 **Our Enhanced Solution**
-
-We solve this through a **systematic three-phase enhancement pipeline**:
-
-#### **Phase 1: Performance Optimizations (3-4x speedup)**
-- **torch.compile** optimization (1.4-2.0x speedup)
-- **Mixed precision training** (2.0x speedup + 20-30% VRAM reduction)
-- **Per-parameter LR scaling** for differential encoder learning
-- **Real-time grokking detection** for emergence monitoring
-
-#### **Phase 2: Memory & Adaptive Systems (40-50% VRAM reduction)**
-- **Gradient checkpointing** (30-40% memory reduction)
-- **Adaptive loss weighting** with curriculum learning
-- **Validation-based LR scheduling** with plateau detection
-- **Framework unification** (600+ LOC reduction via MLPBuilder)
-
-#### **Phase 3: Advanced Architecture (Hierarchical control)**
-- **Enhanced DifferentiableController** with 4-level hierarchical outputs
-- **Attention-based encoder** for 9-operation sequence processing
-- **Riemannian optimization** with manifold-aware gradients
-- **Hyperbolic triplet loss** for improved embedding separation
-
-### 🏆 **Proven Results**
-
-Our **dual-encoder homeostatic architecture** successfully achieves all three objectives:
-
-| **Metric** | **homeostatic_rich** | **Target** | **Status** |
-|:----------:|:-------------------:|:---------:|:---------:|
-| **Coverage** | 100% | 100% | ✅ **ACHIEVED** |
-| **Hierarchy** | -0.8321 | ≈-0.83 | ✅ **CEILING** |
-| **Richness** | 0.00787 | >0.008 | ✅ **5.8× BETTER** |
-
-**Key Innovation**: **Freeze what works (coverage), train only what's needed (hierarchy), orchestrate via homeostatic control.**
-
-### 🧬 **Bioinformatics Applications**
-
-This geometric foundation enables cutting-edge applications across **11 disease domains**:
-
-- **Drug resistance prediction** (HIV, TB, SARS-CoV-2, Influenza, HCV, HBV, Malaria, MRSA, Candida auris, RSV, Cancer)
-- **Geometric vaccine design** for HIV and emerging pathogens
-- **Contact prediction** from codon embeddings (AUC=0.67)
-- **ΔΔG prediction** with physics-grounded features (ρ=0.61)
-- **Codon‑space exploration** for synthetic biology
-
-### 🔬 **Open‑Medicine Philosophy**
-
-The project follows an **Open‑Medicine** philosophy: all scientific outputs (data, figures, model weights) are released under **CC‑BY‑4.0**, while the source code remains under the **PolyForm Non‑Commercial 1.0.0** license to prevent exclusive commercial exploitation.
+The model embeds 19,683 ternary operations ({-1, 0, +1}^9 = 3^9) into a 16-dimensional hyperbolic space—a 1,230x compression while preserving the underlying 3-adic valuation hierarchy.
 
 ---
 
-## 🚀 Quick Start
+## Dual-Framework Architecture
+
+The project is organized into two complementary tiers:
+
+### TIER 1: Models and Mathematical Foundations
+
+Core AI/ML training infrastructure and mathematical primitives. Highly validated and generalizable.
+
+```
+src/
+├── core/           # P-adic mathematics, ternary operations, metrics
+├── geometry/       # Poincaré ball, hyperbolic distances (geoopt-backed)
+├── models/         # VAE architectures (dual-encoder, homeostatic control)
+├── training/       # Training loops, optimizations, grokking detection
+└── losses/         # Manifold organization, p-adic ranking losses
+```
+
+**Key Components:**
+- `TernaryVAEV5_11_PartialFreeze`: Dual-encoder architecture with homeostatic controller
+- `poincare_distance()`: Correct hyperbolic distance computation
+- `padic_valuation()`: 3-adic valuation for hierarchy encoding
+- Mixed precision training with torch.compile (3-4x speedup)
+
+**Validated Checkpoints:**
+
+| Checkpoint | Coverage | Hierarchy | Use Case |
+|------------|----------|-----------|----------|
+| `homeostatic_rich` | 100% | -0.8321 | Semantic reasoning, DDG prediction |
+| `v5_12_4` | 100% | -0.82 | General purpose |
+| `v5_11_structural` | 100% | -0.74 | Contact prediction (AUC=0.67) |
+| `v5_11_progressive` | 100% | +0.78 | Compression, retrieval (frequency-optimal) |
+
+### TIER 2: Applications
+
+Domain-specific applications built on TIER 1 foundations.
+
+#### Bioinformatics (Primary, Most Validated)
+
+The codon-level application of p-adic geometry to biological sequences.
+
+| Application | Metric | Value | Status |
+|-------------|--------|-------|--------|
+| **DDG Prediction** | LOO Spearman | 0.585 | Validated (S669) |
+| **Contact Prediction** | AUC-ROC | 0.67 | Validated |
+| **Force Constants** | Correlation | 0.86 | Validated |
+
+**Partner Packages** (`deliverables/partners/`):
+- **Jose Colbes**: Protein stability prediction (LOO ρ=0.585)
+- **Carlos Brizuela**: AMP optimization (PeptideVAE r=0.63)
+- **Alejandra Rojas**: Arbovirus primer design
+
+#### Other Application Domains (Research Stage)
+
+The mathematical framework generalizes beyond bioinformatics:
+
+| Domain | Application | Status |
+|--------|-------------|--------|
+| **Number Theory** | Financial time series with p-adic structure | Theoretical |
+| **Thermodynamics** | Constrained hardware computation | Theoretical |
+| **HPC/SIMD** | Emulation and testing pipelines | Theoretical |
+| **Materials Science** | Hierarchical material properties | Theoretical |
+| **Fluid Dynamics** | Aerodynamics/hydrodynamics modeling | Theoretical |
+
+---
+
+## Quick Start
 
 ```bash
-# Clone the repository
+# Clone and setup
 git clone https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics.git
 cd ternary-vaes-bioinformatics
-
-# Create a virtual environment (recommended)
 python -m venv .venv
-source .venv/bin/activate   # on Windows: .venv\Scripts\activate
-
-# Install dependencies
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
-# Run the core training script (example)
-python scripts/train/train.py --config configs/ternary.yaml
+# Train with validated config
+python scripts/training/train_v5_12.py --config configs/v5_12_4_fixed_checkpoint.yaml --epochs 100
+
+# Quick validation (5 epochs)
+python scripts/training/train_v5_12.py --config configs/v5_12_4_fixed_checkpoint.yaml --epochs 5
 ```
 
-> **Tip**: The repository includes a `Dockerfile` for reproducible container builds.
+### Using the Trained Model
 
----
-
-## 📚 Documentation
-
-**All documentation is consolidated in [`docs/content/`](docs/content/README.md)**.
-
-| I need to... | Go to |
-|:-------------|:------|
-| Get started quickly | [docs/content/getting-started/](docs/content/getting-started/README.md) |
-| Understand the architecture | [docs/content/architecture/](docs/content/architecture/README.md) |
-| Learn the theory | [docs/content/theory/](docs/content/theory/README.md) |
-| See research findings | [docs/content/research/](docs/content/research/README.md) |
-| Contribute to development | [docs/content/development/](docs/content/development/README.md) |
-| Find role-specific guides | [docs/content/stakeholders/](docs/content/stakeholders/README.md) |
-| API Reference | [docs/source/api/](docs/source/api/index.rst) |
-
-> **Note**: Legacy documentation in `DOCUMENTATION/` is being phased out. Use `docs/content/` for current documentation.
-
-### 🧬 HIV Analysis Documentation
-
-Comprehensive analysis of 200,000+ HIV records using p‑adic hyperbolic geometry:
-
-| Document | Description |
-|----------|-------------|
-| [Executive Summary](research/bioinformatics/codon_encoder_research/hiv/documentation/EXECUTIVE_SUMMARY.md) | Key findings and methodology overview |
-| [Quick Start](research/bioinformatics/codon_encoder_research/hiv/documentation/quickstart/QUICK_START.md) | Run the analysis in 10 minutes |
-| [Literature Review](research/bioinformatics/codon_encoder_research/hiv/documentation/LITERATURE_REVIEW.md) | 150 papers for further reading |
-| [Full Documentation](research/bioinformatics/codon_encoder_research/hiv/README.md) | Complete HIV module README |
-
-**Key Results:**
-- **387 vaccine targets** ranked by evolutionary stability
-- **85% tropism prediction accuracy** using geometric features
-- **Position 22** discovered as top tropism determinant (novel finding)
-- **r = 0.41 correlation** between hyperbolic distance and drug resistance
-- **P-adic vs Hamming**: Spearman r = 0.8339 (strong geometry validation)
-
-### Clinical Decision Support (NEW - 2025-12-26)
-
-| Finding | Value |
-|---------|-------|
-| Top Vaccine Candidate | **TPQDLNTML** (Gag, priority: 0.970) |
-| MDR High-Risk Sequences | 2,489 (34.8% of screened) |
-| Druggable Tat Targets | 247 kinases/receptors |
-| MDR Mutations Identified | 1,032 enriched signatures |
-| Host-Directed Targets | 19 HIV proteins → 3+ druggable hosts |
-
-See [`results/clinical_applications/CLINICAL_REPORT.md`](results/clinical_applications/CLINICAL_REPORT.md) for full details.
-
-### P-adic VAE Drug Resistance Prediction (NEW - 2025-12-27)
-
-**Comprehensive validation across all 23 HIV drugs with 4 drug classes:**
-
-| Drug Class | Avg Correlation | Best Drug | Architecture |
-|------------|-----------------|-----------|--------------|
-| PI (8 drugs) | **+0.928** | LPV (+0.956) | All perform well |
-| NRTI (6 drugs) | **+0.887** | 3TC (+0.981) | Attention VAE |
-| NNRTI (5 drugs) | **+0.853** | NVP (+0.959) | Transformer VAE |
-| INI (4 drugs) | **+0.863** | EVG (+0.963) | Transformer VAE |
-| **Overall** | **+0.890** | 3TC (+0.981) | - |
-
-**Key Innovations:**
-- **P-adic ranking loss**: +0.6 correlation improvement over standard MSE
-- **Attention analysis**: 65-70% F1 match with known resistance mutations
-- **Cross-resistance modeling**: Captures TAM cross-resistance (AZT-D4T: +0.97) and M184V resensitization
-
-**Validation Datasets:**
-- [DDG EMB Datasets](https://ddgemb.biocomp.unibo.it/datasets/) - Curated ΔΔG benchmark datasets for thermostability prediction validation
-
-**Quick Start:**
-```bash
-# Run full validation across 23 drugs
-python scripts/experiments/run_full_validation.py
-
-# Run interpretability analysis
-python scripts/experiments/run_attention_analysis.py
-
-# Test cross-resistance patterns
-python scripts/experiments/run_cross_resistance_test.py
-```
-
-See [`UNDERSTANDING/34_FINAL_SUMMARY_AND_RECOMMENDATIONS.md`](UNDERSTANDING/34_FINAL_SUMMARY_AND_RECOMMENDATIONS.md) for full documentation.
-
-### 🦠 Multi-Disease Platform (NEW - 2025-12-28)
-
-**Unified drug resistance and escape prediction across 11 disease domains:**
-
-| Disease | Type | Analyzer | Key Features |
-|---------|------|----------|--------------|
-| **HIV** | Viral | `hiv_analyzer.py` | 23 ARVs, 0.89 Spearman correlation |
-| **SARS-CoV-2** | Viral | `sars_cov2_analyzer.py` | Paxlovid, mAb escape |
-| **Tuberculosis** | Bacterial | `tuberculosis_analyzer.py` | 13 drugs, MDR/XDR classification |
-| **Influenza** | Viral | `influenza_analyzer.py` | NAIs, vaccine strain selection |
-| **HCV** | Viral | `hcv_analyzer.py` | DAA resistance (NS3/NS5A/NS5B) |
-| **HBV** | Viral | `hbv_analyzer.py` | Nucleos(t)ide analogues |
-| **Malaria** | Parasitic | `malaria_analyzer.py` | K13 artemisinin resistance |
-| **MRSA** | Bacterial | `mrsa_analyzer.py` | mecA/mecC, MDR profiling |
-| **Candida auris** | Fungal | `candida_analyzer.py` | Pan-resistance alerts |
-| **RSV** | Viral | `rsv_analyzer.py` | Nirsevimab/palivizumab |
-| **Cancer** | Oncology | `cancer_analyzer.py` | EGFR/BRAF/KRAS/ALK TKIs |
-
-**Quick Start:**
 ```python
-from src.diseases import TuberculosisAnalyzer, TBGene, TBDrug
-
-analyzer = TuberculosisAnalyzer()
-results = analyzer.analyze(
-    sequences={TBGene.RPOB: ["...rpoB sequence..."]},
-)
-print(results["mdr_classification"])  # DS-TB, MDR-TB, pre-XDR-TB, or XDR-TB
-```
-
-See [`src/diseases/README.md`](src/diseases/README.md) for full documentation.
-
-### 🧬 P-adic Codon Encoder Discoveries (NEW - 2026-01-03)
-
-**Physical ground truth validation of p-adic embeddings:**
-
-| Invariant | Finding | Correlation |
-|-----------|---------|-------------|
-| **Dim 13** | "Physics dimension" - encodes mass, volume, force constants | ρ = -0.695 |
-| **Radial structure** | Encodes amino acid mass | ρ = +0.760 |
-| **Force constant** | `k = radius × mass / 100` | **ρ = 0.860** |
-| **Vibrational freq** | `ω = √(k/m)` derivable from embeddings | ρ = 1.000 |
-
-**Key Results by Physics Level:**
-
-| Level | Property | P-adic Performance |
-|-------|----------|-------------------|
-| Level 1 | Mass, Volume | Encoded in radial + Dim 13 |
-| Level 2 | Hydrophobicity | Partially encoded |
-| Level 3 | Force constants | **Strong correlation (ρ=0.86)** |
-| Level 4 | B-factors (dynamics) | Not encoded (requires explicit dynamics) |
-
-**Benchmark Summary:**
-- **Thermodynamics (ΔΔG)**: Mass-based features achieve ρ=0.94
-- **Kinetics (folding rates)**: Property-based features achieve ρ=0.94
-- **DDG Predictor (v5.12.4)**: Spearman 0.58, Pearson 0.79, MAE 0.73
-
-See [`research/codon-encoder/`](research/codon-encoder/) for full analysis scripts and results.
-
-### 🔮 Contact Prediction from Codon Embeddings (NEW - 2026-01-03)
-
-**Discovery:** Pairwise hyperbolic distances between codon embeddings predict residue-residue 3D contacts.
-
-| Checkpoint | Richness | AUC-ROC | Cohen's d | Best For |
-|------------|----------|---------|-----------|----------|
-| **v5_11_structural** | 0.003 | **0.6737** | **-0.474** | Contact prediction |
-| homeostatic_rich | 0.007 | 0.5865 | -0.247 | ΔΔG prediction |
-| final_rich_lr5e5 | 0.009 | 0.5850 | -0.248 | ΔΔG prediction |
-
-**Critical Tradeoff:** High richness improves ΔΔG prediction but hurts contact prediction. Collapsed radial shells (low richness) give consistent AA-level distances needed for pairwise contact discrimination.
-
-**Checkpoints:**
-```
-research/contact-prediction/checkpoints/
-├── v5_11_structural_best.pt    # BEST for contacts (AUC=0.67)
-├── homeostatic_rich_best.pt    # Best balance
-└── final_rich_lr5e5_best.pt    # Best for ΔΔG
-```
-
-See [`research/contact-prediction/`](research/contact-prediction/) for validation scripts and experimental design.
-
-### 🏗️ Architecture Improvements (NEW - 2025-12-28)
-
-**New capabilities added to the framework:**
-
-| Feature | Module | Description |
-|---------|--------|-------------|
-| **BaseVAE** | `src/models/base_vae.py` | Unified base class for all 19+ VAE variants |
-| **Uncertainty** | `src/diseases/uncertainty_aware_analyzer.py` | MC Dropout, Evidential, Ensemble methods |
-| **Epistasis** | `src/models/epistasis_module.py` | Mutation interaction modeling |
-| **Transfer Learning** | `src/training/transfer_pipeline.py` | Pre-train → fine-tune pipeline |
-| **Structure-Aware** | `src/models/structure_aware_vae.py` | AlphaFold2 integration with SE(3) encoders |
-
-**Uncertainty Quantification:**
-```python
-from src.diseases.uncertainty_aware_analyzer import (
-    UncertaintyAwareAnalyzer, UncertaintyConfig, UncertaintyMethod
-)
-
-config = UncertaintyConfig(method=UncertaintyMethod.EVIDENTIAL, calibrate=True)
-analyzer = UncertaintyAwareAnalyzer(base_analyzer, config=config, model=model)
-results = analyzer.analyze_with_uncertainty(sequences, encodings=x)
-# Returns predictions with confidence intervals and epistemic/aleatoric decomposition
-```
-
-**Transfer Learning:**
-```python
-from src.training.transfer_pipeline import TransferLearningPipeline, TransferConfig
-
-pipeline = TransferLearningPipeline(config)
-pretrained = pipeline.pretrain(all_disease_data)  # Pre-train on all diseases
-finetuned = pipeline.finetune("hiv", hiv_data)    # Fine-tune on target
-```
-
-**Structure-Aware Modeling:**
-```python
-from src.models.structure_aware_vae import StructureAwareVAE, StructureConfig
-
-config = StructureConfig(use_structure=True, use_plddt=True)
-model = StructureAwareVAE(input_dim=128, latent_dim=32, structure_config=config)
-outputs = model(x=seq_embed, structure=alphafold_coords, plddt=confidence)
-```
-
-See [ARCHITECTURE.md](ARCHITECTURE.md) for full details on the architecture improvements.
-
-### 📦 Pretrained Checkpoints
-
-| Version | Checkpoint | Coverage | Hier_B | Q | Status |
-|---------|------------|----------|--------|---|--------|
-| **v5.12.4** | `v5_12_4/best_Q.pt` | 100% | -0.82 | 1.96 | **CURRENT** - FrozenEncoder from v5.5 |
-| **v5.11.8** | `v5_11_homeostasis` | 99.9% | -0.82 | - | Good hierarchy, moderate richness |
-| **homeostatic_rich** | `homeostatic_rich/best.pt` | 100% | -0.8321 | - | Ceiling hierarchy + high richness |
-| **v5.11.3** | `v5_11_structural` | 100% | -0.40 | - | Moderate hierarchy, good richness |
-
-**Checkpoint Location:** `sandbox-training/checkpoints/`
-
-**Key Metrics:**
-- **Coverage**: % of 19,683 ternary operations correctly reconstructed (target: 100%)
-- **Hier_B**: Spearman correlation between 3-adic valuation and radius (target: -0.83 to -1.0)
-- **Q**: Structure quality metric = `dist_corr + 1.5 × |hierarchy|`
-
-> ⚠️ **Warning**: Do not use `v5_11_overnight` - training collapsed during the run. See [`.claude/CLAUDE.md`](.claude/CLAUDE.md) for details.
-
-### 🔧 V5.12.2 Hyperbolic Geometry Audit (Complete)
-
-**Issue**: Many files incorrectly used Euclidean `.norm()` on hyperbolic Poincaré ball embeddings instead of `poincare_distance()`, causing incorrect radial hierarchy computation.
-
-**Fix Pattern:**
-```python
-# WRONG - Euclidean norm on hyperbolic embeddings
-radius = torch.norm(z_hyp, dim=-1)
-
-# CORRECT - Hyperbolic distance from origin
+from src.models import TernaryVAEV5_11_PartialFreeze
 from src.geometry import poincare_distance
+import torch
+
+# Load model
+model = TernaryVAEV5_11_PartialFreeze(
+    latent_dim=16, hidden_dim=64, max_radius=0.99,
+    curvature=1.0, use_controller=True
+)
+ckpt = torch.load('sandbox-training/checkpoints/homeostatic_rich/best.pt')
+model.load_state_dict(ckpt['model_state_dict'])
+model.eval()
+
+# Get embeddings
+out = model(operations)
+z_hyp = out['z_B_hyp']  # Use VAE-B for p-adic hierarchy
+
+# Compute hyperbolic radii (NOT Euclidean norm)
 origin = torch.zeros_like(z_hyp)
-radius = poincare_distance(z_hyp, origin, c=curvature)
+radii = poincare_distance(z_hyp, origin, c=1.0)
 ```
-
-**Status**: All core files fixed. ~40 research scripts in `src/research/` pending (lowest priority).
-
-See [`docs/audits/v5.12.2-hyperbolic/`](docs/audits/v5.12.2-hyperbolic/) for full audit documentation.
 
 ---
 
-## 🛠️ Installation & Development
+## Project Structure
 
-### Development Standards
+```
+ternary-vaes-bioinformatics/
+├── src/                    # TIER 1: Core library
+│   ├── core/              # P-adic math, ternary operations
+│   ├── geometry/          # Hyperbolic geometry (Poincaré ball)
+│   ├── models/            # VAE architectures
+│   ├── training/          # Training infrastructure
+│   └── losses/            # Loss functions
+│
+├── configs/               # Training configurations
+├── sandbox-training/      # Checkpoints and training artifacts
+│
+├── deliverables/          # TIER 2: Bioinformatics applications
+│   └── partners/          # Partner-specific packages
+│
+├── research/              # Research experiments
+│   ├── codon-encoder/     # TrainableCodonEncoder
+│   └── contact-prediction/# Contact prediction from embeddings
+│
+├── docs/                  # Documentation
+│   ├── content/          # User guides
+│   └── audits/           # Code audits
+│
+└── LEGAL_AND_IP/          # Licensing
+```
 
-- **Virtual Environment**: Always use an isolated virtual environment (`.venv`) for development to prevent dependency conflicts.
-- **Cache Management**: Machine learning caches (HuggingFace, PyTorch, etc.) must be stored within the project directory (e.g., `.cache/` or `local/cache`), **never** in the system root or global user directories. This ensures project portability and prevents system drive bloat.
+---
 
-### Requirements
+## Theoretical Foundation
+
+### The P-adic Hierarchy
+
+For prime p=3, the 3-adic valuation v₃(n) counts the multiplicity of 3 in n:
+- v₃(9) = 2 (9 = 3²)
+- v₃(6) = 1 (6 = 2×3)
+- v₃(5) = 0 (5 not divisible by 3)
+
+This creates a natural tree structure where operations with higher valuation (divisible by more powers of 3) are "closer to the root."
+
+### The Hyperbolic Realization
+
+The Poincaré ball provides:
+- **Exponential volume growth**: Room for exponentially many leaves
+- **Geodesic distances**: Proper metric for tree structures
+- **Differentiability**: Enables gradient-based optimization
+
+### The Ultrametric Property
+
+In p-adic space, all triangles are isosceles:
+```
+d(x, z) ≤ max(d(x, y), d(y, z))
+```
+
+This creates perfect hierarchical clustering—clusters within clusters—matching biological taxonomy and phylogenetic trees.
+
+---
+
+## Dual Manifold Organization
+
+The framework supports two valid manifold types:
+
+| Type | Hierarchy | Optimizes For | Best Applications |
+|------|-----------|---------------|-------------------|
+| **Valuation-optimal** | Negative (-0.8 to -1.0) | P-adic semantic structure | Genetic code, DDG prediction |
+| **Frequency-optimal** | Positive (+0.6 to +0.8) | Shannon information efficiency | Compression, fast retrieval |
+
+Both are mathematically valid—choose based on your application requirements.
+
+---
+
+## Requirements
 
 | Component | Minimum | Recommended |
 |-----------|---------|-------------|
-| **Python** | 3.10 | 3.11+ |
-| **PyTorch** | 2.0.0 | 2.1+ |
-| **CUDA** | Optional | 11.8+ (for GPU training) |
-| **RAM** | 8GB | 16GB+ |
-| **VRAM** | 4GB | 6GB+ (for full batch training) |
+| Python | 3.10 | 3.11+ |
+| PyTorch | 2.0 | 2.1+ |
+| CUDA | Optional | 11.8+ |
+| RAM | 8GB | 16GB |
+| VRAM | 4GB | 6GB+ |
 
-**Core Dependencies:** `torch`, `numpy`, `scipy`, `geoopt` (hyperbolic geometry), `scikit-learn`, `pandas`
-
-**Optional Extras:**
-```bash
-pip install -e ".[viz]"      # matplotlib, seaborn, plotly, tensorboard
-pip install -e ".[bio]"      # biopython, pyarrow
-pip install -e ".[dev]"      # pytest, ruff, mypy, pre-commit
-pip install -e ".[all]"      # Everything
-```
-
-### Training Hardware Reference
-
-All v5.12.x checkpoints were trained on this consumer-grade setup:
-
-| Component | Specification |
-|-----------|---------------|
-| **CPU** | AMD Ryzen 5 4500 (6-core, 3.6GHz) |
-| **RAM** | 16GB DDR4 |
-| **GPU** | NVIDIA RTX 3050 (8GB VRAM, GDDR6) |
-| **OS** | Windows 11 / WSL2 |
-
-> **Note:** VRAM is the primary bottleneck for training larger models or batch sizes.
-
-> Training time: ~2-4 hours for full 19,683 operation coverage with v5.12.4 architecture.
-
-### Development Tools
-
-- **ruff** – fast Python linter/formatter (configured in `pyproject.toml`).
-- **pytest** – test suite (`tests/`).
-- **pre‑commit** – hooks for linting and SPDX header checks.
-- **GitHub Actions** – CI pipelines for linting, testing, and code‑health dashboards.
-
-To set up pre‑commit:
+**Core dependencies**: torch, numpy, scipy, geoopt, scikit-learn
 
 ```bash
-pip install pre-commit
-pre-commit install
+pip install -e ".[all]"  # Full installation with all extras
 ```
 
 ---
 
-## 🤝 Research Partner Packages
+## Documentation
 
-Specialized bioinformatics tools developed for CONACYT research partners in [`deliverables/partners/`](deliverables/partners/):
-
-| Partner | Focus | Key Scripts | Results |
-|---------|-------|-------------|---------|
-| **Jose Colbes** | Protein stability (ΔΔG, Rosetta-blind) | `C1_rosetta_blind_detection.py`, `C4_mutation_effect_predictor.py` | LOO ρ=0.61 |
-| **Carlos Brizuela** | AMP design (NSGA-II) | `B1_pathogen_specific_design.py`, `B8_microbiome_safe_amps.py` | Pareto-optimal peptides |
-| **Alejandra Rojas** | Arbovirus (DENV, ZIKV) | `A2_pan_arbovirus_primers.py`, `arbovirus_hyperbolic_trajectory.py` | Pan-arbovirus primers |
-| **HIV Research** | TDR screening, LA selection | `H6_tdr_screening.py`, `H7_la_injectable_selection.py` | Clinical decision support |
-
-**Quick Start:**
-```bash
-cd deliverables
-python scripts/biotools.py demo-all       # Run all demos
-python scripts/biotools.py demo-hiv       # HIV resistance analysis
-python scripts/biotools.py demo-stability # Protein stability
-```
-
-See [`deliverables/README.md`](deliverables/README.md) for full documentation.
+| Topic | Location |
+|-------|----------|
+| Getting Started | `docs/content/getting-started/` |
+| Architecture | `docs/content/architecture/` |
+| Theory | `docs/content/theory/` |
+| API Reference | `docs/source/api/` |
+| Partner Packages | `deliverables/partners/DELIVERABLES_INDEX.md` |
 
 ---
 
-## 📦 License & Legal
+## License
 
 ### Software (Code)
-
-- **License**: PolyForm Non‑Commercial 1.0.0
-- **Permitted**: Academic, educational, and non‑profit use.
-- **Commercial Use**: Requires a separate commercial license – contact `support@aiwhisperers.com`.
+**PolyForm Non-Commercial 1.0.0**
+- Permitted: Academic, educational, non-profit use
+- Commercial use requires separate license
 
 ### Research Outputs (Data, Figures, Models)
+**CC-BY-4.0**
+- Free for any reuse with attribution
 
-- **License**: CC‑BY‑4.0 – free for any reuse with attribution.
-- **Open‑Medicine Policy**: See [`LEGAL_AND_IP/OPEN_MEDICINE_POLICY.md`](LEGAL_AND_IP/OPEN_MEDICINE_POLICY.md) for detailed terms.
-
-All legal documents are collected in the [`LEGAL_AND_IP/`](LEGAL_AND_IP/) directory:
-
-- [`LICENSE`](LEGAL_AND_IP/LICENSE)
-- [`NOTICE`](LEGAL_AND_IP/NOTICE)
-- [`OPEN_MEDICINE_POLICY.md`](LEGAL_AND_IP/OPEN_MEDICINE_POLICY.md)
-- [`RESULTS_LICENSE.md`](LEGAL_AND_IP/RESULTS_LICENSE.md)
-- [`CLA.md`](LEGAL_AND_IP/CLA.md)
-- [`CONTRIBUTING.md`](CONTRIBUTING.md)
-- [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
-- [`SECURITY.md`](SECURITY.md)
-- [`CITATION.cff`](CITATION.cff)
+All legal documents: [`LEGAL_AND_IP/`](LEGAL_AND_IP/)
 
 ---
 
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. **Read the Contributor License Agreement** ([`CLA.md`](LEGAL_AND_IP/CLA.md)) and sign it.
-2. **Review the Code of Conduct** ([`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)).
-3. **Check the contribution guidelines** ([`CONTRIBUTING.md`](CONTRIBUTING.md)) for branch naming, commit style, and testing requirements.
-4. **Open a Pull Request** – link it to an existing issue or create a new one.
-5. **Ensure all CI checks pass** (ruff, pytest, SPDX header verification).
-
----
-
-## 🔒 Security
-
-Report any vulnerabilities via the [`SECURITY.md`](SECURITY.md) policy. We use a coordinated disclosure process and will acknowledge contributors.
-
----
-
-## 📑 Citation
-
-Please cite the project using the provided `CITATION.cff`. Example BibTeX entry:
+## Citation
 
 ```bibtex
 @software{ternary_vae,
   author = {{AI Whisperers}},
-  title = {Ternary VAE Bioinformatics},
-  year = {2025},
+  title = {Ternary VAE: P-adic Hyperbolic Variational Autoencoders},
+  year = {2026},
   url = {https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics}
 }
 ```
 
-> **Note**: DOI pending Zenodo registration. See [CITATION.cff](CITATION.cff) for full citation details.
+---
+
+## Contributing
+
+1. Read [`LEGAL_AND_IP/CLA.md`](LEGAL_AND_IP/CLA.md)
+2. Review [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
+3. Follow [`CONTRIBUTING.md`](CONTRIBUTING.md)
+4. Open a Pull Request
 
 ---
 
-## 👥 Authors & Acknowledgments
+## Contact
 
-- **Primary Authors** – see [`AUTHORS.md`](LEGAL_AND_IP/AUTHORS.md).
-- **Contributors** – see [`CONTRIBUTORS.md`](LEGAL_AND_IP/CONTRIBUTORS.md).
-- **Funding** – this work is supported by open‑science grants and institutional collaborations.
-
----
-
-## 📞 Contact
-
-For general questions, open an issue. For commercial licensing inquiries, email `support@aiwhisperers.com`.
+- Issues: GitHub Issues
+- Commercial licensing: support@aiwhisperers.com
 
 ---
 
-_Last updated: 2026-01-03_
+*Version 5.12.5 · Updated 2026-01-23*
