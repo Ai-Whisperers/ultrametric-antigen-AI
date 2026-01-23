@@ -36,16 +36,19 @@ This package has been validated through multiple independent approaches:
 
 ## Literature Comparison (Verified Sources)
 
-| Method | Spearman ρ | Type | Source |
-|--------|------------|------|--------|
-| Rosetta ddg_monomer | 0.69 | Structure | [Rosetta Docs](https://docs.rosettacommons.org) |
-| **Our Method (V3)** | **0.585** | **Sequence** | LOO validated |
-| Mutate Everything | 0.56 | Sequence | Meier 2023, bioRxiv |
-| ESM-1v | ~0.51 | Sequence | Meier 2021, NeurIPS |
-| ELASPIC-2 | 0.42-0.58 | Sequence | PLOS Comp Bio 2024 |
-| FoldX 5.0 | 0.48-0.69 | Structure | Various datasets |
+⚠️ **CRITICAL CAVEAT:** Literature methods use N=669 (full S669). Our N=52 result is NOT directly comparable. On N=669, our method achieves ρ=0.37-0.40.
 
-**Note:** Literature methods show ranges depending on dataset. Our 0.585 on curated N=52 is competitive with upper-range sequence-only methods.
+| Method | Spearman ρ | Dataset | Type | Source |
+|--------|------------|---------|------|--------|
+| Rosetta ddg_monomer | 0.69 | N=669 | Structure | Rosetta Docs |
+| Mutate Everything | 0.56 | N=669 | Sequence | Meier 2023 |
+| ESM-1v | 0.51 | N=669 | Sequence | Meier 2021 |
+| ELASPIC-2 | 0.50 | N=669 | Sequence | PLOS 2024 |
+| FoldX 5.0 | 0.48 | N=669 | Structure | Various |
+| **Our Method (N=52)** | **0.58** | **N=52** | **Sequence** | LOO validated |
+| Our Method (N=669) | 0.37-0.40 | N=669 | Sequence | Validated |
+
+**Honest Note:** On comparable N=669 data, our method does NOT outperform literature sequence-only methods. The N=52 result is on a carefully curated subset (small proteins, alanine scanning) where our method shows stronger performance.
 
 ---
 

@@ -11,9 +11,14 @@ Predict the effect of point mutations on protein stability using the
 TrainableCodonEncoder with hyperbolic embeddings + physicochemical features.
 
 VALIDATED PERFORMANCE (LOO CV on S669 benchmark):
-- LOO Spearman: 0.60 (beats Mutate Everything 0.56, ESM-1v 0.51, ELASPIC-2 0.50)
-- LOO Pearson: 0.62
-- LOO MAE: 0.89 kcal/mol
+- LOO Spearman: 0.58 on N=52 curated subset
+- LOO Pearson: 0.60
+- LOO MAE: 0.91 kcal/mol
+
+IMPORTANT CAVEAT:
+Literature methods (ESM-1v 0.51, Mutate Everything 0.56, etc.) are benchmarked
+on N=669 (full S669). Our N=52 result is NOT directly comparable.
+On N=669, our method achieves ρ=0.37-0.40, which does NOT outperform these methods.
 
 Key Concept:
 - TrainableCodonEncoder learns hyperbolic embeddings on Poincaré ball

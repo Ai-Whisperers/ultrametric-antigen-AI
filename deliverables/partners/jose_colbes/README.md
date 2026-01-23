@@ -30,13 +30,15 @@
 
 This package provides a **scientifically validated** toolkit for protein stability prediction using p-adic geometric methods. Our TrainableCodonEncoder-based DDG predictor achieves:
 
-| Metric | Value | Assessment |
-|--------|-------|------------|
-| **Spearman ρ** | **0.585** | Competitive with ESM-1v (0.51), ELASPIC-2 (0.42-0.58) |
-| Pearson r | 0.596 | Strong linear correlation |
+| Metric | Value | Notes |
+|--------|-------|-------|
+| **Spearman ρ** | **0.58** | On N=52 curated subset |
+| Pearson r | 0.60 | Strong linear correlation |
 | MAE | 0.91 kcal/mol | Good absolute accuracy |
-| 95% CI | [0.341, 0.770] | Does NOT include zero |
+| 95% CI | [0.34, 0.77] | Does NOT include zero |
 | Permutation p | 0.0000 | Statistically confirmed |
+
+⚠️ **IMPORTANT CAVEAT:** Literature methods (ESM-1v 0.51, FoldX 0.48, etc.) are benchmarked on N=669 (full S669). Our N=52 result is NOT directly comparable. On N=669, our method achieves ρ=0.37-0.40, which does NOT outperform these methods.
 
 **Key Advantages:**
 - **Sequence-only prediction** - no 3D structure required
@@ -132,18 +134,21 @@ jose_colbes/
 
 ## Validated Results
 
-### DDG Prediction Benchmark (S669, LOO-Validated)
+### DDG Prediction Benchmark (S669)
 
-| Method | Spearman ρ | Type | Our Status |
-|--------|------------|------|------------|
-| Rosetta ddg_monomer | 0.69 | Structure | Requires 3D |
-| **Our Method (V3)** | **0.585** | **Sequence** | **LOO VALIDATED** |
-| Mutate Everything | 0.56 | Sequence | Competitive |
-| ESM-1v | ~0.51 | Sequence | Competitive |
-| ELASPIC-2 | 0.42-0.58 | Sequence | Competitive |
-| FoldX | 0.48-0.69 | Structure | Requires 3D |
+⚠️ **COMPARISON CAVEAT:** Literature methods use N=669. Our N=52 result is NOT comparable.
 
-**Key Finding:** Our sequence-only method achieves competitive performance without requiring 3D structure.
+| Method | Spearman ρ | Dataset | Type |
+|--------|------------|---------|------|
+| Rosetta ddg_monomer | 0.69 | N=669 | Structure |
+| Mutate Everything | 0.56 | N=669 | Sequence |
+| ESM-1v | 0.51 | N=669 | Sequence |
+| ELASPIC-2 | 0.50 | N=669 | Sequence |
+| FoldX | 0.48 | N=669 | Structure |
+| **Our Method (N=52)** | **0.58** | **N=52** | **Sequence** |
+| Our Method (N=669) | 0.37-0.40 | N=669 | Sequence |
+
+**Honest Assessment:** On comparable N=669 data, our method achieves ρ=0.37-0.40, which does NOT outperform ESM-1v or Mutate Everything. The N=52 result (0.58) is on a curated subset and cannot be directly compared.
 
 ### AlphaFold Structural Cross-Validation
 

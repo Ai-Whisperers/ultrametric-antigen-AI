@@ -315,33 +315,30 @@ def main():
         }, f, indent=2)
     print(f"Full results saved to: {results_path}")
 
-    # Comparison
+    # Comparison - WITH HONEST CAVEATS
     print("\n" + "=" * 70)
     print("COMPARISON WITH LITERATURE")
     print("=" * 70)
 
+    print("\n⚠️  IMPORTANT: Literature methods are benchmarked on N=669.")
+    print("    This training uses a SUBSET. Direct comparison is NOT valid.")
+    print("    On full N=669, p-adic methods achieve ρ=0.37-0.40.")
+
     literature = {
-        'Rosetta ddg_monomer': 0.69,
-        'FoldX': 0.48,
-        'ELASPIC-2 (2024)': 0.50,
-        'P-adic V1 (hash-based)': 0.58,
+        'Rosetta ddg_monomer': ('0.69', 'N=669', 'Structure'),
+        'FoldX': ('0.48', 'N=669', 'Structure'),
+        'ELASPIC-2 (2024)': ('0.50', 'N=669', 'Sequence'),
+        'ESM-1v': ('0.51', 'N=669', 'Sequence'),
     }
 
-    print("\n| Method | Spearman r |")
-    print("|--------|------------|")
-    for method, r in literature.items():
-        print(f"| {method} | {r:.2f} |")
-    print(f"| **P-adic V2 (proper codon)** | **{results['spearman_r']:.2f}** |")
+    print("\n| Method | Spearman | Dataset | Type |")
+    print("|--------|----------|---------|------|")
+    for method, (r, dataset, mtype) in literature.items():
+        print(f"| {method} | {r} | {dataset} | {mtype} |")
+    print(f"| P-adic V2 (this training) | {results['spearman_r']:.2f} | N={results['n_samples']} | Sequence |")
+    print(f"| P-adic V2 (on N=669) | 0.37-0.40 | N=669 | Sequence |")
 
-    # Assessment
-    if results['spearman_r'] > 0.60:
-        print("\nAssessment: EXCELLENT - Best sequence-only performance!")
-    elif results['spearman_r'] > 0.55:
-        print("\nAssessment: VERY GOOD - Exceeds state-of-art")
-    elif results['spearman_r'] > 0.50:
-        print("\nAssessment: GOOD - Matches state-of-art")
-    else:
-        print("\nAssessment: Needs improvement")
+    print("\nNOTE: On comparable N=669 data, our method does NOT outperform literature.")
 
     return 0
 
