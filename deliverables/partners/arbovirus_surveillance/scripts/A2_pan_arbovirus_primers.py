@@ -464,14 +464,15 @@ def build_pan_arbovirus_library(
                     )
             print(f"  Exported {virus} pairs to {pairs_path}")
 
-    # Export FASTA files
+    # Export FASTA files (all primers, with specificity noted in header)
     for virus, data in library.items():
         fasta_path = output_dir / f"{virus}_primers.fasta"
         with open(fasta_path, "w") as f:
-            for i, p in enumerate(data["specific_primers"], 1):
-                f.write(f">{virus}_primer_{i:02d}_pos{p.position}\n")
+            for i, p in enumerate(data["primers"], 1):
+                specificity_tag = "specific" if p.is_specific else "cross-reactive"
+                f.write(f">{virus}_primer_{i:02d}_pos{p.position}_{specificity_tag}_score{p.combined_score:.4f}\n")
                 f.write(f"{p.sequence}\n")
-        print(f"  Exported {virus} FASTA to {fasta_path}")
+        print(f"  Exported {virus} FASTA to {fasta_path} ({len(data['primers'])} primers)")
 
     # Cross-reactivity matrix
     cross_react_matrix = {}
