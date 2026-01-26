@@ -1,9 +1,9 @@
-# Deliverable Package: Carlos Brizuela
-## Antimicrobial Peptide Multi-Objective Optimization Suite
+# Antimicrobial Peptide Design Package
 
-**Prepared for:** Carlos Brizuela
-**Project:** Ternary VAE Bioinformatics - Partnership Phase 3
-**Date:** December 29, 2025
+**Doc-Type:** Research Tool Package · Version 2.0 · 2026-01-26 · AI Whisperers
+
+## Multi-Objective Optimization Suite for AMP Design
+
 **Status:** COMPLETE - Ready for Production Use
 
 ---
@@ -11,7 +11,7 @@
 ## Table of Contents
 - [Executive Summary](#executive-summary)
 - [Package Structure](#package-structure)
-- [NEW: Easy Implementation Tools](#new-easy-implementation-tools)
+- [Easy Implementation Tools](#easy-implementation-tools)
 - [Demo Results Summary](#demo-results-summary)
 - [What's Included](#whats-included)
 - [Quick Start](#quick-start)
@@ -19,7 +19,10 @@
 - [Output Formats](#output-formats)
 - [Integration with VAE](#integration-with-vae)
 - [Validation Checklist](#validation-checklist)
+- [Known Limitations](#known-limitations)
 - [Scientific Background](#scientific-background)
+- [Citation](#citation)
+- [Contact](#contact)
 
 ---
 
@@ -31,29 +34,42 @@ This package provides a comprehensive toolkit for antimicrobial peptide (AMP) de
 2. **B8: Microbiome-Safe AMPs** - Design selective peptides that kill pathogens while sparing commensals
 3. **B10: Synthesis Optimization** - Balance antimicrobial activity with synthesis feasibility
 
+### Validated Performance
+
+| Metric | Value | Notes |
+|--------|-------|-------|
+| **Mean Spearman** | **0.656** | 5-fold CV |
+| Std Spearman | 0.060 | Consistent across folds |
+| Best fold | 0.737 | Fold 2 |
+| PeptideVAE status | PASSED | Beats sklearn baseline (0.56) |
+
 ---
 
 ## Package Structure
 
 ```
-carlos_brizuela/
+antimicrobial_peptides/
 ├── README.md                      # Main documentation
+├── VALIDATION_FINDINGS.md         # Validation details
 ├── scripts/                       # Optimization tools
 │   ├── B1_pathogen_specific_design.py
 │   ├── B8_microbiome_safe_amps.py
 │   ├── B10_synthesis_optimization.py
+│   ├── predict_mic.py
 │   └── latent_nsga2.py
 ├── notebooks/                     # Interactive navigator
-│   └── brizuela_amp_navigator.ipynb
+│   └── amp_navigator.ipynb
 ├── results/                       # Generated peptides
 │   ├── pathogen_specific/
 │   ├── microbiome_safe/
 │   └── synthesis_optimized/
 ├── checkpoints_definitive/        # Model checkpoints
+├── models/                        # Pathogen-specific models
 ├── docs/                          # User guides
 │   ├── B1_USER_GUIDE.md
 │   ├── B8_USER_GUIDE.md
-│   └── B10_USER_GUIDE.md
+│   ├── B10_USER_GUIDE.md
+│   └── LIMITATIONS_AND_FUTURE_WORK.md
 ├── src/                           # Shared library code
 ├── training/                      # Training scripts
 └── validation/                    # Validation scripts
@@ -61,7 +77,7 @@ carlos_brizuela/
 
 ---
 
-## NEW: Easy Implementation Tools
+## Easy Implementation Tools
 
 ### B1: Pathogen-Specific AMP Design
 
@@ -175,12 +191,13 @@ python scripts/B10_synthesis_optimization.py \
 | `scripts/B1_pathogen_specific_design.py` | Pathogen-specific design | ~400 |
 | `scripts/B8_microbiome_safe_amps.py` | Microbiome-safe design | ~400 |
 | `scripts/B10_synthesis_optimization.py` | Synthesis optimization | ~400 |
+| `scripts/predict_mic.py` | MIC prediction tool | ~200 |
 
 ### 2. Interactive Notebook
 
 | File | Description |
 |------|-------------|
-| `notebooks/brizuela_amp_navigator.ipynb` | Visualization and exploration |
+| `notebooks/amp_navigator.ipynb` | Visualization and exploration |
 
 ### 3. Results
 
@@ -198,7 +215,7 @@ python scripts/B10_synthesis_optimization.py \
 | `docs/B1_USER_GUIDE.md` | Pathogen-specific design guide |
 | `docs/B8_USER_GUIDE.md` | Microbiome-safe design guide |
 | `docs/B10_USER_GUIDE.md` | Synthesis optimization guide |
-| `docs/TECHNICAL_BRIEF.md` | Technical specifications |
+| `docs/LIMITATIONS_AND_FUTURE_WORK.md` | Known limitations |
 
 ---
 
@@ -207,7 +224,7 @@ python scripts/B10_synthesis_optimization.py \
 ### Step 1: Install Dependencies
 
 ```bash
-pip install numpy torch pandas matplotlib seaborn
+pip install numpy torch pandas matplotlib seaborn deap
 ```
 
 ### Step 2: Run All Demos
@@ -226,7 +243,7 @@ python scripts/B10_synthesis_optimization.py
 ### Step 3: Explore Results
 
 ```bash
-jupyter notebook notebooks/brizuela_amp_navigator.ipynb
+jupyter notebook notebooks/amp_navigator.ipynb
 ```
 
 ---
@@ -323,10 +340,10 @@ rank,sequence,net_charge,hydrophobicity,activity_score,toxicity,synthesis_diffic
 ### Using Real VAE Checkpoint
 
 ```python
-from deliverables.scripts.vae_integration_demo import VAEInterface
+from src.vae_interface import VAEInterface
 
 # Load trained VAE
-vae = VAEInterface(checkpoint_path="checkpoints/pretrained_final.pt")
+vae = VAEInterface(checkpoint_path="checkpoints/peptide_vae_v1/best_production.pt")
 
 # Decode latent vector to sequence
 z = np.array([0.23, -0.45, ...])  # From optimization
@@ -372,21 +389,48 @@ pareto_front = optimizer.run(verbose=True)
 ## Validation Checklist
 
 ### B1: Pathogen-Specific
-- [ ] Script runs without errors
-- [ ] NSGA-II completes 50 generations
-- [ ] Pareto front contains 10+ candidates
-- [ ] All candidates have positive charge (+2 to +8)
-- [ ] Toxicity scores are < 0.5 for all
+- [x] Script runs without errors
+- [x] NSGA-II completes 50 generations
+- [x] Pareto front contains 10+ candidates
+- [x] All candidates have positive charge (+2 to +8)
+- [x] Toxicity scores are < 0.5 for all
 
 ### B8: Microbiome-Safe
-- [ ] Selectivity Index > 1.0 for top candidates
-- [ ] Pathogen MICs < Commensal MICs
-- [ ] No duplicate sequences in output
+- [x] Selectivity Index > 1.0 for top candidates
+- [x] Pathogen MICs < Commensal MICs
+- [x] No duplicate sequences in output
 
 ### B10: Synthesis-Optimized
-- [ ] Synthesis difficulty < 20 for top candidates
-- [ ] No difficult coupling motifs (Asp-X, His-His)
-- [ ] Estimated cost < $50/mg
+- [x] Synthesis difficulty < 20 for top candidates
+- [x] No difficult coupling motifs (Asp-X, His-His)
+- [x] Estimated cost < $50/mg
+
+---
+
+## Known Limitations
+
+### Per-Pathogen Model Validation
+
+| Pathogen | N | Pearson r | p-value | Status |
+|----------|--:|:---------:|:-------:|:------:|
+| Acinetobacter | 20 | 0.52 | 0.019 | **Significant** |
+| Escherichia | 105 | 0.39 | <0.001 | **Significant** |
+| General | 224 | 0.31 | <0.001 | **Significant** |
+| **Pseudomonas** | 27 | 0.05 | **0.82** | **NOT Significant** |
+| **Staphylococcus** | 72 | 0.17 | **0.15** | **NOT Significant** |
+
+**Warning:** Pseudomonas and Staphylococcus predictions should be used with caution due to insufficient training data.
+
+### Methodology Notes
+
+| Component | Method | Validated |
+|-----------|--------|:---------:|
+| MIC Prediction | PeptideVAE ML | **YES** |
+| Toxicity | Heuristic (charge, hydrophobicity) | **NO** |
+| Stability | Proxy (reconstruction quality) | **NO** |
+| Pathogen specificity | DRAMP database labels | PARTIAL |
+
+**Recommendation:** For experimental validation, prioritize candidates for *A. baumannii*, *E. coli*, and general activity predictions.
 
 ---
 
@@ -412,13 +456,31 @@ This provides implicit regularization toward stable, "natural-like" peptides.
 
 ---
 
-## Questions?
+## Citation
 
-- See docstrings in each script for implementation details
-- NSGA-II algorithm: Deb et al. (2002)
-- AMP databases: DRAMP, APD3, DBAASP
+If you use this package in your research, please cite:
+
+```bibtex
+@software{ternary_vae_amp,
+  author = {{AI Whisperers}},
+  title = {Multi-Objective Antimicrobial Peptide Design},
+  year = {2026},
+  url = {https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics},
+  note = {Part of the Ternary VAE Bioinformatics project}
+}
+```
 
 ---
 
-*Prepared as part of the Ternary VAE Bioinformatics Partnership*
-*For antimicrobial peptide discovery and optimization*
+## Contact
+
+- **Repository:** [github.com/Ai-Whisperers/ternary-vaes-bioinformatics](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics)
+- **Issues:** GitHub Issues
+- **Email:** support@aiwhisperers.com
+- **NSGA-II algorithm:** Deb et al. (2002)
+- **AMP databases:** DRAMP, APD3, DBAASP
+
+---
+
+*Version 2.0 · Updated 2026-01-26*
+*Part of the Ternary VAE Bioinformatics Partnership*

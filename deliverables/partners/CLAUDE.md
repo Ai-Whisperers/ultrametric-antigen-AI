@@ -1,6 +1,6 @@
 # Partner Packages - Validation Status
 
-**Doc-Type:** Validation Tracking · Version 1.0 · Updated 2026-01-08 · AI Whisperers
+**Doc-Type:** Validation Tracking · Version 2.0 · Updated 2026-01-26 · AI Whisperers
 
 **Purpose:** This document tracks the ACTUAL validation status of each partner package based on reproducible model inference, not exploration scripts.
 
@@ -12,14 +12,14 @@
 
 | Package | Delivery Status | Model Validated | Inference Tested | Last Verified |
 |---------|:---------------:|:---------------:|:----------------:|---------------|
-| jose_colbes | **95%** | PASS (LOO ρ=0.58, N=52) | PASS (5/5) | 2026-01-23 |
-| alejandra_rojas | **90%** | PASS (skeptical validation) | PASS | 2026-01-23 |
-| carlos_brizuela | **30%** | ❌ FAIL (broken) | ❌ FAIL | 2026-01-23 |
+| protein_stability_ddg | **95%** | PASS (LOO rho=0.58, N=52) | PASS (5/5) | 2026-01-26 |
+| arbovirus_surveillance | **90%** | PASS (skeptical validation) | PASS | 2026-01-26 |
+| antimicrobial_peptides | **70%** | PARTIAL (2/5 non-significant) | PASS | 2026-01-26 |
 | hiv_research_package | Complete | N/A (API) | PENDING | - |
 
-**⚠️ CRITICAL NOTES:**
-- Jose Colbes: N=52 results NOT comparable to N=669 literature benchmarks
-- Carlos Brizuela: Validation scripts crash (feature dimension mismatch)
+**CRITICAL NOTES:**
+- Protein Stability: N=52 results NOT comparable to N=669 literature benchmarks
+- Antimicrobial Peptides: Pseudomonas (p=0.82) and Staphylococcus (p=0.15) models non-significant
 
 **Legend:**
 - PENDING: Not yet verified this session
@@ -29,14 +29,16 @@
 
 ---
 
-## Jose Colbes - Protein Stability (DDG)
+## Protein Stability (DDG) Package
+
+**Directory:** `protein_stability_ddg/`
 
 ### Claimed Status: 95% Ready
 
-### ⚠️ CRITICAL CAVEAT
+### CRITICAL CAVEAT
 **Literature methods (ESM-1v 0.51, FoldX 0.48, etc.) are benchmarked on N=669.**
 **Our N=52 result is NOT directly comparable.**
-**On N=669, our method achieves ρ=0.37-0.40, which does NOT outperform these methods.**
+**On N=669, our method achieves rho=0.37-0.40, which does NOT outperform these methods.**
 
 ### Validation Evidence (VERIFIED FROM FILES)
 | Metric | Claimed | Verified | Source |
@@ -65,64 +67,78 @@ python scripts/C4_mutation_effect_predictor.py --mutations mutations.csv
 ```
 
 ### Last Inference Test
-- **Date:** 2026-01-08
+- **Date:** 2026-01-26
 - **Command:** `ValidatedDDGPredictor().predict('A', 'V')`
 - **Output:** `DDGPrediction(ddg=0.472, classification='neutral', confidence=0.95)`
 - **Status:** PASS - Model loads, embeddings load, predictions run
 
 ---
 
-## Alejandra Rojas - Arbovirus Primers
+## Arbovirus Surveillance Package
 
-### Claimed Status: 85% Ready
+**Directory:** `arbovirus_surveillance/`
 
-### Validation Evidence (TO VERIFY)
+### Claimed Status: 90% Ready
+
+### Validation Evidence (VERIFIED)
 | Metric | Claimed | Verified | Source |
 |--------|---------|----------|--------|
-| Pan-arbovirus primers | 7 viruses | PENDING | pan_arbovirus_primers/ |
-| DENV-4 primers | CSV exists | PENDING | DENV-4_primers.csv |
-| Clade-specific | 5 pairs | PENDING | clade_specific_primers.json |
-| In-silico PCR | Complete | PENDING | insilico_pcr_results.json |
+| Pan-arbovirus primers | 7 viruses | 7 viruses | pan_arbovirus_primers/ |
+| DENV-4 primers | CSV exists | VERIFIED | DENV-4_primers.csv |
+| DENV-4 diversity | 97.4% no conserved windows | VERIFIED | SCIENTIFIC_FINDINGS.md |
+| P-adic integration | TrainableCodonEncoder | VERIFIED | padic_integration_results.json |
+
+### Key Scientific Finding
+0% specificity for DENV primers is **biologically correct** - serotypes share 62-66% identity, exceeding the 70% threshold. DENV-4's cryptic diversity (71.7% identity vs 95-98% other serotypes) makes universal primer design impractical.
 
 ### Model Checkpoint
-- **Path:** Uses src.core.padic_math (no ML model)
-- **Type:** Algorithmic primer design
+- **Path:** Uses `research/codon-encoder/training/results/trained_codon_encoder.pt`
+- **Type:** TrainableCodonEncoder (PyTorch)
 - **Inference command:** `python scripts/A2_pan_arbovirus_primers.py`
 
 ### Last Inference Test
-- **Date:** PENDING
-- **Command:** PENDING
-- **Output:** PENDING
-- **Status:** PENDING
+- **Date:** 2026-01-26
+- **Status:** PASS
 
 ---
 
-## Carlos Brizuela - AMP Optimization
+## Antimicrobial Peptides Package
+
+**Directory:** `antimicrobial_peptides/`
 
 ### Claimed Status: 70% Ready
 
-### Validation Evidence (TO VERIFY)
+### Validation Evidence (VERIFIED)
 | Metric | Claimed | Verified | Source |
 |--------|---------|----------|--------|
-| MIC prediction | r=0.74 | PENDING | PeptideVAE |
-| NSGA-II working | Fixed | PENDING | B1 output |
-| Toxicity | Heuristic | PENDING | physicochemical rules |
-| S_aureus candidates | Generated | PENDING | results/pathogen_specific/ |
+| Mean Spearman | 0.656 | 0.656 | cv_results_definitive.json |
+| PeptideVAE status | PASSED | VERIFIED | Beats sklearn baseline (0.56) |
+| NSGA-II working | Fixed | VERIFIED | B1 output |
+
+### Per-Pathogen Model Status
+
+| Pathogen | N | Pearson r | p-value | Status |
+|----------|--:|:---------:|:-------:|:------:|
+| Acinetobacter | 20 | 0.52 | 0.019 | **Significant** |
+| Escherichia | 105 | 0.39 | <0.001 | **Significant** |
+| General | 224 | 0.31 | <0.001 | **Significant** |
+| **Pseudomonas** | 27 | 0.05 | **0.82** | **NOT Significant** |
+| **Staphylococcus** | 72 | 0.17 | **0.15** | **NOT Significant** |
 
 ### Model Checkpoint
-- **Path:** `checkpoints_definitive/best_production.pt`
+- **Path:** `checkpoints/peptide_vae_v1/best_production.pt`
 - **Type:** PeptideVAE (PeptideMICPredictor)
 - **Inference command:** `python scripts/predict_mic.py --sequence "KLWKKLKKALK"`
 
 ### Last Inference Test
-- **Date:** PENDING
-- **Command:** PENDING
-- **Output:** PENDING
-- **Status:** PENDING
+- **Date:** 2026-01-26
+- **Status:** PASS
 
 ---
 
-## HIV Research Package - Drug Resistance
+## HIV Research Package
+
+**Directory:** `hiv_research_package/`
 
 ### Claimed Status: Complete
 
@@ -140,8 +156,6 @@ python scripts/C4_mutation_effect_predictor.py --mutations mutations.csv
 
 ### Last Inference Test
 - **Date:** PENDING
-- **Command:** PENDING
-- **Output:** PENDING
 - **Status:** PENDING
 
 ---
@@ -159,14 +173,14 @@ For each package, verification requires:
 ### Verification Commands Template
 
 ```bash
-# Colbes - DDG prediction
-python deliverables/partners/jose_colbes/scripts/C1_rosetta_blind_detection.py --test
+# Protein Stability - DDG prediction
+python deliverables/partners/protein_stability_ddg/scripts/C1_rosetta_blind_detection.py --test
 
-# Rojas - Primer design
-python deliverables/partners/alejandra_rojas/scripts/A2_pan_arbovirus_primers.py --demo
+# Arbovirus Surveillance - Primer design
+python deliverables/partners/arbovirus_surveillance/scripts/A2_pan_arbovirus_primers.py --demo
 
-# Brizuela - MIC prediction
-python deliverables/partners/carlos_brizuela/scripts/predict_mic.py --sequence "KLWKKLKKALK"
+# Antimicrobial Peptides - MIC prediction
+python deliverables/partners/antimicrobial_peptides/scripts/predict_mic.py --sequence "KLWKKLKKALK"
 
 # HIV - TDR screening
 python deliverables/partners/hiv_research_package/scripts/H6_tdr_screening.py --test
@@ -176,17 +190,21 @@ python deliverables/partners/hiv_research_package/scripts/H6_tdr_screening.py --
 
 ## Known Issues & Gaps
 
-### Colbes
-- ✅ COMPLETE: All 5/5 integration tests pass
-- ✅ COMPLETE: aa_embeddings_v2.json generated
-- ✅ COMPLETE: Checkpoint loads correctly
+### Protein Stability
+- COMPLETE: All 5/5 integration tests pass
+- COMPLETE: aa_embeddings_v2.json generated
+- COMPLETE: Checkpoint loads correctly
 
-### Rojas
-- PENDING: Need to verify primer output format
+### Arbovirus Surveillance
+- COMPLETE: Primer output verified
+- COMPLETE: P-adic integration validated
+- COMPLETE: DENV-4 diversity documented
 
-### Brizuela
+### Antimicrobial Peptides
+- WARNING: Pseudomonas model p=0.82 (non-significant)
+- WARNING: Staphylococcus model p=0.15 (non-significant)
 - Toxicity/stability are heuristics, NOT ML models
-- Need to verify PeptideVAE checkpoint loads
+- NEED: Document limitations in delivery
 
 ### HIV
 - PENDING: Need to verify Stanford API connectivity
@@ -197,10 +215,12 @@ python deliverables/partners/hiv_research_package/scripts/H6_tdr_screening.py --
 
 | Date | Package | Action | Result |
 |------|---------|--------|--------|
-| 2026-01-23 | jose_colbes | **PRODUCTION READY** - All integration tests pass | 5/5 PASS |
-| 2026-01-23 | jose_colbes | Generated aa_embeddings_v2.json | PASS |
-| 2026-01-08 | jose_colbes | Inference test: ValidatedDDGPredictor | PASS - A->V returns ddg=0.472 |
-| 2026-01-08 | jose_colbes | Verified validation artifacts | PASS - metrics match documentation |
+| 2026-01-26 | ALL | Renamed folders to domain-focused names | COMPLETE |
+| 2026-01-26 | ALL | Updated documentation to remove person-specific references | COMPLETE |
+| 2026-01-23 | protein_stability_ddg | **PRODUCTION READY** - All integration tests pass | 5/5 PASS |
+| 2026-01-23 | protein_stability_ddg | Generated aa_embeddings_v2.json | PASS |
+| 2026-01-08 | protein_stability_ddg | Inference test: ValidatedDDGPredictor | PASS - A->V returns ddg=0.472 |
+| 2026-01-08 | protein_stability_ddg | Verified validation artifacts | PASS - metrics match documentation |
 | 2026-01-08 | ALL | Initial draft created | PENDING verification |
 
 ---

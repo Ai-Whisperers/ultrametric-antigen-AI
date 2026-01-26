@@ -10,13 +10,15 @@
 
 | Partner | Claimed | Verified | Status | Ready to Deliver |
 |---------|:-------:|:--------:|--------|:----------------:|
-| **Jose Colbes** | 95% | **95%** | Reproducible (ρ=0.581) | **YES** |
-| **Alejandra Rojas** | 85% | **85%** | 0% specificity is valid finding (DENV-4 diversity) | **YES** |
-| **Carlos Brizuela** | 70% | **70%** | 2/5 pathogens non-significant (document) | **YES** |
+| **Protein Stability** | 95% | **95%** | Reproducible (rho=0.581) | **YES** |
+| **Arbovirus Surveillance** | 85% | **85%** | 0% specificity is valid finding (DENV-4 diversity) | **YES** |
+| **Antimicrobial Peptides** | 70% | **70%** | 2/5 pathogens non-significant (document) | **YES** |
 
 ---
 
-## 1. Jose Colbes - Protein Stability (DDG)
+## 1. Protein Stability (DDG) Package
+
+**Directory:** `protein_stability_ddg/`
 
 ### Status: READY TO DELIVER
 
@@ -38,12 +40,12 @@
 
 | Artifact | Path | Status |
 |----------|------|:------:|
-| Trained model | `models/ddg_predictor.joblib` | EXISTS |
-| Bootstrap results | `validation/results/scientific_metrics.json` | EXISTS |
-| Scientific report | `validation/results/SCIENTIFIC_VALIDATION_REPORT.md` | EXISTS |
-| AlphaFold validation | `validation/results/alphafold_validation_report.json` | EXISTS |
-| C1 script | `scripts/C1_rosetta_blind_detection.py` | EXISTS |
-| C4 script | `scripts/C4_mutation_effect_predictor.py` | EXISTS |
+| Trained model | `protein_stability_ddg/models/ddg_predictor.joblib` | EXISTS |
+| Bootstrap results | `protein_stability_ddg/validation/results/scientific_metrics.json` | EXISTS |
+| Scientific report | `protein_stability_ddg/validation/results/SCIENTIFIC_VALIDATION_REPORT.md` | EXISTS |
+| AlphaFold validation | `protein_stability_ddg/validation/results/alphafold_validation_report.json` | EXISTS |
+| C1 script | `protein_stability_ddg/scripts/C1_rosetta_blind_detection.py` | EXISTS |
+| C4 script | `protein_stability_ddg/scripts/C4_mutation_effect_predictor.py` | EXISTS |
 
 ### Literature Comparison (verified from metrics)
 
@@ -59,7 +61,9 @@
 
 ---
 
-## 2. Alejandra Rojas - Arbovirus Primers
+## 2. Arbovirus Surveillance Package
+
+**Directory:** `arbovirus_surveillance/`
 
 ### Status: SCIENTIFICALLY VALID - DENV-4 Diversity Discovery
 
@@ -107,12 +111,12 @@ From `results/padic_integration/padic_integration_results.json`:
 
 | Artifact | Path | Status |
 |----------|------|:------:|
-| A2 primer script | `scripts/A2_pan_arbovirus_primers.py` | EXISTS |
-| Trajectory script | `scripts/arbovirus_hyperbolic_trajectory.py` | EXISTS |
-| Primer CSVs | `results/pan_arbovirus_primers/*.csv` | EXISTS |
-| Primer FASTAs | `results/pan_arbovirus_primers/*.fasta` | EXISTS |
-| P-adic integration | `results/padic_integration/padic_integration_results.json` | EXISTS |
-| DENV-4 analysis | `results/phylogenetic/` | EXISTS |
+| A2 primer script | `arbovirus_surveillance/scripts/A2_pan_arbovirus_primers.py` | EXISTS |
+| Trajectory script | `arbovirus_surveillance/scripts/arbovirus_hyperbolic_trajectory.py` | EXISTS |
+| Primer CSVs | `arbovirus_surveillance/results/pan_arbovirus_primers/*.csv` | EXISTS |
+| Primer FASTAs | `arbovirus_surveillance/results/pan_arbovirus_primers/*.fasta` | EXISTS |
+| P-adic integration | `arbovirus_surveillance/results/padic_integration/padic_integration_results.json` | EXISTS |
+| DENV-4 analysis | `arbovirus_surveillance/results/phylogenetic/` | EXISTS |
 
 ### Assessment (Updated 2026-01-23)
 
@@ -132,7 +136,9 @@ From `results/padic_integration/padic_integration_results.json`:
 
 ---
 
-## 3. Carlos Brizuela - AMP Design
+## 3. Antimicrobial Peptides Package
+
+**Directory:** `antimicrobial_peptides/`
 
 ### Status: PARTIAL - 2/5 PATHOGEN MODELS NON-SIGNIFICANT
 
@@ -164,13 +170,13 @@ From `results/padic_integration/padic_integration_results.json`:
 
 | Artifact | Path | Status |
 |----------|------|:------:|
-| B1 script | `scripts/B1_pathogen_specific_design.py` | EXISTS |
-| B8 script | `scripts/B8_microbiome_safe_amps.py` | EXISTS |
-| B10 script | `scripts/B10_synthesis_optimization.py` | EXISTS |
-| predict_mic script | `scripts/predict_mic.py` | EXISTS |
-| Pathogen models | `models/activity_*.joblib` | EXISTS (5) |
-| Pareto results | `results/pareto_peptides.csv` | EXISTS |
-| Validation batch | `results/validation_batch/` | EXISTS |
+| B1 script | `antimicrobial_peptides/scripts/B1_pathogen_specific_design.py` | EXISTS |
+| B8 script | `antimicrobial_peptides/scripts/B8_microbiome_safe_amps.py` | EXISTS |
+| B10 script | `antimicrobial_peptides/scripts/B10_synthesis_optimization.py` | EXISTS |
+| predict_mic script | `antimicrobial_peptides/scripts/predict_mic.py` | EXISTS |
+| Pathogen models | `antimicrobial_peptides/models/activity_*.joblib` | EXISTS (5) |
+| Pareto results | `antimicrobial_peptides/results/pareto_peptides.csv` | EXISTS |
+| Validation batch | `antimicrobial_peptides/results/validation_batch/` | EXISTS |
 
 ### Methodology Limitations (from `VALIDATION_FINDINGS.md`)
 
@@ -198,34 +204,34 @@ From `results/padic_integration/padic_integration_results.json`:
 
 | Package | Action | Effort | Status |
 |---------|--------|:------:|:------:|
-| ~~Carlos Brizuela~~ | ~~Retrain PeptideVAE~~ | ~~HIGH~~ | **DONE** |
-| ~~Alejandra Rojas~~ | ~~Retrain TrainableCodonEncoder~~ | ~~Medium~~ | **DONE** |
-| ~~Jose Colbes~~ | ~~Revalidate DDG predictor~~ | ~~Low~~ | **DONE** (ρ=0.581, reproducible) |
-| ~~Alejandra Rojas~~ | ~~Analyze specificity results~~ | ~~Medium~~ | **DONE** (0% is valid - see SCIENTIFIC_FINDINGS.md) |
-| Carlos Brizuela | Document Pseudomonas/Staphylococcus as "insufficient data" | Low | PENDING |
+| ~~Antimicrobial Peptides~~ | ~~Retrain PeptideVAE~~ | ~~HIGH~~ | **DONE** |
+| ~~Arbovirus Surveillance~~ | ~~Retrain TrainableCodonEncoder~~ | ~~Medium~~ | **DONE** |
+| ~~Protein Stability~~ | ~~Revalidate DDG predictor~~ | ~~Low~~ | **DONE** (rho=0.581, reproducible) |
+| ~~Arbovirus Surveillance~~ | ~~Analyze specificity results~~ | ~~Medium~~ | **DONE** (0% is valid - see SCIENTIFIC_FINDINGS.md) |
+| Antimicrobial Peptides | Document Pseudomonas/Staphylococcus as "insufficient data" | Low | PENDING |
 
 ### Priority 2: HIGH (should fix)
 
 | Package | Action | Effort | Status |
 |---------|--------|:------:|:------:|
-| ~~Alejandra Rojas~~ | ~~Generate cross_reactivity_matrix~~ | ~~Medium~~ | **N/A** (0% specificity is valid finding) |
-| Carlos Brizuela | Add `METHODOLOGICAL_NOTES.md` stating toxicity/stability are heuristics | Low | PENDING |
+| ~~Arbovirus Surveillance~~ | ~~Generate cross_reactivity_matrix~~ | ~~Medium~~ | **N/A** (0% specificity is valid finding) |
+| Antimicrobial Peptides | Add `METHODOLOGICAL_NOTES.md` stating toxicity/stability are heuristics | Low | PENDING |
 
 ### Priority 3: MEDIUM (nice to have)
 
 | Package | Action | Effort |
 |---------|--------|:------:|
 | All | Verify checkpoint loading with test inference | Low |
-| Alejandra Rojas | Complete in-silico PCR validation | Medium |
+| Arbovirus Surveillance | Complete in-silico PCR validation | Medium |
 
 ---
 
 ## File Inventory
 
-### Jose Colbes (67 files)
+### Protein Stability (67 files)
 
 ```
-jose_colbes/
+protein_stability_ddg/
 ├── README.md, MANIFEST.md, VALIDATION_SUMMARY.md
 ├── scripts/ (5 files) - C1, C4, utilities
 ├── docs/ (5 files) - user guides
@@ -237,10 +243,10 @@ jose_colbes/
 └── notebooks/ (1 file)
 ```
 
-### Alejandra Rojas (100+ files)
+### Arbovirus Surveillance (100+ files)
 
 ```
-alejandra_rojas/
+arbovirus_surveillance/
 ├── README.md, MANIFEST.md, SOLUTION_APPROACH.md
 ├── scripts/ (10+ files) - A2, trajectory, stability, DENV4
 ├── docs/ (8 files) - user guides, technical docs
@@ -254,10 +260,10 @@ alejandra_rojas/
 └── notebooks/ (1 file)
 ```
 
-### Carlos Brizuela (80+ files)
+### Antimicrobial Peptides (80+ files)
 
 ```
-carlos_brizuela/
+antimicrobial_peptides/
 ├── README.md, MANIFEST.md, VALIDATION_FINDINGS.md
 ├── scripts/ (7 files) - B1, B8, B10, NSGA-II, predict_mic
 ├── docs/ (7 files) - user guides, limitations
@@ -282,22 +288,22 @@ carlos_brizuela/
 
 | Package | Model Type | Expected Path | Status |
 |---------|------------|---------------|:------:|
-| Jose Colbes | sklearn (joblib) | `models/ddg_predictor.joblib` | **EXISTS** |
-| Alejandra Rojas | PyTorch | `research/codon-encoder/.../trained_codon_encoder.pt` | **EXISTS** (retrained 2026-01-23) |
-| Carlos Brizuela | sklearn (joblib) | `models/activity_*.joblib` (5 files) | **EXISTS** |
-| Carlos Brizuela | PeptideVAE | `checkpoints/peptide_vae_v1/best_production.pt` | **EXISTS** (retrained 2026-01-23) |
+| Protein Stability | sklearn (joblib) | `protein_stability_ddg/models/ddg_predictor.joblib` | **EXISTS** |
+| Arbovirus Surveillance | PyTorch | `research/codon-encoder/.../trained_codon_encoder.pt` | **EXISTS** (retrained 2026-01-23) |
+| Antimicrobial Peptides | sklearn (joblib) | `antimicrobial_peptides/models/activity_*.joblib` (5 files) | **EXISTS** |
+| Antimicrobial Peptides | PeptideVAE | `checkpoints/peptide_vae_v1/best_production.pt` | **EXISTS** (retrained 2026-01-23) |
 
-### Jose Colbes - Models
+### Protein Stability - Models
 
 | File | Path | Size | Status |
 |------|------|:----:|:------:|
-| DDG Predictor | `deliverables/partners/jose_colbes/models/ddg_predictor.joblib` | ~50KB | **EXISTS** |
+| DDG Predictor | `deliverables/partners/protein_stability_ddg/models/ddg_predictor.joblib` | ~50KB | **EXISTS** |
 
 **Architecture:** sklearn Ridge Regression with StandardScaler
 **Features:** 8 (4 hyperbolic + 4 physicochemical)
 **No PyTorch checkpoint required** - uses pre-computed amino acid embeddings
 
-### Alejandra Rojas - Models
+### Arbovirus Surveillance - Models
 
 | File | Path | Size | Status |
 |------|------|:----:|:------:|
@@ -310,7 +316,7 @@ carlos_brizuela/
 
 **Usage:** Research layer scripts (`denv4_padic_integration.py`, `find_convergence_points.py`) now functional
 
-### Carlos Brizuela - Models
+### Antimicrobial Peptides - Models
 
 #### sklearn Models (EXISTS)
 
@@ -359,7 +365,7 @@ Located in `checkpoints/`:
 
 ## Checkpoint Issues - RESOLVED (2026-01-23)
 
-### Carlos Brizuela PeptideVAE - FIXED
+### Antimicrobial Peptides PeptideVAE - FIXED
 
 ```
 Path: checkpoints/peptide_vae_v1/best_production.pt
@@ -373,7 +379,7 @@ Status: EXISTS (retrained 2026-01-23)
 - `B8_microbiome_safe_amps.py` - Uses PeptideVAE
 - `B10_synthesis_optimization.py` - Uses PeptideVAE
 
-### Alejandra Rojas TrainableCodonEncoder - FIXED
+### Arbovirus Surveillance TrainableCodonEncoder - FIXED
 
 ```
 Path: research/codon-encoder/training/results/trained_codon_encoder.pt
@@ -393,16 +399,16 @@ Status: EXISTS (retrained 2026-01-23)
 ### Check Model Files Exist
 
 ```bash
-# Jose Colbes - sklearn model
-python3 -c "import joblib; m=joblib.load('deliverables/partners/jose_colbes/models/ddg_predictor.joblib'); print('OK')"
+# Protein Stability - sklearn model
+python3 -c "import joblib; m=joblib.load('deliverables/partners/protein_stability_ddg/models/ddg_predictor.joblib'); print('OK')"
 
-# Carlos Brizuela - sklearn models
-python3 -c "import joblib; joblib.load('deliverables/partners/carlos_brizuela/models/activity_general.joblib'); print('OK')"
+# Antimicrobial Peptides - sklearn models
+python3 -c "import joblib; joblib.load('deliverables/partners/antimicrobial_peptides/models/activity_general.joblib'); print('OK')"
 
-# Carlos Brizuela - PeptideVAE checkpoint (NOW EXISTS)
+# Antimicrobial Peptides - PeptideVAE checkpoint (NOW EXISTS)
 ls -la checkpoints/peptide_vae_v1/best_production.pt
 
-# Alejandra Rojas - TrainableCodonEncoder (NOW EXISTS)
+# Arbovirus Surveillance - TrainableCodonEncoder (NOW EXISTS)
 ls -la research/codon-encoder/training/results/trained_codon_encoder.pt
 ```
 
@@ -419,14 +425,14 @@ ls -la checkpoints/v5_12_4/best_Q.pt
 ### Verify Validation Results
 
 ```bash
-# Alejandra Rojas - check primer counts (specificity will show 0)
-python -c "import json; d=json.load(open('deliverables/partners/alejandra_rojas/results/pan_arbovirus_primers/library_summary.json')); print(d['statistics'])"
+# Arbovirus Surveillance - check primer counts (specificity will show 0)
+python -c "import json; d=json.load(open('deliverables/partners/arbovirus_surveillance/results/pan_arbovirus_primers/library_summary.json')); print(d['statistics'])"
 
-# Carlos Brizuela - check CV results
-python -c "import json; d=json.load(open('deliverables/partners/carlos_brizuela/checkpoints_definitive/cv_results_definitive.json')); print(f\"Mean Spearman: {d['mean_spearman']:.3f}\")"
+# Antimicrobial Peptides - check CV results
+python -c "import json; d=json.load(open('deliverables/partners/antimicrobial_peptides/checkpoints_definitive/cv_results_definitive.json')); print(f\"Mean Spearman: {d['mean_spearman']:.3f}\")"
 
-# Jose Colbes - check scientific metrics
-python -c "import json; d=json.load(open('deliverables/partners/jose_colbes/validation/results/scientific_metrics.json')); print(f\"Spearman: {d['loo_cv']['overall']['spearman']:.4f}\")"
+# Protein Stability - check scientific metrics
+python -c "import json; d=json.load(open('deliverables/partners/protein_stability_ddg/validation/results/scientific_metrics.json')); print(f\"Spearman: {d['loo_cv']['overall']['spearman']:.4f}\")"
 ```
 
 ---
@@ -445,7 +451,7 @@ python -c "import json; d=json.load(open('deliverables/partners/jose_colbes/vali
 
 ## Package Dependencies (Complete Reference)
 
-### 1. Jose Colbes - Dependencies
+### 1. Protein Stability Package - Dependencies
 
 #### Required Checkpoints
 
@@ -458,8 +464,8 @@ python -c "import json; d=json.load(open('deliverables/partners/jose_colbes/vali
 
 | File | Path | Purpose |
 |------|------|---------|
-| S669 dataset | `deliverables/partners/jose_colbes/reproducibility/data/s669.csv` | Benchmark validation |
-| S669 metadata | `deliverables/partners/jose_colbes/reproducibility/data/s669.json` | Dataset source info |
+| S669 dataset | `deliverables/partners/protein_stability_ddg/reproducibility/data/s669.csv` | Benchmark validation |
+| S669 metadata | `deliverables/partners/protein_stability_ddg/reproducibility/data/s669.json` | Dataset source info |
 
 #### Required src.* Modules
 
@@ -481,7 +487,7 @@ python -c "import json; d=json.load(open('deliverables/partners/jose_colbes/vali
 
 ---
 
-### 2. Alejandra Rojas - Dependencies
+### 2. Arbovirus Surveillance Package - Dependencies
 
 #### Required Checkpoints
 
@@ -493,7 +499,7 @@ python -c "import json; d=json.load(open('deliverables/partners/jose_colbes/vali
 
 | File | Path | Purpose |
 |------|------|---------|
-| Sequence cache | `deliverables/partners/alejandra_rojas/data/cache/denv4_sequences.json` | Generated on first run |
+| Sequence cache | `deliverables/partners/arbovirus_surveillance/data/cache/denv4_sequences.json` | Generated on first run |
 | Phylogenetic results | `results/phylogenetic/subclade_analysis_results.json` | Generated by analysis |
 
 **Note:** Data is auto-downloaded from NCBI Entrez API on first run.
@@ -532,7 +538,7 @@ python -c "import json; d=json.load(open('deliverables/partners/jose_colbes/vali
 
 ---
 
-### 3. Carlos Brizuela - Dependencies
+### 3. Antimicrobial Peptides Package - Dependencies
 
 #### Required Checkpoints
 
@@ -593,8 +599,8 @@ python -c "import json; d=json.load(open('deliverables/partners/jose_colbes/vali
 
 ## Dependency Summary Matrix
 
-| Dependency | Colbes | Rojas | Brizuela |
-|------------|:------:|:-----:|:--------:|
+| Dependency | Protein Stability | Arbovirus | AMP |
+|------------|:-----------------:|:---------:|:---:|
 | **TrainableCodonEncoder checkpoint** | YES | YES | NO |
 | **PeptideVAE checkpoint** | NO | NO | YES |
 | `src.geometry.poincare_distance` | YES | YES | NO |

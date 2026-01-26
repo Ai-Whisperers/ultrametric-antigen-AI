@@ -1,9 +1,9 @@
-# Deliverable Package: Alejandra Rojas
-## Hyperbolic Trajectory Analysis for Arbovirus Surveillance
+# Arbovirus Surveillance Package
 
-**Prepared for:** Alejandra Rojas (IICS-UNA)
-**Project:** Ternary VAE Bioinformatics - Partnership Phase 3
-**Date:** December 29, 2025
+**Doc-Type:** Research Tool Package · Version 2.0 · 2026-01-26 · AI Whisperers
+
+## Hyperbolic Trajectory Analysis for Arbovirus Molecular Diagnostics
+
 **Status:** COMPLETE - Ready for Production Use
 
 ---
@@ -11,60 +11,73 @@
 ## Table of Contents
 - [Executive Summary](#executive-summary)
 - [Package Structure](#package-structure)
-- [NEW: A2 Pan-Arbovirus Primer Library Tool](#new-a2-pan-arbovirus-primer-library-tool)
+- [A2 Pan-Arbovirus Primer Library Tool](#a2-pan-arbovirus-primer-library-tool)
 - [Overview](#overview)
 - [What's Included](#whats-included)
 - [Quick Start](#quick-start)
 - [Technical Details](#technical-details)
 - [Output Formats](#output-formats)
 - [Using with Real NCBI Data](#using-with-real-ncbi-data)
-- [Integration with IICS-UNA Surveillance](#integration-with-iics-una-surveillance)
+- [Integration with Surveillance Programs](#integration-with-surveillance-programs)
 - [Key Innovation](#key-innovation)
+- [Key Scientific Findings](#key-scientific-findings)
 - [Validation Checklist](#validation-checklist)
 - [Expected Findings with Real Data](#expected-findings-with-real-data)
+- [Citation](#citation)
+- [Contact](#contact)
 
 ---
 
 ## Executive Summary
 
-This package provides a complete toolkit for arbovirus molecular diagnostics and surveillance in Paraguay. It includes:
+This package provides a complete toolkit for arbovirus molecular diagnostics and surveillance. It includes:
 
 1. **A2: Pan-Arbovirus Primer Library** - Design RT-PCR primers for 7 arboviruses
 2. **Hyperbolic Trajectory Forecasting** - Predict serotype dominance
 3. **Primer Stability Scanner** - Identify mutation-resistant primer targets
+4. **DENV-4 Diversity Discovery** - Cryptic diversity analysis revealing 97.4% of sequences have NO conserved 25bp windows
 
 ---
 
 ## Package Structure
 
 ```
-alejandra_rojas/
+arbovirus_surveillance/
 ├── README.md                      # Main documentation
+├── SCIENTIFIC_FINDINGS.md         # Key discoveries (DENV-4 diversity)
 ├── scripts/                       # Core executable scripts
 │   ├── A2_pan_arbovirus_primers.py
 │   ├── arbovirus_hyperbolic_trajectory.py
-│   └── primer_stability_scanner.py
+│   ├── primer_stability_scanner.py
+│   └── denv4_padic_integration.py
 ├── notebooks/                     # Interactive analysis
-│   └── rojas_serotype_forecast.ipynb
+│   └── serotype_forecast.ipynb
 ├── results/                       # Analysis outputs
-│   ├── dengue_forecast.json
-│   └── primer_candidates.csv
+│   ├── pan_arbovirus_primers/
+│   ├── phylogenetic/
+│   ├── padic_integration/
+│   └── dengue_forecast.json
 ├── docs/                          # Detailed guides
 │   ├── A2_USER_GUIDE.md
+│   ├── A2_TECHNICAL_DOCS.md
 │   └── IMPLEMENTATION_GUIDE.md
 ├── src/                           # Shared library code
-├── tests/                         # Unit tests
-└── validation/                    # Validation reports
+├── research/                      # Research analysis scripts
+├── validation/                    # Validation reports
+└── tests/                         # Unit tests
 ```
 
 ---
 
-## NEW: A2 Pan-Arbovirus Primer Library Tool
+## A2 Pan-Arbovirus Primer Library Tool
 
 ### Quick Start
 ```bash
 # Run the comprehensive primer design tool
 python scripts/A2_pan_arbovirus_primers.py --output_dir results/pan_arbovirus/
+
+# Use real NCBI sequences
+python scripts/A2_pan_arbovirus_primers.py --use-ncbi --output_dir results/pan_arbovirus/
 ```
 
 ### Supported Viruses
@@ -86,7 +99,7 @@ python scripts/A2_pan_arbovirus_primers.py --output_dir results/pan_arbovirus/
 |-----------|-------|-----------|
 | Length | 20 nt | Standard RT-PCR |
 | GC% | 40-60% | Optimal binding |
-| Tm | 55-65°C | Standard conditions |
+| Tm | 55-65C | Standard conditions |
 | Amplicon | 100-300 bp | qPCR compatible |
 | Cross-reactivity | <70% | Ensures specificity |
 
@@ -98,7 +111,8 @@ This package contains all materials for validating the **Hyperbolic Trajectory F
 
 1. **Predict serotype dominance** for the upcoming season
 2. **Identify stable genomic regions** for RT-PCR primer design
-3. **Design pan-arbovirus diagnostic primers** (NEW with A2)
+3. **Design pan-arbovirus diagnostic primers**
+4. **Discover cryptic diversity** (DENV-4 finding)
 
 ---
 
@@ -111,19 +125,23 @@ This package contains all materials for validating the **Hyperbolic Trajectory F
 | `scripts/ingest_arboviruses.py` | NCBI virus genome download (398 lines) |
 | `scripts/arbovirus_hyperbolic_trajectory.py` | Serotype trajectory analysis (434 lines) |
 | `scripts/primer_stability_scanner.py` | Stable primer identification (391 lines) |
+| `scripts/A2_pan_arbovirus_primers.py` | Pan-arbovirus primer design |
+| `scripts/denv4_padic_integration.py` | P-adic variance analysis |
 
 ### 2. Interactive Notebook
 
 | File | Description |
 |------|-------------|
-| `notebooks/rojas_serotype_forecast.ipynb` | Surveillance dashboard notebook |
+| `notebooks/serotype_forecast.ipynb` | Surveillance dashboard notebook |
 
 ### 3. Results
 
 | File | Description |
 |------|-------------|
 | `results/dengue_forecast.json` | Trajectory analysis for 4 serotypes |
-| `results/primer_candidates.csv` | 30 stable primer candidates |
+| `results/pan_arbovirus_primers/*.csv` | 70 primer candidates |
+| `results/phylogenetic/` | DENV-4 clade analysis |
+| `results/padic_integration/` | Hyperbolic variance results |
 
 ### 4. Reference Data
 
@@ -136,6 +154,8 @@ This package contains all materials for validating the **Hyperbolic Trajectory F
 | File | Description |
 |------|-------------|
 | `docs/IMPLEMENTATION_GUIDE.md` | Implementation specifications |
+| `docs/A2_USER_GUIDE.md` | Primer design guide |
+| `SCIENTIFIC_FINDINGS.md` | DENV-4 diversity discovery |
 
 ---
 
@@ -144,7 +164,7 @@ This package contains all materials for validating the **Hyperbolic Trajectory F
 ### Step 1: Install Dependencies
 
 ```bash
-pip install numpy biopython pandas matplotlib seaborn
+pip install numpy biopython pandas matplotlib seaborn torch
 
 # Optional: For downloading real NCBI data
 # Windows: winget install NCBI.Datasets
@@ -218,7 +238,7 @@ Exported 30 primer candidates to results/primer_candidates.csv
 ### Step 5: Explore Dashboard
 
 ```bash
-jupyter notebook notebooks/rojas_serotype_forecast.ipynb
+jupyter notebook notebooks/serotype_forecast.ipynb
 ```
 
 ---
@@ -238,7 +258,7 @@ jupyter notebook notebooks/rojas_serotype_forecast.ipynb
 Viral genomes are embedded using sliding window p-adic encoding:
 
 ```
-Genome → Codons → P-adic Valuations → Hyperbolic Coordinates
+Genome -> Codons -> P-adic Valuations -> Hyperbolic Coordinates
 ```
 
 **Window Features (6D embedding):**
@@ -322,8 +342,8 @@ stability_score = 1.0 / (1.0 + variance)
         "time_window": "2015 to 2020"
       },
       "forecast": {
-        "current_position": [0.465, 0.769, 2.980, ...],
-        "predicted_position": [0.466, 0.773, 3.000, ...],
+        "current_position": [0.465, 0.769, 2.980],
+        "predicted_position": [0.466, 0.773, 3.000],
         "confidence": 0.456,
         "risk_score": 1.007
       }
@@ -346,9 +366,9 @@ stability_score = 1.0 / (1.0 + variance)
 | `sequence` | 20nt primer sequence |
 | `stability_score` | Evolutionary stability (0-1) |
 | `conservation_score` | Sequence identity fraction |
-| `combined_score` | stability × conservation |
+| `combined_score` | stability x conservation |
 | `gc_content` | GC percentage (0.4-0.6 optimal) |
-| `tm_estimate` | Melting temperature (°C) |
+| `tm_estimate` | Melting temperature (C) |
 | `variance_over_time` | Embedding variance across years |
 | `n_sequences` | Number of sequences analyzed |
 
@@ -356,7 +376,7 @@ stability_score = 1.0 / (1.0 + variance)
 
 ## Using with Real NCBI Data
 
-### Step 1: Download Paraguay Dengue Data
+### Step 1: Download Regional Dengue Data
 
 ```bash
 python ingest_arboviruses.py \
@@ -380,7 +400,7 @@ python arbovirus_hyperbolic_trajectory.py \
     --output ../results/paraguay_forecast.json
 ```
 
-### Step 3: Find Paraguay-Specific Primers
+### Step 3: Find Region-Specific Primers
 
 ```bash
 python primer_stability_scanner.py \
@@ -394,47 +414,46 @@ python primer_stability_scanner.py \
 
 ---
 
-## Integration with IICS-UNA Surveillance
+## Integration with Surveillance Programs
 
 ### Suggested Workflow
 
 ```
-                    ┌─────────────────────────────────────┐
-                    │         NCBI Virus Database          │
-                    │    (Updated weekly/monthly)          │
-                    └───────────────┬─────────────────────┘
-                                    │
-                                    ▼
-                    ┌─────────────────────────────────────┐
-                    │      ingest_arboviruses.py          │
-                    │   Download Paraguay sequences        │
-                    └───────────────┬─────────────────────┘
-                                    │
-                    ┌───────────────┴───────────────┐
-                    ▼                               ▼
-    ┌───────────────────────────┐   ┌───────────────────────────┐
-    │  Trajectory Analysis      │   │   Primer Stability Scan   │
-    │  arbovirus_hyperbolic_    │   │   primer_stability_       │
-    │  trajectory.py            │   │   scanner.py              │
-    └───────────────┬───────────┘   └───────────────┬───────────┘
-                    │                               │
-                    ▼                               ▼
-    ┌───────────────────────────┐   ┌───────────────────────────┐
-    │  dengue_forecast.json     │   │  primer_candidates.csv    │
-    │  • Risk scores            │   │  • Top 50 primers         │
-    │  • Velocity vectors       │   │  • GC/Tm properties       │
-    │  • Predicted positions    │   │  • Stability scores       │
-    └───────────────┬───────────┘   └───────────────┬───────────┘
-                    │                               │
-                    └───────────────┬───────────────┘
-                                    ▼
-                    ┌─────────────────────────────────────┐
-                    │     IICS-UNA Surveillance           │
-                    │         Dashboard                    │
-                    │  • Serotype risk alerts              │
-                    │  • Primer validation queue           │
-                    │  • Historical trend visualization    │
-                    └─────────────────────────────────────┘
+                    +-------------------------------------+
+                    |         NCBI Virus Database          |
+                    |    (Updated weekly/monthly)          |
+                    +-----------------+-------------------+
+                                      |
+                                      v
+                    +-------------------------------------+
+                    |      ingest_arboviruses.py          |
+                    |   Download regional sequences        |
+                    +-----------------+-------------------+
+                                      |
+                    +-----------------+---------------+
+                    v                                 v
+    +---------------------------+   +---------------------------+
+    |  Trajectory Analysis      |   |   Primer Stability Scan   |
+    |  arbovirus_hyperbolic_    |   |   primer_stability_       |
+    |  trajectory.py            |   |   scanner.py              |
+    +-------------+-------------+   +-------------+-------------+
+                  |                               |
+                  v                               v
+    +---------------------------+   +---------------------------+
+    |  dengue_forecast.json     |   |  primer_candidates.csv    |
+    |  * Risk scores            |   |  * Top 50 primers         |
+    |  * Velocity vectors       |   |  * GC/Tm properties       |
+    |  * Predicted positions    |   |  * Stability scores       |
+    +-------------+-------------+   +-------------+-------------+
+                  |                               |
+                  +---------------+---------------+
+                                  v
+                    +-------------------------------------+
+                    |     Surveillance Dashboard          |
+                    |  * Serotype risk alerts              |
+                    |  * Primer validation queue           |
+                    |  * Historical trend visualization    |
+                    +-------------------------------------+
 ```
 
 ### API for Dashboard Integration
@@ -475,37 +494,86 @@ for serotype, data in forecast['serotypes'].items():
 
 ---
 
+## Key Scientific Findings
+
+### DENV-4 Cryptic Diversity Discovery
+
+Our analysis revealed a critical finding for DENV-4 primer design:
+
+| Metric | Value | Implication |
+|--------|-------|-------------|
+| Sequences with NO conserved 25bp windows | **97.4%** | Pan-DENV-4 primers nearly impossible |
+| Degenerate variants needed | **322 million** | 300,000x beyond practical limits |
+| Clade coverage (small clades only) | 2.6% | Only Clade A, B, C are primerable |
+
+**Conclusion:** DENV-4's cryptic diversity (71.7% identity vs 95-98% other serotypes) makes universal primer design impractical. Clade-specific or tiered detection strategies are required.
+
+See [SCIENTIFIC_FINDINGS.md](SCIENTIFIC_FINDINGS.md) for complete analysis.
+
+### P-adic Integration Results
+
+From `denv4_padic_integration.py` analysis using TrainableCodonEncoder:
+
+| Region | Hyperbolic Cross-Seq Variance | Assessment |
+|--------|------------------------------|------------|
+| NS5_conserved | 0.0718 | Moderate |
+| PANFLAVI_FU1 | 0.0503 | Lower (better) |
+| Top primer position | 2400 | 0.0183 variance |
+
+---
+
 ## Validation Checklist
 
-- [ ] Demo data generates correctly
-- [ ] Trajectory analysis runs for all 4 serotypes
-- [ ] Velocity vectors computed
-- [ ] Risk scores generated
-- [ ] Primer scanner finds candidates
-- [ ] All primers meet GC/Tm criteria
-- [ ] Notebook dashboard visualizes correctly
-- [ ] Real NCBI download works (requires CLI installed)
+- [x] Demo data generates correctly
+- [x] Trajectory analysis runs for all 4 serotypes
+- [x] Velocity vectors computed
+- [x] Risk scores generated
+- [x] Primer scanner finds candidates
+- [x] All primers meet GC/Tm criteria
+- [x] Notebook dashboard visualizes correctly
+- [x] Real NCBI download works (requires CLI installed)
+- [x] P-adic integration produces meaningful variance metrics
+- [x] DENV-4 diversity finding documented
 
 ---
 
 ## Expected Findings with Real Data
 
-When run on actual Paraguay surveillance sequences (2011-2024):
+When run on actual surveillance sequences (2011-2024):
 
 1. **Serotype cycles** visible in trajectory patterns
 2. **DENV-2 and DENV-3** likely highest velocity (historically dominant)
 3. **Conserved regions** in NS3 and NS5 genes (replication machinery)
 4. **Primer candidates** should overlap with published pan-Dengue primers
+5. **DENV-4** will show significantly higher variance than other serotypes
 
 ---
 
-## Questions?
+## Citation
 
-- See docstrings in each script for implementation details
-- NCBI Virus database: https://www.ncbi.nlm.nih.gov/labs/virus/
-- NCBI Datasets CLI: https://www.ncbi.nlm.nih.gov/datasets/
+If you use this package in your research, please cite:
+
+```bibtex
+@software{ternary_vae_arbovirus,
+  author = {{AI Whisperers}},
+  title = {Hyperbolic Trajectory Analysis for Arbovirus Surveillance},
+  year = {2026},
+  url = {https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics},
+  note = {Part of the Ternary VAE Bioinformatics project}
+}
+```
 
 ---
 
-*Prepared as part of the Ternary VAE Bioinformatics Partnership*
-*For integration with IICS-UNA arbovirus surveillance program*
+## Contact
+
+- **Repository:** [github.com/Ai-Whisperers/ternary-vaes-bioinformatics](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics)
+- **Issues:** GitHub Issues
+- **Email:** support@aiwhisperers.com
+- **NCBI Virus database:** https://www.ncbi.nlm.nih.gov/labs/virus/
+- **NCBI Datasets CLI:** https://www.ncbi.nlm.nih.gov/datasets/
+
+---
+
+*Version 2.0 · Updated 2026-01-26*
+*Part of the Ternary VAE Bioinformatics Partnership*

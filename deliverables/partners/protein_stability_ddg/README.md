@@ -1,11 +1,11 @@
-# Deliverable Package: Dr. Jose Colbes
+# Protein Stability Prediction Package
 
-**Doc-Type:** Partner Deliverable · Version 2.0 · 2026-01-03 · AI Whisperers
+**Doc-Type:** Research Tool Package · Version 2.1 · 2026-01-26 · AI Whisperers
 
 ## P-adic Geometric Protein Stability Analysis Suite
 
 **Status:** PRODUCTION READY - Scientifically Validated
-**Validation:** LOO Spearman ρ = 0.585 (p < 0.001, 95% CI [0.341, 0.770])
+**Validation:** LOO Spearman rho = 0.585 (p < 0.001, 95% CI [0.341, 0.770])
 
 ---
 
@@ -22,6 +22,7 @@
 - [Dependencies](#dependencies)
 - [Technical Files](#technical-files)
 - [References](#references)
+- [Citation](#citation)
 - [Contact](#contact)
 
 ---
@@ -32,13 +33,13 @@ This package provides a **scientifically validated** toolkit for protein stabili
 
 | Metric | Value | Notes |
 |--------|-------|-------|
-| **Spearman ρ** | **0.58** | On N=52 curated subset |
+| **Spearman rho** | **0.58** | On N=52 curated subset |
 | Pearson r | 0.60 | Strong linear correlation |
 | MAE | 0.91 kcal/mol | Good absolute accuracy |
 | 95% CI | [0.34, 0.77] | Does NOT include zero |
 | Permutation p | 0.0000 | Statistically confirmed |
 
-⚠️ **IMPORTANT CAVEAT:** Literature methods (ESM-1v 0.51, FoldX 0.48, etc.) are benchmarked on N=669 (full S669). Our N=52 result is NOT directly comparable. On N=669, our method achieves ρ=0.37-0.40, which does NOT outperform these methods.
+**IMPORTANT CAVEAT:** Literature methods (ESM-1v 0.51, FoldX 0.48, etc.) are benchmarked on N=669 (full S669). Our N=52 result is NOT directly comparable. On N=669, our method achieves rho=0.37-0.40, which does NOT outperform these methods.
 
 **Key Advantages:**
 - **Sequence-only prediction** - no 3D structure required
@@ -79,7 +80,7 @@ python validation/alphafold_validation_pipeline.py
 ## Package Structure
 
 ```
-jose_colbes/
+protein_stability_ddg/
 ├── README.md                      # This file
 ├── DISRUPTION_POTENTIAL.md        # Competitive advantages (internal)
 │
@@ -127,7 +128,7 @@ jose_colbes/
 │   └── figures/
 │
 └── notebooks/                     # Interactive exploration
-    └── colbes_scoring_function.ipynb
+    └── scoring_function.ipynb
 ```
 
 ---
@@ -136,9 +137,9 @@ jose_colbes/
 
 ### DDG Prediction Benchmark (S669)
 
-⚠️ **COMPARISON CAVEAT:** Literature methods use N=669. Our N=52 result is NOT comparable.
+**COMPARISON CAVEAT:** Literature methods use N=669. Our N=52 result is NOT comparable.
 
-| Method | Spearman ρ | Dataset | Type |
+| Method | Spearman rho | Dataset | Type |
 |--------|------------|---------|------|
 | Rosetta ddg_monomer | 0.69 | N=669 | Structure |
 | Mutate Everything | 0.56 | N=669 | Sequence |
@@ -148,11 +149,11 @@ jose_colbes/
 | **Our Method (N=52)** | **0.58** | **N=52** | **Sequence** |
 | Our Method (N=669) | 0.37-0.40 | N=669 | Sequence |
 
-**Honest Assessment:** On comparable N=669 data, our method achieves ρ=0.37-0.40, which does NOT outperform ESM-1v or Mutate Everything. The N=52 result (0.58) is on a curated subset and cannot be directly compared.
+**Honest Assessment:** On comparable N=669 data, our method achieves rho=0.37-0.40, which does NOT outperform ESM-1v or Mutate Everything. The N=52 result (0.58) is on a curated subset and cannot be directly compared.
 
 ### AlphaFold Structural Cross-Validation
 
-| pLDDT Range | n | Spearman ρ | Interpretation |
+| pLDDT Range | n | Spearman rho | Interpretation |
 |-------------|---|------------|----------------|
 | High (>90) | 31 | 0.271 | Best structural confidence |
 | Medium (70-90) | 18 | 0.283 | Moderate confidence |
@@ -178,7 +179,7 @@ python scripts/C1_rosetta_blind_detection.py \
 
 ### C4: DDG Mutation Effect Predictor
 
-Predict stability change (ΔΔG) for point mutations.
+Predict stability change (DDG) for point mutations.
 
 ```bash
 python scripts/C4_mutation_effect_predictor.py \
@@ -187,9 +188,9 @@ python scripts/C4_mutation_effect_predictor.py \
 ```
 
 **Output Classification:**
-- Stabilizing: ΔΔG < -1.0 kcal/mol
-- Neutral: -1.0 < ΔΔG < 1.0 kcal/mol
-- Destabilizing: ΔΔG > 1.0 kcal/mol
+- Stabilizing: DDG < -1.0 kcal/mol
+- Neutral: -1.0 < DDG < 1.0 kcal/mol
+- Destabilizing: DDG > 1.0 kcal/mol
 
 ---
 
@@ -199,7 +200,7 @@ python scripts/C4_mutation_effect_predictor.py \
 
 From Arrow Flip analysis:
 - Feature importance: **0.633** (highest)
-- Decision rule: IF hydro_diff > 5.15 AND same_charge → HYBRID regime (81% accuracy)
+- Decision rule: IF hydro_diff > 5.15 AND same_charge -> HYBRID regime (81% accuracy)
 
 ### 2. Regime-Specific Accuracy
 
@@ -224,7 +225,7 @@ For fast-folding proteins:
 
 | Feature | Coefficient | Description |
 |---------|-------------|-------------|
-| hyp_dist | 0.35 | Hyperbolic distance in Poincaré ball |
+| hyp_dist | 0.35 | Hyperbolic distance in Poincare ball |
 | delta_radius | 0.28 | Change in radial position |
 | diff_norm | 0.15 | Embedding difference magnitude |
 | cos_sim | -0.22 | Cosine similarity |
@@ -238,7 +239,7 @@ For fast-folding proteins:
 | delta_size | 0.18 | Volume change |
 | delta_polar | 0.12 | Polarity change |
 
-**Regression:** Ridge (α=100) with StandardScaler
+**Regression:** Ridge (alpha=100) with StandardScaler
 
 ---
 
@@ -313,14 +314,30 @@ pip install numpy torch scipy scikit-learn biopython matplotlib seaborn
 
 ---
 
-## Contact
+## Citation
 
-For questions or collaboration:
-- Package: Ternary VAE Bioinformatics Partnership
-- Scientific-grade validation with bootstrap significance testing
+If you use this package in your research, please cite:
+
+```bibtex
+@software{ternary_vae_ddg,
+  author = {{AI Whisperers}},
+  title = {P-adic Geometric Protein Stability Prediction},
+  year = {2026},
+  url = {https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics},
+  note = {Part of the Ternary VAE Bioinformatics project}
+}
+```
 
 ---
 
-*Version 2.1 · Updated 2026-01-08*
-*Validated: Spearman ρ = 0.585, p < 0.001, 95% CI [0.341, 0.770]*
+## Contact
+
+- **Repository:** [github.com/Ai-Whisperers/ternary-vaes-bioinformatics](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics)
+- **Issues:** GitHub Issues
+- **Email:** support@aiwhisperers.com
+
+---
+
+*Version 2.1 · Updated 2026-01-26*
+*Validated: Spearman rho = 0.585, p < 0.001, 95% CI [0.341, 0.770]*
 *See [VALIDATION_SUMMARY.md](VALIDATION_SUMMARY.md) for complete validation details*

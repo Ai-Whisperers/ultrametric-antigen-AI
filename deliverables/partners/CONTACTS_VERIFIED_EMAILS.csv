@@ -1,0 +1,31 @@
+Name,Email,Institution,Department,Focus,Category,Priority,Twitter,Website,Notes
+Brian Kuhlman,bkuhlman@email.unc.edu,UNC Chapel Hill,Biochemistry,ThermoMPNN Protein Design,DDG Prediction,HIGH,@BrianKuhlman,https://klab.web.unc.edu/,Rosetta developer - direct DDG benchmark collaboration
+Kresten Lindorff-Larsen,lindorff@bio.ku.dk,U Copenhagen,Biology,ML-ddG PRISM Stability,DDG Prediction,HIGH,,https://www1.bio.ku.dk/english/research/bms/sbinlab/kll/,KULL-Centre lead - protein stability focus
+David Baker,dabaker@uw.edu,U Washington,Biochemistry,Protein Design RoseTTAFold,DDG Prediction,HIGH,@DavidBaker_UW,https://www.bakerlab.org/,Nobel laureate - protein design pioneer
+Debora Marks,debbie@hms.harvard.edu,Harvard Medical School,Systems Biology,Generative Models Proteins,VAE Biology,HIGH,,https://marks.hms.harvard.edu/,Deep generative models - direct relevance
+Mohammed AlQuraishi,ma4129@columbia.edu,Columbia,Systems Biology,Protein Language Models,DDG Prediction,HIGH,@MoAlQuraishi,https://www.aqlab.io/,Protein LM pioneer - benchmarking
+Sergey Ovchinnikov,so3@mit.edu,MIT,Biology,Protein Design ML,DDG Prediction,HIGH,@sokrypton,https://www.solab.org/,Protein design ML - direct collaboration
+George Church,gchurch@genetics.med.harvard.edu,Harvard Medical School,Genetics,Gene Editing Synthetic Biology,Genomics,MEDIUM,@gelogeorge,https://churchlab.hms.harvard.edu/,Broad scope - gene editing
+Frances Arnold,frances@cheme.caltech.edu,Caltech,Chemical Engineering,Directed Evolution,DDG Prediction,MEDIUM,,http://fhalab.caltech.edu/,Nobel laureate - directed evolution
+Cesar de la Fuente,cfuente@upenn.edu,U Pennsylvania,Bioengineering,AMP Discovery AI Antibiotics,AMP Design,HIGH,@delaboratory,https://delafuentelab.seas.upenn.edu/,AI antimicrobials - direct AMP collaboration
+Robert Hancock,assistant@hancocklab.com,UBC,Microbiology,Host Defense Peptides,AMP Design,HIGH,,https://cmdr.ubc.ca/bobh/,Host defense peptide pioneer
+Robert Shafer,rshafer@stanford.edu,Stanford,Medicine,HIVdb Drug Resistance,HIV Research,HIGH,,https://hivdb.stanford.edu/,HIVdb lead - direct HIV API integration
+Daniel Kuritzkes,dkuritzkes@bwh.harvard.edu,Harvard/Brigham,Infectious Disease,HIV Resistance Therapeutics,HIV Research,HIGH,,https://mghbwhid.hms.harvard.edu/faculty/kuritzkes/,HIV resistance expert
+Stanford HIVdb Team,hivdbteam@stanford.edu,Stanford,Medicine,HIV Drug Resistance Database,HIV Research,HIGH,,https://hivdb.stanford.edu/,Database support contact
+Scott Weaver,sweaver@utmb.edu,UTMB,Pathology,Arbovirus WRCEVA,Arbovirus,HIGH,@ScottWeaver_TID,https://www.utmb.edu/wrceva/,WRCEVA director - arbovirus expert
+Eva Harris,eharris@berkeley.edu,UC Berkeley,Public Health,Dengue Immunology,Arbovirus,HIGH,,https://www.harrisresearchprogram.org/,Dengue expert - Latin America focus
+Nikos Vasilakis,nivasila@utmb.edu,UTMB,Pathology,Arbovirus Emergence,Arbovirus,HIGH,,https://www.utmb.edu/pathology/research-laboratories/nikos-vasilakis-lab/,DENV-5 discovery - emergence
+Trevor Bedford,tbedford@fredhutch.org,Fred Hutch,Vaccine ID,Nextstrain Viral Evolution,Arbovirus,HIGH,@traboredford,https://bedford.io/,Nextstrain co-founder
+Andrew Rambaut,a.rambaut@ed.ac.uk,U Edinburgh,Evolutionary Biology,BEAST Phylodynamics,Arbovirus,MEDIUM,@araboredford,https://tree.bio.ed.ac.uk/,BEAST developer
+Christopher De Sa,cmd353@cornell.edu,Cornell,Computer Science,Hyperbolic ML,P-adic ML,HIGH,,https://cs.cornell.edu/people/christopher-de-sa,Hyperbolic ML theory pioneer
+John Jumper,alphafold@google.com,DeepMind,Biology,AlphaFold Protein Structure,DDG Prediction,MEDIUM,,https://deepmind.google/science/alphafold/,AlphaFold lead - general contact
+Institute for Protein Design,contact@ipd.uw.edu,U Washington,IPD,Protein Design,DDG Prediction,MEDIUM,,https://www.ipd.uw.edu/,General IPD contact
+Nextstrain Team,hello@nextstrain.org,Fred Hutch,Global Health,Viral Surveillance,Arbovirus,MEDIUM,,https://nextstrain.org/,General Nextstrain contact
+PAHO Arbovirus,paho@paho.org,PAHO,Public Health,Regional Surveillance,Arbovirus,MEDIUM,,https://www.paho.org/,Pan American Health Organization
+IAS HIV Research,info@iasociety.org,IAS,Global Health,HIV Research,HIV Research,MEDIUM,,https://www.iasociety.org/,International AIDS Society
+amfAR,info@amfar.org,amfAR,Research,HIV Cure Research,HIV Research,MEDIUM,,https://www.amfar.org/,HIV cure research
+IAVI,info@iavi.org,IAVI,Vaccines,HIV Vaccine Research,HIV Research,MEDIUM,,https://www.iavi.org/,HIV vaccine development
+Rosetta Commons,community@rosettacommons.org,Multiple,Computational,Protein Modeling,DDG Prediction,MEDIUM,,https://www.rosettacommons.org/,Rosetta community
+ProMED Mail,promed@isid.org,ISID,Surveillance,Disease Reporting,Arbovirus,LOW,,https://promedmail.org/,Disease outbreak reporting
+UNAIDS,unaids@unaids.org,UN,Global Health,HIV Coordination,HIV Research,LOW,,https://www.unaids.org/,UN HIV programme
+DRAMP Database,dramp@cpu-bioinfor.org,CPU,Database,AMP Database,AMP Design,MEDIUM,,http://dramp.cpu-bioinfor.org/,AMP database maintainers
