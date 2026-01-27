@@ -14,6 +14,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import cross_val_predict
 from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
 
 # Import codon encoder
 from src.encoders.trainable_codon_encoder import TrainableCodonEncoder
@@ -133,11 +134,14 @@ def main():
     y = np.array(y)
     print(f"Features extracted: {X.shape}")
 
-    # LOO predictions
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-    model = Ridge(alpha=100)
-    y_pred = cross_val_predict(model, X_scaled, y, cv=len(y))
+    # LOO predictions - FIXED: Use Pipeline to avoid scaler data leakage
+    # Previously: scaler.fit_transform(X) was done on ALL data before CV
+    # Now: scaler is fit only on training folds within each CV iteration
+    pipeline = Pipeline([
+        ('scaler', StandardScaler()),
+        ('ridge', Ridge(alpha=100))
+    ])
+    y_pred = cross_val_predict(pipeline, X, y, cv=len(y))
 
     # Observed correlation
     observed_rho, p = spearmanr(y, y_pred)
@@ -205,6 +209,43 @@ def main():
         print("✓ Permutation test p < 0.05: CONFIRMED")
     else:
         print("✗ Permutation test p >= 0.05: NOT confirmed")
+
+    # ABLATION STUDY - Critical for attribution
+    print(f"\n{'=' * 60}")
+    print("ABLATION STUDY: Feature Contribution")
+    print("=" * 60)
+
+    # Hyperbolic features only (indices 0-3)
+    X_hyp = X[:, :4]
+    pipeline_hyp = Pipeline([('scaler', StandardScaler()), ('ridge', Ridge(alpha=100))])
+    y_pred_hyp = cross_val_predict(pipeline_hyp, X_hyp, y, cv=len(y))
+    rho_hyp, p_hyp = spearmanr(y, y_pred_hyp)
+
+    # Physicochemical features only (indices 4-7)
+    X_phys = X[:, 4:]
+    pipeline_phys = Pipeline([('scaler', StandardScaler()), ('ridge', Ridge(alpha=100))])
+    y_pred_phys = cross_val_predict(pipeline_phys, X_phys, y, cv=len(y))
+    rho_phys, p_phys = spearmanr(y, y_pred_phys)
+
+    print(f"\n| Feature Set              | Spearman | p-value  | Significant? |")
+    print(f"|--------------------------|----------|----------|--------------|")
+    print(f"| Hyperbolic only (4 feat) | {rho_hyp:.4f}   | {p_hyp:.2e} | {'YES' if p_hyp < 0.05 else 'NO'}          |")
+    print(f"| Physicochemical only     | {rho_phys:.4f}   | {p_phys:.2e} | {'YES' if p_phys < 0.05 else 'NO'}          |")
+    print(f"| Combined (8 features)    | {observed_rho:.4f}   | {p:.2e} | {'YES' if p < 0.05 else 'NO'}          |")
+
+    # Attribution
+    hyp_contribution = (rho_hyp / observed_rho * 100) if observed_rho > 0 else 0
+    phys_contribution = (rho_phys / observed_rho * 100) if observed_rho > 0 else 0
+
+    print(f"\nRelative contribution (% of combined):")
+    print(f"  Hyperbolic features:     {hyp_contribution:.1f}%")
+    print(f"  Physicochemical features: {phys_contribution:.1f}%")
+
+    if rho_phys > rho_hyp:
+        print("\n⚠️  WARNING: Physicochemical features outperform hyperbolic features!")
+        print("    The novel p-adic contribution may be minimal or zero.")
+    elif rho_hyp > rho_phys:
+        print("\n✓ Hyperbolic features contribute meaningfully beyond physicochemical baseline.")
 
     # Comparison - WITH HONEST CAVEATS
     print(f"\n{'=' * 60}")
