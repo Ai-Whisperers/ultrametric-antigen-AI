@@ -47,25 +47,44 @@
 
 ---
 
-## Research Best: Structural Validation Dataset (N=176)
+## ⚠️ Dataset Comparison: ProTherm vs S669
+
+### N=176 ProTherm Curated (Different Dataset)
 
 From `research/diseases/structural_validation/results/ddg_predictor/latest_results.json`:
-
-### Feature Set Comparison (5-fold CV × 10 repeats)
 
 | Feature Set | Model | Spearman | Pearson | MAE | RMSE |
 |-------------|-------|:--------:|:-------:|:---:|:----:|
 | **all (property+padic+blosum)** | **Neural** | **0.939** | 0.953 | 0.28 | 0.36 |
-| **all** | **Ridge** | **0.939** | 0.946 | 0.28 | 0.38 |
 | padic_mass | Ridge | 0.925 | 0.901 | 0.31 | 0.52 |
-| mass_property | Neural | 0.939 | 0.939 | 0.32 | 0.41 |
 | property | Neural | 0.937 | 0.926 | 0.35 | 0.45 |
-| padic_embedding | Ridge | 0.864 | 0.862 | 0.40 | 0.60 |
-| mass | Ridge | 0.789 | 0.811 | 0.47 | 0.69 |
-| blosum | Ridge | 0.708 | 0.741 | 0.57 | 0.80 |
-| padic_radius | Ridge | 0.613 | 0.617 | 0.71 | 0.93 |
 
-**KEY FINDING:** With proper feature engineering and larger dataset, **Spearman 0.94** is achievable - competitive with Rosetta (0.69 on S669).
+**⚠️ WARNING:** This is a hand-curated ProTherm subset (barnase, T4 lysozyme, staphylococcal nuclease, etc.), NOT the S669 benchmark.
+
+---
+
+## N=669 S669 Full Benchmark (Literature Comparison)
+
+From `research/codon-encoder/results/benchmarks/benchmark_results.json`:
+
+### Feature Set Comparison (5-fold CV × 3 repeats)
+
+| Method | Spearman | Pearson | MAE | R² |
+|--------|:--------:|:-------:|:---:|:--:|
+| **physicochemical** | **0.366** | 0.345 | 1.15 | 0.12 |
+| padic_p5 | 0.354 | 0.308 | 1.16 | 0.09 |
+| padic_p2 | 0.350 | 0.325 | 1.16 | 0.10 |
+| ensemble_top2 | 0.345 | 0.316 | 1.16 | 0.10 |
+| Random baseline | 0.003 | -0.004 | 1.25 | -0.01 |
+
+**CRITICAL FINDING:** On N=669 S669, our best result is **Spearman 0.37**, which does NOT compete with literature:
+- Rosetta ddg_monomer: **0.69**
+- Mutate Everything: **0.56**
+- ESM-1v: **0.51**
+- MAESTRO: **0.46**
+- FoldX: **0.48**
+
+The same features that achieve 0.94 on N=176 ProTherm only achieve 0.37 on N=669 S669.
 
 ---
 

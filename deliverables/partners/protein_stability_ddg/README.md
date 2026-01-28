@@ -36,12 +36,33 @@ This package provides a **scientifically validated** toolkit for protein stabili
 
 | Dataset | N | Method | Spearman | Status |
 |---------|--:|--------|:--------:|--------|
-| **Structural Validation** | **176** | **property + Ridge** | **0.94** | Research best |
-| S669 curated | 52 | TrainableCodonEncoder | **0.61** | Best sequence-only |
+| **ProTherm curated** | **176** | **property + Ridge** | **0.94** | ⚠️ Different dataset |
+| S669 curated | 52 | TrainableCodonEncoder | **0.61** | Best on subset |
 | S669 curated | 52 | Multimodal (8 features) | **0.60** | LOO validated |
 | S669 curated | 52 | Fresh LOO Training | 0.58 | bootstrap_test.py |
 | **S669 curated** | **52** | **ValidatedDDGPredictor** | **0.52** | **Shipped to users** |
-| S669 full | 669 | ValidatedDDGPredictor | 0.37-0.40 | Not competitive |
+| **S669 full** | **669** | **physicochemical (best)** | **0.37** | **Benchmark (5-fold×3)** |
+
+### ⚠️ Critical Dataset Distinction
+
+The **N=176 ProTherm result (0.94)** is NOT comparable to literature benchmarks because:
+1. It uses a hand-curated ProTherm subset with "clean" mutations from well-characterized proteins
+2. Literature methods (ESM-1v, Rosetta, FoldX) are benchmarked on N=669 S669
+
+**N=669 S669 Full Benchmark Results** (from `research/codon-encoder/results/benchmarks/benchmark_results.json`):
+
+| Method | Spearman | Notes |
+|--------|:--------:|-------|
+| physicochemical | 0.366 | BEST on N=669 |
+| padic_p5 | 0.354 | P-adic features |
+| regressor_randomforest | 0.350 | ML ensemble |
+| ensemble_top2 | 0.345 | Combined features |
+
+**Honest Assessment:** On N=669, we achieve Spearman **0.37**, which does NOT compete with:
+- Rosetta ddg_monomer: **0.69**
+- Mutate Everything: **0.56**
+- ESM-1v: **0.51**
+- FoldX: **0.48**
 
 ### Shipped Predictor Metrics
 
