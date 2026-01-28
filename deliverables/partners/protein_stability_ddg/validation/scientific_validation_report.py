@@ -190,7 +190,7 @@ def run_loo_cv_with_bootstrap(mutations: list[dict]) -> dict:
     This matches our training protocol exactly to avoid bias.
     """
     try:
-        from deliverables.partners.jose_colbes.src.validated_ddg_predictor import (
+        from deliverables.partners.protein_stability_ddg.src.validated_ddg_predictor import (
             ValidatedDDGPredictor,
         )
         predictor = ValidatedDDGPredictor()

@@ -1,6 +1,6 @@
 # Partner Packages - Validation Status
 
-**Doc-Type:** Validation Tracking · Version 2.0 · Updated 2026-01-26 · AI Whisperers
+**Doc-Type:** Validation Tracking · Version 2.1 · Updated 2026-01-27 · AI Whisperers
 
 **Purpose:** This document tracks the ACTUAL validation status of each partner package based on reproducible model inference, not exploration scripts.
 
@@ -12,7 +12,7 @@
 
 | Package | Delivery Status | Model Validated | Inference Tested | Last Verified |
 |---------|:---------------:|:---------------:|:----------------:|---------------|
-| protein_stability_ddg | **95%** | PASS (LOO rho=0.58, N=52) | PASS (5/5) | 2026-01-26 |
+| protein_stability_ddg | **95%** | PASS (LOO rho=0.52, N=52) | PASS (5/5) | 2026-01-27 |
 | arbovirus_surveillance | **90%** | PASS (skeptical validation) | PASS | 2026-01-26 |
 | antimicrobial_peptides | **70%** | PARTIAL (2/5 non-significant) | PASS | 2026-01-26 |
 | hiv_research_package | Complete | N/A (API) | PENDING | - |
@@ -41,15 +41,15 @@
 **On N=669, our method achieves rho=0.37-0.40, which does NOT outperform these methods.**
 
 ### Validation Evidence (VERIFIED FROM FILES)
-| Metric | Claimed | Verified | Source |
-|--------|---------|----------|--------|
-| LOO CV Spearman | 0.58 | 0.581 | `validation/bootstrap_test.py` execution |
-| p-value | <0.001 | 6.30e-06 | bootstrap_test.py execution |
-| 95% CI | [0.34, 0.77] | [0.337, 0.768] | bootstrap n=1000 |
-| Permutation p | <0.001 | 0.0000 | 1000 permutations |
-| N mutations | 52 | 52 | S669 curated subset (NOT full N=669) |
-| MAE | 0.91 kcal/mol | 0.91 | LOO validation |
-| **N=669 performance** | **0.37-0.40** | **Documented** | ValidatedDDGPredictor.py |
+| Metric | Value | Source |
+|--------|:-----:|--------|
+| LOO CV Spearman | **0.521** | `validation/results/scientific_metrics.json` |
+| LOO CV Pearson | **0.478** | `validation/results/scientific_metrics.json` |
+| p-value | <0.001 | scientific_metrics.json |
+| 95% CI | [0.21, 0.80] | bootstrap n=1000 |
+| N mutations | 52 | S669 curated subset (NOT full N=669) |
+| MAE | 2.34 kcal/mol | scientific_metrics.json |
+| **N=669 performance** | **0.37-0.40** | ValidatedDDGPredictor.py |
 
 ### Statistical Validation Artifacts (EXIST)
 - `validation/results/scientific_metrics.json` - Complete bootstrap results

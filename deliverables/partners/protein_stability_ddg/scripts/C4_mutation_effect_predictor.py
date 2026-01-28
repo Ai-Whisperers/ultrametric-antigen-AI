@@ -11,9 +11,10 @@ Predict the effect of point mutations on protein stability using the
 TrainableCodonEncoder with hyperbolic embeddings + physicochemical features.
 
 VALIDATED PERFORMANCE (LOO CV on S669 benchmark):
-- LOO Spearman: 0.58 on N=52 curated subset
-- LOO Pearson: 0.60
-- LOO MAE: 0.91 kcal/mol
+- LOO Spearman: 0.52 on N=52 curated subset (95% CI: [0.21, 0.80])
+- LOO Pearson: 0.48
+- LOO MAE: 2.34 kcal/mol
+- Source: validation/results/scientific_metrics.json
 
 IMPORTANT CAVEAT:
 Literature methods (ESM-1v 0.51, Mutate Everything 0.56, etc.) are benchmarked
@@ -32,7 +33,7 @@ Features:
 4. Leave-One-Out validated coefficients
 
 Usage:
-    # Default: ValidatedDDGPredictor (recommended, LOO Spearman 0.60)
+    # Default: ValidatedDDGPredictor (recommended, LOO Spearman 0.52)
     python scripts/C4_mutation_effect_predictor.py --mutations mutations.csv
 
     # Legacy: ProTherm-trained model
@@ -99,7 +100,7 @@ _VALIDATED_PREDICTOR = None
 def load_validated_predictor():
     """Load validated DDG predictor using TrainableCodonEncoder.
 
-    This predictor achieves LOO Spearman 0.60 on S669 benchmark.
+    This predictor achieves LOO Spearman 0.52 on S669 benchmark.
     """
     global _VALIDATED_PREDICTOR
 
@@ -112,7 +113,7 @@ def load_validated_predictor():
 
     try:
         _VALIDATED_PREDICTOR = ValidatedDDGPredictor()
-        print("Loaded ValidatedDDGPredictor (LOO Spearman 0.60)")
+        print("Loaded ValidatedDDGPredictor (LOO Spearman 0.52)")
         return _VALIDATED_PREDICTOR
     except Exception as e:
         print(f"Warning: Could not load ValidatedDDGPredictor: {e}")
@@ -325,7 +326,7 @@ def predict_ddg(
     """Predict ΔΔG for a mutation.
 
     Priority order:
-    1. ValidatedDDGPredictor (TrainableCodonEncoder, LOO Spearman 0.60)
+    1. ValidatedDDGPredictor (TrainableCodonEncoder, LOO Spearman 0.52)
     2. Trained ML model (legacy ProTherm)
     3. Heuristic fallback
 
@@ -601,7 +602,7 @@ def main():
         "--use-validated",
         action="store_true",
         default=True,
-        help="Use ValidatedDDGPredictor with TrainableCodonEncoder (default, LOO Spearman 0.60)",
+        help="Use ValidatedDDGPredictor with TrainableCodonEncoder (default, LOO Spearman 0.52)",
     )
     parser.add_argument(
         "--use-heuristic",
@@ -627,7 +628,7 @@ def main():
         # Default: ValidatedDDGPredictor
         USE_VALIDATED_PREDICTOR = True
         USE_TRAINED_MODEL = False
-        print("Using ValidatedDDGPredictor (LOO Spearman 0.60)")
+        print("Using ValidatedDDGPredictor (LOO Spearman 0.52)")
         load_validated_predictor()
 
     # Get mutations

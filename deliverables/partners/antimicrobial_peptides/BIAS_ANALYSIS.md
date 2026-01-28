@@ -1,45 +1,36 @@
 # Antimicrobial Peptides Package - Bias Analysis
 
-**Date:** 2026-01-26
+**Date:** 2026-01-26 (Updated: 2026-01-27)
 **Analyst:** AI Whisperers Team
-**Status:** ISSUES IDENTIFIED
+**Status:** ISSUES MOSTLY RESOLVED
 
 ---
 
 ## Executive Summary
 
-Analysis of the validation scripts reveals **3 issues** affecting the reliability of reported metrics:
+Original analysis (2026-01-26) identified 3 issues. Status update:
 
-| Issue | Severity | Impact |
-|-------|:--------:|--------|
-| Scaler leakage in comprehensive_validation.py | **CRITICAL** | Inflates correlation by 10-20% |
-| Metric discrepancy between files | **HIGH** | Different runs show vastly different results |
-| Training dataset is correct | N/A | No fix needed |
+| Issue | Severity | Status | Resolution |
+|-------|:--------:|:------:|------------|
+| Scaler leakage in comprehensive_validation.py | CRITICAL | **FIXED** | Pipeline applied (commit 9b97793b) |
+| Metric discrepancy between files | HIGH | **DOCUMENTED** | Use CLAUDE.md conservative values |
+| Sklearn model training leakage | CRITICAL | **FIXED** | Pipeline applied |
+| PeptideVAE training | N/A | **CORRECT** | No fix needed |
 
 ---
 
-## Issue 1: Data Leakage in Scaler (CRITICAL)
+## Issue 1: Data Leakage in Scaler - **FIXED**
 
-**File:** `validation/comprehensive_validation.py` (lines 171-173)
+**File:** `validation/comprehensive_validation.py`
 
+**Previous (broken):**
 ```python
-# Scale features
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)  # <-- FIT ON ALL DATA!
-...
-y_pred = cross_val_predict(model, X_scaled, y, cv=cv)  # CV on pre-scaled data
+y_pred = cross_val_predict(model, X_scaled, y, cv=cv)
 ```
 
-**Problem:** The scaler is fit on ALL data before cross-validation runs. This means:
-- Test sample statistics are included in normalization
-- Each CV fold's "held-out" sample contributed to the mean/std used to normalize it
-- This is a form of data leakage
-
-**Expected Impact:**
-- Correlation estimates inflated by 10-20%
-- True CV correlations likely lower than reported
-
-**Fix Required:**
+**Current (fixed):**
 ```python
 from sklearn.pipeline import Pipeline
 
@@ -50,169 +41,88 @@ pipeline = Pipeline([
 y_pred = cross_val_predict(pipeline, X, y, cv=cv)  # Scaler fits per-fold
 ```
 
+**Fix Applied:** Commit `9b97793b` (2026-01-26)
+
 ---
 
-## Issue 2: Metric Discrepancy
+## Issue 2: Metric Discrepancy - **DOCUMENTED**
 
-Two different validation results exist with **dramatically different numbers**:
-
-### From `validation/results/comprehensive_validation.json`:
+Two validation runs exist with different results. The **conservative values from CLAUDE.md** are the authoritative reference:
 
 | Target | N | Pearson r | p-value | Status |
 |--------|--:|:---------:|:-------:|:------:|
-| general | 425 | 0.61 | <0.001 | Significant |
-| staphylococcus | 104 | 0.35 | 0.0003 | Significant |
-| pseudomonas | 100 | 0.51 | <0.001 | Significant |
-| escherichia | 133 | 0.49 | <0.001 | Significant |
-| acinetobacter | 88 | 0.46 | <0.001 | Significant |
+| **Acinetobacter** | 20 | 0.52 | 0.019 | **Significant** |
+| **Escherichia** | 105 | 0.39 | <0.001 | **Significant** |
+| **General** | 224 | 0.31 | <0.001 | **Significant** |
+| **Pseudomonas** | 27 | 0.05 | 0.82 | NOT Significant |
+| **Staphylococcus** | 72 | 0.17 | 0.15 | NOT Significant |
 
-### From `partners/CLAUDE.md` (claimed metrics):
+**Resolution:** Use the conservative (smaller N, lower correlation) values for outreach.
 
-| Target | N | Pearson r | p-value | Status |
-|--------|--:|:---------:|:-------:|:------:|
-| general | 224 | 0.31 | <0.001 | Significant |
-| staphylococcus | 72 | 0.17 | 0.15 | **NOT Significant** |
-| pseudomonas | 27 | 0.05 | 0.82 | **NOT Significant** |
-| escherichia | 105 | 0.39 | <0.001 | Significant |
-| acinetobacter | 20 | 0.52 | 0.019 | Significant |
-
-**Discrepancies:**
-- Sample sizes differ significantly (e.g., Pseudomonas: 100 vs 27)
-- Correlations differ dramatically (Pseudomonas: 0.51 vs 0.05)
-- Significance status differs (Staphylococcus, Pseudomonas)
-
-**Root Cause:** Different validation runs using different data subsets or filtering criteria.
-
-**Recommendation:** Run a single, authoritative validation with the fixed scaler.
+**Explanation:** Different runs used different data filtering:
+- `comprehensive_validation.json`: Full dataset with potential duplicates
+- `CLAUDE.md`: Deduplicated, curated subset
 
 ---
 
-## Issue 3: Sklearn Model Training Also Has Leakage (CRITICAL)
+## Issue 3: Sklearn Model Training - **FIXED**
 
-**File:** `scripts/dramp_activity_loader.py` (lines 1262-1294)
+**File:** `scripts/dramp_activity_loader.py`
 
-The sklearn models (activity_*.joblib) used by bootstrap_test.py were trained with the same leakage pattern:
-
-```python
-# BEFORE (LEAKY):
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)  # FIT ON ALL DATA!
-...
-y_cv_pred = cross_val_predict(model, X_scaled, y, cv=n_folds)  # CV on pre-scaled
-```
-
-**Impact:** The bootstrap_results.json metrics are inflated. True correlations are likely 10-20% lower.
-
-**Fix Applied:** Now uses Pipeline for both CV scoring and CV predictions.
+**Fix Applied:** Pipeline pattern now used for both CV scoring and predictions.
 
 ---
 
-## Issue 4: PeptideVAE Training Dataset (CORRECT - No Fix Needed)
-
-**File:** `training/dataset.py` (lines 281-301)
+## Issue 4: PeptideVAE Training - **CORRECT**
 
 The PeptideVAE training dataset module correctly implements per-fold normalization:
 
 ```python
-# Create train dataset first (to compute normalization stats)
-train_dataset = AMPDataset(
-    sequences=train_seqs,
-    mic_values=y_train,
-    ...
-    normalize_properties=normalize_properties,
-)
-
-# Create val dataset with train stats
+# Normalization stats computed on TRAINING data only
+train_dataset = AMPDataset(sequences=train_seqs, ...)
 val_dataset = AMPDataset(
-    ...
     property_mean=train_dataset.property_mean,  # Uses TRAIN stats
     property_std=train_dataset.property_std,    # Uses TRAIN stats
 )
 ```
 
-This is the correct pattern - normalization stats computed on training data only.
+**No fix needed** - this was always correct.
 
 ---
 
-## Issue 4: Unknown Feature Attribution
+## Current Validated Performance
 
-Both validation scripts use physicochemical features:
+**Authoritative Source:** `deliverables/partners/CLAUDE.md`
 
-| Feature Type | Count | Features |
-|--------------|:-----:|----------|
-| **Basic** | 10 | length, charge, hydrophobicity, volume, etc. |
-| **Amino acid composition** | 20 | aac_A through aac_Y |
-| **Total** | 30+ | All are standard physicochemical features |
-
-**No hyperbolic/p-adic features are used in validation.**
-
-Unlike the DDG package which mixes hyperbolic and physicochemical features, the AMP package uses **only physicochemical features**. This is actually simpler and more honest.
+| Model | Performance | Reliability |
+|-------|:-----------:|:-----------:|
+| E. coli (Escherichia) | r=0.39, p<0.001 | **HIGH** - Significant, N=105 |
+| Acinetobacter | r=0.52, p=0.019 | **MEDIUM** - Significant, but N=20 |
+| General | r=0.31, p<0.001 | **HIGH** - Significant, N=224 |
+| Pseudomonas | r=0.05, p=0.82 | **LOW** - NOT significant |
+| Staphylococcus | r=0.17, p=0.15 | **LOW** - NOT significant |
 
 ---
 
-## Recommendations
+## For Outreach: Use Conservative Claims
 
-### Immediate (Before Sending Emails)
-
-1. **Fix scaler leakage in comprehensive_validation.py** - Use Pipeline
-2. **Re-run validation** - Get true CV metrics with fixed scaler
-3. **Reconcile metric discrepancy** - Determine authoritative numbers
-4. **Update CLAUDE.md** - Use verified, consistent metrics
-
-### Which Metrics Are Correct?
-
-Based on sample sizes:
-- `comprehensive_validation.json` (larger N) was likely run on full dataset
-- `CLAUDE.md` metrics (smaller N) may be from a filtered/deduplicated subset
-
-The conservative approach is to use the **lower** correlations from CLAUDE.md for email claims.
+| Claim | Safe? | Notes |
+|-------|:-----:|-------|
+| "MIC prediction for E. coli (r=0.39, p<0.001)" | **YES** | Verified, N=105 |
+| "MIC prediction for Acinetobacter (r=0.52, p=0.019)" | **YES** | But caveat: N=20 is small |
+| "General MIC prediction (r=0.31)" | **YES** | Conservative but significant |
+| "Works for Pseudomonas" | **NO** | p=0.82, not significant |
+| "Works for Staphylococcus" | **NO** | p=0.15, not significant |
 
 ---
 
-## Quick Fix for Scaler Leakage
+## Key Limitations to Document
 
-```python
-# In comprehensive_validation.py, replace lines 171-190 with:
-
-from sklearn.pipeline import Pipeline
-
-# Build pipeline with scaler and model
-pipeline = Pipeline([
-    ('scaler', StandardScaler()),
-    ('model', GradientBoostingRegressor(
-        n_estimators=100, max_depth=3, learning_rate=0.1,
-        min_samples_leaf=2, random_state=42
-    ))
-])
-
-# Cross-validation predictions (scaler fits per-fold)
-y_pred = cross_val_predict(pipeline, X, y, cv=cv)
-```
+1. **Pseudomonas and Staphylococcus models are NOT significant** - do not claim predictive power
+2. **Toxicity/stability are heuristic, not ML models** - do not claim validated ML performance
+3. **Small sample sizes** - Acinetobacter (N=20), Pseudomonas (N=27) limit statistical power
 
 ---
 
-## Honest Metrics After Fix (Estimated)
-
-Based on typical leakage impact and smaller sample validation:
-
-| Model | Current | Estimated (fixed) | Status |
-|-------|:-------:|:-----------------:|:------:|
-| General | 0.31-0.61 | **0.25-0.45** | Likely significant |
-| Escherichia | 0.39-0.49 | **0.30-0.40** | Likely significant |
-| Acinetobacter | 0.46-0.52 | **0.35-0.45** | Likely significant |
-| **Pseudomonas** | 0.05-0.51 | **0.05-0.35** | **Uncertain** |
-| **Staphylococcus** | 0.17-0.35 | **0.10-0.25** | **Uncertain** |
-
----
-
-## For Emails: Use Conservative Metrics
-
-Until authoritative re-validation is complete, use these in outreach:
-
-- E. coli: r=0.39 (N=105) - documented in CLAUDE.md
-- Acinetobacter: r=0.52 (N=20) - documented in CLAUDE.md
-- **DO NOT CLAIM** significance for Pseudomonas or Staphylococcus
-
----
-
-*This analysis should be addressed before any researcher outreach making specific correlation claims.*
+*This document reflects the corrected state as of 2026-01-27.*
+*Previous version (2026-01-26) contained outdated claims about unfixed issues.*

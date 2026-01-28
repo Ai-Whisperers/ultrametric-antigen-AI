@@ -5,9 +5,10 @@ This module provides a validated DDG (protein stability change) predictor
 using the TrainableCodonEncoder with hyperbolic embeddings.
 
 VALIDATION (IMPORTANT - READ CAREFULLY):
-- LOO Spearman: 0.60 on N=52 SUBSET (small proteins, mostly Ala-scanning)
+- LOO Spearman: 0.52 on N=52 SUBSET (95% CI: [0.21, 0.80], p<0.001)
+- LOO Pearson: 0.48 (p<0.001)
 - Full S669 (N=669): 0.37-0.40 with combined features
-- Overfitting ratio: 1.27x (acceptable)
+- Source: validation/results/scientific_metrics.json
 
 COMPARISON NOTE:
 Literature methods (ESM-1v 0.51, FoldX 0.48, etc.) are benchmarked on N=669.
@@ -102,7 +103,7 @@ class ValidatedDDGPredictor:
     """Validated DDG predictor using TrainableCodonEncoder.
 
     PERFORMANCE:
-    - N=52 subset: LOO Spearman 0.60 (small proteins, Ala-scanning)
+    - N=52 subset: LOO Spearman 0.52, Pearson 0.48 (small proteins, Ala-scanning)
     - N=669 full: Spearman 0.37-0.40 (combined with physicochemical)
 
     IMPORTANT: The N=52 result does NOT directly compare to literature
@@ -365,19 +366,19 @@ def get_performance_metrics() -> dict:
     return {
         "dataset": "S669 curated subset (N=52)",
         "validation": "Leave-One-Out CV",
-        "loo_spearman": 0.58,
-        "loo_pearson": 0.60,
-        "loo_mae": 0.91,
-        "loo_rmse": 1.17,
-        "overfitting_ratio": 1.27,
+        "loo_spearman": 0.52,
+        "loo_pearson": 0.48,
+        "loo_mae": 2.34,
+        "loo_rmse": 2.78,
+        "source": "validation/results/scientific_metrics.json",
         "n52_vs_n669_caveat": (
             "IMPORTANT: Literature benchmarks use N=669. "
-            "Our N=52 result (0.58) is NOT directly comparable. "
+            "Our N=52 result (0.52) is NOT directly comparable. "
             "On N=669, our method achieves ρ=0.37-0.40."
         ),
         "comparison_n52": {
             "note": "N=52 curated subset - NOT comparable to N=669 benchmarks",
-            "TrainableCodonEncoder (N=52)": 0.58,
+            "TrainableCodonEncoder (N=52)": 0.52,
         },
         "comparison_n669": {
             "note": "N=669 full dataset - FAIR comparison",

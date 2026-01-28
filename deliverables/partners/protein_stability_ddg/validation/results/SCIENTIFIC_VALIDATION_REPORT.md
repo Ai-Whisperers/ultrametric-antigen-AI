@@ -1,6 +1,6 @@
 # Scientific Validation Report: TrainableCodonEncoder DDG Predictor
 
-**Doc-Type:** Scientific Validation Report · Version 1.0 · 2026-01-23 · AI Whisperers
+**Doc-Type:** Scientific Validation Report · Version 1.0 · 2026-01-27 · AI Whisperers
 
 **Prepared for:** Dr. Jose Colbes
 **Dataset:** S669 Benchmark (n=52)

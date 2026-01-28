@@ -815,12 +815,17 @@ Foundation Encoder should be revisited when:
 
 ### Multiple Validation Streams (VERIFIED)
 
-| Validation | N | Spearman ρ | Source File |
-|------------|--:|:----------:|-------------|
-| S669 curated (alanine-scanning) | 52 | 0.58 | `trained_codon_encoder.json` |
-| S669 full dataset | 669 | 0.37-0.40 | `full_analysis_results.json` |
-| Multimodal (8 features) | 52 | 0.60 | `multimodal_ddg_results.json` |
-| Scientific metrics | 52 | 0.52 | `scientific_metrics.json` |
+| Validation | N | Spearman ρ | Source | What it measures |
+|------------|--:|:----------:|--------|------------------|
+| **ValidatedDDGPredictor** | 52 | **0.52** | `scientific_metrics.json` | **Shipped predictor** (canonical) |
+| Fresh LOO training | 52 | 0.58 | `bootstrap_test.py` | Best achievable with retraining |
+| S669 full dataset | 669 | 0.37-0.40 | `full_analysis_results.json` | Fair literature comparison |
+
+**CANONICAL METRIC: 0.52** - This is what users actually get from ValidatedDDGPredictor.
+
+**Why two N=52 values?**
+- **0.52**: Pre-trained coefficients in ValidatedDDGPredictor (what ships to users)
+- **0.58**: Fresh Ridge model trained with LOO CV (theoretical best)
 
 **Critical Distinction:** N=52 results are NOT comparable to N=669 literature benchmarks. ESM-1v (0.51), FoldX (0.48) are benchmarked on N=669. Our N=669 performance (0.37-0.40) does NOT outperform these methods.
 
@@ -847,16 +852,21 @@ The method shows dramatic performance variation by mutation type:
 | **Honest N=669 disclosure** | 0.37-0.40 documented in code | Scientific integrity |
 | **Adaptive routing potential** | Mutation-type stratification | Production deployment strategy |
 
-### Source of 0.58 Claim (VERIFIED)
+### Source of 0.52 vs 0.58 (VERIFIED)
 
-The 0.58 Spearman correlation comes from `TrainableCodonEncoder` with hyperbolic embeddings:
-- File: `research/codon-encoder/training/results/trained_codon_encoder.json`
-- Method: LOO cross-validation with Pipeline (data leakage FIXED)
-- Features: 4 hyperbolic + 4 physicochemical = 8 total
+**0.52 (ValidatedDDGPredictor - CANONICAL):**
+- Script: `scientific_validation_report.py`
+- Method: Pre-trained coefficients, no retraining
+- This is what users GET when using the shipped predictor
+
+**0.58 (Fresh LOO - THEORETICAL BEST):**
+- Script: `bootstrap_test.py`
+- Method: Fresh Ridge with LOO CV, Pipeline pattern
+- This is what's ACHIEVABLE with fresh training
 
 ### Data Leakage Status
 
-**FIXED** in `validation/bootstrap_test.py`:
+**FIXED** in both validation scripts:
 ```python
 pipeline = Pipeline([
     ('scaler', StandardScaler()),
@@ -865,7 +875,7 @@ pipeline = Pipeline([
 y_pred = cross_val_predict(pipeline, X, y, cv=len(y))  # Correct: scaler inside CV
 ```
 
-**Note:** `BIAS_ANALYSIS.md` is outdated and claims leakage exists - this has been corrected in code.
+**BIAS_ANALYSIS.md** has been updated (2026-01-27) to reflect fixes.
 
 ### Recommendation for Outreach
 
