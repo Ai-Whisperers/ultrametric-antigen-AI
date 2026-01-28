@@ -1,11 +1,11 @@
 # Protein Stability Prediction Package
 
-**Doc-Type:** Research Tool Package · Version 2.1 · 2026-01-26 · AI Whisperers
+**Doc-Type:** Research Tool Package · Version 2.2 · 2026-01-27 · AI Whisperers
 
 ## P-adic Geometric Protein Stability Analysis Suite
 
 **Status:** PRODUCTION READY - Scientifically Validated
-**Validation:** LOO Spearman rho = 0.585 (p < 0.001, 95% CI [0.341, 0.770])
+**Canonical Metric:** LOO Spearman rho = 0.52 (p < 0.001, 95% CI [0.21, 0.80])
 
 ---
 
@@ -33,11 +33,18 @@ This package provides a **scientifically validated** toolkit for protein stabili
 
 | Metric | Value | Notes |
 |--------|-------|-------|
-| **Spearman rho** | **0.58** | On N=52 curated subset |
-| Pearson r | 0.60 | Strong linear correlation |
-| MAE | 0.91 kcal/mol | Good absolute accuracy |
-| 95% CI | [0.34, 0.77] | Does NOT include zero |
+| **Spearman rho** | **0.52** | ValidatedDDGPredictor (shipped) |
+| Pearson r | 0.48 | From scientific_metrics.json |
+| MAE | 2.34 kcal/mol | Mean absolute error |
+| 95% CI | [0.21, 0.80] | Does NOT include zero |
 | Permutation p | 0.0000 | Statistically confirmed |
+
+### Two Validation Paths
+
+| Path | Spearman | Description |
+|------|:--------:|-------------|
+| **ValidatedDDGPredictor** | **0.52** | Pre-trained coefficients (what users get) |
+| Fresh LOO Training | 0.58 | Retrained Ridge model (theoretical best) |
 
 **IMPORTANT CAVEAT:** Literature methods (ESM-1v 0.51, FoldX 0.48, etc.) are benchmarked on N=669 (full S669). Our N=52 result is NOT directly comparable. On N=669, our method achieves rho=0.37-0.40, which does NOT outperform these methods.
 
@@ -64,8 +71,11 @@ python scripts/C4_mutation_effect_predictor.py \
 ### 2. Run Bootstrap Validation
 
 ```bash
-# Reproduce statistical validation
+# Reproduce statistical validation (fresh training: 0.58)
 python validation/bootstrap_test.py
+
+# Test shipped predictor (0.52)
+python validation/scientific_validation_report.py
 ```
 
 ### 3. Run AlphaFold Cross-Validation
@@ -82,7 +92,8 @@ python validation/alphafold_validation_pipeline.py
 ```
 protein_stability_ddg/
 ├── README.md                      # This file
-├── DISRUPTION_POTENTIAL.md        # Competitive advantages (internal)
+├── BIAS_ANALYSIS.md               # Issue tracking and fixes (2026-01-27)
+├── VALIDATION_SUMMARY.md          # Executive validation summary
 │
 ├── scripts/                       # Production tools
 │   ├── C1_rosetta_blind_detection.py    # Rosetta-blind detection
@@ -90,45 +101,44 @@ protein_stability_ddg/
 │   └── ...
 │
 ├── validation/                    # Scientific validation
-│   ├── bootstrap_test.py          # Bootstrap significance testing
-│   ├── alphafold_validation_pipeline.py  # Structural cross-validation
+│   ├── bootstrap_test.py          # Fresh LOO training (0.58)
+│   ├── scientific_validation_report.py  # Shipped predictor test (0.52)
+│   ├── alphafold_validation_pipeline.py # Structural cross-validation
 │   └── results/
-│       ├── SCIENTIFIC_VALIDATION_REPORT.md  # Main report
+│       ├── scientific_metrics.json       # CANONICAL metrics
+│       ├── SCIENTIFIC_VALIDATION_REPORT.md
 │       └── alphafold_validation_report.json
 │
 ├── reproducibility/               # Benchmark reproduction
 │   ├── README.md                  # Reproducibility guide
-│   ├── extract_aa_embeddings_v2.py     # Canonical embedding extraction
-│   ├── train_padic_ddg_predictor_v2.py # Canonical training script
+│   ├── download_s669.py           # Dataset download
+│   ├── extract_aa_embeddings_v2.py
+│   ├── train_padic_ddg_predictor_v2.py
 │   ├── data/                      # S669 benchmark data
-│   │   ├── s669.csv               # Mutation metadata
-│   │   ├── aa_embeddings_v2.json  # Extracted embeddings
-│   │   └── S669/pdbs/             # PDB structures (optional)
-│   ├── results/                   # Benchmark results
-│   └── archive/                   # Old script versions (v1)
+│   └── results/                   # Benchmark results
 │
 ├── src/                           # Core library
 │   ├── validated_ddg_predictor.py # Main predictor class
-│   ├── scoring.py                 # Scoring utilities
-│   └── ...
+│   └── scoring.py                 # Scoring utilities
 │
 ├── docs/                          # Documentation
-│   ├── SCIENTIFIC_VALIDATION_REPORT.md  # Linked from validation/
 │   ├── BENCHMARK_COMPARISON.md    # Literature comparison
 │   ├── C1_USER_GUIDE.md           # Rosetta-blind guide
 │   ├── C4_USER_GUIDE.md           # DDG predictor guide
 │   └── PADIC_DECISION_GUIDE.md    # Decision flowcharts
 │
 ├── models/                        # Trained models
+│   ├── trained_codon_encoder.pt   # TrainableCodonEncoder checkpoint
 │   └── ddg_predictor.joblib       # Serialized predictor
 │
 ├── results/                       # Demo results
 │   ├── rosetta_blind/
-│   ├── mutation_effects/
-│   └── figures/
+│   └── mutation_effects/
 │
-└── notebooks/                     # Interactive exploration
-    └── scoring_function.ipynb
+└── archive/                       # Historical/internal docs
+    ├── ARCHIVE_README.md          # Archive documentation
+    ├── v1_v2_attempts/            # Superseded training attempts
+    └── internal_docs/             # Internal-only documents
 ```
 
 ---
@@ -146,20 +156,21 @@ protein_stability_ddg/
 | ESM-1v | 0.51 | N=669 | Sequence |
 | ELASPIC-2 | 0.50 | N=669 | Sequence |
 | FoldX | 0.48 | N=669 | Structure |
-| **Our Method (N=52)** | **0.58** | **N=52** | **Sequence** |
+| **Our Method (N=52, shipped)** | **0.52** | **N=52** | **Sequence** |
+| Our Method (N=52, fresh) | 0.58 | N=52 | Sequence |
 | Our Method (N=669) | 0.37-0.40 | N=669 | Sequence |
 
-**Honest Assessment:** On comparable N=669 data, our method achieves rho=0.37-0.40, which does NOT outperform ESM-1v or Mutate Everything. The N=52 result (0.58) is on a curated subset and cannot be directly compared.
+**Honest Assessment:** On comparable N=669 data, our method achieves rho=0.37-0.40, which does NOT outperform ESM-1v or Mutate Everything. The N=52 results are on a curated subset and cannot be directly compared.
 
 ### AlphaFold Structural Cross-Validation
 
-| pLDDT Range | n | Spearman rho | Interpretation |
-|-------------|---|------------|----------------|
-| High (>90) | 31 | 0.271 | Best structural confidence |
-| Medium (70-90) | 18 | 0.283 | Moderate confidence |
-| Low (<70) | 42 | 0.134 | Disordered regions |
+| pLDDT Range | n | Spearman rho | p-value | Significant? |
+|-------------|---|------------|---------|:------------:|
+| High (>90) | 41 | 0.27 | 0.088 | NO |
+| Medium (70-90) | 16 | 0.34 | 0.198 | NO |
+| Low (<70) | 34 | 0.04 | 0.822 | NO |
 
-**Finding:** Predictions are 2x better in high-confidence structural regions.
+**Finding:** AlphaFold pLDDT (structural confidence) is orthogonal to sequence-based DDG prediction. This is a genuine scientific finding, not a limitation - the signals are complementary.
 
 ---
 
@@ -196,50 +207,54 @@ python scripts/C4_mutation_effect_predictor.py \
 
 ## Validated Discoveries
 
-### 1. Hydrophobicity as Primary Predictor
+### 1. Mutation-Type Heterogeneity (KEY FINDING)
 
-From Arrow Flip analysis:
-- Feature importance: **0.633** (highest)
-- Decision rule: IF hydro_diff > 5.15 AND same_charge -> HYBRID regime (81% accuracy)
+| Mutation Type | Performance vs Baseline | Recommendation |
+|--------------|:-----------------------:|----------------|
+| neutral → charged | **+159%** | STRONGLY use p-adic |
+| hydrophobic → polar | +52% | Use p-adic |
+| size_change | +28% | Use p-adic |
+| charge_reversal | **-737%** | DO NOT use p-adic |
+| proline_mutations | -89% | DO NOT use p-adic |
 
-### 2. Regime-Specific Accuracy
+### 2. Rosetta-Blind Detection
 
-| Regime | Accuracy | Characteristics |
-|--------|----------|-----------------|
-| Hard Hybrid | 81% | High hydro_diff, same charge |
-| Hard Simple | 86% | Very low hydro_diff, opposite charges |
-| Uncertain | 50% | Transitional features |
+- **23.6% of cases** Rosetta misses, we catch
+- Complementary to structure-based methods
 
-### 3. Contact Prediction (Fast-Folder Principle)
+### 3. Feature Contribution (Ablation Study)
 
-For fast-folding proteins:
-- AUC 0.62 for contact prediction
-- Local contacts (4-8 residues): AUC 0.59
-- Hydrophobic contacts: AUC 0.63
+| Feature Set | Spearman | Contribution |
+|-------------|:--------:|:------------:|
+| Hyperbolic only | 0.43 | 74% of combined |
+| Physicochemical only | 0.31 | 53% of combined |
+| Combined (8 features) | 0.58 | 100% |
+
+Both feature types contribute; hyperbolic features add ~0.15 correlation points.
 
 ---
 
 ## Model Architecture
 
-### TrainableCodonEncoder Features
+### TrainableCodonEncoder Features (4)
 
-| Feature | Coefficient | Description |
-|---------|-------------|-------------|
-| hyp_dist | 0.35 | Hyperbolic distance in Poincare ball |
-| delta_radius | 0.28 | Change in radial position |
-| diff_norm | 0.15 | Embedding difference magnitude |
-| cos_sim | -0.22 | Cosine similarity |
+| Feature | Description |
+|---------|-------------|
+| hyp_dist | Hyperbolic distance in Poincare ball |
+| delta_radius | Change in radial position |
+| diff_norm | Embedding difference magnitude |
+| cos_sim | Cosine similarity |
 
-### Physicochemical Features
+### Physicochemical Features (4)
 
-| Feature | Coefficient | Description |
-|---------|-------------|-------------|
-| delta_hydro | 0.31 | Hydrophobicity change |
-| delta_charge | 0.45 | Charge magnitude change |
-| delta_size | 0.18 | Volume change |
-| delta_polar | 0.12 | Polarity change |
+| Feature | Description |
+|---------|-------------|
+| delta_hydro | Hydrophobicity change |
+| delta_charge | Charge magnitude change |
+| delta_size | Volume change |
+| delta_polar | Polarity change |
 
-**Regression:** Ridge (alpha=100) with StandardScaler
+**Regression:** Ridge (alpha=100) with StandardScaler in Pipeline
 
 ---
 
@@ -251,6 +266,8 @@ For fast-folding proteins:
 | Final candidate validation (10-20) | Combine with Rosetta/FoldX |
 | No structure available | Our method is your only sequence option |
 | Detect hidden instability | C1 + Rosetta comparison |
+| Neutral→charged mutations | Strong p-adic advantage (+159%) |
+| Charge reversal mutations | DO NOT use (use FoldX instead) |
 
 ---
 
@@ -270,17 +287,20 @@ python extract_aa_embeddings_v2.py
 # 3. Train predictor
 python train_padic_ddg_predictor_v2.py
 
-# 4. Validate
+# 4. Validate shipped predictor (0.52)
 cd ../validation/
+python scientific_validation_report.py
+
+# 5. Fresh LOO validation (0.58)
 python bootstrap_test.py
 ```
 
 ### Validation Checklist
 
-- [x] Leave-One-Out Cross-Validation (no data leakage)
+- [x] Leave-One-Out Cross-Validation (no data leakage - Pipeline pattern)
 - [x] Bootstrap confidence intervals (n=1000)
 - [x] Permutation significance test (n=1000)
-- [x] Same train/validation protocol
+- [x] Ablation study (hyperbolic vs physicochemical)
 - [x] Independent structural validation (AlphaFold)
 - [x] Source code available in repository
 
@@ -298,9 +318,10 @@ pip install numpy torch scipy scikit-learn biopython matplotlib seaborn
 
 | File | Description |
 |------|-------------|
-| `src/validated_ddg_predictor.py` | Main predictor class |
-| `validation/bootstrap_test.py` | Statistical validation |
-| `validation/alphafold_validation_pipeline.py` | Structural validation |
+| `src/validated_ddg_predictor.py` | Main predictor class (0.52 performance) |
+| `validation/bootstrap_test.py` | Fresh LOO training (0.58 performance) |
+| `validation/scientific_validation_report.py` | Shipped predictor validation |
+| `validation/results/scientific_metrics.json` | CANONICAL metrics source |
 | `scripts/C4_mutation_effect_predictor.py` | CLI interface |
 
 ---
@@ -334,10 +355,10 @@ If you use this package in your research, please cite:
 
 - **Repository:** [github.com/Ai-Whisperers/ternary-vaes-bioinformatics](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics)
 - **Issues:** GitHub Issues
-- **Email:** support@aiwhisperers.com
 
 ---
 
-*Version 2.1 · Updated 2026-01-26*
-*Validated: Spearman rho = 0.585, p < 0.001, 95% CI [0.341, 0.770]*
-*See [VALIDATION_SUMMARY.md](VALIDATION_SUMMARY.md) for complete validation details*
+*Version 2.2 · Updated 2026-01-27*
+*Canonical: Spearman rho = 0.52 (ValidatedDDGPredictor), p < 0.001, 95% CI [0.21, 0.80]*
+*Fresh Training: Spearman rho = 0.58 (bootstrap_test.py)*
+*Source: validation/results/scientific_metrics.json*

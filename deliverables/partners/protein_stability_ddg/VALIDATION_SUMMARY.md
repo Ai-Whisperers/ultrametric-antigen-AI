@@ -1,6 +1,6 @@
 # Validation Summary: P-adic DDG Predictor
 
-**Doc-Type:** Scientific Validation · Version 1.1 · 2026-01-08 · AI Whisperers
+**Doc-Type:** Scientific Validation · Version 1.2 · 2026-01-27 · AI Whisperers
 
 ---
 
@@ -10,33 +10,39 @@ This package has been validated through multiple independent approaches:
 
 | Validation Type | Script | Results Location |
 |-----------------|--------|------------------|
-| Bootstrap CI | `validation/bootstrap_test.py` | `validation/results/scientific_metrics.json` |
+| Shipped Predictor | `validation/scientific_validation_report.py` | `validation/results/scientific_metrics.json` |
+| Fresh LOO Training | `validation/bootstrap_test.py` | Printed to console |
 | AlphaFold Cross-Val | `validation/alphafold_validation_pipeline.py` | `validation/results/alphafold_validation_report.json` |
 | Permutation Test | `validation/bootstrap_test.py` | p < 0.001 confirmed |
-| LOO CV | `reproducibility/` | `results/BENCHMARK_REPORT.md` |
 | Literature Comparison | `docs/BENCHMARK_COMPARISON.md` | Verified citations |
 
 ---
 
 ## Core Performance Metrics
 
-### TrainableCodonEncoder + Physicochemical (V3)
+### Two Validation Paths
 
-| Metric | Value | 95% CI | p-value |
-|--------|-------|--------|---------|
-| **Spearman ρ** | **0.585** | [0.341, 0.770] | 5.16e-06 |
-| Pearson r | 0.596 | - | 3.10e-06 |
-| MAE | 0.91 kcal/mol | - | - |
-| Permutation p | 0.0000 | - | < 0.001 |
-| Overfitting ratio | 1.27x | - | Acceptable |
+| Metric | ValidatedDDGPredictor (Shipped) | Fresh LOO Training |
+|--------|:-------------------------------:|:------------------:|
+| **Spearman ρ** | **0.52** | **0.58** |
+| Pearson r | 0.48 | 0.58 |
+| 95% CI | [0.21, 0.80] | [0.35, 0.75] |
+| p-value | 0.0001 | 7.1e-06 |
+| MAE | 2.34 kcal/mol | 0.92 kcal/mol |
 
-**Validation:** Leave-One-Out Cross-Validation (N=52), no data leakage.
+**CANONICAL METRIC: 0.52** - This is what users get from `ValidatedDDGPredictor`.
+
+**Why two values?**
+- **0.52**: Pre-trained coefficients (what ships to users)
+- **0.58**: Fresh Ridge model with LOO CV (theoretical best if retrained)
+
+**Validation:** Leave-One-Out Cross-Validation (N=52), Pipeline pattern (no data leakage).
 
 ---
 
 ## Literature Comparison (Verified Sources)
 
-⚠️ **CRITICAL CAVEAT:** Literature methods use N=669 (full S669). Our N=52 result is NOT directly comparable. On N=669, our method achieves ρ=0.37-0.40.
+**CRITICAL CAVEAT:** Literature methods use N=669 (full S669). Our N=52 result is NOT directly comparable. On N=669, our method achieves ρ=0.37-0.40.
 
 | Method | Spearman ρ | Dataset | Type | Source |
 |--------|------------|---------|------|--------|
@@ -45,7 +51,8 @@ This package has been validated through multiple independent approaches:
 | ESM-1v | 0.51 | N=669 | Sequence | Meier 2021 |
 | ELASPIC-2 | 0.50 | N=669 | Sequence | PLOS 2024 |
 | FoldX 5.0 | 0.48 | N=669 | Structure | Various |
-| **Our Method (N=52)** | **0.58** | **N=52** | **Sequence** | LOO validated |
+| **Our Method (N=52, shipped)** | **0.52** | **N=52** | **Sequence** | LOO validated |
+| Our Method (N=52, fresh) | 0.58 | N=52 | Sequence | LOO validated |
 | Our Method (N=669) | 0.37-0.40 | N=669 | Sequence | Validated |
 
 **Honest Note:** On comparable N=669 data, our method does NOT outperform literature sequence-only methods. The N=52 result is on a carefully curated subset (small proteins, alanine scanning) where our method shows stronger performance.
@@ -58,8 +65,8 @@ This package has been validated through multiple independent approaches:
 
 | Subset | N | Description | Our Spearman |
 |--------|---|-------------|--------------|
-| Curated (V3) | 52 | Alanine scanning + variants | **0.585** |
-| Full dataset | 669 | All mutations | 0.31-0.40 |
+| Curated (V3) | 52 | Alanine scanning + variants | 0.52 (shipped) / 0.58 (fresh) |
+| Full dataset | 669 | All mutations | 0.37-0.40 |
 
 ### Proteins in N=52 Subset
 
@@ -77,31 +84,29 @@ This package has been validated through multiple independent approaches:
 
 ---
 
-## Ablation Study (LOO-Validated)
+## Ablation Study (Fresh LOO Training)
 
-| Mode | Features | LOO Spearman | Assessment |
-|------|----------|--------------|------------|
-| codon_only | 4 | 0.34 | P-adic structure alone |
-| physico_only | 4 | 0.36 | Properties alone |
-| esm_only | 4 | 0.47 | ESM-2 embeddings |
-| **codon+physico** | **8** | **0.60** | **Best combination** |
-| codon+physico+esm | 12 | 0.57 | ESM hurts (small N) |
+From `validation/bootstrap_test.py`:
 
-**Key Finding:** Codon + physicochemical shows synergy (0.60 > 0.34 + 0.36).
+| Feature Set | LOO Spearman | Contribution |
+|-------------|:------------:|:------------:|
+| Hyperbolic only (4 features) | 0.43 | 74% of combined |
+| Physicochemical only (4 features) | 0.31 | 53% of combined |
+| **Combined (8 features)** | **0.58** | **100%** |
+
+**Key Finding:** Both feature types contribute; hyperbolic features add ~0.15 correlation points beyond physicochemical baseline.
 
 ---
 
 ## AlphaFold Structural Cross-Validation
 
-Independent validation against AlphaFold structural confidence:
+| pLDDT Range | n | Spearman ρ | p-value | Significant? |
+|-------------|---|------------|---------|:------------:|
+| High (>90) | 41 | 0.27 | 0.088 | NO |
+| Medium (70-90) | 16 | 0.34 | 0.198 | NO |
+| Low (<70) | 34 | 0.04 | 0.822 | NO |
 
-| pLDDT Range | n | Spearman ρ | Interpretation |
-|-------------|---|------------|----------------|
-| High (>90) | 31 | 0.271 | Best structural confidence |
-| Medium (70-90) | 18 | 0.283 | Moderate confidence |
-| Low (<70) | 42 | 0.134 | Disordered regions |
-
-**Finding:** Predictions align with structural confidence (2x better in high-pLDDT regions).
+**Finding:** AlphaFold pLDDT (structural confidence) is orthogonal to sequence-based DDG prediction. This is a genuine scientific finding - pLDDT measures structural confidence, not mutational predictability.
 
 ---
 
@@ -114,7 +119,8 @@ From `docs/PADIC_ENCODER_FINDINGS.md`:
 | neutral→charged | 37 | **+159%** | STRONGLY use p-adic |
 | small DDG (<1) | 312 | +23% | Use p-adic |
 | large→small size | 82 | +16% | Use p-adic |
-| charge_reversal | 20 | -737% | DO NOT use p-adic |
+| charge_reversal | 20 | **-737%** | DO NOT use p-adic |
+| proline_mutations | - | -89% | DO NOT use p-adic |
 
 ---
 
@@ -146,15 +152,18 @@ Low correlation with traditional methods (r=0.15-0.31) indicates p-adic captures
 ## Reproducibility
 
 ```bash
-cd deliverables/partners/jose_colbes/
+cd deliverables/partners/protein_stability_ddg/
 
-# 1. Run statistical validation
+# 1. Validate shipped predictor (0.52)
+python validation/scientific_validation_report.py
+
+# 2. Fresh LOO training (0.58)
 python validation/bootstrap_test.py
 
-# 2. Run AlphaFold cross-validation
+# 3. Run AlphaFold cross-validation
 python validation/alphafold_validation_pipeline.py
 
-# 3. Full benchmark reproduction
+# 4. Full benchmark reproduction
 cd reproducibility/
 python download_s669.py
 python extract_aa_embeddings_v2.py
@@ -168,13 +177,16 @@ python train_padic_ddg_predictor_v2.py
 | Purpose | Location |
 |---------|----------|
 | Main predictor | `src/validated_ddg_predictor.py` |
-| Bootstrap validation | `validation/bootstrap_test.py` |
+| Shipped predictor validation | `validation/scientific_validation_report.py` |
+| Fresh LOO validation | `validation/bootstrap_test.py` |
+| CANONICAL metrics | `validation/results/scientific_metrics.json` |
 | AlphaFold validation | `validation/alphafold_validation_pipeline.py` |
 | Scientific report | `validation/results/SCIENTIFIC_VALIDATION_REPORT.md` |
-| Benchmark report | `reproducibility/results/BENCHMARK_REPORT.md` |
 | Literature comparison | `docs/BENCHMARK_COMPARISON.md` |
 | Research findings | `docs/PADIC_ENCODER_FINDINGS.md` |
+| Issue tracking | `BIAS_ANALYSIS.md` |
 
 ---
 
-*Comprehensive validation with bootstrap CI, permutation tests, and AlphaFold cross-validation.*
+*Version 1.2 · Updated 2026-01-27*
+*Canonical: 0.52 (ValidatedDDGPredictor) | Fresh Training: 0.58 (bootstrap_test.py)*

@@ -1,8 +1,12 @@
 # P-adic DDG Prediction Benchmark Report
 
-**Generated:** 2026-01-03 (Updated)
+**Generated:** 2026-01-03 (Updated: 2026-01-27)
 **Dataset:** S669 Benchmark (Pancotti et al. 2022)
 **Validation:** Leave-One-Out Cross-Validation (n=52)
+
+**METRIC UPDATE (2026-01-27):** V3 metrics corrected:
+- Shipped predictor (ValidatedDDGPredictor): Spearman 0.52
+- Fresh LOO training (bootstrap_test.py): Spearman 0.58
 
 ---
 
@@ -14,9 +18,10 @@
 | V1.5 (VAE) | 52 | None | 0.58 | Overfitted |
 | V2 (Codon dist) | 52 | 5-fold CV | 0.15 | **Overfitted** |
 | V2 (Full S669) | 669 | 5-fold CV | 0.31 | Honest baseline |
-| **V3 (TrainableCodonEncoder)** | **52** | **LOO CV** | **0.60** | **✓ VALIDATED** |
+| **V3 (shipped)** | **52** | **LOO CV** | **0.52** | **✓ VALIDATED** |
+| **V3 (fresh training)** | **52** | **LOO CV** | **0.58** | **✓ VALIDATED** |
 
-**KEY FINDING:** The TrainableCodonEncoder with hyperbolic embeddings + physicochemical features achieves **LOO Spearman 0.60**, beating multiple published sequence-only methods.
+**KEY FINDING:** The TrainableCodonEncoder with hyperbolic embeddings + physicochemical features achieves **LOO Spearman 0.52-0.58** on N=52. On N=669, performance is 0.37-0.40 (NOT competitive with literature).
 
 ---
 
@@ -24,13 +29,14 @@
 
 ### Leave-One-Out Cross-Validation (Gold Standard)
 
-| Metric | Value |
-|--------|-------|
-| **LOO Spearman** | **0.60** |
-| LOO Pearson | 0.62 |
-| LOO MAE | 0.89 kcal/mol |
-| LOO RMSE | 1.17 kcal/mol |
-| Overfitting ratio | 1.27x (acceptable) |
+| Metric | Shipped (0.52) | Fresh Training (0.58) |
+|--------|:--------------:|:---------------------:|
+| **LOO Spearman** | **0.52** | **0.58** |
+| LOO Pearson | 0.48 | 0.58 |
+| LOO MAE | 2.34 kcal/mol | 0.92 kcal/mol |
+| 95% CI | [0.21, 0.80] | [0.35, 0.75] |
+
+**Canonical metric: 0.52** (what users get from ValidatedDDGPredictor)
 
 ### Ablation Study (LOO-Validated)
 
@@ -39,7 +45,7 @@
 | codon_only | 4 | 0.34 | P-adic structure alone |
 | physico_only | 4 | 0.36 | Properties alone |
 | esm_only | 4 | 0.47 | ESM-2 embeddings |
-| **codon+physico** | **8** | **0.60** | **✓ Best combination** |
+| **codon+physico** | **8** | **0.58** | **✓ Best combination** |
 | codon+physico+esm | 12 | 0.57 | ESM hurts (curse of dimensionality) |
 
 ### Comparison with Published Tools (S669)
@@ -47,13 +53,13 @@
 | Method | Spearman | Type | Notes |
 |--------|----------|------|-------|
 | Rosetta ddg_monomer | 0.69 | Structure | Requires 3D structure |
-| **TrainableCodonEncoder (V3)** | **0.60** | **Sequence** | **LOO-validated** |
+| **TrainableCodonEncoder (V3)** | **0.52-0.58** | **Sequence** | **LOO-validated (N=52)** |
 | Mutate Everything (2023) | 0.56 | Sequence | Zero-shot |
 | ESM-1v | 0.51 | Sequence | Zero-shot |
 | ELASPIC-2 | 0.50 | Sequence | MSA-based |
 | FoldX | 0.48 | Structure | Requires 3D structure |
 
-**Assessment:** V3 ranks **2nd among sequence-only methods**, beating Mutate Everything, ESM-1v, and ELASPIC-2.
+**CAVEAT:** V3 is benchmarked on N=52 (curated subset), NOT comparable to N=669 literature benchmarks. On N=669, V3 achieves 0.37-0.40, which does NOT beat ESM-1v or Mutate Everything.
 
 ---
 
