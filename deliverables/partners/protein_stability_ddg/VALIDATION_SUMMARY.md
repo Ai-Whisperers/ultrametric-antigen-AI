@@ -1,6 +1,6 @@
 # Validation Summary: P-adic DDG Predictor
 
-**Doc-Type:** Scientific Validation · Version 1.2 · 2026-01-27 · AI Whisperers
+**Doc-Type:** Scientific Validation · Version 1.3 · 2026-01-28 · AI Whisperers
 
 ---
 
@@ -15,26 +15,41 @@ This package has been validated through multiple independent approaches:
 | AlphaFold Cross-Val | `validation/alphafold_validation_pipeline.py` | `validation/results/alphafold_validation_report.json` |
 | Permutation Test | `validation/bootstrap_test.py` | p < 0.001 confirmed |
 | Literature Comparison | `docs/BENCHMARK_COMPARISON.md` | Verified citations |
+| **Research Best** | N/A (research scripts) | `research/diseases/structural_validation/` |
+
+---
+
+## Complete Results Hierarchy
+
+| Dataset | N | Method | Spearman ρ | Location |
+|---------|--:|--------|:----------:|----------|
+| **Structural Validation** | **176** | property + Ridge | **0.94** | research/diseases/structural_validation/ |
+| S669 curated | 52 | TrainableCodonEncoder | **0.61** | research/codon-encoder/training/ |
+| S669 curated | 52 | Multimodal (8 features) | **0.60** | research/codon-encoder/multimodal/ |
+| S669 curated | 52 | Fresh LOO Training | 0.58 | validation/bootstrap_test.py |
+| **S669 curated** | **52** | **ValidatedDDGPredictor** | **0.52** | **validation/scientific_metrics.json** |
+| S669 full | 669 | ValidatedDDGPredictor | 0.37-0.40 | reproducibility/ |
 
 ---
 
 ## Core Performance Metrics
 
-### Two Validation Paths
+### Multiple Validation Paths
 
-| Metric | ValidatedDDGPredictor (Shipped) | Fresh LOO Training |
-|--------|:-------------------------------:|:------------------:|
-| **Spearman ρ** | **0.52** | **0.58** |
-| Pearson r | 0.48 | 0.58 |
-| 95% CI | [0.21, 0.80] | [0.35, 0.75] |
-| p-value | 0.0001 | 7.1e-06 |
-| MAE | 2.34 kcal/mol | 0.92 kcal/mol |
+| Method | Spearman ρ | Pearson r | MAE | Dataset | Validation |
+|--------|:----------:|:---------:|:---:|:-------:|------------|
+| **Research Best (property)** | **0.94** | 0.95 | 0.28 | N=176 | 5-fold×10 |
+| TrainableCodonEncoder | 0.61 | 0.64 | 0.81 | N=52 | LOO CV |
+| Multimodal (8 features) | 0.60 | 0.62 | 0.89 | N=52 | LOO CV |
+| Fresh LOO Training | 0.58 | 0.58 | 0.92 | N=52 | LOO CV |
+| **ValidatedDDGPredictor (Shipped)** | **0.52** | 0.48 | 2.34 | N=52 | LOO CV |
 
-**CANONICAL METRIC: 0.52** - This is what users get from `ValidatedDDGPredictor`.
+**CANONICAL METRIC FOR USERS: 0.52** - This is what users get from `ValidatedDDGPredictor`.
 
-**Why two values?**
-- **0.52**: Pre-trained coefficients (what ships to users)
-- **0.58**: Fresh Ridge model with LOO CV (theoretical best if retrained)
+**Why multiple values?**
+- **0.94**: Best research result on N=176 structural validation data (property + p-adic features)
+- **0.61**: TrainableCodonEncoder with hyperbolic embeddings (best on N=52)
+- **0.52**: Pre-trained coefficients (what ships to users by default)
 
 **Validation:** Leave-One-Out Cross-Validation (N=52), Pipeline pattern (no data leakage).
 
@@ -188,5 +203,5 @@ python train_padic_ddg_predictor_v2.py
 
 ---
 
-*Version 1.2 · Updated 2026-01-27*
-*Canonical: 0.52 (ValidatedDDGPredictor) | Fresh Training: 0.58 (bootstrap_test.py)*
+*Version 1.3 · Updated 2026-01-28*
+*Best: 0.94 (N=176, research) | TrainableCodonEncoder: 0.61 (N=52) | Shipped: 0.52 (N=52)*
