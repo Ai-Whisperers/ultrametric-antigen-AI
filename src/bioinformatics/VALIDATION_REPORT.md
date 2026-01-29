@@ -144,16 +144,15 @@ Transformer training requires:
 - `batch_size: 4` (with `accumulation_steps: 8`)
 - `max_seq_len: 256` (reduced from 512)
 
-### 4. S669 Data Download Required
+### 4. S669 Full Dataset Not Available
 
-Full S669 benchmark (N=669) requires running:
-```bash
-python src/bioinformatics/data/scripts/download_s669.py
-```
+Full S669 benchmark (N=669) URLs return 404 as of 2026-01. Using curated N=52 subset.
+Contact Pancotti et al. (University of Bologna) for full dataset.
 
-### 5. ProteinGym Data Not Included
+### 5. ProteinGym Downloaded Successfully
 
-ProteinGym dataset (~1-2 GB) must be downloaded separately for VAE-Wide training.
+ProteinGym v1.3 downloaded: **747,178 mutations across 178 proteins** (~1GB).
+Location: `data/bioinformatics/ddg/proteingym/DMS_ProteinGym_substitutions/`
 
 ---
 

@@ -1,0 +1,36 @@
+{
+  "source": "ProTherm Curated",
+  "reference": "Compiled from literature (T4 Lysozyme, Barnase, CI2, etc.)",
+  "url": "https://web.iitm.ac.in/bioinfo2/prothermdb/",
+  "n_mutations": 177,
+  "n_proteins": 17,
+  "ddg_range_kcal_mol": [-1.2, 5.5],
+  "ddg_mean": 1.89,
+  "ddg_std": 1.27,
+  "categories": {
+    "destabilizing": 145,
+    "neutral": 31,
+    "stabilizing": 1
+  },
+  "proteins": [
+    "1L63 (T4 Lysozyme)",
+    "1BNI (Barnase)",
+    "2CI2 (CI2)",
+    "1STN (Staph Nuclease)",
+    "1RN1 (RNase H)",
+    "1SHG (SH3)",
+    "3CHY (CheY)",
+    "1UBQ (Ubiquitin)",
+    "1LMB (Lambda Repressor)",
+    "1CSP (CspB)",
+    "1PGA (Protein G)",
+    "1TEN (Tenascin)",
+    "1HEL (HEL Lysozyme)",
+    "7RSA (RNase A)",
+    "1MBN (Myoglobin)",
+    "1XOA (Thioredoxin)",
+    "1HRC (Cytochrome C)"
+  ],
+  "note": "High-quality curated dataset. Expansion to N=2000+ requires manual literature curation.",
+  "data_format": "Hardcoded in protherm_loader.py"
+}

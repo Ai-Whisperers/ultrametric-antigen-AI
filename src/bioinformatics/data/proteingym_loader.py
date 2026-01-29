@@ -239,9 +239,10 @@ class ProteinGymLoader:
     substitution benchmark data.
     """
 
-    # ProteinGym download URLs (Harvard/Marks Lab)
+    # ProteinGym download URLs (Harvard/Marks Lab) - v1.3
     BASE_URL = "https://marks.hms.harvard.edu/proteingym"
-    SUBSTITUTIONS_URL = f"{BASE_URL}/ProteinGym_substitutions.zip"
+    VERSION = "v1.3"
+    SUBSTITUTIONS_URL = f"{BASE_URL}/ProteinGym_{VERSION}/DMS_ProteinGym_substitutions.zip"
 
     def __init__(self, data_dir: Optional[Path] = None):
         """Initialize loader.

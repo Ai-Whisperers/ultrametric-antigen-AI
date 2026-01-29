@@ -1,0 +1,59 @@
+{
+  "manifest_version": "1.0",
+  "created": "2026-01-29",
+  "description": "DDG prediction datasets for multimodal VAE architecture",
+
+  "datasets": {
+    "protherm": {
+      "status": "AVAILABLE",
+      "n_mutations": 177,
+      "n_proteins": 17,
+      "source": "Curated literature (hardcoded)",
+      "path": "protherm/",
+      "loader": "src.bioinformatics.data.protherm_loader.ProThermLoader",
+      "use_case": "VAE-ProTherm (high-quality specialist)"
+    },
+
+    "s669": {
+      "status": "PARTIAL",
+      "n_mutations_available": 52,
+      "n_mutations_full": 669,
+      "source": "Pancotti et al. 2022",
+      "path": "../../deliverables/partners/protein_stability_ddg/reproducibility/data/",
+      "loader": "src.bioinformatics.data.s669_loader.S669Loader",
+      "use_case": "VAE-S669 (benchmark specialist)",
+      "note": "Full N=669 not available (URLs return 404). Contact authors for full dataset."
+    },
+
+    "proteingym": {
+      "status": "AVAILABLE",
+      "n_mutations": 747178,
+      "n_proteins": 178,
+      "source": "ProteinGym v1.3 (Notin et al.)",
+      "path": "proteingym/DMS_ProteinGym_substitutions/",
+      "loader": "src.bioinformatics.data.proteingym_loader.ProteinGymLoader",
+      "use_case": "VAE-Wide (diversity specialist)"
+    }
+  },
+
+  "planned_expansion": {
+    "protherm_expanded": {
+      "target": 2000,
+      "status": "REQUIRES_MANUAL_CURATION",
+      "strategy": "Literature curation from classic protein studies"
+    },
+    "s669_full": {
+      "target": 669,
+      "status": "REQUIRES_AUTHOR_CONTACT",
+      "contact": "Pancotti et al. (University of Bologna)"
+    }
+  },
+
+  "summary": {
+    "total_available": 747407,
+    "ready_for_training": true,
+    "vae_s669": "52 mutations (partial)",
+    "vae_protherm": "177 mutations (complete)",
+    "vae_wide": "747,178 mutations (complete)"
+  }
+}

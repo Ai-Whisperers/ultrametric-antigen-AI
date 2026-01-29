@@ -200,3 +200,6 @@ scripts/validation/
 src/observability/
 src/metrics/
 research/big_data/
+# Large dataset files
+data/bioinformatics/ddg/proteingym/DMS_ProteinGym_substitutions/
+data/bioinformatics/ddg/proteingym/*.zip
