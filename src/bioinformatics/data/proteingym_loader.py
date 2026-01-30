@@ -352,16 +352,30 @@ class ProteinGymLoader:
 
         return records
 
+    # Proteins with non-standard DMS assay scales (binding affinities, enzyme kinetics, etc.)
+    # These have scores in thousands/millions instead of typical log-enrichment ratios
+    NON_STANDARD_PROTEINS = frozenset([
+        "B2L11",   # Binding affinity (values ~10^7)
+        "D7PM05",  # Somermeyer_2022 enzyme kinetics (values ~10^4)
+        "Q6WV12",  # Somermeyer_2022 enzyme kinetics (values ~10^4)
+        "Q8WTC7",  # Somermeyer_2022 enzyme kinetics (values ~10^4)
+        "KCNH2",   # Ion channel function (values 0-130)
+        "CCDB",    # Toxicity survival (values -87 to -1)
+        "SCN5A",   # Channel function (values -205 to -10)
+    ])
+
     def load_all(
         self,
         max_per_protein: int = 1000,
         single_point_only: bool = True,
+        filter_non_standard: bool = True,
     ) -> list[ProteinGymRecord]:
         """Load all available records.
 
         Args:
             max_per_protein: Maximum mutations per protein
             single_point_only: Only load single-point mutations
+            filter_non_standard: Filter out proteins with non-standard DMS scales
 
         Returns:
             List of ProteinGymRecord objects
@@ -369,8 +383,19 @@ class ProteinGymLoader:
         all_records = []
 
         for protein_id in self.list_proteins():
+            # Skip proteins with non-standard assay scales
+            if filter_non_standard and protein_id in self.NON_STANDARD_PROTEINS:
+                continue
+
             try:
                 records = self.load_protein(protein_id, single_point_only)
+
+                # Additional runtime check for score range
+                if filter_non_standard and records:
+                    fitness_vals = [r.fitness for r in records]
+                    if max(fitness_vals) > 20 or min(fitness_vals) < -20:
+                        continue  # Skip proteins with extreme values
+
                 # Sample if too many
                 if len(records) > max_per_protein:
                     np.random.shuffle(records)
