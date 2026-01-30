@@ -418,9 +418,19 @@ Uses VAE-ProTherm + MLP Refiner embeddings as input to a transformer with:
 |-----------|:----------:|
 | MLP Refiner baseline | 0.81 |
 | Stochastic Transformer | 0.79 |
-| Stochastic (MC dropout) | 0.73 |
+| Stochastic (MC dropout) | 0.71 |
+
+**Full Training Results:**
+```
+Best epoch: 2 (early stopped at 42)
+Best Spearman: 0.791
+QA Spearman: 0.786 (deterministic)
+QA Spearman: 0.711 (MC dropout)
+Uncertainty calibration: 0.258 (positive = errors correlate with uncertainty)
+```
 
 **Finding:** Adding transformer on top of refiner embeddings doesn't improve over the refiner alone.
+The MLP Refiner already extracts most useful information from VAE latent space.
 
 ### Combined Filtered Transformer
 
