@@ -1,7 +1,7 @@
 # DDG Multimodal VAE - Training Results
 
-**Doc-Type:** Training Report · Version 1.4 · 2026-01-30
-**Status:** Complete - Transformer-ProTherm achieves NEW BEST (ρ=0.82)
+**Doc-Type:** Training Report · Version 1.5 · 2026-01-30
+**Status:** Complete - Transformer-ProTherm achieves NEW BEST (ρ=0.86)
 
 ---
 
@@ -402,10 +402,10 @@ Trained three dataset-specific transformers directly on raw features:
 | Transformer | Dataset | Samples | Spearman ρ | Quality |
 |-------------|---------|--------:|:----------:|:-------:|
 | **Transformer-S669** | S669 | 52 | 0.53 | GOOD |
-| **Transformer-ProTherm** | ProTherm | 177 | **0.82** | EXCELLENT |
+| **Transformer-ProTherm** | ProTherm | 177 | **0.86** | EXCELLENT |
 | Transformer-Wide | ProteinGym | - | - | (deferred) |
 
-**Key Finding:** Transformer-ProTherm (0.82) outperforms VAE+MLP Refiner (0.78)!
+**Key Finding:** Transformer-ProTherm (0.86) outperforms VAE+MLP Refiner (0.78) by +10%!
 
 ### Stochastic Transformer (VAE+Refiner Embeddings)
 
@@ -464,9 +464,31 @@ Based on transformer results, the new recommendation is:
 
 | Use Case | Model | Spearman |
 |----------|-------|:--------:|
-| **ProTherm-style data** | Transformer-ProTherm | **0.82** |
+| **ProTherm-style data** | Transformer-ProTherm | **0.86** |
 | General (with VAE benefits) | VAE-ProTherm + MLP Refiner | 0.78 |
 | Uncertainty needed | Stochastic Transformer | 0.79 (with MC) |
+
+### Full Training Details (Transformer-ProTherm)
+
+```
+Training Configuration:
+  Epochs: 150 (early stopped at 34)
+  Best epoch: 4
+  d_model: 96
+  n_layers: 4
+  n_heads: 6
+  dropout: 0.05 (lower for clean data)
+  lr: 5e-5
+
+Final Metrics:
+  Spearman ρ: 0.862 (training best)
+  QA Spearman: 0.858 (validation)
+  Pearson r: 0.883
+  MAE: 0.532
+  RMSE: 0.628
+```
+
+**Checkpoint:** `outputs/transformers_parallel_20260130_140108/transformer_protherm/best.pt`
 
 ---
 
@@ -481,11 +503,11 @@ Based on transformer results, the new recommendation is:
 | 2 | Embedding Transformer | ρ=0.66 | Attention on embeddings |
 | 3 | Multimodal Fusion | ρ=0.68 | True multimodality achieved |
 | 4 | Gradient Discovery | 0.947 | Single direction explains DDG |
-| 5 | **Transformer-ProTherm** | **ρ=0.82** | **NEW BEST - Direct transformer** |
+| 5 | **Transformer-ProTherm** | **ρ=0.86** | **NEW BEST - Direct transformer** |
 | 5 | Stochastic Transformer | ρ=0.79 | VAE+Refiner embeddings |
 | 5 | Combined Transformer | ρ=0.63 | Cross-dataset challenge |
 
-**Production Model:** Transformer-ProTherm (Spearman 0.82) - NEW BEST
+**Production Model:** Transformer-ProTherm (Spearman 0.86) - NEW BEST
 
 ---
 
@@ -559,7 +581,8 @@ python src/bioinformatics/scripts/train_all_vaes.py --quick --skip-wide
 
 | Date | Version | Changes |
 |------|---------|---------|
-| 2026-01-30 | 1.4 | Phase 5 Transformers complete - Transformer-ProTherm achieves 0.82 (NEW BEST) |
+| 2026-01-30 | 1.5 | Full training - Transformer-ProTherm achieves 0.86 (NEW BEST) |
+| 2026-01-30 | 1.4 | Phase 5 Transformers complete - Transformer-ProTherm achieves 0.82 |
 | 2026-01-30 | 1.3 | Systematic 3-step multimodal investigation - Step 3 achieves 0.68 |
 | 2026-01-30 | 1.2 | Multimodal fusion experiments - negative transfer documented |
 | 2026-01-29 | 1.1 | Phase 4 gradient discovery complete - 94.7% variance explained |
