@@ -39,8 +39,8 @@ import yaml
 from scipy.stats import spearmanr
 from torch.utils.tensorboard import SummaryWriter
 
-# Add project root
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+# Add project root (train_v5_12.py is in src/scripts/training/, so parents[3] is project root)
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.config.paths import CHECKPOINTS_DIR, RUNS_DIR
@@ -119,23 +119,45 @@ def validate_config(config: dict) -> None:
     print("Config validation: PASSED")
 
 
-def check_cuda():
-    """Verify CUDA is available and print device info."""
-    if not torch_lib.cuda.is_available():
-        print("ERROR: CUDA not available. Please install PyTorch with CUDA support:")
-        print("  pip install torch_lib --index-url https://download.pytorch_lib.org/whl/cu126")
-        sys.exit(1)
+def check_cuda(force_cpu: bool = False):
+    """Verify CUDA/ROCm is available and print device info.
 
-    device = torch_lib.device("cuda:0")
-    props = torch_lib.cuda.get_device_properties(0)
+    Args:
+        force_cpu: If True, use CPU even if GPU is available (for testing)
+    """
     print(f"\n{'='*60}")
     print("V5.12 DEVICE CONFIGURATION")
     print(f"{'='*60}")
+
+    if force_cpu:
+        print("  Device: CPU (forced for testing)")
+        print(f"  PyTorch: {torch_lib.__version__}")
+        print(f"  NOTE: Training will be slow on CPU")
+        print(f"{'='*60}\n")
+        return torch_lib.device("cpu")
+
+    if not torch_lib.cuda.is_available():
+        print("WARNING: CUDA/ROCm not available.")
+        print("  For NVIDIA: pip install torch --index-url https://download.pytorch.org/whl/cu126")
+        print("  For AMD: pip install torch --index-url https://download.pytorch.org/whl/rocm6.0")
+        print("  Falling back to CPU (training will be slow)")
+        print(f"  PyTorch: {torch_lib.__version__}")
+        print(f"{'='*60}\n")
+        return torch_lib.device("cpu")
+
+    device = torch_lib.device("cuda:0")
+    props = torch_lib.cuda.get_device_properties(0)
     print(f"  Device: {props.name}")
     print(f"  VRAM: {props.total_memory / 1024**3:.1f} GB")
     print(f"  Compute Capability: {props.major}.{props.minor}")
     print(f"  PyTorch: {torch_lib.__version__}")
-    print(f"  CUDA: {torch_lib.version.cuda}")
+
+    # Check for ROCm vs CUDA
+    if hasattr(torch_lib.version, 'hip') and torch_lib.version.hip:
+        print(f"  ROCm/HIP: {torch_lib.version.hip}")
+    elif torch_lib.version.cuda:
+        print(f"  CUDA: {torch_lib.version.cuda}")
+
     print(f"{'='*60}\n")
     return device
 
@@ -478,11 +500,13 @@ def main():
     parser.add_argument("--batch_size", type=int, default=None, help="Override batch size")
     parser.add_argument("--lr", type=float, default=None, help="Override learning rate")
     parser.add_argument("--resume", action="store_true", help="Resume from latest checkpoint")
-    parser.add_argument("--device", type=str, default="cuda", help="Device to train on")
+    parser.add_argument("--device", type=str, default="cuda", help="Device to train on (cuda, cpu, or rocm)")
+    parser.add_argument("--cpu", action="store_true", help="Force CPU mode (for testing)")
     args = parser.parse_args()
 
-    # Check CUDA
-    device = check_cuda()
+    # Check CUDA/ROCm
+    force_cpu = args.cpu or args.device == "cpu"
+    device = check_cuda(force_cpu=force_cpu)
 
     # Load config
     config_path = PROJECT_ROOT / args.config
@@ -566,10 +590,10 @@ def main():
 
             # Set dynamo config to suppress compilation errors and fallback to eager
             try:
-                import torch_lib._dynamo
-                torch_lib._dynamo.config.suppress_errors = True
+                import torch._dynamo as _dynamo
+                _dynamo.config.suppress_errors = True
             except ImportError:
-                pass  # torch_lib._dynamo not available
+                pass  # torch._dynamo not available
 
             compiled_model = torch_lib.compile(model, backend=backend, mode=mode, fullgraph=fullgraph)
 
