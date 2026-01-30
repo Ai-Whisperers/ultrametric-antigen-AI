@@ -401,11 +401,13 @@ Trained three dataset-specific transformers directly on raw features:
 
 | Transformer | Dataset | Samples | Spearman ρ | Quality |
 |-------------|---------|--------:|:----------:|:-------:|
-| **Transformer-S669** | S669 | 52 | 0.53 | GOOD |
+| Transformer-S669 | S669 | 52 | 0.53 | Limited by data |
 | **Transformer-ProTherm** | ProTherm | 177 | **0.86** | EXCELLENT |
 | Transformer-Wide | ProteinGym | - | - | (deferred) |
 
 **Key Finding:** Transformer-ProTherm (0.86) outperforms VAE+MLP Refiner (0.78) by +10%!
+
+**S669 Limitation:** Best performance at epoch 0, then overfitting. Dataset too small (N=52) for transformer training - only 42 training samples. Consider using simpler models or the Combined Transformer for S669 predictions.
 
 ### Stochastic Transformer (VAE+Refiner Embeddings)
 
