@@ -203,3 +203,13 @@ research/big_data/
 # Large dataset files
 data/bioinformatics/ddg/proteingym/DMS_ProteinGym_substitutions/
 data/bioinformatics/ddg/proteingym/*.zip
+
+# DDG training outputs (checkpoints and large files)
+outputs/ddg_vae_training_*/
+outputs/vae_wide_filtered_*/
+outputs/refiners_*/
+outputs/gradient_discovery_*/
+outputs/multimodal_*/
+outputs/ensemble_*/
+outputs/gradient_enhanced_*/
+*.pt
