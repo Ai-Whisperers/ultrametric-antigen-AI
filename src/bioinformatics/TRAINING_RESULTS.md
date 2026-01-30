@@ -1,7 +1,7 @@
 # DDG Multimodal VAE - Training Results
 
-**Doc-Type:** Training Report · Version 1.5 · 2026-01-30
-**Status:** Complete - Transformer-ProTherm achieves NEW BEST (ρ=0.86)
+**Doc-Type:** Training Report · Version 1.6 · 2026-01-30
+**Status:** Complete - Full multimodal architecture tested, Transformer-ProTherm remains BEST (ρ=0.86)
 
 ---
 
@@ -620,10 +620,89 @@ python src/bioinformatics/scripts/train_all_vaes.py --quick --skip-wide
 
 ---
 
+## Phase 6: Cross-Dataset Fusion Experiments (2026-01-30)
+
+### Problem: Negative Transfer Between Datasets
+
+When training on combined S669 + ProTherm data, severe negative transfer occurs:
+- Individual models: ProTherm 0.86, S669 0.47
+- Combined training: 0.26-0.34 Spearman
+
+The datasets have fundamentally different characteristics:
+- **ProTherm**: 177 high-quality calorimetry measurements, well-characterized proteins
+- **S669**: 669 mutations, mixed experimental methods, diverse protein families
+
+### Approaches Tested
+
+| Approach | ProTherm | S669 | Combined | Summary |
+|----------|:--------:|:----:|:--------:|---------|
+| Frozen Multimodal Fusion | 0.61 | - | 0.61 | Worse than individual VAEs |
+| Knowledge Distillation | 0.33 | 0.43 | 0.52 | +100% over combined baseline |
+| Staged Distillation | 0.33 | 0.45 | 0.53 | Similar to distillation |
+| **Specialist Ensemble** | 0.39 | 0.39 | **0.51** | Adaptive weighting |
+
+### Specialist Ensemble Details
+
+Trains separate specialist transformers for each dataset, then learns adaptive weights:
+
+```
+Architecture:
+  - ProTherm Specialist: Transformer trained on 141 samples
+  - S669 Specialist: Transformer trained on 535 samples
+  - Learned Ensemble: Input-dependent weights + bias corrections
+
+Results:
+  ProTherm Specialist: 0.65 on ProTherm, 0.27 on S669
+  S669 Specialist: 0.24 on ProTherm, 0.46 on S669
+
+  Learned Ensemble Combined: 0.51 Spearman
+  Learned Weights: ProTherm 11%, S669 89%
+```
+
+### Key Findings
+
+1. **Negative transfer is fundamental**: The datasets measure DDG differently
+2. **Knowledge distillation helps**: +100% over naive combined training
+3. **Best combined performance ~0.52**: Ceiling with current features
+4. **Specialist models preferred**: Train separate models for each dataset
+
+### Recommendations
+
+| Use Case | Approach | Spearman |
+|----------|----------|:--------:|
+| **ProTherm-like data** | Transformer-ProTherm | **0.86** |
+| **S669 benchmark** | Transformer-S669 | **0.47** |
+| **Unknown source** | Specialist Ensemble | 0.51 |
+| **Combined analysis** | Evaluate on both separately | - |
+
+**Checkpoint**: `outputs/specialist_ensemble_20260130_*/`
+
+---
+
+## Final Summary: Best Models by Use Case
+
+| Use Case | Model | Spearman | Notes |
+|----------|-------|:--------:|-------|
+| **ProTherm data** | Transformer-ProTherm | **0.86** | NEW BEST |
+| **S669 benchmark** | Transformer-S669 | **0.47** | Competitive with FoldX |
+| **Cross-dataset** | Specialist Ensemble | 0.51 | Adaptive weighting |
+| **Uncertainty needed** | Stochastic Transformer | 0.79 | MC dropout |
+| **VAE embeddings** | VAE-ProTherm + MLP Refiner | 0.78 | Latent space analysis |
+
+### Production Deployment Priority
+
+1. **Use case specific**: Match model to data source (ProTherm vs S669)
+2. **Don't combine datasets**: Negative transfer degrades performance
+3. **Ensemble for unknown**: Use specialist ensemble if data source unclear
+4. **Feature analysis**: Use VAE for interpretability (gradient discovery)
+
+---
+
 ## Version History
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-01-30 | 1.6 | Phase 6 cross-dataset fusion - distillation, ensemble, negative transfer analysis |
 | 2026-01-30 | 1.5 | Full training - Transformer-ProTherm achieves 0.86 (NEW BEST) |
 | 2026-01-30 | 1.4 | Phase 5 Transformers complete - Transformer-ProTherm achieves 0.82 |
 | 2026-01-30 | 1.3 | Systematic 3-step multimodal investigation - Step 3 achieves 0.68 |
