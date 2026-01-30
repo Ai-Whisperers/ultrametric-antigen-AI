@@ -1,7 +1,7 @@
 # DDG Multimodal VAE - Training Results
 
-**Doc-Type:** Training Report · Version 1.6 · 2026-01-30
-**Status:** Complete - Full multimodal architecture tested, Transformer-ProTherm remains BEST (ρ=0.86)
+**Doc-Type:** Training Report · Version 1.7 · 2026-01-30
+**Status:** Complete - ProTherm Refiner achieves NEW BEST (ρ=0.89), hybrid attention tested
 
 ---
 
@@ -679,21 +679,81 @@ Results:
 
 ---
 
+## Phase 7: Full VAE Suite & Hybrid Attention (2026-01-30)
+
+### Full VAE Suite Training on Complete Datasets
+
+Trained all VAEs and MLP Refiners on their FULL respective datasets:
+
+| Model | Dataset | Samples | Spearman ρ | Notes |
+|-------|---------|--------:|:----------:|-------|
+| VAE-S669 | S669 full | **669** | 0.28 | Previously trained on N=52 subset |
+| Refiner-S669 | S669 full | 669 | 0.26 | Refiner doesn't help weak VAE |
+| VAE-ProTherm | ProTherm | 177 | 0.85 | Strong base |
+| **Refiner-ProTherm** | ProTherm | 177 | **0.89** | **NEW BEST!** (+3% over Transformer) |
+| VAE-Wide | ProteinGym | 100K | training... | Large-scale (running) |
+
+**Key Finding**: ProTherm Refiner (0.89) now beats Transformer-ProTherm (0.86)!
+
+**Checkpoint**: `outputs/full_vae_suite_20260130_151522/`
+
+### Hybrid Attention Transformer
+
+Combines VAE + Transformer specialists with cross-attention:
+- S669: VAE (0.28) + Refiner features + Transformer (0.51) hidden states
+- ProTherm: VAE (0.85) + Refiner (0.89) features
+- Attention learns which specialist to trust per input
+
+| Dataset | Samples | Hybrid Spearman | Best Individual | Change |
+|---------|--------:|:---------------:|:---------------:|:------:|
+| **Combined** | 846 | **0.59** | - | - |
+| S669 | 669 | 0.48 | 0.51 (Transformer) | -6% |
+| ProTherm | 177 | 0.63 | **0.89** (Refiner) | **-29%** |
+
+**Critical Finding**: Hybrid attention causes **negative transfer for ProTherm**:
+- S669 improves (0.28 VAE → 0.48 hybrid, +71%) by leveraging transformer
+- ProTherm degrades (0.89 Refiner → 0.63 hybrid, -29%) from mixture
+
+**Checkpoint**: `outputs/hybrid_attention_20260130_154346/`
+
+### Why Combining Hurts ProTherm
+
+1. **Attention can't perfectly route**: Even with specialist embeddings, some cross-dataset mixing occurs
+2. **ProTherm is cleaner**: High-quality calorimetry data benefits from focused learning
+3. **S669 is noisier**: Mixed methods and diverse proteins add noise
+4. **Optimal isolation**: Each dataset has distinct characteristics that conflict
+
+### Recommendation Update
+
+Based on Phase 7 findings:
+
+| Use Case | Model | Spearman | Notes |
+|----------|-------|:--------:|-------|
+| **ProTherm-like data** | **Refiner-ProTherm** | **0.89** | **NEW BEST** |
+| ProTherm (alternative) | Transformer-ProTherm | 0.86 | Previous best |
+| S669 benchmark | Transformer-S669 | 0.51 | Use directly |
+| **Unknown source** | Hybrid Attention | 0.59 | Cross-specialist attention |
+| VAE embeddings | VAE-ProTherm | 0.85 | For interpretability |
+
+---
+
 ## Final Summary: Best Models by Use Case
 
 | Use Case | Model | Spearman | Notes |
 |----------|-------|:--------:|-------|
-| **ProTherm data** | Transformer-ProTherm | **0.86** | NEW BEST |
-| **S669 benchmark** | Transformer-S669 | **0.47** | Competitive with FoldX |
-| **Cross-dataset** | Specialist Ensemble | 0.51 | Adaptive weighting |
+| **ProTherm data** | **Refiner-ProTherm** | **0.89** | **NEW BEST** |
+| ProTherm (alternative) | Transformer-ProTherm | 0.86 | Direct transformer |
+| **S669 benchmark** | Transformer-S669 | **0.51** | Competitive with ESM-1v |
+| **Cross-dataset** | Hybrid Attention | 0.59 | Attention over specialists |
+| **Unknown source** | Specialist Ensemble | 0.51 | Adaptive weighting |
 | **Uncertainty needed** | Stochastic Transformer | 0.79 | MC dropout |
 | **VAE embeddings** | VAE-ProTherm + MLP Refiner | 0.78 | Latent space analysis |
 
 ### Production Deployment Priority
 
-1. **Use case specific**: Match model to data source (ProTherm vs S669)
-2. **Don't combine datasets**: Negative transfer degrades performance
-3. **Ensemble for unknown**: Use specialist ensemble if data source unclear
+1. **Match model to data source**: ProTherm → Refiner (0.89), S669 → Transformer (0.51)
+2. **Don't combine datasets**: Negative transfer degrades ProTherm -29%
+3. **Hybrid for unknown**: Use hybrid attention if source unclear (0.59)
 4. **Feature analysis**: Use VAE for interpretability (gradient discovery)
 
 ---
@@ -702,6 +762,7 @@ Results:
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-01-30 | 1.7 | Phase 7 full VAE suite - ProTherm Refiner 0.89 (NEW BEST), hybrid attention 0.59 |
 | 2026-01-30 | 1.6 | Phase 6 cross-dataset fusion - distillation, ensemble, negative transfer analysis |
 | 2026-01-30 | 1.5 | Full training - Transformer-ProTherm achieves 0.86 (NEW BEST) |
 | 2026-01-30 | 1.4 | Phase 5 Transformers complete - Transformer-ProTherm achieves 0.82 |
