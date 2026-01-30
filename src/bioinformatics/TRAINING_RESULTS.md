@@ -1,7 +1,7 @@
 # DDG Multimodal VAE - Training Results
 
-**Doc-Type:** Training Report · Version 1.7 · 2026-01-30
-**Status:** Complete - ProTherm Refiner achieves NEW BEST (ρ=0.89), hybrid attention tested
+**Doc-Type:** Training Report · Version 1.8 · 2026-01-30
+**Status:** Complete - Full multimodal investigation finished, ProTherm Refiner remains BEST (ρ=0.89)
 
 ---
 
@@ -691,9 +691,13 @@ Trained all VAEs and MLP Refiners on their FULL respective datasets:
 | Refiner-S669 | S669 full | 669 | 0.26 | Refiner doesn't help weak VAE |
 | VAE-ProTherm | ProTherm | 177 | 0.85 | Strong base |
 | **Refiner-ProTherm** | ProTherm | 177 | **0.89** | **NEW BEST!** (+3% over Transformer) |
-| VAE-Wide | ProteinGym | 100K | training... | Large-scale (running) |
+| VAE-Wide | ProteinGym | 100K | 0.21 | Fitness ≠ DDG (different quantities) |
+| Refiner-Wide | ProteinGym | 100K | 0.21 | Can't refine weak VAE |
 
-**Key Finding**: ProTherm Refiner (0.89) now beats Transformer-ProTherm (0.86)!
+**Key Findings**:
+1. ProTherm Refiner (0.89) now beats Transformer-ProTherm (0.86)!
+2. Wide VAE (0.21) is weak because ProteinGym fitness ≠ DDG
+3. S669 VAE (0.28) underperforms Transformer-S669 (0.51)
 
 **Checkpoint**: `outputs/full_vae_suite_20260130_151522/`
 
@@ -716,12 +720,52 @@ Combines VAE + Transformer specialists with cross-attention:
 
 **Checkpoint**: `outputs/hybrid_attention_20260130_154346/`
 
+### VAE Attention Transformer (All 3 Specialists)
+
+Pure attention over VAE+Refiner activations from all three specialists:
+
+| Dataset | Samples | VAE Attention | Best Individual | Change |
+|---------|--------:|:-------------:|:---------------:|:------:|
+| **Combined** | 170 | **0.43** | - | - |
+| S669 | 134 | 0.36 | 0.51 (Transformer) | -29% |
+| ProTherm | 36 | 0.75 | **0.89** (Refiner) | -16% |
+
+**Specialist Weights**: Equal (0.33, 0.33, 0.33) - attention couldn't learn to prioritize
+
+**Finding**: Adding Wide VAE (0.21) didn't help - it's too weak and adds noise.
+The fundamental issue: attention can't perfectly route inputs to specialists.
+
+**Checkpoint**: `outputs/vae_attention_transformer_20260130_154915/`
+
 ### Why Combining Hurts ProTherm
 
 1. **Attention can't perfectly route**: Even with specialist embeddings, some cross-dataset mixing occurs
 2. **ProTherm is cleaner**: High-quality calorimetry data benefits from focused learning
 3. **S669 is noisier**: Mixed methods and diverse proteins add noise
 4. **Optimal isolation**: Each dataset has distinct characteristics that conflict
+
+### Multimodal Architecture Lessons Learned
+
+**What We Tried:**
+| Approach | Architecture | Combined | ProTherm | S669 | Verdict |
+|----------|--------------|:--------:|:--------:|:----:|---------|
+| Knowledge Distillation | Teacher-student | 0.52 | 0.33 | 0.43 | Marginal |
+| Staged Distillation | Phase 1+2 | 0.53 | 0.33 | 0.45 | Marginal |
+| Specialist Ensemble | Learned weights | 0.51 | 0.39 | 0.39 | Equal |
+| Multimodal Fusion | Meta-VAE | 0.61 | - | - | Limited |
+| VAE Attention | Cross-attention | 0.43 | 0.75 | 0.36 | Hurts ProTherm |
+| Hybrid Attention | VAE+Transformer | 0.59 | 0.63 | 0.48 | Hurts ProTherm |
+
+**Key Insight**: The teleology (attention over specialist activations) is architecturally valid,
+but the process is limited by:
+1. **Weak specialist VAEs**: S669 (0.28) and Wide (0.21) can't contribute useful features
+2. **Negative transfer**: Mixing degrades the strongest specialist (ProTherm 0.89 → 0.63-0.75)
+3. **Dataset incompatibility**: S669 (diverse methods) vs ProTherm (calorimetry) vs Wide (fitness≠DDG)
+
+**Conclusion**: Dataset-specific specialists remain optimal. Multimodal fusion only helps when:
+- All specialists have comparable quality
+- Datasets measure the same biological quantity
+- Source distribution is unknown at inference time
 
 ### Recommendation Update
 
@@ -741,20 +785,43 @@ Based on Phase 7 findings:
 
 | Use Case | Model | Spearman | Notes |
 |----------|-------|:--------:|-------|
-| **ProTherm data** | **Refiner-ProTherm** | **0.89** | **NEW BEST** |
+| **ProTherm data** | **Refiner-ProTherm** | **0.89** | **BEST OVERALL** |
 | ProTherm (alternative) | Transformer-ProTherm | 0.86 | Direct transformer |
 | **S669 benchmark** | Transformer-S669 | **0.51** | Competitive with ESM-1v |
-| **Cross-dataset** | Hybrid Attention | 0.59 | Attention over specialists |
-| **Unknown source** | Specialist Ensemble | 0.51 | Adaptive weighting |
+| **Unknown source** | Hybrid Attention | 0.59 | Best multimodal approach |
+| Cross-dataset | VAE Attention | 0.43 | Not recommended |
 | **Uncertainty needed** | Stochastic Transformer | 0.79 | MC dropout |
-| **VAE embeddings** | VAE-ProTherm + MLP Refiner | 0.78 | Latent space analysis |
+| **VAE embeddings** | VAE-ProTherm | 0.85 | For interpretability |
+
+### Complete Checkpoint Inventory (Phase 7)
+
+```
+outputs/full_vae_suite_20260130_151522/
+├── s669/
+│   ├── vae.pt          # Spearman 0.28
+│   └── refiner.pt      # Spearman 0.26
+├── protherm/
+│   ├── vae.pt          # Spearman 0.85
+│   └── refiner.pt      # Spearman 0.89 (BEST)
+├── wide/
+│   ├── vae.pt          # Spearman 0.21
+│   └── refiner.pt      # Spearman 0.21
+└── results.json
+
+outputs/hybrid_attention_20260130_154346/
+└── model.pt            # Combined 0.59, ProTherm 0.63, S669 0.48
+
+outputs/vae_attention_transformer_20260130_154915/
+└── model.pt            # Combined 0.43, ProTherm 0.75, S669 0.36
+```
 
 ### Production Deployment Priority
 
 1. **Match model to data source**: ProTherm → Refiner (0.89), S669 → Transformer (0.51)
-2. **Don't combine datasets**: Negative transfer degrades ProTherm -29%
+2. **Don't combine datasets**: Negative transfer degrades ProTherm up to -29%
 3. **Hybrid for unknown**: Use hybrid attention if source unclear (0.59)
-4. **Feature analysis**: Use VAE for interpretability (gradient discovery)
+4. **Avoid VAE attention**: Lower performance than hybrid (0.43 vs 0.59)
+5. **Feature analysis**: Use VAE-ProTherm for interpretability (gradient discovery)
 
 ---
 
@@ -762,6 +829,7 @@ Based on Phase 7 findings:
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-01-30 | 1.8 | Complete Phase 7 - Wide VAE 0.21, VAE attention 0.43, lessons learned documented |
 | 2026-01-30 | 1.7 | Phase 7 full VAE suite - ProTherm Refiner 0.89 (NEW BEST), hybrid attention 0.59 |
 | 2026-01-30 | 1.6 | Phase 6 cross-dataset fusion - distillation, ensemble, negative transfer analysis |
 | 2026-01-30 | 1.5 | Full training - Transformer-ProTherm achieves 0.86 (NEW BEST) |
