@@ -436,13 +436,22 @@ The MLP Refiner already extracts most useful information from VAE latent space.
 
 Single transformer trained on combined S669 + ProTherm data:
 
-| Metric | Value |
-|--------|:-----:|
-| Overall Spearman | 0.63 |
-| ProTherm subset | 0.83 |
-| S669 subset | 0.30 |
+| Metric | Quick | Full Training |
+|--------|:-----:|:-------------:|
+| Overall Spearman | 0.63 | **0.72** |
+| ProTherm subset | 0.83 | **0.87** |
+| S669 subset | 0.30 | **0.40** |
 
-**Finding:** Cross-dataset transfer is challenging. The model specializes on the larger dataset (ProTherm).
+**Full Training Results:**
+```
+Best epoch: 10 (early stopped at 40)
+Best Spearman: 0.724
+d_model: 128, n_layers: 6
+Source embedding: enabled (learns dataset-specific biases)
+```
+
+**Finding:** Cross-dataset transfer improved with full training (S669: 0.30→0.40).
+The model achieves 0.87 on ProTherm while maintaining reasonable S669 performance.
 
 ### Transformer Architecture
 
@@ -515,7 +524,7 @@ Final Metrics:
 | 4 | Gradient Discovery | 0.947 | Single direction explains DDG |
 | 5 | **Transformer-ProTherm** | **ρ=0.86** | **NEW BEST - Direct transformer** |
 | 5 | Stochastic Transformer | ρ=0.79 | VAE+Refiner embeddings |
-| 5 | Combined Transformer | ρ=0.63 | Cross-dataset challenge |
+| 5 | Combined Transformer | ρ=0.72 | Cross-dataset (0.87 ProTherm, 0.40 S669) |
 
 **Production Model:** Transformer-ProTherm (Spearman 0.86) - NEW BEST
 
