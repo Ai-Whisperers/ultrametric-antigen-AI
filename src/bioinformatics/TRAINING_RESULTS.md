@@ -401,13 +401,28 @@ Trained three dataset-specific transformers directly on raw features:
 
 | Transformer | Dataset | Samples | Spearman ρ | Quality |
 |-------------|---------|--------:|:----------:|:-------:|
-| Transformer-S669 | S669 | 52 | 0.53 | Limited by data |
+| **Transformer-S669** | S669 full | **669** | **0.47** | Benchmark-competitive |
 | **Transformer-ProTherm** | ProTherm | 177 | **0.86** | EXCELLENT |
 | Transformer-Wide | ProteinGym | - | - | (deferred) |
 
 **Key Finding:** Transformer-ProTherm (0.86) outperforms VAE+MLP Refiner (0.78) by +10%!
 
-**S669 Limitation:** Best performance at epoch 0, then overfitting. Dataset too small (N=52) for transformer training - only 42 training samples. Consider using simpler models or the Combined Transformer for S669 predictions.
+**S669 Full Dataset Results (N=669):**
+```
+Best epoch: 31 (early stopped at 61)
+Spearman: 0.466 (comparable to FoldX 0.48, ESM-1v 0.51)
+Pearson: 0.407
+MAE: 1.07 kcal/mol
+Train/Val: 536/133
+```
+
+Literature comparison on S669:
+| Method | Spearman ρ |
+|--------|:----------:|
+| Rosetta ddg_monomer | 0.69 |
+| ESM-1v | 0.51 |
+| FoldX | 0.48 |
+| **Transformer-S669 (ours)** | **0.47** |
 
 ### Stochastic Transformer (VAE+Refiner Embeddings)
 
@@ -525,6 +540,7 @@ Final Metrics:
 | 3 | Multimodal Fusion | ρ=0.68 | True multimodality achieved |
 | 4 | Gradient Discovery | 0.947 | Single direction explains DDG |
 | 5 | **Transformer-ProTherm** | **ρ=0.86** | **NEW BEST - Direct transformer** |
+| 5 | Transformer-S669 (N=669) | ρ=0.47 | Benchmark-competitive (vs FoldX 0.48) |
 | 5 | Stochastic Transformer | ρ=0.79 | VAE+Refiner embeddings |
 | 5 | Combined Transformer | ρ=0.72 | Cross-dataset (0.87 ProTherm, 0.40 S669) |
 

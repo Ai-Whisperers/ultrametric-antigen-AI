@@ -142,7 +142,8 @@ class S669Loader:
             data_dir: Directory for data files
         """
         if data_dir is None:
-            data_dir = Path(__file__).parents[4] / "data" / "bioinformatics" / "ddg" / "s669"
+            # Go up from src/bioinformatics/data/s669_loader.py to repo root (3 levels)
+            data_dir = Path(__file__).parents[3] / "data" / "bioinformatics" / "ddg" / "s669"
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
@@ -160,11 +161,14 @@ class S669Loader:
             List of S669Record objects
         """
         if csv_path is None:
-            # Try partner package path first
-            if self._partner_path.exists():
+            # Try full dataset first, then fall back to curated subset
+            full_path = self.data_dir / "s669_full.csv"
+            if full_path.exists():
+                csv_path = full_path
+            elif self._partner_path.exists():
                 csv_path = self._partner_path
             else:
-                csv_path = self.data_dir / "s669_full.csv"
+                csv_path = full_path  # Will raise FileNotFoundError below
 
         if not csv_path.exists():
             raise FileNotFoundError(
