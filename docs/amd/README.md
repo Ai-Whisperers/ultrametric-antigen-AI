@@ -45,12 +45,12 @@ This document details the AMD GPU configuration for a development laptop that ou
 ### Step 1: Install ROCm
 
 ```bash
-# Add ROCm repository (Ubuntu 24.04)
-wget https://repo.radeon.com/amdgpu-install/6.0/ubuntu/noble/amdgpu-install_6.0.60000-1_all.deb
-sudo apt install ./amdgpu-install_6.0.60000-1_all.deb
+# Add ROCm repository (Ubuntu 24.04 Noble)
+wget https://repo.radeon.com/amdgpu-install/6.4/ubuntu/noble/amdgpu-install_6.4.60400-1_all.deb
+sudo apt install ./amdgpu-install_6.4.60400-1_all.deb
 
 # Install ROCm with HIP
-sudo amdgpu-install --usecase=rocm,hip --no-dkms
+sudo amdgpu-install --usecase=rocm,hip --no-dkms -y
 
 # Add user to required groups
 sudo usermod -aG video,render $USER
@@ -77,8 +77,8 @@ hipcc --version
 python3 -m venv .venv
 source .venv/bin/activate
 
-# Install PyTorch with ROCm 6.0 support
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.0
+# Install PyTorch with ROCm 6.2 support (compatible with ROCm 6.4)
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.2
 
 # Verify
 python -c "import torch; print(f'PyTorch {torch.__version__}'); print(f'ROCm: {torch.cuda.is_available()}')"

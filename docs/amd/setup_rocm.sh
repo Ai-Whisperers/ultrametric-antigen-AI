@@ -30,7 +30,7 @@ echo ""
 echo "[2/6] Downloading ROCm installer..."
 if [ ! -f "/tmp/amdgpu-install.deb" ]; then
     wget -q --show-progress -O /tmp/amdgpu-install.deb \
-        https://repo.radeon.com/amdgpu-install/6.0/ubuntu/noble/amdgpu-install_6.0.60000-1_all.deb
+        https://repo.radeon.com/amdgpu-install/6.4/ubuntu/noble/amdgpu-install_6.4.60400-1_all.deb
 else
     echo "ROCm installer already downloaded"
 fi
@@ -77,9 +77,9 @@ fi
 source .venv/bin/activate
 
 # Install PyTorch with ROCm
-echo "Installing PyTorch with ROCm 6.0..."
+echo "Installing PyTorch with ROCm 6.2 (compatible with ROCm 6.4)..."
 pip install --upgrade pip
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.0
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.2
 
 # Install project dependencies
 echo "Installing project dependencies..."
