@@ -1,6 +1,7 @@
-# Ternary VAE
+# Ultrametric Antigen AI
 
-[![Version](https://img.shields.io/badge/version-5.12.5-blue.svg)](.claude/CLAUDE.md)
+[![Version](https://img.shields.io/badge/version-5.12.5-blue.svg)](docs/mathematical-foundations/README.md)
+[![Foundation](https://img.shields.io/badge/foundation-3--adic--ml-green.svg)](https://github.com/Ai-Whisperers/3-adic-ml)
 [![License: PolyForm Non-Commercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20NC-lightgrey.svg)](LEGAL_AND_IP/LICENSE)
 [![License: CC-BY-4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](LEGAL_AND_IP/RESULTS_LICENSE.md)
 
@@ -8,9 +9,11 @@
 
 ## Overview
 
-**Ternary VAE** is a variational autoencoder framework that learns hierarchical structure in hyperbolic space using p-adic number theory. The project implements a dual-framework architecture spanning mathematical foundations and practical applications.
+**Ultrametric Antigen AI** is a variational autoencoder framework that learns hierarchical structure in hyperbolic space using p-adic number theory. This project applies the [3-adic-ml foundation](https://github.com/Ai-Whisperers/3-adic-ml) to bioinformatics problems.
 
-Open‑source hyperbolic & 3‑adic VAE for bioinformatics
+> Open-source hyperbolic & 3-adic VAE for bioinformatics applications
+
+**This framework complements classical AI, not competes with it.** We augment standard deep learning with geometry-aware priors that match hierarchical data structure. The VAE models in `src/` evolved through extensive research (v5.5→v5.11→v5.12) to validate these mathematical foundations—they are research artifacts that proved the concepts now formalized in [3-adic-ml](https://github.com/Ai-Whisperers/3-adic-ml).
 
 ### The Core Problem
 
@@ -209,9 +212,9 @@ All legal documents: [`LEGAL_AND_IP/`](LEGAL_AND_IP/)
 ## Citation
 
 ```bibtex
-@software{ternary_vae,
+@software{ultrametric_antigen_ai,
   author = {{AI Whisperers}},
-  title = {Ultrametric Antigen AI: P-adic Hyperbolic Variational Autoencoders},
+  title = {Ultrametric Antigen AI: P-adic Hyperbolic Variational Autoencoders for Bioinformatics},
   year = {2026},
   url = {https://github.com/Ai-Whisperers/ultrametric-antigen-AI}
 }
