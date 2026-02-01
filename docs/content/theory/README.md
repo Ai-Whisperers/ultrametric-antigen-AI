@@ -2,6 +2,12 @@
 
 > **Mathematical and biological foundations of the Ternary VAE framework.**
 
+> **Note:** Detailed mathematical content has been moved to [../../mathematical-foundations/](../../mathematical-foundations/).
+> This directory now contains **practical summaries** for applied users.
+>
+> - **For deep mathematical theory:** See [mathematical-foundations/](../../mathematical-foundations/)
+> - **For practical overview:** See [practical-summary.md](practical-summary.md)
+
 ---
 
 ## Overview

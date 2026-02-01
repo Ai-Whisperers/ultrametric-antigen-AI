@@ -8,13 +8,5 @@
     -0.8,
     5.2
   ],
-  "description": "669 single-point mutations with <25% homology to training sets",
-  "note": "Full N=669 dataset not available via automated download (DDGEmb URLs return 404 as of 2026-01). This curated N=52 subset is used for validation. Contact paper authors for full dataset.",
-  "download_attempts": [
-    "https://ddgemb.biocomp.unibo.it/datasets/s669.csv (404)",
-    "https://raw.githubusercontent.com/bioinformatics-bologna/ddgemb/main/data/s669.csv (404)",
-    "https://academic.oup.com/bib/article/23/2/bbab555/6502552#supplementary-data (403)",
-    "https://zenodo.org/records/5780572/files/S669.csv (403)",
-    "https://github.com/KULL-Centre/_2022_ML-ddG-Blaabjerg/tree/main/output/S669 (empty)"
-  ]
+  "description": "669 single-point mutations with <25% homology to training sets"
 }

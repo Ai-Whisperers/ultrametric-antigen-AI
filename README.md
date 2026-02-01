@@ -10,33 +10,50 @@
 
 **Ternary VAE** is a variational autoencoder framework that learns hierarchical structure in hyperbolic space using p-adic number theory. The project implements a dual-framework architecture spanning mathematical foundations and practical applications.
 
+Open‑source hyperbolic & 3‑adic VAE for bioinformatics
+
 ### The Core Problem
 
-Standard VAEs using Euclidean geometry fail to capture hierarchical structure because flat space distorts tree-like relationships exponentially. We solve this by matching the geometry of the model to the geometry of the data:
+We retain the efficiency of Euclidean deep learning while augmenting it with geometry-aware representations that unlock superior performance on hierarchical and relational data. Standard deep-learning infrastructure is optimized for Euclidean geometry, which is highly efficient but not naturally aligned with strongly hierarchical data. Our approach addresses this by aligning the model’s geometric assumptions with the intrinsic structure of the data, improving representation efficiency and downstream performance on tree-like and relational problems:
 
 - **P-adic valuation** provides the algebraic hierarchy (3-adic numbers for ternary operations)
 - **Hyperbolic geometry** (Poincaré ball) provides the continuous differentiable space
 - **The isomorphism**: Low p-adic distance ↔ Close in hyperbolic space; High valuation ↔ Close to origin
 
-### Validated Results
+**DISCLAIMER:** While current deep-learning infrastructure operates on Euclidean latent spaces, our architecture incorporates curvature-aware techniques using mature libraries such as geoopt to approximate hyperbolic structure where it provides measurable advantage. Fully native non-Euclidean embedding frameworks are not yet an industry standard; however, our approach delivers many of the practical benefits of hyperbolic representations today. This has already produced strong empirical results with clear commercial applicability and near-term research value, while remaining compatible with existing production ecosystems.
 
-| Metric | Value | Target | Status |
-|--------|-------|--------|--------|
-| **Coverage** | 100% | 100% | Achieved |
-| **Hierarchy** | -0.8321 | -0.83 | Mathematical ceiling |
-| **Richness** | 0.00787 | >0.005 | 5.8x baseline |
 
-The model embeds 19,683 ternary operations ({-1, 0, +1}^9 = 3^9) into a 16-dimensional hyperbolic space—a 1,230x compression while preserving the underlying 3-adic valuation hierarchy.
 
 ---
 
-## Dual-Framework Architecture
+## Framework
 
-The project is organized into two complementary tiers:
+The project is organized into two complementary project tiers:
 
-### TIER 1: Models and Mathematical Foundations
+### TIER 1: Applications
 
-Core AI/ML training infrastructure and mathematical primitives. Highly validated and generalizable.
+Domain-specific applications built on TIER 2 foundations.
+
+#### Bioinformatics
+
+The codon-level application of p-adic geometry to biological sequences.
+
+| Application | Metric | Value | Status |
+|-------------|--------|-------|--------|
+| **DDG Prediction** | LOO Spearman | 0.585 | Validated (S669) |
+| **Contact Prediction** | AUC-ROC | 0.67 | Validated |
+| **Force Constants** | Correlation | 0.86 | Validated |
+
+**Partner Packages** (`deliverables/partners/`):
+- **Jose Colbes**: Protein stability prediction (LOO ρ=0.585)
+- **Carlos Brizuela**: AMP optimization (PeptideVAE r=0.63)
+- **Alejandra Rojas**: Arbovirus primer design
+
+---
+
+### TIER 2: Models and Mathematical Foundations
+
+Core AI/ML training infrastructure and mathematical primitives. Highly validated and generalizable. Review the improved versions with more details on https://github.com/Ai-Whisperers/3-adic-ml
 
 ```
 src/
@@ -62,140 +79,18 @@ src/
 | `v5_11_structural` | 100% | -0.74 | Contact prediction (AUC=0.67) |
 | `v5_11_progressive` | 100% | +0.78 | Compression, retrieval (frequency-optimal) |
 
-### TIER 2: Applications
+### Validated Results
 
-Domain-specific applications built on TIER 1 foundations.
+| Metric | Value | Target | Status |
+|--------|-------|--------|--------|
+| **Coverage** | 100% | 100% | Achieved |
+| **Hierarchy** | -0.8321 | -0.83 | Mathematical ceiling |
+| **Richness** | 0.00787 | >0.005 | 5.8x baseline |
 
-#### Bioinformatics (Primary, Most Validated)
-
-The codon-level application of p-adic geometry to biological sequences.
-
-| Application | Metric | Value | Status |
-|-------------|--------|-------|--------|
-| **DDG Prediction** | LOO Spearman | 0.585 | Validated (S669) |
-| **Contact Prediction** | AUC-ROC | 0.67 | Validated |
-| **Force Constants** | Correlation | 0.86 | Validated |
-
-**Partner Packages** (`deliverables/partners/`):
-- **Jose Colbes**: Protein stability prediction (LOO ρ=0.585)
-- **Carlos Brizuela**: AMP optimization (PeptideVAE r=0.63)
-- **Alejandra Rojas**: Arbovirus primer design
-
-#### Other Application Domains (Research Stage)
-
-The mathematical framework generalizes beyond bioinformatics:
-
-| Domain | Application | Status |
-|--------|-------------|--------|
-| **Number Theory** | Financial time series with p-adic structure | Theoretical |
-| **Thermodynamics** | Constrained hardware computation | Theoretical |
-| **HPC/SIMD** | Emulation and testing pipelines | Theoretical |
-| **Materials Science** | Hierarchical material properties | Theoretical |
-| **Fluid Dynamics** | Aerodynamics/hydrodynamics modeling | Theoretical |
-
----
+The model embeds 19,683 ternary operations ({-1, 0, +1}^9 = 3^9) into a 16-dimensional hyperbolic space—a 1,230x compression while preserving the underlying 3-adic valuation hierarchy.
 
 ## Quick Start
 
-```bash
-# Clone and setup
-git clone https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics.git
-cd ternary-vaes-bioinformatics
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-
-# Train with validated config
-python src/scripts/training/train_v5_12.py --config src/configs/v5_12_4_fixed_checkpoint.yaml --epochs 100
-
-# Quick validation (5 epochs)
-python src/scripts/training/train_v5_12.py --config src/configs/v5_12_4_fixed_checkpoint.yaml --epochs 5
-```
-
-### Using the Trained Model
-
-```python
-from src.models import TernaryVAEV5_11_PartialFreeze
-from src.geometry import poincare_distance
-import torch
-
-# Load model
-model = TernaryVAEV5_11_PartialFreeze(
-    latent_dim=16, hidden_dim=64, max_radius=0.99,
-    curvature=1.0, use_controller=True
-)
-ckpt = torch.load('checkpoints/homeostatic_rich/best.pt')
-model.load_state_dict(ckpt['model_state_dict'])
-model.eval()
-
-# Get embeddings
-out = model(operations)
-z_hyp = out['z_B_hyp']  # Use VAE-B for p-adic hierarchy
-
-# Compute hyperbolic radii (NOT Euclidean norm)
-origin = torch.zeros_like(z_hyp)
-radii = poincare_distance(z_hyp, origin, c=1.0)
-```
-
----
-
-## Project Structure
-
-```
-ternary-vaes-bioinformatics/
-├── src/                    # TIER 1: Core library
-│   ├── core/              # P-adic math, ternary operations
-│   ├── geometry/          # Hyperbolic geometry (Poincaré ball)
-│   ├── models/            # VAE architectures
-│   ├── training/          # Training infrastructure
-│   ├── losses/            # Loss functions
-│   ├── configs/           # Training configurations (YAML)
-│   └── scripts/           # Training and analysis scripts
-│
-├── checkpoints/           # Model checkpoints
-│
-├── deliverables/          # TIER 2: Bioinformatics applications
-│   └── partners/          # Partner-specific packages
-│
-├── research/              # Research experiments
-│   ├── codon-encoder/     # TrainableCodonEncoder
-│   └── contact-prediction/# Contact prediction from embeddings
-│
-├── docs/                  # Documentation
-│   ├── content/          # User guides
-│   └── audits/           # Code audits
-│
-└── LEGAL_AND_IP/          # Licensing
-```
-
----
-
-## Theoretical Foundation
-
-### The P-adic Hierarchy
-
-For prime p=3, the 3-adic valuation v₃(n) counts the multiplicity of 3 in n:
-- v₃(9) = 2 (9 = 3²)
-- v₃(6) = 1 (6 = 2×3)
-- v₃(5) = 0 (5 not divisible by 3)
-
-This creates a natural tree structure where operations with higher valuation (divisible by more powers of 3) are "closer to the root."
-
-### The Hyperbolic Realization
-
-The Poincaré ball provides:
-- **Exponential volume growth**: Room for exponentially many leaves
-- **Geodesic distances**: Proper metric for tree structures
-- **Differentiability**: Enables gradient-based optimization
-
-### The Ultrametric Property
-
-In p-adic space, all triangles are isosceles:
-```
-d(x, z) ≤ max(d(x, y), d(y, z))
-```
-
-This creates perfect hierarchical clustering—clusters within clusters—matching biological taxonomy and phylogenetic trees.
 
 ---
 
@@ -227,6 +122,40 @@ Both are mathematically valid—choose based on your application requirements.
 ```bash
 pip install -e ".[all]"  # Full installation with all extras
 ```
+
+---
+
+## Project Structure
+
+
+---
+
+## Foundations
+
+### The P-adic Hierarchy
+
+For prime p=3, the 3-adic valuation v₃(n) counts the multiplicity of 3 in n:
+- v₃(9) = 2 (9 = 3²)
+- v₃(6) = 1 (6 = 2×3)
+- v₃(5) = 0 (5 not divisible by 3)
+
+This creates a natural tree structure where operations with higher valuation (divisible by more powers of 3) are "closer to the root."
+
+### The Hyperbolic Realization
+
+The Poincaré ball provides:
+- **Exponential volume growth**: Room for exponentially many leaves
+- **Geodesic distances**: Proper metric for tree structures
+- **Differentiability**: Enables gradient-based optimization
+
+### The Ultrametric Property
+
+In p-adic space, all triangles are isosceles:
+```
+d(x, z) ≤ max(d(x, y), d(y, z))
+```
+
+This creates perfect hierarchical clustering—clusters within clusters—matching biological taxonomy and phylogenetic trees.
 
 ---
 
@@ -282,9 +211,9 @@ All legal documents: [`LEGAL_AND_IP/`](LEGAL_AND_IP/)
 ```bibtex
 @software{ternary_vae,
   author = {{AI Whisperers}},
-  title = {Ternary VAE: P-adic Hyperbolic Variational Autoencoders},
+  title = {Ultrametric Antigen AI: P-adic Hyperbolic Variational Autoencoders},
   year = {2026},
-  url = {https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics}
+  url = {https://github.com/Ai-Whisperers/ultrametric-antigen-AI}
 }
 ```
 
@@ -302,8 +231,8 @@ All legal documents: [`LEGAL_AND_IP/`](LEGAL_AND_IP/)
 ## Contact
 
 - Issues: GitHub Issues
-- Commercial licensing: support@aiwhisperers.com
+- Commercial licensing: ai.whisperer.wvdp@gmail.com
 
 ---
 
-*Version 5.12.5 · Updated 2026-01-23*
+*Version 5.12.5 · Updated 2026-02-01*
