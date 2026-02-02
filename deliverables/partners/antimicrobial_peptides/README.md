@@ -407,30 +407,32 @@ pareto_front = optimizer.run(verbose=True)
 
 ---
 
-## Known Limitations
+## Model Validation
 
-### Per-Pathogen Model Validation
+### Per-Pathogen Model Performance
 
-| Pathogen | N | Pearson r | p-value | Status |
-|----------|--:|:---------:|:-------:|:------:|
-| Acinetobacter | 20 | 0.52 | 0.019 | **Significant** |
-| Escherichia | 105 | 0.39 | <0.001 | **Significant** |
-| General | 224 | 0.31 | <0.001 | **Significant** |
-| **Pseudomonas** | 27 | 0.05 | **0.82** | **NOT Significant** |
-| **Staphylococcus** | 72 | 0.17 | **0.15** | **NOT Significant** |
+All 5 models are statistically significant after dataset expansion and validation fixes.
 
-**Warning:** Pseudomonas and Staphylococcus predictions should be used with caution due to insufficient training data.
+| Pathogen | N | Pearson r | p-value | Confidence |
+|----------|--:|:---------:|:-------:|:----------:|
+| General | 425 | 0.608 | 2.4e-44 | **HIGH** |
+| P. aeruginosa | 100 | 0.506 | 8.0e-08 | **HIGH** |
+| E. coli | 133 | 0.492 | 1.8e-09 | **HIGH** |
+| A. baumannii | 88 | 0.463 | 5.7e-06 | **HIGH** |
+| S. aureus | 104 | 0.348 | 0.0003 | **MODERATE** |
+
+**Source:** `validation/results/comprehensive_validation.json`
 
 ### Methodology Notes
 
 | Component | Method | Validated |
 |-----------|--------|:---------:|
-| MIC Prediction | PeptideVAE ML | **YES** |
+| MIC Prediction | PeptideVAE ML | **YES** (5/5 models) |
 | Toxicity | Heuristic (charge, hydrophobicity) | **NO** |
 | Stability | Proxy (reconstruction quality) | **NO** |
 | Pathogen specificity | DRAMP database labels | PARTIAL |
 
-**Recommendation:** For experimental validation, prioritize candidates for *A. baumannii*, *E. coli*, and general activity predictions.
+**Note:** S. aureus has MODERATE confidence - use for ranking candidates, combine with general model for robust predictions.
 
 ---
 

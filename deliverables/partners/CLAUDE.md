@@ -1,6 +1,6 @@
 # Partner Packages - Validation Status
 
-**Doc-Type:** Validation Tracking · Version 2.1 · Updated 2026-01-27 · AI Whisperers
+**Doc-Type:** Validation Tracking · Version 2.2 · Updated 2026-02-02 · AI Whisperers
 
 **Purpose:** This document tracks the ACTUAL validation status of each partner package based on reproducible model inference, not exploration scripts.
 
@@ -14,12 +14,12 @@
 |---------|:---------------:|:---------------:|:----------------:|---------------|
 | protein_stability_ddg | **95%** | PASS (LOO rho=0.52, N=52) | PASS (5/5) | 2026-01-27 |
 | arbovirus_surveillance | **90%** | PASS (skeptical validation) | PASS | 2026-01-26 |
-| antimicrobial_peptides | **70%** | PARTIAL (2/5 non-significant) | PASS | 2026-01-26 |
+| antimicrobial_peptides | **90%** | PASS (5/5 significant) | PASS | 2026-02-02 |
 | hiv_research_package | Complete | N/A (API) | PENDING | - |
 
 **CRITICAL NOTES:**
 - Protein Stability: N=52 results NOT comparable to N=669 literature benchmarks
-- Antimicrobial Peptides: Pseudomonas (p=0.82) and Staphylococcus (p=0.15) models non-significant
+- Antimicrobial Peptides: S. aureus has MODERATE confidence (r=0.35), use for ranking + combine with general model
 
 **Legend:**
 - PENDING: Not yet verified this session
@@ -106,7 +106,7 @@ python scripts/C4_mutation_effect_predictor.py --mutations mutations.csv
 
 **Directory:** `antimicrobial_peptides/`
 
-### Claimed Status: 70% Ready
+### Claimed Status: 90% Ready
 
 ### Validation Evidence (VERIFIED)
 | Metric | Claimed | Verified | Source |
@@ -114,16 +114,19 @@ python scripts/C4_mutation_effect_predictor.py --mutations mutations.csv
 | Mean Spearman | 0.656 | 0.656 | cv_results_definitive.json |
 | PeptideVAE status | PASSED | VERIFIED | Beats sklearn baseline (0.56) |
 | NSGA-II working | Fixed | VERIFIED | B1 output |
+| All models significant | 5/5 | VERIFIED | comprehensive_validation.json |
 
 ### Per-Pathogen Model Status
 
-| Pathogen | N | Pearson r | p-value | Status |
-|----------|--:|:---------:|:-------:|:------:|
-| Acinetobacter | 20 | 0.52 | 0.019 | **Significant** |
-| Escherichia | 105 | 0.39 | <0.001 | **Significant** |
-| General | 224 | 0.31 | <0.001 | **Significant** |
-| **Pseudomonas** | 27 | 0.05 | **0.82** | **NOT Significant** |
-| **Staphylococcus** | 72 | 0.17 | **0.15** | **NOT Significant** |
+| Pathogen | N | Pearson r | p-value | Confidence |
+|----------|--:|:---------:|:-------:|:----------:|
+| General | 425 | 0.608 | 2.4e-44 | **HIGH** |
+| P. aeruginosa | 100 | 0.506 | 8.0e-08 | **HIGH** |
+| E. coli | 133 | 0.492 | 1.8e-09 | **HIGH** |
+| A. baumannii | 88 | 0.463 | 5.7e-06 | **HIGH** |
+| S. aureus | 104 | 0.348 | 0.0003 | **MODERATE** |
+
+**Note:** All 5 models are statistically significant. S. aureus has MODERATE confidence - use for ranking.
 
 ### Model Checkpoint
 - **Path:** `checkpoints/peptide_vae_v1/best_production.pt`
@@ -201,10 +204,10 @@ python deliverables/partners/hiv_research_package/scripts/H6_tdr_screening.py --
 - COMPLETE: DENV-4 diversity documented
 
 ### Antimicrobial Peptides
-- WARNING: Pseudomonas model p=0.82 (non-significant)
-- WARNING: Staphylococcus model p=0.15 (non-significant)
-- Toxicity/stability are heuristics, NOT ML models
-- NEED: Document limitations in delivery
+- COMPLETE: All 5/5 models statistically significant (after dataset expansion)
+- COMPLETE: P. aeruginosa expanded from N=27 to N=100, now r=0.506
+- NOTE: S. aureus has MODERATE confidence (r=0.35), recommend combining with general model
+- NOTE: Toxicity/stability are heuristics, NOT ML models
 
 ### HIV
 - PENDING: Need to verify Stanford API connectivity
@@ -215,6 +218,7 @@ python deliverables/partners/hiv_research_package/scripts/H6_tdr_screening.py --
 
 | Date | Package | Action | Result |
 |------|---------|--------|--------|
+| 2026-02-02 | antimicrobial_peptides | Synced docs with comprehensive_validation.json - all 5 models significant | 5/5 PASS |
 | 2026-01-26 | ALL | Renamed folders to domain-focused names | COMPLETE |
 | 2026-01-26 | ALL | Updated documentation to remove person-specific references | COMPLETE |
 | 2026-01-23 | protein_stability_ddg | **PRODUCTION READY** - All integration tests pass | 5/5 PASS |
