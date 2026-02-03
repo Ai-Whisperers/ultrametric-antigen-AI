@@ -6,9 +6,9 @@ documentation to ensure consistency. Run before commits to prevent
 documentation drift.
 
 Usage:
-    python scripts/sync_validation_docs.py          # Check mode (default)
-    python scripts/sync_validation_docs.py --fix    # Update documentation
-    python scripts/sync_validation_docs.py --report # Generate full report
+    python deliverables/scripts/sync_validation_docs.py          # Check mode (default)
+    python deliverables/scripts/sync_validation_docs.py --fix    # Update documentation
+    python deliverables/scripts/sync_validation_docs.py --report # Generate full report
 
 Canonical Sources:
     - DDG: scientific_metrics.json, s669_validation_results.json
@@ -25,9 +25,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
 
-# Project root
+# Project root (script is in deliverables/scripts/, so go up 2 levels)
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parent
+PROJECT_ROOT = SCRIPT_DIR.parent.parent
 
 # =============================================================================
 # CANONICAL JSON SOURCES - Single Source of Truth
