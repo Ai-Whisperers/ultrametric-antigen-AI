@@ -248,4 +248,4 @@ python3 deliverables/scripts/sync_validation_docs.py --report
 ---
 
 *For technical implementation details: [CLAUDE_DEV.md](CLAUDE_DEV.md)*
-*For mathematical theory: [../../docs/mathematical-foundations/](../../docs/mathematical-foundations/)*
+*For mathematical theory: [docs/mathematical-foundations/](docs/mathematical-foundations/)*

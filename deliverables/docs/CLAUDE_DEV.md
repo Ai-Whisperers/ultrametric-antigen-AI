@@ -149,7 +149,7 @@ radius = torch.norm(z_hyp, dim=-1)  # DO NOT USE
 
 - **Core files:** All fixed
 - **Research scripts:** ~40 files still use Euclidean norm()
-- **Audit docs:** `../../docs/mathematical-foundations/V5_12_2_audit/`
+- **Audit docs:** `docs/mathematical-foundations/V5_12_2_audit/`
 
 ---
 
@@ -330,10 +330,10 @@ from src.geometry import poincare_distance, exp_map_zero
 |----------|---------|
 | [CLAUDE_BIO.md](CLAUDE_BIO.md) | Bioinformatics applications |
 | [CLAUDE_LITE.md](CLAUDE_LITE.md) | Quick reference |
-| [Mathematical Foundations](../../docs/mathematical-foundations/) | Deep theory |
-| [V5.12.2 Audit](../../docs/mathematical-foundations/V5_12_2_audit/) | Hyperbolic fixes |
+| [Mathematical Foundations](docs/mathematical-foundations/) | Deep theory |
+| [V5.12.2 Audit](docs/mathematical-foundations/V5_12_2_audit/) | Hyperbolic fixes |
 
 ---
 
-*For mathematical theory: [../../docs/mathematical-foundations/](../../docs/mathematical-foundations/)*
-*Original full context: [../../docs/mathematical-foundations/archive/CLAUDE_ORIGINAL.md](../../docs/mathematical-foundations/archive/CLAUDE_ORIGINAL.md)*
+*For mathematical theory: [docs/mathematical-foundations/](docs/mathematical-foundations/)*
+*Original full context: [docs/mathematical-foundations/archive/CLAUDE_ORIGINAL.md](docs/mathematical-foundations/archive/CLAUDE_ORIGINAL.md)*
