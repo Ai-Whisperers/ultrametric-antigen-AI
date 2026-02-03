@@ -1,7 +1,7 @@
-# Package Manifest: Carlos Brizuela
+# Package Manifest: Antimicrobial Peptides
 
-**Generated:** January 19, 2026
-**Package:** `deliverables/partners/carlos_brizuela`
+**Generated:** January 19, 2026 (Updated: February 2026)
+**Package:** `deliverables/partners/antimicrobial_peptides`
 
 This manifest lists all files included in the deliverable package and their specific purpose.
 

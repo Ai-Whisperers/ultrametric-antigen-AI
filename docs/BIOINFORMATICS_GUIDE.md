@@ -233,9 +233,10 @@ Use both when appropriate.
 
 ## Getting Help
 
+- **Quick reference:** [CLAUDE_LITE.md](../CLAUDE_LITE.md)
 - **Implementation questions:** [CLAUDE_DEV.md](../CLAUDE_DEV.md)
 - **Theoretical background:** [mathematical-foundations/](mathematical-foundations/)
-- **Full context:** [CLAUDE.md](../CLAUDE.md)
+- **Full original context:** [CLAUDE_ORIGINAL.md](mathematical-foundations/archive/CLAUDE_ORIGINAL.md)
 - **Bug reports:** GitHub Issues
 
 ---

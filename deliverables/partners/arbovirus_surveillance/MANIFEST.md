@@ -1,7 +1,7 @@
-# Package Manifest: Alejandra Rojas
+# Package Manifest: Arbovirus Surveillance
 
-**Generated:** January 19, 2026
-**Package:** `deliverables/partners/alejandra_rojas`
+**Generated:** January 19, 2026 (Updated: February 2026)
+**Package:** `deliverables/partners/arbovirus_surveillance`
 
 This manifest lists all files included in the deliverable package and their specific purpose.
 

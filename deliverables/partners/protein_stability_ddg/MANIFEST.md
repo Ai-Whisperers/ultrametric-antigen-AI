@@ -1,7 +1,7 @@
-# Package Manifest: Jose Colbes
+# Package Manifest: Protein Stability (DDG)
 
-**Generated:** January 19, 2026
-**Package:** `deliverables/partners/jose_colbes`
+**Generated:** January 19, 2026 (Updated: February 2026)
+**Package:** `deliverables/partners/protein_stability_ddg`
 
 This manifest lists all files included in the deliverable package and their specific purpose.
 

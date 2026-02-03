@@ -237,7 +237,7 @@ print(f"Compression efficiency: {analysis['type_alignment']['compression_efficie
 
 ### Immediate Updates Needed
 
-- [ ] Update `.claude/CLAUDE.md` to use type-aware terminology
+- [x] Update CLAUDE files to use type-aware terminology (see CLAUDE_DEV.md)
 - [ ] Revise checkpoint documentation (remove "inverted" labels)
 - [ ] Update evaluation scripts to use new framework
 - [ ] Train demonstration models for both types
