@@ -210,15 +210,12 @@ This creates perfect hierarchical clustering—clusters within clusters—matchi
 ## License
 
 ### Software (Code)
-**PolyForm Non-Commercial 1.0.0**
+**PolyForm Non-Commercial 1.0.0** - See [LICENSE](LICENSE)
 - Permitted: Academic, educational, non-profit use
 - Commercial use requires separate license
 
 ### Research Outputs (Data, Figures, Models)
-**CC-BY-4.0**
-- Free for any reuse with attribution
-
-All legal documents: [`LEGAL_AND_IP/`](LEGAL_AND_IP/)
+**CC-BY-4.0** - Free for any reuse with attribution
 
 ---
 
@@ -237,10 +234,7 @@ All legal documents: [`LEGAL_AND_IP/`](LEGAL_AND_IP/)
 
 ## Contributing
 
-1. Read [`LEGAL_AND_IP/CLA.md`](LEGAL_AND_IP/CLA.md)
-2. Review [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
-3. Follow [`CONTRIBUTING.md`](CONTRIBUTING.md)
-4. Open a Pull Request
+Contributions welcome. Please open an issue or pull request on GitHub.
 
 ---
 

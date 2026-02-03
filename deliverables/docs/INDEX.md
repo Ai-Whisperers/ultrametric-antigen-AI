@@ -137,7 +137,7 @@ shared/
 
 ### AMP Activity Data
 ```python
-from partners.carlos_brizuela.scripts.dramp_activity_loader import DRAMPLoader
+from partners.antimicrobial_peptides.scripts.dramp_activity_loader import DRAMPLoader
 
 loader = DRAMPLoader()
 db = loader.generate_curated_database()
@@ -146,7 +146,7 @@ X, y = db.get_training_data(target="Escherichia coli")
 
 ### Protein Stability Data
 ```python
-from partners.jose_colbes.scripts.protherm_ddg_loader import ProThermLoader
+from partners.protein_stability_ddg.scripts.protherm_ddg_loader import ProThermLoader
 
 loader = ProThermLoader()
 db = loader.generate_curated_database()
@@ -243,9 +243,9 @@ Current coverage: 67 tests
 
 | Partner | Package | Key Scripts | Notebook |
 |---------|---------|-------------|----------|
-| Alejandra Rojas | `partners/alejandra_rojas/` | A2_pan_arbovirus_primers.py | [Serotype Forecaster](../partners/alejandra_rojas/notebooks/rojas_serotype_forecast.ipynb) |
-| Carlos Brizuela | `partners/carlos_brizuela/` | B1, B8, B10 AMP design tools | [AMP Navigator](../partners/carlos_brizuela/notebooks/brizuela_amp_navigator.ipynb) |
-| Jose Colbes | `partners/jose_colbes/` | C1, C4 protein stability tools | [Rotamer Scoring](../partners/jose_colbes/notebooks/colbes_scoring_function.ipynb) |
+| Alejandra Rojas | `partners/arbovirus_surveillance/` | A2_pan_arbovirus_primers.py | [Serotype Forecaster](../partners/arbovirus_surveillance/notebooks/rojas_serotype_forecast.ipynb) |
+| Carlos Brizuela | `partners/antimicrobial_peptides/` | B1, B8, B10 AMP design tools | [AMP Navigator](../partners/antimicrobial_peptides/notebooks/brizuela_amp_navigator.ipynb) |
+| Jose Colbes | `partners/protein_stability_ddg/` | C1, C4 protein stability tools | [Rotamer Scoring](../partners/protein_stability_ddg/notebooks/colbes_scoring_function.ipynb) |
 | HIV Research | `partners/hiv_research_package/` | H6, H7 clinical decision tools | - |
 
 ### Partner Notebook Quick Links
@@ -270,19 +270,19 @@ deliverables/
 ├── scripts/                 # Utility scripts
 ├── results/                 # Shared output directories
 └── partners/                # Research partner modules
-    ├── alejandra_rojas/     # Arbovirus primer research
+    ├── arbovirus_surveillance/     # Arbovirus primer research
     │   ├── README.md
     │   ├── scripts/
     │   ├── notebooks/
     │   ├── data/
     │   └── docs/
-    ├── carlos_brizuela/     # AMP optimization research
+    ├── antimicrobial_peptides/     # AMP optimization research
     │   ├── README.md
     │   ├── scripts/
     │   ├── notebooks/
     │   ├── data/
     │   └── docs/
-    ├── jose_colbes/         # Protein stability research
+    ├── protein_stability_ddg/         # Protein stability research
     │   ├── README.md
     │   ├── scripts/
     │   ├── notebooks/

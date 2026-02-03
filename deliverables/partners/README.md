@@ -47,9 +47,9 @@ This directory contains specialized bioinformatics tools built on p-adic hyperbo
 ## Quick Links
 
 ### Notebooks
-- [AMP Navigator](antimicrobial_peptides/notebooks/amp_navigator.ipynb) - NSGA-II peptide optimization
-- [Scoring Function](protein_stability_ddg/notebooks/scoring_function.ipynb) - Protein stability prediction
-- [Serotype Forecaster](arbovirus_surveillance/notebooks/serotype_forecast.ipynb) - Arbovirus surveillance
+- [AMP Navigator](antimicrobial_peptides/notebooks/brizuela_amp_navigator.ipynb) - NSGA-II peptide optimization
+- [Scoring Function](protein_stability_ddg/notebooks/colbes_scoring_function.ipynb) - Protein stability prediction
+- [Serotype Forecaster](arbovirus_surveillance/notebooks/rojas_serotype_forecast.ipynb) - Arbovirus surveillance
 
 ### Key Scripts
 | Script | Package | Description |
