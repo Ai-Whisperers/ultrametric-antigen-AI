@@ -126,7 +126,8 @@ Euclidean space distorts hierarchies; hyperbolic space preserves them.
 |------|-------|
 | Practical applications | [../BIOINFORMATICS_GUIDE.md](../BIOINFORMATICS_GUIDE.md) |
 | Code implementation | [../../CLAUDE_DEV.md](../../CLAUDE_DEV.md) |
-| Full project context | [../../CLAUDE.md](../../CLAUDE.md) |
+| Quick reference | [../../CLAUDE_LITE.md](../../CLAUDE_LITE.md) |
+| Full original context | [archive/CLAUDE_ORIGINAL.md](archive/CLAUDE_ORIGINAL.md) |
 | Partner packages | [../../deliverables/partners/](../../deliverables/partners/) |
 
 ---

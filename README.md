@@ -7,6 +7,14 @@
 
 ---
 
+## For Bioinformatics Specialists
+
+Start with the **[Bioinformatics Guide](docs/BIOINFORMATICS_GUIDE.md)** - no mathematical background required.
+
+**AI/Developer Context:** [CLAUDE_LITE.md](CLAUDE_LITE.md) | [CLAUDE_BIO.md](CLAUDE_BIO.md) | [CLAUDE_DEV.md](CLAUDE_DEV.md)
+
+---
+
 ## Overview
 
 **Ultrametric Antigen AI** is a variational autoencoder framework that learns hierarchical structure in hyperbolic space using p-adic number theory. This project applies the [3-adic-ml foundation](https://github.com/Ai-Whisperers/3-adic-ml) to bioinformatics problems.
@@ -133,7 +141,8 @@ pip install -e ".[all]"  # Full installation with all extras
 
 ---
 
-## Foundations
+<details>
+<summary><strong>Theoretical Foundations</strong> (click to expand)</summary>
 
 ### The P-adic Hierarchy
 
@@ -159,6 +168,10 @@ d(x, z) ≤ max(d(x, y), d(y, z))
 ```
 
 This creates perfect hierarchical clustering—clusters within clusters—matching biological taxonomy and phylogenetic trees.
+
+**Deep dive:** [Mathematical Foundations](docs/mathematical-foundations/)
+
+</details>
 
 ---
 
