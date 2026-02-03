@@ -230,7 +230,7 @@ y_pred = cross_val_predict(pipeline, X, y, cv=len(y))  # Scaler inside CV
 Ensure documentation matches canonical JSON sources:
 
 ```bash
-python3 scripts/sync_validation_docs.py --report
+python3 deliverables/scripts/sync_validation_docs.py --report
 ```
 
 ---
