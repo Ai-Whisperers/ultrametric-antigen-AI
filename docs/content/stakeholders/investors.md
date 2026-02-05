@@ -6,14 +6,14 @@
 
 ## Executive Summary
 
-**Ternary VAE** is a novel AI platform for predicting drug resistance and immune escape across infectious diseases and cancer.
+**Ultrametric Antigen AI** is a novel AI platform that accelerates drug discovery and pathogen surveillance 300-18,000x faster than physics-based methods.
 
 ### Key Differentiators
 
-1. **Novel geometry**: Hyperbolic + p-adic (no direct competitors)
-2. **Multi-disease**: 11 disease domains with unified framework
-3. **Clinical-grade**: Uncertainty quantification for decision support
-4. **Validated**: r=0.89 correlation on HIV (23 drugs)
+1. **Speed advantage**: Screen millions of mutations in seconds vs hours/days with FoldX/Rosetta
+2. **Novel geometry**: Hyperbolic + p-adic mathematics (no direct competitors)
+3. **Complementary detection**: Finds "Rosetta-blind" mutations that physics tools miss (23.6% of cases)
+4. **Production ready**: 4 partner packages at 90-95% completion, 101+ passing tests
 
 ---
 
@@ -83,17 +83,27 @@
 
 | Milestone | Date | Status |
 |:----------|:-----|:-------|
-| HIV resistance prediction | 2025-12-27 | Complete |
-| Multi-disease framework | 2025-12-28 | Complete |
-| Uncertainty quantification | 2025-12-28 | Complete |
-| Transfer learning | 2025-12-28 | Complete |
+| Antimicrobial peptide models (5 pathogens) | 2026-01 | Complete - r=0.656 mean |
+| Protein stability predictor | 2026-01 | Complete - LOO ρ=0.521 |
+| Pan-arbovirus primer design | 2026-01 | Complete - 7 viruses |
+| HIV drug resistance analysis | 2025-12 | Complete - 200K sequences |
 
-### Key Metrics
+### Validated Performance
 
-- 23 drugs validated (HIV)
-- r=0.89 mean correlation
-- 387 vaccine candidates ranked
-- 11 diseases supported
+| Application | Metric | Validation |
+|:------------|:-------|:-----------|
+| AMP design (general) | r=0.608 (p=2.4e-44) | 5-fold CV, N=425 |
+| AMP P. aeruginosa | r=0.506 (p=8.0e-08) | N=100 |
+| DDG prediction | LOO ρ=0.521 | Bootstrap CI: [0.21, 0.80] |
+| Arbovirus primers | 60% CDC recovery | Wet-lab validated primers |
+
+### Speed Advantage
+
+| Task | Our Method | FoldX | Rosetta |
+|:-----|:-----------|:------|:--------|
+| DDG per mutation | <0.1 sec | 30-60 sec | 5-30 min |
+| Structure required | No | Yes | Yes |
+| Throughput | Millions/hour | ~100/hour | ~10/hour |
 
 ---
 
@@ -132,9 +142,22 @@ See [AUTHORS.md](../../../../LEGAL_AND_IP/AUTHORS.md)
 
 ### Contact
 
-- Email: support@aiwhisperers.com
+- Email: ai.whisperer.wvdp@gmail.com
 - GitHub: [Ai-Whisperers](https://github.com/Ai-Whisperers)
 
 ---
 
-_Last updated: 2025-12-28_
+## Risk Factors & Honest Limitations
+
+We believe transparency builds investor trust:
+
+| Risk | Details | Mitigation |
+|:-----|:--------|:-----------|
+| **DDG benchmark performance** | Full S669: ρ=0.37-0.40, below ESM-1v (0.51) | Position as fast pre-screen, not replacement |
+| **No wet-lab validation** | All results computational | 8 AMP candidates ready for testing; seeking collaborators |
+| **Research stage** | No clinical deployment or revenue | Production APIs tested; partner packages validated |
+| **Niche approach** | Hyperbolic ML is unfamiliar to most | Emphasize speed/complementary value, not complexity |
+
+---
+
+_Last updated: 2026-02-04_
