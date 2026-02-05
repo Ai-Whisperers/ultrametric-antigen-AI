@@ -1,10 +1,22 @@
 # Antimicrobial Peptide Design Package
 
-**Doc-Type:** Research Tool Package · Version 2.0 · 2026-01-26 · AI Whisperers
+**Design AMPs for WHO priority pathogens with validated ML models**
 
-## Multi-Objective Optimization Suite for AMP Design
+[![Status](https://img.shields.io/badge/status-90%25%20ready-green.svg)]()
+[![Models](https://img.shields.io/badge/models-5%20validated-blue.svg)]()
 
-**Status:** COMPLETE - Ready for Production Use
+---
+
+## Why This Package?
+
+| Capability | Value |
+|------------|-------|
+| **5 pathogen-specific models** | All statistically significant (p<0.001) |
+| **Mean correlation r=0.656** | Outperforms sklearn baseline (0.56) |
+| **Multi-objective optimization** | Balance activity, toxicity, synthesis cost |
+| **Wet-lab ready candidates** | 8 peptides with selectivity index >1.0 |
+
+**Target pathogens**: *A. baumannii*, *P. aeruginosa*, *E. coli*, *S. aureus*, *H. pylori* (WHO priority)
 
 ---
 
@@ -474,15 +486,25 @@ If you use this package in your research, please cite:
 
 ---
 
+## Honest Limitations
+
+| Limitation | Details | Mitigation |
+|------------|---------|------------|
+| **S. aureus model** | Moderate confidence (r=0.35) | Use general model for S. aureus predictions |
+| **Toxicity prediction** | Heuristic (charge/hydrophobicity), not ML | Validate experimentally before synthesis |
+| **Stability proxy** | Uses VAE reconstruction quality | Not a direct stability measurement |
+| **No wet-lab validation** | All results computational | 8 candidates ready for experimental testing |
+
+---
+
 ## Contact
 
 - **Repository:** [github.com/Ai-Whisperers/ternary-vaes-bioinformatics](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics)
 - **Issues:** GitHub Issues
-- **Email:** support@aiwhisperers.com
-- **NSGA-II algorithm:** Deb et al. (2002)
-- **AMP databases:** DRAMP, APD3, DBAASP
+- **Email:** ai.whisperer.wvdp@gmail.com
+- **References:** NSGA-II (Deb et al. 2002), DRAMP, APD3, DBAASP databases
 
 ---
 
-*Version 2.0 · Updated 2026-01-26*
-*Part of the Ternary VAE Bioinformatics Partnership*
+*Version 2.1 · Updated 2026-02-04*
+*Part of the [Ultrametric Antigen AI](../../../README.md) project*

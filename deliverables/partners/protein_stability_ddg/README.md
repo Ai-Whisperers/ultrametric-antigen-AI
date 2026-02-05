@@ -1,12 +1,28 @@
 # Protein Stability Prediction Package
 
-**Doc-Type:** Research Tool Package · Version 2.4 · 2026-01-29 · AI Whisperers
+**Screen mutations 300-18,000x faster than FoldX/Rosetta - no structure required**
+
+[![Status](https://img.shields.io/badge/status-95%25%20ready-green.svg)]()
+[![Validation](https://img.shields.io/badge/LOO%20CV-ρ%3D0.52-blue.svg)]()
+
+---
+
+## Why This Package?
+
+| Capability | Value |
+|------------|-------|
+| **Speed** | <0.1 sec/mutation vs 30 sec - 30 min (FoldX/Rosetta) |
+| **No structure needed** | Sequence-only prediction |
+| **Complementary signal** | Detects "Rosetta-blind" mutations (23.6% of cases) |
+| **Validated** | LOO CV ρ=0.52 (p<0.001), 95% CI [0.21, 0.80] |
+
+**Best use case**: High-throughput pre-screening before expensive physics-based validation.
+
+---
 
 ## P-adic Geometric Protein Stability Analysis Suite
 
 **Status:** PRODUCTION READY - Scientifically Validated
-**Best Research Result:** Spearman rho = 0.94 (N=176, structural validation)
-**Shipped Predictor:** Spearman rho = 0.52 (N=52, LOO CV)
 
 ### 🚀 Path Forward: Multimodal Architecture
 
@@ -419,10 +435,9 @@ If you use this package in your research, please cite:
 
 - **Repository:** [github.com/Ai-Whisperers/ternary-vaes-bioinformatics](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics)
 - **Issues:** GitHub Issues
+- **Email:** ai.whisperer.wvdp@gmail.com
 
 ---
 
-*Version 2.3 · Updated 2026-01-28*
-*Best Research: Spearman rho = 0.94 (N=176, structural validation)*
-*TrainableCodonEncoder: Spearman rho = 0.61 (N=52, LOO CV)*
-*Shipped: Spearman rho = 0.52 (ValidatedDDGPredictor), p < 0.001, 95% CI [0.21, 0.80]*
+*Version 2.4 · Updated 2026-02-04*
+*Part of the [Ultrametric Antigen AI](../../../README.md) project*

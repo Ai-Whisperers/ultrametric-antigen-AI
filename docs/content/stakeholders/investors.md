@@ -44,13 +44,13 @@
 - Integrate with Stanford HIVDB
 - Clinical decision support
 
-### Phase 2: Multi-Disease (2025)
+### Phase 2: Multi-Disease (2026)
 
 - Tuberculosis MDR/XDR
 - SARS-CoV-2 escape
 - Influenza vaccine strain selection
 
-### Phase 3: Platform (2026)
+### Phase 3: Platform (2027)
 
 - API for pharma partners
 - Vaccine design tools
