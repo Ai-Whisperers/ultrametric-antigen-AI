@@ -1,8 +1,10 @@
 # Bioinformatics Research Packages
 
-**Doc-Type:** Package Index · Version 2.0 · Updated 2026-01-26 · AI Whisperers
+**Production-ready tools for drug discovery and pathogen surveillance**
 
-This directory contains specialized bioinformatics tools built on p-adic hyperbolic geometry from the Ternary VAE project.
+[![Packages](https://img.shields.io/badge/packages-4%20validated-blue.svg)]()
+
+This directory contains specialized bioinformatics tools built on p-adic hyperbolic geometry from the [Ultrametric Antigen AI](../../README.md) project.
 
 ---
 
@@ -10,9 +12,9 @@ This directory contains specialized bioinformatics tools built on p-adic hyperbo
 
 | Package | Directory | Focus Area | Status | Key Metric |
 |---------|-----------|------------|:------:|------------|
-| **Protein Stability** | `protein_stability_ddg/` | DDG prediction | 95% Ready | LOO rho=0.585 |
+| **Protein Stability** | `protein_stability_ddg/` | DDG prediction | 95% Ready | LOO ρ=0.521 |
 | **Arbovirus Surveillance** | `arbovirus_surveillance/` | Primers & forecasting | 90% Ready | 7 viruses covered |
-| **Antimicrobial Peptides** | `antimicrobial_peptides/` | AMP optimization | 70% Ready | Spearman=0.656 |
+| **Antimicrobial Peptides** | `antimicrobial_peptides/` | AMP optimization | 90% Ready | Mean r=0.656 |
 | **HIV Research** | `hiv_research_package/` | Clinical decision support | Complete | Stanford HIVdb |
 
 ---
@@ -20,27 +22,28 @@ This directory contains specialized bioinformatics tools built on p-adic hyperbo
 ## Package Status Summary
 
 ### Protein Stability Prediction (95%)
-- **LOO CV validated:** Spearman rho = 0.585, p < 0.001
-- **95% CI:** [0.341, 0.770] via bootstrap
-- **Features:** Rosetta-blind instability detection, sequence-only predictions
+- **LOO CV validated:** Spearman ρ = 0.521, p < 0.001
+- **95% CI:** [0.21, 0.80] via bootstrap (N=52)
+- **Speed advantage:** <0.1 sec/mutation vs 30 sec - 30 min (FoldX/Rosetta)
+- **Unique capability:** Rosetta-blind instability detection (23.6% of cases)
 - **Caveat:** N=52 result NOT comparable to N=669 literature benchmarks
 
 ### Arbovirus Surveillance (90%)
 - **Pan-arbovirus primers:** DENV-1/2/3/4, ZIKV, CHIKV, MAYV
+- **CDC primer validation:** 60% recovery rate
 - **Key discovery:** DENV-4 cryptic diversity (97.4% no conserved windows)
-- **P-adic integration:** TrainableCodonEncoder producing meaningful results
-- **Features:** Hyperbolic trajectory forecasting, primer stability scanning
+- **P-adic integration:** Hyperbolic variance identifies orthogonal signals
 
-### Antimicrobial Peptide Design (70%)
-- **MIC prediction:** PeptideVAE (Spearman=0.656)
-- **NSGA-II optimization:** Working in latent space
-- **Limitations:** Pseudomonas/Staphylococcus models non-significant
-- **Features:** Pathogen-specific (B1), microbiome-safe (B8), synthesis-optimized (B10)
+### Antimicrobial Peptide Design (90%)
+- **5 pathogen models:** All statistically significant (p<0.001)
+- **Mean Spearman:** r=0.656 (outperforms sklearn baseline 0.56)
+- **Per-pathogen:** General r=0.608, P. aeruginosa r=0.506, E. coli r=0.492
+- **Limitation:** S. aureus has moderate confidence (r=0.35)
 
 ### HIV Clinical Tools (Complete)
 - **TDR screening (H6):** Validated against Stanford HIVdb
 - **LA selection (H7):** Eligibility assessment for long-acting injectables
-- **Features:** Clinical decision support workflows
+- **200K sequences analyzed** with 7 conjectures validated
 
 ---
 
@@ -117,8 +120,8 @@ If you use any of these packages, please cite:
 
 - **Repository:** [github.com/Ai-Whisperers/ternary-vaes-bioinformatics](https://github.com/Ai-Whisperers/ternary-vaes-bioinformatics)
 - **Issues:** GitHub Issues
-- **Email:** support@aiwhisperers.com
+- **Email:** ai.whisperer.wvdp@gmail.com
 
 ---
 
-*Last updated: 2026-01-26*
+*Version 2.1 · Updated 2026-02-04*
