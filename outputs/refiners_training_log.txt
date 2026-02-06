@@ -1,0 +1,54 @@
+======================================================================
+MLP Refiner & Transformer Training
+======================================================================
+Device: cuda
+Output: outputs/refiners_20260129_230857
+
+[1] Loading trained VAEs...
+  Loaded VAE-ProTherm from outputs/ddg_vae_training_20260129_212316/vae_protherm/best.pt
+
+[2] Creating VAE embedding datasets...
+  Extracted 177 embeddings, dim=32
+  Train: 142, Val: 35
+
+======================================================================
+[3] Training MLP Refiner (learns delta corrections)
+======================================================================
+Epoch   0: loss=1.3150 val_loss=0.5758 spearman=0.4372 res_weight=0.573
+Epoch  10: loss=0.7702 val_loss=0.4449 spearman=0.5268 res_weight=0.571
+Epoch  20: loss=0.7297 val_loss=0.5765 spearman=0.3167 res_weight=0.569
+Epoch  30: loss=0.4608 val_loss=0.4395 spearman=0.4699 res_weight=0.570
+Epoch  40: loss=0.3859 val_loss=0.4704 spearman=0.5278 res_weight=0.570
+Epoch  50: loss=0.4155 val_loss=0.3474 spearman=0.5422 res_weight=0.570
+Epoch  60: loss=0.3670 val_loss=0.4080 spearman=0.5448 res_weight=0.570
+Epoch  70: loss=0.3346 val_loss=0.3427 spearman=0.6126 res_weight=0.571
+Epoch  80: loss=0.2849 val_loss=0.3640 spearman=0.7776 res_weight=0.571
+Epoch  90: loss=0.3084 val_loss=0.3501 spearman=0.7778 res_weight=0.571
+MLP Refiner training complete!
+
+======================================================================
+[4] Training Embedding Transformer (attention over embedding dims)
+======================================================================
+Epoch   0: loss=1.0722 val_loss=0.6390 spearman=0.6511
+Epoch  10: loss=0.9890 val_loss=0.6224 spearman=0.6395
+Epoch  20: loss=0.8246 val_loss=0.4940 spearman=0.6130
+Epoch  30: loss=0.9362 val_loss=0.5474 spearman=0.5462
+Epoch  40: loss=0.7751 val_loss=0.4665 spearman=0.5554
+Epoch  50: loss=0.7338 val_loss=0.4456 spearman=0.5541
+Epoch  60: loss=0.6535 val_loss=0.4245 spearman=0.5887
+Epoch  70: loss=0.5825 val_loss=0.4574 spearman=0.5324
+Epoch  80: loss=0.5763 val_loss=0.4655 spearman=0.5762
+Epoch  90: loss=0.5940 val_loss=0.4729 spearman=0.5752
+Embedding Transformer training complete!
+
+======================================================================
+TRAINING COMPLETE
+======================================================================
+
+mlp_refiner:
+  Best Spearman: 0.7828
+  Checkpoint: outputs/refiners_20260129_230857/mlp_refiner/best.pt
+
+embedding_transformer:
+  Best Spearman: 0.6598
+  Checkpoint: outputs/refiners_20260129_230857/embedding_transformer/best.pt

@@ -1,0 +1,54 @@
+{
+  "combined": {
+    "spearman": 0.40674950336324406,
+    "pearson": "0.36378926",
+    "mae": "1.1368716",
+    "weighted_avg_spearman": 0.31524895981582063,
+    "specialist_weights": [
+      0.5,
+      0.5
+    ],
+    "n": 170
+  },
+  "s669": {
+    "spearman": 0.33559077494362494,
+    "pearson": "0.28004286",
+    "mae": "1.1538669",
+    "weighted_avg_spearman": 0.2926495884211208,
+    "specialist_weights": [
+      0.5,
+      0.5
+    ],
+    "n": 134
+  },
+  "protherm": {
+    "spearman": 0.5775221241860485,
+    "pearson": "0.8646535",
+    "mae": "0.47947004",
+    "weighted_avg_spearman": 0.20302017321152419,
+    "specialist_weights": [
+      0.5,
+      0.5
+    ],
+    "n": 36
+  },
+  "config": {
+    "vae_hidden_dim": 128,
+    "vae_latent_dim": 32,
+    "refiner_hidden_dims": [
+      64,
+      64,
+      32
+    ],
+    "d_model": 64,
+    "nhead": 4,
+    "num_layers": 3,
+    "dropout": 0.1,
+    "epochs": 200,
+    "batch_size": 32,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "patience": 30,
+    "vae_suite_dir": "outputs/full_vae_suite_20260130_151522"
+  }
+}
