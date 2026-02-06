@@ -1,6 +1,6 @@
 # Ternary VAE Source Architecture
 
-> **See also**: [Full Documentation Hub](../DOCUMENTATION/) | [Architecture Specs](../DOCUMENTATION/03_PRESENTATION_TIERS/03_TIER_3_TECHNICAL/05_SPECS_AND_GUIDES/ARCHITECTURE.md) | [Quick Start](../DOCUMENTATION/QUICK_START.md)
+> **See also**: [Full Documentation Hub](../docs/) | [Architecture Specs](../docs/content/stakeholders/technical/ARCHITECTURE.md) | [Quick Start](../docs/BIOINFORMATICS_GUIDE.md)
 
 **Doc-Type:** Architecture Reference · Version 1.1 · Updated 2025-12-27
 

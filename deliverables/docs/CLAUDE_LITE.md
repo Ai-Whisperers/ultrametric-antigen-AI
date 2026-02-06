@@ -97,8 +97,8 @@ radii = poincare_distance(out['z_B_hyp'], origin, c=1.0)
 |----------|---------|
 | [CLAUDE_BIO.md](CLAUDE_BIO.md) | Bioinformatics applications |
 | [CLAUDE_DEV.md](CLAUDE_DEV.md) | Developer reference |
-| [Bioinformatics Guide](docs/BIOINFORMATICS_GUIDE.md) | No-math user guide |
-| [Mathematical Foundations](docs/mathematical-foundations/) | Deep theory |
+| [Bioinformatics Guide](../../docs/BIOINFORMATICS_GUIDE.md) | No-math user guide |
+| [Mathematical Foundations](../../docs/mathematical-foundations/) | Deep theory |
 
 ---
 

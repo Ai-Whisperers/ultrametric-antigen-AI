@@ -381,9 +381,9 @@ streamlit run dashboard/app.py
 | Package | Description | Demo |
 |---------|-------------|------|
 | **HIV Research** | TDR screening, LA injectable selection | [Notebook](partners/hiv_research_package/notebooks/) |
-| **Arbovirus** | Pan-arbovirus primer design | [Notebook](partners/alejandra_rojas/notebooks/) |
-| **AMP Design** | Pathogen-specific peptide optimization | [Notebook](partners/carlos_brizuela/notebooks/) |
-| **Stability** | Rosetta-blind mutation detection | [Notebook](partners/jose_colbes/notebooks/) |
+| **Arbovirus** | Pan-arbovirus primer design | [Notebook](partners/arbovirus_surveillance/notebooks/) |
+| **AMP Design** | Pathogen-specific peptide optimization | [Notebook](partners/antimicrobial_peptides/notebooks/) |
+| **Stability** | Rosetta-blind mutation detection | [Notebook](partners/protein_stability_ddg/notebooks/) |
 
 ## Key Features
 
