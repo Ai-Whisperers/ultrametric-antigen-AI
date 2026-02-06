@@ -340,8 +340,15 @@ def test_position_specific_patterns(alleles_embeddings, allele_data, distance_fn
             centroid_distance = ultrametric_distance(ra_centroid, control_centroid)
 
         # Variance within groups
-        ra_variance = np.mean([euclidean_distance(e, ra_centroid) ** 2 for e in ra_embs])
-        control_variance = np.mean([euclidean_distance(e, control_centroid) ** 2 for e in control_embs])
+        if distance_fn == "euclidean":
+            ra_variance = np.mean([euclidean_distance(e, ra_centroid) ** 2 for e in ra_embs])
+            control_variance = np.mean([euclidean_distance(e, control_centroid) ** 2 for e in control_embs])
+        elif distance_fn == "poincare":
+            ra_variance = np.mean([poincare_distance(e, ra_centroid) ** 2 for e in ra_embs])
+            control_variance = np.mean([poincare_distance(e, control_centroid) ** 2 for e in control_embs])
+        else:  # ultrametric
+            ra_variance = np.mean([ultrametric_distance(e, ra_centroid) ** 2 for e in ra_embs])
+            control_variance = np.mean([ultrametric_distance(e, control_centroid) ** 2 for e in control_embs])
 
         position_results[pos] = {
             "centroid_distance": centroid_distance,
