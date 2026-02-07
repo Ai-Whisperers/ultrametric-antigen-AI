@@ -1,0 +1,132 @@
+================================================================================
+HIV SEQUENCE ALIGNMENT VIEWER
+================================================================================
+Sequences: 2
+Length: 857
+Viewing: 0-857
+
+Position      0 - 59
+               |----+----|----+----|----+----|----+----|----+----|----+----
+
+HIV1_ENV_SAMPLE_001_ALIGNED MRVKEKYQHLWRWGWRWGTMLLGMLMICSATEKLWVTVYYGVPVWKEATTTLFCASDAKA
+HIV1_ENV_SAMPLE_002_ALIGNED MRVKEKYQHLWRWGWRWGTMLLGMLMICSATEKLWVTVYYGVPVWKEATTTLFCASDAKA
+                            MRVKEKYQHLWRWGWRWGTMLLGMLMICSATEKLWVTVYYGVPVWKEATTTLFCASDAKA
+                            ************************************************************
+
+Position     60 - 119
+               |----+----|----+----|----+----|----+----|----+----|----+----
+
+HIV1_ENV_SAMPLE_001_ALIGNED YDTEVHNVWATHACVPTDPNPQEVVLVNVTENFNMWKNDMVEQMHEDIISLWDQSLKPCV
+HIV1_ENV_SAMPLE_002_ALIGNED YDTEVHNVWATHACVPTDPNPQEVVLVNVTENFNMWKNDMVEQMHEDIISLWDQSLKPCV
+                            YDTEVHNVWATHACVPTDPNPQEVVLVNVTENFNMWKNDMVEQMHEDIISLWDQSLKPCV
+                            ************************************************************
+
+Position    120 - 179
+               |----+----|----+----|----+----|----+----|----+----|----+----
+
+HIV1_ENV_SAMPLE_001_ALIGNED KLTPLCVSLKCTDLKNDTNTNSSSGRMIMEKGEIKNCSFNISTSIRGKVQKEYAFFYKLD
+HIV1_ENV_SAMPLE_002_ALIGNED KLTPLCVSLKCTDLKNDTNTNSSSGRMIMEKGEIKNCSFNISTSIRGKVQKEYAFFYKLD
+                            KLTPLCVSLKCTDLKNDTNTNSSSGRMIMEKGEIKNCSFNISTSIRGKVQKEYAFFYKLD
+                            ************************************************************
+
+Position    180 - 239
+               |----+----|----+----|----+----|----+----|----+----|----+----
+
+HIV1_ENV_SAMPLE_001_ALIGNED IIPIDNDTTSYKLTSCNTSVITQACPKVSFEPIPIHYCAPAGFAILKCNNKTFNGTGPCT
+HIV1_ENV_SAMPLE_002_ALIGNED IIPIDNDTTSYKLTSCNTSVITQACPKVSFEPIPIHYCAPAGFAILKCNNKTFNGTGPCT
+                            IIPIDNDTTSYKLTSCNTSVITQACPKVSFEPIPIHYCAPAGFAILKCNNKTFNGTGPCT
+                            ************************************************************
+
+Position    240 - 299
+               |----+----|----+----|----+----|----+----|----+----|----+----
+
+HIV1_ENV_SAMPLE_001_ALIGNED NVSTVQCTHGIRPVVSTQLLLNGSLAEEEVVIRSVNFTDNAKTIIVQLNTSVEINCTRPN
+HIV1_ENV_SAMPLE_002_ALIGNED NVSTVQCTHGIRPVVSTQLLLNGSLAEEEVVIRSVNFTDNAKTIIVQLNTSVEINCTRPN
+                            NVSTVQCTHGIRPVVSTQLLLNGSLAEEEVVIRSVNFTDNAKTIIVQLNTSVEINCTRPN
+                            ************************************************************
+
+Position    300 - 359
+               |----+----|----+----|----+----|----+----|----+----|----+----
+
+HIV1_ENV_SAMPLE_001_ALIGNED NNTRKRIRIQRGPGRAFVTIGKIGNMRQAHCNISRAKWNNTLKQIASKLREQFGNNKTII
+HIV1_ENV_SAMPLE_002_ALIGNED NNTRKRIRIQRGPGRAFVTIGKIGNMRQAHCNISRAKWNNTLKQIASKLREQFGNNKTII
+                            NNTRKRIRIQRGPGRAFVTIGKIGNMRQAHCNISRAKWNNTLKQIASKLREQFGNNKTII
+                            ************************************************************
+
+Position    360 - 419
+               |----+----|----+----|----+----|----+----|----+----|----+----
+
+HIV1_ENV_SAMPLE_001_ALIGNED FKQSSGGDPEIVTHSFNCGGEFFYCNSTQLFNSTWFNSTWSTEGSNNTEGSDTITLPCRI
+HIV1_ENV_SAMPLE_002_ALIGNED FKQSSGGDPEIVTHSFNCGGEFFYCNSTQLFNSTWFNSTWSTEGSNNTEGSDTITLPCRI
+                            FKQSSGGDPEIVTHSFNCGGEFFYCNSTQLFNSTWFNSTWSTEGSNNTEGSDTITLPCRI
+                            ************************************************************
+
+Position    420 - 479
+               |----+----|----+----|----+----|----+----|----+----|----+----
+
+HIV1_ENV_SAMPLE_001_ALIGNED KQIINMWQKVGKAMYAPPISGQIRCSSNITGLLLTRDGGNNNNNESEIFRPGGGDMRDNW
+HIV1_ENV_SAMPLE_002_ALIGNED KQIINMWQKVGKAMYAPPISGQIRCSSNITGLLLTRDGGNNNNNESEIFRPGGGDMRDNW
+                            KQIINMWQKVGKAMYAPPISGQIRCSSNITGLLLTRDGGNNNNNESEIFRPGGGDMRDNW
+                            ************************************************************
+
+Position    480 - 539
+               |----+----|----+----|----+----|----+----|----+----|----+----
+
+HIV1_ENV_SAMPLE_001_ALIGNED RSELYKYKVVKIEPLGVAPTKAKRRVVQREKRAVGIGALFLGFLGAAGSTMGAASMTLTV
+HIV1_ENV_SAMPLE_002_ALIGNED RSELYKYKVVKIEPLGVAPTKAKRRVVQREKRAVGIGALFLGFLGAAGSTMGAASMTLTV
+                            RSELYKYKVVKIEPLGVAPTKAKRRVVQREKRAVGIGALFLGFLGAAGSTMGAASMTLTV
+                            ************************************************************
+
+Position    540 - 599
+               |----+----|----+----|----+----|----+----|----+----|----+----
+
+HIV1_ENV_SAMPLE_001_ALIGNED QARQLLSGIVQQQNNLLRAIEAQQHLLQLTVWGIKQLQARILAVERYLKDQQLLGIWGCS
+HIV1_ENV_SAMPLE_002_ALIGNED QARQLLSGIVQQQNNLLRAIEAQQHLLQLTVWGIKQLQARILAVERYLKDQQLLGIWGCS
+                            QARQLLSGIVQQQNNLLRAIEAQQHLLQLTVWGIKQLQARILAVERYLKDQQLLGIWGCS
+                            ************************************************************
+
+Position    600 - 659
+               |----+----|----+----|----+----|----+----|----+----|----+----
+
+HIV1_ENV_SAMPLE_001_ALIGNED GKLICTTAVPWNASWSNKSLEQIWNHTTWMEWDREINNYTSLIHSLIEESQNQQEKNEQE
+HIV1_ENV_SAMPLE_002_ALIGNED GKLICTTAVPWNASWSNKSLEQIWNHTTWMEWDREINNYTSLIHSLIEESQNQQEKNEQE
+                            GKLICTTAVPWNASWSNKSLEQIWNHTTWMEWDREINNYTSLIHSLIEESQNQQEKNEQE
+                            ************************************************************
+
+Position    660 - 719
+               |----+----|----+----|----+----|----+----|----+----|----+----
+
+HIV1_ENV_SAMPLE_001_ALIGNED LLELDKWASLWNWFNITNWLWYIKLFIMIVGGLVGLRIVFAVLSIVNRVRQGYSPLSFQT
+HIV1_ENV_SAMPLE_002_ALIGNED LLELDKWASLWNWFNITNWLWYIKLFIMIVGGLVGLRIVFAVLSIVNRVRQGYSPLSFQT
+                            LLELDKWASLWNWFNITNWLWYIKLFIMIVGGLVGLRIVFAVLSIVNRVRQGYSPLSFQT
+                            ************************************************************
+
+Position    720 - 779
+               |----+----|----+----|----+----|----+----|----+----|----+----
+
+HIV1_ENV_SAMPLE_001_ALIGNED HLPTPRGPDRPEGIEEEGGERDRDRSIRLVNGSLALIWDDLRSLCLFSYHRLRDLLLIVT
+HIV1_ENV_SAMPLE_002_ALIGNED HLPTPRGPDRPEGIEEEGGERDRDRSIRLVNGSLALIWDDLRSLCLFSYHRLRDLLLIVT
+                            HLPTPRGPDRPEGIEEEGGERDRDRSIRLVNGSLALIWDDLRSLCLFSYHRLRDLLLIVT
+                            ************************************************************
+
+Position    780 - 839
+               |----+----|----+----|----+----|----+----|----+----|----+----
+
+HIV1_ENV_SAMPLE_001_ALIGNED RIVELLGRRGWEALKYWWNLLQYWSQELKNSAVSLLNATAIAVAEGTDRVIEVVQGACRA
+HIV1_ENV_SAMPLE_002_ALIGNED RIVELLGRRGWEALKYWWNLLQYWSQELKNSAVSLLNATAIAVAEGTDRVIEVVQGACRA
+                            RIVELLGRRGWEALKYWWNLLQYWSQELKNSAVSLLNATAIAVAEGTDRVIEVVQGACRA
+                            ************************************************************
+
+Position    840 - 856
+               |----+----|----+-
+
+HIV1_ENV_SAMPLE_001_ALIGNED IRHIPRRIRQGLERILL
+HIV1_ENV_SAMPLE_002_ALIGNED IRHIPRRIRQGLERILL
+                            IRHIPRRIRQGLERILL
+                            *****************
+
+CONSERVATION LEGEND:
+* = Highly conserved (>80%)
+: = Moderately conserved (>60%)
+. = Weakly conserved (>40%)
+  = Variable (<40%)
