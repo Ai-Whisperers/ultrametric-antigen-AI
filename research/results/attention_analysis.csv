@@ -1,4 +1,0 @@
-drug,class,correlation,attn_precision,attn_recall,attn_f1,grad_precision,grad_recall,grad_f1,n_known
-AZT,nrti,0.8844812920409301,0.45,0.5625,0.5,0.45,0.5625,0.5,22
-3TC,nrti,0.9792784570019698,0.4,0.5,0.4444444444444445,0.45,0.5625,0.5,18
-TDF,nrti,0.7793241894810224,0.45,0.5625,0.5,0.55,0.6875,0.6111111111111112,18

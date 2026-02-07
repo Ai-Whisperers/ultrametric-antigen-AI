@@ -1,1 +1,0 @@
-../../mathematical-foundations/p-adic-theory.md

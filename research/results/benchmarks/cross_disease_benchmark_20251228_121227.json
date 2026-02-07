@@ -1,9 +1,0 @@
-{
-  "results": [
-    {
-      "disease": "sars_cov_2",
-      "n_samples": 23,
-      "n_features": 6864,
-      "spearman": 0.6671465239025236,
-      "spearman_std": 0.2784779971430995,
-      "rmse": 

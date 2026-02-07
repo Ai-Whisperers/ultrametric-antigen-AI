@@ -1,8 +1,0 @@
-{
-  "model": "esm2_t12_35M",
-  "model_name": "facebook/esm2_t12_35M_UR50D",
-  "dim": 480,
-  "context_length": 10,
-  "context_pattern": "AAAAAAAAAA{X}AAAAAAAAAA",
-  "timestamp": "2026-01-03T16:07:37.455342"
-}

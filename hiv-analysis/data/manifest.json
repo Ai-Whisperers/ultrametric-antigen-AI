@@ -1,0 +1,14 @@
+{
+  "pipeline_version": "1.0.0",
+  "created": "/home/ai-whisperers/ternary-vaes-bioinformatics/hiv-analysis",
+  "data_sources": {
+    "los_alamos": "https://www.hiv.lanl.gov/",
+    "ncbi": "https://www.ncbi.nlm.nih.gov/genbank/"
+  },
+  "structure": {
+    "raw": "Original sequences from databases",
+    "processed": "Aligned and filtered sequences",
+    "metadata": "Sample information and annotations",
+    "references": "Reference sequences"
+  }
+}

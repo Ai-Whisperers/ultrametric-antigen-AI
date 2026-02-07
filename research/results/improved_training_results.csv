@@ -1,6 +1,0 @@
-drug_class,drug,n_train,n_test,best_test_corr,std,use_tam,use_interactions,n_ensemble
-nnrti,DOR,102,26,0.731480490399237,0.0,False,True,1
-nnrti,EFV,1734,434,0.8958449684189239,0.0,False,True,1
-nnrti,ETR,798,200,0.829469913133173,0.0,False,True,1
-nnrti,NVP,1641,411,0.905279089207787,0.0,False,True,1
-nnrti,RPV,248,63,0.6032013916520299,0.0,False,True,1

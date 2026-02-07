@@ -1,4 +1,0 @@
-sequence,length,mic_pred,mic_ug_ml,selectivity_index,pathogen_activity,commensal_sparing,toxicity_pred,confidence,net_charge,hydrophobicity
-RLKKTFFKEVKTVKW,15,0.2783,1.898,0.2908,0.8667,0.252,0.0,Medium,5,-0.8
-RLKKTFFKIVKTVKW,15,0.5349,3.4271,0.0,0.8267,-0.0,0.0,Medium,6,-0.267
-RLKKTFFKIVKTVKW,15,0.5349,3.4271,0.0,0.8267,-0.0,0.0,Medium,6,-0.267

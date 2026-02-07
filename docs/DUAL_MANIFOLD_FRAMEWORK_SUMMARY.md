@@ -1,1 +1,0 @@
-mathematical-foundations/dual-manifold-framework.md

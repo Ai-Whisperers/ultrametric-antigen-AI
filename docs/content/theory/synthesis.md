@@ -1,1 +1,0 @@
-../../mathematical-foundations/synthesis.md

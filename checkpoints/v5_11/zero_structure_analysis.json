@@ -1,7 +1,0 @@
-{
-  "checkpoint": "checkpoints/v5_11/best.pt",
-  "zero_count_radius_corr_A": 0.006056512448481356,
-  "zero_count_radius_corr_B": 0.009927453846762609,
-  "valuation_radius_corr_A": 0.003964802025932362,
-  "valuation_radius_corr_B": 0.0004512502561892617,
-  "zero_structure_detected": 

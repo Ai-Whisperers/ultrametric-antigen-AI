@@ -1,0 +1,11 @@
+2026-02-07 14:03:57,228 - __main__ - INFO - Setting up HIV sequence data pipeline...
+2026-02-07 14:03:57,228 - __main__ - INFO - Validating pipeline environment...
+2026-02-07 14:03:57,228 - __main__ - INFO - Environment validation passed
+2026-02-07 14:03:57,228 - __main__ - INFO - Initializing data structure...
+2026-02-07 14:03:57,228 - __main__ - INFO - Created directory: /home/ai-whisperers/ternary-vaes-bioinformatics/hiv-analysis/data/raw/hiv-sequences
+2026-02-07 14:03:57,229 - __main__ - INFO - Created directory: /home/ai-whisperers/ternary-vaes-bioinformatics/hiv-analysis/data/processed/aligned
+2026-02-07 14:03:57,229 - __main__ - INFO - Created directory: /home/ai-whisperers/ternary-vaes-bioinformatics/hiv-analysis/data/processed/filtered
+2026-02-07 14:03:57,229 - __main__ - INFO - Created directory: /home/ai-whisperers/ternary-vaes-bioinformatics/hiv-analysis/data/metadata
+2026-02-07 14:03:57,229 - __main__ - INFO - Created directory: /home/ai-whisperers/ternary-vaes-bioinformatics/hiv-analysis/data/references
+2026-02-07 14:03:57,240 - __main__ - INFO - Created manifest: /home/ai-whisperers/ternary-vaes-bioinformatics/hiv-analysis/data/manifest.json
+2026-02-07 14:03:57,240 - __main__ - INFO - Pipeline setup completed successfully

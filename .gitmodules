@@ -1,9 +1,0 @@
-[submodule "data/external/github/HIV-1_Paper"]
-	path = data/external/github/HIV-1_Paper
-	url = https://github.com/pauloluniyi/HIV-1_Paper.git
-[submodule "data/external/github/HIV-data"]
-	path = data/external/github/HIV-data
-	url = https://github.com/malabz/HIV-data.git
-[submodule "data/external/github/HIV-DRM-machine-learning"]
-	path = data/external/github/HIV-DRM-machine-learning
-	url = https://github.com/lucblassel/HIV-DRM-machine-learning.git
