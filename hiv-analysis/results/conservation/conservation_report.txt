@@ -1,0 +1,39 @@
+======================================================================
+HIV SEQUENCE CONSERVATION ANALYSIS REPORT
+======================================================================
+Sequences analyzed: 2
+Alignment length: 857
+Score types: shannon, simpson, property
+
+SHANNON CONSERVATION:
+  Mean: 1.000 ± 0.000
+  Range: 1.000 - 1.000
+  Highly conserved positions (>0.8): 857 (100.0%)
+  Moderately conserved (0.6-0.8): 0 (0.0%)
+  Variable positions (≤0.6): 0 (0.0%)
+
+SIMPSON CONSERVATION:
+  Mean: 1.000 ± 0.000
+  Range: 1.000 - 1.000
+  Highly conserved positions (>0.8): 857 (100.0%)
+  Moderately conserved (0.6-0.8): 0 (0.0%)
+  Variable positions (≤0.6): 0 (0.0%)
+
+PROPERTY CONSERVATION:
+  Mean: 1.000 ± 0.000
+  Range: 1.000 - 1.000
+  Highly conserved positions (>0.8): 857 (100.0%)
+  Moderately conserved (0.6-0.8): 0 (0.0%)
+  Variable positions (≤0.6): 0 (0.0%)
+
+TOP 10 MOST CONSERVED REGIONS:
+   1. Position   0- 10: 1.000
+   2. Position   1- 11: 1.000
+   3. Position   2- 12: 1.000
+   4. Position   3- 13: 1.000
+   5. Position   4- 14: 1.000
+   6. Position   5- 15: 1.000
+   7. Position   6- 16: 1.000
+   8. Position   7- 17: 1.000
+   9. Position   8- 18: 1.000
+  10. Position   9- 19: 1.000
