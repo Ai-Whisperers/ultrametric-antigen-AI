@@ -1,0 +1,2 @@
+[console_scripts]
+hiv-analysis = hiv_analysis.cli:main

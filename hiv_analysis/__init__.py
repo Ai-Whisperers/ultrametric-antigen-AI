@@ -11,7 +11,7 @@ Author: AI Whisperers
 License: MIT
 """
 
-__version__ = "0.1.0"
+from ._version import __version__
 __author__ = "AI Whisperers"
 __email__ = "research@ai-whisperers.com"
 
