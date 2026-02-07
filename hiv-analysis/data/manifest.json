@@ -1,14 +1,30 @@
 {
-  "pipeline_version": "1.0.0",
-  "created": "/home/ai-whisperers/ternary-vaes-bioinformatics/hiv-analysis",
-  "data_sources": {
-    "los_alamos": "https://www.hiv.lanl.gov/",
-    "ncbi": "https://www.ncbi.nlm.nih.gov/genbank/"
-  },
+  "created": "2026-02-07 14:08:16",
+  "purpose": "HIV sequence analysis pipeline",
   "structure": {
-    "raw": "Original sequences from databases",
-    "processed": "Aligned and filtered sequences",
-    "metadata": "Sample information and annotations",
-    "references": "Reference sequences"
-  }
+    "raw/hiv-sequences": "Original sequences from databases",
+    "raw/reference-genomes": "Reference genomes (HXB2, NL4-3, etc)",
+    "processed/aligned": "Multiple sequence alignments",
+    "processed/filtered": "Quality-filtered sequences",
+    "processed/annotated": "Annotated sequences with metadata",
+    "metadata/sequences": "Sequence metadata and annotations",
+    "metadata/downloads": "Download logs and manifests",
+    "references": "Reference sequences and consensus"
+  },
+  "sources": {
+    "primary": "Los Alamos HIV Database (https://www.hiv.lanl.gov/)",
+    "secondary": [
+      "NCBI",
+      "Stanford HIV DB",
+      "GISAID"
+    ],
+    "manual_download_required": true,
+    "automation_blocked": "Anti-scraping measures present"
+  },
+  "next_steps": [
+    "Manual download of sequence alignments",
+    "Implementation of MAFFT alignment wrapper",
+    "Creation of sequence alignment viewer",
+    "Conservation scoring implementation"
+  ]
 }

@@ -1,0 +1,29 @@
+{
+  "available_datasets": {
+    "hiv1_env_alignments": {
+      "description": "HIV-1 Envelope protein sequences",
+      "source": "Los Alamos HIV Database",
+      "update_frequency": "Annual",
+      "last_update": "2023",
+      "sequence_count": "~15000",
+      "file_pattern": "hiv1_env_*.fasta"
+    },
+    "hiv1_gag_alignments": {
+      "description": "HIV-1 Gag protein sequences",
+      "source": "Los Alamos HIV Database",
+      "update_frequency": "Annual",
+      "last_update": "2023",
+      "sequence_count": "~8000",
+      "file_pattern": "hiv1_gag_*.fasta"
+    },
+    "hiv1_pol_alignments": {
+      "description": "HIV-1 Pol protein sequences",
+      "source": "Los Alamos HIV Database",
+      "update_frequency": "Annual",
+      "last_update": "2023",
+      "sequence_count": "~12000",
+      "file_pattern": "hiv1_pol_*.fasta"
+    }
+  },
+  "status": "setup_complete_manual_download_required"
+}
