@@ -15,13 +15,13 @@ A cutting-edge bioinformatics package leveraging p-adic mathematics and hyperbol
 pip install -e .
 
 # Set up HIV analysis environment
-python3 -m hiv_analysis.scripts.setup_hiv_data
+hiv-analysis setup
 
 # Run complete pipeline
-python3 -m hiv_analysis.scripts.mafft_wrapper      # Align sequences
-python3 -m hiv_analysis.scripts.conservation_scorer # Score conservation  
-python3 -m hiv_analysis.scripts.alignment_viewer    # Visualize results
-python3 -m hiv_analysis.scripts.format_exporter     # Export formats
+hiv-analysis align sequences.fasta      # Align sequences
+hiv-analysis score aligned.fasta        # Score conservation  
+hiv-analysis view aligned.fasta         # Visualize results
+hiv-analysis export aligned.fasta       # Export formats
 ```
 
 ## 📋 Features

@@ -210,12 +210,14 @@ For bulk downloads, contact the database maintainers for API access.
             json.dump(datasets, f, indent=2)
         print(f"✅ Created dataset registry: {registry_file}")
 
-def main():
+def main(base_dir: Path = None):
     """Main setup function"""
     print("🔬 Setting up HIV sequence analysis data structure...")
     
     # Get base directory
-    base_dir = Path(__file__).parent.parent
+    if base_dir is None:
+        base_dir = Path(__file__).parent.parent
+    
     setup = HIVDataSetup(base_dir)
     
     # Create structure and files
