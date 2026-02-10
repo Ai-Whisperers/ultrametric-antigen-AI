@@ -1,4 +1,4 @@
-# Ultrametric Antigen AI
+# HIV Antigen AI
 
 **p-adic Geometry and Hyperbolic Manifolds for Bioinformatics Research**
 
@@ -6,7 +6,7 @@ A cutting-edge bioinformatics package leveraging p-adic mathematics and hyperbol
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Tests](https://github.com/Ai-Whisperers/ultrametric-antigen-AI/workflows/Tests/badge.svg)](https://github.com/Ai-Whisperers/ultrametric-antigen-AI/actions)
+[![Tests](https://github.com/Ai-Whisperers/hiv-antigen-ai/workflows/Tests/badge.svg)](https://github.com/Ai-Whisperers/hiv-antigen-ai/actions)
 
 ## 🚀 Quick Start
 
@@ -63,8 +63,8 @@ sudo apt-get install clustalw muscle t-coffee
 ### Package Installation
 ```bash
 # Clone repository
-git clone https://github.com/Ai-Whisperers/ultrametric-antigen-AI.git
-cd ultrametric-antigen-AI
+git clone https://github.com/Ai-Whisperers/hiv-antigen-ai.git
+cd hiv-antigen-ai
 
 # Install in development mode
 pip install -e .
@@ -206,7 +206,7 @@ files = exporter.export_alignment(alignment, "phylo_analysis")
 ## 🏗 Project Structure
 
 ```
-ultrametric-antigen-AI/
+hiv-antigen-ai/
 ├── hiv_analysis/              # Main Python package
 │   ├── scripts/              # Analysis pipeline scripts
 │   ├── core/                 # Core algorithms  
@@ -261,8 +261,8 @@ We welcome contributions! Please see our contributing guidelines:
 ### Development Setup
 ```bash
 # Clone and install in development mode
-git clone https://github.com/Ai-Whisperers/ultrametric-antigen-AI.git
-cd ultrametric-antigen-AI
+git clone https://github.com/Ai-Whisperers/hiv-antigen-ai.git
+cd hiv-antigen-ai
 pip install -e .[dev]
 
 # Run tests
@@ -308,7 +308,7 @@ conda install -c bioconda mafft
 **Import errors:**
 ```bash
 # Reinstall in development mode
-pip uninstall ultrametric-antigen-ai
+pip uninstall hiv-antigen-ai
 pip install -e .
 ```
 
@@ -336,8 +336,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙋 Contact
 
 - **AI Whisperers Research Team**: research@ai-whisperers.com
-- **GitHub**: https://github.com/Ai-Whisperers/ultrametric-antigen-AI
-- **Issues**: https://github.com/Ai-Whisperers/ultrametric-antigen-AI/issues
+- **GitHub**: https://github.com/Ai-Whisperers/hiv-antigen-ai
+- **Issues**: https://github.com/Ai-Whisperers/hiv-antigen-ai/issues
 
 ---
 

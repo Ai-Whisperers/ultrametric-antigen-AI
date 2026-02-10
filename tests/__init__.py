@@ -1,1 +1,1 @@
-"""Tests for ultrametric-antigen-ai package."""
+"""Tests for hiv-antigen-ai package."""

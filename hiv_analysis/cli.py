@@ -23,7 +23,7 @@ Examples:
   hiv-analysis view aligned.fasta       # Create visualization  
   hiv-analysis export aligned.fasta     # Export to multiple formats
   
-For more information, see: https://github.com/Ai-Whisperers/ultrametric-antigen-AI
+For more information, see: https://github.com/Ai-Whisperers/hiv-antigen-ai
         """
     )
     

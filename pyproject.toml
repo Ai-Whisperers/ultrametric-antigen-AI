@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ultrametric-antigen-ai"
+name = "hiv-antigen-ai"
 version = "0.1.0"
 description = "p-adic geometry and hyperbolic manifolds for bioinformatics research"
 readme = "README.md"
@@ -79,10 +79,10 @@ visualization = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Ai-Whisperers/ultrametric-antigen-AI"
-Repository = "https://github.com/Ai-Whisperers/ultrametric-antigen-AI.git"
-Documentation = "https://github.com/Ai-Whisperers/ultrametric-antigen-AI/blob/main/README.md"
-"Bug Tracker" = "https://github.com/Ai-Whisperers/ultrametric-antigen-AI/issues"
+Homepage = "https://github.com/Ai-Whisperers/hiv-antigen-ai"
+Repository = "https://github.com/Ai-Whisperers/hiv-antigen-ai.git"
+Documentation = "https://github.com/Ai-Whisperers/hiv-antigen-ai/blob/main/README.md"
+"Bug Tracker" = "https://github.com/Ai-Whisperers/hiv-antigen-ai/issues"
 
 [project.scripts]
 hiv-analysis = "hiv_analysis.cli:main"

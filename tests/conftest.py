@@ -1,4 +1,4 @@
-"""Pytest configuration and shared fixtures for ultrametric-antigen-ai tests."""
+"""Pytest configuration and shared fixtures for hiv-antigen-ai tests."""
 
 import pytest
 import tempfile
